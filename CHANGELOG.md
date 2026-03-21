@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Initial CubixRecipes project bootstrap with FastAPI backend, React+Vite frontend, docs, skills, and MVP recipe/parser/storage/resolver flow.
+- Added a root `start-dev.py` control panel with Start/Stop/Restart actions for backend and frontend; on Windows it launches the dev servers in separate consoles.
 
 ### Changed
 - Replaced placeholder repository files with a structured modular architecture for backend and frontend development.
