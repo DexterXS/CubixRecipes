@@ -35,6 +35,7 @@ class RecipeCell:
     col: int
     raw: Optional[str]
     item: Optional[ItemRef]
+    resolution: Optional[dict[str, Any]] = None
 
 
 @dataclass
@@ -57,6 +58,7 @@ class Recipe:
     raw_text: str
     name: Optional[str] = None
     diagnostics: list[str] = field(default_factory=list)
+    output_resolution: Optional[dict[str, Any]] = None
 
 
 @dataclass

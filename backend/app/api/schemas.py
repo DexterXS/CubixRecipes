@@ -47,3 +47,12 @@ class UpdateRecipeRequest(BaseModel):
     output_raw: str
     matrix: list[list[Optional[str]]]
     name: Optional[str] = None
+
+
+class ProjectSettingsRequest(BaseModel):
+    scripts_dir: str = 'scripts'
+    mods_dir: str = ''
+    assets_dir: str = ''
+    recipe_db_path: str = ''
+    extra_icon_sources: list[str] = Field(default_factory=list)
+    extra_recipe_sources: list[str] = Field(default_factory=list)

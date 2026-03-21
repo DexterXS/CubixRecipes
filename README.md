@@ -6,7 +6,8 @@ CubixRecipes — локальное русскоязычное веб-прило
 - Парсинг `recipes.addShaped(...)` и `mods.avaritia.ExtremeCrafting.addShaped(...)`.
 - Поддержка `null`, meta, wildcard `*`, legacy и 1.12 name-синтаксиса.
 - Поиск рецептов по output item id в локальных `.zs` файлах.
-- Редактируемая сетка рецепта во frontend.
+- Редактируемая сетка рецепта во frontend и отдельный блок отображения/редактирования output item.
+- Control Panel с вкладкой Settings для сохранения путей к `.zs`, модам, ассетам и дополнительным источникам.
 - Базовый индексатор ресурсов и resolver со стратегиями и `confidence`.
 - Документация и skill-система для дальнейшего развития.
 
@@ -17,6 +18,7 @@ CubixRecipes — локальное русскоязычное веб-прило
 - `backend/app/resolver`: цепочка стратегий разрешения иконок/имён.
 - `backend/app/services`: orchestration use-cases.
 - `backend/app/api`: FastAPI endpoints.
+- `backend/app/config`: сервис конфигурации project paths и валидации путей.
 - `frontend/src`: React + Vite SPA с редактируемой сеткой и русским UI.
 - `.agents/skills`: локальные повторно используемые workflow-инструкции.
 
@@ -43,7 +45,7 @@ npm run dev
 - Backend по умолчанию: `http://127.0.0.1:8000`
 - Backend теперь приведён к совместимой типизации для Python 3.9+, поэтому Pydantic-схемы и dataclass-модели не зависят от union-нотации `|`.
 - Frontend Vite: `http://127.0.0.1:5173`
-- Для локального управления можно запустить `python start-dev.py` из корня проекта: откроется Tkinter-панель с кнопками Start/Stop/Restart для backend и frontend и вкладками `Backend Console`, `Frontend Console` и `Action Log`. Backend и frontend запускаются прямо внутри программы без внешних окон, а их stdout/stderr выводится в отдельные вкладки. Текст во вкладках можно выделять и копировать, HTTP/HTTPS-ссылки открываются кликом, а вывод дополнительно очищается от ANSI-кодов и части проблемных символов терминала. Для backend панель теперь заранее проверяет, в каком Python установлен `uvicorn`, и если зависимостей нет, показывает понятную команду установки вместо немого падения процесса. Если frontend не стартует, причина ошибки остаётся видна во вкладке frontend; скрипт также проверяет наличие `frontend/package.json` и `frontend/node_modules` перед запуском.
+- Для локального управления можно запустить `python start-dev.py` из корня проекта: откроется Tkinter-панель с кнопками Start/Stop/Restart для backend и frontend и вкладками `Backend Console`, `Frontend Console`, `Settings` и `Action Log`. Во вкладке `Settings` можно задать `scripts_dir`, `mods_dir`, `assets_dir`, `recipe_db_path`, `extra_icon_sources` и `extra_recipe_sources`; они сохраняются в `cubixrecipes.config.json` и используются backend при следующем запуске. Backend и frontend запускаются прямо внутри программы без внешних окон, а их stdout/stderr выводится в отдельные вкладки. Текст во вкладках можно выделять и копировать, HTTP/HTTPS-ссылки открываются кликом, а вывод дополнительно очищается от ANSI-кодов и части проблемных символов терминала. Для backend панель теперь заранее проверяет, в каком Python установлен `uvicorn`, и если зависимостей нет, показывает понятную команду установки вместо немого падения процесса. Если frontend не стартует, причина ошибки остаётся видна во вкладке frontend; скрипт также проверяет наличие `frontend/package.json` и `frontend/node_modules` перед запуском.
 
 
 ## Разработка
