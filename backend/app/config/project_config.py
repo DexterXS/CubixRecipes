@@ -7,6 +7,14 @@ from typing import Any, Optional
 
 
 @dataclass
+class UiPreferencesConfig:
+    display_mode: str = 'text'
+    density_mode: str = 'normal'
+    editor_mode: str = 'edit'
+    collapsed_sections: dict[str, bool] = field(default_factory=dict)
+
+
+@dataclass
 class ProjectPathsConfig:
     scripts_dir: str = 'scripts'
     mods_dir: str = ''
@@ -16,6 +24,7 @@ class ProjectPathsConfig:
     extra_recipe_sources: list[str] = field(default_factory=list)
     verbose_debug_logging: bool = False
     project_config_path: str = ''
+    ui_preferences: UiPreferencesConfig = field(default_factory=UiPreferencesConfig)
 
 
 class ProjectConfigService:
@@ -48,6 +57,7 @@ class ProjectConfigService:
             extra_recipe_sources=self._coerce_list(payload.get('extra_recipe_sources', current.extra_recipe_sources)),
             verbose_debug_logging=bool(payload.get('verbose_debug_logging', current.verbose_debug_logging)),
             project_config_path=str(self.config_path),
+            ui_preferences=self._coerce_ui_preferences(payload.get('ui_preferences', asdict(current.ui_preferences))),
         )
         return self.save(merged)
 
@@ -67,6 +77,7 @@ class ProjectConfigService:
         validations['extra_icon_sources'] = [self._validate_path(value) for value in config.extra_icon_sources]
         validations['extra_recipe_sources'] = [self._validate_path(value) for value in config.extra_recipe_sources]
         validations['verbose_debug_logging'] = {'enabled': config.verbose_debug_logging}
+        validations['ui_preferences'] = asdict(config.ui_preferences)
         return validations
 
     def build_index_paths(self, config: Optional[ProjectPathsConfig] = None) -> list[str]:
@@ -89,6 +100,7 @@ class ProjectConfigService:
             extra_recipe_sources=self._coerce_list(config.extra_recipe_sources),
             verbose_debug_logging=bool(config.verbose_debug_logging),
             project_config_path=str(self.config_path),
+            ui_preferences=self._coerce_ui_preferences(asdict(config.ui_preferences) if isinstance(config.ui_preferences, UiPreferencesConfig) else config.ui_preferences),
         )
 
     def _from_payload(self, payload: dict[str, Any]) -> ProjectPathsConfig:
@@ -102,6 +114,7 @@ class ProjectConfigService:
                 extra_recipe_sources=self._coerce_list(payload.get('extra_recipe_sources', [])),
                 verbose_debug_logging=bool(payload.get('verbose_debug_logging', False)),
                 project_config_path=str(self.config_path),
+                ui_preferences=self._coerce_ui_preferences(payload.get('ui_preferences', {})),
             )
         )
 
@@ -113,6 +126,16 @@ class ProjectConfigService:
         else:
             values = []
         return [value for value in values if value]
+
+    def _coerce_ui_preferences(self, raw: Any) -> UiPreferencesConfig:
+        payload = raw if isinstance(raw, dict) else {}
+        collapsed = payload.get('collapsed_sections', {})
+        return UiPreferencesConfig(
+            display_mode=str(payload.get('display_mode', 'text') or 'text'),
+            density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
+            editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
+            collapsed_sections={str(key): bool(value) for key, value in collapsed.items()} if isinstance(collapsed, dict) else {},
+        )
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:

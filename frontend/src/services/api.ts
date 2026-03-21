@@ -1,4 +1,4 @@
-import { RecipeView } from '../types';
+import { ProjectSettings, RecipeView, UiPreferences } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -110,6 +110,28 @@ export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolea
       matrix: payload.matrix,
       name: payload.name ?? null,
       target_path: payload.targetPath
+    })
+  });
+}
+
+export async function getProjectSettings(): Promise<ProjectSettings> {
+  return request<ProjectSettings>('/api/settings/project');
+}
+
+export async function updateProjectUiPreferences(uiPreferences: UiPreferences): Promise<ProjectSettings> {
+  const current = await getProjectSettings();
+  return request<ProjectSettings>('/api/settings/project', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      scripts_dir: current.scripts_dir,
+      mods_dir: current.mods_dir,
+      assets_dir: current.assets_dir,
+      recipe_db_path: current.recipe_db_path,
+      extra_icon_sources: current.extra_icon_sources,
+      extra_recipe_sources: current.extra_recipe_sources,
+      verbose_debug_logging: current.verbose_debug_logging,
+      ui_preferences: uiPreferences
     })
   });
 }

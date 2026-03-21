@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -49,6 +49,14 @@ class UpdateRecipeRequest(BaseModel):
     name: Optional[str] = None
 
 
+
+
+class UiPreferencesRequest(BaseModel):
+    display_mode: Literal['text', 'icons'] = 'text'
+    density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
+    editor_mode: Literal['view', 'edit'] = 'edit'
+    collapsed_sections: dict[str, bool] = Field(default_factory=dict)
+
 class ProjectSettingsRequest(BaseModel):
     scripts_dir: str = 'scripts'
     mods_dir: str = ''
@@ -57,6 +65,7 @@ class ProjectSettingsRequest(BaseModel):
     extra_icon_sources: list[str] = Field(default_factory=list)
     extra_recipe_sources: list[str] = Field(default_factory=list)
     verbose_debug_logging: bool = False
+    ui_preferences: UiPreferencesRequest = Field(default_factory=UiPreferencesRequest)
 
 
 class DebugLogEventRequest(BaseModel):

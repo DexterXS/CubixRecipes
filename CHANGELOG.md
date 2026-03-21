@@ -33,3 +33,4 @@
 
 ### Fixed
 - Cleaned project instructions so AGENTS.md now contains only permanent workflow and maintenance rules.
+- Rebuilt the frontend into a multi-panel recipe editor with a sticky action toolbar, status bar, collapsible cards, responsive three-column workspace, stronger output presentation, adaptive scrollable grid, quick diagnostics/info sidebar, and config-backed UI preferences for display/density/editor modes.

@@ -1,4 +1,9 @@
 export type CellValue = string | null;
+export type DisplayMode = 'text' | 'icons';
+export type DensityMode = 'compact' | 'normal' | 'wide';
+export type EditorMode = 'view' | 'edit';
+export type AppTab = 'editor' | 'preview' | 'diagnostics' | 'raw';
+export type SectionKey = 'input' | 'settings' | 'output' | 'metadata' | 'diagnostics';
 
 export interface ResolutionView {
   item_raw?: string;
@@ -23,4 +28,24 @@ export interface RecipeView {
     kind: string;
     path?: string | null;
   };
+}
+
+export interface UiPreferences {
+  display_mode: DisplayMode;
+  density_mode: DensityMode;
+  editor_mode: EditorMode;
+  collapsed_sections: Record<SectionKey, boolean>;
+}
+
+export interface ProjectSettings {
+  scripts_dir: string;
+  mods_dir: string;
+  assets_dir: string;
+  recipe_db_path: string;
+  extra_icon_sources: string[];
+  extra_recipe_sources: string[];
+  verbose_debug_logging: boolean;
+  project_config_path: string;
+  ui_preferences: UiPreferences;
+  validation?: Record<string, unknown>;
 }

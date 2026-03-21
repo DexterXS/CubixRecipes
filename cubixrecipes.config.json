@@ -5,5 +5,17 @@
   "recipe_db_path": "",
   "extra_icon_sources": [],
   "extra_recipe_sources": [],
-  "project_config_path": "/workspace/CubixRecipes/cubixrecipes.config.json"
+  "project_config_path": "/workspace/CubixRecipes/cubixrecipes.config.json",
+  "ui_preferences": {
+    "display_mode": "text",
+    "density_mode": "normal",
+    "editor_mode": "edit",
+    "collapsed_sections": {
+      "input": false,
+      "settings": false,
+      "output": false,
+      "metadata": false,
+      "diagnostics": false
+    }
+  }
 }

@@ -9,12 +9,44 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  Object.assign(navigator, {
+    clipboard: {
+      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)')
+    }
+  });
+
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
 
-
     if (url === '/api/debug/log') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
+    }
+
+    if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          scripts_dir: 'scripts',
+          mods_dir: '',
+          assets_dir: '',
+          recipe_db_path: '',
+          extra_icon_sources: [],
+          extra_recipe_sources: [],
+          verbose_debug_logging: false,
+          project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json',
+          ui_preferences: {
+            display_mode: 'text',
+            density_mode: 'normal',
+            editor_mode: 'edit',
+            collapsed_sections: {}
+          }
+        })
+      }) as Promise<Response>;
+    }
+
+    if (url === '/api/settings/project' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body));
+      return Promise.resolve({ ok: true, json: async () => ({ ...body, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json' }) }) as Promise<Response>;
     }
 
     if (url === '/api/parse') {
@@ -117,7 +149,7 @@ beforeEach(() => {
   vi.spyOn(window, 'open').mockImplementation(() => null);
 });
 
-test('paste triggers parse and shows output block', async () => {
+test('paste triggers parse and shows stronger output block', async () => {
   render(<App />);
   const textarea = screen.getByLabelText('paste-input');
   fireEvent.paste(textarea, {
@@ -128,7 +160,8 @@ test('paste triggers parse and shows output block', async () => {
   await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
   expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>');
   expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
-  expect(screen.getByText('Имя: Факел')).toBeTruthy();
+  expect(screen.getAllByText('Факел').length).toBeGreaterThan(0);
+  expect(screen.getByText('Input Grid')).toBeTruthy();
 });
 
 test('parse error resets status from parsing state', async () => {
@@ -142,7 +175,7 @@ test('toolbar buttons invoke save, save-as, create, help and wiki flows with edi
   render(<App />);
 
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
-  fireEvent.click(screen.getByText('Вставить'));
+  fireEvent.click(screen.getAllByText('Вставить')[0]);
   await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
 
   fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:lantern>' } });
@@ -163,10 +196,14 @@ test('toolbar buttons invoke save, save-as, create, help and wiki flows with edi
   expect(window.open).toHaveBeenCalledWith('/wiki.html', '_blank', 'noopener,noreferrer');
 });
 
-
-test('edit cell updates state', () => {
+test('clear action resets editor state', async () => {
   render(<App />);
-  const cell = screen.getByLabelText('cell-0-0') as HTMLInputElement;
-  fireEvent.change(cell, { target: { value: '<minecraft:stone>' } });
-  expect(cell.value).toBe('<minecraft:stone>');
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  fireEvent.click(screen.getAllByText('Вставить')[0]);
+  await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
+
+  fireEvent.click(screen.getByText('Очистить'));
+  expect((screen.getByLabelText('paste-input') as HTMLTextAreaElement).value).toBe('');
+  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:stone>');
+  expect(screen.getByText('Интерфейс очищен')).toBeTruthy();
 });
