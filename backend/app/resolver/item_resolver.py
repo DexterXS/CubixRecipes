@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from app.domain.models import ItemRef, ResolutionResult
 from app.indexer.asset_index import AssetIndex
 
@@ -8,7 +10,7 @@ class ItemResolver:
     def __init__(self, asset_index: AssetIndex):
         self.asset_index = asset_index
 
-    def resolve(self, item_ref: ItemRef, settings: dict | None = None) -> ResolutionResult:
+    def resolve(self, item_ref: ItemRef, settings: Optional[dict] = None) -> ResolutionResult:
         trace: list[dict] = []
         settings = settings or {}
         key = item_ref.base_key

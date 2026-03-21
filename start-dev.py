@@ -66,10 +66,12 @@ class ConsolePane:
         self.output = ScrolledText(
             self.frame,
             height=20,
-            state=tk.DISABLED,
+            state=tk.NORMAL,
             font=("Consolas", 9),
             wrap=tk.WORD,
             cursor="xterm",
+            exportselection=False,
+            insertwidth=0,
         )
         self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
         self.output.tag_configure("link", foreground="#1a73e8", underline=True)
@@ -78,26 +80,24 @@ class ConsolePane:
         self.output.tag_bind("link", "<Leave>", lambda _event: self.output.config(cursor="xterm"))
         self.output.bind("<Control-c>", self._copy_selection)
         self.output.bind("<Control-C>", self._copy_selection)
+        self.output.bind("<Button-3>", self._copy_selection)
+        self.output.bind("<Key>", self._block_edit_keys)
 
     def append(self, text: str) -> None:
         if not text:
             return
 
-        self.output.configure(state=tk.NORMAL)
         start_index = self.output.index(tk.END + "-1c")
         self.output.insert(tk.END, text)
         end_index = self.output.index(tk.END + "-1c")
         self._tag_links(start_index, end_index)
         self.output.see(tk.END)
-        self.output.configure(state=tk.DISABLED)
 
     def write_line(self, text: str) -> None:
         self.append(text.rstrip("\n") + "\n")
 
     def clear(self) -> None:
-        self.output.configure(state=tk.NORMAL)
         self.output.delete("1.0", tk.END)
-        self.output.configure(state=tk.DISABLED)
 
     def _tag_links(self, start_index: str, end_index: str) -> None:
         block = self.output.get(start_index, end_index)
@@ -114,6 +114,11 @@ class ConsolePane:
 
         self.output.clipboard_clear()
         self.output.clipboard_append(selected_text)
+        return "break"
+
+    def _block_edit_keys(self, event: tk.Event[tk.Misc]) -> str | None:
+        if (event.state & 0x4) and event.keysym.lower() == "c":
+            return None
         return "break"
 
     def _open_clicked_link(self, event: tk.Event[tk.Misc]) -> str:

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from app.domain.models import Recipe, RecipeCell, RecipeSource
 from app.parsers.recipe_parser import RecipeParser
 from app.storage.zs_storage import ZsStorage
@@ -13,7 +15,7 @@ class RecipeService:
     def parse_text(self, text: str):
         return self.parser.parse(text)
 
-    def create_recipe(self, recipe_type: str, output_raw: str | None = None, grid: int = 3) -> Recipe:
+    def create_recipe(self, recipe_type: str, output_raw: Optional[str] = None, grid: int = 3) -> Recipe:
         output = self.parser.parse_item_ref(output_raw or "<minecraft:stone>")
         size = 9 if recipe_type == "avaritia_extreme_shaped" else grid
         matrix = [

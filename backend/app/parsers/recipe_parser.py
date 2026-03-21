@@ -4,7 +4,7 @@ import ast
 import hashlib
 import re
 from dataclasses import dataclass
-from typing import Any
+from typing import Optional
 
 from app.domain.models import ItemRef, MetaMode, Recipe, RecipeCell, RecipeSource
 
@@ -14,9 +14,9 @@ ITEM_RE = re.compile(r"^<([a-zA-Z0-9_\-.]+):([a-zA-Z0-9_\-/\.]+)(?::([0-9*]+))?>
 @dataclass(slots=True)
 class ParseResult:
     kind: str
-    recipe: Recipe | None = None
-    item: ItemRef | None = None
-    diagnostics: list[str] | None = None
+    recipe: Optional[Recipe] = None
+    item: Optional[ItemRef] = None
+    diagnostics: Optional[list[str]] = None
 
 
 class RecipeParser:
@@ -88,7 +88,7 @@ class RecipeParser:
             raise ValueError(f"Cannot parse output item from: {output_raw}")
         return self.parse_item_ref(item_match.group(0))
 
-    def _parse_matrix(self, matrix_raw: str) -> list[list[str | None]]:
+    def _parse_matrix(self, matrix_raw: str) -> list[list[Optional[str]]]:
         transformed = re.sub(r"<([^>]+)>", lambda m: repr(f"<{m.group(1)}>"), matrix_raw)
         transformed = re.sub(r"\bnull\b", "None", transformed)
         matrix = ast.literal_eval(transformed)

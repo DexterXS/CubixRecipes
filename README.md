@@ -39,6 +39,7 @@ npm run dev
 
 ## Запуск
 - Backend по умолчанию: `http://127.0.0.1:8000`
+- Backend теперь приведён к совместимой типизации для Python 3.9+, поэтому Pydantic-схемы и dataclass-модели не зависят от union-нотации `|`.
 - Frontend Vite: `http://127.0.0.1:5173`
 - Для локального управления можно запустить `python start-dev.py` из корня проекта: откроется Tkinter-панель с кнопками Start/Stop/Restart для backend и frontend и вкладками `Backend Console`, `Frontend Console` и `Action Log`. Backend и frontend запускаются прямо внутри программы без внешних окон, а их stdout/stderr выводится в отдельные вкладки. Текст во вкладках можно выделять и копировать, HTTP/HTTPS-ссылки открываются кликом, а вывод дополнительно очищается от ANSI-кодов и части проблемных символов терминала. Если frontend не стартует, причина ошибки остаётся видна во вкладке frontend; скрипт также проверяет наличие `frontend/package.json` и `frontend/node_modules` перед запуском.
 
