@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CubixRecipes Wiki</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 920px; margin: 0 auto; padding: 24px; background: #111827; color: #f9fafb; line-height: 1.6; }
+      code { background: #1f2937; padding: 2px 6px; border-radius: 4px; }
+      h1, h2 { color: #ffffff; }
+      a { color: #60a5fa; }
+    </style>
+  </head>
+  <body>
+    <h1>CubixRecipes Wiki</h1>
+    <p>Краткая документация по текущему MVP интерфейсу и формату рецептов.</p>
+    <h2>Поддерживаемые форматы</h2>
+    <ul>
+      <li><code>recipes.addShaped(&lt;output&gt;, [[...]]);</code></li>
+      <li><code>recipes.addShaped("Name", &lt;output&gt;, [[...]]);</code></li>
+      <li><code>mods.avaritia.ExtremeCrafting.addShaped(&lt;output&gt;, [[...9x9...]]);</code></li>
+    </ul>
+    <h2>Кнопки</h2>
+    <ul>
+      <li><strong>Вставить</strong> — отправляет текст в backend parser.</li>
+      <li><strong>Сохранить</strong> — обновляет существующий рецепт в исходном <code>.zs</code> файле.</li>
+      <li><strong>Сохранить как</strong> — добавляет текущий рецепт в указанный <code>.zs</code> файл.</li>
+      <li><strong>Создать новый</strong> — создаёт backend-шаблон пустого рецепта.</li>
+      <li><strong>Справка</strong> — открывает модальное окно с быстрыми подсказками.</li>
+    </ul>
+    <p>Полная пользовательская документация также хранится в корневом файле <code>WIKI.md</code> проекта.</p>
+  </body>
+</html>

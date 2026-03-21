@@ -107,9 +107,22 @@ def create_app(scripts_dir: str = "scripts") -> FastAPI:
 
     @router.post("/recipes/save-as")
     def save_as(request: SaveAsRequest):
-        recipe = storage.get_recipe(request.recipe_uid)
+        try:
+            recipe = storage.get_recipe(request.recipe_uid)
+        except KeyError:
+            recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix))
+            recipe.recipe_uid = request.recipe_uid
+
+        recipe.name = request.name
+        recipe.output = parser.parse_item_ref(request.output_raw)
+        recipe.matrix = [
+            [RecipeCell(row=r, col=c, raw=raw, item=None if raw is None else parser.parse_item_ref(raw)) for c, raw in enumerate(row)]
+            for r, row in enumerate(request.matrix)
+        ]
+        recipe.grid_h = len(recipe.matrix)
+        recipe.grid_w = max((len(row) for row in request.matrix), default=0)
         new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
-        return {"ok": True, "new_uid": new_uid}
+        return {"ok": True, "new_uid": new_uid, "recipe": serialize_recipe(storage.get_recipe(new_uid))}
 
     @router.post("/index/scan")
     def index_scan(request: IndexScanRequest):

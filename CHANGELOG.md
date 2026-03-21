@@ -1,6 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Added Vite `/api` proxy and wired frontend toolbar actions so parse/save/create/help/wiki controls now execute real flows instead of inert buttons.
+- Added frontend parse/save error handling so the UI leaves the `Парсинг...` state on backend failures and shows actionable status messages.
+- Expanded backend `save-as` API to accept generated/frontend-edited recipes and return the newly saved recipe for immediate UI refresh.
+
 ### Added
 - Initial CubixRecipes project bootstrap with FastAPI backend, React+Vite frontend, docs, skills, and MVP recipe/parser/storage/resolver flow.
 - Added a root `start-dev.py` control panel with Start/Stop/Restart actions for backend and frontend; on Windows it launches the dev servers in separate consoles.
