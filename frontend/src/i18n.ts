@@ -13,6 +13,9 @@ const translations: Record<UiLanguage, TranslationTree> = {
       resetLayout: 'Сбросить раскладку',
       showAllPanels: 'Показать все панели',
       hidePanel: 'Скрыть панель',
+      dragPanel: 'Перетащить панель',
+      resizePanel: 'Потяните за нижний край, чтобы изменить высоту панели',
+      resizeWorkspace: 'Потяните разделитель мышкой',
       move: 'Переместить',
       moveUp: 'Выше',
       moveDown: 'Ниже',
@@ -73,7 +76,8 @@ const translations: Record<UiLanguage, TranslationTree> = {
       saveState: 'Сохранение',
       icons: 'Иконки',
       mode: 'Режим',
-      uiSaved: 'UI-настройки сохранены'
+      uiSaved: 'UI-настройки сохранены',
+      logReady: 'Full Debug Log готов'
     },
     fields: {
       sourceText: 'Исходный текст рецепта',
@@ -99,7 +103,9 @@ const translations: Record<UiLanguage, TranslationTree> = {
       iconFound: 'Иконка найдена',
       configSources: 'Источники конфига',
       originPath: 'Исходный путь',
-      visiblePanels: 'Панели'
+      visiblePanels: 'Панели',
+      layoutSaved: 'Layout сохранён',
+      workspace: 'Рабочее пространство'
     },
     values: {
       unresolved: 'не разрешено',
@@ -152,6 +158,9 @@ const translations: Record<UiLanguage, TranslationTree> = {
       resetLayout: 'Reset layout',
       showAllPanels: 'Show all panels',
       hidePanel: 'Hide panel',
+      dragPanel: 'Drag panel',
+      resizePanel: 'Drag the bottom edge to resize panel height',
+      resizeWorkspace: 'Drag the splitter',
       move: 'Move',
       moveUp: 'Up',
       moveDown: 'Down',
@@ -212,7 +221,8 @@ const translations: Record<UiLanguage, TranslationTree> = {
       saveState: 'Save',
       icons: 'Icons',
       mode: 'Mode',
-      uiSaved: 'UI settings saved'
+      uiSaved: 'UI settings saved',
+      logReady: 'Full Debug Log ready'
     },
     fields: {
       sourceText: 'Recipe source text',

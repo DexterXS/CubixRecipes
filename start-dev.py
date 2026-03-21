@@ -20,6 +20,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 from typing import Any, Optional, Union
+from time import perf_counter
 
 POLL_INTERVAL_MS = 1000
 STREAM_POLL_MS = 120
@@ -930,7 +931,7 @@ class ProcessControllerApp:
         since_id = 0 if force_replace else self.full_log_pane.last_event_id
         path = (
             f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
-            f"&since_id={since_id}&limit=150&include_details=false"
+            f"&since_id={since_id}&limit={'120' if force_replace else '80'}&include_details=false"
         )
         self.full_log_pane.set_status(f'Refreshing unified log from {BACKEND_API_BASE_URL}{path}')
 
@@ -941,8 +942,9 @@ class ProcessControllerApp:
             self.full_log_pane.render_lines(lines, replace=force_replace)
             self.full_log_pane.last_event_id = int(payload.get('nextSinceId', self.full_log_pane.last_event_id))
             request_info = payload.get('_request', {})
+            diagnostics = payload.get('diagnostics', {})
             self.full_log_pane.set_status(
-                f"URL: {request_info.get('url')} | status: {request_info.get('status')} | new events: {len(events)} | cursor: {self.full_log_pane.last_event_id}"
+                f"URL: {request_info.get('url')} | status: {request_info.get('status')} | req: {request_info.get('duration_ms')}ms | server: {diagnostics.get('total_ms')}ms | bottleneck: {diagnostics.get('bottleneck')} | new events: {len(events)} | cursor: {self.full_log_pane.last_event_id}"
             )
 
         def on_error(error: Exception) -> None:
@@ -987,18 +989,23 @@ class ProcessControllerApp:
         body = None if payload is None else json.dumps(payload).encode('utf-8')
         headers = {} if payload is None else {'Content-Type': 'application/json'}
         request = Request(url, data=body, headers=headers, method=method)
+        started_at = perf_counter()
         try:
             with urlopen(request, timeout=timeout) as response:
                 raw_body = response.read().decode('utf-8')
                 parsed = json.loads(raw_body) if raw_body else {}
+                duration_ms = round((perf_counter() - started_at) * 1000, 2)
+                request_meta = {'url': url, 'status': response.status, 'body': raw_body[:400], 'duration_ms': duration_ms}
                 if isinstance(parsed, dict):
-                    parsed['_request'] = {'url': url, 'status': response.status, 'body': raw_body[:400]}
-                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': {'url': url, 'status': response.status, 'body': raw_body[:400]}}
+                    parsed['_request'] = request_meta
+                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': request_meta}
         except HTTPError as error:
+            duration_ms = round((perf_counter() - started_at) * 1000, 2)
             error_body = error.read().decode('utf-8', errors='replace')
-            raise RuntimeError(f'HTTP {error.code} for {url} body={error_body[:400]}') from error
+            raise RuntimeError(f'HTTP {error.code} for {url} after {duration_ms}ms body={error_body[:400]}') from error
         except URLError as error:
-            raise RuntimeError(f'URL error for {url}: {error}') from error
+            duration_ms = round((perf_counter() - started_at) * 1000, 2)
+            raise RuntimeError(f'URL error for {url} after {duration_ms}ms: {error}') from error
 
     def refresh_debug_info(self) -> None:
         if self._debug_summary_in_flight:

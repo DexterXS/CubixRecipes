@@ -37,3 +37,6 @@
 - Optimized debug/control-panel flow by moving Tkinter backend requests off the main thread, adding incremental unified log fetching with cursor-based updates, deduplicating repeated log spam, and simplifying wiki opening so docs no longer depend on the heavy debug pipeline.
 - Reworked the frontend into a modular RU-first workspace with configurable panel layout, panel visibility controls via a `View` menu, panel move/reorder actions, persisted language/layout preferences, and a default input-left/output-right composition.
 
+
+- Fixed Full Debug Log timeouts by adding a lightweight query path with diagnostics, a dedicated UI-preferences endpoint that avoids full rescans, and control-panel request timing/bottleneck reporting.
+- Replaced button-first panel movement with drag-and-drop, persisted panel heights/workspace splitters, and mouse-driven resize handles in the React workspace.

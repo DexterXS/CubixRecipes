@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import threading
 from collections import deque
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
+from time import perf_counter
 from typing import Any, Optional
 
 
@@ -30,14 +32,16 @@ class DebugLogService:
         self.verbose = verbose
         self._next_event_id = 1
         self._events: deque[DebugLogEvent] = deque(maxlen=max_events)
+        self._lock = threading.RLock()
 
     def set_verbose(self, verbose: bool) -> None:
         self.verbose = verbose
         self.log('SYSTEM', 'INFO', 'CONFIG', 'Verbose debug logging updated', {'verbose': verbose}, force=True)
 
     def clear(self) -> None:
-        self._events.clear()
-        self._next_event_id = 1
+        with self._lock:
+            self._events.clear()
+            self._next_event_id = 1
         self.log('SYSTEM', 'INFO', 'LOG', 'Unified debug log cleared', force=True)
 
     def log(self, source: str, level: str, category: str, message: str, details: Optional[dict[str, Any]] = None, verbose_only: bool = False, force: bool = False) -> dict[str, Any]:
@@ -45,21 +49,22 @@ class DebugLogService:
             return {}
         normalized_details = self._sanitize_details(details or {})
         signature = self._signature(source, level, category, message, normalized_details)
-        deduplicated = self._deduplicate(signature)
-        if deduplicated is not None:
-            return asdict(deduplicated)
-        event = DebugLogEvent(
-            event_id=self._next_event_id,
-            timestamp=datetime.now(timezone.utc).astimezone().isoformat(timespec='milliseconds'),
-            source=source,
-            level=level,
-            category=category,
-            message=message,
-            details=normalized_details,
-        )
-        self._next_event_id += 1
-        self._events.append(event)
-        return asdict(event)
+        with self._lock:
+            deduplicated = self._deduplicate(signature)
+            if deduplicated is not None:
+                return self._serialize_event(deduplicated, include_details=True)
+            event = DebugLogEvent(
+                event_id=self._next_event_id,
+                timestamp=datetime.now(timezone.utc).astimezone().isoformat(timespec='milliseconds'),
+                source=source,
+                level=level,
+                category=category,
+                message=message,
+                details=normalized_details,
+            )
+            self._next_event_id += 1
+            self._events.append(event)
+            return self._serialize_event(event, include_details=True)
 
     def ingest(self, payload: dict[str, Any]) -> dict[str, Any]:
         return self.log(
@@ -79,17 +84,87 @@ class DebugLogService:
         limit: int = 200,
         include_details: bool = False,
     ) -> list[dict[str, Any]]:
-        events = [item for item in self._events if item.event_id > since_id]
-        if source != 'All':
-            events = [item for item in events if item.source == source or item.category == source.upper()]
-        if level != 'All':
-            events = [item for item in events if item.level == level]
+        return self.query_events(source=source, level=level, since_id=since_id, limit=limit, include_details=include_details)['events']
+
+    def query_events(
+        self,
+        source: str = 'All',
+        level: str = 'All',
+        since_id: int = 0,
+        limit: int = 100,
+        include_details: bool = False,
+    ) -> dict[str, Any]:
+        total_started = perf_counter()
+        with self._lock:
+            snapshot = list(self._events)
+            newest_event_id = snapshot[-1].event_id if snapshot else 0
+        snapshot_ms = round((perf_counter() - total_started) * 1000, 3)
+
+        filter_started = perf_counter()
+        matched: list[DebugLogEvent] = []
+        scanned = 0
+        matched_total = 0
+        has_more = False
         if limit > 0:
-            events = events[-limit:]
-        return [self._serialize_event(item, include_details=include_details) for item in events]
+            extra_match_seen = False
+            for event in reversed(snapshot):
+                if event.event_id <= since_id:
+                    break
+                scanned += 1
+                if not self._matches_source(event, source) or not self._matches_level(event, level):
+                    continue
+                matched_total += 1
+                if len(matched) < limit:
+                    matched.append(event)
+                else:
+                    extra_match_seen = True
+                    break
+            matched.reverse()
+            has_more = extra_match_seen
+        else:
+            for event in snapshot:
+                if event.event_id <= since_id:
+                    continue
+                scanned += 1
+                if self._matches_source(event, source) and self._matches_level(event, level):
+                    matched.append(event)
+                    matched_total += 1
+        filter_ms = round((perf_counter() - filter_started) * 1000, 3)
+
+        serialize_started = perf_counter()
+        events = [self._serialize_event(item, include_details=include_details) for item in matched]
+        serialize_ms = round((perf_counter() - serialize_started) * 1000, 3)
+        total_ms = round((perf_counter() - total_started) * 1000, 3)
+
+        phase_map = {
+            'snapshot': snapshot_ms,
+            'filter': filter_ms,
+            'serialize': serialize_ms,
+        }
+        bottleneck = max(phase_map, key=phase_map.get) if phase_map else 'none'
+        return {
+            'events': events,
+            'next_since_id': events[-1]['event_id'] if events else since_id,
+            'has_more': has_more,
+            'diagnostics': {
+                'total_ms': total_ms,
+                'snapshot_ms': snapshot_ms,
+                'filter_ms': filter_ms,
+                'serialize_ms': serialize_ms,
+                'bottleneck': bottleneck,
+                'scanned': scanned,
+                'matched': matched_total,
+                'returned': len(events),
+                'since_id': since_id,
+                'limit': limit,
+                'include_details': include_details,
+                'newest_event_id': newest_event_id,
+                'buffer_size': len(snapshot),
+            },
+        }
 
     def export_text(self, events: Optional[list[dict[str, Any]]] = None) -> str:
-        rows = events if events is not None else self.list_events(include_details=True)
+        rows = events if events is not None else self.list_events(include_details=True, limit=0)
         lines = []
         for item in rows:
             repeated = '' if item.get('repeat_count', 1) <= 1 else f" x{item['repeat_count']}"
@@ -141,3 +216,12 @@ class DebugLogService:
                 event.repeat_count += 1
                 return event
         return None
+
+    def _matches_source(self, event: DebugLogEvent, source: str) -> bool:
+        if source == 'All':
+            return True
+        source_upper = source.upper()
+        return event.source == source_upper or event.category == source_upper
+
+    def _matches_level(self, event: DebugLogEvent, level: str) -> bool:
+        return level == 'All' or event.level == level

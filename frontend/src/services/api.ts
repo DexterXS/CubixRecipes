@@ -119,19 +119,9 @@ export async function getProjectSettings(): Promise<ProjectSettings> {
 }
 
 export async function updateProjectUiPreferences(uiPreferences: UiPreferences): Promise<ProjectSettings> {
-  const current = await getProjectSettings();
-  return request<ProjectSettings>('/api/settings/project', {
+  return request<ProjectSettings>('/api/settings/project/ui', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      scripts_dir: current.scripts_dir,
-      mods_dir: current.mods_dir,
-      assets_dir: current.assets_dir,
-      recipe_db_path: current.recipe_db_path,
-      extra_icon_sources: current.extra_icon_sources,
-      extra_recipe_sources: current.extra_recipe_sources,
-      verbose_debug_logging: current.verbose_debug_logging,
-      ui_preferences: uiPreferences
-    })
+    body: JSON.stringify(uiPreferences)
   });
 }

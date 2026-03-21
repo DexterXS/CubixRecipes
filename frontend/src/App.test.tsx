@@ -40,26 +40,27 @@ beforeEach(() => {
             editor_mode: 'edit',
             language: 'ru',
             active_view_tab: 'editor',
-            reset_layout_version: 2,
+            reset_layout_version: 3,
+            workspace_layout: { top_ratio: 55, main_ratio: 68 },
             panel_layout: [
-              { id: 'input', zone: 'topLeft', order: 0, visible: true },
-              { id: 'output', zone: 'topRight', order: 0, visible: true },
-              { id: 'grid', zone: 'bottom', order: 0, visible: true },
-              { id: 'settings', zone: 'bottom', order: 1, visible: true },
-              { id: 'info', zone: 'sidebar', order: 0, visible: true },
-              { id: 'debug', zone: 'sidebar', order: 1, visible: true },
-              { id: 'diagnostics', zone: 'sidebar', order: 2, visible: true },
-              { id: 'preview', zone: 'sidebar', order: 3, visible: false },
-              { id: 'raw', zone: 'sidebar', order: 4, visible: false }
+              { id: 'input', zone: 'topLeft', order: 0, visible: true, height: 420 },
+              { id: 'output', zone: 'topRight', order: 0, visible: true, height: 420 },
+              { id: 'grid', zone: 'bottom', order: 0, visible: true, height: 420 },
+              { id: 'settings', zone: 'bottom', order: 1, visible: true, height: 320 },
+              { id: 'info', zone: 'sidebar', order: 0, visible: true, height: 280 },
+              { id: 'debug', zone: 'sidebar', order: 1, visible: true, height: 280 },
+              { id: 'diagnostics', zone: 'sidebar', order: 2, visible: true, height: 260 },
+              { id: 'preview', zone: 'sidebar', order: 3, visible: false, height: 220 },
+              { id: 'raw', zone: 'sidebar', order: 4, visible: false, height: 260 }
             ]
           }
         })
       }) as Promise<Response>;
     }
 
-    if (url === '/api/settings/project' && init?.method === 'PUT') {
+    if (url === '/api/settings/project/ui' && init?.method === 'PUT') {
       const body = JSON.parse(String(init.body));
-      return Promise.resolve({ ok: true, json: async () => ({ ...body, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json' }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ ui_preferences: body, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json' }) }) as Promise<Response>;
     }
 
     if (url === '/api/parse') {
@@ -214,3 +215,21 @@ test('toolbar buttons invoke save, save-as, create, help and wiki flows', async 
   fireEvent.click(screen.getByText('Вики'));
   expect(window.open).toHaveBeenCalledWith('http://localhost:3000/wiki.html', '_blank', 'noopener,noreferrer');
 });
+
+test('drag and drop becomes the primary way to reorder panels', async () => {
+  render(<App />);
+  const dragHandle = await screen.findByLabelText('Перетащить панель: Настройки');
+  const slots = document.querySelectorAll('.bottom-zone .drop-slot');
+  expect(slots.length).toBeGreaterThan(1);
+
+  fireEvent.dragStart(dragHandle);
+  fireEvent.dragOver(slots[0]);
+  fireEvent.drop(slots[0]);
+  fireEvent.dragEnd(dragHandle);
+
+  await waitFor(() => {
+    const headings = Array.from(document.querySelectorAll('.bottom-zone h2')).map((node) => node.textContent);
+    expect(headings[0]).toBe('Настройки');
+  });
+});
+

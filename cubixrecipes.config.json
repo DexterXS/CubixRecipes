@@ -5,6 +5,7 @@
   "recipe_db_path": "",
   "extra_icon_sources": [],
   "extra_recipe_sources": [],
+  "verbose_debug_logging": false,
   "project_config_path": "/workspace/CubixRecipes/cubixrecipes.config.json",
   "ui_preferences": {
     "display_mode": "text",
@@ -12,17 +13,21 @@
     "editor_mode": "edit",
     "language": "ru",
     "active_view_tab": "editor",
-    "reset_layout_version": 2,
+    "reset_layout_version": 3,
+    "workspace_layout": {
+      "top_ratio": 55,
+      "main_ratio": 68
+    },
     "panel_layout": [
-      { "id": "input", "zone": "topLeft", "order": 0, "visible": true },
-      { "id": "output", "zone": "topRight", "order": 0, "visible": true },
-      { "id": "grid", "zone": "bottom", "order": 0, "visible": true },
-      { "id": "settings", "zone": "bottom", "order": 1, "visible": true },
-      { "id": "info", "zone": "sidebar", "order": 0, "visible": true },
-      { "id": "debug", "zone": "sidebar", "order": 1, "visible": true },
-      { "id": "diagnostics", "zone": "sidebar", "order": 2, "visible": true },
-      { "id": "preview", "zone": "sidebar", "order": 3, "visible": false },
-      { "id": "raw", "zone": "sidebar", "order": 4, "visible": false }
+      { "id": "input", "zone": "topLeft", "order": 0, "visible": true, "height": 420 },
+      { "id": "output", "zone": "topRight", "order": 0, "visible": true, "height": 420 },
+      { "id": "grid", "zone": "bottom", "order": 0, "visible": true, "height": 420 },
+      { "id": "settings", "zone": "bottom", "order": 1, "visible": true, "height": 320 },
+      { "id": "info", "zone": "sidebar", "order": 0, "visible": true, "height": 280 },
+      { "id": "debug", "zone": "sidebar", "order": 1, "visible": true, "height": 280 },
+      { "id": "diagnostics", "zone": "sidebar", "order": 2, "visible": true, "height": 260 },
+      { "id": "preview", "zone": "sidebar", "order": 3, "visible": false, "height": 220 },
+      { "id": "raw", "zone": "sidebar", "order": 4, "visible": false, "height": 260 }
     ]
   }
 }

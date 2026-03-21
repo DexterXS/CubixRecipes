@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionToolbar } from '../components/ActionToolbar';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
@@ -7,7 +7,7 @@ import { TabNav } from '../components/TabNav';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences } from '../types';
+import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -15,20 +15,27 @@ const defaultMatrix: CellValue[][] = [
   [null, null, null]
 ];
 
+const defaultWorkspaceLayout: WorkspaceLayout = {
+  top_ratio: 55,
+  main_ratio: 68
+};
+
 const defaultPanelLayout: PanelLayoutItem[] = [
-  { id: 'input', zone: 'topLeft', order: 0, visible: true },
-  { id: 'output', zone: 'topRight', order: 0, visible: true },
-  { id: 'grid', zone: 'bottom', order: 0, visible: true },
-  { id: 'settings', zone: 'bottom', order: 1, visible: true },
-  { id: 'info', zone: 'sidebar', order: 0, visible: true },
-  { id: 'debug', zone: 'sidebar', order: 1, visible: true },
-  { id: 'diagnostics', zone: 'sidebar', order: 2, visible: true },
-  { id: 'preview', zone: 'sidebar', order: 3, visible: false },
-  { id: 'raw', zone: 'sidebar', order: 4, visible: false }
+  { id: 'input', zone: 'topLeft', order: 0, visible: true, height: 420 },
+  { id: 'output', zone: 'topRight', order: 0, visible: true, height: 420 },
+  { id: 'grid', zone: 'bottom', order: 0, visible: true, height: 420 },
+  { id: 'settings', zone: 'bottom', order: 1, visible: true, height: 320 },
+  { id: 'info', zone: 'sidebar', order: 0, visible: true, height: 280 },
+  { id: 'debug', zone: 'sidebar', order: 1, visible: true, height: 280 },
+  { id: 'diagnostics', zone: 'sidebar', order: 2, visible: true, height: 260 },
+  { id: 'preview', zone: 'sidebar', order: 3, visible: false, height: 220 },
+  { id: 'raw', zone: 'sidebar', order: 4, visible: false, height: 260 }
 ];
 
 const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
 const orderedZones: PanelZone[] = ['topLeft', 'topRight', 'bottom', 'sidebar'];
+const PANEL_MIN_HEIGHT = 220;
+const PANEL_MAX_HEIGHT = 960;
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -36,8 +43,9 @@ const defaultUiPreferences: UiPreferences = {
   editor_mode: 'edit',
   language: 'ru',
   active_view_tab: 'editor',
-  reset_layout_version: 2,
-  panel_layout: defaultPanelLayout
+  reset_layout_version: 3,
+  panel_layout: defaultPanelLayout,
+  workspace_layout: defaultWorkspaceLayout
 };
 
 const defaultRecipe: RecipeView = {
@@ -52,12 +60,34 @@ const defaultRecipe: RecipeView = {
   source: { kind: 'generated', path: null }
 };
 
+interface DropTarget {
+  zone: PanelZone;
+  index: number;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(value, max));
+}
+
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
 }
 
 function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
+}
+
+function normalizeOrders(layout: PanelLayoutItem[]): PanelLayoutItem[] {
+  const normalized = layout.map((item) => ({ ...item }));
+  orderedZones.forEach((zone) => {
+    normalized
+      .filter((item) => item.zone === zone)
+      .sort((left, right) => left.order - right.order)
+      .forEach((item, index) => {
+        item.order = index;
+      });
+  });
+  return normalized;
 }
 
 function normalizePanelLayout(rawLayout?: PanelLayoutItem[] | null): PanelLayoutItem[] {
@@ -68,14 +98,22 @@ function normalizePanelLayout(rawLayout?: PanelLayoutItem[] | null): PanelLayout
       result.push({ ...item });
     }
   });
-  return result
-    .map((item, index) => ({
+  return normalizeOrders(
+    result.map((item, index) => ({
       id: item.id,
       zone: orderedZones.includes(item.zone) ? item.zone : 'bottom',
       order: Number.isFinite(item.order) ? item.order : index,
-      visible: item.visible !== false
+      visible: item.visible !== false,
+      height: typeof item.height === 'number' ? clamp(item.height, PANEL_MIN_HEIGHT, PANEL_MAX_HEIGHT) : defaultPanelLayout.find((panel) => panel.id === item.id)?.height
     }))
-    .sort((left, right) => left.order - right.order);
+  );
+}
+
+function normalizeWorkspaceLayout(layout?: WorkspaceLayout | null): WorkspaceLayout {
+  return {
+    top_ratio: clamp(Math.round(layout?.top_ratio ?? defaultWorkspaceLayout.top_ratio), 30, 70),
+    main_ratio: clamp(Math.round(layout?.main_ratio ?? defaultWorkspaceLayout.main_ratio), 30, 75)
+  };
 }
 
 function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreferences {
@@ -86,43 +124,42 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
     language: (source?.language ?? 'ru') as UiLanguage,
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
-    reset_layout_version: source?.reset_layout_version ?? 2,
-    panel_layout: normalizePanelLayout(source?.panel_layout)
+    reset_layout_version: source?.reset_layout_version ?? 3,
+    panel_layout: normalizePanelLayout(source?.panel_layout),
+    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout)
   };
 }
 
 function updatePanelLayout(layout: PanelLayoutItem[], panelId: PanelId, updater: (panel: PanelLayoutItem) => PanelLayoutItem): PanelLayoutItem[] {
-  return layout.map((panel) => (panel.id === panelId ? updater(panel) : panel));
+  return normalizeOrders(layout.map((panel) => (panel.id === panelId ? updater(panel) : panel)));
 }
 
-function reorderWithinZone(layout: PanelLayoutItem[], panelId: PanelId, direction: -1 | 1): PanelLayoutItem[] {
-  const target = layout.find((item) => item.id === panelId);
-  if (!target) {
+function movePanel(layout: PanelLayoutItem[], panelId: PanelId, target: DropTarget): PanelLayoutItem[] {
+  const source = layout.find((item) => item.id === panelId);
+  if (!source) {
     return layout;
   }
-  const zoneItems = layout.filter((item) => item.zone === target.zone).sort((a, b) => a.order - b.order);
-  const index = zoneItems.findIndex((item) => item.id === panelId);
-  const swapIndex = index + direction;
-  if (index < 0 || swapIndex < 0 || swapIndex >= zoneItems.length) {
-    return layout;
-  }
-  const reordered = [...zoneItems];
-  [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
-  return layout.map((item) => {
-    const updatedIndex = reordered.findIndex((entry) => entry.id === item.id);
-    return updatedIndex >= 0 ? { ...item, order: updatedIndex } : item;
+  const without = layout.filter((item) => item.id !== panelId);
+  const zoneItems = without.filter((item) => item.zone === target.zone).sort((left, right) => left.order - right.order);
+  const insertAt = clamp(target.index, 0, zoneItems.length);
+  const movedPanel = { ...source, zone: target.zone, visible: true };
+  const rebuilt: PanelLayoutItem[] = [];
+  orderedZones.forEach((zone) => {
+    const items = zone === target.zone
+      ? [...without.filter((item) => item.zone === zone).sort((left, right) => left.order - right.order)]
+      : without.filter((item) => item.zone === zone).sort((left, right) => left.order - right.order);
+    if (zone === target.zone) {
+      items.splice(insertAt, 0, movedPanel);
+    }
+    items.forEach((item, order) => {
+      rebuilt.push({ ...item, zone, order });
+    });
   });
+  return normalizeOrders(rebuilt);
 }
 
-function movePanelToZone(layout: PanelLayoutItem[], panelId: PanelId, step: -1 | 1): PanelLayoutItem[] {
-  const target = layout.find((item) => item.id === panelId);
-  if (!target) {
-    return layout;
-  }
-  const zoneIndex = orderedZones.indexOf(target.zone);
-  const nextZone = orderedZones[(zoneIndex + step + orderedZones.length) % orderedZones.length];
-  const nextOrder = layout.filter((item) => item.zone === nextZone).length;
-  return updatePanelLayout(layout, panelId, (panel) => ({ ...panel, zone: nextZone, order: nextOrder, visible: true }));
+function setPanelHeight(layout: PanelLayoutItem[], panelId: PanelId, nextHeight: number): PanelLayoutItem[] {
+  return updatePanelLayout(layout, panelId, (panel) => ({ ...panel, height: clamp(Math.round(nextHeight), PANEL_MIN_HEIGHT, PANEL_MAX_HEIGHT) }));
 }
 
 export default function App() {
@@ -140,6 +177,12 @@ export default function App() {
   const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
+  const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
+  const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
+
+  const workspaceRef = useRef<HTMLDivElement | null>(null);
+  const persistTimerRef = useRef<number | null>(null);
+  const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
 
   const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
@@ -155,32 +198,52 @@ export default function App() {
       try {
         const nextSettings = await getProjectSettings();
         setSettings(nextSettings);
-        setUiPreferences(normalizeUiPreferences(nextSettings));
+        const normalized = normalizeUiPreferences(nextSettings);
+        latestUiPreferencesRef.current = normalized;
+        setUiPreferences(normalized);
       } catch {
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
       }
     })();
   }, []);
 
-  async function persistUiPreferences(next: UiPreferences) {
-    setUiPreferences(next);
-    try {
-      const response = await updateProjectUiPreferences(next);
-      setSettings(response);
-      setSaveStatus(t('status.uiSaved'));
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      setStatus(`${t('status.saveError')}: ${message}`);
+  useEffect(() => () => {
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
     }
+  }, []);
+
+  function persistUiPreferences(next: UiPreferences) {
+    latestUiPreferencesRef.current = next;
+    setUiPreferences(next);
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+    }
+    persistTimerRef.current = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const response = await updateProjectUiPreferences(latestUiPreferencesRef.current);
+          setSettings(response);
+          setSaveStatus(createTranslator(latestUiPreferencesRef.current.language)('fields.layoutSaved'));
+          logFrontendEvent({ level: 'INFO', category: 'LAYOUT', message: 'Workspace layout persisted', details: { panel_count: latestUiPreferencesRef.current.panel_layout.length, workspace: latestUiPreferencesRef.current.workspace_layout } });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Unknown error';
+          setStatus(`${createTranslator(latestUiPreferencesRef.current.language)('status.saveError')}: ${message}`);
+        }
+      })();
+    }, 220);
   }
 
   function patchUiPreferences(patch: Partial<UiPreferences>) {
-    const next = { ...uiPreferences, ...patch };
-    void persistUiPreferences(next);
+    persistUiPreferences({ ...uiPreferences, ...patch });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
-    void persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(nextLayout) });
+    persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(nextLayout) });
+  }
+
+  function patchWorkspaceLayout(nextLayout: WorkspaceLayout) {
+    persistUiPreferences({ ...uiPreferences, workspace_layout: normalizeWorkspaceLayout(nextLayout) });
   }
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
@@ -311,11 +374,69 @@ export default function App() {
   }
 
   function resetLayout() {
-    void persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(defaultPanelLayout), active_view_tab: 'editor', reset_layout_version: 2 });
+    persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(defaultPanelLayout), workspace_layout: defaultWorkspaceLayout, active_view_tab: 'editor', reset_layout_version: 3 });
   }
 
   function setPanelVisible(panelId: PanelId, visible: boolean) {
     patchPanelLayout(updatePanelLayout(uiPreferences.panel_layout, panelId, (panel) => ({ ...panel, visible })));
+  }
+
+  function handleDragStart(panelId: PanelId) {
+    setDraggedPanelId(panelId);
+    setDropTarget(null);
+  }
+
+  function handleDrop(zone: PanelZone, index: number) {
+    if (!draggedPanelId) {
+      return;
+    }
+    patchPanelLayout(movePanel(uiPreferences.panel_layout, draggedPanelId, { zone, index }));
+    setDropTarget(null);
+    setDraggedPanelId(null);
+  }
+
+  function startPanelResize(panelId: PanelId, clientY: number) {
+    const startHeight = uiPreferences.panel_layout.find((panel) => panel.id === panelId)?.height ?? 320;
+    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
+      const nextClientY = typeof event.clientY === 'number' ? event.clientY : clientY;
+      patchPanelLayout(setPanelHeight(latestUiPreferencesRef.current.panel_layout, panelId, startHeight + (nextClientY - clientY)));
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('mouseup', onUp);
+  }
+
+  function startWorkspaceResize(kind: 'top_ratio' | 'main_ratio', clientX: number) {
+    const rect = workspaceRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return;
+    }
+    const startRatio = uiPreferences.workspace_layout[kind];
+    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
+      const nextClientX = typeof event.clientX === 'number' ? event.clientX : clientX;
+      const deltaRatio = ((nextClientX - clientX) / rect.width) * 100;
+      patchWorkspaceLayout({
+        ...latestUiPreferencesRef.current.workspace_layout,
+        [kind]: clamp(Math.round(startRatio + deltaRatio), kind === 'top_ratio' ? 30 : 35, kind === 'top_ratio' ? 70 : 75)
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('mouseup', onUp);
   }
 
   const panelsByZone = useMemo(() => {
@@ -338,24 +459,81 @@ export default function App() {
     { label: t('status.mode'), value: `${uiPreferences.display_mode} • ${uiPreferences.language}` }
   ];
 
-  function buildPanelActions(panelId: PanelId) {
+  function renderDropSlot(zone: PanelZone, index: number) {
+    const active = dropTarget?.zone === zone && dropTarget.index === index;
     return (
-      <div className="panel-controls">
-        <button type="button" className="ghost-button" onClick={() => patchPanelLayout(reorderWithinZone(uiPreferences.panel_layout, panelId, -1))}>{t('app.moveUp')}</button>
-        <button type="button" className="ghost-button" onClick={() => patchPanelLayout(reorderWithinZone(uiPreferences.panel_layout, panelId, 1))}>{t('app.moveDown')}</button>
-        <button type="button" className="ghost-button" onClick={() => patchPanelLayout(movePanelToZone(uiPreferences.panel_layout, panelId, -1))}>{t('app.movePrevZone')}</button>
-        <button type="button" className="ghost-button" onClick={() => patchPanelLayout(movePanelToZone(uiPreferences.panel_layout, panelId, 1))}>{t('app.moveNextZone')}</button>
-        <button type="button" className="ghost-button" onClick={() => setPanelVisible(panelId, false)}>{t('app.hidePanel')}</button>
+      <div
+        key={`${zone}-${index}`}
+        className={`drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
+        onDragOver={(event) => {
+          event.preventDefault();
+          if (draggedPanelId) {
+            setDropTarget({ zone, index });
+          }
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          handleDrop(zone, index);
+        }}
+      >
+        <span>{active ? `${t('app.dragPanel')} → ${getPanelLabel(uiPreferences.language, draggedPanelId ?? allPanelIds[0])}` : t('app.resizeWorkspace')}</span>
       </div>
     );
   }
 
-  function renderPanel(panelId: PanelId) {
-    const common = { collapseLabel: '−', expandLabel: '+', actions: buildPanelActions(panelId) };
+  function renderPanel(panel: PanelLayoutItem) {
+    const panelId = panel.id;
+    const common = {
+      collapseLabel: '−',
+      expandLabel: '+',
+      actions: (
+        <div className="panel-controls">
+          <button type="button" className="ghost-button" onClick={() => setPanelVisible(panelId, false)}>{t('app.hidePanel')}</button>
+        </div>
+      ),
+      dragHandle: (
+        <button
+          type="button"
+          className="panel-drag-handle"
+          draggable
+          aria-label={`${t('app.dragPanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
+          title={t('app.dragPanel')}
+          onDragStart={(event: DragEvent<HTMLButtonElement>) => {
+            if (event.dataTransfer) {
+              event.dataTransfer.effectAllowed = 'move';
+              event.dataTransfer.setData('text/plain', panelId);
+            }
+            handleDragStart(panelId);
+          }}
+          onDragEnd={() => {
+            setDraggedPanelId(null);
+            setDropTarget(null);
+          }}
+        >
+          ⋮⋮
+        </button>
+      ),
+      footer: (
+        <button
+          type="button"
+          className="panel-resize-handle"
+          aria-label={`${t('app.resizePanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
+          title={t('app.resizePanel')}
+          onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            startPanelResize(panelId, event.clientY);
+          }}
+        >
+          <span />
+        </button>
+      )
+    };
+
+    let content = null;
     switch (panelId) {
       case 'input':
-        return (
-          <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.sourceText')} {...common}>
+        content = (
+          <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.sourceText')} {...common} className="panel-kind-input">
             <div className="field-header">
               <span>{t('fields.sourceText')}</span>
               <div className="inline-actions">
@@ -370,9 +548,10 @@ export default function App() {
             }} />
           </Panel>
         );
+        break;
       case 'output':
-        return (
-          <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
+        content = (
+          <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common} className="panel-kind-output">
             <div className="output-card">
               <div className="output-icon-slot">{uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <img src={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} /> : <span>?</span>}</div>
               <div className="output-details">
@@ -392,8 +571,9 @@ export default function App() {
             </div>
           </Panel>
         );
+        break;
       case 'grid':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} className="grid-panel" {...common}>
             <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
             <div className="grid-scroll-zone">
@@ -404,8 +584,9 @@ export default function App() {
             </div>
           </Panel>
         );
+        break;
       case 'settings':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.visiblePanels')} {...common}>
             <div className="settings-grid">
               <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
@@ -416,8 +597,9 @@ export default function App() {
             </div>
           </Panel>
         );
+        break;
       case 'info':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.info')} {...common}>
             <div className="kv-grid">
               <div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div>
@@ -432,8 +614,9 @@ export default function App() {
             </div>
           </Panel>
         );
+        break;
       case 'debug':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.debug')} {...common}>
             <div className="kv-grid">
               <div><span>{t('fields.lastApiStatus')}</span><strong>{lastApiStatus}</strong></div>
@@ -441,12 +624,13 @@ export default function App() {
               <div><span>{t('fields.outputResolved')}</span><strong>{recipe.output_resolution?.display_name ? t('values.yes') : t('values.no')}</strong></div>
               <div><span>{t('fields.iconFound')}</span><strong>{recipe.output_resolution?.icon_url ? t('values.yes') : t('values.no')}</strong></div>
               <div><span>{t('fields.displayMode')}</span><strong>{uiPreferences.display_mode}</strong></div>
-              <div><span>{t('fields.configSources')}</span><strong>{(settings?.extra_icon_sources.length ?? 0) + (settings?.extra_recipe_sources.length ?? 0)}</strong></div>
+              <div><span>{t('fields.configSources')}</span><strong>{(settings?.extra_icon_sources?.length ?? 0) + (settings?.extra_recipe_sources?.length ?? 0)}</strong></div>
             </div>
           </Panel>
         );
+        break;
       case 'diagnostics':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={getTabLabel(uiPreferences.language, 'diagnostics')} {...common}>
             <ul className="diagnostics-list">
               <li>Unresolved cells: {unresolvedCells}</li>
@@ -456,21 +640,50 @@ export default function App() {
             </ul>
           </Panel>
         );
+        break;
       case 'preview':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={getTabLabel(uiPreferences.language, 'preview')} {...common}>
             <div className="preview-block"><strong>{outputDisplayName ?? outputRaw}</strong><span>{recipe.recipe_type}</span><span>{summary}</span></div>
           </Panel>
         );
+        break;
       case 'raw':
-        return (
+        content = (
           <Panel key={panelId} title={getPanelLabel(uiPreferences.language, panelId)} subtitle={getTabLabel(uiPreferences.language, 'raw')} {...common}>
             <pre className="raw-block">{JSON.stringify({ recipe, matrix, ui: uiPreferences }, null, 2)}</pre>
           </Panel>
         );
+        break;
       default:
-        return null;
+        content = null;
     }
+
+    return (
+      <div key={panelId} className={`workspace-panel-shell ${draggedPanelId === panelId ? 'is-dragging' : ''}`.trim()} style={{ height: panel.height ? `${panel.height}px` : undefined }}>
+        {content}
+      </div>
+    );
+  }
+
+  function renderZone(zone: PanelZone, className: string) {
+    const panels = panelsByZone[zone];
+    return (
+      <div className={className} onDragOver={(event) => panels.length === 0 && event.preventDefault()} onDrop={(event) => {
+        event.preventDefault();
+        if (panels.length === 0) {
+          handleDrop(zone, 0);
+        }
+      }}>
+        {renderDropSlot(zone, 0)}
+        {panels.map((panel, index) => (
+          <Fragment key={panel.id}>
+            {renderPanel(panel)}
+            {renderDropSlot(zone, index + 1)}
+          </Fragment>
+        ))}
+      </div>
+    );
   }
 
   const tabLabels: Record<AppTab, string> = {
@@ -490,7 +703,7 @@ export default function App() {
         </div>
         <div className="header-tools">
           <div className="header-toolbar-row">
-            <label className="language-switch"><span>{t('app.language')}</span><select value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+            <label className="language-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
             <div className="view-menu-wrap">
               <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
               {isViewMenuOpen ? (
@@ -499,7 +712,7 @@ export default function App() {
                   {allPanelIds.map((panelId) => {
                     const panel = uiPreferences.panel_layout.find((item) => item.id === panelId);
                     return (
-                      <label key={panelId} className="view-toggle">
+                      <label key={panelId} className="view-toggle" aria-label={getPanelLabel(uiPreferences.language, panelId)}>
                         <input type="checkbox" checked={panel?.visible ?? false} onChange={(event) => setPanelVisible(panelId, event.target.checked)} />
                         <span>{getPanelLabel(uiPreferences.language, panelId)}</span>
                       </label>
@@ -535,11 +748,28 @@ export default function App() {
       />
       <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
 
-      <div className="modular-workspace">
-        <div className="top-zone top-zone-left">{panelsByZone.topLeft.map((panel) => renderPanel(panel.id))}</div>
-        <div className="top-zone top-zone-right">{panelsByZone.topRight.map((panel) => renderPanel(panel.id))}</div>
-        <div className="bottom-zone">{panelsByZone.bottom.map((panel) => renderPanel(panel.id))}</div>
-        <div className="sidebar-zone">{panelsByZone.sidebar.map((panel) => renderPanel(panel.id))}</div>
+      <div className="workspace-intro-card">
+        <strong>{t('fields.workspace')}</strong>
+        <span>{t('app.dragPanel')} • {t('app.resizePanel')} • {t('app.resizeWorkspace')}</span>
+      </div>
+
+      <div className="modular-workspace" ref={workspaceRef}>
+        <div className="workspace-top" style={{ gridTemplateColumns: `${uiPreferences.workspace_layout.top_ratio}fr 12px ${100 - uiPreferences.workspace_layout.top_ratio}fr` }}>
+          {renderZone('topLeft', 'zone-stack top-zone-left')}
+          <button type="button" className="workspace-splitter" aria-label={t('app.resizeWorkspace')} title={t('app.resizeWorkspace')} onPointerDown={(event) => {
+            event.preventDefault();
+            startWorkspaceResize('top_ratio', event.clientX);
+          }} />
+          {renderZone('topRight', 'zone-stack top-zone-right')}
+        </div>
+        <div className="workspace-bottom" style={{ gridTemplateColumns: `${uiPreferences.workspace_layout.main_ratio}fr 12px ${100 - uiPreferences.workspace_layout.main_ratio}fr` }}>
+          {renderZone('bottom', 'zone-stack bottom-zone')}
+          <button type="button" className="workspace-splitter" aria-label={t('app.resizeWorkspace')} title={t('app.resizeWorkspace')} onPointerDown={(event) => {
+            event.preventDefault();
+            startWorkspaceResize('main_ratio', event.clientX);
+          }} />
+          {renderZone('sidebar', 'zone-stack sidebar-zone')}
+        </div>
       </div>
 
       {isHelpOpen ? (

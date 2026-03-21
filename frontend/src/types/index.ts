@@ -37,6 +37,12 @@ export interface PanelLayoutItem {
   zone: PanelZone;
   order: number;
   visible: boolean;
+  height?: number;
+}
+
+export interface WorkspaceLayout {
+  top_ratio: number;
+  main_ratio: number;
 }
 
 export interface UiPreferences {
@@ -47,6 +53,7 @@ export interface UiPreferences {
   active_view_tab: AppTab;
   reset_layout_version: number;
   panel_layout: PanelLayoutItem[];
+  workspace_layout: WorkspaceLayout;
 }
 
 export interface ProjectSettings {

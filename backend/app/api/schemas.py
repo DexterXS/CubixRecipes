@@ -54,6 +54,12 @@ class PanelLayoutItemRequest(BaseModel):
     zone: Literal['topLeft', 'topRight', 'bottom', 'sidebar'] = 'bottom'
     order: int = 0
     visible: bool = True
+    height: Optional[int] = None
+
+
+class WorkspaceLayoutRequest(BaseModel):
+    top_ratio: int = 55
+    main_ratio: int = 68
 
 
 class UiPreferencesRequest(BaseModel):
@@ -64,6 +70,7 @@ class UiPreferencesRequest(BaseModel):
     active_view_tab: Literal['editor', 'preview', 'diagnostics', 'raw'] = 'editor'
     reset_layout_version: int = 2
     panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
+    workspace_layout: WorkspaceLayoutRequest = Field(default_factory=WorkspaceLayoutRequest)
 
 
 class ProjectSettingsRequest(BaseModel):

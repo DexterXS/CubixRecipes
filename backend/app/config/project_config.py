@@ -7,16 +7,17 @@ from typing import Any, Optional
 
 
 DEFAULT_PANEL_LAYOUT = [
-    {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True},
-    {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True},
-    {'id': 'grid', 'zone': 'bottom', 'order': 0, 'visible': True},
-    {'id': 'settings', 'zone': 'bottom', 'order': 1, 'visible': True},
-    {'id': 'info', 'zone': 'sidebar', 'order': 0, 'visible': True},
-    {'id': 'debug', 'zone': 'sidebar', 'order': 1, 'visible': True},
-    {'id': 'diagnostics', 'zone': 'sidebar', 'order': 2, 'visible': True},
-    {'id': 'preview', 'zone': 'sidebar', 'order': 3, 'visible': False},
-    {'id': 'raw', 'zone': 'sidebar', 'order': 4, 'visible': False},
+    {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 420},
+    {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True, 'height': 420},
+    {'id': 'grid', 'zone': 'bottom', 'order': 0, 'visible': True, 'height': 420},
+    {'id': 'settings', 'zone': 'bottom', 'order': 1, 'visible': True, 'height': 320},
+    {'id': 'info', 'zone': 'sidebar', 'order': 0, 'visible': True, 'height': 280},
+    {'id': 'debug', 'zone': 'sidebar', 'order': 1, 'visible': True, 'height': 280},
+    {'id': 'diagnostics', 'zone': 'sidebar', 'order': 2, 'visible': True, 'height': 260},
+    {'id': 'preview', 'zone': 'sidebar', 'order': 3, 'visible': False, 'height': 220},
+    {'id': 'raw', 'zone': 'sidebar', 'order': 4, 'visible': False, 'height': 260},
 ]
+DEFAULT_WORKSPACE_LAYOUT = {'top_ratio': 55, 'main_ratio': 68}
 
 
 @dataclass
@@ -25,6 +26,13 @@ class PanelLayoutItemConfig:
     zone: str = 'bottom'
     order: int = 0
     visible: bool = True
+    height: Optional[int] = None
+
+
+@dataclass
+class WorkspaceLayoutConfig:
+    top_ratio: int = 55
+    main_ratio: int = 68
 
 
 @dataclass
@@ -34,8 +42,9 @@ class UiPreferencesConfig:
     editor_mode: str = 'edit'
     language: str = 'ru'
     active_view_tab: str = 'editor'
-    reset_layout_version: int = 2
+    reset_layout_version: int = 3
     panel_layout: list[PanelLayoutItemConfig] = field(default_factory=list)
+    workspace_layout: WorkspaceLayoutConfig = field(default_factory=WorkspaceLayoutConfig)
 
 
 @dataclass
@@ -88,6 +97,11 @@ class ProjectConfigService:
         )
         return self.save(merged)
 
+    def update_ui_preferences(self, raw_ui_preferences: Any) -> ProjectPathsConfig:
+        current = self.load()
+        current.ui_preferences = self._coerce_ui_preferences(raw_ui_preferences)
+        return self.save(current)
+
     def as_api_dict(self, config: Optional[ProjectPathsConfig] = None) -> dict[str, Any]:
         current = self.normalize(config or self.load())
         return {**asdict(current), 'validation': self.validate(current)}
@@ -118,6 +132,7 @@ class ProjectConfigService:
         return [value for value in candidates if value]
 
     def normalize(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
+        ui_preferences = self._coerce_ui_preferences(asdict(config.ui_preferences) if isinstance(config.ui_preferences, UiPreferencesConfig) else config.ui_preferences)
         return ProjectPathsConfig(
             scripts_dir=config.scripts_dir or 'scripts',
             mods_dir=config.mods_dir or '',
@@ -127,7 +142,7 @@ class ProjectConfigService:
             extra_recipe_sources=self._coerce_list(config.extra_recipe_sources),
             verbose_debug_logging=bool(config.verbose_debug_logging),
             project_config_path=str(self.config_path),
-            ui_preferences=self._coerce_ui_preferences(asdict(config.ui_preferences) if isinstance(config.ui_preferences, UiPreferencesConfig) else config.ui_preferences),
+            ui_preferences=ui_preferences,
         )
 
     def _from_payload(self, payload: dict[str, Any]) -> ProjectPathsConfig:
@@ -156,22 +171,27 @@ class ProjectConfigService:
 
     def _coerce_ui_preferences(self, raw: Any) -> UiPreferencesConfig:
         payload = raw if isinstance(raw, dict) else {}
-        raw_layout = payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)
-        layout = self._coerce_panel_layout(raw_layout)
         return UiPreferencesConfig(
             display_mode=str(payload.get('display_mode', 'text') or 'text'),
             density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
             language=str(payload.get('language', 'ru') or 'ru'),
             active_view_tab=str(payload.get('active_view_tab', 'editor') or 'editor'),
-            reset_layout_version=int(payload.get('reset_layout_version', 2) or 2),
-            panel_layout=layout,
+            reset_layout_version=int(payload.get('reset_layout_version', 3) or 3),
+            panel_layout=self._coerce_panel_layout(payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)),
+            workspace_layout=self._coerce_workspace_layout(payload.get('workspace_layout', DEFAULT_WORKSPACE_LAYOUT)),
         )
+
+    def _coerce_workspace_layout(self, raw: Any) -> WorkspaceLayoutConfig:
+        payload = raw if isinstance(raw, dict) else {}
+        top_ratio = self._clamp_ratio(payload.get('top_ratio', DEFAULT_WORKSPACE_LAYOUT['top_ratio']))
+        main_ratio = self._clamp_ratio(payload.get('main_ratio', DEFAULT_WORKSPACE_LAYOUT['main_ratio']))
+        return WorkspaceLayoutConfig(top_ratio=top_ratio, main_ratio=main_ratio)
 
     def _coerce_panel_layout(self, raw: Any) -> list[PanelLayoutItemConfig]:
         if not isinstance(raw, list):
             raw = DEFAULT_PANEL_LAYOUT
-        result = []
+        result: list[PanelLayoutItemConfig] = []
         seen = set()
         for index, item in enumerate(raw):
             if not isinstance(item, dict):
@@ -180,18 +200,28 @@ class ProjectConfigService:
             if not panel_id or panel_id in seen:
                 continue
             seen.add(panel_id)
+            height_raw = item.get('height')
+            height = int(height_raw) if isinstance(height_raw, (int, float)) else None
             result.append(
                 PanelLayoutItemConfig(
                     id=panel_id,
                     zone=str(item.get('zone', 'bottom') or 'bottom'),
                     order=int(item.get('order', index) or index),
                     visible=bool(item.get('visible', True)),
+                    height=max(180, min(height, 960)) if height is not None else None,
                 )
             )
         for item in DEFAULT_PANEL_LAYOUT:
             if item['id'] not in seen:
                 result.append(PanelLayoutItemConfig(**item))
         return result
+
+    def _clamp_ratio(self, value: Any) -> int:
+        try:
+            ratio = int(value)
+        except (TypeError, ValueError):
+            ratio = 50
+        return max(25, min(ratio, 75))
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:

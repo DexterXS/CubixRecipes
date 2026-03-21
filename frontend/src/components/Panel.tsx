@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 interface PanelProps {
   title: string;
@@ -11,6 +11,9 @@ interface PanelProps {
   onToggle?: () => void;
   children?: ReactNode;
   className?: string;
+  style?: CSSProperties;
+  dragHandle?: ReactNode;
+  footer?: ReactNode;
 }
 
 export function Panel({
@@ -23,13 +26,17 @@ export function Panel({
   expandLabel = 'Развернуть',
   onToggle,
   children,
-  className = ''
+  className = '',
+  style,
+  dragHandle,
+  footer
 }: PanelProps) {
   return (
-    <section className={`panel ${className}`.trim()}>
+    <section className={`panel ${className}`.trim()} style={style}>
       <header className="panel-header">
-        <div>
+        <div className="panel-header-main">
           <div className="panel-title-row">
+            {dragHandle ? <div className="panel-drag-slot">{dragHandle}</div> : null}
             <h2>{title}</h2>
             {collapsible ? (
               <button type="button" className="ghost-button panel-toggle" onClick={onToggle} aria-expanded={!collapsed}>
@@ -42,6 +49,7 @@ export function Panel({
         {actions ? <div className="panel-actions">{actions}</div> : null}
       </header>
       {!collapsed ? <div className="panel-body">{children}</div> : null}
+      {!collapsed && footer ? <div className="panel-footer">{footer}</div> : null}
     </section>
   );
 }

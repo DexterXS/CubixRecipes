@@ -1,3 +1,4 @@
+import json
 from zipfile import ZipFile
 from pathlib import Path
 
@@ -149,6 +150,7 @@ def test_debug_log_ingest_and_export(tmp_path: Path):
 
     assert payload['events'][-1]['message'] == 'Test event'
     assert payload['events'][-1]['repeat_count'] == 2
+    assert payload['diagnostics']['bottleneck'] in {'snapshot', 'filter', 'serialize'}
     assert 'Test event' in incremental['exportText']
     assert incremental['events'][-1]['details']['raw_input'].endswith('…')
 
@@ -194,3 +196,28 @@ def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources
     assert any(source['nested_archives'] for source in assets_payload['sources'])
     assert resolved['icon_asset_id'] is not None
     assert any(entry['item_raw'] == '<examplemod:seed>' and entry['checked_sources'] for entry in resolver_payload['entries'])
+
+
+def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project/ui')
+
+    response = put_route(type('UiRequest', (), {'model_dump': lambda self=None: {
+        'display_mode': 'icons',
+        'density_mode': 'compact',
+        'editor_mode': 'edit',
+        'language': 'ru',
+        'active_view_tab': 'editor',
+        'reset_layout_version': 3,
+        'workspace_layout': {'top_ratio': 60, 'main_ratio': 64},
+        'panel_layout': [
+            {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 500},
+            {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True, 'height': 420},
+        ],
+    }})())
+
+    assert response['ui_preferences']['workspace_layout']['top_ratio'] == 60
+    assert response['ui_preferences']['panel_layout'][0]['height'] == 500
+    stored = json.loads(config_path.read_text(encoding='utf-8'))
+    assert stored['ui_preferences']['workspace_layout']['main_ratio'] == 64
