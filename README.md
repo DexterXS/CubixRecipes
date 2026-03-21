@@ -40,6 +40,7 @@ npm run dev
 ## Запуск
 - Backend по умолчанию: `http://127.0.0.1:8000`
 - Frontend Vite: `http://127.0.0.1:5173`
+- Для Windows можно запустить `start-dev.bat` из корня проекта: он откроет две отдельные консоли для backend и frontend. Скрипт ожидает, что зависимости уже установлены, а backend virtualenv находится в `backend/.venv`.
 
 ## Разработка
 1. Прочитайте `AGENTS.md`.
