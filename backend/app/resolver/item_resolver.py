@@ -17,7 +17,7 @@ class ItemResolver:
         settings = settings or {}
         key = item_ref.base_key
         checked_keys = [key]
-        checked_sources: list[str] = []
+        checked_sources: list[str] = list(dict.fromkeys(self.asset_index.last_scan_report.get('indexed_paths', [])))
         strategies = [
             self._contenttweaker_exact,
             self._textures_exact,
@@ -33,22 +33,22 @@ class ItemResolver:
             if result is not None:
                 self.last_resolution_details[item_ref.raw] = {
                     'source': result.icon_asset_id.split(':', 1)[0] if result.icon_asset_id else 'lang/manual',
-                    'checked_sources': checked_sources,
+                    'checked_sources': list(dict.fromkeys(checked_sources)),
                     'checked_keys': checked_keys,
                     'reason': f'matched via {result.strategy}',
                 }
                 if self.log_service is not None:
-                    self.log_service.log('BACKEND', 'INFO', 'RESOLVER', 'Item resolved', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'strategy': result.strategy, 'confidence': result.confidence, 'icon_asset_id': result.icon_asset_id, 'checked_keys': checked_keys, 'checked_sources': checked_sources, 'display_name': result.display_name}, verbose_only=True)
+                    self.log_service.log('BACKEND', 'INFO', 'RESOLVER', 'Item resolved', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'strategy': result.strategy, 'confidence': result.confidence, 'icon_asset_id': result.icon_asset_id, 'checked_keys': checked_keys, 'checked_sources': list(dict.fromkeys(checked_sources)), 'display_name': result.display_name}, verbose_only=True)
                 return result
         result = ResolutionResult(item_raw=item_ref.raw, display_name=item_ref.raw, icon_asset_id=None, icon_url=None, animated=False, confidence=0.1, strategy='placeholder', trace=trace)
         self.last_resolution_details[item_ref.raw] = {
             'source': None,
-            'checked_sources': checked_sources,
+            'checked_sources': list(dict.fromkeys(checked_sources)),
             'checked_keys': checked_keys,
             'reason': 'No icon, model or lang entry matched the item id',
         }
         if self.log_service is not None:
-            self.log_service.log('BACKEND', 'WARN', 'RESOLVER', 'No icon found for item; placeholder may be used', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'checked_keys': checked_keys, 'checked_sources': checked_sources, 'reason': 'No icon, model or lang entry matched the item id'})
+            self.log_service.log('BACKEND', 'WARN', 'RESOLVER', 'No icon found for item; placeholder may be used', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'checked_keys': checked_keys, 'checked_sources': list(dict.fromkeys(checked_sources)), 'reason': 'No icon, model or lang entry matched the item id'})
         return result
 
     def _contenttweaker_exact(self, item_ref, key, settings, trace, checked_keys, checked_sources):

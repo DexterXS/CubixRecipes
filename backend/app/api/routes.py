@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
@@ -100,6 +101,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     parser = RecipeParser()
     config_service = ProjectConfigService(Path(config_path) if config_path else None)
     config = config_service.load()
+    raw_config_payload = {}
+    config_path_obj = Path(config.project_config_path)
+    if config_path_obj.exists():
+        try:
+            raw_config_payload = json.loads(config_path_obj.read_text(encoding='utf-8'))
+        except Exception:
+            raw_config_payload = {'_raw': config_path_obj.read_text(encoding='utf-8', errors='replace')[:2000]}
     log_service = DebugLogService(verbose=config.verbose_debug_logging)
     debug_service = DebugService(config_service)
     active_scripts_dir = scripts_dir if scripts_dir != 'scripts' else config.scripts_dir
@@ -117,8 +125,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
         'config_file': config.project_config_path,
+        'raw_config_payload': raw_config_payload,
+        'normalized_config': config_service.as_api_dict(config),
+        'final_index_paths': index_paths,
+        'final_recipe_scan_paths': config_service.build_recipe_scan_paths(config),
         'scripts_dir': active_scripts_dir,
-        'index_paths': index_paths,
         'verbose_debug_logging': config.verbose_debug_logging,
     })
 

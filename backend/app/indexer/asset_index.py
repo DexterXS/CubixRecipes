@@ -6,7 +6,6 @@ from typing import Any
 from zipfile import ZipFile
 
 
-
 class AssetIndex:
     def __init__(self, log_service: Any = None) -> None:
         self.log_service = log_service
@@ -47,7 +46,7 @@ class AssetIndex:
         self.lang.setdefault(locale, {}).update(mapping)
 
     def scan_paths(self, paths: list[str]) -> str:
-        scan_id = f"scan-{len(self.scan_status)+1}"
+        scan_id = f'scan-{len(self.scan_status)+1}'
         self.scan_status[scan_id] = {'progress': 0, 'errors': [], 'startedAt': 'local'}
         report = {
             'indexed_paths': list(paths),
@@ -75,6 +74,7 @@ class AssetIndex:
                 'skipped_files': [],
                 'errors': [],
                 'registered_keys': [],
+                'nested_archives': [],
             }
             try:
                 if path.is_dir():
@@ -103,14 +103,29 @@ class AssetIndex:
         report['missing_icons'] = self._build_missing_icons()
         self.last_scan_report = report
         if self.log_service is not None:
-            self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Asset scan finished', {'counters': report['counters'], 'sources': len(report['sources']), 'missing_icons': len(report['missing_icons'])})
+            self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Asset scan finished', {
+                'counters': report['counters'],
+                'sources': len(report['sources']),
+                'missing_icons': len(report['missing_icons']),
+                'registered_keys': len(report['registered_keys']),
+            })
         return scan_id
 
     def _scan_dir(self, root: Path, source_report: dict[str, Any], report: dict[str, Any]) -> None:
         for file_path in root.rglob('*'):
-            if file_path.is_file():
-                rel_path = file_path.relative_to(root).as_posix()
-                self._consume_file(file_path, rel_path, source=str(root), source_report=source_report, report=report)
+            if not file_path.is_file():
+                continue
+            if file_path.suffix in {'.jar', '.zip'}:
+                source_report['nested_archives'].append(str(file_path))
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Scanning nested archive from directory source', {
+                        'archive_path': str(file_path),
+                        'root_source': source_report['source_path'],
+                    })
+                self._scan_zip(file_path, source_report, report)
+                continue
+            rel_path = file_path.relative_to(root).as_posix()
+            self._consume_file(file_path, rel_path, source=str(root), source_report=source_report, report=report)
 
     def _scan_zip(self, archive_path: Path, source_report: dict[str, Any], report: dict[str, Any]) -> None:
         with ZipFile(archive_path) as archive:
@@ -127,8 +142,6 @@ class AssetIndex:
             source_report['errors'].append(issue)
             report['scan_errors'].append(issue)
             if self.log_service is not None:
-                self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to parse asset file', issue)
-            if self.log_service is not None:
                 self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to read asset file', issue)
             return
         self._consume_virtual(rel_path, data, source=source, source_report=source_report, report=report)
@@ -142,6 +155,8 @@ class AssetIndex:
                 mapping = self._parse_lang(rel_path, data)
                 self.register_lang(locale, mapping)
                 report['counters']['lang_entries'] += len(mapping)
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Registered language entries', {'source_path': source, 'relative_path': rel_path, 'entries': len(mapping)}, verbose_only=True)
                 recognized = True
             if '/models/item/' in rel_path and rel_path.endswith('.json'):
                 namespace, item_name = self._extract_namespace_name(rel_path, 'models/item', '.json')
@@ -149,6 +164,8 @@ class AssetIndex:
                 report['counters']['models_item'] += 1
                 report['registered_keys'].append(f'{namespace}:{item_name}')
                 source_report['registered_keys'].append(f'{namespace}:{item_name}')
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Registered item model', {'item_key': f'{namespace}:{item_name}', 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
                 recognized = True
             if rel_path.endswith('.png') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
                 namespace, item_name = self._extract_texture_key(rel_path)

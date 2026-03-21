@@ -1,3 +1,4 @@
+from zipfile import ZipFile
 from pathlib import Path
 
 from app.api.routes import create_app
@@ -145,3 +146,46 @@ def test_debug_log_ingest_and_export(tmp_path: Path):
 
     assert payload['events'][-1]['message'] == 'Test event'
     assert 'Test event' in payload['exportText']
+
+
+def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources(tmp_path: Path):
+    mods_dir = tmp_path / 'mods'
+    mods_dir.mkdir()
+    archive_path = mods_dir / 'examplemod.jar'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.writestr('assets/examplemod/textures/items/seed.png', b'png')
+
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    resolve_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/resolve')
+    debug_assets_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/assets')
+    debug_resolver_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/resolver')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': 'scripts',
+                    'mods_dir': str(mods_dir),
+                    'assets_dir': '',
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                    'verbose_debug_logging': True,
+                }
+            },
+        )()
+    )
+
+    resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<examplemod:seed>', 'settings': {}})())
+    assets_payload = debug_assets_route()
+    resolver_payload = debug_resolver_route()
+
+    assert assets_payload['counters']['textures_items'] == 1
+    assert any(source['nested_archives'] for source in assets_payload['sources'])
+    assert resolved['icon_asset_id'] is not None
+    assert any(entry['item_raw'] == '<examplemod:seed>' and entry['checked_sources'] for entry in resolver_payload['entries'])
