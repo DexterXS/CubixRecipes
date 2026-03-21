@@ -1,0 +1,101 @@
+from __future__ import annotations
+
+from app.domain.models import ItemRef, ResolutionResult
+from app.indexer.asset_index import AssetIndex
+
+
+class ItemResolver:
+    def __init__(self, asset_index: AssetIndex):
+        self.asset_index = asset_index
+
+    def resolve(self, item_ref: ItemRef, settings: dict | None = None) -> ResolutionResult:
+        trace: list[dict] = []
+        settings = settings or {}
+        key = item_ref.base_key
+        strategies = [
+            self._contenttweaker_exact,
+            self._textures_exact,
+            self._textures_meta_suffix,
+            self._grouped_files,
+            self._model_texture,
+            self._block_texture,
+            self._lang_lookup,
+            self._manual_override,
+        ]
+        for strategy in strategies:
+            result = strategy(item_ref, key, settings, trace)
+            if result is not None:
+                return result
+        return ResolutionResult(item_raw=item_ref.raw, display_name=item_ref.raw, icon_asset_id=None, icon_url=None, animated=False, confidence=0.1, strategy="placeholder", trace=trace)
+
+    def _contenttweaker_exact(self, item_ref, key, settings, trace):
+        candidates = [c for c in self.asset_index.icons.get(key, []) if "contenttweaker" in c["source_type"].lower()]
+        trace.append({"strategy": "contenttweaker_exact", "checked": len(candidates)})
+        return self._make_result(item_ref, candidates[:1], 0.95, "contenttweaker_exact")
+
+    def _textures_exact(self, item_ref, key, settings, trace):
+        candidates = self.asset_index.icons.get(key, [])
+        trace.append({"strategy": "textures_exact", "checked": len(candidates)})
+        return self._make_result(item_ref, candidates[:1], 0.9, "textures_exact")
+
+    def _textures_meta_suffix(self, item_ref, key, settings, trace):
+        if item_ref.meta_value is None:
+            trace.append({"strategy": "textures_meta_suffix", "checked": 0})
+            return None
+        suffixes = [f"{item_ref.base_key}_{item_ref.meta_value}", f"{item_ref.base_key}{item_ref.meta_value}"]
+        for suffix in suffixes:
+            candidates = self.asset_index.icons.get(suffix, [])
+            if candidates:
+                trace.append({"strategy": "textures_meta_suffix", "matched": suffix})
+                return self._make_result(item_ref, candidates[:1], 0.85, "textures_meta_suffix")
+        trace.append({"strategy": "textures_meta_suffix", "matched": None})
+        return None
+
+    def _grouped_files(self, item_ref, key, settings, trace):
+        variants = []
+        for icon_key, values in self.asset_index.icons.items():
+            if icon_key.startswith(f"{item_ref.base_key}") and icon_key != key:
+                variants.extend(values)
+        trace.append({"strategy": "grouped_files", "variants": len(variants)})
+        return self._make_result(item_ref, variants[:1], 0.75, "grouped_files")
+
+    def _model_texture(self, item_ref, key, settings, trace):
+        model = self.asset_index.models.get(key)
+        trace.append({"strategy": "model_texture", "model": bool(model)})
+        if not model:
+            return None
+        layer0 = (model.get("textures") or {}).get("layer0")
+        if not layer0:
+            return None
+        namespace, texture_name = layer0.split(":", 1)
+        candidates = self.asset_index.icons.get(f"{namespace}:{texture_name}", [])
+        return self._make_result(item_ref, candidates[:1], 0.8, "model_texture")
+
+    def _block_texture(self, item_ref, key, settings, trace):
+        block_key = f"{item_ref.modid}:{item_ref.name}"
+        candidates = [c for c in self.asset_index.icons.get(block_key, []) if "/blocks/" in c["path"]]
+        trace.append({"strategy": "block_texture", "checked": len(candidates)})
+        return self._make_result(item_ref, candidates[:1], 0.65, "block_texture")
+
+    def _lang_lookup(self, item_ref, key, settings, trace):
+        locale = settings.get("locale", "ru_ru")
+        mapping = self.asset_index.lang.get(locale, {}) or self.asset_index.lang.get("en_us", {})
+        candidate = mapping.get(f"item.{item_ref.modid}.{item_ref.name}") or mapping.get(f"tile.{item_ref.modid}.{item_ref.name}.name")
+        trace.append({"strategy": "lang_lookup", "locale": locale, "found": bool(candidate)})
+        if candidate:
+            return ResolutionResult(item_raw=item_ref.raw, display_name=candidate, icon_asset_id=None, icon_url=None, animated=False, confidence=0.9, strategy="lang_lookup", trace=trace)
+        return None
+
+    def _manual_override(self, item_ref, key, settings, trace):
+        overrides = settings.get("manual_overrides", {})
+        trace.append({"strategy": "manual_override", "found": item_ref.raw in overrides})
+        if item_ref.raw not in overrides:
+            return None
+        override = overrides[item_ref.raw]
+        return ResolutionResult(item_raw=item_ref.raw, display_name=override.get("display_name"), icon_asset_id=override.get("icon_asset_id"), icon_url=override.get("icon_url"), animated=False, confidence=0.99, strategy="manual_override", trace=trace)
+
+    def _make_result(self, item_ref, candidates, confidence, strategy):
+        if not candidates:
+            return None
+        candidate = candidates[0]
+        return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get("display_name") or item_ref.raw, icon_asset_id=candidate["asset_id"], icon_url=f"/api/icons/{candidate['asset_id']}", animated=candidate.get("animated", False), confidence=confidence, strategy=strategy, trace=[])

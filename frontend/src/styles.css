@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; margin: 0; background: #111827; color: #f9fafb; }
+main { max-width: 960px; margin: 0 auto; padding: 24px; }
+textarea { width: 100%; min-height: 120px; margin-bottom: 12px; }
+.grid-row { display: flex; gap: 8px; margin-bottom: 8px; }
+input, textarea, select, button { border-radius: 6px; border: 1px solid #374151; padding: 8px; }
+input { width: 140px; }
+button { margin-right: 8px; background: #2563eb; color: white; }
+.toolbar { margin-top: 16px; }
