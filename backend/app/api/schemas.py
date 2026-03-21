@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -49,6 +49,31 @@ class UpdateRecipeRequest(BaseModel):
     name: Optional[str] = None
 
 
+class PanelLayoutItemRequest(BaseModel):
+    id: str
+    zone: Literal['topLeft', 'topRight', 'bottom', 'sidebar'] = 'bottom'
+    order: int = 0
+    visible: bool = True
+    height: Optional[int] = None
+    width_units: int = 1
+
+
+class WorkspaceLayoutRequest(BaseModel):
+    columns: Literal[1, 2, 3] = 3
+    compact_header: bool = True
+
+
+class UiPreferencesRequest(BaseModel):
+    display_mode: Literal['text', 'icons'] = 'text'
+    density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
+    editor_mode: Literal['view', 'edit'] = 'edit'
+    language: Literal['ru', 'en'] = 'ru'
+    active_view_tab: Literal['editor', 'preview', 'diagnostics', 'raw'] = 'editor'
+    reset_layout_version: int = 4
+    panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
+    workspace_layout: WorkspaceLayoutRequest = Field(default_factory=WorkspaceLayoutRequest)
+
+
 class ProjectSettingsRequest(BaseModel):
     scripts_dir: str = 'scripts'
     mods_dir: str = ''
@@ -57,6 +82,7 @@ class ProjectSettingsRequest(BaseModel):
     extra_icon_sources: list[str] = Field(default_factory=list)
     extra_recipe_sources: list[str] = Field(default_factory=list)
     verbose_debug_logging: bool = False
+    ui_preferences: UiPreferencesRequest = Field(default_factory=UiPreferencesRequest)
 
 
 class DebugLogEventRequest(BaseModel):

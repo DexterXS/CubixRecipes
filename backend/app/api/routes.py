@@ -8,7 +8,7 @@ from typing import Any, Optional
 from fastapi import APIRouter, FastAPI, HTTPException, Response
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, SaveAsRequest, SearchRequest, UpdateRecipeRequest
+from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
 from app.config.project_config import ProjectConfigService
 from app.debug.debug_service import DebugService
 from app.debug.log_service import DebugLogService
@@ -151,6 +151,12 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             return {'kind': parsed.kind, 'item': parsed.item.__dict__}
         recipe = _resolve_recipe_items(parsed.recipe, resolver, debug_service)
         debug_service.record_parse(debug_service.build_parse_diagnostic_for_recipe(request.text, recipe))
+        log_service.log('RESOLVER', 'INFO', 'ICON', 'Icon lookup completed for parsed recipe', {
+            'recipe_uid': recipe.recipe_uid,
+            'output_raw': recipe.output.raw,
+            'output_icon_url': recipe.output_resolution.get('icon_url') if recipe.output_resolution else None,
+            'resolved_cells': sum(1 for row in recipe.matrix for cell in row if cell.resolution and cell.resolution.get('icon_url')),
+        })
         log_service.log('BACKEND', 'INFO', 'PARSE', 'Recipe parsed', {
             'recipe_type': recipe.recipe_type,
             'output': recipe.output.raw,
@@ -264,6 +270,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         item = parser.parse_item_ref(request.item_raw)
         result = resolver.resolve(item, request.settings)
         debug_service.record_resolver(item.raw, item.base_key, result, resolver.last_resolution_details.get(item.raw))
+        log_service.log('RESOLVER', 'INFO', 'ICON', 'Icon lookup requested', {'raw_item_id': item.raw, 'icon_asset_id': result.icon_asset_id, 'strategy': result.strategy})
         if result.icon_asset_id is None:
             log_service.log('BACKEND', 'WARN', 'ICON', 'Resolver returned no icon', {'raw_item_id': item.raw, 'checked': resolver.last_resolution_details.get(item.raw)})
         _log_api(log_service, 'POST', '/api/items/resolve', {'item_raw': request.item_raw}, '200', started_at, {'strategy': result.strategy, 'icon_asset_id': result.icon_asset_id})
@@ -292,6 +299,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         log_service.log('BACKEND', 'INFO', 'CONFIG', 'Project settings updated', {'scripts_dir': updated.scripts_dir, 'mods_dir': updated.mods_dir, 'assets_dir': updated.assets_dir, 'verbose_debug_logging': updated.verbose_debug_logging})
         response = config_service.as_api_dict(updated)
         _log_api(log_service, 'PUT', '/api/settings/project', request.model_dump(), '200', started_at, {'verbose_debug_logging': updated.verbose_debug_logging})
+        return response
+
+    @router.put('/settings/project/ui')
+    def update_project_ui_preferences(request: UiPreferencesRequest):
+        started_at = perf_counter()
+        updated = config_service.update_ui_preferences(request.model_dump())
+        debug_service.update_config(updated, used_recipe_paths=config_service.build_recipe_scan_paths(updated), used_asset_paths=config_service.build_index_paths(updated))
+        response = config_service.as_api_dict(updated)
+        _log_api(log_service, 'PUT', '/api/settings/project/ui', {'ui_preferences': request.model_dump()}, '200', started_at, {'language': updated.ui_preferences.language, 'layout_items': len(updated.ui_preferences.panel_layout)})
         return response
 
     @router.post('/debug/recipes/rescan')
@@ -349,8 +365,19 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         return {'ok': True, 'event': event}
 
     @router.get('/debug/log')
-    def debug_log(source: str = 'All', level: str = 'All'):
-        return {'events': log_service.list_events(source=source, level=level), 'exportText': log_service.export_text(source=source, level=level), 'verbose': log_service.verbose}
+    def debug_log(source: str = 'All', level: str = 'All', since_id: int = 0, limit: int = 100, include_details: bool = False, include_text: bool = False):
+        query = log_service.query_events(source=source, level=level, since_id=since_id, limit=limit, include_details=include_details)
+        events = query['events']
+        response = {
+            'events': events,
+            'verbose': log_service.verbose,
+            'nextSinceId': query['next_since_id'],
+            'hasMore': query['has_more'],
+            'diagnostics': query['diagnostics'],
+        }
+        if include_text:
+            response['exportText'] = log_service.export_text(events)
+        return response
 
     @router.post('/debug/log/clear')
     def debug_log_clear():
@@ -359,12 +386,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/debug/log/export')
     def debug_log_export(source: str = 'All', level: str = 'All'):
-        return PlainTextResponse(log_service.export_text(source=source, level=level))
+        events = log_service.list_events(source=source, level=level, limit=0, include_details=True)
+        return PlainTextResponse(log_service.export_text(events))
 
     @router.get('/debug/summary')
     def debug_summary():
         snapshot = debug_service.snapshot()
-        snapshot['unified_log'] = {'size': len(log_service.list_events()), 'verbose': log_service.verbose}
+        snapshot['unified_log'] = {'size': len(log_service.list_events(limit=0)), 'verbose': log_service.verbose}
         return snapshot
 
     @router.get('/icons/{icon_asset_id:path}')

@@ -7,6 +7,9 @@ export interface FrontendLogPayload {
   verbose_only?: boolean;
 }
 
+const recentEvents = new Map<string, number>();
+const DEDUP_WINDOW_MS = 1500;
+
 function safeStringify(value: unknown): string {
   try {
     return JSON.stringify(value);
@@ -15,7 +18,29 @@ function safeStringify(value: unknown): string {
   }
 }
 
+function shouldSkip(payload: FrontendLogPayload): boolean {
+  const key = `${payload.source ?? 'FRONTEND'}|${payload.level ?? 'INFO'}|${payload.category}|${payload.message}|${safeStringify(payload.details ?? {})}`;
+  const now = Date.now();
+  const previous = recentEvents.get(key);
+  recentEvents.set(key, now);
+  if (previous && now - previous < DEDUP_WINDOW_MS) {
+    return true;
+  }
+  if (recentEvents.size > 200) {
+    const threshold = now - DEDUP_WINDOW_MS;
+    for (const [entryKey, entryTime] of recentEvents.entries()) {
+      if (entryTime < threshold) {
+        recentEvents.delete(entryKey);
+      }
+    }
+  }
+  return false;
+}
+
 export function logFrontendEvent(payload: FrontendLogPayload): void {
+  if (shouldSkip(payload)) {
+    return;
+  }
   void fetch('/api/debug/log', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -33,18 +58,23 @@ export function logFrontendEvent(payload: FrontendLogPayload): void {
 }
 
 export function installConsoleCapture(): void {
-  (window as Window & { __cubixrecipesDebugCollector?: boolean }).__cubixrecipesDebugCollector = true;
+  const state = window as Window & { __cubixrecipesDebugCollector?: boolean };
+  if (state.__cubixrecipesDebugCollector) {
+    return;
+  }
+  state.__cubixrecipesDebugCollector = true;
   logFrontendEvent({ level: 'INFO', category: 'FRONTEND', message: 'Frontend debug collector initialized', details: { location: window.location.href } });
-  const methods: Array<'log' | 'warn' | 'error'> = ['log', 'warn', 'error'];
+
+  const methods: Array<'warn' | 'error'> = ['warn', 'error'];
   methods.forEach((method) => {
     const original = console[method].bind(console);
     console[method] = (...args: unknown[]) => {
       logFrontendEvent({
-        level: method === 'error' ? 'ERROR' : method === 'warn' ? 'WARN' : 'INFO',
+        level: method === 'error' ? 'ERROR' : 'WARN',
         category: 'FRONTEND',
         message: `console.${method}`,
-        details: { args: args.map((item) => safeStringify(item)) },
-        verbose_only: method === 'log'
+        details: { args: args.map((item) => safeStringify(item)).slice(0, 5) },
+        verbose_only: false
       });
       original(...args);
     };

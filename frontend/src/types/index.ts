@@ -1,4 +1,11 @@
 export type CellValue = string | null;
+export type DisplayMode = 'text' | 'icons';
+export type DensityMode = 'compact' | 'normal' | 'wide';
+export type EditorMode = 'view' | 'edit';
+export type AppTab = 'editor' | 'preview' | 'diagnostics' | 'raw';
+export type UiLanguage = 'ru' | 'en';
+export type PanelId = 'hero' | 'statusBar' | 'toolbar' | 'input' | 'output' | 'grid' | 'info' | 'debug' | 'settings' | 'diagnostics' | 'preview' | 'raw';
+export type PanelZone = 'topLeft' | 'topRight' | 'bottom' | 'sidebar';
 
 export interface ResolutionView {
   item_raw?: string;
@@ -23,4 +30,42 @@ export interface RecipeView {
     kind: string;
     path?: string | null;
   };
+}
+
+export interface PanelLayoutItem {
+  id: PanelId;
+  zone: PanelZone;
+  order: number;
+  visible: boolean;
+  height?: number;
+  width_units?: number;
+}
+
+export interface WorkspaceLayout {
+  columns: 1 | 2 | 3;
+  compact_header: boolean;
+}
+
+export interface UiPreferences {
+  display_mode: DisplayMode;
+  density_mode: DensityMode;
+  editor_mode: EditorMode;
+  language: UiLanguage;
+  active_view_tab: AppTab;
+  reset_layout_version: number;
+  panel_layout: PanelLayoutItem[];
+  workspace_layout: WorkspaceLayout;
+}
+
+export interface ProjectSettings {
+  scripts_dir: string;
+  mods_dir: string;
+  assets_dir: string;
+  recipe_db_path: string;
+  extra_icon_sources: string[];
+  extra_recipe_sources: string[];
+  verbose_debug_logging: boolean;
+  project_config_path: string;
+  ui_preferences: UiPreferences;
+  validation?: Record<string, unknown>;
 }

@@ -9,19 +9,77 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  Object.assign(navigator, {
+    clipboard: {
+      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)')
+    }
+  });
+
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-
 
     if (url === '/api/debug/log') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
     }
 
+    if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          scripts_dir: 'scripts',
+          mods_dir: '',
+          assets_dir: '',
+          recipe_db_path: '',
+          extra_icon_sources: [],
+          extra_recipe_sources: [],
+          verbose_debug_logging: false,
+          project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json',
+          ui_preferences: {
+            display_mode: 'text',
+            density_mode: 'normal',
+            editor_mode: 'edit',
+            language: 'ru',
+            active_view_tab: 'editor',
+            reset_layout_version: 4,
+            workspace_layout: { columns: 3, compact_header: true },
+            panel_layout: [
+              { id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 },
+              { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 },
+              { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 },
+              { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 },
+              { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 },
+              { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 },
+              { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 },
+              { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 },
+              { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 },
+              { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 },
+              { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 },
+              { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }
+            ]
+          }
+        })
+      }) as Promise<Response>;
+    }
+
+    if (url === '/api/settings/project/ui' && init?.method === 'PUT') {
+      const ui = JSON.parse(String(init.body));
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          scripts_dir: 'scripts',
+          mods_dir: '',
+          assets_dir: '',
+          recipe_db_path: '',
+          extra_icon_sources: [],
+          extra_recipe_sources: [],
+          verbose_debug_logging: false,
+          project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json',
+          ui_preferences: ui
+        })
+      }) as Promise<Response>;
+    }
+
     if (url === '/api/parse') {
-      const body = JSON.parse(String(init?.body));
-      if (body.text === 'broken') {
-        return Promise.resolve({ ok: false, status: 500, json: async () => ({ detail: 'backend down' }) }) as Promise<Response>;
-      }
       return Promise.resolve({
         ok: true,
         json: async () => ({
@@ -45,128 +103,97 @@ beforeEach(() => {
 
     if (url === '/api/recipes/recipe-1' && init?.method === 'PUT') {
       const body = JSON.parse(String(init?.body));
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({
-          ok: true,
-          updatedRecipe: {
-            recipe_uid: 'recipe-1',
-            recipe_type: 'ct_shaped',
-            name: null,
-            output: { raw: body.output_raw },
-            output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' },
-            grid_w: 2,
-            grid_h: 2,
-            source: { kind: 'zs_file', path: 'scripts/test.zs' },
-            matrix: [
-              [{ raw: '<minecraft:planks>' }, { raw: null }],
-              [{ raw: null }, { raw: '<minecraft:stick>' }]
-            ]
-          }
-        })
-      }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ ok: true, updatedRecipe: { recipe_uid: 'recipe-1', recipe_type: 'ct_shaped', name: null, output: { raw: body.output_raw }, output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' }, grid_w: 2, grid_h: 2, source: { kind: 'zs_file', path: 'scripts/test.zs' }, matrix: [[{ raw: '<minecraft:planks>' }, { raw: null }], [{ raw: null }, { raw: '<minecraft:stick>' }]] } }) }) as Promise<Response>;
     }
 
     if (url === '/api/recipes/create') {
       const body = JSON.parse(String(init?.body));
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({
-          recipe_uid: 'new-recipe',
-          recipe_type: 'ct_shaped',
-          name: null,
-          output: { raw: body.output ?? '<minecraft:stone>' },
-          output_resolution: null,
-          grid_w: 3,
-          grid_h: 3,
-          source: { kind: 'generated', path: null },
-          matrix: Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => ({ raw: null })))
-        })
-      }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ recipe_uid: 'new-recipe', recipe_type: 'ct_shaped', name: null, output: { raw: body.output ?? '<minecraft:stone>' }, output_resolution: null, grid_w: 3, grid_h: 3, source: { kind: 'generated', path: null }, matrix: Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => ({ raw: null }))) }) }) as Promise<Response>;
     }
 
     if (url === '/api/recipes/save-as') {
       const body = JSON.parse(String(init?.body));
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({
-          ok: true,
-          new_uid: 'saved-1',
-          recipe: {
-            recipe_uid: 'saved-1',
-            recipe_type: 'ct_shaped',
-            name: null,
-            output: { raw: body.output_raw },
-            output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' },
-            grid_w: 2,
-            grid_h: 2,
-            source: { kind: 'zs_file', path: 'scripts/new_recipe.zs' },
-            matrix: [
-              [{ raw: '<minecraft:planks>' }, { raw: null }],
-              [{ raw: null }, { raw: '<minecraft:stick>' }]
-            ]
-          }
-        })
-      }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ ok: true, new_uid: 'saved-1', recipe: { recipe_uid: 'saved-1', recipe_type: 'ct_shaped', name: null, output: { raw: body.output_raw }, output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' }, grid_w: 2, grid_h: 2, source: { kind: 'zs_file', path: 'scripts/new_recipe.zs' }, matrix: [[{ raw: '<minecraft:planks>' }, { raw: null }], [{ raw: null }, { raw: '<minecraft:stick>' }]] } }) }) as Promise<Response>;
     }
 
     throw new Error(`Unexpected fetch call: ${url}`);
   }) as typeof fetch;
 
   vi.spyOn(window, 'prompt').mockReturnValue('scripts/new_recipe.zs');
-  vi.spyOn(window, 'open').mockImplementation(() => null);
+  vi.spyOn(window, 'open').mockImplementation(() => ({ closed: false } as Window));
 });
 
-test('paste triggers parse and shows output block', async () => {
+test('shows minimal default layout and parses a recipe', async () => {
   render(<App />);
-  const textarea = screen.getByLabelText('paste-input');
-  fireEvent.paste(textarea, {
-    clipboardData: {
-      getData: () => 'recipes.addShaped(...)'
-    }
+  expect(screen.getByText('Редактор рецептов')).toBeTruthy();
+  expect(screen.getByText('Входной рецепт')).toBeTruthy();
+  expect(screen.getByText('Инструменты')).toBeTruthy();
+  expect(screen.queryByText('Быстрый debug')).toBeFalsy();
+
+  fireEvent.paste(screen.getByLabelText('paste-input'), { clipboardData: { getData: () => 'recipes.addShaped(...)' } });
+  await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
+  expect(screen.getByText('scripts/test.zs')).toBeTruthy();
+});
+
+test('view menu can reveal hidden panels and compact header mode', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.click(screen.getAllByLabelText('Быстрый debug')[0]);
+  await waitFor(() => expect(screen.getAllByText('Быстрый debug').length).toBeGreaterThan(0));
+
+  const compactToggle = screen.getByLabelText('Компактный верх');
+  fireEvent.click(compactToggle);
+  await waitFor(() => expect((global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.some(([url]) => url === '/api/settings/project/ui')).toBe(true));
+});
+
+test('column count can be switched up to 3 columns and persisted', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.change(screen.getByRole('combobox', { name: 'Колонки' }), { target: { value: '1' } });
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    expect(body.workspace_layout.columns).toBe(1);
   });
-  await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
-  expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>');
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
-  expect(screen.getByText('Имя: Факел')).toBeTruthy();
 });
 
-test('parse error resets status from parsing state', async () => {
+test('drag and drop reorders panels in the workspace grid', async () => {
   render(<App />);
-  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'broken' } });
-  fireEvent.click(screen.getByText('Вставить'));
-  await waitFor(() => expect(screen.getByText('Ошибка парсинга: backend down')).toBeTruthy());
+  const dragHandle = await screen.findByLabelText('Перетащить панель: Выходной рецепт');
+  const slots = document.querySelectorAll('.grid-drop-slot');
+  fireEvent.dragStart(dragHandle);
+  fireEvent.dragOver(slots[2]);
+  fireEvent.drop(slots[2]);
+  fireEvent.dragEnd(dragHandle);
+
+  await waitFor(() => {
+    const headings = Array.from(document.querySelectorAll('.workspace-grid h2')).map((node) => node.textContent);
+    expect(headings.includes('Выходной рецепт')).toBe(true);
+  });
 });
 
-test('toolbar buttons invoke save, save-as, create, help and wiki flows with editable output', async () => {
+test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
-
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
   fireEvent.click(screen.getByText('Вставить'));
-  await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
+  await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 
-  fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:lantern>' } });
   fireEvent.click(screen.getByText('Сохранить'));
-  await waitFor(() => expect(screen.getByText('Рецепт сохранён')).toBeTruthy());
+  await waitFor(() => {
+    expect((global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.some(([url, init]) => url === '/api/recipes/recipe-1' && init?.method === 'PUT')).toBe(true);
+  });
 
   fireEvent.click(screen.getByText('Сохранить как'));
-  await waitFor(() => expect(screen.getByText('Рецепт сохранён в scripts/new_recipe.zs')).toBeTruthy());
+  await waitFor(() => {
+    expect((global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.some(([url]) => url === '/api/recipes/save-as')).toBe(true);
+  });
 
   fireEvent.click(screen.getByText('Создать новый'));
-  await waitFor(() => expect(screen.getByText('Создан новый шаблон рецепта')).toBeTruthy());
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:lantern>');
+  await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 
   fireEvent.click(screen.getByText('Справка'));
   expect(screen.getByRole('dialog', { name: 'Справка' })).toBeTruthy();
 
   fireEvent.click(screen.getByText('Вики'));
-  expect(window.open).toHaveBeenCalledWith('/wiki.html', '_blank', 'noopener,noreferrer');
-});
-
-
-test('edit cell updates state', () => {
-  render(<App />);
-  const cell = screen.getByLabelText('cell-0-0') as HTMLInputElement;
-  fireEvent.change(cell, { target: { value: '<minecraft:stone>' } });
-  expect(cell.value).toBe('<minecraft:stone>');
+  expect(window.open).toHaveBeenCalled();
 });

@@ -1,14 +1,54 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ActionToolbar } from '../components/ActionToolbar';
+import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
-import { createRecipeTemplate, parseText, saveRecipeAs, updateRecipe } from '../services/api';
+import { StatusBar } from '../components/StatusBar';
+import { TabNav } from '../components/TabNav';
+import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
+import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { CellValue, RecipeView } from '../types';
+import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ];
+
+const defaultWorkspaceLayout: WorkspaceLayout = {
+  columns: 3,
+  compact_header: true
+};
+
+const defaultPanelLayout: PanelLayoutItem[] = [
+  { id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 },
+  { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 },
+  { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 },
+  { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 },
+  { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 },
+  { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 },
+  { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 },
+  { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 },
+  { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 },
+  { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 },
+  { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 },
+  { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }
+];
+
+const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
+const MIN_HEIGHT = 72;
+const MAX_HEIGHT = 960;
+
+const defaultUiPreferences: UiPreferences = {
+  display_mode: 'text',
+  density_mode: 'normal',
+  editor_mode: 'edit',
+  language: 'ru',
+  active_view_tab: 'editor',
+  reset_layout_version: 4,
+  panel_layout: defaultPanelLayout,
+  workspace_layout: defaultWorkspaceLayout
+};
 
 const defaultRecipe: RecipeView = {
   recipe_uid: 'new-recipe',
@@ -22,21 +62,73 @@ const defaultRecipe: RecipeView = {
   source: { kind: 'generated', path: null }
 };
 
-const helpText = [
-  'Вставьте `recipes.addShaped(...)` или `mods.avaritia.ExtremeCrafting.addShaped(...)` в верхнее поле.',
-  'Кнопка «Вставить» отправляет текст в backend `/api/parse` и заполняет сетку рецепта.',
-  'Блок «Выход» показывает результат крафта и позволяет редактировать raw item id перед сохранением.',
-  '«Сохранить» обновляет исходный `.zs` файл для уже существующего рецепта.',
-  '«Сохранить как» добавляет текущий рецепт в другой `.zs` файл через backend save-as endpoint.',
-  '«Создать новый» запрашивает backend шаблон нового рецепта и сбрасывает сетку.'
-];
-
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
 }
 
 function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(value, max));
+}
+
+function widthToSpan(widthUnits: number, columns: 1 | 2 | 3): number {
+  if (columns === 1) return 12;
+  if (columns === 2) return widthUnits >= 2 ? 12 : 6;
+  return widthUnits === 3 ? 12 : widthUnits === 2 ? 8 : 4;
+}
+
+function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[] {
+  const existing = raw && raw.length ? raw.map((item) => ({ ...item })) : [];
+  const seen = new Set(existing.map((item) => item.id));
+  defaultPanelLayout.forEach((panel) => {
+    if (!seen.has(panel.id)) {
+      existing.push({ ...panel });
+    }
+  });
+  return existing
+    .map((item, index) => ({
+      id: item.id,
+      zone: item.zone ?? 'bottom',
+      order: Number.isFinite(item.order) ? item.order : index,
+      visible: item.visible !== false,
+      height: typeof item.height === 'number' ? clamp(Math.round(item.height), MIN_HEIGHT, MAX_HEIGHT) : defaultPanelLayout.find((panel) => panel.id === item.id)?.height,
+      width_units: typeof item.width_units === 'number' ? clamp(Math.round(item.width_units), 1, 3) : defaultPanelLayout.find((panel) => panel.id === item.id)?.width_units ?? 1
+    }))
+    .sort((left, right) => left.order - right.order)
+    .map((item, index) => ({ ...item, order: index }));
+}
+
+function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout {
+  return {
+    columns: clamp(Number(raw?.columns ?? 3), 1, 3) as 1 | 2 | 3,
+    compact_header: Boolean(raw?.compact_header ?? true)
+  };
+}
+
+function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreferences {
+  const source = settings?.ui_preferences;
+  return {
+    display_mode: (source?.display_mode ?? 'text') as DisplayMode,
+    density_mode: (source?.density_mode ?? 'normal') as DensityMode,
+    editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
+    language: (source?.language ?? 'ru') as UiLanguage,
+    active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
+    reset_layout_version: source?.reset_layout_version ?? 4,
+    panel_layout: normalizePanelLayout(source?.panel_layout),
+    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout)
+  };
+}
+
+function movePanel(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetIndex: number): PanelLayoutItem[] {
+  const working = layout.map((item) => ({ ...item }));
+  const sourceIndex = working.findIndex((item) => item.id === draggedPanelId);
+  if (sourceIndex < 0) return working;
+  const [dragged] = working.splice(sourceIndex, 1);
+  working.splice(clamp(targetIndex, 0, working.length), 0, dragged);
+  return working.map((item, index) => ({ ...item, order: index }));
 }
 
 export default function App() {
@@ -48,263 +140,520 @@ export default function App() {
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('Не сохранено');
+  const [lastApiStatus, setLastApiStatus] = useState('idle');
+  const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
+  const [settings, setSettings] = useState<ProjectSettings | null>(null);
+  const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
+  const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
 
+  const persistTimerRef = useRef<number | null>(null);
+  const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
+  const hasLocalUiChangesRef = useRef(false);
+
+  const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayName = recipe.output_resolution?.display_name;
+  const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
+  const nullCells = useMemo(() => matrix.flat().filter((cell) => !cell || cell === 'null').length, [matrix]);
+  const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
+  const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
+  const iconTotal = filledCells + (outputRaw ? 1 : 0);
 
   useEffect(() => {
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Frontend app mounted', details: { displayMode: metaMode, strictBinding } });
+    void (async () => {
+      try {
+        const nextSettings = await getProjectSettings();
+        setSettings(nextSettings);
+        const normalized = normalizeUiPreferences(nextSettings);
+        if (!hasLocalUiChangesRef.current) {
+          latestUiPreferencesRef.current = normalized;
+          setUiPreferences(normalized);
+        }
+      } catch {
+        setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
+      }
+    })();
   }, []);
 
-  useEffect(() => {
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Display mode changed', details: { metaMode, strictBinding } });
-  }, [metaMode, strictBinding]);
-
-  useEffect(() => {
-    if (!recipe.output_resolution?.icon_url) {
-      logFrontendEvent({
-        level: 'WARN',
-        category: 'ICON',
-        message: 'Using placeholder for output icon',
-        details: {
-          raw_item_id: outputRaw,
-          display_name: outputDisplayName,
-          reason: 'icon_url missing in output_resolution',
-          placeholder: true
-        }
-      });
-    } else {
-      logFrontendEvent({
-        level: 'INFO',
-        category: 'ICON',
-        message: 'Output icon resolved in frontend',
-        details: { raw_item_id: outputRaw, icon_url: recipe.output_resolution.icon_url, strategy: recipe.output_resolution.strategy },
-        verbose_only: true
-      });
+  useEffect(() => () => {
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
     }
-  }, [recipe.output_resolution?.icon_url, recipe.output_resolution?.strategy, outputDisplayName, outputRaw]);
+  }, []);
+
+  function persistUiPreferences(next: UiPreferences) {
+    hasLocalUiChangesRef.current = true;
+    latestUiPreferencesRef.current = next;
+    setUiPreferences(next);
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+    }
+    persistTimerRef.current = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const response = await updateProjectUiPreferences(latestUiPreferencesRef.current);
+          setSettings((current) => ({ ...(current ?? response), ...response }));
+          setSaveStatus(createTranslator(latestUiPreferencesRef.current.language)('fields.layoutSaved'));
+          logFrontendEvent({ level: 'INFO', category: 'LAYOUT', message: 'Workspace persisted', details: { columns: latestUiPreferencesRef.current.workspace_layout.columns, compact_header: latestUiPreferencesRef.current.workspace_layout.compact_header } });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Unknown error';
+          setStatus(`${createTranslator(latestUiPreferencesRef.current.language)('status.saveError')}: ${message}`);
+        }
+      })();
+    }, 180);
+  }
+
+  function patchUiPreferences(patch: Partial<UiPreferences>) {
+    persistUiPreferences({ ...uiPreferences, ...patch });
+  }
+
+  function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
+    persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(nextLayout) });
+  }
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
     setRecipe(nextRecipe);
     setOutputRaw(nextRecipe.output.raw);
     setMatrix(toCellMatrix(nextRecipe));
-    logFrontendEvent({
-      level: 'INFO',
-      category: 'UI',
-      message: 'Recipe applied to frontend state',
-      details: { recipe_uid: nextRecipe.recipe_uid, recipe_type: nextRecipe.recipe_type, source_path: nextRecipe.source.path, output: nextRecipe.output.raw }
-    });
+    setSaveStatus(nextRecipe.source.kind === 'generated' ? t('values.draft') : t('values.synchronized'));
     if (nextInput !== undefined) {
       setInput(nextInput);
     }
   }
 
+  function clearEditor() {
+    applyRecipe(defaultRecipe, '');
+    setStatus(t('status.cleared'));
+    setSaveStatus(t('values.reset'));
+    setLastApiStatus(t('values.idle'));
+    setLastParseResult(t('values.reset'));
+  }
+
   async function handleParse(value: string) {
     setInput(value);
-    setStatus('Парсинг...');
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse started', details: { input_length: value.length, preview: value.slice(0, 200) } });
+    setStatus(t('status.parsing'));
+    setLastApiStatus(t('values.pending'));
     try {
       const result = await parseText(value);
+      setLastApiStatus(t('values.ok'));
       if (result.recipe) {
         applyRecipe(result.recipe, value);
-        setStatus('Рецепт загружен');
-        logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse completed with recipe', details: { output: result.recipe.output.raw, grid: `${result.recipe.grid_w}x${result.recipe.grid_h}` } });
+        setStatus(t('status.loaded'));
+        setLastParseResult(result.recipe.recipe_type);
         return;
       }
       if (result.item) {
-        setStatus(`Найден item id: ${result.item.raw}`);
-        logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse completed with item query', details: { item_raw: result.item.raw } });
-        return;
+        setStatus(`Item id: ${result.item.raw}`);
+        setLastParseResult(result.item.raw);
       }
-      setStatus('Backend не вернул рецепт или item id');
-      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Parse returned no recipe or item', details: {} });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`Ошибка парсинга: ${message}`);
-      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Parse failed in frontend', details: { error: message, input_length: value.length } });
+      setStatus(`${t('status.parseError')}: ${message}`);
+      setLastApiStatus(t('values.error'));
+      setLastParseResult(message);
+    }
+  }
+
+  async function handlePasteFromClipboard() {
+    try {
+      await handleParse(await navigator.clipboard.readText());
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Clipboard unavailable');
+      setLastApiStatus(t('values.error'));
     }
   }
 
   async function handleSave() {
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save button clicked', details: { recipe_uid: recipe.recipe_uid, outputRaw } });
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
-      setStatus('Сохранение недоступно: рецепт ещё не существует в .zs файле, используйте «Сохранить как».');
-      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Save blocked for generated recipe', details: { recipe_uid: recipe.recipe_uid, source_kind: recipe.source.kind } });
+      setStatus('Сохранение недоступно: используйте «Сохранить как».');
       return;
     }
-
     setStatus('Сохраняем...');
+    setSaveStatus(t('values.pending'));
     try {
-      const updated = await updateRecipe({
-        recipeUid: recipe.recipe_uid,
-        recipeType: recipe.recipe_type,
-        outputRaw,
-        matrix,
-        name: recipe.name
-      });
+      const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name });
       applyRecipe(updated.updatedRecipe, input);
-      setStatus('Рецепт сохранён');
-      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save completed', details: { recipe_uid: updated.updatedRecipe.recipe_uid } });
+      setStatus(t('status.saved'));
+      setSaveStatus(t('values.saved'));
+      setLastApiStatus(t('values.ok'));
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`Ошибка сохранения: ${message}`);
-      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Save failed', details: { error: message } });
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`${t('status.saveError')}: ${message}`);
+      setSaveStatus(t('values.error'));
+      setLastApiStatus(t('values.error'));
     }
   }
 
   async function handleSaveAs() {
     const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
     if (!targetPath) {
-      setStatus('Сохранение как отменено');
-      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Save as cancelled by user', details: {} });
+      setStatus(t('status.saveAsCancelled'));
       return;
     }
-
     setStatus('Сохраняем как...');
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save as started', details: { targetPath, recipe_uid: recipe.recipe_uid } });
+    setSaveStatus(t('values.pending'));
     try {
       if (recipe.recipe_uid === 'new-recipe') {
-        const created = await createRecipeTemplate({
-          templateType: recipe.recipe_type,
-          output: outputRaw,
-          grid: matrix.length
-        });
-        const response = await saveRecipeAs({
-          recipeUid: created.recipe_uid,
-          recipeType: created.recipe_type,
-          outputRaw,
-          matrix,
-          name: created.name,
-          targetPath
-        });
+        const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: matrix.length });
+        const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath });
         applyRecipe(response.recipe, input);
       } else {
-        const response = await saveRecipeAs({
-          recipeUid: recipe.recipe_uid,
-          recipeType: recipe.recipe_type,
-          outputRaw,
-          matrix,
-          name: recipe.name,
-          targetPath
-        });
+        const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath });
         applyRecipe(response.recipe, input);
       }
-      setStatus(`Рецепт сохранён в ${targetPath}`);
-      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save as completed', details: { targetPath } });
+      setStatus(`${t('status.saved')} → ${targetPath}`);
+      setSaveStatus(t('values.saved'));
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`Ошибка сохранения как: ${message}`);
-      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Save as failed', details: { error: message, targetPath } });
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`${t('status.saveError')}: ${message}`);
+      setSaveStatus(t('values.error'));
     }
   }
 
   async function handleCreateNew() {
-    setStatus('Создаём шаблон...');
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Create new recipe clicked', details: { recipe_type: recipe.recipe_type, outputRaw } });
+    setStatus(t('status.creating'));
     try {
-      const created = await createRecipeTemplate({
-        templateType: recipe.recipe_type,
-        output: outputRaw,
-        grid: recipe.recipe_type === 'avaritia_extreme_shaped' ? 9 : 3
-      });
+      const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: recipe.recipe_type === 'avaritia_extreme_shaped' ? 9 : 3 });
       applyRecipe(created, '');
-      setStatus('Создан новый шаблон рецепта');
-      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Create new recipe completed', details: { recipe_uid: created.recipe_uid } });
+      setStatus(t('status.created'));
+      setLastParseResult(t('status.created'));
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`Ошибка создания рецепта: ${message}`);
-      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Create new recipe failed', details: { error: message } });
+      setStatus(`${t('status.saveError')}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
   function handleOpenWiki() {
-    window.open('/wiki.html', '_blank', 'noopener,noreferrer');
-    setStatus('Открыта документация');
-    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Wiki opened', details: {} });
+    const wikiUrl = new URL('/wiki.html', window.location.origin).toString();
+    const openedWindow = window.open(wikiUrl, '_blank', 'noopener,noreferrer');
+    if (!openedWindow) {
+      window.location.assign(wikiUrl);
+    }
+    setStatus(t('status.docsOpened'));
+  }
+
+  function resetLayout() {
+    persistUiPreferences({ ...defaultUiPreferences, language: uiPreferences.language, display_mode: uiPreferences.display_mode, density_mode: uiPreferences.density_mode, editor_mode: uiPreferences.editor_mode });
+  }
+
+  function setPanelVisible(panelId: PanelId, visible: boolean) {
+    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
+  }
+
+  function updatePanel(panelId: PanelId, patch: Partial<PanelLayoutItem>) {
+    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
+  }
+
+  function startResize(panelId: PanelId, startX: number, startY: number) {
+    const panel = uiPreferences.panel_layout.find((item) => item.id === panelId);
+    if (!panel) return;
+    const startHeight = panel.height ?? 240;
+    const startWidthUnits = panel.width_units ?? 1;
+    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
+      const currentX = typeof event.clientX === 'number' ? event.clientX : startX;
+      const currentY = typeof event.clientY === 'number' ? event.clientY : startY;
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      const nextWidthUnits = clamp(startWidthUnits + Math.round(deltaX / 180), 1, uiPreferences.workspace_layout.columns) as 1 | 2 | 3;
+      updatePanel(panelId, { width_units: nextWidthUnits, height: clamp(startHeight + deltaY, MIN_HEIGHT, MAX_HEIGHT) });
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('mouseup', onUp);
+  }
+
+  const visiblePanels = useMemo(
+    () => normalizePanelLayout(uiPreferences.panel_layout).filter((panel) => panel.visible),
+    [uiPreferences.panel_layout]
+  );
+
+  const statusItems = [
+    { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
+    { label: t('status.type'), value: recipe.recipe_type },
+    { label: t('status.size'), value: summary },
+    { label: t('status.saveState'), value: saveStatus },
+    { label: t('status.icons'), value: `${iconsResolved}/${iconTotal}` },
+    { label: t('status.mode'), value: `${uiPreferences.display_mode} • ${uiPreferences.language}` }
+  ];
+
+  const tabLabels: Record<AppTab, string> = {
+    editor: getTabLabel(uiPreferences.language, 'editor'),
+    preview: getTabLabel(uiPreferences.language, 'preview'),
+    diagnostics: getTabLabel(uiPreferences.language, 'diagnostics'),
+    raw: getTabLabel(uiPreferences.language, 'raw')
+  };
+
+  function renderDropSlot(targetIndex: number) {
+    const active = dropIndex === targetIndex;
+    return (
+      <div
+        key={`drop-${targetIndex}`}
+        className={`grid-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
+        style={{ gridColumn: '1 / -1' }}
+        onDragOver={(event) => {
+          event.preventDefault();
+          setDropIndex(targetIndex);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          if (draggedPanelId) {
+            patchPanelLayout(movePanel(uiPreferences.panel_layout, draggedPanelId, targetIndex));
+          }
+          setDraggedPanelId(null);
+          setDropIndex(null);
+        }}
+      />
+    );
+  }
+
+  function renderPanel(panel: PanelLayoutItem) {
+    const panelId = panel.id;
+    const common = {
+      actions: <button type="button" className="ghost-button" onClick={() => setPanelVisible(panelId, false)}>{t('app.hidePanel')}</button>,
+      dragHandle: (
+        <button
+          type="button"
+          className="panel-drag-handle"
+          draggable
+          aria-label={`${t('app.dragPanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
+          onDragStart={(event: DragEvent<HTMLButtonElement>) => {
+            if (event.dataTransfer) {
+              event.dataTransfer.effectAllowed = 'move';
+            }
+            setDraggedPanelId(panelId);
+          }}
+          onDragEnd={() => {
+            setDraggedPanelId(null);
+            setDropIndex(null);
+          }}
+        >
+          ⋮⋮
+        </button>
+      ),
+      footer: (
+        <button
+          type="button"
+          className="panel-resize-handle"
+          aria-label={`${t('app.resizePanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
+          onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            startResize(panelId, event.clientX, event.clientY);
+          }}
+        >
+          <span />
+        </button>
+      )
+    };
+
+    switch (panelId) {
+      case 'hero':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('app.subtitle')} {...common} className="hero-panel">
+              <div className="hero-panel-grid">
+                <div>
+                  <p className="eyebrow">{t('app.name')}</p>
+                  <h1>{t('app.title')}</h1>
+                </div>
+                <div className="hero-summary-grid">
+                  <div><span>{t('app.file')}</span><strong>{recipe.source.path ?? t('app.unsaved')}</strong></div>
+                  <div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div>
+                  <div><span>{t('app.source')}</span><strong>{recipe.source.kind}</strong></div>
+                </div>
+              </div>
+            </Panel>
+          </div>
+        );
+      case 'statusBar':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('status.logReady')} {...common}>
+              <StatusBar items={statusItems} />
+            </Panel>
+          </div>
+        );
+      case 'toolbar':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
+              <ActionToolbar
+                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
+                onParse={() => void handleParse(input)}
+                onPaste={handlePasteFromClipboard}
+                onCreateNew={() => void handleCreateNew()}
+                onClear={clearEditor}
+                onSave={() => void handleSave()}
+                onSaveAs={() => void handleSaveAs()}
+                onHelp={() => setIsHelpOpen(true)}
+                onWiki={handleOpenWiki}
+              />
+              <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
+            </Panel>
+          </div>
+        );
+      case 'input':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 2, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.sourceText')} {...common}>
+              <div className="field-header">
+                <span>{t('fields.sourceText')}</span>
+                <div className="inline-actions">
+                  <button type="button" className="secondary-button" onClick={() => void handlePasteFromClipboard()}>{t('toolbar.paste')}</button>
+                  <button type="button" className="ghost-button" onClick={() => setInput('')}>{t('toolbar.clear')}</button>
+                </div>
+              </div>
+              <textarea aria-label="paste-input" value={input} onChange={(event) => setInput(event.target.value)} onPaste={(event) => {
+                const pasted = event.clipboardData.getData('text');
+                void handleParse(pasted);
+                event.preventDefault();
+              }} />
+            </Panel>
+          </div>
+        );
+      case 'output':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
+              <div className="output-card">
+                <div className="output-icon-slot">{uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <img src={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} /> : <span>?</span>}</div>
+                <div className="output-details">
+                  <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
+                  <label className="field-block"><span>{t('fields.rawOutput')}</span><input aria-label="output-raw" type="text" value={outputRaw} onChange={(event) => {
+                    const value = event.target.value;
+                    setOutputRaw(value);
+                    setRecipe((current) => ({ ...current, output: { ...current.output, raw: value } }));
+                  }} /></label>
+                  <div className="kv-grid">
+                    <div><span>{t('fields.displayName')}</span><strong>{outputDisplayName ?? t('values.unresolved')}</strong></div>
+                    <div><span>{t('fields.rawId')}</span><strong>{outputRaw || '—'}</strong></div>
+                    <div><span>{t('fields.iconStatus')}</span><strong>{recipe.output_resolution?.icon_url ?? t('values.placeholder')}</strong></div>
+                    <div><span>{t('fields.strategy')}</span><strong>{recipe.output_resolution?.strategy ?? 'n/a'}</strong></div>
+                  </div>
+                </div>
+              </div>
+            </Panel>
+          </div>
+        );
+      case 'grid':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
+              <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
+              <div className="grid-scroll-zone">
+                <RecipeGrid matrix={matrix} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} onCellChange={(row, col, value) => {
+                  setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
+                  setSaveStatus(t('values.unsavedChanges'));
+                }} />
+              </div>
+            </Panel>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.visiblePanels')} {...common}>
+              <div className="settings-grid">
+                <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
+                <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
+                <label className="field-block"><span>{t('fields.displayMode')}</span><select value={uiPreferences.display_mode} onChange={(event) => patchUiPreferences({ display_mode: event.target.value as DisplayMode })}><option value="text">text</option><option value="icons">icons</option></select></label>
+                <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
+                <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
+              </div>
+            </Panel>
+          </div>
+        );
+      case 'info':
+      case 'debug':
+      case 'diagnostics':
+      case 'preview':
+      case 'raw': {
+        const renderExtra = () => {
+          switch (panelId) {
+            case 'info':
+              return <div className="kv-grid"><div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div><div><span>{t('fields.sourceFile')}</span><strong>{recipe.source.path ?? '—'}</strong></div><div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div><div><span>{t('fields.originPath')}</span><strong>{recipe.source.path ?? settings?.project_config_path ?? '—'}</strong></div></div>;
+            case 'debug':
+              return <div className="kv-grid"><div><span>{t('fields.lastApiStatus')}</span><strong>{lastApiStatus}</strong></div><div><span>{t('fields.lastParseResult')}</span><strong>{lastParseResult}</strong></div><div><span>{t('fields.iconFound')}</span><strong>{recipe.output_resolution?.icon_url ? t('values.yes') : t('values.no')}</strong></div></div>;
+            case 'diagnostics':
+              return <ul className="diagnostics-list"><li>Unresolved cells: {unresolvedCells}</li><li>Output icon: {recipe.output_resolution?.icon_url ?? 'not found'}</li><li>Current file: {recipe.source.path ?? 'unsaved'}</li></ul>;
+            case 'preview':
+              return <div className="preview-block"><strong>{outputDisplayName ?? outputRaw}</strong><span>{recipe.recipe_type}</span><span>{summary}</span></div>;
+            default:
+              return <pre className="raw-block">{JSON.stringify({ recipe, matrix, ui: uiPreferences }, null, 2)}</pre>;
+          }
+        };
+        return (
+          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={panelId === 'diagnostics' ? getTabLabel(uiPreferences.language, 'diagnostics') : undefined} {...common}>{renderExtra()}</Panel>
+          </div>
+        );
+      }
+      default:
+        return null;
+    }
   }
 
   return (
-    <main>
-      <h1>CubixRecipes</h1>
-      <textarea
-        aria-label="paste-input"
-        value={input}
-        onChange={(event) => {
-          setInput(event.target.value);
-          logFrontendEvent({ level: 'DEBUG', category: 'UI', message: 'Input changed', details: { length: event.target.value.length }, verbose_only: true });
-        }}
-        onPaste={(event) => {
-          const pasted = event.clipboardData.getData('text');
-          logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Text pasted into input', details: { length: pasted.length, preview: pasted.slice(0, 200) } });
-          void handleParse(pasted);
-          event.preventDefault();
-        }}
-      />
-      <button onClick={() => void handleParse(input)}>Вставить</button>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={strictBinding}
-            onChange={() => {
-              setStrictBinding((value) => !value);
-            }}
-          />
-          Жёсткая привязка
-        </label>
-        <select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}>
-          <option value="strict">Строгая мета</option>
-          <option value="wildcard">Учитывать *</option>
-          <option value="ignore">Игнорировать мету</option>
-        </select>
+    <main className={`app-shell density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`}>
+      <div className="utility-bar">
+        <strong>CubixRecipes</strong>
+        <div className="utility-actions">
+          <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <div className="view-menu-wrap">
+            <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
+            {isViewMenuOpen ? (
+              <div className="view-menu">
+                <strong>{t('fields.visiblePanels')}</strong>
+                {allPanelIds.map((panelId) => {
+                  const panel = uiPreferences.panel_layout.find((item) => item.id === panelId);
+                  return (
+                    <label key={panelId} className="view-toggle" aria-label={getPanelLabel(uiPreferences.language, panelId)}>
+                      <input type="checkbox" checked={panel?.visible ?? false} onChange={(event) => setPanelVisible(panelId, event.target.checked)} />
+                      <span>{getPanelLabel(uiPreferences.language, panelId)}</span>
+                    </label>
+                  );
+                })}
+                <div className="view-menu-controls">
+                  <label className="view-toggle"><input type="checkbox" checked={uiPreferences.workspace_layout.compact_header} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, compact_header: event.target.checked } })} /><span>{t('app.compactHeader')}</span></label>
+                  <label className="field-block"><span>{t('app.columns')}</span><select aria-label={t('app.columns')} value={uiPreferences.workspace_layout.columns} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, columns: Number(event.target.value) as 1 | 2 | 3 } })}><option value="1">{t('app.oneColumn')}</option><option value="2">{t('app.twoColumns')}</option><option value="3">{t('app.threeColumns')}</option></select></label>
+                </div>
+                <div className="view-menu-actions">
+                  <button type="button" onClick={() => patchPanelLayout(uiPreferences.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
+                  <button type="button" className="ghost-button" onClick={resetLayout}>{t('app.resetLayout')}</button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
-      <p>{status}</p>
-      <p>Размер: {summary}</p>
-      <section aria-label="recipe-output">
-        <h2>Выход</h2>
-        <label>
-          Raw output
-          <input
-            aria-label="output-raw"
-            type="text"
-            value={outputRaw}
-            onChange={(event) => {
-              const value = event.target.value;
-              setOutputRaw(value);
-              setRecipe((current) => ({ ...current, output: { ...current.output, raw: value } }));
-              logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Output changed', details: { outputRaw: value } });
-            }}
-          />
-        </label>
-        <p>Текущее значение: <code>{outputRaw || '—'}</code></p>
-        <p>Имя: {outputDisplayName ?? 'пока не разрешено'}</p>
-        <p>Иконка: {recipe.output_resolution?.icon_url ?? 'пока не найдена'}</p>
-      </section>
-      <RecipeGrid
-        matrix={matrix}
-        onCellChange={(row, col, value) => {
-          setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' ? null : value) : cell))));
-          logFrontendEvent({ level: 'DEBUG', category: 'UI', message: 'Recipe cell changed', details: { row, col, value }, verbose_only: true });
-        }}
-      />
-      <div className="toolbar">
-        <button onClick={() => void handleSave()}>Сохранить</button>
-        <button onClick={() => void handleSaveAs()}>Сохранить как</button>
-        <button onClick={() => void handleCreateNew()}>Создать новый</button>
-        <button onClick={() => setIsHelpOpen(true)}>Справка</button>
-        <button onClick={handleOpenWiki}>Вики</button>
+
+      <div className="workspace-grid">
+        {renderDropSlot(0)}
+        {visiblePanels.map((panel, index) => (
+          <Fragment key={panel.id}>
+            {renderPanel(panel)}
+            {renderDropSlot(index + 1)}
+          </Fragment>
+        ))}
       </div>
+
       {isHelpOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsHelpOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label="Справка" onClick={(event) => event.stopPropagation()}>
+          <div className="modal" role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>Справка</h2>
-              <button type="button" onClick={() => setIsHelpOpen(false)}>Закрыть</button>
+              <h2>{t('help.title')}</h2>
+              <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
             </div>
             <ul>
-              {helpText.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
+              {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
             </ul>
           </div>
         </div>
