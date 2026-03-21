@@ -157,18 +157,27 @@ test('column count can be switched up to 3 columns and persisted', async () => {
   });
 });
 
-test('drag and drop reorders panels in the workspace grid', async () => {
+test('drag and drop can move panels between workspace zones', async () => {
   render(<App />);
   const dragHandle = await screen.findByLabelText('Перетащить панель: Выходной рецепт');
-  const slots = document.querySelectorAll('.grid-drop-slot');
+  const targetSlot = document.querySelector('.zone-drop-slot[data-zone="topLeft"][data-index="1"]');
+  expect(targetSlot).toBeTruthy();
+
   fireEvent.dragStart(dragHandle);
-  fireEvent.dragOver(slots[2]);
-  fireEvent.drop(slots[2]);
+  fireEvent.dragOver(targetSlot as Element);
+  fireEvent.drop(targetSlot as Element);
   fireEvent.dragEnd(dragHandle);
 
   await waitFor(() => {
-    const headings = Array.from(document.querySelectorAll('.workspace-grid h2')).map((node) => node.textContent);
+    const headings = Array.from(document.querySelectorAll('.zone-top-left h2')).map((node) => node.textContent);
     expect(headings.includes('Выходной рецепт')).toBe(true);
+  });
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    const movedPanel = body.panel_layout.find((panel: { id: string; zone: string }) => panel.id === 'output');
+    expect(movedPanel.zone).toBe('topLeft');
   });
 });
 

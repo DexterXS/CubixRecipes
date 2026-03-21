@@ -7,7 +7,7 @@ import { TabNav } from '../components/TabNav';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
+import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -36,8 +36,14 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 ];
 
 const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
+const zoneOrder: PanelZone[] = ['topLeft', 'topRight', 'bottom', 'sidebar'];
 const MIN_HEIGHT = 72;
 const MAX_HEIGHT = 960;
+
+type DropTarget = {
+  zone: PanelZone;
+  index: number;
+} | null;
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -80,6 +86,32 @@ function widthToSpan(widthUnits: number, columns: 1 | 2 | 3): number {
   return widthUnits === 3 ? 12 : widthUnits === 2 ? 8 : 4;
 }
 
+function normalizePanelOrdersByZone(layout: PanelLayoutItem[]): PanelLayoutItem[] {
+  const byZone = new Map<PanelZone, PanelLayoutItem[]>();
+
+  zoneOrder.forEach((zone) => byZone.set(zone, []));
+
+  layout.forEach((item) => {
+    const zoneItems = byZone.get(item.zone) ?? [];
+    zoneItems.push({ ...item });
+    byZone.set(item.zone, zoneItems);
+  });
+
+  const result: PanelLayoutItem[] = [];
+
+  zoneOrder.forEach((zone) => {
+    const items = (byZone.get(zone) ?? [])
+      .sort((a, b) => a.order - b.order)
+      .map((item, index) => ({
+        ...item,
+        order: index
+      }));
+    result.push(...items);
+  });
+
+  return result;
+}
+
 function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[] {
   const existing = raw && raw.length ? raw.map((item) => ({ ...item })) : [];
   const seen = new Set(existing.map((item) => item.id));
@@ -88,7 +120,7 @@ function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[]
       existing.push({ ...panel });
     }
   });
-  return existing
+  return normalizePanelOrdersByZone(existing
     .map((item, index) => ({
       id: item.id,
       zone: item.zone ?? 'bottom',
@@ -96,9 +128,38 @@ function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[]
       visible: item.visible !== false,
       height: typeof item.height === 'number' ? clamp(Math.round(item.height), MIN_HEIGHT, MAX_HEIGHT) : defaultPanelLayout.find((panel) => panel.id === item.id)?.height,
       width_units: typeof item.width_units === 'number' ? clamp(Math.round(item.width_units), 1, 3) : defaultPanelLayout.find((panel) => panel.id === item.id)?.width_units ?? 1
-    }))
-    .sort((left, right) => left.order - right.order)
-    .map((item, index) => ({ ...item, order: index }));
+    })));
+}
+
+function movePanelToZone(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetZone: PanelZone, targetIndex: number): PanelLayoutItem[] {
+  const dragged = layout.find((item) => item.id === draggedPanelId);
+  if (!dragged) return layout.map((item) => ({ ...item }));
+
+  const withoutDragged = layout
+    .filter((item) => item.id !== draggedPanelId)
+    .map((item) => ({ ...item }));
+
+  const targetZoneItems = withoutDragged
+    .filter((item) => item.zone === targetZone)
+    .sort((a, b) => a.order - b.order);
+
+  const otherItems = withoutDragged.filter((item) => item.zone !== targetZone);
+
+  const nextDragged: PanelLayoutItem = {
+    ...dragged,
+    zone: targetZone
+  };
+
+  const safeIndex = Math.max(0, Math.min(targetIndex, targetZoneItems.length));
+  targetZoneItems.splice(safeIndex, 0, nextDragged);
+
+  return normalizePanelOrdersByZone([...otherItems, ...targetZoneItems]);
+}
+
+function getPanelsForZone(layout: PanelLayoutItem[], zone: PanelZone): PanelLayoutItem[] {
+  return normalizePanelLayout(layout)
+    .filter((panel) => panel.visible && panel.zone === zone)
+    .sort((a, b) => a.order - b.order);
 }
 
 function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout {
@@ -122,15 +183,6 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   };
 }
 
-function movePanel(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetIndex: number): PanelLayoutItem[] {
-  const working = layout.map((item) => ({ ...item }));
-  const sourceIndex = working.findIndex((item) => item.id === draggedPanelId);
-  if (sourceIndex < 0) return working;
-  const [dragged] = working.splice(sourceIndex, 1);
-  working.splice(clamp(targetIndex, 0, working.length), 0, dragged);
-  return working.map((item, index) => ({ ...item, order: index }));
-}
-
 export default function App() {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
@@ -147,7 +199,7 @@ export default function App() {
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
-  const [dropIndex, setDropIndex] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<DropTarget>(null);
 
   const persistTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
@@ -371,10 +423,10 @@ export default function App() {
     window.addEventListener('mouseup', onUp);
   }
 
-  const visiblePanels = useMemo(
-    () => normalizePanelLayout(uiPreferences.panel_layout).filter((panel) => panel.visible),
-    [uiPreferences.panel_layout]
-  );
+  const topLeftPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topLeft'), [uiPreferences.panel_layout]);
+  const topRightPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topRight'), [uiPreferences.panel_layout]);
+  const bottomPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'bottom'), [uiPreferences.panel_layout]);
+  const sidebarPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'sidebar'), [uiPreferences.panel_layout]);
 
   const statusItems = [
     { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
@@ -392,26 +444,69 @@ export default function App() {
     raw: getTabLabel(uiPreferences.language, 'raw')
   };
 
-  function renderDropSlot(targetIndex: number) {
-    const active = dropIndex === targetIndex;
+  function commitDrop(target: DropTarget) {
+    if (!draggedPanelId || !target) {
+      setDraggedPanelId(null);
+      setDropTarget(null);
+      return;
+    }
+
+    patchPanelLayout(movePanelToZone(uiPreferences.panel_layout, draggedPanelId, target.zone, target.index));
+    setDraggedPanelId(null);
+    setDropTarget(null);
+  }
+
+  function renderZoneDropSlot(zone: PanelZone, targetIndex: number) {
+    const active = dropTarget?.zone === zone && dropTarget.index === targetIndex;
+
     return (
       <div
-        key={`drop-${targetIndex}`}
-        className={`grid-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
-        style={{ gridColumn: '1 / -1' }}
+        key={`drop-${zone}-${targetIndex}`}
+        className={`zone-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
+        data-zone={zone}
+        data-index={targetIndex}
         onDragOver={(event) => {
           event.preventDefault();
-          setDropIndex(targetIndex);
+          setDropTarget({ zone, index: targetIndex });
         }}
         onDrop={(event) => {
           event.preventDefault();
-          if (draggedPanelId) {
-            patchPanelLayout(movePanel(uiPreferences.panel_layout, draggedPanelId, targetIndex));
-          }
-          setDraggedPanelId(null);
-          setDropIndex(null);
+          commitDrop({ zone, index: targetIndex });
         }}
       />
+    );
+  }
+
+  function renderZone(zone: PanelZone, panels: PanelLayoutItem[], className?: string) {
+    const isZoneActive = dropTarget?.zone === zone;
+
+    return (
+      <div
+        className={`workspace-zone ${className ?? ''} ${draggedPanelId ? 'is-dragging' : ''} ${isZoneActive ? 'is-drag-over' : ''}`.trim()}
+        data-zone={zone}
+        onDragOver={(event) => {
+          event.preventDefault();
+          if (!panels.length) {
+            setDropTarget({ zone, index: 0 });
+          }
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          const target = dropTarget?.zone === zone ? dropTarget : { zone, index: panels.length };
+          commitDrop(target);
+        }}
+      >
+        {renderZoneDropSlot(zone, 0)}
+        {panels.map((panel, index) => (
+          <Fragment key={`${zone}-${panel.id}`}>
+            {renderPanel(panel)}
+            {renderZoneDropSlot(zone, index + 1)}
+          </Fragment>
+        ))}
+        {!panels.length ? (
+          <div className="workspace-zone-empty">Перетащите панель сюда</div>
+        ) : null}
+      </div>
     );
   }
 
@@ -433,7 +528,7 @@ export default function App() {
           }}
           onDragEnd={() => {
             setDraggedPanelId(null);
-            setDropIndex(null);
+            setDropTarget(null);
           }}
         >
           ⋮⋮
@@ -635,14 +730,15 @@ export default function App() {
         </div>
       </div>
 
-      <div className="workspace-grid">
-        {renderDropSlot(0)}
-        {visiblePanels.map((panel, index) => (
-          <Fragment key={panel.id}>
-            {renderPanel(panel)}
-            {renderDropSlot(index + 1)}
-          </Fragment>
-        ))}
+      <div className="workspace-layout">
+        <div className="workspace-main">
+          <div className="workspace-top">
+            {renderZone('topLeft', topLeftPanels, 'zone-top-left')}
+            {renderZone('topRight', topRightPanels, 'zone-top-right')}
+          </div>
+          {renderZone('bottom', bottomPanels, 'zone-bottom')}
+        </div>
+        {renderZone('sidebar', sidebarPanels, 'zone-sidebar')}
       </div>
 
       {isHelpOpen ? (
