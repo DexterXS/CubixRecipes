@@ -6,6 +6,7 @@ import logging
 import os
 import queue
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -347,18 +348,8 @@ class ProcessControllerApp:
         self.root.after(POLL_INTERVAL_MS, self._update_status_labels)
 
     def _build_backend_command(self) -> tuple[list[str] | str, bool]:
-        if os.name == "nt":
-            venv_python = self.backend_dir / ".venv" / "Scripts" / "python.exe"
-            if venv_python.exists():
-                return [str(venv_python), "-m", "uvicorn", "app.main:app", "--reload"], False
-
-            return "python -m uvicorn app.main:app --reload", True
-
-        venv_python = self.backend_dir / ".venv" / "bin" / "python"
-        if venv_python.exists():
-            return [str(venv_python), "-m", "uvicorn", "app.main:app", "--reload"], False
-
-        return [sys.executable, "-m", "uvicorn", "app.main:app", "--reload"], False
+        python_executable = self._select_backend_python()
+        return [python_executable, "-m", "uvicorn", "app.main:app", "--reload"], False
 
     def _build_frontend_command(self) -> tuple[list[str] | str, bool]:
         if os.name == "nt":
@@ -369,6 +360,98 @@ class ProcessControllerApp:
     def _show_missing_dir_error(self, name: str, directory: Path) -> None:
         self.logger.error("Запуск %s невозможен: не найдена папка %s", name, directory)
         messagebox.showerror("Ошибка", f"Папка {name} не найдена:\n{directory}")
+
+    def _python_candidates_for_backend(self) -> list[str]:
+        candidates: list[str] = []
+
+        if os.name == "nt":
+            local_venv = self.backend_dir / ".venv" / "Scripts" / "python.exe"
+            if local_venv.exists():
+                candidates.append(str(local_venv))
+        else:
+            local_venv = self.backend_dir / ".venv" / "bin" / "python"
+            if local_venv.exists():
+                candidates.append(str(local_venv))
+
+        candidates.append(sys.executable)
+
+        for executable in ("python", "python3", "py"):
+            resolved = shutil.which(executable)
+            if resolved:
+                candidates.append(resolved)
+
+        unique_candidates: list[str] = []
+        seen: set[str] = set()
+        for candidate in candidates:
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                unique_candidates.append(candidate)
+
+        return unique_candidates
+
+    def _python_has_module(self, python_executable: str, module_name: str) -> bool:
+        try:
+            result = subprocess.run(
+                [
+                    python_executable,
+                    "-c",
+                    (
+                        "import importlib.util, sys; "
+                        f"sys.exit(0 if importlib.util.find_spec('{module_name}') else 1)"
+                    ),
+                ],
+                cwd=self.backend_dir,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        except OSError:
+            return False
+
+        return result.returncode == 0
+
+    def _show_backend_dependency_error(self, checked_candidates: list[str]) -> None:
+        preferred_python = checked_candidates[0] if checked_candidates else sys.executable
+        install_command = f'"{preferred_python}" -m pip install -e backend[dev]'
+        details = "\n".join(f"- {candidate}" for candidate in checked_candidates) or "- candidates not found"
+        message = (
+            "Не найден модуль uvicorn ни в одном подходящем Python-интерпретаторе.\n\n"
+            "Проверьте backend-окружение и установите зависимости, например так:\n"
+            f"{install_command}\n\n"
+            "Проверенные интерпретаторы:\n"
+            f"{details}"
+        )
+        self.logger.error(message.replace("\n", " "))
+        self._write_process_line(
+            self.backend,
+            (
+                "Backend не запущен: в выбранном Python отсутствует модуль uvicorn.\n"
+                f"Установите зависимости командой:\n{install_command}\n"
+            ),
+        )
+        messagebox.showerror("Ошибка backend", message)
+
+    def _select_backend_python(self) -> str:
+        checked_candidates = self._python_candidates_for_backend()
+        for candidate in checked_candidates:
+            if self._python_has_module(candidate, "uvicorn"):
+                self.logger.info("Для backend выбран Python-интерпретатор с установленным uvicorn: %s", candidate)
+                return candidate
+
+        self._show_backend_dependency_error(checked_candidates)
+        raise RuntimeError("uvicorn is not installed in any detected Python interpreter")
+
+    def _validate_backend_setup(self) -> bool:
+        if not self.backend_dir.is_dir():
+            self._show_missing_dir_error("backend", self.backend_dir)
+            return False
+
+        try:
+            self._select_backend_python()
+        except RuntimeError:
+            return False
+
+        return True
 
     def _validate_frontend_setup(self) -> bool:
         package_json = self.frontend_dir / "package.json"
@@ -466,6 +549,9 @@ class ProcessControllerApp:
             messagebox.showerror("Ошибка запуска", f"Не удалось запустить {managed.name}:\n{error}")
 
     def start_backend(self) -> None:
+        if not self._validate_backend_setup():
+            return
+
         command, use_shell = self._build_backend_command()
         self.notebook.select(self.backend_console.frame)
         self._start_process(self.backend, command, use_shell)

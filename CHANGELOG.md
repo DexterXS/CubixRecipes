@@ -14,6 +14,7 @@
 - Added copyable/selectable console text, clickable HTTP/HTTPS links, UTF-8 subprocess decoding, and extra mojibake cleanup for embedded console tabs.
 - Replaced backend `|` union type hints with Python 3.9-compatible typing constructs (`Optional`/`Union`) so FastAPI/Pydantic imports no longer fail in older runtime environments.
 - Removed backend `dataclass(slots=True)` usage so Python 3.9 runtimes no longer fail during module import with `TypeError: dataclass() got an unexpected keyword argument 'slots'`.
+- Improved `start-dev.py` backend startup validation so it checks which Python interpreter actually has `uvicorn` installed and shows an actionable install command when the environment is incomplete.
 
 ### Fixed
 - Cleaned project instructions so AGENTS.md now contains only permanent workflow and maintenance rules.
