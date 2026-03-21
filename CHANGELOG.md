@@ -8,6 +8,7 @@
 
 ### Changed
 - Replaced placeholder repository files with a structured modular architecture for backend and frontend development.
+- Expanded `start-dev.py` with an in-window action log that explains launches, stops, restart reasons, and which managed processes can currently be stopped.
 
 ### Fixed
 - Cleaned project instructions so AGENTS.md now contains only permanent workflow and maintenance rules.
