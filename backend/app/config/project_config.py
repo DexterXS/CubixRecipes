@@ -7,17 +7,20 @@ from typing import Any, Optional
 
 
 DEFAULT_PANEL_LAYOUT = [
-    {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 420},
-    {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True, 'height': 420},
-    {'id': 'grid', 'zone': 'bottom', 'order': 0, 'visible': True, 'height': 420},
-    {'id': 'settings', 'zone': 'bottom', 'order': 1, 'visible': True, 'height': 320},
-    {'id': 'info', 'zone': 'sidebar', 'order': 0, 'visible': True, 'height': 280},
-    {'id': 'debug', 'zone': 'sidebar', 'order': 1, 'visible': True, 'height': 280},
-    {'id': 'diagnostics', 'zone': 'sidebar', 'order': 2, 'visible': True, 'height': 260},
-    {'id': 'preview', 'zone': 'sidebar', 'order': 3, 'visible': False, 'height': 220},
-    {'id': 'raw', 'zone': 'sidebar', 'order': 4, 'visible': False, 'height': 260},
+    {'id': 'hero', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 120, 'width_units': 3},
+    {'id': 'toolbar', 'zone': 'topLeft', 'order': 1, 'visible': True, 'height': 96, 'width_units': 3},
+    {'id': 'input', 'zone': 'topLeft', 'order': 2, 'visible': True, 'height': 320, 'width_units': 2},
+    {'id': 'output', 'zone': 'topRight', 'order': 3, 'visible': True, 'height': 320, 'width_units': 1},
+    {'id': 'grid', 'zone': 'bottom', 'order': 4, 'visible': True, 'height': 380, 'width_units': 3},
+    {'id': 'statusBar', 'zone': 'topRight', 'order': 5, 'visible': False, 'height': 72, 'width_units': 3},
+    {'id': 'settings', 'zone': 'bottom', 'order': 6, 'visible': False, 'height': 260, 'width_units': 1},
+    {'id': 'info', 'zone': 'sidebar', 'order': 7, 'visible': False, 'height': 260, 'width_units': 1},
+    {'id': 'debug', 'zone': 'sidebar', 'order': 8, 'visible': False, 'height': 260, 'width_units': 1},
+    {'id': 'diagnostics', 'zone': 'sidebar', 'order': 9, 'visible': False, 'height': 260, 'width_units': 1},
+    {'id': 'preview', 'zone': 'sidebar', 'order': 10, 'visible': False, 'height': 220, 'width_units': 1},
+    {'id': 'raw', 'zone': 'sidebar', 'order': 11, 'visible': False, 'height': 260, 'width_units': 1},
 ]
-DEFAULT_WORKSPACE_LAYOUT = {'top_ratio': 55, 'main_ratio': 68}
+DEFAULT_WORKSPACE_LAYOUT = {'columns': 3, 'compact_header': True}
 
 
 @dataclass
@@ -27,12 +30,13 @@ class PanelLayoutItemConfig:
     order: int = 0
     visible: bool = True
     height: Optional[int] = None
+    width_units: int = 1
 
 
 @dataclass
 class WorkspaceLayoutConfig:
-    top_ratio: int = 55
-    main_ratio: int = 68
+    columns: int = 3
+    compact_header: bool = True
 
 
 @dataclass
@@ -42,7 +46,7 @@ class UiPreferencesConfig:
     editor_mode: str = 'edit'
     language: str = 'ru'
     active_view_tab: str = 'editor'
-    reset_layout_version: int = 3
+    reset_layout_version: int = 4
     panel_layout: list[PanelLayoutItemConfig] = field(default_factory=list)
     workspace_layout: WorkspaceLayoutConfig = field(default_factory=WorkspaceLayoutConfig)
 
@@ -177,16 +181,16 @@ class ProjectConfigService:
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
             language=str(payload.get('language', 'ru') or 'ru'),
             active_view_tab=str(payload.get('active_view_tab', 'editor') or 'editor'),
-            reset_layout_version=int(payload.get('reset_layout_version', 3) or 3),
+            reset_layout_version=int(payload.get('reset_layout_version', 4) or 4),
             panel_layout=self._coerce_panel_layout(payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)),
             workspace_layout=self._coerce_workspace_layout(payload.get('workspace_layout', DEFAULT_WORKSPACE_LAYOUT)),
         )
 
     def _coerce_workspace_layout(self, raw: Any) -> WorkspaceLayoutConfig:
         payload = raw if isinstance(raw, dict) else {}
-        top_ratio = self._clamp_ratio(payload.get('top_ratio', DEFAULT_WORKSPACE_LAYOUT['top_ratio']))
-        main_ratio = self._clamp_ratio(payload.get('main_ratio', DEFAULT_WORKSPACE_LAYOUT['main_ratio']))
-        return WorkspaceLayoutConfig(top_ratio=top_ratio, main_ratio=main_ratio)
+        columns = self._clamp_columns(payload.get('columns', DEFAULT_WORKSPACE_LAYOUT['columns']))
+        compact_header = bool(payload.get('compact_header', DEFAULT_WORKSPACE_LAYOUT['compact_header']))
+        return WorkspaceLayoutConfig(columns=columns, compact_header=compact_header)
 
     def _coerce_panel_layout(self, raw: Any) -> list[PanelLayoutItemConfig]:
         if not isinstance(raw, list):
@@ -202,26 +206,35 @@ class ProjectConfigService:
             seen.add(panel_id)
             height_raw = item.get('height')
             height = int(height_raw) if isinstance(height_raw, (int, float)) else None
+            width_units_raw = item.get('width_units', 1)
+            try:
+                width_units = int(width_units_raw)
+            except (TypeError, ValueError):
+                width_units = 1
             result.append(
                 PanelLayoutItemConfig(
                     id=panel_id,
                     zone=str(item.get('zone', 'bottom') or 'bottom'),
                     order=int(item.get('order', index) or index),
                     visible=bool(item.get('visible', True)),
-                    height=max(180, min(height, 960)) if height is not None else None,
+                    height=max(72, min(height, 960)) if height is not None else None,
+                    width_units=max(1, min(width_units, 3)),
                 )
             )
         for item in DEFAULT_PANEL_LAYOUT:
             if item['id'] not in seen:
                 result.append(PanelLayoutItemConfig(**item))
+        result.sort(key=lambda item: item.order)
+        for order, item in enumerate(result):
+            item.order = order
         return result
 
-    def _clamp_ratio(self, value: Any) -> int:
+    def _clamp_columns(self, value: Any) -> int:
         try:
-            ratio = int(value)
+            columns = int(value)
         except (TypeError, ValueError):
-            ratio = 50
-        return max(25, min(ratio, 75))
+            columns = 3
+        return max(1, min(columns, 3))
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:

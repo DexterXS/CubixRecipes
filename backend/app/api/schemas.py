@@ -55,11 +55,12 @@ class PanelLayoutItemRequest(BaseModel):
     order: int = 0
     visible: bool = True
     height: Optional[int] = None
+    width_units: int = 1
 
 
 class WorkspaceLayoutRequest(BaseModel):
-    top_ratio: int = 55
-    main_ratio: int = 68
+    columns: Literal[1, 2, 3] = 3
+    compact_header: bool = True
 
 
 class UiPreferencesRequest(BaseModel):
@@ -68,7 +69,7 @@ class UiPreferencesRequest(BaseModel):
     editor_mode: Literal['view', 'edit'] = 'edit'
     language: Literal['ru', 'en'] = 'ru'
     active_view_tab: Literal['editor', 'preview', 'diagnostics', 'raw'] = 'editor'
-    reset_layout_version: int = 2
+    reset_layout_version: int = 4
     panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
     workspace_layout: WorkspaceLayoutRequest = Field(default_factory=WorkspaceLayoutRequest)
 

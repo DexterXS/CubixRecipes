@@ -26,7 +26,12 @@ const translations: Record<UiLanguage, TranslationTree> = {
       file: 'Файл',
       uid: 'UID',
       source: 'Источник',
-      unsaved: 'ещё не сохранён'
+      unsaved: 'ещё не сохранён',
+      compactHeader: 'Компактный верх',
+      columns: 'Колонки',
+      oneColumn: '1 колонка',
+      twoColumns: '2 колонки',
+      threeColumns: '3 колонки'
     },
     toolbar: {
       work: 'Работа',
@@ -48,8 +53,11 @@ const translations: Record<UiLanguage, TranslationTree> = {
       raw: 'Raw'
     },
     panel: {
+      hero: 'Обзор проекта',
+      statusBar: 'Статус',
+      toolbar: 'Инструменты',
       input: 'Входной рецепт',
-      output: 'Результат',
+      output: 'Выходной рецепт',
       grid: 'Сетка рецепта',
       info: 'Информация о рецепте',
       debug: 'Быстрый debug',
@@ -171,7 +179,12 @@ const translations: Record<UiLanguage, TranslationTree> = {
       file: 'File',
       uid: 'UID',
       source: 'Source',
-      unsaved: 'not saved yet'
+      unsaved: 'not saved yet',
+      compactHeader: 'Compact header',
+      columns: 'Columns',
+      oneColumn: '1 column',
+      twoColumns: '2 columns',
+      threeColumns: '3 columns'
     },
     toolbar: {
       work: 'Work',
@@ -193,8 +206,11 @@ const translations: Record<UiLanguage, TranslationTree> = {
       raw: 'Raw'
     },
     panel: {
+      hero: 'Project Overview',
+      statusBar: 'Status',
+      toolbar: 'Tools',
       input: 'Input Text',
-      output: 'Output',
+      output: 'Output Recipe',
       grid: 'Input Grid',
       info: 'Recipe Info',
       debug: 'Quick Debug',
@@ -248,7 +264,9 @@ const translations: Record<UiLanguage, TranslationTree> = {
       iconFound: 'Icon found',
       configSources: 'Config sources',
       originPath: 'Origin path',
-      visiblePanels: 'Panels'
+      visiblePanels: 'Panels',
+      layoutSaved: 'Layout saved',
+      workspace: 'Workspace'
     },
     values: {
       unresolved: 'unresolved',
@@ -318,6 +336,9 @@ export function getTabLabel(language: UiLanguage, tab: AppTab): string {
 
 export function getPanelLabel(language: UiLanguage, panelId: PanelId): string {
   const map: Record<PanelId, string> = {
+    hero: 'panel.hero',
+    statusBar: 'panel.statusBar',
+    toolbar: 'panel.toolbar',
     input: 'panel.input',
     output: 'panel.output',
     grid: 'panel.grid',
@@ -329,5 +350,5 @@ export function getPanelLabel(language: UiLanguage, panelId: PanelId): string {
     raw: 'panel.raw'
   };
   const t = createTranslator(language);
-  return t(map[panelId]);
+  return t(map[panelId] ?? `panel.${panelId}`);
 }

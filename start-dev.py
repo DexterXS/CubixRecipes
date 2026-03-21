@@ -931,7 +931,7 @@ class ProcessControllerApp:
         since_id = 0 if force_replace else self.full_log_pane.last_event_id
         path = (
             f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
-            f"&since_id={since_id}&limit={'120' if force_replace else '80'}&include_details=false"
+            f"&since_id={since_id}&limit={'60' if force_replace else '40'}&include_details=false"
         )
         self.full_log_pane.set_status(f'Refreshing unified log from {BACKEND_API_BASE_URL}{path}')
 
@@ -952,7 +952,7 @@ class ProcessControllerApp:
             self.full_log_pane.set_status(f"Unified log refresh failed | URL: {BACKEND_API_BASE_URL}{path} | error: {error}")
             self.logger.error('Не удалось обновить unified log: %s', error)
 
-        self._run_debug_request(path, on_success=on_success, on_error=on_error, timeout=2.5)
+        self._run_debug_request(path, on_success=on_success, on_error=on_error, timeout=5.0)
 
     def copy_unified_log(self) -> None:
         self.full_log_pane.copy_all()

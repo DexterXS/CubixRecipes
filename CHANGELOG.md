@@ -40,3 +40,4 @@
 
 - Fixed Full Debug Log timeouts by adding a lightweight query path with diagnostics, a dedicated UI-preferences endpoint that avoids full rescans, and control-panel request timing/bottleneck reporting.
 - Replaced button-first panel movement with drag-and-drop, persisted panel heights/workspace splitters, and mouse-driven resize handles in the React workspace.
+- Fixed workspace panel label translations for the new `hero`/`toolbar`/`statusBar` panels and prevented late settings loads from overwriting user layout changes made immediately after startup.

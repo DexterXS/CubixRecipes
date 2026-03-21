@@ -209,15 +209,16 @@ def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
         'editor_mode': 'edit',
         'language': 'ru',
         'active_view_tab': 'editor',
-        'reset_layout_version': 3,
-        'workspace_layout': {'top_ratio': 60, 'main_ratio': 64},
+        'reset_layout_version': 4,
+        'workspace_layout': {'columns': 2, 'compact_header': True},
         'panel_layout': [
-            {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 500},
-            {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True, 'height': 420},
+            {'id': 'hero', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 120, 'width_units': 3},
+            {'id': 'input', 'zone': 'topLeft', 'order': 1, 'visible': True, 'height': 500, 'width_units': 2},
+            {'id': 'output', 'zone': 'topRight', 'order': 2, 'visible': True, 'height': 420, 'width_units': 1},
         ],
     }})())
 
-    assert response['ui_preferences']['workspace_layout']['top_ratio'] == 60
-    assert response['ui_preferences']['panel_layout'][0]['height'] == 500
+    assert response['ui_preferences']['workspace_layout']['columns'] == 2
+    assert response['ui_preferences']['panel_layout'][1]['height'] == 500
     stored = json.loads(config_path.read_text(encoding='utf-8'))
-    assert stored['ui_preferences']['workspace_layout']['main_ratio'] == 64
+    assert stored['ui_preferences']['workspace_layout']['compact_header'] is True

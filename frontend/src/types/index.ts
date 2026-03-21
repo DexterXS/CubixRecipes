@@ -4,7 +4,7 @@ export type DensityMode = 'compact' | 'normal' | 'wide';
 export type EditorMode = 'view' | 'edit';
 export type AppTab = 'editor' | 'preview' | 'diagnostics' | 'raw';
 export type UiLanguage = 'ru' | 'en';
-export type PanelId = 'input' | 'output' | 'grid' | 'info' | 'debug' | 'settings' | 'diagnostics' | 'preview' | 'raw';
+export type PanelId = 'hero' | 'statusBar' | 'toolbar' | 'input' | 'output' | 'grid' | 'info' | 'debug' | 'settings' | 'diagnostics' | 'preview' | 'raw';
 export type PanelZone = 'topLeft' | 'topRight' | 'bottom' | 'sidebar';
 
 export interface ResolutionView {
@@ -38,11 +38,12 @@ export interface PanelLayoutItem {
   order: number;
   visible: boolean;
   height?: number;
+  width_units?: number;
 }
 
 export interface WorkspaceLayout {
-  top_ratio: number;
-  main_ratio: number;
+  columns: 1 | 2 | 3;
+  compact_header: boolean;
 }
 
 export interface UiPreferences {
