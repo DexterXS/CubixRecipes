@@ -3,7 +3,9 @@ export type DisplayMode = 'text' | 'icons';
 export type DensityMode = 'compact' | 'normal' | 'wide';
 export type EditorMode = 'view' | 'edit';
 export type AppTab = 'editor' | 'preview' | 'diagnostics' | 'raw';
-export type SectionKey = 'input' | 'settings' | 'output' | 'metadata' | 'diagnostics';
+export type UiLanguage = 'ru' | 'en';
+export type PanelId = 'input' | 'output' | 'grid' | 'info' | 'debug' | 'settings' | 'diagnostics' | 'preview' | 'raw';
+export type PanelZone = 'topLeft' | 'topRight' | 'bottom' | 'sidebar';
 
 export interface ResolutionView {
   item_raw?: string;
@@ -30,11 +32,21 @@ export interface RecipeView {
   };
 }
 
+export interface PanelLayoutItem {
+  id: PanelId;
+  zone: PanelZone;
+  order: number;
+  visible: boolean;
+}
+
 export interface UiPreferences {
   display_mode: DisplayMode;
   density_mode: DensityMode;
   editor_mode: EditorMode;
-  collapsed_sections: Record<SectionKey, boolean>;
+  language: UiLanguage;
+  active_view_tab: AppTab;
+  reset_layout_version: number;
+  panel_layout: PanelLayoutItem[];
 }
 
 export interface ProjectSettings {

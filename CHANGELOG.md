@@ -35,4 +35,5 @@
 - Cleaned project instructions so AGENTS.md now contains only permanent workflow and maintenance rules.
 - Rebuilt the frontend into a multi-panel recipe editor with a sticky action toolbar, status bar, collapsible cards, responsive three-column workspace, stronger output presentation, adaptive scrollable grid, quick diagnostics/info sidebar, and config-backed UI preferences for display/density/editor modes.
 - Optimized debug/control-panel flow by moving Tkinter backend requests off the main thread, adding incremental unified log fetching with cursor-based updates, deduplicating repeated log spam, and simplifying wiki opening so docs no longer depend on the heavy debug pipeline.
+- Reworked the frontend into a modular RU-first workspace with configurable panel layout, panel visibility controls via a `View` menu, panel move/reorder actions, persisted language/layout preferences, and a default input-left/output-right composition.
 

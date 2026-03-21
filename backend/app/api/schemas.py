@@ -49,13 +49,22 @@ class UpdateRecipeRequest(BaseModel):
     name: Optional[str] = None
 
 
+class PanelLayoutItemRequest(BaseModel):
+    id: str
+    zone: Literal['topLeft', 'topRight', 'bottom', 'sidebar'] = 'bottom'
+    order: int = 0
+    visible: bool = True
 
 
 class UiPreferencesRequest(BaseModel):
     display_mode: Literal['text', 'icons'] = 'text'
     density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
     editor_mode: Literal['view', 'edit'] = 'edit'
-    collapsed_sections: dict[str, bool] = Field(default_factory=dict)
+    language: Literal['ru', 'en'] = 'ru'
+    active_view_tab: Literal['editor', 'preview', 'diagnostics', 'raw'] = 'editor'
+    reset_layout_version: int = 2
+    panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
+
 
 class ProjectSettingsRequest(BaseModel):
     scripts_dir: str = 'scripts'

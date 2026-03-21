@@ -10,12 +10,19 @@
     "display_mode": "text",
     "density_mode": "normal",
     "editor_mode": "edit",
-    "collapsed_sections": {
-      "input": false,
-      "settings": false,
-      "output": false,
-      "metadata": false,
-      "diagnostics": false
-    }
+    "language": "ru",
+    "active_view_tab": "editor",
+    "reset_layout_version": 2,
+    "panel_layout": [
+      { "id": "input", "zone": "topLeft", "order": 0, "visible": true },
+      { "id": "output", "zone": "topRight", "order": 0, "visible": true },
+      { "id": "grid", "zone": "bottom", "order": 0, "visible": true },
+      { "id": "settings", "zone": "bottom", "order": 1, "visible": true },
+      { "id": "info", "zone": "sidebar", "order": 0, "visible": true },
+      { "id": "debug", "zone": "sidebar", "order": 1, "visible": true },
+      { "id": "diagnostics", "zone": "sidebar", "order": 2, "visible": true },
+      { "id": "preview", "zone": "sidebar", "order": 3, "visible": false },
+      { "id": "raw", "zone": "sidebar", "order": 4, "visible": false }
+    ]
   }
 }

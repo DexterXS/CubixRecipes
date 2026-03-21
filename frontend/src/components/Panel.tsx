@@ -6,12 +6,25 @@ interface PanelProps {
   actions?: ReactNode;
   collapsible?: boolean;
   collapsed?: boolean;
+  collapseLabel?: string;
+  expandLabel?: string;
   onToggle?: () => void;
   children?: ReactNode;
   className?: string;
 }
 
-export function Panel({ title, subtitle, actions, collapsible = false, collapsed = false, onToggle, children, className = '' }: PanelProps) {
+export function Panel({
+  title,
+  subtitle,
+  actions,
+  collapsible = false,
+  collapsed = false,
+  collapseLabel = 'Свернуть',
+  expandLabel = 'Развернуть',
+  onToggle,
+  children,
+  className = ''
+}: PanelProps) {
   return (
     <section className={`panel ${className}`.trim()}>
       <header className="panel-header">
@@ -20,7 +33,7 @@ export function Panel({ title, subtitle, actions, collapsible = false, collapsed
             <h2>{title}</h2>
             {collapsible ? (
               <button type="button" className="ghost-button panel-toggle" onClick={onToggle} aria-expanded={!collapsed}>
-                {collapsed ? 'Развернуть' : 'Свернуть'}
+                {collapsed ? expandLabel : collapseLabel}
               </button>
             ) : null}
           </div>

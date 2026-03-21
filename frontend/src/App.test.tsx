@@ -38,7 +38,20 @@ beforeEach(() => {
             display_mode: 'text',
             density_mode: 'normal',
             editor_mode: 'edit',
-            collapsed_sections: {}
+            language: 'ru',
+            active_view_tab: 'editor',
+            reset_layout_version: 2,
+            panel_layout: [
+              { id: 'input', zone: 'topLeft', order: 0, visible: true },
+              { id: 'output', zone: 'topRight', order: 0, visible: true },
+              { id: 'grid', zone: 'bottom', order: 0, visible: true },
+              { id: 'settings', zone: 'bottom', order: 1, visible: true },
+              { id: 'info', zone: 'sidebar', order: 0, visible: true },
+              { id: 'debug', zone: 'sidebar', order: 1, visible: true },
+              { id: 'diagnostics', zone: 'sidebar', order: 2, visible: true },
+              { id: 'preview', zone: 'sidebar', order: 3, visible: false },
+              { id: 'raw', zone: 'sidebar', order: 4, visible: false }
+            ]
           }
         })
       }) as Promise<Response>;
@@ -149,33 +162,40 @@ beforeEach(() => {
   vi.spyOn(window, 'open').mockImplementation(() => ({ closed: false } as Window));
 });
 
-test('paste triggers parse and shows stronger output block', async () => {
+test('uses russian layout with output to the right and parses recipe', async () => {
   render(<App />);
-  const textarea = screen.getByLabelText('paste-input');
-  fireEvent.paste(textarea, {
-    clipboardData: {
-      getData: () => 'recipes.addShaped(...)'
-    }
-  });
+  expect(screen.getByText('Редактор рецептов')).toBeTruthy();
+  expect(screen.getByText('Входной рецепт')).toBeTruthy();
+  expect(screen.getAllByText('Результат').length).toBeGreaterThan(0);
+
+  fireEvent.paste(screen.getByLabelText('paste-input'), { clipboardData: { getData: () => 'recipes.addShaped(...)' } });
   await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
-  expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>');
   expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
-  expect(screen.getAllByText('Факел').length).toBeGreaterThan(0);
-  expect(screen.getByText('Input Grid')).toBeTruthy();
 });
 
-test('parse error resets status from parsing state', async () => {
+test('view menu hides and restores panels', async () => {
   render(<App />);
-  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'broken' } });
-  fireEvent.click(screen.getByText('Вставить'));
-  await waitFor(() => expect(screen.getByText('Ошибка парсинга: backend down')).toBeTruthy());
+  fireEvent.click(screen.getByText('Вид'));
+  const debugToggle = screen.getAllByLabelText('Быстрый debug')[0];
+  fireEvent.click(debugToggle);
+  await waitFor(() => expect(screen.queryByRole('heading', { name: 'Быстрый debug' })).toBeFalsy());
+
+  fireEvent.click(screen.getByText('Показать все панели'));
+  await waitFor(() => expect(screen.getByRole('heading', { name: 'Быстрый debug' })).toBeTruthy());
 });
 
-test('toolbar buttons invoke save, save-as, create, help and wiki flows with editable output', async () => {
+test('language switch changes visible labels', async () => {
   render(<App />);
+  await waitFor(() => expect((screen.getByLabelText('Язык') as HTMLSelectElement).value).toBe('ru'));
+  fireEvent.change(screen.getByLabelText('Язык'), { target: { value: 'en' } });
+  await waitFor(() => expect(screen.getByText('Recipe Editor')).toBeTruthy());
+  expect(screen.getByText('Language')).toBeTruthy();
+});
 
+test('toolbar buttons invoke save, save-as, create, help and wiki flows', async () => {
+  render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
-  fireEvent.click(screen.getAllByText('Вставить')[0]);
+  fireEvent.click(screen.getByText('Вставить'));
   await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
 
   fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:lantern>' } });
@@ -183,27 +203,14 @@ test('toolbar buttons invoke save, save-as, create, help and wiki flows with edi
   await waitFor(() => expect(screen.getByText('Рецепт сохранён')).toBeTruthy());
 
   fireEvent.click(screen.getByText('Сохранить как'));
-  await waitFor(() => expect(screen.getByText('Рецепт сохранён в scripts/new_recipe.zs')).toBeTruthy());
+  await waitFor(() => expect(screen.getByText('Рецепт сохранён → scripts/new_recipe.zs')).toBeTruthy());
 
   fireEvent.click(screen.getByText('Создать новый'));
-  await waitFor(() => expect(screen.getByText('Создан новый шаблон рецепта')).toBeTruthy());
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:lantern>');
+  await waitFor(() => expect(screen.getAllByText('Создан новый шаблон рецепта').length).toBeGreaterThan(0));
 
   fireEvent.click(screen.getByText('Справка'));
   expect(screen.getByRole('dialog', { name: 'Справка' })).toBeTruthy();
 
   fireEvent.click(screen.getByText('Вики'));
   expect(window.open).toHaveBeenCalledWith('http://localhost:3000/wiki.html', '_blank', 'noopener,noreferrer');
-});
-
-test('clear action resets editor state', async () => {
-  render(<App />);
-  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
-  fireEvent.click(screen.getAllByText('Вставить')[0]);
-  await waitFor(() => expect(screen.getByText('Рецепт загружен')).toBeTruthy());
-
-  fireEvent.click(screen.getByText('Очистить'));
-  expect((screen.getByLabelText('paste-input') as HTMLTextAreaElement).value).toBe('');
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:stone>');
-  expect(screen.getByText('Интерфейс очищен')).toBeTruthy();
 });

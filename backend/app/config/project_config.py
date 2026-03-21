@@ -6,12 +6,36 @@ from pathlib import Path
 from typing import Any, Optional
 
 
+DEFAULT_PANEL_LAYOUT = [
+    {'id': 'input', 'zone': 'topLeft', 'order': 0, 'visible': True},
+    {'id': 'output', 'zone': 'topRight', 'order': 0, 'visible': True},
+    {'id': 'grid', 'zone': 'bottom', 'order': 0, 'visible': True},
+    {'id': 'settings', 'zone': 'bottom', 'order': 1, 'visible': True},
+    {'id': 'info', 'zone': 'sidebar', 'order': 0, 'visible': True},
+    {'id': 'debug', 'zone': 'sidebar', 'order': 1, 'visible': True},
+    {'id': 'diagnostics', 'zone': 'sidebar', 'order': 2, 'visible': True},
+    {'id': 'preview', 'zone': 'sidebar', 'order': 3, 'visible': False},
+    {'id': 'raw', 'zone': 'sidebar', 'order': 4, 'visible': False},
+]
+
+
+@dataclass
+class PanelLayoutItemConfig:
+    id: str
+    zone: str = 'bottom'
+    order: int = 0
+    visible: bool = True
+
+
 @dataclass
 class UiPreferencesConfig:
     display_mode: str = 'text'
     density_mode: str = 'normal'
     editor_mode: str = 'edit'
-    collapsed_sections: dict[str, bool] = field(default_factory=dict)
+    language: str = 'ru'
+    active_view_tab: str = 'editor'
+    reset_layout_version: int = 2
+    panel_layout: list[PanelLayoutItemConfig] = field(default_factory=list)
 
 
 @dataclass
@@ -37,7 +61,10 @@ class ProjectConfigService:
             config = ProjectPathsConfig(project_config_path=str(self.config_path))
             self.save(config)
             return config
-        payload = json.loads(self.config_path.read_text(encoding='utf-8'))
+        try:
+            payload = json.loads(self.config_path.read_text(encoding='utf-8'))
+        except json.JSONDecodeError:
+            payload = {}
         return self._from_payload(payload)
 
     def save(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
@@ -129,13 +156,42 @@ class ProjectConfigService:
 
     def _coerce_ui_preferences(self, raw: Any) -> UiPreferencesConfig:
         payload = raw if isinstance(raw, dict) else {}
-        collapsed = payload.get('collapsed_sections', {})
+        raw_layout = payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)
+        layout = self._coerce_panel_layout(raw_layout)
         return UiPreferencesConfig(
             display_mode=str(payload.get('display_mode', 'text') or 'text'),
             density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
-            collapsed_sections={str(key): bool(value) for key, value in collapsed.items()} if isinstance(collapsed, dict) else {},
+            language=str(payload.get('language', 'ru') or 'ru'),
+            active_view_tab=str(payload.get('active_view_tab', 'editor') or 'editor'),
+            reset_layout_version=int(payload.get('reset_layout_version', 2) or 2),
+            panel_layout=layout,
         )
+
+    def _coerce_panel_layout(self, raw: Any) -> list[PanelLayoutItemConfig]:
+        if not isinstance(raw, list):
+            raw = DEFAULT_PANEL_LAYOUT
+        result = []
+        seen = set()
+        for index, item in enumerate(raw):
+            if not isinstance(item, dict):
+                continue
+            panel_id = str(item.get('id', '')).strip()
+            if not panel_id or panel_id in seen:
+                continue
+            seen.add(panel_id)
+            result.append(
+                PanelLayoutItemConfig(
+                    id=panel_id,
+                    zone=str(item.get('zone', 'bottom') or 'bottom'),
+                    order=int(item.get('order', index) or index),
+                    visible=bool(item.get('visible', True)),
+                )
+            )
+        for item in DEFAULT_PANEL_LAYOUT:
+            if item['id'] not in seen:
+                result.append(PanelLayoutItemConfig(**item))
+        return result
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:
