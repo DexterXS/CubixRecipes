@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 import queue
+import re
 import subprocess
 import sys
 import threading
@@ -18,6 +19,7 @@ STREAM_POLL_MS = 120
 RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
+ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 
 
 class TkTextHandler(logging.Handler):
@@ -202,8 +204,18 @@ class ProcessControllerApp:
         self.logger.info("Backend и frontend запускаются внутри этой программы, каждая служба пишет вывод в свою вкладку.")
         self.logger.info("Остановить можно только процессы, которые были запущены этой панелью и всё ещё активны.")
 
+    def _sanitize_console_text(self, text: str) -> str:
+        if not text:
+            return ""
+
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        text = ANSI_ESCAPE_RE.sub("", text)
+        return "".join(character for character in text if character == "\n" or character == "\t" or character.isprintable())
+
     def _write_process_line(self, managed: ManagedProcess, text: str) -> None:
-        managed.console.write_line(text)
+        sanitized = self._sanitize_console_text(text)
+        if sanitized:
+            managed.console.write_line(sanitized)
 
     def _poll_process_output(self) -> None:
         for managed in self.managed_processes:
@@ -212,7 +224,10 @@ class ProcessControllerApp:
                     chunk = managed.output_queue.get_nowait()
                 except queue.Empty:
                     break
-                managed.console.append(chunk)
+
+                sanitized = self._sanitize_console_text(chunk)
+                if sanitized:
+                    managed.console.append(sanitized)
 
         self.root.after(STREAM_POLL_MS, self._poll_process_output)
 
