@@ -1,3 +1,4 @@
+from zipfile import ZipFile
 from pathlib import Path
 
 from app.api.routes import create_app
@@ -94,3 +95,97 @@ def test_project_settings_are_persisted_and_reload_storage(tmp_path: Path):
     matches = search_route(type('SearchRequest', (), {'output_item_raw': '<minecraft:apple>'})())['matches']
     assert len(matches) == 1
     assert config_path.exists()
+
+
+def test_debug_summary_exposes_recipe_and_asset_diagnostics(tmp_path: Path):
+    scripts_dir = tmp_path / 'scripts'
+    scripts_dir.mkdir()
+    (scripts_dir / 'recipe.zs').write_text('recipes.addShaped(<minecraft:apple>, [[<minecraft:stick>]]);\n', encoding='utf-8')
+    assets_dir = tmp_path / 'assets'
+    (assets_dir / 'assets' / 'minecraft' / 'textures' / 'items').mkdir(parents=True)
+    (assets_dir / 'assets' / 'minecraft' / 'textures' / 'items' / 'apple.png').write_bytes(b'png')
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    debug_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/summary')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': str(scripts_dir),
+                    'mods_dir': '',
+                    'assets_dir': str(assets_dir),
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                }
+            },
+        )()
+    )
+
+    payload = debug_route()
+
+    assert payload['summary']['recipes_scanned'] == 1
+    assert payload['summary']['icons_found'] == 1
+    assert payload['config']['assets_dir'] == str(assets_dir)
+    assert payload['recipe_scan']['files'][0]['recipe_count'] == 1
+    assert payload['asset_scan']['counters']['textures_items'] == 1
+
+
+def test_debug_log_ingest_and_export(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    post_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'POST' in getattr(route, 'methods', set()))
+    get_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'GET' in getattr(route, 'methods', set()))
+
+    post_route(type('LogRequest', (), {'model_dump': lambda self=None: {'source': 'FRONTEND', 'level': 'WARN', 'category': 'UI', 'message': 'Test event', 'details': {'clicked': True}, 'verbose_only': False}})())
+    payload = get_route()
+
+    assert payload['events'][-1]['message'] == 'Test event'
+    assert 'Test event' in payload['exportText']
+
+
+def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources(tmp_path: Path):
+    mods_dir = tmp_path / 'mods'
+    mods_dir.mkdir()
+    archive_path = mods_dir / 'examplemod.jar'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.writestr('assets/examplemod/textures/items/seed.png', b'png')
+
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    resolve_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/resolve')
+    debug_assets_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/assets')
+    debug_resolver_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/resolver')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': 'scripts',
+                    'mods_dir': str(mods_dir),
+                    'assets_dir': '',
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                    'verbose_debug_logging': True,
+                }
+            },
+        )()
+    )
+
+    resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<examplemod:seed>', 'settings': {}})())
+    assets_payload = debug_assets_route()
+    resolver_payload = debug_resolver_route()
+
+    assert assets_payload['counters']['textures_items'] == 1
+    assert any(source['nested_archives'] for source in assets_payload['sources'])
+    assert resolved['icon_asset_id'] is not None
+    assert any(entry['item_raw'] == '<examplemod:seed>' and entry['checked_sources'] for entry in resolver_payload['entries'])

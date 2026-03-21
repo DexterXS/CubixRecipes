@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { createRecipeTemplate, parseText, saveRecipeAs, updateRecipe } from '../services/api';
+import { logFrontendEvent } from '../services/debugLog';
 import { CellValue, RecipeView } from '../types';
 
 const defaultMatrix: CellValue[][] = [
@@ -51,10 +52,48 @@ export default function App() {
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayName = recipe.output_resolution?.display_name;
 
+  useEffect(() => {
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Frontend app mounted', details: { displayMode: metaMode, strictBinding } });
+  }, []);
+
+  useEffect(() => {
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Display mode changed', details: { metaMode, strictBinding } });
+  }, [metaMode, strictBinding]);
+
+  useEffect(() => {
+    if (!recipe.output_resolution?.icon_url) {
+      logFrontendEvent({
+        level: 'WARN',
+        category: 'ICON',
+        message: 'Using placeholder for output icon',
+        details: {
+          raw_item_id: outputRaw,
+          display_name: outputDisplayName,
+          reason: 'icon_url missing in output_resolution',
+          placeholder: true
+        }
+      });
+    } else {
+      logFrontendEvent({
+        level: 'INFO',
+        category: 'ICON',
+        message: 'Output icon resolved in frontend',
+        details: { raw_item_id: outputRaw, icon_url: recipe.output_resolution.icon_url, strategy: recipe.output_resolution.strategy },
+        verbose_only: true
+      });
+    }
+  }, [recipe.output_resolution?.icon_url, recipe.output_resolution?.strategy, outputDisplayName, outputRaw]);
+
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
     setRecipe(nextRecipe);
     setOutputRaw(nextRecipe.output.raw);
     setMatrix(toCellMatrix(nextRecipe));
+    logFrontendEvent({
+      level: 'INFO',
+      category: 'UI',
+      message: 'Recipe applied to frontend state',
+      details: { recipe_uid: nextRecipe.recipe_uid, recipe_type: nextRecipe.recipe_type, source_path: nextRecipe.source.path, output: nextRecipe.output.raw }
+    });
     if (nextInput !== undefined) {
       setInput(nextInput);
     }
@@ -63,27 +102,34 @@ export default function App() {
   async function handleParse(value: string) {
     setInput(value);
     setStatus('Парсинг...');
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse started', details: { input_length: value.length, preview: value.slice(0, 200) } });
     try {
       const result = await parseText(value);
       if (result.recipe) {
         applyRecipe(result.recipe, value);
         setStatus('Рецепт загружен');
+        logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse completed with recipe', details: { output: result.recipe.output.raw, grid: `${result.recipe.grid_w}x${result.recipe.grid_h}` } });
         return;
       }
       if (result.item) {
         setStatus(`Найден item id: ${result.item.raw}`);
+        logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Parse completed with item query', details: { item_raw: result.item.raw } });
         return;
       }
       setStatus('Backend не вернул рецепт или item id');
+      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Parse returned no recipe or item', details: {} });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       setStatus(`Ошибка парсинга: ${message}`);
+      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Parse failed in frontend', details: { error: message, input_length: value.length } });
     }
   }
 
   async function handleSave() {
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save button clicked', details: { recipe_uid: recipe.recipe_uid, outputRaw } });
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
       setStatus('Сохранение недоступно: рецепт ещё не существует в .zs файле, используйте «Сохранить как».');
+      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Save blocked for generated recipe', details: { recipe_uid: recipe.recipe_uid, source_kind: recipe.source.kind } });
       return;
     }
 
@@ -98,9 +144,11 @@ export default function App() {
       });
       applyRecipe(updated.updatedRecipe, input);
       setStatus('Рецепт сохранён');
+      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save completed', details: { recipe_uid: updated.updatedRecipe.recipe_uid } });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       setStatus(`Ошибка сохранения: ${message}`);
+      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Save failed', details: { error: message } });
     }
   }
 
@@ -108,10 +156,12 @@ export default function App() {
     const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
     if (!targetPath) {
       setStatus('Сохранение как отменено');
+      logFrontendEvent({ level: 'WARN', category: 'UI', message: 'Save as cancelled by user', details: {} });
       return;
     }
 
     setStatus('Сохраняем как...');
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save as started', details: { targetPath, recipe_uid: recipe.recipe_uid } });
     try {
       if (recipe.recipe_uid === 'new-recipe') {
         const created = await createRecipeTemplate({
@@ -140,14 +190,17 @@ export default function App() {
         applyRecipe(response.recipe, input);
       }
       setStatus(`Рецепт сохранён в ${targetPath}`);
+      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Save as completed', details: { targetPath } });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       setStatus(`Ошибка сохранения как: ${message}`);
+      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Save as failed', details: { error: message, targetPath } });
     }
   }
 
   async function handleCreateNew() {
     setStatus('Создаём шаблон...');
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Create new recipe clicked', details: { recipe_type: recipe.recipe_type, outputRaw } });
     try {
       const created = await createRecipeTemplate({
         templateType: recipe.recipe_type,
@@ -156,15 +209,18 @@ export default function App() {
       });
       applyRecipe(created, '');
       setStatus('Создан новый шаблон рецепта');
+      logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Create new recipe completed', details: { recipe_uid: created.recipe_uid } });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       setStatus(`Ошибка создания рецепта: ${message}`);
+      logFrontendEvent({ level: 'ERROR', category: 'UI', message: 'Create new recipe failed', details: { error: message } });
     }
   }
 
   function handleOpenWiki() {
     window.open('/wiki.html', '_blank', 'noopener,noreferrer');
     setStatus('Открыта документация');
+    logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Wiki opened', details: {} });
   }
 
   return (
@@ -173,9 +229,13 @@ export default function App() {
       <textarea
         aria-label="paste-input"
         value={input}
-        onChange={(event) => setInput(event.target.value)}
+        onChange={(event) => {
+          setInput(event.target.value);
+          logFrontendEvent({ level: 'DEBUG', category: 'UI', message: 'Input changed', details: { length: event.target.value.length }, verbose_only: true });
+        }}
         onPaste={(event) => {
           const pasted = event.clipboardData.getData('text');
+          logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Text pasted into input', details: { length: pasted.length, preview: pasted.slice(0, 200) } });
           void handleParse(pasted);
           event.preventDefault();
         }}
@@ -183,7 +243,13 @@ export default function App() {
       <button onClick={() => void handleParse(input)}>Вставить</button>
       <div>
         <label>
-          <input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} />
+          <input
+            type="checkbox"
+            checked={strictBinding}
+            onChange={() => {
+              setStrictBinding((value) => !value);
+            }}
+          />
           Жёсткая привязка
         </label>
         <select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}>
@@ -206,6 +272,7 @@ export default function App() {
               const value = event.target.value;
               setOutputRaw(value);
               setRecipe((current) => ({ ...current, output: { ...current.output, raw: value } }));
+              logFrontendEvent({ level: 'INFO', category: 'UI', message: 'Output changed', details: { outputRaw: value } });
             }}
           />
         </label>
@@ -217,6 +284,7 @@ export default function App() {
         matrix={matrix}
         onCellChange={(row, col, value) => {
           setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' ? null : value) : cell))));
+          logFrontendEvent({ level: 'DEBUG', category: 'UI', message: 'Recipe cell changed', details: { row, col, value }, verbose_only: true });
         }}
       />
       <div className="toolbar">

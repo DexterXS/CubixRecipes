@@ -8,18 +8,19 @@ from typing import Any, Optional
 
 @dataclass
 class ProjectPathsConfig:
-    scripts_dir: str = "scripts"
-    mods_dir: str = ""
-    assets_dir: str = ""
-    recipe_db_path: str = ""
+    scripts_dir: str = 'scripts'
+    mods_dir: str = ''
+    assets_dir: str = ''
+    recipe_db_path: str = ''
     extra_icon_sources: list[str] = field(default_factory=list)
     extra_recipe_sources: list[str] = field(default_factory=list)
-    project_config_path: str = ""
+    verbose_debug_logging: bool = False
+    project_config_path: str = ''
 
 
 class ProjectConfigService:
     def __init__(self, config_path: Optional[Path] = None) -> None:
-        default_path = Path(__file__).resolve().parents[3] / "cubixrecipes.config.json"
+        default_path = Path(__file__).resolve().parents[3] / 'cubixrecipes.config.json'
         self.config_path = Path(config_path) if config_path is not None else default_path
 
     def load(self) -> ProjectPathsConfig:
@@ -27,47 +28,45 @@ class ProjectConfigService:
             config = ProjectPathsConfig(project_config_path=str(self.config_path))
             self.save(config)
             return config
-
-        payload = json.loads(self.config_path.read_text(encoding="utf-8"))
+        payload = json.loads(self.config_path.read_text(encoding='utf-8'))
         return self._from_payload(payload)
 
     def save(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
         normalized = self.normalize(config)
         self.config_path.parent.mkdir(parents=True, exist_ok=True)
-        self.config_path.write_text(json.dumps(asdict(normalized), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        self.config_path.write_text(json.dumps(asdict(normalized), ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         return normalized
 
     def update(self, payload: dict[str, Any]) -> ProjectPathsConfig:
         current = self.load()
         merged = ProjectPathsConfig(
-            scripts_dir=str(payload.get("scripts_dir", current.scripts_dir) or current.scripts_dir),
-            mods_dir=str(payload.get("mods_dir", current.mods_dir) or ""),
-            assets_dir=str(payload.get("assets_dir", current.assets_dir) or ""),
-            recipe_db_path=str(payload.get("recipe_db_path", current.recipe_db_path) or ""),
-            extra_icon_sources=self._coerce_list(payload.get("extra_icon_sources", current.extra_icon_sources)),
-            extra_recipe_sources=self._coerce_list(payload.get("extra_recipe_sources", current.extra_recipe_sources)),
+            scripts_dir=str(payload.get('scripts_dir', current.scripts_dir) or current.scripts_dir),
+            mods_dir=str(payload.get('mods_dir', current.mods_dir) or ''),
+            assets_dir=str(payload.get('assets_dir', current.assets_dir) or ''),
+            recipe_db_path=str(payload.get('recipe_db_path', current.recipe_db_path) or ''),
+            extra_icon_sources=self._coerce_list(payload.get('extra_icon_sources', current.extra_icon_sources)),
+            extra_recipe_sources=self._coerce_list(payload.get('extra_recipe_sources', current.extra_recipe_sources)),
+            verbose_debug_logging=bool(payload.get('verbose_debug_logging', current.verbose_debug_logging)),
             project_config_path=str(self.config_path),
         )
         return self.save(merged)
 
     def as_api_dict(self, config: Optional[ProjectPathsConfig] = None) -> dict[str, Any]:
         current = self.normalize(config or self.load())
-        return {
-            **asdict(current),
-            "validation": self.validate(current),
-        }
+        return {**asdict(current), 'validation': self.validate(current)}
 
     def validate(self, config: ProjectPathsConfig) -> dict[str, Any]:
         paths = {
-            "scripts_dir": config.scripts_dir,
-            "mods_dir": config.mods_dir,
-            "assets_dir": config.assets_dir,
-            "recipe_db_path": config.recipe_db_path,
-            "project_config_path": config.project_config_path,
+            'scripts_dir': config.scripts_dir,
+            'mods_dir': config.mods_dir,
+            'assets_dir': config.assets_dir,
+            'recipe_db_path': config.recipe_db_path,
+            'project_config_path': config.project_config_path,
         }
-        validations = {key: self._validate_path(value, expect_file=(key == "recipe_db_path" or key == "project_config_path")) for key, value in paths.items()}
-        validations["extra_icon_sources"] = [self._validate_path(value) for value in config.extra_icon_sources]
-        validations["extra_recipe_sources"] = [self._validate_path(value) for value in config.extra_recipe_sources]
+        validations = {key: self._validate_path(value, expect_file=(key == 'recipe_db_path' or key == 'project_config_path')) for key, value in paths.items()}
+        validations['extra_icon_sources'] = [self._validate_path(value) for value in config.extra_icon_sources]
+        validations['extra_recipe_sources'] = [self._validate_path(value) for value in config.extra_recipe_sources]
+        validations['verbose_debug_logging'] = {'enabled': config.verbose_debug_logging}
         return validations
 
     def build_index_paths(self, config: Optional[ProjectPathsConfig] = None) -> list[str]:
@@ -82,24 +81,26 @@ class ProjectConfigService:
 
     def normalize(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
         return ProjectPathsConfig(
-            scripts_dir=config.scripts_dir or "scripts",
-            mods_dir=config.mods_dir or "",
-            assets_dir=config.assets_dir or "",
-            recipe_db_path=config.recipe_db_path or "",
+            scripts_dir=config.scripts_dir or 'scripts',
+            mods_dir=config.mods_dir or '',
+            assets_dir=config.assets_dir or '',
+            recipe_db_path=config.recipe_db_path or '',
             extra_icon_sources=self._coerce_list(config.extra_icon_sources),
             extra_recipe_sources=self._coerce_list(config.extra_recipe_sources),
+            verbose_debug_logging=bool(config.verbose_debug_logging),
             project_config_path=str(self.config_path),
         )
 
     def _from_payload(self, payload: dict[str, Any]) -> ProjectPathsConfig:
         return self.normalize(
             ProjectPathsConfig(
-                scripts_dir=str(payload.get("scripts_dir", "scripts") or "scripts"),
-                mods_dir=str(payload.get("mods_dir", "") or ""),
-                assets_dir=str(payload.get("assets_dir", "") or ""),
-                recipe_db_path=str(payload.get("recipe_db_path", "") or ""),
-                extra_icon_sources=self._coerce_list(payload.get("extra_icon_sources", [])),
-                extra_recipe_sources=self._coerce_list(payload.get("extra_recipe_sources", [])),
+                scripts_dir=str(payload.get('scripts_dir', 'scripts') or 'scripts'),
+                mods_dir=str(payload.get('mods_dir', '') or ''),
+                assets_dir=str(payload.get('assets_dir', '') or ''),
+                recipe_db_path=str(payload.get('recipe_db_path', '') or ''),
+                extra_icon_sources=self._coerce_list(payload.get('extra_icon_sources', [])),
+                extra_recipe_sources=self._coerce_list(payload.get('extra_recipe_sources', [])),
+                verbose_debug_logging=bool(payload.get('verbose_debug_logging', False)),
                 project_config_path=str(self.config_path),
             )
         )
@@ -115,12 +116,12 @@ class ProjectConfigService:
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:
-            return {"path": raw_path, "exists": False, "kind": "missing", "message": "Путь не задан"}
+            return {'path': raw_path, 'exists': False, 'kind': 'missing', 'message': 'Путь не задан'}
         path = Path(raw_path)
         exists = path.exists()
         if expect_file:
-            kind = "file" if path.is_file() else "dir" if path.is_dir() else "missing"
+            kind = 'file' if path.is_file() else 'dir' if path.is_dir() else 'missing'
         else:
-            kind = "dir" if path.is_dir() else "file" if path.is_file() else "missing"
-        message = "OK" if exists else "Путь не найден"
-        return {"path": raw_path, "exists": exists, "kind": kind, "message": message}
+            kind = 'dir' if path.is_dir() else 'file' if path.is_file() else 'missing'
+        message = 'OK' if exists else 'Путь не найден'
+        return {'path': raw_path, 'exists': exists, 'kind': kind, 'message': message}

@@ -13,6 +13,8 @@ import sys
 import threading
 import tkinter as tk
 import webbrowser
+from urllib.error import URLError, HTTPError
+from urllib.request import Request, urlopen
 from dataclasses import dataclass, field
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
@@ -24,6 +26,7 @@ STREAM_POLL_MS = 120
 RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
+BACKEND_API_BASE_URL = "http://127.0.0.1:8000"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 URL_RE = re.compile(r"https?://[^\s]+")
 MOJIBAKE_REPLACEMENTS = {
@@ -43,6 +46,7 @@ class PanelProjectConfig:
     recipe_db_path: str = ""
     extra_icon_sources: list[str] = field(default_factory=list)
     extra_recipe_sources: list[str] = field(default_factory=list)
+    verbose_debug_logging: bool = False
 
     def to_dict(self, config_path: Path) -> dict[str, Any]:
         return {
@@ -52,6 +56,7 @@ class PanelProjectConfig:
             "recipe_db_path": self.recipe_db_path,
             "extra_icon_sources": self.extra_icon_sources,
             "extra_recipe_sources": self.extra_recipe_sources,
+            "verbose_debug_logging": self.verbose_debug_logging,
             "project_config_path": str(config_path),
         }
 
@@ -73,6 +78,7 @@ class ProjectConfigStore:
             recipe_db_path=str(payload.get("recipe_db_path", "") or ""),
             extra_icon_sources=self._coerce_list(payload.get("extra_icon_sources", [])),
             extra_recipe_sources=self._coerce_list(payload.get("extra_recipe_sources", [])),
+            verbose_debug_logging=bool(payload.get("verbose_debug_logging", False)),
         )
 
     def save(self, config: PanelProjectConfig) -> None:
@@ -183,6 +189,158 @@ class ConsolePane:
         return "break"
 
 
+
+
+class DebugPane:
+    def __init__(self, parent: ttk.Notebook) -> None:
+        self.frame = ttk.Frame(parent)
+        parent.add(self.frame, text="Debug")
+
+        header = tk.Label(
+            self.frame,
+            text=(
+                "Подробная backend-диагностика: активный config, recipe scan, asset scan, resolver, parse, errors и missing links. "
+                "Кнопки ниже запрашивают реальные структурированные debug endpoints."
+            ),
+            wraplength=900,
+            justify=tk.LEFT,
+            anchor="w",
+        )
+        header.pack(fill=tk.X, padx=10, pady=(10, 8))
+
+        actions = ttk.Frame(self.frame)
+        actions.pack(fill=tk.X, padx=10, pady=(0, 8))
+        self.refresh_button = ttk.Button(actions, text="Refresh Debug Info")
+        self.refresh_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.rescan_recipes_button = ttk.Button(actions, text="Rescan Recipes")
+        self.rescan_recipes_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.rescan_assets_button = ttk.Button(actions, text="Rescan Assets")
+        self.rescan_assets_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.clear_button = ttk.Button(actions, text="Clear Debug Log")
+        self.clear_button.pack(side=tk.LEFT)
+
+        summary_label = tk.Label(self.frame, text="Summary", font=("Arial", 10, "bold"), anchor="w")
+        summary_label.pack(fill=tk.X, padx=10)
+        self.summary = ScrolledText(self.frame, height=6, font=("Consolas", 9), wrap=tk.WORD)
+        self.summary.pack(fill=tk.X, padx=10, pady=(0, 8))
+
+        self.sections: dict[str, ScrolledText] = {}
+        for key, title in [
+            ("config", "Config"),
+            ("recipe_scan", "Recipe Scan"),
+            ("asset_scan", "Asset Scan"),
+            ("resolver", "Resolver"),
+            ("parse", "Parse"),
+            ("errors", "Errors"),
+            ("missing_links", "Missing Links"),
+        ]:
+            pane = ttk.LabelFrame(self.frame, text=title)
+            pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 8))
+            widget = ScrolledText(pane, height=8, font=("Consolas", 9), wrap=tk.WORD)
+            widget.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
+            self.sections[key] = widget
+
+    def render(self, payload: dict[str, Any]) -> None:
+        summary = payload.get("summary", {})
+        summary_lines = [
+            f"recipes scanned: {summary.get('recipes_scanned', 0)}",
+            f"recipes failed: {summary.get('recipes_failed', 0)}",
+            f"assets scanned: {summary.get('assets_scanned', 0)}",
+            f"icons found: {summary.get('icons_found', 0)}",
+            f"icons missing: {summary.get('icons_missing', 0)}",
+            f"lang entries loaded: {summary.get('lang_entries_loaded', 0)}",
+            f"parse warnings: {summary.get('parse_warnings', 0)}",
+            f"errors: {summary.get('errors', 0)}",
+        ]
+        self._write_widget(self.summary, "\n".join(summary_lines))
+        for key, widget in self.sections.items():
+            self._write_widget(widget, json.dumps(payload.get(key, {} if key not in {'errors', 'missing_links'} else []), ensure_ascii=False, indent=2))
+
+    def clear(self) -> None:
+        self._write_widget(self.summary, "")
+        for widget in self.sections.values():
+            self._write_widget(widget, "")
+
+    def _write_widget(self, widget: ScrolledText, text: str) -> None:
+        widget.configure(state=tk.NORMAL)
+        widget.delete("1.0", tk.END)
+        widget.insert("1.0", text)
+        widget.configure(state=tk.DISABLED)
+
+class UnifiedLogPane:
+    def __init__(self, parent: ttk.Notebook) -> None:
+        self.frame = ttk.Frame(parent)
+        parent.add(self.frame, text="Full Debug Log")
+
+        header = tk.Label(
+            self.frame,
+            text=(
+                "Единый событийный лог для backend/frontend/API/UI. Здесь по времени собираются структурированные записи, "
+                "которые можно целиком скопировать и отдать ИИ для анализа."
+            ),
+            wraplength=900,
+            justify=tk.LEFT,
+            anchor="w",
+        )
+        header.pack(fill=tk.X, padx=10, pady=(10, 8))
+
+        controls = ttk.Frame(self.frame)
+        controls.pack(fill=tk.X, padx=10, pady=(0, 8))
+        ttk.Label(controls, text="Source").pack(side=tk.LEFT)
+        self.source_var = tk.StringVar(value="All")
+        self.source_filter = ttk.Combobox(controls, textvariable=self.source_var, values=["All", "BACKEND", "FRONTEND", "API", "RESOLVER", "ASSETS", "RECIPES", "UI", "ICON", "SYSTEM", "CONTROL_PANEL"], width=12, state="readonly")
+        self.source_filter.pack(side=tk.LEFT, padx=(6, 12))
+        ttk.Label(controls, text="Level").pack(side=tk.LEFT)
+        self.level_var = tk.StringVar(value="All")
+        self.level_filter = ttk.Combobox(controls, textvariable=self.level_var, values=["All", "INFO", "WARN", "ERROR", "DEBUG"], width=10, state="readonly")
+        self.level_filter.pack(side=tk.LEFT, padx=(6, 12))
+        self.autoscroll_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(controls, text="Auto-scroll", variable=self.autoscroll_var).pack(side=tk.LEFT, padx=(0, 12))
+        self.refresh_button = ttk.Button(controls, text="Refresh Log")
+        self.refresh_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.copy_button = ttk.Button(controls, text="Copy Full Log")
+        self.copy_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.save_button = ttk.Button(controls, text="Save Log To File")
+        self.save_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.clear_button = ttk.Button(controls, text="Clear Log")
+        self.clear_button.pack(side=tk.LEFT)
+
+        self.status_var = tk.StringVar(value='URL: not requested yet')
+        ttk.Label(self.frame, textvariable=self.status_var, justify=tk.LEFT, anchor='w').pack(fill=tk.X, padx=10, pady=(0, 6))
+        self.test_button = ttk.Button(controls, text='Test Debug Pipeline')
+        self.test_button.pack(side=tk.LEFT, padx=(8, 0))
+        self.output = ScrolledText(self.frame, height=28, font=("Consolas", 9), wrap=tk.WORD)
+        self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.output.configure(state=tk.DISABLED)
+        self.current_text = ''
+
+    def set_status(self, text: str) -> None:
+        self.status_var.set(text)
+
+    def render(self, text: str) -> None:
+        self.current_text = text
+        self.output.configure(state=tk.NORMAL)
+        self.output.delete('1.0', tk.END)
+        self.output.insert('1.0', text)
+        if self.autoscroll_var.get():
+            self.output.see(tk.END)
+        self.output.configure(state=tk.DISABLED)
+
+    def copy_all(self) -> None:
+        self.output.clipboard_clear()
+        self.output.clipboard_append(self.current_text)
+
+    def save_to_file(self, initialdir: Path) -> Optional[str]:
+        path = filedialog.asksaveasfilename(initialdir=initialdir, defaultextension='.log', filetypes=[('Log files', '*.log'), ('Text files', '*.txt'), ('All files', '*.*')])
+        if not path:
+            return None
+        Path(path).write_text(self.current_text, encoding='utf-8')
+        return path
+
+    def clear(self) -> None:
+        self.render('')
+
+
 class ManagedProcess:
     def __init__(self, name: str, directory: Path, console: ConsolePane) -> None:
         self.name = name
@@ -222,6 +380,8 @@ class ProcessControllerApp:
         self.notebook: ttk.Notebook
         self.settings_vars: dict[str, tk.StringVar] = {}
         self.validation_labels: dict[str, tk.Label] = {}
+        self.debug_pane: DebugPane
+        self.full_log_pane: UnifiedLogPane
 
         self.logger = logging.getLogger("cubixrecipes.start_dev")
         self.logger.setLevel(logging.INFO)
@@ -239,6 +399,7 @@ class ProcessControllerApp:
         self._log_environment_summary()
         self._update_status_labels()
         self._poll_process_output()
+        self._poll_unified_log()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _create_widgets(self) -> None:
@@ -284,12 +445,25 @@ class ProcessControllerApp:
 
         self.backend_console = ConsolePane(self.notebook, "Backend Console")
         self.frontend_console = ConsolePane(self.notebook, "Frontend Console")
+        self.debug_pane = DebugPane(self.notebook)
+        self.full_log_pane = UnifiedLogPane(self.notebook)
         self._create_settings_tab()
         log_frame = ttk.Frame(self.notebook)
         self.notebook.add(log_frame, text="Action Log")
         tk.Label(log_frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
         self.log_output = ScrolledText(log_frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
         self.log_output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.debug_pane.refresh_button.configure(command=self.refresh_debug_info)
+        self.debug_pane.rescan_recipes_button.configure(command=self.rescan_debug_recipes)
+        self.debug_pane.rescan_assets_button.configure(command=self.rescan_debug_assets)
+        self.debug_pane.clear_button.configure(command=self.clear_debug_log)
+        self.full_log_pane.refresh_button.configure(command=self.refresh_unified_log)
+        self.full_log_pane.copy_button.configure(command=self.copy_unified_log)
+        self.full_log_pane.save_button.configure(command=self.save_unified_log)
+        self.full_log_pane.clear_button.configure(command=self.clear_unified_log)
+        self.full_log_pane.test_button.configure(command=self.test_debug_pipeline)
+        self.full_log_pane.source_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
+        self.full_log_pane.level_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
 
     def _create_settings_tab(self) -> None:
         settings_frame = ttk.Frame(self.notebook)
@@ -320,6 +494,8 @@ class ProcessControllerApp:
         actions = ttk.Frame(settings_frame)
         actions.pack(fill=tk.X, padx=10, pady=(10, 8))
         ttk.Button(actions, text="Save Settings", command=self.save_settings).pack(side=tk.LEFT, padx=(0, 8))
+        self.verbose_debug_var = tk.BooleanVar(value=self.project_config.verbose_debug_logging)
+        ttk.Checkbutton(actions, text="Verbose debug logging", variable=self.verbose_debug_var).pack(side=tk.LEFT, padx=(12, 0))
         ttk.Button(actions, text="Reload Settings", command=self.reload_settings).pack(side=tk.LEFT)
 
         self.settings_summary = tk.Label(settings_frame, text="", justify=tk.LEFT, anchor="w")
@@ -364,6 +540,7 @@ class ProcessControllerApp:
         self.extra_icon_sources_widget.insert("1.0", "\n".join(self.project_config.extra_icon_sources))
         self.extra_recipe_sources_widget.delete("1.0", tk.END)
         self.extra_recipe_sources_widget.insert("1.0", "\n".join(self.project_config.extra_recipe_sources))
+        self.verbose_debug_var.set(self.project_config.verbose_debug_logging)
         self._refresh_all_validations()
 
     def _refresh_all_validations(self) -> None:
@@ -379,7 +556,8 @@ class ProcessControllerApp:
                 f"Config file: {self.config_store.config_path}\n"
                 f"Scripts: {self.settings_vars['scripts_dir'].get() or '—'}\n"
                 f"Mods: {self.settings_vars['mods_dir'].get() or '—'}\n"
-                f"Assets: {self.settings_vars['assets_dir'].get() or '—'}"
+                f"Assets: {self.settings_vars['assets_dir'].get() or '—'}\n"
+                f"Verbose logging: {'on' if self.verbose_debug_var.get() else 'off'}"
             )
         )
 
@@ -440,6 +618,7 @@ class ProcessControllerApp:
             recipe_db_path=self.settings_vars["recipe_db_path"].get().strip(),
             extra_icon_sources=extra_icon_sources,
             extra_recipe_sources=extra_recipe_sources,
+            verbose_debug_logging=self.verbose_debug_var.get(),
         )
 
     def save_settings(self) -> None:
@@ -629,6 +808,133 @@ class ProcessControllerApp:
 
     def _describe_command(self, command: Union[list[str], str]) -> str:
         return " ".join(command) if isinstance(command, list) else command
+
+
+    def _emit_panel_log_event(self, level: str, category: str, message: str, details: Optional[dict[str, Any]] = None) -> None:
+        try:
+            self._request_debug_json('/api/debug/log', method='POST', payload={
+                'source': 'CONTROL_PANEL',
+                'level': level,
+                'category': category,
+                'message': message,
+                'details': details or {},
+                'verbose_only': False,
+            })
+        except Exception:
+            pass
+
+    def test_debug_pipeline(self) -> None:
+        details = {'test': 'control-panel-pipeline', 'note': 'synthetic frontend-like event from control panel'}
+        try:
+            post_response = self._request_debug_json('/api/debug/log', method='POST', payload={
+                'source': 'FRONTEND',
+                'level': 'INFO',
+                'category': 'UI',
+                'message': 'Test Debug Pipeline event',
+                'details': details,
+                'verbose_only': False,
+            })
+            get_response = self._request_debug_json('/api/debug/log?source=All&level=All')
+            export_text = get_response.get('exportText', '')
+            if 'Test Debug Pipeline event' not in export_text:
+                raise RuntimeError('backend buffer empty or event not found after ingest')
+            self.full_log_pane.set_status(f"Pipeline OK | url={get_response.get('_request', {}).get('url')} | status={get_response.get('_request', {}).get('status')}")
+            self._emit_panel_log_event('INFO', 'UI', 'Test Debug Pipeline succeeded', {'post': post_response.get('_request'), 'get': get_response.get('_request')})
+            self.refresh_unified_log()
+        except Exception as error:
+            self.full_log_pane.set_status(f'Pipeline broken: {error}')
+            self.logger.error('Test Debug Pipeline failed: %s', error)
+
+
+    def refresh_unified_log(self) -> None:
+        path = f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
+        try:
+            payload = self._request_debug_json(path)
+            self.full_log_pane.render(payload.get('exportText', ''))
+            request_info = payload.get('_request', {})
+            self.full_log_pane.set_status(f"URL: {request_info.get('url')} | status: {request_info.get('status')} | events: {len(payload.get('events', []))}")
+        except Exception as error:
+            self.full_log_pane.set_status(f"Unified log refresh failed | URL: {BACKEND_API_BASE_URL}{path} | error: {error}")
+            self.logger.error('Не удалось обновить unified log: %s', error)
+            self._emit_panel_log_event('ERROR', 'API', 'Unified log refresh failed', {'url': f'{BACKEND_API_BASE_URL}{path}', 'error': str(error)})
+
+    def copy_unified_log(self) -> None:
+        self.full_log_pane.copy_all()
+        self.logger.info('Unified log copied to clipboard.')
+        self._emit_panel_log_event('INFO', 'UI', 'Copy Full Log clicked', {'length': len(self.full_log_pane.current_text)})
+
+    def save_unified_log(self) -> None:
+        path = self.full_log_pane.save_to_file(self.root_dir)
+        if path:
+            self.logger.info('Unified log saved to %s', path)
+            self._emit_panel_log_event('INFO', 'UI', 'Save Log To File clicked', {'path': path})
+
+    def clear_unified_log(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/log/clear', method='POST')
+        except Exception as error:
+            self.logger.error('Не удалось очистить unified log: %s', error)
+        self.full_log_pane.clear()
+        self._emit_panel_log_event('INFO', 'UI', 'Clear Log clicked', {})
+
+    def _poll_unified_log(self) -> None:
+        if self.backend.is_running() or self.full_log_pane.current_text:
+            self.refresh_unified_log()
+        self.root.after(1500, self._poll_unified_log)
+
+    def _request_debug_json(self, path: str, method: str = "GET", payload: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+        url = f"{BACKEND_API_BASE_URL}{path}"
+        body = None if payload is None else json.dumps(payload).encode('utf-8')
+        headers = {} if payload is None else {'Content-Type': 'application/json'}
+        request = Request(url, data=body, headers=headers, method=method)
+        try:
+            with urlopen(request, timeout=10) as response:
+                raw_body = response.read().decode('utf-8')
+                parsed = json.loads(raw_body) if raw_body else {}
+                if isinstance(parsed, dict):
+                    parsed['_request'] = {'url': url, 'status': response.status, 'body': raw_body[:800]}
+                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': {'url': url, 'status': response.status, 'body': raw_body[:800]}}
+        except HTTPError as error:
+            error_body = error.read().decode('utf-8', errors='replace')
+            raise RuntimeError(f'HTTP {error.code} for {url} body={error_body[:800]}') from error
+        except URLError as error:
+            raise RuntimeError(f'URL error for {url}: {error}') from error
+
+    def refresh_debug_info(self) -> None:
+        try:
+            payload = self._request_debug_json('/api/debug/summary')
+            self.debug_pane.render(payload)
+            self.notebook.select(self.debug_pane.frame)
+            self.logger.info('Debug summary refreshed from backend /api/debug/summary')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось обновить debug summary: %s', error)
+            messagebox.showerror('Debug', f'Не удалось получить debug summary from backend:\n{error}')
+
+    def rescan_debug_recipes(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/recipes/rescan', method='POST')
+            self.refresh_debug_info()
+            self.logger.info('Recipe diagnostics refreshed via /api/debug/recipes/rescan')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось пересканировать recipes debug: %s', error)
+            messagebox.showerror('Debug', f'Не удалось пересканировать recipes:\n{error}')
+
+    def rescan_debug_assets(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/assets/rescan', method='POST')
+            self.refresh_debug_info()
+            self.logger.info('Asset diagnostics refreshed via /api/debug/assets/rescan')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось пересканировать assets debug: %s', error)
+            messagebox.showerror('Debug', f'Не удалось пересканировать assets:\n{error}')
+
+    def clear_debug_log(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/clear', method='POST')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось очистить backend debug log: %s', error)
+        self.debug_pane.clear()
+        self.logger.info('Debug pane cleared by user request.')
 
     def _build_process_env(self) -> dict[str, str]:
         env = os.environ.copy()
