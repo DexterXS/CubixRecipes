@@ -37,6 +37,8 @@ npm install
 npm run dev
 ```
 
+> Vite dev server проксирует запросы `/api` на `http://127.0.0.1:8000`, поэтому frontend в режиме разработки ходит в FastAPI backend без ручной настройки base URL.
+
 ## Запуск
 - Backend по умолчанию: `http://127.0.0.1:8000`
 - Backend теперь приведён к совместимой типизации для Python 3.9+, поэтому Pydantic-схемы и dataclass-модели не зависят от union-нотации `|`.

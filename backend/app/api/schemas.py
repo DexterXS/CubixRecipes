@@ -21,6 +21,10 @@ class CreateRecipeRequest(BaseModel):
 
 class SaveAsRequest(BaseModel):
     recipe_uid: str
+    recipe_type: str
+    output_raw: str
+    matrix: list[list[Optional[str]]]
+    name: Optional[str] = None
     target_path: str
 
 

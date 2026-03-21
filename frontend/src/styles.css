@@ -4,5 +4,12 @@ textarea { width: 100%; min-height: 120px; margin-bottom: 12px; }
 .grid-row { display: flex; gap: 8px; margin-bottom: 8px; }
 input, textarea, select, button { border-radius: 6px; border: 1px solid #374151; padding: 8px; }
 input { width: 140px; }
-button { margin-right: 8px; background: #2563eb; color: white; }
+button { margin-right: 8px; background: #2563eb; color: white; cursor: pointer; }
+button:hover { background: #1d4ed8; }
 .toolbar { margin-top: 16px; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.75); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.modal { width: min(640px, 100%); background: #0f172a; border: 1px solid #374151; border-radius: 12px; padding: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.modal-header h2 { margin: 0; }
+.modal ul { padding-left: 20px; }
+.modal li { margin-bottom: 8px; }
