@@ -13,6 +13,8 @@ import sys
 import threading
 import tkinter as tk
 import webbrowser
+from urllib.error import URLError, HTTPError
+from urllib.request import Request, urlopen
 from dataclasses import dataclass, field
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
@@ -183,6 +185,85 @@ class ConsolePane:
         return "break"
 
 
+
+
+class DebugPane:
+    def __init__(self, parent: ttk.Notebook) -> None:
+        self.frame = ttk.Frame(parent)
+        parent.add(self.frame, text="Debug")
+
+        header = tk.Label(
+            self.frame,
+            text=(
+                "Подробная backend-диагностика: активный config, recipe scan, asset scan, resolver, parse, errors и missing links. "
+                "Кнопки ниже запрашивают реальные структурированные debug endpoints."
+            ),
+            wraplength=900,
+            justify=tk.LEFT,
+            anchor="w",
+        )
+        header.pack(fill=tk.X, padx=10, pady=(10, 8))
+
+        actions = ttk.Frame(self.frame)
+        actions.pack(fill=tk.X, padx=10, pady=(0, 8))
+        self.refresh_button = ttk.Button(actions, text="Refresh Debug Info")
+        self.refresh_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.rescan_recipes_button = ttk.Button(actions, text="Rescan Recipes")
+        self.rescan_recipes_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.rescan_assets_button = ttk.Button(actions, text="Rescan Assets")
+        self.rescan_assets_button.pack(side=tk.LEFT, padx=(0, 8))
+        self.clear_button = ttk.Button(actions, text="Clear Debug Log")
+        self.clear_button.pack(side=tk.LEFT)
+
+        summary_label = tk.Label(self.frame, text="Summary", font=("Arial", 10, "bold"), anchor="w")
+        summary_label.pack(fill=tk.X, padx=10)
+        self.summary = ScrolledText(self.frame, height=6, font=("Consolas", 9), wrap=tk.WORD)
+        self.summary.pack(fill=tk.X, padx=10, pady=(0, 8))
+
+        self.sections: dict[str, ScrolledText] = {}
+        for key, title in [
+            ("config", "Config"),
+            ("recipe_scan", "Recipe Scan"),
+            ("asset_scan", "Asset Scan"),
+            ("resolver", "Resolver"),
+            ("parse", "Parse"),
+            ("errors", "Errors"),
+            ("missing_links", "Missing Links"),
+        ]:
+            pane = ttk.LabelFrame(self.frame, text=title)
+            pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 8))
+            widget = ScrolledText(pane, height=8, font=("Consolas", 9), wrap=tk.WORD)
+            widget.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
+            self.sections[key] = widget
+
+    def render(self, payload: dict[str, Any]) -> None:
+        summary = payload.get("summary", {})
+        summary_lines = [
+            f"recipes scanned: {summary.get('recipes_scanned', 0)}",
+            f"recipes failed: {summary.get('recipes_failed', 0)}",
+            f"assets scanned: {summary.get('assets_scanned', 0)}",
+            f"icons found: {summary.get('icons_found', 0)}",
+            f"icons missing: {summary.get('icons_missing', 0)}",
+            f"lang entries loaded: {summary.get('lang_entries_loaded', 0)}",
+            f"parse warnings: {summary.get('parse_warnings', 0)}",
+            f"errors: {summary.get('errors', 0)}",
+        ]
+        self._write_widget(self.summary, "\n".join(summary_lines))
+        for key, widget in self.sections.items():
+            self._write_widget(widget, json.dumps(payload.get(key, {} if key not in {'errors', 'missing_links'} else []), ensure_ascii=False, indent=2))
+
+    def clear(self) -> None:
+        self._write_widget(self.summary, "")
+        for widget in self.sections.values():
+            self._write_widget(widget, "")
+
+    def _write_widget(self, widget: ScrolledText, text: str) -> None:
+        widget.configure(state=tk.NORMAL)
+        widget.delete("1.0", tk.END)
+        widget.insert("1.0", text)
+        widget.configure(state=tk.DISABLED)
+
+
 class ManagedProcess:
     def __init__(self, name: str, directory: Path, console: ConsolePane) -> None:
         self.name = name
@@ -222,6 +303,7 @@ class ProcessControllerApp:
         self.notebook: ttk.Notebook
         self.settings_vars: dict[str, tk.StringVar] = {}
         self.validation_labels: dict[str, tk.Label] = {}
+        self.debug_pane: DebugPane
 
         self.logger = logging.getLogger("cubixrecipes.start_dev")
         self.logger.setLevel(logging.INFO)
@@ -284,12 +366,17 @@ class ProcessControllerApp:
 
         self.backend_console = ConsolePane(self.notebook, "Backend Console")
         self.frontend_console = ConsolePane(self.notebook, "Frontend Console")
+        self.debug_pane = DebugPane(self.notebook)
         self._create_settings_tab()
         log_frame = ttk.Frame(self.notebook)
         self.notebook.add(log_frame, text="Action Log")
         tk.Label(log_frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
         self.log_output = ScrolledText(log_frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
         self.log_output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.debug_pane.refresh_button.configure(command=self.refresh_debug_info)
+        self.debug_pane.rescan_recipes_button.configure(command=self.rescan_debug_recipes)
+        self.debug_pane.rescan_assets_button.configure(command=self.rescan_debug_assets)
+        self.debug_pane.clear_button.configure(command=self.clear_debug_log)
 
     def _create_settings_tab(self) -> None:
         settings_frame = ttk.Frame(self.notebook)
@@ -629,6 +716,49 @@ class ProcessControllerApp:
 
     def _describe_command(self, command: Union[list[str], str]) -> str:
         return " ".join(command) if isinstance(command, list) else command
+
+    def _request_debug_json(self, path: str, method: str = "GET") -> dict[str, Any]:
+        url = f"http://127.0.0.1:8000{path}"
+        request = Request(url, method=method)
+        with urlopen(request, timeout=10) as response:
+            payload = response.read().decode("utf-8")
+        return json.loads(payload) if payload else {}
+
+    def refresh_debug_info(self) -> None:
+        try:
+            payload = self._request_debug_json('/api/debug/summary')
+            self.debug_pane.render(payload)
+            self.notebook.select(self.debug_pane.frame)
+            self.logger.info('Debug summary refreshed from backend /api/debug/summary')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось обновить debug summary: %s', error)
+            messagebox.showerror('Debug', f'Не удалось получить debug summary from backend:\n{error}')
+
+    def rescan_debug_recipes(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/recipes/rescan', method='POST')
+            self.refresh_debug_info()
+            self.logger.info('Recipe diagnostics refreshed via /api/debug/recipes/rescan')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось пересканировать recipes debug: %s', error)
+            messagebox.showerror('Debug', f'Не удалось пересканировать recipes:\n{error}')
+
+    def rescan_debug_assets(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/assets/rescan', method='POST')
+            self.refresh_debug_info()
+            self.logger.info('Asset diagnostics refreshed via /api/debug/assets/rescan')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось пересканировать assets debug: %s', error)
+            messagebox.showerror('Debug', f'Не удалось пересканировать assets:\n{error}')
+
+    def clear_debug_log(self) -> None:
+        try:
+            self._request_debug_json('/api/debug/clear', method='POST')
+        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            self.logger.error('Не удалось очистить backend debug log: %s', error)
+        self.debug_pane.clear()
+        self.logger.info('Debug pane cleared by user request.')
 
     def _build_process_env(self) -> dict[str, str]:
         env = os.environ.copy()

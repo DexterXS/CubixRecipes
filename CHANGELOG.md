@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added structured backend debug diagnostics endpoints/state for config, recipe scans, asset scans, resolver traces, parse history, missing links, and summary counters, plus a new Control Panel `Debug` tab with refresh/rescan/clear actions.
 - Added project path configuration storage in `cubixrecipes.config.json`, backend settings endpoints, and a new Control Panel `Settings` tab with browse actions and path validation.
 - Added recipe output rendering/editing in the React UI, including output resolution metadata in API responses for future icon/name display.
 

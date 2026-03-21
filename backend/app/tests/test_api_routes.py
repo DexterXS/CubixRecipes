@@ -94,3 +94,42 @@ def test_project_settings_are_persisted_and_reload_storage(tmp_path: Path):
     matches = search_route(type('SearchRequest', (), {'output_item_raw': '<minecraft:apple>'})())['matches']
     assert len(matches) == 1
     assert config_path.exists()
+
+
+def test_debug_summary_exposes_recipe_and_asset_diagnostics(tmp_path: Path):
+    scripts_dir = tmp_path / 'scripts'
+    scripts_dir.mkdir()
+    (scripts_dir / 'recipe.zs').write_text('recipes.addShaped(<minecraft:apple>, [[<minecraft:stick>]]);\n', encoding='utf-8')
+    assets_dir = tmp_path / 'assets'
+    (assets_dir / 'assets' / 'minecraft' / 'textures' / 'items').mkdir(parents=True)
+    (assets_dir / 'assets' / 'minecraft' / 'textures' / 'items' / 'apple.png').write_bytes(b'png')
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    debug_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/summary')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': str(scripts_dir),
+                    'mods_dir': '',
+                    'assets_dir': str(assets_dir),
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                }
+            },
+        )()
+    )
+
+    payload = debug_route()
+
+    assert payload['summary']['recipes_scanned'] == 1
+    assert payload['summary']['icons_found'] == 1
+    assert payload['config']['assets_dir'] == str(assets_dir)
+    assert payload['recipe_scan']['files'][0]['recipe_count'] == 1
+    assert payload['asset_scan']['counters']['textures_items'] == 1

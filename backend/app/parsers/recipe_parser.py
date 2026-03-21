@@ -40,6 +40,12 @@ class RecipeParser:
             return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.WILDCARD)
         return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.EXACT, meta_value=int(meta))
 
+    def parse_item_ref_safe(self, raw: str) -> tuple[Optional[ItemRef], Optional[str]]:
+        try:
+            return self.parse_item_ref(raw), None
+        except Exception as exc:
+            return None, str(exc)
+
     def _parse_recipe(self, text: str, source_kind: str) -> Recipe:
         func, args = self._split_call(text)
         recipe_type = "avaritia_extreme_shaped" if "mods.avaritia.ExtremeCrafting.addShaped" in func else "ct_shaped"
@@ -65,7 +71,11 @@ class RecipeParser:
                 diagnostics.append(f"Row {r_idx} normalized with trailing null values")
             cell_row = []
             for c_idx, cell in enumerate(normalized):
-                item = None if cell is None else self.parse_item_ref(cell)
+                item = None
+                if cell is not None:
+                    item, error = self.parse_item_ref_safe(cell)
+                    if error:
+                        diagnostics.append(f"Cell ({r_idx}, {c_idx}) failed to parse: {error}")
                 cell_row.append(RecipeCell(row=r_idx, col=c_idx, raw=cell, item=item))
             cells.append(cell_row)
         uid = hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
