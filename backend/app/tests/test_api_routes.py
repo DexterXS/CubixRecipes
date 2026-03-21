@@ -24,6 +24,7 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
 
     assert response['ok'] is True
     assert response['recipe']['name'] == 'Torch Recipe'
+    assert response['recipe']['output']['raw'] == '<minecraft:torch>'
     assert response['recipe']['matrix'][0][0]['raw'] == '<minecraft:coal>'
     assert (tmp_path / 'saved.zs').read_text(encoding='utf-8').strip().startswith('recipes.addShaped("Torch Recipe"')
 
@@ -52,5 +53,44 @@ def test_update_existing_recipe_persists_changes(tmp_path: Path):
         )(),
     )
 
+    assert response['updatedRecipe']['output']['raw'] == '<minecraft:torch>'
     assert response['updatedRecipe']['matrix'][0][0]['raw'] == '<minecraft:redstone>'
     assert '<minecraft:redstone>' in recipe_file.read_text(encoding='utf-8')
+
+
+def test_project_settings_are_persisted_and_reload_storage(tmp_path: Path):
+    scripts_dir = tmp_path / 'custom_scripts'
+    scripts_dir.mkdir()
+    (scripts_dir / 'recipe.zs').write_text('recipes.addShaped(<minecraft:apple>, [[<minecraft:stick>]]);\n', encoding='utf-8')
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    get_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'GET' in getattr(route, 'methods', set()))
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    search_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/search')
+
+    initial = get_route()
+    assert initial['scripts_dir'] == 'scripts'
+
+    updated = put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': str(scripts_dir),
+                    'mods_dir': '',
+                    'assets_dir': '',
+                    'recipe_db_path': str(tmp_path / 'recipes.json'),
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                }
+            },
+        )()
+    )
+
+    assert updated['scripts_dir'] == str(scripts_dir)
+    assert updated['validation']['scripts_dir']['exists'] is True
+    matches = search_route(type('SearchRequest', (), {'output_item_raw': '<minecraft:apple>'})())['matches']
+    assert len(matches) == 1
+    assert config_path.exists()

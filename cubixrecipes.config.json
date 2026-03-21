@@ -1,0 +1,9 @@
+{
+  "scripts_dir": "scripts",
+  "mods_dir": "",
+  "assets_dir": "",
+  "recipe_db_path": "",
+  "extra_icon_sources": [],
+  "extra_recipe_sources": [],
+  "project_config_path": "/workspace/CubixRecipes/cubixrecipes.config.json"
+}

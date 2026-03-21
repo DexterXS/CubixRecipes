@@ -12,6 +12,13 @@ class AssetIndex:
         self.lang: dict[str, dict[str, str]] = {}
         self.scan_status: dict[str, dict] = {}
 
+
+    def reset(self) -> None:
+        self.icons.clear()
+        self.models.clear()
+        self.lang.clear()
+        self.scan_status.clear()
+
     def register_icon(self, key: str, candidate: dict) -> None:
         self.icons.setdefault(key, []).append(candidate)
 

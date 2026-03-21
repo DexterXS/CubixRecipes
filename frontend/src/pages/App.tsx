@@ -14,6 +14,7 @@ const defaultRecipe: RecipeView = {
   recipe_type: 'ct_shaped',
   name: null,
   output: { raw: '<minecraft:stone>' },
+  output_resolution: null,
   grid_w: 3,
   grid_h: 3,
   matrix: defaultMatrix.map((row) => row.map((cell) => ({ raw: cell }))),
@@ -23,6 +24,7 @@ const defaultRecipe: RecipeView = {
 const helpText = [
   'Вставьте `recipes.addShaped(...)` или `mods.avaritia.ExtremeCrafting.addShaped(...)` в верхнее поле.',
   'Кнопка «Вставить» отправляет текст в backend `/api/parse` и заполняет сетку рецепта.',
+  'Блок «Выход» показывает результат крафта и позволяет редактировать raw item id перед сохранением.',
   '«Сохранить» обновляет исходный `.zs` файл для уже существующего рецепта.',
   '«Сохранить как» добавляет текущий рецепт в другой `.zs` файл через backend save-as endpoint.',
   '«Создать новый» запрашивает backend шаблон нового рецепта и сбрасывает сетку.'
@@ -43,12 +45,15 @@ export default function App() {
   const [strictBinding, setStrictBinding] = useState(true);
   const [metaMode, setMetaMode] = useState('strict');
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
+  const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
+  const outputDisplayName = recipe.output_resolution?.display_name;
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
     setRecipe(nextRecipe);
+    setOutputRaw(nextRecipe.output.raw);
     setMatrix(toCellMatrix(nextRecipe));
     if (nextInput !== undefined) {
       setInput(nextInput);
@@ -87,7 +92,7 @@ export default function App() {
       const updated = await updateRecipe({
         recipeUid: recipe.recipe_uid,
         recipeType: recipe.recipe_type,
-        outputRaw: recipe.output.raw,
+        outputRaw,
         matrix,
         name: recipe.name
       });
@@ -111,13 +116,13 @@ export default function App() {
       if (recipe.recipe_uid === 'new-recipe') {
         const created = await createRecipeTemplate({
           templateType: recipe.recipe_type,
-          output: recipe.output.raw,
+          output: outputRaw,
           grid: matrix.length
         });
         const response = await saveRecipeAs({
           recipeUid: created.recipe_uid,
           recipeType: created.recipe_type,
-          outputRaw: created.output.raw,
+          outputRaw,
           matrix,
           name: created.name,
           targetPath
@@ -127,7 +132,7 @@ export default function App() {
         const response = await saveRecipeAs({
           recipeUid: recipe.recipe_uid,
           recipeType: recipe.recipe_type,
-          outputRaw: recipe.output.raw,
+          outputRaw,
           matrix,
           name: recipe.name,
           targetPath
@@ -146,7 +151,7 @@ export default function App() {
     try {
       const created = await createRecipeTemplate({
         templateType: recipe.recipe_type,
-        output: recipe.output.raw,
+        output: outputRaw,
         grid: recipe.recipe_type === 'avaritia_extreme_shaped' ? 9 : 3
       });
       applyRecipe(created, '');
@@ -189,6 +194,25 @@ export default function App() {
       </div>
       <p>{status}</p>
       <p>Размер: {summary}</p>
+      <section aria-label="recipe-output">
+        <h2>Выход</h2>
+        <label>
+          Raw output
+          <input
+            aria-label="output-raw"
+            type="text"
+            value={outputRaw}
+            onChange={(event) => {
+              const value = event.target.value;
+              setOutputRaw(value);
+              setRecipe((current) => ({ ...current, output: { ...current.output, raw: value } }));
+            }}
+          />
+        </label>
+        <p>Текущее значение: <code>{outputRaw || '—'}</code></p>
+        <p>Имя: {outputDisplayName ?? 'пока не разрешено'}</p>
+        <p>Иконка: {recipe.output_resolution?.icon_url ?? 'пока не найдена'}</p>
+      </section>
       <RecipeGrid
         matrix={matrix}
         onCellChange={(row, col, value) => {

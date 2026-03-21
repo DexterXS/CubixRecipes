@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import queue
@@ -12,9 +13,11 @@ import sys
 import threading
 import tkinter as tk
 import webbrowser
+from dataclasses import dataclass, field
 from pathlib import Path
-from tkinter import messagebox, ttk
+from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
+from typing import Any, Optional, Union
 
 POLL_INTERVAL_MS = 1000
 STREAM_POLL_MS = 120
@@ -26,10 +29,61 @@ URL_RE = re.compile(r"https?://[^\s]+")
 MOJIBAKE_REPLACEMENTS = {
     "вЫє": "-",
     "вЫ ": "-",
-    "в¢": "-",
+    "в\x80¢": "-",
     "âžœ": "-",
     "â†’": "->",
 }
+
+
+@dataclass
+class PanelProjectConfig:
+    scripts_dir: str = "scripts"
+    mods_dir: str = ""
+    assets_dir: str = ""
+    recipe_db_path: str = ""
+    extra_icon_sources: list[str] = field(default_factory=list)
+    extra_recipe_sources: list[str] = field(default_factory=list)
+
+    def to_dict(self, config_path: Path) -> dict[str, Any]:
+        return {
+            "scripts_dir": self.scripts_dir,
+            "mods_dir": self.mods_dir,
+            "assets_dir": self.assets_dir,
+            "recipe_db_path": self.recipe_db_path,
+            "extra_icon_sources": self.extra_icon_sources,
+            "extra_recipe_sources": self.extra_recipe_sources,
+            "project_config_path": str(config_path),
+        }
+
+
+class ProjectConfigStore:
+    def __init__(self, root_dir: Path) -> None:
+        self.config_path = root_dir / "cubixrecipes.config.json"
+
+    def load(self) -> PanelProjectConfig:
+        if not self.config_path.exists():
+            config = PanelProjectConfig()
+            self.save(config)
+            return config
+        payload = json.loads(self.config_path.read_text(encoding="utf-8"))
+        return PanelProjectConfig(
+            scripts_dir=str(payload.get("scripts_dir", "scripts") or "scripts"),
+            mods_dir=str(payload.get("mods_dir", "") or ""),
+            assets_dir=str(payload.get("assets_dir", "") or ""),
+            recipe_db_path=str(payload.get("recipe_db_path", "") or ""),
+            extra_icon_sources=self._coerce_list(payload.get("extra_icon_sources", [])),
+            extra_recipe_sources=self._coerce_list(payload.get("extra_recipe_sources", [])),
+        )
+
+    def save(self, config: PanelProjectConfig) -> None:
+        self.config_path.write_text(json.dumps(config.to_dict(self.config_path), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    def _coerce_list(self, value: Any) -> list[str]:
+        if isinstance(value, list):
+            return [str(item).strip() for item in value if str(item).strip()]
+        if isinstance(value, str):
+            return [line.strip() for line in value.splitlines() if line.strip()]
+        return []
 
 
 class TkTextHandler(logging.Handler):
@@ -87,7 +141,6 @@ class ConsolePane:
     def append(self, text: str) -> None:
         if not text:
             return
-
         start_index = self.output.index(tk.END + "-1c")
         self.output.insert(tk.END, text)
         end_index = self.output.index(tk.END + "-1c")
@@ -107,17 +160,16 @@ class ConsolePane:
             tag_end = f"{start_index}+{match.end()}c"
             self.output.tag_add("link", tag_start, tag_end)
 
-    def _copy_selection(self, _event: tk.Event[tk.Misc]) -> str | None:
+    def _copy_selection(self, _event: tk.Event[tk.Misc]) -> Optional[str]:
         try:
             selected_text = self.output.get("sel.first", "sel.last")
         except tk.TclError:
             return "break"
-
         self.output.clipboard_clear()
         self.output.clipboard_append(selected_text)
         return "break"
 
-    def _block_edit_keys(self, event: tk.Event[tk.Misc]) -> str | None:
+    def _block_edit_keys(self, event: tk.Event[tk.Misc]) -> Optional[str]:
         if (event.state & 0x4) and event.keysym.lower() == "c":
             return None
         return "break"
@@ -128,7 +180,6 @@ class ConsolePane:
             if self.output.compare(index, ">=", start) and self.output.compare(index, "<", end):
                 webbrowser.open(self.output.get(start, end))
                 break
-
         return "break"
 
 
@@ -137,10 +188,10 @@ class ManagedProcess:
         self.name = name
         self.directory = directory
         self.console = console
-        self.proc: subprocess.Popen[str] | None = None
+        self.proc: Optional[subprocess.Popen[str]] = None
         self.output_queue: queue.Queue[str] = queue.Queue()
-        self.reader_thread: threading.Thread | None = None
-        self.last_return_code: int | None = None
+        self.reader_thread: Optional[threading.Thread] = None
+        self.last_return_code: Optional[int] = None
 
     def is_running(self) -> bool:
         return self.proc is not None and self.proc.poll() is None
@@ -155,23 +206,27 @@ class ProcessControllerApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("CubixRecipes Control Panel")
-        self.root.geometry("860x700")
+        self.root.geometry("960x860")
         self.root.resizable(True, True)
-        self.root.minsize(760, 620)
+        self.root.minsize(860, 700)
 
         self.root_dir = Path(__file__).resolve().parent
         self.backend_dir = self.root_dir / "backend"
         self.frontend_dir = self.root_dir / "frontend"
+        self.config_store = ProjectConfigStore(self.root_dir)
+        self.project_config = self.config_store.load()
 
         self.backend_status: tk.Label
         self.frontend_status: tk.Label
         self.log_output: ScrolledText
         self.notebook: ttk.Notebook
+        self.settings_vars: dict[str, tk.StringVar] = {}
+        self.validation_labels: dict[str, tk.Label] = {}
 
         self.logger = logging.getLogger("cubixrecipes.start_dev")
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
-        self._status_snapshot: tuple[bool, bool] | None = None
+        self._status_snapshot: Optional[tuple[bool, bool]] = None
 
         self._create_widgets()
 
@@ -180,42 +235,34 @@ class ProcessControllerApp:
         self.managed_processes = [self.backend, self.frontend]
 
         self._configure_logging()
+        self._apply_loaded_settings_to_form()
         self._log_environment_summary()
         self._update_status_labels()
         self._poll_process_output()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _create_widgets(self) -> None:
-        title = tk.Label(
-            self.root,
-            text="Управление CubixRecipes",
-            font=("Arial", 14, "bold"),
-        )
+        title = tk.Label(self.root, text="Управление CubixRecipes", font=("Arial", 14, "bold"))
         title.pack(pady=10)
 
         self.backend_status = tk.Label(self.root, text="Backend: неизвестно", font=("Arial", 11))
         self.backend_status.pack(pady=5)
-
         backend_frame = tk.Frame(self.root)
         backend_frame.pack(pady=5)
-
         tk.Button(backend_frame, text="Start Backend", width=15, command=self.start_backend).pack(side=tk.LEFT, padx=5)
         tk.Button(backend_frame, text="Stop Backend", width=15, command=self.stop_backend).pack(side=tk.LEFT, padx=5)
         tk.Button(backend_frame, text="Restart Backend", width=15, command=self.restart_backend).pack(side=tk.LEFT, padx=5)
 
         self.frontend_status = tk.Label(self.root, text="Frontend: неизвестно", font=("Arial", 11))
         self.frontend_status.pack(pady=10)
-
         frontend_frame = tk.Frame(self.root)
         frontend_frame.pack(pady=5)
-
         tk.Button(frontend_frame, text="Start Frontend", width=15, command=self.start_frontend).pack(side=tk.LEFT, padx=5)
         tk.Button(frontend_frame, text="Stop Frontend", width=15, command=self.stop_frontend).pack(side=tk.LEFT, padx=5)
         tk.Button(frontend_frame, text="Restart Frontend", width=15, command=self.restart_frontend).pack(side=tk.LEFT, padx=5)
 
         global_frame = tk.Frame(self.root)
         global_frame.pack(pady=20)
-
         tk.Button(global_frame, text="Start All", width=15, command=self.start_all).pack(side=tk.LEFT, padx=5)
         tk.Button(global_frame, text="Stop All", width=15, command=self.stop_all).pack(side=tk.LEFT, padx=5)
         tk.Button(global_frame, text="Restart All", width=15, command=self.restart_all).pack(side=tk.LEFT, padx=5)
@@ -223,11 +270,11 @@ class ProcessControllerApp:
         hint = tk.Label(
             self.root,
             text=(
-                "Ниже доступны вкладки с отдельными консолями backend/frontend и журналом управления. "
+                "Ниже доступны вкладки с отдельными консолями backend/frontend, настройками путей и журналом управления. "
                 "Вывод процессов больше не открывается во внешних окнах."
             ),
             font=("Arial", 9),
-            wraplength=760,
+            wraplength=860,
             justify=tk.CENTER,
         )
         hint.pack(pady=(0, 10))
@@ -237,33 +284,190 @@ class ProcessControllerApp:
 
         self.backend_console = ConsolePane(self.notebook, "Backend Console")
         self.frontend_console = ConsolePane(self.notebook, "Frontend Console")
+        self._create_settings_tab()
         log_frame = ttk.Frame(self.notebook)
         self.notebook.add(log_frame, text="Action Log")
-
         tk.Label(log_frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
         self.log_output = ScrolledText(log_frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
         self.log_output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
+    def _create_settings_tab(self) -> None:
+        settings_frame = ttk.Frame(self.notebook)
+        self.notebook.add(settings_frame, text="Settings")
+        tk.Label(settings_frame, text="Project Paths", font=("Arial", 11, "bold")).pack(anchor="w", padx=10, pady=(10, 4))
+        tk.Label(
+            settings_frame,
+            text=(
+                "Укажите пути к `.zs`, модам, ассетам и дополнительным источникам. Настройки сохраняются в cubixrecipes.config.json "
+                "и backend использует их при следующем запуске или через API настроек."
+            ),
+            wraplength=860,
+            justify=tk.LEFT,
+        ).pack(anchor="w", padx=10, pady=(0, 10))
+
+        form = ttk.Frame(settings_frame)
+        form.pack(fill=tk.X, padx=10)
+        form.columnconfigure(1, weight=1)
+
+        self._add_path_row(form, 0, "scripts_dir", "Scripts (.zs)", directory=True)
+        self._add_path_row(form, 1, "mods_dir", "Mods directory", directory=True)
+        self._add_path_row(form, 2, "assets_dir", "Assets directory", directory=True)
+        self._add_path_row(form, 3, "recipe_db_path", "Recipe DB path", directory=False, save_file=True)
+
+        self._add_multiline_row(form, 4, "extra_icon_sources", "Extra icon sources")
+        self._add_multiline_row(form, 5, "extra_recipe_sources", "Extra recipe sources")
+
+        actions = ttk.Frame(settings_frame)
+        actions.pack(fill=tk.X, padx=10, pady=(10, 8))
+        ttk.Button(actions, text="Save Settings", command=self.save_settings).pack(side=tk.LEFT, padx=(0, 8))
+        ttk.Button(actions, text="Reload Settings", command=self.reload_settings).pack(side=tk.LEFT)
+
+        self.settings_summary = tk.Label(settings_frame, text="", justify=tk.LEFT, anchor="w")
+        self.settings_summary.pack(fill=tk.X, padx=10, pady=(0, 10))
+
+    def _add_path_row(self, parent: ttk.Frame, row: int, key: str, label: str, directory: bool, save_file: bool = False) -> None:
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=(0, 8), pady=4)
+        variable = tk.StringVar()
+        entry = ttk.Entry(parent, textvariable=variable)
+        entry.grid(row=row, column=1, sticky="ew", pady=4)
+        ttk.Button(parent, text="Browse...", command=lambda: self._browse_path(key, directory=directory, save_file=save_file)).grid(row=row, column=2, padx=(8, 0), pady=4)
+        validation = tk.Label(parent, text="", anchor="w")
+        validation.grid(row=row, column=3, sticky="w", padx=(8, 0), pady=4)
+        variable.trace_add("write", lambda *_args, name=key: self._update_validation_label(name))
+        self.settings_vars[key] = variable
+        self.validation_labels[key] = validation
+
+    def _add_multiline_row(self, parent: ttk.Frame, row: int, key: str, label: str) -> None:
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky="nw", padx=(0, 8), pady=4)
+        widget = ScrolledText(parent, height=4, font=("Consolas", 9), wrap=tk.WORD)
+        widget.grid(row=row, column=1, sticky="ew", pady=4)
+        actions = ttk.Frame(parent)
+        actions.grid(row=row, column=2, sticky="n", padx=(8, 0), pady=4)
+        ttk.Button(actions, text="Add dir...", command=lambda: self._append_multiline_directory(key)).pack(fill=tk.X)
+        validation = tk.Label(parent, text="", anchor="nw", justify=tk.LEFT)
+        validation.grid(row=row, column=3, sticky="nw", padx=(8, 0), pady=4)
+        self.settings_vars[key] = tk.StringVar()
+        self.validation_labels[key] = validation
+        setattr(self, f"{key}_widget", widget)
+
     def _configure_logging(self) -> None:
         if self.logger.handlers:
             self.logger.handlers.clear()
-
         self.logger.addHandler(TkTextHandler(self.log_output))
+
+    def _apply_loaded_settings_to_form(self) -> None:
+        self.settings_vars["scripts_dir"].set(self.project_config.scripts_dir)
+        self.settings_vars["mods_dir"].set(self.project_config.mods_dir)
+        self.settings_vars["assets_dir"].set(self.project_config.assets_dir)
+        self.settings_vars["recipe_db_path"].set(self.project_config.recipe_db_path)
+        self.extra_icon_sources_widget.delete("1.0", tk.END)
+        self.extra_icon_sources_widget.insert("1.0", "\n".join(self.project_config.extra_icon_sources))
+        self.extra_recipe_sources_widget.delete("1.0", tk.END)
+        self.extra_recipe_sources_widget.insert("1.0", "\n".join(self.project_config.extra_recipe_sources))
+        self._refresh_all_validations()
+
+    def _refresh_all_validations(self) -> None:
+        for key in ("scripts_dir", "mods_dir", "assets_dir", "recipe_db_path"):
+            self._update_validation_label(key)
+        self._update_multiline_validation("extra_icon_sources")
+        self._update_multiline_validation("extra_recipe_sources")
+        self._update_settings_summary()
+
+    def _update_settings_summary(self) -> None:
+        self.settings_summary.config(
+            text=(
+                f"Config file: {self.config_store.config_path}\n"
+                f"Scripts: {self.settings_vars['scripts_dir'].get() or '—'}\n"
+                f"Mods: {self.settings_vars['mods_dir'].get() or '—'}\n"
+                f"Assets: {self.settings_vars['assets_dir'].get() or '—'}"
+            )
+        )
+
+    def _path_status_text(self, raw_path: str, expect_file: bool = False) -> tuple[str, str]:
+        if not raw_path:
+            return ("Не задан", "#b36b00")
+        path = Path(raw_path)
+        if path.exists():
+            if expect_file and path.is_dir():
+                return ("Есть, но это папка", "#b36b00")
+            return ("OK", "#0b7a0b")
+        return ("Не найден", "#b00020")
+
+    def _update_validation_label(self, key: str) -> None:
+        expect_file = key == "recipe_db_path"
+        status, color = self._path_status_text(self.settings_vars[key].get().strip(), expect_file=expect_file)
+        self.validation_labels[key].config(text=status, fg=color)
+        self._update_settings_summary()
+
+    def _update_multiline_validation(self, key: str) -> None:
+        widget = getattr(self, f"{key}_widget")
+        values = [line.strip() for line in widget.get("1.0", tk.END).splitlines() if line.strip()]
+        if not values:
+            self.validation_labels[key].config(text="Нет дополнительных путей", fg="#666666")
+            return
+        missing = sum(1 for value in values if not Path(value).exists())
+        text = f"{len(values)} path(s), отсутствует: {missing}"
+        self.validation_labels[key].config(text=text, fg="#0b7a0b" if missing == 0 else "#b36b00")
+
+    def _browse_path(self, key: str, directory: bool, save_file: bool = False) -> None:
+        if directory:
+            selected = filedialog.askdirectory(initialdir=self.root_dir)
+        elif save_file:
+            selected = filedialog.asksaveasfilename(initialdir=self.root_dir, defaultextension=".json")
+        else:
+            selected = filedialog.askopenfilename(initialdir=self.root_dir)
+        if selected:
+            self.settings_vars[key].set(selected)
+
+    def _append_multiline_directory(self, key: str) -> None:
+        selected = filedialog.askdirectory(initialdir=self.root_dir)
+        if not selected:
+            return
+        widget = getattr(self, f"{key}_widget")
+        existing = widget.get("1.0", tk.END).strip()
+        updated = f"{existing}\n{selected}" if existing else selected
+        widget.delete("1.0", tk.END)
+        widget.insert("1.0", updated)
+        self._update_multiline_validation(key)
+
+    def _collect_settings_from_form(self) -> PanelProjectConfig:
+        extra_icon_sources = [line.strip() for line in self.extra_icon_sources_widget.get("1.0", tk.END).splitlines() if line.strip()]
+        extra_recipe_sources = [line.strip() for line in self.extra_recipe_sources_widget.get("1.0", tk.END).splitlines() if line.strip()]
+        return PanelProjectConfig(
+            scripts_dir=self.settings_vars["scripts_dir"].get().strip() or "scripts",
+            mods_dir=self.settings_vars["mods_dir"].get().strip(),
+            assets_dir=self.settings_vars["assets_dir"].get().strip(),
+            recipe_db_path=self.settings_vars["recipe_db_path"].get().strip(),
+            extra_icon_sources=extra_icon_sources,
+            extra_recipe_sources=extra_recipe_sources,
+        )
+
+    def save_settings(self) -> None:
+        self.project_config = self._collect_settings_from_form()
+        self.config_store.save(self.project_config)
+        self._refresh_all_validations()
+        self.logger.info("Настройки путей сохранены в %s", self.config_store.config_path)
+        self.logger.info("scripts_dir=%s | mods_dir=%s | assets_dir=%s", self.project_config.scripts_dir, self.project_config.mods_dir or "-", self.project_config.assets_dir or "-")
+        messagebox.showinfo("Settings", f"Настройки сохранены в:\n{self.config_store.config_path}")
+
+    def reload_settings(self) -> None:
+        self.project_config = self.config_store.load()
+        self._apply_loaded_settings_to_form()
+        self.logger.info("Настройки путей перечитаны из %s", self.config_store.config_path)
 
     def _log_environment_summary(self) -> None:
         self.logger.info("Панель управления запущена. Корень проекта: %s", self.root_dir)
         self.logger.info("Backend и frontend запускаются внутри этой программы, каждая служба пишет вывод в свою вкладку.")
+        self.logger.info("Config paths loaded from %s", self.config_store.config_path)
         self.logger.info("Остановить можно только процессы, которые были запущены этой панелью и всё ещё активны.")
 
     def _sanitize_console_text(self, text: str) -> str:
         if not text:
             return ""
-
         text = text.replace("\r\n", "\n").replace("\r", "\n")
         text = ANSI_ESCAPE_RE.sub("", text)
         for source, target in MOJIBAKE_REPLACEMENTS.items():
             text = text.replace(source, target)
-
         text = text.replace("→", "->").replace("➜", "-")
         return "".join(character for character in text if character == "\n" or character == "\t" or character.isprintable())
 
@@ -279,18 +483,15 @@ class ProcessControllerApp:
                     chunk = managed.output_queue.get_nowait()
                 except queue.Empty:
                     break
-
                 sanitized = self._sanitize_console_text(chunk)
                 if sanitized:
                     managed.console.append(sanitized)
-
         self.root.after(STREAM_POLL_MS, self._poll_process_output)
 
     def _stream_process_output(self, managed: ManagedProcess) -> None:
         proc = managed.proc
         if proc is None or proc.stdout is None:
             return
-
         try:
             for line in proc.stdout:
                 managed.output_queue.put(line)
@@ -305,29 +506,19 @@ class ProcessControllerApp:
         snapshot = (backend_running, frontend_running)
         if snapshot == self._status_snapshot:
             return
-
         if self._status_snapshot is not None:
             if backend_running != self._status_snapshot[0]:
-                self.logger.info(
-                    "Статус backend изменился: %s.",
-                    "работает и может быть остановлен" if backend_running else "остановлен и сейчас нечего останавливать",
-                )
+                self.logger.info("Статус backend изменился: %s.", "работает и может быть остановлен" if backend_running else "остановлен и сейчас нечего останавливать")
             if frontend_running != self._status_snapshot[1]:
-                self.logger.info(
-                    "Статус frontend изменился: %s.",
-                    "работает и может быть остановлен" if frontend_running else "остановлен и сейчас нечего останавливать",
-                )
-
+                self.logger.info("Статус frontend изменился: %s.", "работает и может быть остановлен" if frontend_running else "остановлен и сейчас нечего останавливать")
         self._status_snapshot = snapshot
 
     def _report_unexpected_exit(self, managed: ManagedProcess) -> None:
         if managed.proc is None:
             return
-
         return_code = managed.proc.poll()
         if return_code is None or return_code == managed.last_return_code:
             return
-
         managed.last_return_code = return_code
         self.logger.warning("Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
         self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
@@ -335,26 +526,20 @@ class ProcessControllerApp:
     def _update_status_labels(self) -> None:
         backend_running = self.is_running(self.backend)
         frontend_running = self.is_running(self.frontend)
-
         self._report_unexpected_exit(self.backend)
         self._report_unexpected_exit(self.frontend)
-
-        backend_text = "Backend: работает" if backend_running else "Backend: остановлен"
-        frontend_text = "Frontend: работает" if frontend_running else "Frontend: остановлен"
-
-        self.backend_status.config(text=backend_text)
-        self.frontend_status.config(text=frontend_text)
+        self.backend_status.config(text="Backend: работает" if backend_running else "Backend: остановлен")
+        self.frontend_status.config(text="Frontend: работает" if frontend_running else "Frontend: остановлен")
         self._set_status_snapshot(backend_running, frontend_running)
         self.root.after(POLL_INTERVAL_MS, self._update_status_labels)
 
-    def _build_backend_command(self) -> tuple[list[str] | str, bool]:
+    def _build_backend_command(self) -> tuple[Union[list[str], str], bool]:
         python_executable = self._select_backend_python()
         return [python_executable, "-m", "uvicorn", "app.main:app", "--reload"], False
 
-    def _build_frontend_command(self) -> tuple[list[str] | str, bool]:
+    def _build_frontend_command(self) -> tuple[Union[list[str], str], bool]:
         if os.name == "nt":
             return ["npm.cmd", "run", "dev"], False
-
         return ["npm", "run", "dev"], False
 
     def _show_missing_dir_error(self, name: str, directory: Path) -> None:
@@ -363,7 +548,6 @@ class ProcessControllerApp:
 
     def _python_candidates_for_backend(self) -> list[str]:
         candidates: list[str] = []
-
         if os.name == "nt":
             local_venv = self.backend_dir / ".venv" / "Scripts" / "python.exe"
             if local_venv.exists():
@@ -372,42 +556,28 @@ class ProcessControllerApp:
             local_venv = self.backend_dir / ".venv" / "bin" / "python"
             if local_venv.exists():
                 candidates.append(str(local_venv))
-
         candidates.append(sys.executable)
-
         for executable in ("python", "python3", "py"):
             resolved = shutil.which(executable)
             if resolved:
                 candidates.append(resolved)
-
         unique_candidates: list[str] = []
         seen: set[str] = set()
         for candidate in candidates:
             if candidate and candidate not in seen:
                 seen.add(candidate)
                 unique_candidates.append(candidate)
-
         return unique_candidates
 
     def _python_has_module(self, python_executable: str, module_name: str) -> bool:
         try:
-            result = subprocess.run(
-                [
-                    python_executable,
-                    "-c",
-                    (
-                        "import importlib.util, sys; "
-                        f"sys.exit(0 if importlib.util.find_spec('{module_name}') else 1)"
-                    ),
-                ],
-                cwd=self.backend_dir,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=False,
-            )
+            result = subprocess.run([
+                python_executable,
+                "-c",
+                f"import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('{module_name}') else 1)",
+            ], cwd=self.backend_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
         except OSError:
             return False
-
         return result.returncode == 0
 
     def _show_backend_dependency_error(self, checked_candidates: list[str]) -> None:
@@ -422,13 +592,7 @@ class ProcessControllerApp:
             f"{details}"
         )
         self.logger.error(message.replace("\n", " "))
-        self._write_process_line(
-            self.backend,
-            (
-                "Backend не запущен: в выбранном Python отсутствует модуль uvicorn.\n"
-                f"Установите зависимости командой:\n{install_command}\n"
-            ),
-        )
+        self._write_process_line(self.backend, f"Backend не запущен: в выбранном Python отсутствует модуль uvicorn.\nУстановите зависимости командой:\n{install_command}\n")
         messagebox.showerror("Ошибка backend", message)
 
     def _select_backend_python(self) -> str:
@@ -437,7 +601,6 @@ class ProcessControllerApp:
             if self._python_has_module(candidate, "uvicorn"):
                 self.logger.info("Для backend выбран Python-интерпретатор с установленным uvicorn: %s", candidate)
                 return candidate
-
         self._show_backend_dependency_error(checked_candidates)
         raise RuntimeError("uvicorn is not installed in any detected Python interpreter")
 
@@ -445,40 +608,27 @@ class ProcessControllerApp:
         if not self.backend_dir.is_dir():
             self._show_missing_dir_error("backend", self.backend_dir)
             return False
-
         try:
             self._select_backend_python()
         except RuntimeError:
             return False
-
         return True
 
     def _validate_frontend_setup(self) -> bool:
         package_json = self.frontend_dir / "package.json"
         node_modules = self.frontend_dir / "node_modules"
-
         if not package_json.is_file():
             self.logger.error("Frontend не может быть запущен: отсутствует файл %s", package_json)
             messagebox.showerror("Ошибка frontend", f"Не найден файл frontend/package.json:\n{package_json}")
             return False
-
         if not node_modules.is_dir():
-            self.logger.error(
-                "Frontend не может быть запущен: отсутствует папка node_modules. Сначала выполните npm install в %s",
-                self.frontend_dir,
-            )
-            messagebox.showerror(
-                "Ошибка frontend",
-                "Frontend зависимости не установлены.\n" f"Выполните npm install в папке:\n{self.frontend_dir}",
-            )
+            self.logger.error("Frontend не может быть запущен: отсутствует папка node_modules. Сначала выполните npm install в %s", self.frontend_dir)
+            messagebox.showerror("Ошибка frontend", "Frontend зависимости не установлены.\n" f"Выполните npm install в папке:\n{self.frontend_dir}")
             return False
-
         return True
 
-    def _describe_command(self, command: list[str] | str) -> str:
-        if isinstance(command, list):
-            return " ".join(command)
-        return command
+    def _describe_command(self, command: Union[list[str], str]) -> str:
+        return " ".join(command) if isinstance(command, list) else command
 
     def _build_process_env(self) -> dict[str, str]:
         env = os.environ.copy()
@@ -487,36 +637,21 @@ class ProcessControllerApp:
         env["NO_COLOR"] = "1"
         env["CLICOLOR"] = "0"
         env["npm_config_color"] = "false"
+        env["CUBIXRECIPES_CONFIG"] = str(self.config_store.config_path)
         return env
 
-    def _start_process(
-        self,
-        managed: ManagedProcess,
-        command: list[str] | str,
-        use_shell: bool,
-    ) -> None:
+    def _start_process(self, managed: ManagedProcess, command: Union[list[str], str], use_shell: bool) -> None:
         if self.is_running(managed):
-            self.logger.info(
-                "%s уже запущен, поэтому повторный старт пропущен. Этот процесс можно остановить кнопкой Stop %s.",
-                managed.name.capitalize(),
-                managed.name.capitalize(),
-            )
+            self.logger.info("%s уже запущен, поэтому повторный старт пропущен. Этот процесс можно остановить кнопкой Stop %s.", managed.name.capitalize(), managed.name.capitalize())
             return
-
         if not managed.directory.is_dir():
             self._show_missing_dir_error(managed.name, managed.directory)
             return
-
         managed.reset_output()
         managed.last_return_code = None
         self._write_process_line(managed, f"$ {self._describe_command(command)}")
-        self.logger.info(
-            "Запускаю %s внутри встроенной вкладки-консоли. Рабочая папка: %s. Команда: %s",
-            managed.name,
-            managed.directory,
-            self._describe_command(command),
-        )
-
+        self.logger.info("Запускаю %s внутри встроенной вкладки-консоли. Рабочая папка: %s. Команда: %s", managed.name, managed.directory, self._describe_command(command))
+        self.logger.info("Для запуска будет использован конфиг путей: %s", self.config_store.config_path)
         try:
             managed.proc = subprocess.Popen(
                 command,
@@ -531,18 +666,9 @@ class ProcessControllerApp:
                 errors="replace",
                 env=self._build_process_env(),
             )
-            managed.reader_thread = threading.Thread(
-                target=self._stream_process_output,
-                args=(managed,),
-                daemon=True,
-            )
+            managed.reader_thread = threading.Thread(target=self._stream_process_output, args=(managed,), daemon=True)
             managed.reader_thread.start()
-            self.logger.info(
-                "%s успешно запущен (pid=%s). Вывод доступен во вкладке %s.",
-                managed.name.capitalize(),
-                managed.proc.pid,
-                managed.console.frame.master.tab(managed.console.frame, 'text'),
-            )
+            self.logger.info("%s успешно запущен (pid=%s). Вывод доступен во вкладке %s.", managed.name.capitalize(), managed.proc.pid, managed.console.frame.master.tab(managed.console.frame, 'text'))
         except OSError as error:
             managed.proc = None
             self.logger.exception("Не удалось запустить %s: %s", managed.name, error)
@@ -551,7 +677,6 @@ class ProcessControllerApp:
     def start_backend(self) -> None:
         if not self._validate_backend_setup():
             return
-
         command, use_shell = self._build_backend_command()
         self.notebook.select(self.backend_console.frame)
         self._start_process(self.backend, command, use_shell)
@@ -559,23 +684,15 @@ class ProcessControllerApp:
     def start_frontend(self) -> None:
         if not self._validate_frontend_setup():
             return
-
         command, use_shell = self._build_frontend_command()
         self.notebook.select(self.frontend_console.frame)
         self._start_process(self.frontend, command, use_shell)
 
     def _stop_process(self, managed: ManagedProcess) -> None:
         if not self.is_running(managed):
-            self.logger.info(
-                "%s уже остановлен или не запускался из панели, поэтому останавливать сейчас нечего.",
-                managed.name.capitalize(),
-            )
+            self.logger.info("%s уже остановлен или не запускался из панели, поэтому останавливать сейчас нечего.", managed.name.capitalize())
             return
-
-        self.logger.info(
-            "Останавливаю %s по запросу из панели. Сначала отправляется мягкое завершение процесса.",
-            managed.name,
-        )
+        self.logger.info("Останавливаю %s по запросу из панели. Сначала отправляется мягкое завершение процесса.", managed.name)
         self._write_process_line(managed, "\n[stop requested]\n")
         try:
             assert managed.proc is not None
@@ -584,10 +701,7 @@ class ProcessControllerApp:
             self.logger.info("%s остановлен корректно.", managed.name.capitalize())
             self._write_process_line(managed, "[stopped gracefully]\n")
         except Exception:
-            self.logger.warning(
-                "%s не завершился вовремя после terminate(), поэтому будет выполнен kill().",
-                managed.name.capitalize(),
-            )
+            self.logger.warning("%s не завершился вовремя после terminate(), поэтому будет выполнен kill().", managed.name.capitalize())
             try:
                 assert managed.proc is not None
                 managed.proc.kill()
@@ -627,10 +741,7 @@ class ProcessControllerApp:
         self.stop_frontend()
 
     def restart_all(self) -> None:
-        self.logger.info(
-            "Перезапуск всех сервисов: сначала полная остановка, затем общий старт через %sms.",
-            RESTART_ALL_DELAY_MS,
-        )
+        self.logger.info("Перезапуск всех сервисов: сначала полная остановка, затем общий старт через %sms.", RESTART_ALL_DELAY_MS)
         self.stop_all()
         self.root.after(RESTART_ALL_DELAY_MS, self.start_all)
 

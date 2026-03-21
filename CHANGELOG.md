@@ -1,6 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added project path configuration storage in `cubixrecipes.config.json`, backend settings endpoints, and a new Control Panel `Settings` tab with browse actions and path validation.
+- Added recipe output rendering/editing in the React UI, including output resolution metadata in API responses for future icon/name display.
+
+### Changed
+- Backend now reloads storage/index inputs from the shared project config and serializes output/item resolution data together with parsed recipes.
+
 ### Fixed
 - Added Vite `/api` proxy and wired frontend toolbar actions so parse/save/create/help/wiki controls now execute real flows instead of inert buttons.
 - Added frontend parse/save error handling so the UI leaves the `Парсинг...` state on backend failures and shows actionable status messages.
