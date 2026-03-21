@@ -198,7 +198,7 @@ class ProcessControllerApp:
 
     def _build_frontend_command(self) -> tuple[list[str] | str, bool]:
         if os.name == "nt":
-            return ["npm.cmd", "run", "dev"], False
+            return ["cmd.exe", "/k", "npm run dev"], False
 
         return ["npm", "run", "dev"], False
 
@@ -208,6 +208,32 @@ class ProcessControllerApp:
     def _show_missing_dir_error(self, name: str, directory: Path) -> None:
         self.logger.error("Запуск %s невозможен: не найдена папка %s", name, directory)
         messagebox.showerror("Ошибка", f"Папка {name} не найдена:\n{directory}")
+
+    def _validate_frontend_setup(self) -> bool:
+        package_json = self.frontend_dir / "package.json"
+        node_modules = self.frontend_dir / "node_modules"
+
+        if not package_json.is_file():
+            self.logger.error("Frontend не может быть запущен: отсутствует файл %s", package_json)
+            messagebox.showerror(
+                "Ошибка frontend",
+                f"Не найден файл frontend/package.json:\n{package_json}",
+            )
+            return False
+
+        if not node_modules.is_dir():
+            self.logger.error(
+                "Frontend не может быть запущен: отсутствует папка node_modules. Сначала выполните npm install в %s",
+                self.frontend_dir,
+            )
+            messagebox.showerror(
+                "Ошибка frontend",
+                "Frontend зависимости не установлены.\n"
+                f"Выполните npm install в папке:\n{self.frontend_dir}",
+            )
+            return False
+
+        return True
 
     def _describe_command(self, command: list[str] | str) -> str:
         if isinstance(command, list):
@@ -269,7 +295,14 @@ class ProcessControllerApp:
         )
 
     def start_frontend(self) -> None:
+        if not self._validate_frontend_setup():
+            return
+
         command, use_shell = self._build_frontend_command()
+        if os.name == "nt":
+            self.logger.info(
+                "Frontend на Windows запускается через cmd /k, чтобы консоль не закрывалась сразу и показывала причину возможной ошибки."
+            )
         self.frontend_proc = self._start_process(
             self.frontend_proc,
             self.frontend_dir,
