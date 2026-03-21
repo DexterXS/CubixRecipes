@@ -11,7 +11,7 @@ from app.domain.models import ItemRef, MetaMode, Recipe, RecipeCell, RecipeSourc
 ITEM_RE = re.compile(r"^<([a-zA-Z0-9_\-.]+):([a-zA-Z0-9_\-/\.]+)(?::([0-9*]+))?>$")
 
 
-@dataclass(slots=True)
+@dataclass
 class ParseResult:
     kind: str
     recipe: Optional[Recipe] = None

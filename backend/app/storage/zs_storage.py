@@ -10,7 +10,7 @@ from app.domain.models import Recipe
 from app.parsers.recipe_parser import RecipeParser
 
 
-@dataclass(slots=True)
+@dataclass
 class StoredRecipe:
     recipe: Recipe
     file_path: str

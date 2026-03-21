@@ -16,7 +16,7 @@ class BindingMode(str, Enum):
     SOFT = "soft"
 
 
-@dataclass(slots=True)
+@dataclass
 class ItemRef:
     raw: str
     modid: str
@@ -29,7 +29,7 @@ class ItemRef:
         return f"{self.modid}:{self.name}"
 
 
-@dataclass(slots=True)
+@dataclass
 class RecipeCell:
     row: int
     col: int
@@ -37,7 +37,7 @@ class RecipeCell:
     item: Optional[ItemRef]
 
 
-@dataclass(slots=True)
+@dataclass
 class RecipeSource:
     kind: str
     path: Optional[str] = None
@@ -45,7 +45,7 @@ class RecipeSource:
     end_offset: Optional[int] = None
 
 
-@dataclass(slots=True)
+@dataclass
 class Recipe:
     recipe_uid: str
     recipe_type: str
@@ -59,7 +59,7 @@ class Recipe:
     diagnostics: list[str] = field(default_factory=list)
 
 
-@dataclass(slots=True)
+@dataclass
 class ResolutionResult:
     item_raw: str
     display_name: Optional[str]
@@ -71,7 +71,7 @@ class ResolutionResult:
     trace: list[dict[str, Any]]
 
 
-@dataclass(slots=True)
+@dataclass
 class AssetCandidate:
     asset_id: str
     source_type: str
