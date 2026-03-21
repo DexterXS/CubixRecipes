@@ -10,6 +10,7 @@ import subprocess
 import sys
 import threading
 import tkinter as tk
+import webbrowser
 from pathlib import Path
 from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
@@ -20,6 +21,14 @@ RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
+URL_RE = re.compile(r"https?://[^\s]+")
+MOJIBAKE_REPLACEMENTS = {
+    "вЫє": "-",
+    "вЫ ": "-",
+    "в¢": "-",
+    "âžœ": "-",
+    "â†’": "->",
+}
 
 
 class TkTextHandler(logging.Handler):
@@ -60,15 +69,25 @@ class ConsolePane:
             state=tk.DISABLED,
             font=("Consolas", 9),
             wrap=tk.WORD,
+            cursor="xterm",
         )
         self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.output.tag_configure("link", foreground="#1a73e8", underline=True)
+        self.output.tag_bind("link", "<Button-1>", self._open_clicked_link)
+        self.output.tag_bind("link", "<Enter>", lambda _event: self.output.config(cursor="hand2"))
+        self.output.tag_bind("link", "<Leave>", lambda _event: self.output.config(cursor="xterm"))
+        self.output.bind("<Control-c>", self._copy_selection)
+        self.output.bind("<Control-C>", self._copy_selection)
 
     def append(self, text: str) -> None:
         if not text:
             return
 
         self.output.configure(state=tk.NORMAL)
+        start_index = self.output.index(tk.END + "-1c")
         self.output.insert(tk.END, text)
+        end_index = self.output.index(tk.END + "-1c")
+        self._tag_links(start_index, end_index)
         self.output.see(tk.END)
         self.output.configure(state=tk.DISABLED)
 
@@ -79,6 +98,32 @@ class ConsolePane:
         self.output.configure(state=tk.NORMAL)
         self.output.delete("1.0", tk.END)
         self.output.configure(state=tk.DISABLED)
+
+    def _tag_links(self, start_index: str, end_index: str) -> None:
+        block = self.output.get(start_index, end_index)
+        for match in URL_RE.finditer(block):
+            tag_start = f"{start_index}+{match.start()}c"
+            tag_end = f"{start_index}+{match.end()}c"
+            self.output.tag_add("link", tag_start, tag_end)
+
+    def _copy_selection(self, _event: tk.Event[tk.Misc]) -> str | None:
+        try:
+            selected_text = self.output.get("sel.first", "sel.last")
+        except tk.TclError:
+            return "break"
+
+        self.output.clipboard_clear()
+        self.output.clipboard_append(selected_text)
+        return "break"
+
+    def _open_clicked_link(self, event: tk.Event[tk.Misc]) -> str:
+        index = self.output.index(f"@{event.x},{event.y}")
+        for start, end in zip(self.output.tag_ranges("link")[::2], self.output.tag_ranges("link")[1::2]):
+            if self.output.compare(index, ">=", start) and self.output.compare(index, "<", end):
+                webbrowser.open(self.output.get(start, end))
+                break
+
+        return "break"
 
 
 class ManagedProcess:
@@ -210,6 +255,10 @@ class ProcessControllerApp:
 
         text = text.replace("\r\n", "\n").replace("\r", "\n")
         text = ANSI_ESCAPE_RE.sub("", text)
+        for source, target in MOJIBAKE_REPLACEMENTS.items():
+            text = text.replace(source, target)
+
+        text = text.replace("→", "->").replace("➜", "-")
         return "".join(character for character in text if character == "\n" or character == "\t" or character.isprintable())
 
     def _write_process_line(self, managed: ManagedProcess, text: str) -> None:
@@ -343,6 +392,15 @@ class ProcessControllerApp:
             return " ".join(command)
         return command
 
+    def _build_process_env(self) -> dict[str, str]:
+        env = os.environ.copy()
+        env.setdefault("PYTHONIOENCODING", "utf-8")
+        env["FORCE_COLOR"] = "0"
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR"] = "0"
+        env["npm_config_color"] = "false"
+        return env
+
     def _start_process(
         self,
         managed: ManagedProcess,
@@ -381,6 +439,9 @@ class ProcessControllerApp:
                 stdin=subprocess.PIPE,
                 text=True,
                 bufsize=1,
+                encoding="utf-8",
+                errors="replace",
+                env=self._build_process_env(),
             )
             managed.reader_thread = threading.Thread(
                 target=self._stream_process_output,
