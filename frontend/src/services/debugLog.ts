@@ -33,6 +33,8 @@ export function logFrontendEvent(payload: FrontendLogPayload): void {
 }
 
 export function installConsoleCapture(): void {
+  (window as Window & { __cubixrecipesDebugCollector?: boolean }).__cubixrecipesDebugCollector = true;
+  logFrontendEvent({ level: 'INFO', category: 'FRONTEND', message: 'Frontend debug collector initialized', details: { location: window.location.href } });
   const methods: Array<'log' | 'warn' | 'error'> = ['log', 'warn', 'error'];
   methods.forEach((method) => {
     const original = console[method].bind(console);

@@ -26,6 +26,7 @@ STREAM_POLL_MS = 120
 RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
+BACKEND_API_BASE_URL = "http://127.0.0.1:8000"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 URL_RE = re.compile(r"https?://[^\s]+")
 MOJIBAKE_REPLACEMENTS = {
@@ -287,7 +288,7 @@ class UnifiedLogPane:
         controls.pack(fill=tk.X, padx=10, pady=(0, 8))
         ttk.Label(controls, text="Source").pack(side=tk.LEFT)
         self.source_var = tk.StringVar(value="All")
-        self.source_filter = ttk.Combobox(controls, textvariable=self.source_var, values=["All", "BACKEND", "FRONTEND", "API", "RESOLVER", "ASSETS", "RECIPES", "UI", "ICON", "SYSTEM"], width=12, state="readonly")
+        self.source_filter = ttk.Combobox(controls, textvariable=self.source_var, values=["All", "BACKEND", "FRONTEND", "API", "RESOLVER", "ASSETS", "RECIPES", "UI", "ICON", "SYSTEM", "CONTROL_PANEL"], width=12, state="readonly")
         self.source_filter.pack(side=tk.LEFT, padx=(6, 12))
         ttk.Label(controls, text="Level").pack(side=tk.LEFT)
         self.level_var = tk.StringVar(value="All")
@@ -304,10 +305,17 @@ class UnifiedLogPane:
         self.clear_button = ttk.Button(controls, text="Clear Log")
         self.clear_button.pack(side=tk.LEFT)
 
+        self.status_var = tk.StringVar(value='URL: not requested yet')
+        ttk.Label(self.frame, textvariable=self.status_var, justify=tk.LEFT, anchor='w').pack(fill=tk.X, padx=10, pady=(0, 6))
+        self.test_button = ttk.Button(controls, text='Test Debug Pipeline')
+        self.test_button.pack(side=tk.LEFT, padx=(8, 0))
         self.output = ScrolledText(self.frame, height=28, font=("Consolas", 9), wrap=tk.WORD)
         self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
         self.output.configure(state=tk.DISABLED)
         self.current_text = ''
+
+    def set_status(self, text: str) -> None:
+        self.status_var.set(text)
 
     def render(self, text: str) -> None:
         self.current_text = text
@@ -453,6 +461,7 @@ class ProcessControllerApp:
         self.full_log_pane.copy_button.configure(command=self.copy_unified_log)
         self.full_log_pane.save_button.configure(command=self.save_unified_log)
         self.full_log_pane.clear_button.configure(command=self.clear_unified_log)
+        self.full_log_pane.test_button.configure(command=self.test_debug_pipeline)
         self.full_log_pane.source_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
         self.full_log_pane.level_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
 
@@ -801,40 +810,95 @@ class ProcessControllerApp:
         return " ".join(command) if isinstance(command, list) else command
 
 
-    def refresh_unified_log(self) -> None:
+    def _emit_panel_log_event(self, level: str, category: str, message: str, details: Optional[dict[str, Any]] = None) -> None:
         try:
-            payload = self._request_debug_json(f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}")
+            self._request_debug_json('/api/debug/log', method='POST', payload={
+                'source': 'CONTROL_PANEL',
+                'level': level,
+                'category': category,
+                'message': message,
+                'details': details or {},
+                'verbose_only': False,
+            })
+        except Exception:
+            pass
+
+    def test_debug_pipeline(self) -> None:
+        details = {'test': 'control-panel-pipeline', 'note': 'synthetic frontend-like event from control panel'}
+        try:
+            post_response = self._request_debug_json('/api/debug/log', method='POST', payload={
+                'source': 'FRONTEND',
+                'level': 'INFO',
+                'category': 'UI',
+                'message': 'Test Debug Pipeline event',
+                'details': details,
+                'verbose_only': False,
+            })
+            get_response = self._request_debug_json('/api/debug/log?source=All&level=All')
+            export_text = get_response.get('exportText', '')
+            if 'Test Debug Pipeline event' not in export_text:
+                raise RuntimeError('backend buffer empty or event not found after ingest')
+            self.full_log_pane.set_status(f"Pipeline OK | url={get_response.get('_request', {}).get('url')} | status={get_response.get('_request', {}).get('status')}")
+            self._emit_panel_log_event('INFO', 'UI', 'Test Debug Pipeline succeeded', {'post': post_response.get('_request'), 'get': get_response.get('_request')})
+            self.refresh_unified_log()
+        except Exception as error:
+            self.full_log_pane.set_status(f'Pipeline broken: {error}')
+            self.logger.error('Test Debug Pipeline failed: %s', error)
+
+
+    def refresh_unified_log(self) -> None:
+        path = f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
+        try:
+            payload = self._request_debug_json(path)
             self.full_log_pane.render(payload.get('exportText', ''))
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+            request_info = payload.get('_request', {})
+            self.full_log_pane.set_status(f"URL: {request_info.get('url')} | status: {request_info.get('status')} | events: {len(payload.get('events', []))}")
+        except Exception as error:
+            self.full_log_pane.set_status(f"Unified log refresh failed | URL: {BACKEND_API_BASE_URL}{path} | error: {error}")
             self.logger.error('Не удалось обновить unified log: %s', error)
+            self._emit_panel_log_event('ERROR', 'API', 'Unified log refresh failed', {'url': f'{BACKEND_API_BASE_URL}{path}', 'error': str(error)})
 
     def copy_unified_log(self) -> None:
         self.full_log_pane.copy_all()
         self.logger.info('Unified log copied to clipboard.')
+        self._emit_panel_log_event('INFO', 'UI', 'Copy Full Log clicked', {'length': len(self.full_log_pane.current_text)})
 
     def save_unified_log(self) -> None:
         path = self.full_log_pane.save_to_file(self.root_dir)
         if path:
             self.logger.info('Unified log saved to %s', path)
+            self._emit_panel_log_event('INFO', 'UI', 'Save Log To File clicked', {'path': path})
 
     def clear_unified_log(self) -> None:
         try:
             self._request_debug_json('/api/debug/log/clear', method='POST')
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+        except Exception as error:
             self.logger.error('Не удалось очистить unified log: %s', error)
         self.full_log_pane.clear()
+        self._emit_panel_log_event('INFO', 'UI', 'Clear Log clicked', {})
 
     def _poll_unified_log(self) -> None:
         if self.backend.is_running() or self.full_log_pane.current_text:
             self.refresh_unified_log()
         self.root.after(1500, self._poll_unified_log)
 
-    def _request_debug_json(self, path: str, method: str = "GET") -> dict[str, Any]:
-        url = f"http://127.0.0.1:8000{path}"
-        request = Request(url, method=method)
-        with urlopen(request, timeout=10) as response:
-            payload = response.read().decode("utf-8")
-        return json.loads(payload) if payload else {}
+    def _request_debug_json(self, path: str, method: str = "GET", payload: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+        url = f"{BACKEND_API_BASE_URL}{path}"
+        body = None if payload is None else json.dumps(payload).encode('utf-8')
+        headers = {} if payload is None else {'Content-Type': 'application/json'}
+        request = Request(url, data=body, headers=headers, method=method)
+        try:
+            with urlopen(request, timeout=10) as response:
+                raw_body = response.read().decode('utf-8')
+                parsed = json.loads(raw_body) if raw_body else {}
+                if isinstance(parsed, dict):
+                    parsed['_request'] = {'url': url, 'status': response.status, 'body': raw_body[:800]}
+                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': {'url': url, 'status': response.status, 'body': raw_body[:800]}}
+        except HTTPError as error:
+            error_body = error.read().decode('utf-8', errors='replace')
+            raise RuntimeError(f'HTTP {error.code} for {url} body={error_body[:800]}') from error
+        except URLError as error:
+            raise RuntimeError(f'URL error for {url}: {error}') from error
 
     def refresh_debug_info(self) -> None:
         try:
