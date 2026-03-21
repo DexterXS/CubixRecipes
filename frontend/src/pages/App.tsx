@@ -301,7 +301,11 @@ export default function App() {
   }
 
   function handleOpenWiki() {
-    window.open('/wiki.html', '_blank', 'noopener,noreferrer');
+    const wikiUrl = new URL('/wiki.html', window.location.origin).toString();
+    const openedWindow = window.open(wikiUrl, '_blank', 'noopener,noreferrer');
+    if (!openedWindow) {
+      window.location.assign(wikiUrl);
+    }
     setStatus('Открыта документация');
   }
 

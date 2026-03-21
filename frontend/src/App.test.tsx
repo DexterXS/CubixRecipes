@@ -146,7 +146,7 @@ beforeEach(() => {
   }) as typeof fetch;
 
   vi.spyOn(window, 'prompt').mockReturnValue('scripts/new_recipe.zs');
-  vi.spyOn(window, 'open').mockImplementation(() => null);
+  vi.spyOn(window, 'open').mockImplementation(() => ({ closed: false } as Window));
 });
 
 test('paste triggers parse and shows stronger output block', async () => {
@@ -193,7 +193,7 @@ test('toolbar buttons invoke save, save-as, create, help and wiki flows with edi
   expect(screen.getByRole('dialog', { name: 'Справка' })).toBeTruthy();
 
   fireEvent.click(screen.getByText('Вики'));
-  expect(window.open).toHaveBeenCalledWith('/wiki.html', '_blank', 'noopener,noreferrer');
+  expect(window.open).toHaveBeenCalledWith('http://localhost:3000/wiki.html', '_blank', 'noopener,noreferrer');
 });
 
 test('clear action resets editor state', async () => {

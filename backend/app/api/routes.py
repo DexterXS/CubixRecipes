@@ -349,8 +349,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         return {'ok': True, 'event': event}
 
     @router.get('/debug/log')
-    def debug_log(source: str = 'All', level: str = 'All'):
-        return {'events': log_service.list_events(source=source, level=level), 'exportText': log_service.export_text(source=source, level=level), 'verbose': log_service.verbose}
+    def debug_log(source: str = 'All', level: str = 'All', since_id: int = 0, limit: int = 200, include_details: bool = False, include_text: bool = False):
+        events = log_service.list_events(source=source, level=level, since_id=since_id, limit=limit, include_details=include_details)
+        response = {
+            'events': events,
+            'verbose': log_service.verbose,
+            'nextSinceId': events[-1]['event_id'] if events else since_id,
+            'hasMore': len(events) >= limit if limit > 0 else False,
+        }
+        if include_text:
+            response['exportText'] = log_service.export_text(events)
+        return response
 
     @router.post('/debug/log/clear')
     def debug_log_clear():
@@ -359,12 +368,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/debug/log/export')
     def debug_log_export(source: str = 'All', level: str = 'All'):
-        return PlainTextResponse(log_service.export_text(source=source, level=level))
+        events = log_service.list_events(source=source, level=level, limit=0, include_details=True)
+        return PlainTextResponse(log_service.export_text(events))
 
     @router.get('/debug/summary')
     def debug_summary():
         snapshot = debug_service.snapshot()
-        snapshot['unified_log'] = {'size': len(log_service.list_events()), 'verbose': log_service.verbose}
+        snapshot['unified_log'] = {'size': len(log_service.list_events(limit=0)), 'verbose': log_service.verbose}
         return snapshot
 
     @router.get('/icons/{icon_asset_id:path}')

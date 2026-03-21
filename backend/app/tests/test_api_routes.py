@@ -141,11 +141,16 @@ def test_debug_log_ingest_and_export(tmp_path: Path):
     post_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'POST' in getattr(route, 'methods', set()))
     get_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'GET' in getattr(route, 'methods', set()))
 
-    post_route(type('LogRequest', (), {'model_dump': lambda self=None: {'source': 'FRONTEND', 'level': 'WARN', 'category': 'UI', 'message': 'Test event', 'details': {'clicked': True}, 'verbose_only': False}})())
-    payload = get_route()
+    request = type('LogRequest', (), {'model_dump': lambda self=None: {'source': 'FRONTEND', 'level': 'WARN', 'category': 'UI', 'message': 'Test event', 'details': {'clicked': True, 'raw_input': 'x' * 600}, 'verbose_only': False}})()
+    post_route(request)
+    post_route(request)
+    payload = get_route(include_text=True, include_details=False)
+    incremental = get_route(since_id=0, limit=10, include_details=True, include_text=True)
 
     assert payload['events'][-1]['message'] == 'Test event'
-    assert 'Test event' in payload['exportText']
+    assert payload['events'][-1]['repeat_count'] == 2
+    assert 'Test event' in incremental['exportText']
+    assert incremental['events'][-1]['details']['raw_input'].endswith('…')
 
 
 def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources(tmp_path: Path):

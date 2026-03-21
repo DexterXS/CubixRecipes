@@ -275,8 +275,8 @@ class UnifiedLogPane:
         header = tk.Label(
             self.frame,
             text=(
-                "Единый событийный лог для backend/frontend/API/UI. Здесь по времени собираются структурированные записи, "
-                "которые можно целиком скопировать и отдать ИИ для анализа."
+                "Облегчённый unified log: загружаются только новые события, без полного пересоздания текста на каждом refresh. "
+                "Авто-обновление выключено по умолчанию и работает только когда вкладка активна."
             ),
             wraplength=900,
             justify=tk.LEFT,
@@ -296,6 +296,8 @@ class UnifiedLogPane:
         self.level_filter.pack(side=tk.LEFT, padx=(6, 12))
         self.autoscroll_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(controls, text="Auto-scroll", variable=self.autoscroll_var).pack(side=tk.LEFT, padx=(0, 12))
+        self.autorefresh_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(controls, text="Auto-refresh", variable=self.autorefresh_var).pack(side=tk.LEFT, padx=(0, 12))
         self.refresh_button = ttk.Button(controls, text="Refresh Log")
         self.refresh_button.pack(side=tk.LEFT, padx=(0, 8))
         self.copy_button = ttk.Button(controls, text="Copy Full Log")
@@ -313,15 +315,26 @@ class UnifiedLogPane:
         self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
         self.output.configure(state=tk.DISABLED)
         self.current_text = ''
+        self.last_event_id = 0
 
     def set_status(self, text: str) -> None:
         self.status_var.set(text)
 
-    def render(self, text: str) -> None:
-        self.current_text = text
+    def reset_cursor(self) -> None:
+        self.last_event_id = 0
+
+    def render_lines(self, lines: list[str], *, replace: bool = False) -> None:
+        if replace:
+            self.current_text = '\n'.join(lines)
+        elif lines:
+            self.current_text = '\n'.join([part for part in [self.current_text, '\n'.join(lines)] if part])
         self.output.configure(state=tk.NORMAL)
-        self.output.delete('1.0', tk.END)
-        self.output.insert('1.0', text)
+        if replace:
+            self.output.delete('1.0', tk.END)
+        if lines:
+            if not replace and self.output.index('end-1c') != '1.0':
+                self.output.insert(tk.END, '\n')
+            self.output.insert(tk.END, '\n'.join(lines))
         if self.autoscroll_var.get():
             self.output.see(tk.END)
         self.output.configure(state=tk.DISABLED)
@@ -338,7 +351,11 @@ class UnifiedLogPane:
         return path
 
     def clear(self) -> None:
-        self.render('')
+        self.reset_cursor()
+        self.current_text = ''
+        self.output.configure(state=tk.NORMAL)
+        self.output.delete('1.0', tk.END)
+        self.output.configure(state=tk.DISABLED)
 
 
 class ManagedProcess:
@@ -388,6 +405,9 @@ class ProcessControllerApp:
         self.logger.propagate = False
         self._status_snapshot: Optional[tuple[bool, bool]] = None
 
+        self._ui_job_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
+        self._unified_log_in_flight = False
+        self._debug_summary_in_flight = False
         self._create_widgets()
 
         self.backend = ManagedProcess("backend", self.backend_dir, self.backend_console)
@@ -399,6 +419,7 @@ class ProcessControllerApp:
         self._log_environment_summary()
         self._update_status_labels()
         self._poll_process_output()
+        self._drain_ui_job_queue()
         self._poll_unified_log()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -462,8 +483,9 @@ class ProcessControllerApp:
         self.full_log_pane.save_button.configure(command=self.save_unified_log)
         self.full_log_pane.clear_button.configure(command=self.clear_unified_log)
         self.full_log_pane.test_button.configure(command=self.test_debug_pipeline)
-        self.full_log_pane.source_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
-        self.full_log_pane.level_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log())
+        self.full_log_pane.source_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log(force_replace=True))
+        self.full_log_pane.level_filter.bind('<<ComboboxSelected>>', lambda _event: self.refresh_unified_log(force_replace=True))
+        self.notebook.bind('<<NotebookTabChanged>>', self._handle_tab_changed)
 
     def _create_settings_tab(self) -> None:
         settings_frame = ttk.Frame(self.notebook)
@@ -810,53 +832,125 @@ class ProcessControllerApp:
         return " ".join(command) if isinstance(command, list) else command
 
 
+    def _handle_tab_changed(self, _event: tk.Event[tk.Misc]) -> None:
+        if self.notebook.select() == str(self.full_log_pane.frame):
+            self.refresh_unified_log(force_replace=not bool(self.full_log_pane.current_text))
+
+    def _drain_ui_job_queue(self) -> None:
+        while True:
+            try:
+                job_type, payload = self._ui_job_queue.get_nowait()
+            except queue.Empty:
+                break
+            if job_type == 'callback':
+                callback, value = payload
+                callback(value)
+            elif job_type == 'error':
+                callback, value = payload
+                callback(value)
+        self.root.after(120, self._drain_ui_job_queue)
+
+    def _run_debug_request(
+        self,
+        path: str,
+        *,
+        on_success: Any,
+        on_error: Any,
+        method: str = 'GET',
+        payload: Optional[dict[str, Any]] = None,
+        timeout: float = 3.0,
+    ) -> None:
+        def worker() -> None:
+            try:
+                response = self._request_debug_json(path, method=method, payload=payload, timeout=timeout)
+                self._ui_job_queue.put(('callback', (on_success, response)))
+            except Exception as error:
+                self._ui_job_queue.put(('error', (on_error, error)))
+
+        threading.Thread(target=worker, daemon=True).start()
+
     def _emit_panel_log_event(self, level: str, category: str, message: str, details: Optional[dict[str, Any]] = None) -> None:
-        try:
-            self._request_debug_json('/api/debug/log', method='POST', payload={
+        self._run_debug_request(
+            '/api/debug/log',
+            method='POST',
+            payload={
                 'source': 'CONTROL_PANEL',
                 'level': level,
                 'category': category,
                 'message': message,
                 'details': details or {},
                 'verbose_only': False,
-            })
-        except Exception:
-            pass
+            },
+            timeout=1.5,
+            on_success=lambda _payload: None,
+            on_error=lambda _error: None,
+        )
 
     def test_debug_pipeline(self) -> None:
         details = {'test': 'control-panel-pipeline', 'note': 'synthetic frontend-like event from control panel'}
-        try:
-            post_response = self._request_debug_json('/api/debug/log', method='POST', payload={
+        self.full_log_pane.set_status('Pipeline test running...')
+
+        def after_post(_payload: dict[str, Any]) -> None:
+            self.refresh_unified_log(force_replace=False)
+            self.full_log_pane.set_status('Pipeline OK | test event queued for incremental log fetch')
+            self._emit_panel_log_event('INFO', 'UI', 'Test Debug Pipeline succeeded', details)
+
+        self._run_debug_request(
+            '/api/debug/log',
+            method='POST',
+            payload={
                 'source': 'FRONTEND',
                 'level': 'INFO',
                 'category': 'UI',
                 'message': 'Test Debug Pipeline event',
                 'details': details,
                 'verbose_only': False,
-            })
-            get_response = self._request_debug_json('/api/debug/log?source=All&level=All')
-            export_text = get_response.get('exportText', '')
-            if 'Test Debug Pipeline event' not in export_text:
-                raise RuntimeError('backend buffer empty or event not found after ingest')
-            self.full_log_pane.set_status(f"Pipeline OK | url={get_response.get('_request', {}).get('url')} | status={get_response.get('_request', {}).get('status')}")
-            self._emit_panel_log_event('INFO', 'UI', 'Test Debug Pipeline succeeded', {'post': post_response.get('_request'), 'get': get_response.get('_request')})
-            self.refresh_unified_log()
-        except Exception as error:
-            self.full_log_pane.set_status(f'Pipeline broken: {error}')
-            self.logger.error('Test Debug Pipeline failed: %s', error)
+            },
+            on_success=after_post,
+            on_error=lambda error: self.full_log_pane.set_status(f'Pipeline broken: {error}'),
+        )
 
+    def _format_unified_log_lines(self, events: list[dict[str, Any]]) -> list[str]:
+        lines: list[str] = []
+        for item in events:
+            repeated = '' if item.get('repeat_count', 1) <= 1 else f" x{item['repeat_count']}"
+            details = item.get('details') if isinstance(item.get('details'), dict) else None
+            details_text = '' if not details else f" details={json.dumps(details, ensure_ascii=False)}"
+            lines.append(f"[{item['timestamp']}] [{item['source']}] [{item['level']}] [{item['category']}] {item['message']}{repeated}{details_text}")
+        return lines
 
-    def refresh_unified_log(self) -> None:
-        path = f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
-        try:
-            payload = self._request_debug_json(path)
-            self.full_log_pane.render(payload.get('exportText', ''))
+    def refresh_unified_log(self, force_replace: bool = False) -> None:
+        if self._unified_log_in_flight:
+            return
+        if not force_replace and self.notebook.select() != str(self.full_log_pane.frame):
+            return
+        if force_replace:
+            self.full_log_pane.clear()
+        self._unified_log_in_flight = True
+        since_id = 0 if force_replace else self.full_log_pane.last_event_id
+        path = (
+            f"/api/debug/log?source={self.full_log_pane.source_var.get()}&level={self.full_log_pane.level_var.get()}"
+            f"&since_id={since_id}&limit=150&include_details=false"
+        )
+        self.full_log_pane.set_status(f'Refreshing unified log from {BACKEND_API_BASE_URL}{path}')
+
+        def on_success(payload: dict[str, Any]) -> None:
+            self._unified_log_in_flight = False
+            events = payload.get('events', [])
+            lines = self._format_unified_log_lines(events)
+            self.full_log_pane.render_lines(lines, replace=force_replace)
+            self.full_log_pane.last_event_id = int(payload.get('nextSinceId', self.full_log_pane.last_event_id))
             request_info = payload.get('_request', {})
-            self.full_log_pane.set_status(f"URL: {request_info.get('url')} | status: {request_info.get('status')} | events: {len(payload.get('events', []))}")
-        except Exception as error:
+            self.full_log_pane.set_status(
+                f"URL: {request_info.get('url')} | status: {request_info.get('status')} | new events: {len(events)} | cursor: {self.full_log_pane.last_event_id}"
+            )
+
+        def on_error(error: Exception) -> None:
+            self._unified_log_in_flight = False
             self.full_log_pane.set_status(f"Unified log refresh failed | URL: {BACKEND_API_BASE_URL}{path} | error: {error}")
             self.logger.error('Не удалось обновить unified log: %s', error)
-            self._emit_panel_log_event('ERROR', 'API', 'Unified log refresh failed', {'url': f'{BACKEND_API_BASE_URL}{path}', 'error': str(error)})
+
+        self._run_debug_request(path, on_success=on_success, on_error=on_error, timeout=2.5)
 
     def copy_unified_log(self) -> None:
         self.full_log_pane.copy_all()
@@ -870,71 +964,90 @@ class ProcessControllerApp:
             self._emit_panel_log_event('INFO', 'UI', 'Save Log To File clicked', {'path': path})
 
     def clear_unified_log(self) -> None:
-        try:
-            self._request_debug_json('/api/debug/log/clear', method='POST')
-        except Exception as error:
-            self.logger.error('Не удалось очистить unified log: %s', error)
         self.full_log_pane.clear()
-        self._emit_panel_log_event('INFO', 'UI', 'Clear Log clicked', {})
+        self._run_debug_request(
+            '/api/debug/log/clear',
+            method='POST',
+            timeout=2.0,
+            on_success=lambda _payload: self.full_log_pane.set_status('Unified log cleared'),
+            on_error=lambda error: self.full_log_pane.set_status(f'Unified log clear failed: {error}'),
+        )
 
     def _poll_unified_log(self) -> None:
-        if self.backend.is_running() or self.full_log_pane.current_text:
-            self.refresh_unified_log()
-        self.root.after(1500, self._poll_unified_log)
+        if (
+            self.backend.is_running()
+            and self.notebook.select() == str(self.full_log_pane.frame)
+            and self.full_log_pane.autorefresh_var.get()
+        ):
+            self.refresh_unified_log(force_replace=False)
+        self.root.after(2000, self._poll_unified_log)
 
-    def _request_debug_json(self, path: str, method: str = "GET", payload: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+    def _request_debug_json(self, path: str, method: str = "GET", payload: Optional[dict[str, Any]] = None, timeout: float = 3.0) -> dict[str, Any]:
         url = f"{BACKEND_API_BASE_URL}{path}"
         body = None if payload is None else json.dumps(payload).encode('utf-8')
         headers = {} if payload is None else {'Content-Type': 'application/json'}
         request = Request(url, data=body, headers=headers, method=method)
         try:
-            with urlopen(request, timeout=10) as response:
+            with urlopen(request, timeout=timeout) as response:
                 raw_body = response.read().decode('utf-8')
                 parsed = json.loads(raw_body) if raw_body else {}
                 if isinstance(parsed, dict):
-                    parsed['_request'] = {'url': url, 'status': response.status, 'body': raw_body[:800]}
-                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': {'url': url, 'status': response.status, 'body': raw_body[:800]}}
+                    parsed['_request'] = {'url': url, 'status': response.status, 'body': raw_body[:400]}
+                return parsed if isinstance(parsed, dict) else {'data': parsed, '_request': {'url': url, 'status': response.status, 'body': raw_body[:400]}}
         except HTTPError as error:
             error_body = error.read().decode('utf-8', errors='replace')
-            raise RuntimeError(f'HTTP {error.code} for {url} body={error_body[:800]}') from error
+            raise RuntimeError(f'HTTP {error.code} for {url} body={error_body[:400]}') from error
         except URLError as error:
             raise RuntimeError(f'URL error for {url}: {error}') from error
 
     def refresh_debug_info(self) -> None:
-        try:
-            payload = self._request_debug_json('/api/debug/summary')
+        if self._debug_summary_in_flight:
+            return
+        self._debug_summary_in_flight = True
+        self.logger.info('Refreshing debug summary in background...')
+
+        def on_success(payload: dict[str, Any]) -> None:
+            self._debug_summary_in_flight = False
             self.debug_pane.render(payload)
             self.notebook.select(self.debug_pane.frame)
             self.logger.info('Debug summary refreshed from backend /api/debug/summary')
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
+
+        def on_error(error: Exception) -> None:
+            self._debug_summary_in_flight = False
             self.logger.error('Не удалось обновить debug summary: %s', error)
-            messagebox.showerror('Debug', f'Не удалось получить debug summary from backend:\n{error}')
+
+        self._run_debug_request('/api/debug/summary', on_success=on_success, on_error=on_error, timeout=3.0)
 
     def rescan_debug_recipes(self) -> None:
-        try:
-            self._request_debug_json('/api/debug/recipes/rescan', method='POST')
-            self.refresh_debug_info()
-            self.logger.info('Recipe diagnostics refreshed via /api/debug/recipes/rescan')
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
-            self.logger.error('Не удалось пересканировать recipes debug: %s', error)
-            messagebox.showerror('Debug', f'Не удалось пересканировать recipes:\n{error}')
+        self.logger.info('Recipe rescan requested in background...')
+        self._run_debug_request(
+            '/api/debug/recipes/rescan',
+            method='POST',
+            on_success=lambda _payload: self.refresh_debug_info(),
+            on_error=lambda error: self.logger.error('Не удалось пересканировать recipes debug: %s', error),
+            timeout=3.0,
+        )
 
     def rescan_debug_assets(self) -> None:
-        try:
-            self._request_debug_json('/api/debug/assets/rescan', method='POST')
-            self.refresh_debug_info()
-            self.logger.info('Asset diagnostics refreshed via /api/debug/assets/rescan')
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
-            self.logger.error('Не удалось пересканировать assets debug: %s', error)
-            messagebox.showerror('Debug', f'Не удалось пересканировать assets:\n{error}')
+        self.logger.info('Asset rescan requested in background...')
+        self._run_debug_request(
+            '/api/debug/assets/rescan',
+            method='POST',
+            on_success=lambda _payload: self.refresh_debug_info(),
+            on_error=lambda error: self.logger.error('Не удалось пересканировать assets debug: %s', error),
+            timeout=3.0,
+        )
 
     def clear_debug_log(self) -> None:
-        try:
-            self._request_debug_json('/api/debug/clear', method='POST')
-        except (URLError, HTTPError, TimeoutError, json.JSONDecodeError) as error:
-            self.logger.error('Не удалось очистить backend debug log: %s', error)
         self.debug_pane.clear()
         self.logger.info('Debug pane cleared by user request.')
+        self._run_debug_request(
+            '/api/debug/clear',
+            method='POST',
+            on_success=lambda _payload: None,
+            on_error=lambda error: self.logger.error('Не удалось очистить backend debug log: %s', error),
+            timeout=2.0,
+        )
 
     def _build_process_env(self) -> dict[str, str]:
         env = os.environ.copy()
