@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 
 class MetaMode(str, Enum):
@@ -16,36 +16,36 @@ class BindingMode(str, Enum):
     SOFT = "soft"
 
 
-@dataclass(slots=True)
+@dataclass
 class ItemRef:
     raw: str
     modid: str
     name: str
     meta_mode: MetaMode = MetaMode.NONE
-    meta_value: int | None = None
+    meta_value: Optional[int] = None
 
     @property
     def base_key(self) -> str:
         return f"{self.modid}:{self.name}"
 
 
-@dataclass(slots=True)
+@dataclass
 class RecipeCell:
     row: int
     col: int
-    raw: str | None
-    item: ItemRef | None
+    raw: Optional[str]
+    item: Optional[ItemRef]
 
 
-@dataclass(slots=True)
+@dataclass
 class RecipeSource:
     kind: str
-    path: str | None = None
-    start_offset: int | None = None
-    end_offset: int | None = None
+    path: Optional[str] = None
+    start_offset: Optional[int] = None
+    end_offset: Optional[int] = None
 
 
-@dataclass(slots=True)
+@dataclass
 class Recipe:
     recipe_uid: str
     recipe_type: str
@@ -55,27 +55,27 @@ class Recipe:
     grid_h: int
     source: RecipeSource
     raw_text: str
-    name: str | None = None
+    name: Optional[str] = None
     diagnostics: list[str] = field(default_factory=list)
 
 
-@dataclass(slots=True)
+@dataclass
 class ResolutionResult:
     item_raw: str
-    display_name: str | None
-    icon_asset_id: str | None
-    icon_url: str | None
+    display_name: Optional[str]
+    icon_asset_id: Optional[str]
+    icon_url: Optional[str]
     animated: bool
     confidence: float
     strategy: str
     trace: list[dict[str, Any]]
 
 
-@dataclass(slots=True)
+@dataclass
 class AssetCandidate:
     asset_id: str
     source_type: str
     path: str
     animated: bool = False
-    display_name: str | None = None
+    display_name: Optional[str] = None
     payload: dict[str, Any] = field(default_factory=dict)

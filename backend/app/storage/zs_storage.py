@@ -4,12 +4,13 @@ import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Union
 
 from app.domain.models import Recipe
 from app.parsers.recipe_parser import RecipeParser
 
 
-@dataclass(slots=True)
+@dataclass
 class StoredRecipe:
     recipe: Recipe
     file_path: str
@@ -19,7 +20,7 @@ class StoredRecipe:
 
 
 class ZsStorage:
-    def __init__(self, scripts_dir: str | Path):
+    def __init__(self, scripts_dir: Union[str, Path]):
         self.scripts_dir = Path(scripts_dir)
         self.parser = RecipeParser()
         self._recipes: dict[str, StoredRecipe] = {}
@@ -46,7 +47,7 @@ class ZsStorage:
                 for key in {recipe.output.raw, recipe.output.base_key}:
                     self._by_output.setdefault(key, []).append(uid)
 
-    def list_files(self) -> list[dict[str, str | int]]:
+    def list_files(self) -> list[dict[str, Union[str, int]]]:
         return [
             {"path": str(path), "recipeCount": sum(1 for item in self._recipes.values() if item.file_path == str(path))}
             for path in sorted(self.scripts_dir.glob("*.zs"))

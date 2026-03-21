@@ -2,38 +2,187 @@
 
 from __future__ import annotations
 
+import logging
 import os
+import queue
+import re
+import shutil
 import subprocess
 import sys
+import threading
 import tkinter as tk
+import webbrowser
 from pathlib import Path
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+from tkinter.scrolledtext import ScrolledText
 
-WINDOWS_NEW_CONSOLE = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
 POLL_INTERVAL_MS = 1000
+STREAM_POLL_MS = 120
 RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
+LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
+ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
+URL_RE = re.compile(r"https?://[^\s]+")
+MOJIBAKE_REPLACEMENTS = {
+    "вЫє": "-",
+    "вЫ ": "-",
+    "в¢": "-",
+    "âžœ": "-",
+    "â†’": "->",
+}
+
+
+class TkTextHandler(logging.Handler):
+    def __init__(self, widget: ScrolledText) -> None:
+        super().__init__()
+        self.widget = widget
+        self.setFormatter(logging.Formatter(LOG_FORMAT, datefmt="%H:%M:%S"))
+
+    def emit(self, record: logging.LogRecord) -> None:
+        message = self.format(record)
+
+        def append() -> None:
+            self.widget.configure(state=tk.NORMAL)
+            self.widget.insert(tk.END, message + "\n")
+            self.widget.see(tk.END)
+            self.widget.configure(state=tk.DISABLED)
+
+        self.widget.after(0, append)
+
+
+class ConsolePane:
+    def __init__(self, parent: ttk.Notebook, title: str) -> None:
+        self.frame = ttk.Frame(parent)
+        parent.add(self.frame, text=title)
+
+        description = tk.Label(
+            self.frame,
+            text=f"Вкладка показывает вывод процесса {title.lower()} в реальном времени.",
+            font=("Arial", 9),
+            anchor="w",
+            justify=tk.LEFT,
+        )
+        description.pack(fill=tk.X, padx=10, pady=(10, 6))
+
+        self.output = ScrolledText(
+            self.frame,
+            height=20,
+            state=tk.NORMAL,
+            font=("Consolas", 9),
+            wrap=tk.WORD,
+            cursor="xterm",
+            exportselection=False,
+            insertwidth=0,
+        )
+        self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.output.tag_configure("link", foreground="#1a73e8", underline=True)
+        self.output.tag_bind("link", "<Button-1>", self._open_clicked_link)
+        self.output.tag_bind("link", "<Enter>", lambda _event: self.output.config(cursor="hand2"))
+        self.output.tag_bind("link", "<Leave>", lambda _event: self.output.config(cursor="xterm"))
+        self.output.bind("<Control-c>", self._copy_selection)
+        self.output.bind("<Control-C>", self._copy_selection)
+        self.output.bind("<Button-3>", self._copy_selection)
+        self.output.bind("<Key>", self._block_edit_keys)
+
+    def append(self, text: str) -> None:
+        if not text:
+            return
+
+        start_index = self.output.index(tk.END + "-1c")
+        self.output.insert(tk.END, text)
+        end_index = self.output.index(tk.END + "-1c")
+        self._tag_links(start_index, end_index)
+        self.output.see(tk.END)
+
+    def write_line(self, text: str) -> None:
+        self.append(text.rstrip("\n") + "\n")
+
+    def clear(self) -> None:
+        self.output.delete("1.0", tk.END)
+
+    def _tag_links(self, start_index: str, end_index: str) -> None:
+        block = self.output.get(start_index, end_index)
+        for match in URL_RE.finditer(block):
+            tag_start = f"{start_index}+{match.start()}c"
+            tag_end = f"{start_index}+{match.end()}c"
+            self.output.tag_add("link", tag_start, tag_end)
+
+    def _copy_selection(self, _event: tk.Event[tk.Misc]) -> str | None:
+        try:
+            selected_text = self.output.get("sel.first", "sel.last")
+        except tk.TclError:
+            return "break"
+
+        self.output.clipboard_clear()
+        self.output.clipboard_append(selected_text)
+        return "break"
+
+    def _block_edit_keys(self, event: tk.Event[tk.Misc]) -> str | None:
+        if (event.state & 0x4) and event.keysym.lower() == "c":
+            return None
+        return "break"
+
+    def _open_clicked_link(self, event: tk.Event[tk.Misc]) -> str:
+        index = self.output.index(f"@{event.x},{event.y}")
+        for start, end in zip(self.output.tag_ranges("link")[::2], self.output.tag_ranges("link")[1::2]):
+            if self.output.compare(index, ">=", start) and self.output.compare(index, "<", end):
+                webbrowser.open(self.output.get(start, end))
+                break
+
+        return "break"
+
+
+class ManagedProcess:
+    def __init__(self, name: str, directory: Path, console: ConsolePane) -> None:
+        self.name = name
+        self.directory = directory
+        self.console = console
+        self.proc: subprocess.Popen[str] | None = None
+        self.output_queue: queue.Queue[str] = queue.Queue()
+        self.reader_thread: threading.Thread | None = None
+        self.last_return_code: int | None = None
+
+    def is_running(self) -> bool:
+        return self.proc is not None and self.proc.poll() is None
+
+    def reset_output(self) -> None:
+        self.console.clear()
+        self.output_queue = queue.Queue()
+        self.reader_thread = None
 
 
 class ProcessControllerApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("CubixRecipes Control Panel")
-        self.root.geometry("520x260")
-        self.root.resizable(False, False)
+        self.root.geometry("860x700")
+        self.root.resizable(True, True)
+        self.root.minsize(760, 620)
 
         self.root_dir = Path(__file__).resolve().parent
         self.backend_dir = self.root_dir / "backend"
         self.frontend_dir = self.root_dir / "frontend"
 
-        self.backend_proc: subprocess.Popen[str] | None = None
-        self.frontend_proc: subprocess.Popen[str] | None = None
-
         self.backend_status: tk.Label
         self.frontend_status: tk.Label
+        self.log_output: ScrolledText
+        self.notebook: ttk.Notebook
+
+        self.logger = logging.getLogger("cubixrecipes.start_dev")
+        self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
+        self._status_snapshot: tuple[bool, bool] | None = None
 
         self._create_widgets()
+
+        self.backend = ManagedProcess("backend", self.backend_dir, self.backend_console)
+        self.frontend = ManagedProcess("frontend", self.frontend_dir, self.frontend_console)
+        self.managed_processes = [self.backend, self.frontend]
+
+        self._configure_logging()
+        self._log_environment_summary()
         self._update_status_labels()
+        self._poll_process_output()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _create_widgets(self) -> None:
@@ -50,18 +199,9 @@ class ProcessControllerApp:
         backend_frame = tk.Frame(self.root)
         backend_frame.pack(pady=5)
 
-        tk.Button(backend_frame, text="Start Backend", width=15, command=self.start_backend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
-        tk.Button(backend_frame, text="Stop Backend", width=15, command=self.stop_backend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
-        tk.Button(backend_frame, text="Restart Backend", width=15, command=self.restart_backend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
+        tk.Button(backend_frame, text="Start Backend", width=15, command=self.start_backend).pack(side=tk.LEFT, padx=5)
+        tk.Button(backend_frame, text="Stop Backend", width=15, command=self.stop_backend).pack(side=tk.LEFT, padx=5)
+        tk.Button(backend_frame, text="Restart Backend", width=15, command=self.restart_backend).pack(side=tk.LEFT, padx=5)
 
         self.frontend_status = tk.Label(self.root, text="Frontend: неизвестно", font=("Arial", 11))
         self.frontend_status.pack(pady=10)
@@ -69,18 +209,9 @@ class ProcessControllerApp:
         frontend_frame = tk.Frame(self.root)
         frontend_frame.pack(pady=5)
 
-        tk.Button(frontend_frame, text="Start Frontend", width=15, command=self.start_frontend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
-        tk.Button(frontend_frame, text="Stop Frontend", width=15, command=self.stop_frontend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
-        tk.Button(frontend_frame, text="Restart Frontend", width=15, command=self.restart_frontend).pack(
-            side=tk.LEFT,
-            padx=5,
-        )
+        tk.Button(frontend_frame, text="Start Frontend", width=15, command=self.start_frontend).pack(side=tk.LEFT, padx=5)
+        tk.Button(frontend_frame, text="Stop Frontend", width=15, command=self.stop_frontend).pack(side=tk.LEFT, padx=5)
+        tk.Button(frontend_frame, text="Restart Frontend", width=15, command=self.restart_frontend).pack(side=tk.LEFT, padx=5)
 
         global_frame = tk.Frame(self.root)
         global_frame.pack(pady=20)
@@ -91,35 +222,134 @@ class ProcessControllerApp:
 
         hint = tk.Label(
             self.root,
-            text="Совет: frontend удобнее перезапускать этой кнопкой, чем вручную через консоль.",
+            text=(
+                "Ниже доступны вкладки с отдельными консолями backend/frontend и журналом управления. "
+                "Вывод процессов больше не открывается во внешних окнах."
+            ),
             font=("Arial", 9),
+            wraplength=760,
+            justify=tk.CENTER,
         )
-        hint.pack(pady=10)
+        hint.pack(pady=(0, 10))
 
-    def is_running(self, proc: subprocess.Popen[str] | None) -> bool:
-        return proc is not None and proc.poll() is None
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
+
+        self.backend_console = ConsolePane(self.notebook, "Backend Console")
+        self.frontend_console = ConsolePane(self.notebook, "Frontend Console")
+        log_frame = ttk.Frame(self.notebook)
+        self.notebook.add(log_frame, text="Action Log")
+
+        tk.Label(log_frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
+        self.log_output = ScrolledText(log_frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
+        self.log_output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+
+    def _configure_logging(self) -> None:
+        if self.logger.handlers:
+            self.logger.handlers.clear()
+
+        self.logger.addHandler(TkTextHandler(self.log_output))
+
+    def _log_environment_summary(self) -> None:
+        self.logger.info("Панель управления запущена. Корень проекта: %s", self.root_dir)
+        self.logger.info("Backend и frontend запускаются внутри этой программы, каждая служба пишет вывод в свою вкладку.")
+        self.logger.info("Остановить можно только процессы, которые были запущены этой панелью и всё ещё активны.")
+
+    def _sanitize_console_text(self, text: str) -> str:
+        if not text:
+            return ""
+
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        text = ANSI_ESCAPE_RE.sub("", text)
+        for source, target in MOJIBAKE_REPLACEMENTS.items():
+            text = text.replace(source, target)
+
+        text = text.replace("→", "->").replace("➜", "-")
+        return "".join(character for character in text if character == "\n" or character == "\t" or character.isprintable())
+
+    def _write_process_line(self, managed: ManagedProcess, text: str) -> None:
+        sanitized = self._sanitize_console_text(text)
+        if sanitized:
+            managed.console.write_line(sanitized)
+
+    def _poll_process_output(self) -> None:
+        for managed in self.managed_processes:
+            while True:
+                try:
+                    chunk = managed.output_queue.get_nowait()
+                except queue.Empty:
+                    break
+
+                sanitized = self._sanitize_console_text(chunk)
+                if sanitized:
+                    managed.console.append(sanitized)
+
+        self.root.after(STREAM_POLL_MS, self._poll_process_output)
+
+    def _stream_process_output(self, managed: ManagedProcess) -> None:
+        proc = managed.proc
+        if proc is None or proc.stdout is None:
+            return
+
+        try:
+            for line in proc.stdout:
+                managed.output_queue.put(line)
+        finally:
+            if proc.stdout is not None:
+                proc.stdout.close()
+
+    def is_running(self, managed: ManagedProcess) -> bool:
+        return managed.is_running()
+
+    def _set_status_snapshot(self, backend_running: bool, frontend_running: bool) -> None:
+        snapshot = (backend_running, frontend_running)
+        if snapshot == self._status_snapshot:
+            return
+
+        if self._status_snapshot is not None:
+            if backend_running != self._status_snapshot[0]:
+                self.logger.info(
+                    "Статус backend изменился: %s.",
+                    "работает и может быть остановлен" if backend_running else "остановлен и сейчас нечего останавливать",
+                )
+            if frontend_running != self._status_snapshot[1]:
+                self.logger.info(
+                    "Статус frontend изменился: %s.",
+                    "работает и может быть остановлен" if frontend_running else "остановлен и сейчас нечего останавливать",
+                )
+
+        self._status_snapshot = snapshot
+
+    def _report_unexpected_exit(self, managed: ManagedProcess) -> None:
+        if managed.proc is None:
+            return
+
+        return_code = managed.proc.poll()
+        if return_code is None or return_code == managed.last_return_code:
+            return
+
+        managed.last_return_code = return_code
+        self.logger.warning("Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
+        self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
 
     def _update_status_labels(self) -> None:
-        backend_text = "Backend: работает" if self.is_running(self.backend_proc) else "Backend: остановлен"
-        frontend_text = "Frontend: работает" if self.is_running(self.frontend_proc) else "Frontend: остановлен"
+        backend_running = self.is_running(self.backend)
+        frontend_running = self.is_running(self.frontend)
+
+        self._report_unexpected_exit(self.backend)
+        self._report_unexpected_exit(self.frontend)
+
+        backend_text = "Backend: работает" if backend_running else "Backend: остановлен"
+        frontend_text = "Frontend: работает" if frontend_running else "Frontend: остановлен"
 
         self.backend_status.config(text=backend_text)
         self.frontend_status.config(text=frontend_text)
+        self._set_status_snapshot(backend_running, frontend_running)
         self.root.after(POLL_INTERVAL_MS, self._update_status_labels)
 
     def _build_backend_command(self) -> tuple[list[str] | str, bool]:
-        if os.name == "nt":
-            venv_python = self.backend_dir / ".venv" / "Scripts" / "python.exe"
-            if venv_python.exists():
-                return [str(venv_python), "-m", "uvicorn", "app.main:app", "--reload"], False
-
-            return "python -m uvicorn app.main:app --reload", True
-
-        venv_python = self.backend_dir / ".venv" / "bin" / "python"
-        if venv_python.exists():
-            return [str(venv_python), "-m", "uvicorn", "app.main:app", "--reload"], False
-
-        return [sys.executable, "-m", "uvicorn", "app.main:app", "--reload"], False
+        python_executable = self._select_backend_python()
+        return [python_executable, "-m", "uvicorn", "app.main:app", "--reload"], False
 
     def _build_frontend_command(self) -> tuple[list[str] | str, bool]:
         if os.name == "nt":
@@ -127,103 +357,291 @@ class ProcessControllerApp:
 
         return ["npm", "run", "dev"], False
 
-    def _creation_flags(self) -> int:
-        return WINDOWS_NEW_CONSOLE if os.name == "nt" else 0
-
     def _show_missing_dir_error(self, name: str, directory: Path) -> None:
+        self.logger.error("Запуск %s невозможен: не найдена папка %s", name, directory)
         messagebox.showerror("Ошибка", f"Папка {name} не найдена:\n{directory}")
+
+    def _python_candidates_for_backend(self) -> list[str]:
+        candidates: list[str] = []
+
+        if os.name == "nt":
+            local_venv = self.backend_dir / ".venv" / "Scripts" / "python.exe"
+            if local_venv.exists():
+                candidates.append(str(local_venv))
+        else:
+            local_venv = self.backend_dir / ".venv" / "bin" / "python"
+            if local_venv.exists():
+                candidates.append(str(local_venv))
+
+        candidates.append(sys.executable)
+
+        for executable in ("python", "python3", "py"):
+            resolved = shutil.which(executable)
+            if resolved:
+                candidates.append(resolved)
+
+        unique_candidates: list[str] = []
+        seen: set[str] = set()
+        for candidate in candidates:
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                unique_candidates.append(candidate)
+
+        return unique_candidates
+
+    def _python_has_module(self, python_executable: str, module_name: str) -> bool:
+        try:
+            result = subprocess.run(
+                [
+                    python_executable,
+                    "-c",
+                    (
+                        "import importlib.util, sys; "
+                        f"sys.exit(0 if importlib.util.find_spec('{module_name}') else 1)"
+                    ),
+                ],
+                cwd=self.backend_dir,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        except OSError:
+            return False
+
+        return result.returncode == 0
+
+    def _show_backend_dependency_error(self, checked_candidates: list[str]) -> None:
+        preferred_python = checked_candidates[0] if checked_candidates else sys.executable
+        install_command = f'"{preferred_python}" -m pip install -e backend[dev]'
+        details = "\n".join(f"- {candidate}" for candidate in checked_candidates) or "- candidates not found"
+        message = (
+            "Не найден модуль uvicorn ни в одном подходящем Python-интерпретаторе.\n\n"
+            "Проверьте backend-окружение и установите зависимости, например так:\n"
+            f"{install_command}\n\n"
+            "Проверенные интерпретаторы:\n"
+            f"{details}"
+        )
+        self.logger.error(message.replace("\n", " "))
+        self._write_process_line(
+            self.backend,
+            (
+                "Backend не запущен: в выбранном Python отсутствует модуль uvicorn.\n"
+                f"Установите зависимости командой:\n{install_command}\n"
+            ),
+        )
+        messagebox.showerror("Ошибка backend", message)
+
+    def _select_backend_python(self) -> str:
+        checked_candidates = self._python_candidates_for_backend()
+        for candidate in checked_candidates:
+            if self._python_has_module(candidate, "uvicorn"):
+                self.logger.info("Для backend выбран Python-интерпретатор с установленным uvicorn: %s", candidate)
+                return candidate
+
+        self._show_backend_dependency_error(checked_candidates)
+        raise RuntimeError("uvicorn is not installed in any detected Python interpreter")
+
+    def _validate_backend_setup(self) -> bool:
+        if not self.backend_dir.is_dir():
+            self._show_missing_dir_error("backend", self.backend_dir)
+            return False
+
+        try:
+            self._select_backend_python()
+        except RuntimeError:
+            return False
+
+        return True
+
+    def _validate_frontend_setup(self) -> bool:
+        package_json = self.frontend_dir / "package.json"
+        node_modules = self.frontend_dir / "node_modules"
+
+        if not package_json.is_file():
+            self.logger.error("Frontend не может быть запущен: отсутствует файл %s", package_json)
+            messagebox.showerror("Ошибка frontend", f"Не найден файл frontend/package.json:\n{package_json}")
+            return False
+
+        if not node_modules.is_dir():
+            self.logger.error(
+                "Frontend не может быть запущен: отсутствует папка node_modules. Сначала выполните npm install в %s",
+                self.frontend_dir,
+            )
+            messagebox.showerror(
+                "Ошибка frontend",
+                "Frontend зависимости не установлены.\n" f"Выполните npm install в папке:\n{self.frontend_dir}",
+            )
+            return False
+
+        return True
+
+    def _describe_command(self, command: list[str] | str) -> str:
+        if isinstance(command, list):
+            return " ".join(command)
+        return command
+
+    def _build_process_env(self) -> dict[str, str]:
+        env = os.environ.copy()
+        env.setdefault("PYTHONIOENCODING", "utf-8")
+        env["FORCE_COLOR"] = "0"
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR"] = "0"
+        env["npm_config_color"] = "false"
+        return env
 
     def _start_process(
         self,
-        current_proc: subprocess.Popen[str] | None,
-        directory: Path,
+        managed: ManagedProcess,
         command: list[str] | str,
         use_shell: bool,
-        name: str,
-    ) -> subprocess.Popen[str] | None:
-        if self.is_running(current_proc):
-            return current_proc
-
-        if not directory.is_dir():
-            self._show_missing_dir_error(name, directory)
-            return None
-
-        try:
-            return subprocess.Popen(
-                command,
-                cwd=directory,
-                shell=use_shell,
-                creationflags=self._creation_flags(),
+    ) -> None:
+        if self.is_running(managed):
+            self.logger.info(
+                "%s уже запущен, поэтому повторный старт пропущен. Этот процесс можно остановить кнопкой Stop %s.",
+                managed.name.capitalize(),
+                managed.name.capitalize(),
             )
-        except OSError as error:
-            messagebox.showerror("Ошибка запуска", f"Не удалось запустить {name}:\n{error}")
-            return None
-
-    def start_backend(self) -> None:
-        command, use_shell = self._build_backend_command()
-        self.backend_proc = self._start_process(
-            self.backend_proc,
-            self.backend_dir,
-            command,
-            use_shell,
-            "backend",
-        )
-
-    def start_frontend(self) -> None:
-        command, use_shell = self._build_frontend_command()
-        self.frontend_proc = self._start_process(
-            self.frontend_proc,
-            self.frontend_dir,
-            command,
-            use_shell,
-            "frontend",
-        )
-
-    def _stop_process(self, proc: subprocess.Popen[str] | None) -> None:
-        if not self.is_running(proc):
             return
 
+        if not managed.directory.is_dir():
+            self._show_missing_dir_error(managed.name, managed.directory)
+            return
+
+        managed.reset_output()
+        managed.last_return_code = None
+        self._write_process_line(managed, f"$ {self._describe_command(command)}")
+        self.logger.info(
+            "Запускаю %s внутри встроенной вкладки-консоли. Рабочая папка: %s. Команда: %s",
+            managed.name,
+            managed.directory,
+            self._describe_command(command),
+        )
+
         try:
-            proc.terminate()
-            proc.wait(timeout=3)
+            managed.proc = subprocess.Popen(
+                command,
+                cwd=managed.directory,
+                shell=use_shell,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                stdin=subprocess.PIPE,
+                text=True,
+                bufsize=1,
+                encoding="utf-8",
+                errors="replace",
+                env=self._build_process_env(),
+            )
+            managed.reader_thread = threading.Thread(
+                target=self._stream_process_output,
+                args=(managed,),
+                daemon=True,
+            )
+            managed.reader_thread.start()
+            self.logger.info(
+                "%s успешно запущен (pid=%s). Вывод доступен во вкладке %s.",
+                managed.name.capitalize(),
+                managed.proc.pid,
+                managed.console.frame.master.tab(managed.console.frame, 'text'),
+            )
+        except OSError as error:
+            managed.proc = None
+            self.logger.exception("Не удалось запустить %s: %s", managed.name, error)
+            messagebox.showerror("Ошибка запуска", f"Не удалось запустить {managed.name}:\n{error}")
+
+    def start_backend(self) -> None:
+        if not self._validate_backend_setup():
+            return
+
+        command, use_shell = self._build_backend_command()
+        self.notebook.select(self.backend_console.frame)
+        self._start_process(self.backend, command, use_shell)
+
+    def start_frontend(self) -> None:
+        if not self._validate_frontend_setup():
+            return
+
+        command, use_shell = self._build_frontend_command()
+        self.notebook.select(self.frontend_console.frame)
+        self._start_process(self.frontend, command, use_shell)
+
+    def _stop_process(self, managed: ManagedProcess) -> None:
+        if not self.is_running(managed):
+            self.logger.info(
+                "%s уже остановлен или не запускался из панели, поэтому останавливать сейчас нечего.",
+                managed.name.capitalize(),
+            )
+            return
+
+        self.logger.info(
+            "Останавливаю %s по запросу из панели. Сначала отправляется мягкое завершение процесса.",
+            managed.name,
+        )
+        self._write_process_line(managed, "\n[stop requested]\n")
+        try:
+            assert managed.proc is not None
+            managed.proc.terminate()
+            managed.proc.wait(timeout=3)
+            self.logger.info("%s остановлен корректно.", managed.name.capitalize())
+            self._write_process_line(managed, "[stopped gracefully]\n")
         except Exception:
+            self.logger.warning(
+                "%s не завершился вовремя после terminate(), поэтому будет выполнен kill().",
+                managed.name.capitalize(),
+            )
             try:
-                proc.kill()
-            except Exception:
-                pass
+                assert managed.proc is not None
+                managed.proc.kill()
+                self.logger.info("%s был принудительно остановлен через kill().", managed.name.capitalize())
+                self._write_process_line(managed, "[killed forcefully]\n")
+            except Exception as error:
+                self.logger.exception("Не удалось принудительно остановить %s: %s", managed.name, error)
+        finally:
+            if managed.proc is not None:
+                managed.last_return_code = managed.proc.poll()
+            managed.proc = None
 
     def stop_backend(self) -> None:
-        self._stop_process(self.backend_proc)
-        self.backend_proc = None
+        self._stop_process(self.backend)
 
     def stop_frontend(self) -> None:
-        self._stop_process(self.frontend_proc)
-        self.frontend_proc = None
+        self._stop_process(self.frontend)
 
     def restart_backend(self) -> None:
+        self.logger.info("Перезапуск backend: сначала остановка, затем запуск через %sms.", RESTART_DELAY_MS)
         self.stop_backend()
         self.root.after(RESTART_DELAY_MS, self.start_backend)
 
     def restart_frontend(self) -> None:
+        self.logger.info("Перезапуск frontend: сначала остановка, затем запуск через %sms.", RESTART_DELAY_MS)
         self.stop_frontend()
         self.root.after(RESTART_DELAY_MS, self.start_frontend)
 
     def start_all(self) -> None:
+        self.logger.info("Запускаю backend и frontend вместе по команде Start All.")
         self.start_backend()
         self.start_frontend()
 
     def stop_all(self) -> None:
+        self.logger.info("Останавливаю все процессы, которые были запущены из панели и ещё активны.")
         self.stop_backend()
         self.stop_frontend()
 
     def restart_all(self) -> None:
+        self.logger.info(
+            "Перезапуск всех сервисов: сначала полная остановка, затем общий старт через %sms.",
+            RESTART_ALL_DELAY_MS,
+        )
         self.stop_all()
         self.root.after(RESTART_ALL_DELAY_MS, self.start_all)
 
     def on_close(self) -> None:
+        self.logger.info("Пользователь запросил закрытие панели. Будет предложено остановить backend/frontend.")
         if messagebox.askyesno("Выход", "Закрыть панель и остановить backend/frontend?"):
+            self.logger.info("Подтверждено закрытие окна с остановкой управляемых процессов.")
             self.stop_all()
             self.root.destroy()
+        else:
+            self.logger.info("Закрытие окна отменено пользователем; процессы продолжают работать.")
 
 
 def main() -> None:

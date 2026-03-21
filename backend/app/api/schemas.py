@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -13,7 +15,7 @@ class SearchRequest(BaseModel):
 
 class CreateRecipeRequest(BaseModel):
     templateType: str
-    output: str | None = None
+    output: Optional[str] = None
     grid: int = 3
 
 
@@ -39,5 +41,5 @@ class CreateFileRequest(BaseModel):
 class UpdateRecipeRequest(BaseModel):
     recipe_type: str
     output_raw: str
-    matrix: list[list[str | None]]
-    name: str | None = None
+    matrix: list[list[Optional[str]]]
+    name: Optional[str] = None
