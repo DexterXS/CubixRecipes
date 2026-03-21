@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './pages/App';
 import './styles.css';
+import { installConsoleCapture } from './services/debugLog';
+
+installConsoleCapture();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -56,3 +56,13 @@ class ProjectSettingsRequest(BaseModel):
     recipe_db_path: str = ''
     extra_icon_sources: list[str] = Field(default_factory=list)
     extra_recipe_sources: list[str] = Field(default_factory=list)
+    verbose_debug_logging: bool = False
+
+
+class DebugLogEventRequest(BaseModel):
+    source: str = 'FRONTEND'
+    level: str = 'INFO'
+    category: str = 'CLIENT'
+    message: str
+    details: dict = Field(default_factory=dict)
+    verbose_only: bool = False

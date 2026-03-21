@@ -4,7 +4,7 @@ import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from app.domain.models import Recipe
 from app.parsers.recipe_parser import RecipeParser
@@ -20,8 +20,9 @@ class StoredRecipe:
 
 
 class ZsStorage:
-    def __init__(self, scripts_dir: Union[str, Path]):
+    def __init__(self, scripts_dir: Union[str, Path], log_service: Optional[Any] = None):
         self.scripts_dir = Path(scripts_dir)
+        self.log_service = log_service
         self.extra_recipe_sources: list[Path] = []
         self.parser = RecipeParser()
         self._recipes: dict[str, StoredRecipe] = {}
@@ -46,9 +47,14 @@ class ZsStorage:
             'unparsed_fragments': [],
         }
         pattern = re.compile(r'(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\(.*?\);', re.S)
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe scan started', {'active_paths': [str(path) for path in paths]})
         for root in paths:
             if not root.exists():
-                self.last_scan_report['scan_errors'].append(self._issue('error', 'recipe_path', 'Recipe source path does not exist', source_path=str(root)))
+                issue = self._issue('error', 'recipe_path', 'Recipe source path does not exist', source_path=str(root))
+                self.last_scan_report['scan_errors'].append(issue)
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'ERROR', 'RECIPES', 'Recipe source path does not exist', issue)
                 continue
             if root.is_file() and root.suffix == '.zs':
                 self._scan_file(root, root.parent, pattern, source='extra_recipe_source_file')
@@ -58,7 +64,10 @@ class ZsStorage:
                     source = 'scripts_dir' if root == self.scripts_dir else 'extra_recipe_source'
                     self._scan_file(file_path, root, pattern, source=source)
                 continue
-            self.last_scan_report['scan_errors'].append(self._issue('warning', 'recipe_path', 'Unsupported recipe source type', source_path=str(root)))
+            issue = self._issue('warning', 'recipe_path', 'Unsupported recipe source type', source_path=str(root))
+            self.last_scan_report['scan_errors'].append(issue)
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'WARN', 'RECIPES', 'Unsupported recipe source type', issue)
 
     def _scan_file(self, file_path: Path, root: Path, pattern: re.Pattern, source: str) -> None:
         file_report = {
@@ -74,6 +83,8 @@ class ZsStorage:
             'unparsed_fragments': [],
             'errors': [],
         }
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Reading recipe file', {'file_path': str(file_path), 'source': source}, verbose_only=True)
         try:
             text = file_path.read_text(encoding='utf-8')
             file_report['read_ok'] = True
@@ -83,6 +94,8 @@ class ZsStorage:
             file_report['errors'].append(issue)
             self.last_scan_report['scan_errors'].append(issue)
             self.last_scan_report['files'].append(file_report)
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'ERROR', 'RECIPES', 'Failed to read recipe file', issue)
             return
 
         for match in pattern.finditer(text):
@@ -113,6 +126,8 @@ class ZsStorage:
                 })
                 for key in {recipe.output.raw, recipe.output.base_key}:
                     self._by_output.setdefault(key, []).append(uid)
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe parsed from file', {'file_path': str(file_path), 'recipe_uid': uid, 'recipe_type': recipe.recipe_type, 'output': recipe.output.raw, 'grid': f'{recipe.grid_w}x{recipe.grid_h}', 'diagnostics': list(recipe.diagnostics)}, verbose_only=True)
             except Exception as exc:
                 line = text.count('\n', 0, match.start()) + 1
                 fragment = block[:240]
@@ -122,8 +137,12 @@ class ZsStorage:
                 file_report['unparsed_fragments'].append(fragment_payload)
                 self.last_scan_report['unparsed_fragments'].append(fragment_payload)
                 self.last_scan_report['scan_errors'].append(issue)
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'ERROR', 'RECIPES', 'Recipe block failed to parse', issue)
 
         self.last_scan_report['files'].append(file_report)
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Finished recipe file scan', {'file_path': str(file_path), 'recipe_count': file_report['recipe_count'], 'recognized_types': file_report['recognized_types'], 'errors': len(file_report['errors'])}, verbose_only=True)
 
     def list_files(self) -> list[dict[str, Union[str, int]]]:
         return [

@@ -12,6 +12,11 @@ beforeEach(() => {
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
 
+
+    if (url === '/api/debug/log') {
+      return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
+    }
+
     if (url === '/api/parse') {
       const body = JSON.parse(String(init?.body));
       if (body.text === 'broken') {

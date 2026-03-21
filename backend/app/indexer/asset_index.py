@@ -8,7 +8,8 @@ from zipfile import ZipFile
 
 
 class AssetIndex:
-    def __init__(self) -> None:
+    def __init__(self, log_service: Any = None) -> None:
+        self.log_service = log_service
         self.icons: dict[str, list[dict]] = {}
         self.models: dict[str, dict] = {}
         self.lang: dict[str, dict[str, str]] = {}
@@ -61,6 +62,8 @@ class AssetIndex:
             'missing_icons': [],
             'scan_errors': [],
         }
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Asset scan started', {'indexed_paths': list(paths)})
         for idx, raw_path in enumerate(paths, start=1):
             path = Path(raw_path)
             source_report = {
@@ -85,16 +88,22 @@ class AssetIndex:
                     source_report['errors'].append(issue)
                     report['scan_errors'].append(issue)
                     self.scan_status[scan_id]['errors'].append(issue['message'])
+                    if self.log_service is not None:
+                        self.log_service.log('BACKEND', 'WARN', 'ASSETS', 'Asset source path missing or unsupported', issue)
             except Exception as exc:  # pragma: no cover
                 issue = self._issue('error', 'asset_scan', str(exc), source_path=raw_path, error_type=exc.__class__.__name__)
                 source_report['errors'].append(issue)
                 report['scan_errors'].append(issue)
                 self.scan_status[scan_id]['errors'].append(str(exc))
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Asset source scan failed', issue)
             report['sources'].append(source_report)
             self.scan_status[scan_id]['progress'] = int(idx / max(len(paths), 1) * 100)
         report['registered_keys'] = sorted(set(report['registered_keys']))
         report['missing_icons'] = self._build_missing_icons()
         self.last_scan_report = report
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Asset scan finished', {'counters': report['counters'], 'sources': len(report['sources']), 'missing_icons': len(report['missing_icons'])})
         return scan_id
 
     def _scan_dir(self, root: Path, source_report: dict[str, Any], report: dict[str, Any]) -> None:
@@ -117,6 +126,10 @@ class AssetIndex:
             issue = self._issue('error', 'asset_read', str(exc), file_path=str(file_path), source_path=source, error_type=exc.__class__.__name__)
             source_report['errors'].append(issue)
             report['scan_errors'].append(issue)
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to parse asset file', issue)
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to read asset file', issue)
             return
         self._consume_virtual(rel_path, data, source=source, source_report=source_report, report=report)
 
@@ -141,6 +154,8 @@ class AssetIndex:
                 namespace, item_name = self._extract_texture_key(rel_path)
                 key = f'{namespace}:{item_name}'
                 self.register_icon(key, {'asset_id': f'{source}:{rel_path}', 'path': rel_path, 'source_type': source, 'animated': False})
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_key': key, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
                 counter_key = 'textures_items' if '/textures/items/' in rel_path else 'textures_blocks'
                 report['counters'][counter_key] += 1
                 report['registered_keys'].append(key)
@@ -156,10 +171,14 @@ class AssetIndex:
                 recognized = True
             if not recognized:
                 source_report['skipped_files'].append({'path': rel_path, 'reason': 'unsupported_or_irrelevant'})
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Skipped asset file', {'path': rel_path, 'source_path': source}, verbose_only=True)
         except Exception as exc:
             issue = self._issue('error', 'asset_parse', str(exc), file_path=rel_path, source_path=source, error_type=exc.__class__.__name__)
             source_report['errors'].append(issue)
             report['scan_errors'].append(issue)
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to parse asset file', issue)
 
     def _extract_namespace_name(self, rel_path: str, folder: str, suffix: str) -> tuple[str, str]:
         namespace = rel_path.split('/')[1]

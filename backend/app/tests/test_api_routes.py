@@ -133,3 +133,15 @@ def test_debug_summary_exposes_recipe_and_asset_diagnostics(tmp_path: Path):
     assert payload['config']['assets_dir'] == str(assets_dir)
     assert payload['recipe_scan']['files'][0]['recipe_count'] == 1
     assert payload['asset_scan']['counters']['textures_items'] == 1
+
+
+def test_debug_log_ingest_and_export(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    post_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'POST' in getattr(route, 'methods', set()))
+    get_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/debug/log' and 'GET' in getattr(route, 'methods', set()))
+
+    post_route(type('LogRequest', (), {'model_dump': lambda self=None: {'source': 'FRONTEND', 'level': 'WARN', 'category': 'UI', 'message': 'Test event', 'details': {'clicked': True}, 'verbose_only': False}})())
+    payload = get_route()
+
+    assert payload['events'][-1]['message'] == 'Test event'
+    assert 'Test event' in payload['exportText']
