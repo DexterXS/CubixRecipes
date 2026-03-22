@@ -124,6 +124,26 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .compact-header h1 { font-size: 22px; margin-bottom: 0; }
 .compact-header .panel-header { padding-top: 10px; }
 .compact-header .panel-body { padding-top: 10px; padding-bottom: 10px; }
+.parse-composer { display: grid; gap: 12px; min-height: 0; }
+.parse-composer-header { align-items: flex-start; }
+.parse-composer-helper { margin: 6px 0 0; color: var(--muted); max-width: 62ch; }
+.parse-composer-main { display: grid; gap: 12px; min-height: 0; }
+.parse-callout { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 18px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.78); }
+.parse-callout[data-tone='success'] { border-color: rgba(34, 197, 94, 0.7); box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.12); }
+.parse-callout[data-tone='warning'] { border-color: rgba(245, 158, 11, 0.7); box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.12); }
+.parse-primary-button { min-width: 220px; min-height: 52px; font-size: 16px; font-weight: 700; }
+.parse-primary-button:disabled, button:disabled { cursor: not-allowed; opacity: 0.6; filter: none; }
+.parse-callout-copy { display: grid; gap: 4px; }
+.parse-callout-copy span { color: var(--text); }
+.parse-status-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.parse-status-pill { padding: 10px 12px; border-radius: 14px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.82); display: grid; gap: 4px; min-width: 180px; }
+.parse-status-pill span { color: var(--muted); font-size: 12px; }
+.parse-status-pill.online, .parse-status-pill.success { border-color: rgba(34, 197, 94, 0.7); }
+.parse-status-pill.offline, .parse-status-pill.warning { border-color: rgba(245, 158, 11, 0.7); }
+.parse-status-pill.unknown, .parse-status-pill.default { border-color: var(--border); }
+.grid-scroll-zone-highlight { border-color: rgba(34, 197, 94, 0.7); box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25), 0 0 24px rgba(34, 197, 94, 0.12); }
+.status-pill.success { border-color: rgba(34,197,94,.7); }
+.status-pill.warning { border-color: rgba(245,158,11,.7); }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.74); display: flex; align-items: center; justify-content: center; padding: 24px; }
 .modal { width: min(720px, 100%); background: #0f172a; border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }

@@ -14,6 +14,7 @@ interface ActionToolbarLabels {
 
 interface ActionToolbarProps {
   labels: ActionToolbarLabels;
+  isParseDisabled?: boolean;
   onParse: () => void;
   onPaste: () => Promise<void>;
   onCreateNew: () => void;
@@ -30,7 +31,7 @@ export function ActionToolbar(props: ActionToolbarProps) {
     <div className="action-toolbar sticky-toolbar">
       <div className="toolbar-group">
         <span className="toolbar-label">{labels.work}</span>
-        <button type="button" onClick={props.onParse}>{labels.parse}</button>
+        <button type="button" disabled={props.isParseDisabled} onClick={props.onParse}>{labels.parse}</button>
         <button type="button" onClick={() => void props.onPaste()}>{labels.paste}</button>
         <button type="button" onClick={props.onCreateNew}>{labels.createNew}</button>
         <button type="button" className="ghost-button" onClick={props.onClear}>{labels.clear}</button>

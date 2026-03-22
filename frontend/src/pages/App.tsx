@@ -1,12 +1,14 @@
 import { Fragment, type CSSProperties, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionToolbar } from '../components/ActionToolbar';
+import { ParseComposer } from '../components/ParseComposer';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { TabNav } from '../components/TabNav';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
+import { createRecipeTemplate, getProjectSettings, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
+import { useParseWorkflow } from '../hooks/useParseWorkflow';
 import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
@@ -194,9 +196,8 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
 }
 
 export default function App() {
-  const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
-  const [status, setStatus] = useState('Готово');
+  const [status, setStatus] = useState(defaultUiPreferences.language === 'ru' ? 'Готово' : 'Ready');
   const [strictBinding, setStrictBinding] = useState(true);
   const [metaMode, setMetaMode] = useState('strict');
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
@@ -206,6 +207,7 @@ export default function App() {
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
+  const [gridHighlight, setGridHighlight] = useState(false);
   const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
@@ -218,6 +220,18 @@ export default function App() {
   const hasLocalUiChangesRef = useRef(false);
 
   const t = createTranslator(uiPreferences.language);
+  const parseWorkflow = useParseWorkflow({
+    t,
+    onRecipeParsed: (nextRecipe, nextInput) => {
+      applyRecipe(nextRecipe, nextInput);
+    },
+    onParseApplied: () => {
+      setGridHighlight(true);
+    },
+    onStatusChange: setStatus,
+    onApiStatusChange: setLastApiStatus,
+    onParseResultChange: setLastParseResult
+  });
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayName = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
@@ -231,12 +245,14 @@ export default function App() {
       try {
         const nextSettings = await getProjectSettings();
         setSettings(nextSettings);
+        parseWorkflow.markBackendOnline();
         const normalized = normalizeUiPreferences(nextSettings);
         if (!hasLocalUiChangesRef.current) {
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
       } catch {
+        parseWorkflow.markBackendOffline(t('parseStatus.backendOfflineDetail'));
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
       }
     })();
@@ -247,6 +263,15 @@ export default function App() {
       window.clearTimeout(persistTimerRef.current);
     }
   }, []);
+
+
+  useEffect(() => {
+    if (!gridHighlight) {
+      return;
+    }
+    const timer = window.setTimeout(() => setGridHighlight(false), 1800);
+    return () => window.clearTimeout(timer);
+  }, [gridHighlight]);
 
   function persistUiPreferences(next: UiPreferences) {
     hasLocalUiChangesRef.current = true;
@@ -322,48 +347,27 @@ export default function App() {
     setMatrix(toCellMatrix(nextRecipe));
     setSaveStatus(nextRecipe.source.kind === 'generated' ? t('values.draft') : t('values.synchronized'));
     if (nextInput !== undefined) {
-      setInput(nextInput);
+      parseWorkflow.setInput(nextInput);
     }
   }
 
   function clearEditor() {
     applyRecipe(defaultRecipe, '');
+    parseWorkflow.setInput('');
+    parseWorkflow.resetParseState();
+    setGridHighlight(false);
     setStatus(t('status.cleared'));
     setSaveStatus(t('values.reset'));
     setLastApiStatus(t('values.idle'));
     setLastParseResult(t('values.reset'));
   }
 
-  async function handleParse(value: string) {
-    setInput(value);
-    setStatus(t('status.parsing'));
-    setLastApiStatus(t('values.pending'));
-    try {
-      const result = await parseText(value);
-      setLastApiStatus(t('values.ok'));
-      if (result.recipe) {
-        applyRecipe(result.recipe, value);
-        setStatus(t('status.loaded'));
-        setLastParseResult(result.recipe.recipe_type);
-        return;
-      }
-      if (result.item) {
-        setStatus(`Item id: ${result.item.raw}`);
-        setLastParseResult(result.item.raw);
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`${t('status.parseError')}: ${message}`);
-      setLastApiStatus(t('values.error'));
-      setLastParseResult(message);
-    }
-  }
-
   async function handlePasteFromClipboard() {
     try {
-      await handleParse(await navigator.clipboard.readText());
+      await parseWorkflow.handlePastedText(await navigator.clipboard.readText(), { autoParse: true });
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Clipboard unavailable');
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      setStatus(message);
       setLastApiStatus(t('values.error'));
     }
   }
@@ -377,7 +381,7 @@ export default function App() {
     setSaveStatus(t('values.pending'));
     try {
       const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name });
-      applyRecipe(updated.updatedRecipe, input);
+      applyRecipe(updated.updatedRecipe, parseWorkflow.input);
       setStatus(t('status.saved'));
       setSaveStatus(t('values.saved'));
       setLastApiStatus(t('values.ok'));
@@ -401,10 +405,10 @@ export default function App() {
       if (recipe.recipe_uid === 'new-recipe') {
         const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: matrix.length });
         const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath });
-        applyRecipe(response.recipe, input);
+        applyRecipe(response.recipe, parseWorkflow.input);
       } else {
         const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath });
-        applyRecipe(response.recipe, input);
+        applyRecipe(response.recipe, parseWorkflow.input);
       }
       setStatus(`${t('status.saved')} → ${targetPath}`);
       setSaveStatus(t('values.saved'));
@@ -697,8 +701,9 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
-                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
-                onParse={() => void handleParse(input)}
+                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parsePrimary'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
+                isParseDisabled={!parseWorkflow.canParse}
+                onParse={() => void parseWorkflow.requestParse()}
                 onPaste={handlePasteFromClipboard}
                 onCreateNew={() => void handleCreateNew()}
                 onClear={clearEditor}
@@ -715,18 +720,34 @@ export default function App() {
         return (
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 2, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.sourceText')} {...common}>
-              <div className="field-header">
-                <span>{t('fields.sourceText')}</span>
-                <div className="inline-actions">
-                  <button type="button" className="secondary-button" onClick={() => void handlePasteFromClipboard()}>{t('toolbar.paste')}</button>
-                  <button type="button" className="ghost-button" onClick={() => setInput('')}>{t('toolbar.clear')}</button>
-                </div>
-              </div>
-              <textarea aria-label="paste-input" value={input} onChange={(event) => setInput(event.target.value)} onPaste={(event) => {
-                const pasted = event.clipboardData.getData('text');
-                void handleParse(pasted);
-                event.preventDefault();
-              }} />
+              <ParseComposer
+                labels={{
+                  title: t('fields.sourceText'),
+                  helper: t('parseStatus.helper'),
+                  paste: t('toolbar.paste'),
+                  clear: t('toolbar.clear'),
+                  parse: t('toolbar.parsePrimary'),
+                  parsing: t('toolbar.parsingPrimary'),
+                  shortcut: t('parseStatus.shortcut'),
+                  backendOnline: t('parseStatus.backendOnline'),
+                  backendOffline: t('parseStatus.backendOffline'),
+                  backendUnknown: t('parseStatus.backendUnknown'),
+                  statusLabel: t('parseStatus.statusLabel'),
+                  backendLabel: t('parseStatus.backendLabel')
+                }}
+                input={parseWorkflow.input}
+                parseMessage={parseWorkflow.parseMessage}
+                parseHint={parseWorkflow.parseHint}
+                parseTone={parseWorkflow.parseTone}
+                backendState={parseWorkflow.backendState}
+                isParsing={parseWorkflow.isParsing}
+                canParse={parseWorkflow.canParse}
+                onInputChange={parseWorkflow.setInput}
+                onParse={() => void parseWorkflow.requestParse()}
+                onPaste={handlePasteFromClipboard}
+                onClear={clearEditor}
+                onPasteText={(value) => parseWorkflow.handlePastedText(value, { autoParse: true })}
+              />
             </Panel>
           </div>
         );
@@ -759,7 +780,7 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
-              <div className="grid-scroll-zone">
+              <div className={`grid-scroll-zone ${gridHighlight ? 'grid-scroll-zone-highlight' : ''}`.trim()}>
                 <RecipeGrid matrix={matrix} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} onCellChange={(row, col, value) => {
                   setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
                   setSaveStatus(t('values.unsavedChanges'));

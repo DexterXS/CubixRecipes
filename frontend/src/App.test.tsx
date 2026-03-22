@@ -80,6 +80,10 @@ beforeEach(() => {
     }
 
     if (url === '/api/parse') {
+      const body = JSON.parse(String(init?.body ?? '{}'));
+      if (body.text === 'broken') {
+        return Promise.resolve({ ok: false, status: 400, json: async () => ({ detail: 'unsupported recipe format' }) }) as Promise<Response>;
+      }
       return Promise.resolve({
         ok: true,
         json: async () => ({
@@ -123,16 +127,41 @@ beforeEach(() => {
   vi.spyOn(window, 'open').mockImplementation(() => ({ closed: false } as Window));
 });
 
-test('shows minimal default layout and parses a recipe', async () => {
+test('shows explicit parse CTA, backend status, and auto-parses pasted recipes into grid', async () => {
   render(<App />);
-  expect(screen.getByText('Редактор рецептов')).toBeTruthy();
-  expect(screen.getByText('Входной рецепт')).toBeTruthy();
-  expect(screen.getByText('Инструменты')).toBeTruthy();
-  expect(screen.queryByText('Быстрый debug')).toBeFalsy();
+
+  expect(screen.getAllByText('Распарсить в сетку').length).toBeGreaterThan(0);
+  await waitFor(() => expect(screen.getAllByText('online').length).toBeGreaterThan(0));
+  expect(screen.getByText('Ctrl/Cmd + Enter запускает парсинг')).toBeTruthy();
 
   fireEvent.paste(screen.getByLabelText('paste-input'), { clipboardData: { getData: () => 'recipes.addShaped(...)' } });
+
   await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
   expect(screen.getByText('scripts/test.zs')).toBeTruthy();
+  expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>');
+});
+
+test('typing text shows explicit manual parse hint and parse button is disabled for empty input', async () => {
+  render(<App />);
+
+  const parseButtons = screen.getAllByText('Распарсить в сетку');
+  expect((parseButtons[0] as HTMLButtonElement).disabled).toBe(true);
+
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  expect(screen.getByText('Текст вставлен, нажмите «Распарсить в сетку».')).toBeTruthy();
+  expect((parseButtons[0] as HTMLButtonElement).disabled).toBe(false);
+
+  fireEvent.keyDown(screen.getByLabelText('paste-input'), { key: 'Enter', ctrlKey: true });
+  await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
+});
+
+test('shows friendly parse errors when backend cannot extract a recipe', async () => {
+  render(<App />);
+
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'broken' } });
+  fireEvent.click(screen.getAllByText('Распарсить в сетку')[0]);
+
+  await waitFor(() => expect(screen.getAllByText('Ошибка парсинга: unsupported recipe format').length).toBeGreaterThan(0));
 });
 
 test('view menu can reveal hidden panels and compact header mode', async () => {
@@ -226,7 +255,7 @@ test('layout settings button saves the current workspace arrangement explicitly'
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
-  fireEvent.click(screen.getByText('Вставить'));
+  fireEvent.click(screen.getAllByText('Распарсить в сетку')[0]);
   await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 
   fireEvent.click(screen.getByText('Сохранить'));

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+- Added an always-visible frontend parse composer with a primary “Распарсить в сетку / Parse into grid” CTA, backend online/offline parsing status, keyboard shortcut hint, and explicit success/error feedback near the recipe input.
+
+### Changed
+- Changed recipe input UX so paste actions now trigger or clearly announce parsing, repeated parse requests are blocked while loading, and successful parse visibly highlights the updated recipe grid.
+
+### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
 - Added a utility-bar settings button with an explicit “save current window layout” action that writes the current panel arrangement and zone sizes back to the backend config for reuse on the next app start.
 - Added structured backend debug diagnostics endpoints/state for config, recipe scans, asset scans, resolver traces, parse history, missing links, summary counters, and a ring-buffer unified log API that collects backend/frontend/API/UI events.
