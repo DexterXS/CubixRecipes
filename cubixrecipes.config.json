@@ -1,36 +1,12 @@
 {
-  "scripts_dir": "scripts",
-  "mods_dir": "",
+  "scripts_dir": "C:/Users/rootu/launcher/updates/HiTech/scripts",
+  "mods_dir": "C:/Users/rootu/launcher/updates/HiTech/mods",
   "assets_dir": "",
   "recipe_db_path": "",
-  "extra_icon_sources": [],
+  "extra_icon_sources": [
+    "C:/Users/rootu/launcher/updates/HiTech/config/contenttweaker/icons/items"
+  ],
   "extra_recipe_sources": [],
   "verbose_debug_logging": false,
-  "project_config_path": "/workspace/CubixRecipes/cubixrecipes.config.json",
-  "ui_preferences": {
-    "display_mode": "text",
-    "density_mode": "normal",
-    "editor_mode": "edit",
-    "language": "ru",
-    "active_view_tab": "editor",
-    "reset_layout_version": 4,
-    "workspace_layout": {
-      "columns": 3,
-      "compact_header": true
-    },
-    "panel_layout": [
-      { "id": "hero", "zone": "topLeft", "order": 0, "visible": true, "height": 120, "width_units": 3 },
-      { "id": "toolbar", "zone": "topLeft", "order": 1, "visible": true, "height": 96, "width_units": 3 },
-      { "id": "input", "zone": "topLeft", "order": 2, "visible": true, "height": 320, "width_units": 2 },
-      { "id": "output", "zone": "topRight", "order": 3, "visible": true, "height": 320, "width_units": 1 },
-      { "id": "grid", "zone": "bottom", "order": 4, "visible": true, "height": 380, "width_units": 3 },
-      { "id": "statusBar", "zone": "topRight", "order": 5, "visible": false, "height": 72, "width_units": 3 },
-      { "id": "settings", "zone": "bottom", "order": 6, "visible": false, "height": 260, "width_units": 1 },
-      { "id": "info", "zone": "sidebar", "order": 7, "visible": false, "height": 260, "width_units": 1 },
-      { "id": "debug", "zone": "sidebar", "order": 8, "visible": false, "height": 260, "width_units": 1 },
-      { "id": "diagnostics", "zone": "sidebar", "order": 9, "visible": false, "height": 260, "width_units": 1 },
-      { "id": "preview", "zone": "sidebar", "order": 10, "visible": false, "height": 220, "width_units": 1 },
-      { "id": "raw", "zone": "sidebar", "order": 11, "visible": false, "height": 260, "width_units": 1 }
-    ]
-  }
+  "project_config_path": "C:\\Users\\rootu\\PycharmProjects\\CubixRecipes\\cubixrecipes.config.json"
 }
