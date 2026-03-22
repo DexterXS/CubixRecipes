@@ -1,4 +1,4 @@
-import { Fragment, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, type CSSProperties, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionToolbar } from '../components/ActionToolbar';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
@@ -7,7 +7,7 @@ import { TabNav } from '../components/TabNav';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
+import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -17,7 +17,11 @@ const defaultMatrix: CellValue[][] = [
 
 const defaultWorkspaceLayout: WorkspaceLayout = {
   columns: 3,
-  compact_header: true
+  compact_header: true,
+  top_split_ratio: 0.68,
+  main_sidebar_ratio: 0.76,
+  top_height: 560,
+  bottom_height: 260
 };
 
 const defaultPanelLayout: PanelLayoutItem[] = [
@@ -36,8 +40,16 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 ];
 
 const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
+const zoneOrder: PanelZone[] = ['topLeft', 'topRight', 'bottom', 'sidebar'];
 const MIN_HEIGHT = 72;
 const MAX_HEIGHT = 960;
+
+type DropTarget = {
+  zone: PanelZone;
+  index: number;
+} | null;
+
+type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -80,6 +92,32 @@ function widthToSpan(widthUnits: number, columns: 1 | 2 | 3): number {
   return widthUnits === 3 ? 12 : widthUnits === 2 ? 8 : 4;
 }
 
+function normalizePanelOrdersByZone(layout: PanelLayoutItem[]): PanelLayoutItem[] {
+  const byZone = new Map<PanelZone, PanelLayoutItem[]>();
+
+  zoneOrder.forEach((zone) => byZone.set(zone, []));
+
+  layout.forEach((item) => {
+    const zoneItems = byZone.get(item.zone) ?? [];
+    zoneItems.push({ ...item });
+    byZone.set(item.zone, zoneItems);
+  });
+
+  const result: PanelLayoutItem[] = [];
+
+  zoneOrder.forEach((zone) => {
+    const items = (byZone.get(zone) ?? [])
+      .sort((a, b) => a.order - b.order)
+      .map((item, index) => ({
+        ...item,
+        order: index
+      }));
+    result.push(...items);
+  });
+
+  return result;
+}
+
 function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[] {
   const existing = raw && raw.length ? raw.map((item) => ({ ...item })) : [];
   const seen = new Set(existing.map((item) => item.id));
@@ -88,7 +126,7 @@ function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[]
       existing.push({ ...panel });
     }
   });
-  return existing
+  return normalizePanelOrdersByZone(existing
     .map((item, index) => ({
       id: item.id,
       zone: item.zone ?? 'bottom',
@@ -96,15 +134,48 @@ function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[]
       visible: item.visible !== false,
       height: typeof item.height === 'number' ? clamp(Math.round(item.height), MIN_HEIGHT, MAX_HEIGHT) : defaultPanelLayout.find((panel) => panel.id === item.id)?.height,
       width_units: typeof item.width_units === 'number' ? clamp(Math.round(item.width_units), 1, 3) : defaultPanelLayout.find((panel) => panel.id === item.id)?.width_units ?? 1
-    }))
-    .sort((left, right) => left.order - right.order)
-    .map((item, index) => ({ ...item, order: index }));
+    })));
+}
+
+function movePanelToZone(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetZone: PanelZone, targetIndex: number): PanelLayoutItem[] {
+  const dragged = layout.find((item) => item.id === draggedPanelId);
+  if (!dragged) return layout.map((item) => ({ ...item }));
+
+  const withoutDragged = layout
+    .filter((item) => item.id !== draggedPanelId)
+    .map((item) => ({ ...item }));
+
+  const targetZoneItems = withoutDragged
+    .filter((item) => item.zone === targetZone)
+    .sort((a, b) => a.order - b.order);
+
+  const otherItems = withoutDragged.filter((item) => item.zone !== targetZone);
+
+  const nextDragged: PanelLayoutItem = {
+    ...dragged,
+    zone: targetZone
+  };
+
+  const safeIndex = Math.max(0, Math.min(targetIndex, targetZoneItems.length));
+  targetZoneItems.splice(safeIndex, 0, nextDragged);
+
+  return normalizePanelOrdersByZone([...otherItems, ...targetZoneItems]);
+}
+
+function getPanelsForZone(layout: PanelLayoutItem[], zone: PanelZone): PanelLayoutItem[] {
+  return normalizePanelLayout(layout)
+    .filter((panel) => panel.visible && panel.zone === zone)
+    .sort((a, b) => a.order - b.order);
 }
 
 function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout {
   return {
     columns: clamp(Number(raw?.columns ?? 3), 1, 3) as 1 | 2 | 3,
-    compact_header: Boolean(raw?.compact_header ?? true)
+    compact_header: Boolean(raw?.compact_header ?? true),
+    top_split_ratio: clamp(Number(raw?.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68), 0.25, 0.75),
+    main_sidebar_ratio: clamp(Number(raw?.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76), 0.55, 0.9),
+    top_height: clamp(Number(raw?.top_height ?? defaultWorkspaceLayout.top_height ?? 560), 240, 1200),
+    bottom_height: clamp(Number(raw?.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260), 120, 1000)
   };
 }
 
@@ -122,15 +193,6 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   };
 }
 
-function movePanel(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetIndex: number): PanelLayoutItem[] {
-  const working = layout.map((item) => ({ ...item }));
-  const sourceIndex = working.findIndex((item) => item.id === draggedPanelId);
-  if (sourceIndex < 0) return working;
-  const [dragged] = working.splice(sourceIndex, 1);
-  working.splice(clamp(targetIndex, 0, working.length), 0, dragged);
-  return working.map((item, index) => ({ ...item, order: index }));
-}
-
 export default function App() {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
@@ -140,6 +202,7 @@ export default function App() {
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -147,7 +210,8 @@ export default function App() {
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
-  const [dropIndex, setDropIndex] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<DropTarget>(null);
+  const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
@@ -207,11 +271,49 @@ export default function App() {
   }
 
   function patchUiPreferences(patch: Partial<UiPreferences>) {
-    persistUiPreferences({ ...uiPreferences, ...patch });
+    persistUiPreferences({ ...latestUiPreferencesRef.current, ...patch });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
-    persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(nextLayout) });
+    persistUiPreferences({ ...latestUiPreferencesRef.current, panel_layout: normalizePanelLayout(nextLayout) });
+  }
+
+  function patchWorkspaceLayout(patch: Partial<WorkspaceLayout>) {
+    patchUiPreferences({
+      workspace_layout: normalizeWorkspaceLayout({
+        ...latestUiPreferencesRef.current.workspace_layout,
+        ...patch
+      })
+    });
+  }
+
+  async function saveCurrentWindowLayout() {
+    const nextPreferences: UiPreferences = {
+      ...latestUiPreferencesRef.current,
+      panel_layout: normalizePanelLayout(latestUiPreferencesRef.current.panel_layout),
+      workspace_layout: normalizeWorkspaceLayout(latestUiPreferencesRef.current.workspace_layout)
+    };
+
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
+
+    try {
+      latestUiPreferencesRef.current = nextPreferences;
+      setUiPreferences(nextPreferences);
+      const response = await updateProjectUiPreferences(nextPreferences);
+      const normalized = normalizeUiPreferences(response);
+      latestUiPreferencesRef.current = normalized;
+      setUiPreferences(normalized);
+      setSettings((current) => ({ ...(current ?? response), ...response }));
+      setSaveStatus(t('layoutSettings.saved'));
+      setStatus(t('layoutSettings.saved'));
+      setIsLayoutSettingsOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`${t('status.saveError')}: ${message}`);
+    }
   }
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
@@ -339,11 +441,11 @@ export default function App() {
   }
 
   function setPanelVisible(panelId: PanelId, visible: boolean) {
-    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
+    patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
   }
 
   function updatePanel(panelId: PanelId, patch: Partial<PanelLayoutItem>) {
-    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
+    patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
   }
 
   function startResize(panelId: PanelId, startX: number, startY: number) {
@@ -352,8 +454,8 @@ export default function App() {
     const startHeight = panel.height ?? 240;
     const startWidthUnits = panel.width_units ?? 1;
     const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
-      const currentX = typeof event.clientX === 'number' ? event.clientX : startX;
-      const currentY = typeof event.clientY === 'number' ? event.clientY : startY;
+      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
+      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
       const deltaX = currentX - startX;
       const deltaY = currentY - startY;
       const nextWidthUnits = clamp(startWidthUnits + Math.round(deltaX / 180), 1, uiPreferences.workspace_layout.columns) as 1 | 2 | 3;
@@ -371,10 +473,76 @@ export default function App() {
     window.addEventListener('mouseup', onUp);
   }
 
-  const visiblePanels = useMemo(
-    () => normalizePanelLayout(uiPreferences.panel_layout).filter((panel) => panel.visible),
-    [uiPreferences.panel_layout]
-  );
+  function startZoneResize(kind: ZoneResizeKind, startX: number, startY: number) {
+    const startLayout = latestUiPreferencesRef.current.workspace_layout;
+    const startTopHeight = startLayout.top_height ?? defaultWorkspaceLayout.top_height ?? 560;
+    const startBottomHeight = startLayout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260;
+
+    setActiveZoneResizer(kind);
+
+    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
+      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
+      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
+
+      if (kind === 'topSplit') {
+        const container = document.querySelector('.workspace-top');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        if (!rect.width) return;
+        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.25, 0.75);
+        patchWorkspaceLayout({ top_split_ratio: nextRatio });
+        return;
+      }
+
+      if (kind === 'mainSidebarSplit') {
+        const container = document.querySelector('.workspace-layout');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        if (!rect.width) return;
+        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.55, 0.9);
+        patchWorkspaceLayout({ main_sidebar_ratio: nextRatio });
+        return;
+      }
+
+      const deltaY = currentY - startY;
+      patchWorkspaceLayout({
+        top_height: clamp(startTopHeight + deltaY, 240, 1200),
+        bottom_height: clamp(startBottomHeight - deltaY, 120, 1000)
+      });
+    };
+
+    const onUp = () => {
+      setActiveZoneResizer(null);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('mouseup', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('mouseup', onUp);
+  }
+
+  const topLeftPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topLeft'), [uiPreferences.panel_layout]);
+  const topRightPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topRight'), [uiPreferences.panel_layout]);
+  const bottomPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'bottom'), [uiPreferences.panel_layout]);
+  const sidebarPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'sidebar'), [uiPreferences.panel_layout]);
+  const workspaceLayoutStyle = useMemo(() => {
+    const mainSidebarRatio = uiPreferences.workspace_layout.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76;
+
+    return {
+      gridTemplateColumns: `${mainSidebarRatio}fr 10px ${1 - mainSidebarRatio}fr`
+    } satisfies CSSProperties;
+  }, [uiPreferences.workspace_layout.main_sidebar_ratio]);
+  const workspaceMainStyle = useMemo(() => ({
+    gridTemplateRows: `minmax(${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px, auto) 10px minmax(${uiPreferences.workspace_layout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260}px, auto)`
+  } satisfies CSSProperties), [uiPreferences.workspace_layout.bottom_height, uiPreferences.workspace_layout.top_height]);
+  const workspaceTopStyle = useMemo(() => ({
+    gridTemplateColumns: `${uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68}fr 10px ${1 - (uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68)}fr`,
+    minHeight: `${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px`
+  } satisfies CSSProperties), [uiPreferences.workspace_layout.top_height, uiPreferences.workspace_layout.top_split_ratio]);
 
   const statusItems = [
     { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
@@ -392,26 +560,69 @@ export default function App() {
     raw: getTabLabel(uiPreferences.language, 'raw')
   };
 
-  function renderDropSlot(targetIndex: number) {
-    const active = dropIndex === targetIndex;
+  function commitDrop(target: DropTarget) {
+    if (!draggedPanelId || !target) {
+      setDraggedPanelId(null);
+      setDropTarget(null);
+      return;
+    }
+
+    patchPanelLayout(movePanelToZone(uiPreferences.panel_layout, draggedPanelId, target.zone, target.index));
+    setDraggedPanelId(null);
+    setDropTarget(null);
+  }
+
+  function renderZoneDropSlot(zone: PanelZone, targetIndex: number) {
+    const active = dropTarget?.zone === zone && dropTarget.index === targetIndex;
+
     return (
       <div
-        key={`drop-${targetIndex}`}
-        className={`grid-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
-        style={{ gridColumn: '1 / -1' }}
+        key={`drop-${zone}-${targetIndex}`}
+        className={`zone-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
+        data-zone={zone}
+        data-index={targetIndex}
         onDragOver={(event) => {
           event.preventDefault();
-          setDropIndex(targetIndex);
+          setDropTarget({ zone, index: targetIndex });
         }}
         onDrop={(event) => {
           event.preventDefault();
-          if (draggedPanelId) {
-            patchPanelLayout(movePanel(uiPreferences.panel_layout, draggedPanelId, targetIndex));
-          }
-          setDraggedPanelId(null);
-          setDropIndex(null);
+          commitDrop({ zone, index: targetIndex });
         }}
       />
+    );
+  }
+
+  function renderZone(zone: PanelZone, panels: PanelLayoutItem[], className?: string) {
+    const isZoneActive = dropTarget?.zone === zone;
+
+    return (
+      <div
+        className={`workspace-zone ${className ?? ''} ${draggedPanelId ? 'is-dragging' : ''} ${isZoneActive ? 'is-drag-over' : ''}`.trim()}
+        data-zone={zone}
+        onDragOver={(event) => {
+          event.preventDefault();
+          if (!panels.length) {
+            setDropTarget({ zone, index: 0 });
+          }
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          const target = dropTarget?.zone === zone ? dropTarget : { zone, index: panels.length };
+          commitDrop(target);
+        }}
+      >
+        {renderZoneDropSlot(zone, 0)}
+        {panels.map((panel, index) => (
+          <Fragment key={`${zone}-${panel.id}`}>
+            {renderPanel(panel)}
+            {renderZoneDropSlot(zone, index + 1)}
+          </Fragment>
+        ))}
+        {!panels.length ? (
+          <div className="workspace-zone-empty">Перетащите панель сюда</div>
+        ) : null}
+      </div>
     );
   }
 
@@ -433,7 +644,7 @@ export default function App() {
           }}
           onDragEnd={() => {
             setDraggedPanelId(null);
-            setDropIndex(null);
+            setDropTarget(null);
           }}
         >
           ⋮⋮
@@ -607,6 +818,7 @@ export default function App() {
         <strong>CubixRecipes</strong>
         <div className="utility-actions">
           <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
           <div className="view-menu-wrap">
             <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
             {isViewMenuOpen ? (
@@ -626,7 +838,7 @@ export default function App() {
                   <label className="field-block"><span>{t('app.columns')}</span><select aria-label={t('app.columns')} value={uiPreferences.workspace_layout.columns} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, columns: Number(event.target.value) as 1 | 2 | 3 } })}><option value="1">{t('app.oneColumn')}</option><option value="2">{t('app.twoColumns')}</option><option value="3">{t('app.threeColumns')}</option></select></label>
                 </div>
                 <div className="view-menu-actions">
-                  <button type="button" onClick={() => patchPanelLayout(uiPreferences.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
+                  <button type="button" onClick={() => patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
                   <button type="button" className="ghost-button" onClick={resetLayout}>{t('app.resetLayout')}</button>
                 </div>
               </div>
@@ -635,14 +847,42 @@ export default function App() {
         </div>
       </div>
 
-      <div className="workspace-grid">
-        {renderDropSlot(0)}
-        {visiblePanels.map((panel, index) => (
-          <Fragment key={panel.id}>
-            {renderPanel(panel)}
-            {renderDropSlot(index + 1)}
-          </Fragment>
-        ))}
+      <div className="workspace-layout" style={workspaceLayoutStyle}>
+        <div className="workspace-main" style={workspaceMainStyle}>
+          <div className="workspace-top" style={workspaceTopStyle}>
+            {renderZone('topLeft', topLeftPanels, 'zone-top-left')}
+            <button
+              type="button"
+              className={`layout-resizer layout-resizer-top-split ${activeZoneResizer === 'topSplit' ? 'is-active' : ''}`.trim()}
+              aria-label="Изменить ширину верхних зон"
+              onPointerDown={(event) => {
+                event.preventDefault();
+                startZoneResize('topSplit', event.clientX, event.clientY);
+              }}
+            />
+            {renderZone('topRight', topRightPanels, 'zone-top-right')}
+          </div>
+          <button
+            type="button"
+            className={`layout-resizer layout-resizer-top-bottom ${activeZoneResizer === 'topBottomSplit' ? 'is-active' : ''}`.trim()}
+            aria-label="Изменить высоту верхней и нижней зоны"
+            onPointerDown={(event) => {
+              event.preventDefault();
+              startZoneResize('topBottomSplit', event.clientX, event.clientY);
+            }}
+          />
+          {renderZone('bottom', bottomPanels, 'zone-bottom')}
+        </div>
+        <button
+          type="button"
+          className={`layout-resizer layout-resizer-main-sidebar ${activeZoneResizer === 'mainSidebarSplit' ? 'is-active' : ''}`.trim()}
+          aria-label="Изменить ширину основной области и sidebar"
+          onPointerDown={(event) => {
+            event.preventDefault();
+            startZoneResize('mainSidebarSplit', event.clientX, event.clientY);
+          }}
+        />
+        {renderZone('sidebar', sidebarPanels, 'zone-sidebar')}
       </div>
 
       {isHelpOpen ? (
@@ -655,6 +895,29 @@ export default function App() {
             <ul>
               {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
             </ul>
+          </div>
+        </div>
+      ) : null}
+
+      {isLayoutSettingsOpen ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
+          <div className="modal" role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{t('layoutSettings.title')}</h2>
+              <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+            </div>
+            <div className="settings-modal-body">
+              <p>{t('layoutSettings.description')}</p>
+              <div className="kv-grid">
+                <div><span>{t('app.columns')}</span><strong>{uiPreferences.workspace_layout.columns}</strong></div>
+                <div><span>{t('app.zone')}</span><strong>{uiPreferences.panel_layout.filter((panel) => panel.visible).length}</strong></div>
+                <div><span>{t('app.file')}</span><strong>{settings?.project_config_path ?? '—'}</strong></div>
+              </div>
+              <div className="view-menu-actions">
+                <button type="button" onClick={() => void saveCurrentWindowLayout()}>{t('layoutSettings.saveCurrent')}</button>
+                <button type="button" className="ghost-button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

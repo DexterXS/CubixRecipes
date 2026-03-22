@@ -41,7 +41,7 @@ beforeEach(() => {
             language: 'ru',
             active_view_tab: 'editor',
             reset_layout_version: 4,
-            workspace_layout: { columns: 3, compact_header: true },
+            workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 },
             panel_layout: [
               { id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 },
               { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 },
@@ -157,18 +157,69 @@ test('column count can be switched up to 3 columns and persisted', async () => {
   });
 });
 
-test('drag and drop reorders panels in the workspace grid', async () => {
+test('drag and drop can move panels between workspace zones', async () => {
   render(<App />);
   const dragHandle = await screen.findByLabelText('Перетащить панель: Выходной рецепт');
-  const slots = document.querySelectorAll('.grid-drop-slot');
+  const targetSlot = document.querySelector('.zone-drop-slot[data-zone="topLeft"][data-index="1"]');
+  expect(targetSlot).toBeTruthy();
+
   fireEvent.dragStart(dragHandle);
-  fireEvent.dragOver(slots[2]);
-  fireEvent.drop(slots[2]);
+  fireEvent.dragOver(targetSlot as Element);
+  fireEvent.drop(targetSlot as Element);
   fireEvent.dragEnd(dragHandle);
 
   await waitFor(() => {
-    const headings = Array.from(document.querySelectorAll('.workspace-grid h2')).map((node) => node.textContent);
+    const headings = Array.from(document.querySelectorAll('.zone-top-left h2')).map((node) => node.textContent);
     expect(headings.includes('Выходной рецепт')).toBe(true);
+  });
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    const movedPanel = body.panel_layout.find((panel: { id: string; zone: string }) => panel.id === 'output');
+    expect(movedPanel.zone).toBe('topLeft');
+  });
+});
+
+test('zone layout still applies panel width units', async () => {
+  render(<App />);
+  const dragHandle = await screen.findByLabelText('Перетащить панель: Выходной рецепт');
+  const shell = dragHandle.closest('.workspace-panel-shell') as HTMLElement | null;
+  expect(shell).toBeTruthy();
+  expect(shell?.style.gridColumn).toContain('span 4');
+});
+
+test('layout zone resizers update persisted workspace ratios', async () => {
+  render(<App />);
+  const mainSidebarResizer = await screen.findByLabelText('Изменить ширину основной области и sidebar');
+  const layout = document.querySelector('.workspace-layout') as HTMLElement | null;
+  expect(layout).toBeTruthy();
+  expect(layout?.style.gridTemplateColumns).toContain('0.76fr');
+  Object.defineProperty(layout, 'getBoundingClientRect', {
+    value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON: () => ({}) })
+  });
+
+  fireEvent.pointerDown(mainSidebarResizer, { clientX: 760, clientY: 0 });
+  fireEvent.mouseMove(window, { clientX: 600, clientY: 0 });
+  fireEvent.mouseUp(window);
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    expect(body.workspace_layout.main_sidebar_ratio).not.toBe(0.76);
+  });
+});
+
+test('layout settings button saves the current workspace arrangement explicitly', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Настройки'));
+  expect(screen.getByRole('dialog', { name: 'Настройки layout' })).toBeTruthy();
+
+  fireEvent.click(screen.getByText('Сохранить текущее расположение окон'));
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    expect(putCalls.length).toBeGreaterThan(0);
   });
 });
 
