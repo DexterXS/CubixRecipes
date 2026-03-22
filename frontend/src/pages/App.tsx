@@ -404,8 +404,8 @@ export default function App() {
     const startHeight = panel.height ?? 240;
     const startWidthUnits = panel.width_units ?? 1;
     const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
-      const currentX = typeof event.clientX === 'number' ? event.clientX : startX;
-      const currentY = typeof event.clientY === 'number' ? event.clientY : startY;
+      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
+      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
       const deltaX = currentX - startX;
       const deltaY = currentY - startY;
       const nextWidthUnits = clamp(startWidthUnits + Math.round(deltaX / 180), 1, uiPreferences.workspace_layout.columns) as 1 | 2 | 3;

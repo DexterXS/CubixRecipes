@@ -181,6 +181,14 @@ test('drag and drop can move panels between workspace zones', async () => {
   });
 });
 
+test('zone layout still applies panel width units', async () => {
+  render(<App />);
+  const dragHandle = await screen.findByLabelText('Перетащить панель: Выходной рецепт');
+  const shell = dragHandle.closest('.workspace-panel-shell') as HTMLElement | null;
+  expect(shell).toBeTruthy();
+  expect(shell?.style.gridColumn).toContain('span 4');
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });

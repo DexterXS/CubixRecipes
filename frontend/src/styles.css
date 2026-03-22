@@ -47,9 +47,6 @@ main.app-shell { max-width: 1880px; margin: 0 auto; padding: 14px 18px 24px; }
 .zone-top-left .workspace-panel-shell,
 .zone-top-right .workspace-panel-shell,
 .zone-sidebar .workspace-panel-shell { min-width: 0; }
-.zone-top-left .workspace-panel-shell,
-.zone-top-right .workspace-panel-shell,
-.zone-sidebar .workspace-panel-shell { grid-column: 1 / -1 !important; }
 .workspace-panel-shell { min-width: 0; min-height: 72px; display: flex; }
 .panel { border-radius: var(--radius); overflow: hidden; min-height: 100%; display: flex; flex-direction: column; width: 100%; }
 .panel-header { padding: 12px 14px 0; display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
