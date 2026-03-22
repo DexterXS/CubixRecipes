@@ -210,6 +210,19 @@ test('layout zone resizers update persisted workspace ratios', async () => {
   });
 });
 
+test('layout settings button saves the current workspace arrangement explicitly', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Настройки'));
+  expect(screen.getByRole('dialog', { name: 'Настройки layout' })).toBeTruthy();
+
+  fireEvent.click(screen.getByText('Сохранить текущее расположение окон'));
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    expect(putCalls.length).toBeGreaterThan(0);
+  });
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });

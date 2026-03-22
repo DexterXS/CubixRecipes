@@ -202,6 +202,7 @@ export default function App() {
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -284,6 +285,35 @@ export default function App() {
         ...patch
       })
     });
+  }
+
+  async function saveCurrentWindowLayout() {
+    const nextPreferences: UiPreferences = {
+      ...latestUiPreferencesRef.current,
+      panel_layout: normalizePanelLayout(latestUiPreferencesRef.current.panel_layout),
+      workspace_layout: normalizeWorkspaceLayout(latestUiPreferencesRef.current.workspace_layout)
+    };
+
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
+
+    try {
+      latestUiPreferencesRef.current = nextPreferences;
+      setUiPreferences(nextPreferences);
+      const response = await updateProjectUiPreferences(nextPreferences);
+      const normalized = normalizeUiPreferences(response);
+      latestUiPreferencesRef.current = normalized;
+      setUiPreferences(normalized);
+      setSettings((current) => ({ ...(current ?? response), ...response }));
+      setSaveStatus(t('layoutSettings.saved'));
+      setStatus(t('layoutSettings.saved'));
+      setIsLayoutSettingsOpen(false);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`${t('status.saveError')}: ${message}`);
+    }
   }
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
@@ -788,6 +818,7 @@ export default function App() {
         <strong>CubixRecipes</strong>
         <div className="utility-actions">
           <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
           <div className="view-menu-wrap">
             <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
             {isViewMenuOpen ? (
@@ -864,6 +895,29 @@ export default function App() {
             <ul>
               {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
             </ul>
+          </div>
+        </div>
+      ) : null}
+
+      {isLayoutSettingsOpen ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
+          <div className="modal" role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{t('layoutSettings.title')}</h2>
+              <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+            </div>
+            <div className="settings-modal-body">
+              <p>{t('layoutSettings.description')}</p>
+              <div className="kv-grid">
+                <div><span>{t('app.columns')}</span><strong>{uiPreferences.workspace_layout.columns}</strong></div>
+                <div><span>{t('app.zone')}</span><strong>{uiPreferences.panel_layout.filter((panel) => panel.visible).length}</strong></div>
+                <div><span>{t('app.file')}</span><strong>{settings?.project_config_path ?? '—'}</strong></div>
+              </div>
+              <div className="view-menu-actions">
+                <button type="button" onClick={() => void saveCurrentWindowLayout()}>{t('layoutSettings.saveCurrent')}</button>
+                <button type="button" className="ghost-button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

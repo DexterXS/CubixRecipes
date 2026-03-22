@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
+- Added a utility-bar settings button with an explicit “save current window layout” action that writes the current panel arrangement and zone sizes back to the backend config for reuse on the next app start.
 - Added structured backend debug diagnostics endpoints/state for config, recipe scans, asset scans, resolver traces, parse history, missing links, summary counters, and a ring-buffer unified log API that collects backend/frontend/API/UI events.
 - Added a new Control Panel `Full Debug Log` tab with source/level filters, copy/save/clear controls, auto-scroll, `Test Debug Pipeline`, and explicit request diagnostics for the unified log URL/status/error body.
 - Fixed backend asset indexing so `mods_dir` directories now scan nested `.jar`/`.zip` files, boot logs show raw/normalized config and final index paths, and resolver diagnostics include non-empty checked sources from real asset paths.

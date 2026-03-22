@@ -9,6 +9,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       title: 'Редактор рецептов',
       subtitle: 'Гибкое рабочее пространство для парсинга, редактирования и отладки рецептов.',
       language: 'Язык',
+      settings: 'Настройки',
       view: 'Вид',
       resetLayout: 'Сбросить раскладку',
       showAllPanels: 'Показать все панели',
@@ -144,6 +145,13 @@ const translations: Record<UiLanguage, TranslationTree> = {
         'Через меню «Вид» можно скрывать, возвращать и переставлять панели.'
       ]
     },
+    layoutSettings: {
+      title: 'Настройки layout',
+      description: 'Сохраните текущее расположение и размеры окон в backend config, чтобы при следующем открытии интерфейс восстановился в том же виде.',
+      saveCurrent: 'Сохранить текущее расположение окон',
+      saved: 'Текущее расположение окон сохранено',
+      close: 'Закрыть'
+    },
     parseModes: {
       strict: 'Строгая мета',
       wildcard: 'Учитывать *',
@@ -162,6 +170,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       title: 'Recipe Editor',
       subtitle: 'Flexible workspace for parsing, editing and debugging recipes.',
       language: 'Language',
+      settings: 'Settings',
       view: 'View',
       resetLayout: 'Reset layout',
       showAllPanels: 'Show all panels',
@@ -296,6 +305,13 @@ const translations: Record<UiLanguage, TranslationTree> = {
         '`Save As` appends the current recipe to another `.zs` file.',
         'Use the View menu to hide, restore and rearrange panels.'
       ]
+    },
+    layoutSettings: {
+      title: 'Layout settings',
+      description: 'Save the current window arrangement and sizes to the backend config so the workspace opens the same way next time.',
+      saveCurrent: 'Save current window layout',
+      saved: 'Current window layout saved',
+      close: 'Close'
     },
     parseModes: {
       strict: 'Strict meta',

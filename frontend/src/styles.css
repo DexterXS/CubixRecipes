@@ -127,5 +127,6 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.74); display: flex; align-items: center; justify-content: center; padding: 24px; }
 .modal { width: min(720px, 100%); background: #0f172a; border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.settings-modal-body { display: grid; gap: 16px; }
 @media (max-width: 1280px) { .workspace-layout { grid-template-columns: 1fr; } .workspace-main { grid-template-rows: auto auto auto; gap: 14px; } .workspace-top { grid-template-columns: 1fr; min-height: 0; gap: 14px; } .layout-resizer { display: none; } .zone-sidebar { position: static; margin-top: 14px; } .zone-bottom { margin-top: 0; } .workspace-panel-shell { grid-column: span 6 !important; } }
 @media (max-width: 900px) { .workspace-zone { padding: 8px; } .workspace-panel-shell { grid-column: 1 / -1 !important; } .utility-bar, .field-header, .output-title-row { flex-direction: column; align-items: stretch; } .output-card { grid-template-columns: 1fr; } }
