@@ -41,7 +41,7 @@ beforeEach(() => {
             language: 'ru',
             active_view_tab: 'editor',
             reset_layout_version: 4,
-            workspace_layout: { columns: 3, compact_header: true },
+            workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 },
             panel_layout: [
               { id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 },
               { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 },
@@ -187,6 +187,27 @@ test('zone layout still applies panel width units', async () => {
   const shell = dragHandle.closest('.workspace-panel-shell') as HTMLElement | null;
   expect(shell).toBeTruthy();
   expect(shell?.style.gridColumn).toContain('span 4');
+});
+
+test('layout zone resizers update persisted workspace ratios', async () => {
+  render(<App />);
+  const mainSidebarResizer = await screen.findByLabelText('Изменить ширину основной области и sidebar');
+  const layout = document.querySelector('.workspace-layout') as HTMLElement | null;
+  expect(layout).toBeTruthy();
+  expect(layout?.style.gridTemplateColumns).toContain('0.76fr');
+  Object.defineProperty(layout, 'getBoundingClientRect', {
+    value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON: () => ({}) })
+  });
+
+  fireEvent.pointerDown(mainSidebarResizer, { clientX: 760, clientY: 0 });
+  fireEvent.mouseMove(window, { clientX: 600, clientY: 0 });
+  fireEvent.mouseUp(window);
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    expect(body.workspace_layout.main_sidebar_ratio).not.toBe(0.76);
+  });
 });
 
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {

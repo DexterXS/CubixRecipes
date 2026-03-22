@@ -44,6 +44,10 @@ export interface PanelLayoutItem {
 export interface WorkspaceLayout {
   columns: 1 | 2 | 3;
   compact_header: boolean;
+  top_split_ratio?: number;
+  main_sidebar_ratio?: number;
+  top_height?: number;
+  bottom_height?: number;
 }
 
 export interface UiPreferences {

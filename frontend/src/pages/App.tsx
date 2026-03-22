@@ -1,4 +1,4 @@
-import { Fragment, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, type CSSProperties, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionToolbar } from '../components/ActionToolbar';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
@@ -17,7 +17,11 @@ const defaultMatrix: CellValue[][] = [
 
 const defaultWorkspaceLayout: WorkspaceLayout = {
   columns: 3,
-  compact_header: true
+  compact_header: true,
+  top_split_ratio: 0.68,
+  main_sidebar_ratio: 0.76,
+  top_height: 560,
+  bottom_height: 260
 };
 
 const defaultPanelLayout: PanelLayoutItem[] = [
@@ -44,6 +48,8 @@ type DropTarget = {
   zone: PanelZone;
   index: number;
 } | null;
+
+type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -165,7 +171,11 @@ function getPanelsForZone(layout: PanelLayoutItem[], zone: PanelZone): PanelLayo
 function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout {
   return {
     columns: clamp(Number(raw?.columns ?? 3), 1, 3) as 1 | 2 | 3,
-    compact_header: Boolean(raw?.compact_header ?? true)
+    compact_header: Boolean(raw?.compact_header ?? true),
+    top_split_ratio: clamp(Number(raw?.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68), 0.25, 0.75),
+    main_sidebar_ratio: clamp(Number(raw?.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76), 0.55, 0.9),
+    top_height: clamp(Number(raw?.top_height ?? defaultWorkspaceLayout.top_height ?? 560), 240, 1200),
+    bottom_height: clamp(Number(raw?.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260), 120, 1000)
   };
 }
 
@@ -200,6 +210,7 @@ export default function App() {
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
+  const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
@@ -259,11 +270,20 @@ export default function App() {
   }
 
   function patchUiPreferences(patch: Partial<UiPreferences>) {
-    persistUiPreferences({ ...uiPreferences, ...patch });
+    persistUiPreferences({ ...latestUiPreferencesRef.current, ...patch });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
-    persistUiPreferences({ ...uiPreferences, panel_layout: normalizePanelLayout(nextLayout) });
+    persistUiPreferences({ ...latestUiPreferencesRef.current, panel_layout: normalizePanelLayout(nextLayout) });
+  }
+
+  function patchWorkspaceLayout(patch: Partial<WorkspaceLayout>) {
+    patchUiPreferences({
+      workspace_layout: normalizeWorkspaceLayout({
+        ...latestUiPreferencesRef.current.workspace_layout,
+        ...patch
+      })
+    });
   }
 
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
@@ -391,11 +411,11 @@ export default function App() {
   }
 
   function setPanelVisible(panelId: PanelId, visible: boolean) {
-    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
+    patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
   }
 
   function updatePanel(panelId: PanelId, patch: Partial<PanelLayoutItem>) {
-    patchPanelLayout(uiPreferences.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
+    patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
   }
 
   function startResize(panelId: PanelId, startX: number, startY: number) {
@@ -423,10 +443,76 @@ export default function App() {
     window.addEventListener('mouseup', onUp);
   }
 
+  function startZoneResize(kind: ZoneResizeKind, startX: number, startY: number) {
+    const startLayout = latestUiPreferencesRef.current.workspace_layout;
+    const startTopHeight = startLayout.top_height ?? defaultWorkspaceLayout.top_height ?? 560;
+    const startBottomHeight = startLayout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260;
+
+    setActiveZoneResizer(kind);
+
+    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
+      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
+      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
+
+      if (kind === 'topSplit') {
+        const container = document.querySelector('.workspace-top');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        if (!rect.width) return;
+        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.25, 0.75);
+        patchWorkspaceLayout({ top_split_ratio: nextRatio });
+        return;
+      }
+
+      if (kind === 'mainSidebarSplit') {
+        const container = document.querySelector('.workspace-layout');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        if (!rect.width) return;
+        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.55, 0.9);
+        patchWorkspaceLayout({ main_sidebar_ratio: nextRatio });
+        return;
+      }
+
+      const deltaY = currentY - startY;
+      patchWorkspaceLayout({
+        top_height: clamp(startTopHeight + deltaY, 240, 1200),
+        bottom_height: clamp(startBottomHeight - deltaY, 120, 1000)
+      });
+    };
+
+    const onUp = () => {
+      setActiveZoneResizer(null);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('mouseup', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('mouseup', onUp);
+  }
+
   const topLeftPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topLeft'), [uiPreferences.panel_layout]);
   const topRightPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topRight'), [uiPreferences.panel_layout]);
   const bottomPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'bottom'), [uiPreferences.panel_layout]);
   const sidebarPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'sidebar'), [uiPreferences.panel_layout]);
+  const workspaceLayoutStyle = useMemo(() => {
+    const mainSidebarRatio = uiPreferences.workspace_layout.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76;
+
+    return {
+      gridTemplateColumns: `${mainSidebarRatio}fr 10px ${1 - mainSidebarRatio}fr`
+    } satisfies CSSProperties;
+  }, [uiPreferences.workspace_layout.main_sidebar_ratio]);
+  const workspaceMainStyle = useMemo(() => ({
+    gridTemplateRows: `minmax(${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px, auto) 10px minmax(${uiPreferences.workspace_layout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260}px, auto)`
+  } satisfies CSSProperties), [uiPreferences.workspace_layout.bottom_height, uiPreferences.workspace_layout.top_height]);
+  const workspaceTopStyle = useMemo(() => ({
+    gridTemplateColumns: `${uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68}fr 10px ${1 - (uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68)}fr`,
+    minHeight: `${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px`
+  } satisfies CSSProperties), [uiPreferences.workspace_layout.top_height, uiPreferences.workspace_layout.top_split_ratio]);
 
   const statusItems = [
     { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
@@ -721,7 +807,7 @@ export default function App() {
                   <label className="field-block"><span>{t('app.columns')}</span><select aria-label={t('app.columns')} value={uiPreferences.workspace_layout.columns} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, columns: Number(event.target.value) as 1 | 2 | 3 } })}><option value="1">{t('app.oneColumn')}</option><option value="2">{t('app.twoColumns')}</option><option value="3">{t('app.threeColumns')}</option></select></label>
                 </div>
                 <div className="view-menu-actions">
-                  <button type="button" onClick={() => patchPanelLayout(uiPreferences.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
+                  <button type="button" onClick={() => patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
                   <button type="button" className="ghost-button" onClick={resetLayout}>{t('app.resetLayout')}</button>
                 </div>
               </div>
@@ -730,14 +816,41 @@ export default function App() {
         </div>
       </div>
 
-      <div className="workspace-layout">
-        <div className="workspace-main">
-          <div className="workspace-top">
+      <div className="workspace-layout" style={workspaceLayoutStyle}>
+        <div className="workspace-main" style={workspaceMainStyle}>
+          <div className="workspace-top" style={workspaceTopStyle}>
             {renderZone('topLeft', topLeftPanels, 'zone-top-left')}
+            <button
+              type="button"
+              className={`layout-resizer layout-resizer-top-split ${activeZoneResizer === 'topSplit' ? 'is-active' : ''}`.trim()}
+              aria-label="Изменить ширину верхних зон"
+              onPointerDown={(event) => {
+                event.preventDefault();
+                startZoneResize('topSplit', event.clientX, event.clientY);
+              }}
+            />
             {renderZone('topRight', topRightPanels, 'zone-top-right')}
           </div>
+          <button
+            type="button"
+            className={`layout-resizer layout-resizer-top-bottom ${activeZoneResizer === 'topBottomSplit' ? 'is-active' : ''}`.trim()}
+            aria-label="Изменить высоту верхней и нижней зоны"
+            onPointerDown={(event) => {
+              event.preventDefault();
+              startZoneResize('topBottomSplit', event.clientX, event.clientY);
+            }}
+          />
           {renderZone('bottom', bottomPanels, 'zone-bottom')}
         </div>
+        <button
+          type="button"
+          className={`layout-resizer layout-resizer-main-sidebar ${activeZoneResizer === 'mainSidebarSplit' ? 'is-active' : ''}`.trim()}
+          aria-label="Изменить ширину основной области и sidebar"
+          onPointerDown={(event) => {
+            event.preventDefault();
+            startZoneResize('mainSidebarSplit', event.clientX, event.clientY);
+          }}
+        />
         {renderZone('sidebar', sidebarPanels, 'zone-sidebar')}
       </div>
 
