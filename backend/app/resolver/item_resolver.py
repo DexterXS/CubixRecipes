@@ -96,12 +96,29 @@ class ItemResolver:
         layer0 = (model.get('textures') or {}).get('layer0')
         if not layer0:
             return None
-        namespace, texture_name = layer0.split(':', 1)
-        texture_key = f'{namespace}:{texture_name}'
+        texture_key = self._normalize_texture_reference(item_ref, layer0)
+        if not texture_key:
+            trace.append({'strategy': 'model_texture', 'skipped': 'invalid_layer0_reference', 'layer0': layer0})
+            if self.log_service is not None:
+                self.log_service.log('BACKEND', 'WARN', 'RESOLVER', 'Skipped invalid model texture reference', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'layer0': layer0})
+            return None
         checked_keys.append(texture_key)
         candidates = self.asset_index.icons.get(texture_key, [])
         checked_sources.extend([c['source_type'] for c in candidates])
         return self._make_result(item_ref, candidates[:1], 0.8, 'model_texture', trace)
+
+    def _normalize_texture_reference(self, item_ref: ItemRef, layer0: Any) -> Optional[str]:
+        if not isinstance(layer0, str):
+            return None
+        normalized = layer0.strip()
+        if not normalized or normalized.startswith('#'):
+            return None
+        if ':' in normalized:
+            namespace, texture_name = normalized.split(':', 1)
+            if namespace and texture_name:
+                return f'{namespace}:{texture_name}'
+            return None
+        return f'{item_ref.modid}:{normalized}'
 
     def _block_texture(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         block_key = f'{item_ref.modid}:{item_ref.name}'

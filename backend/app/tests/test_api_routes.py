@@ -222,3 +222,40 @@ def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
     assert response['ui_preferences']['panel_layout'][1]['height'] == 500
     stored = json.loads(config_path.read_text(encoding='utf-8'))
     assert stored['ui_preferences']['workspace_layout']['compact_header'] is True
+
+
+def test_parse_route_tolerates_invalid_model_texture_reference(tmp_path: Path):
+    assets_dir = tmp_path / 'assets'
+    model_dir = assets_dir / 'assets' / 'energyadditions' / 'models' / 'item'
+    model_dir.mkdir(parents=True)
+    (model_dir / 'easolartype10.json').write_text('{"textures": {"layer0": "#missing"}}', encoding='utf-8')
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    parse_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/parse')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': 'scripts',
+                    'mods_dir': '',
+                    'assets_dir': str(assets_dir),
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                    'verbose_debug_logging': True,
+                }
+            },
+        )()
+    )
+
+    response = parse_route(type('ParseRequest', (), {'text': 'mods.avaritia.ExtremeCrafting.addShaped(<energyadditions:easolartype10>, [[<energyadditions:easolartype10>]]);'})())
+
+    assert response['kind'] == 'recipe'
+    assert response['recipe']['output']['raw'] == '<energyadditions:easolartype10>'
+    assert response['recipe']['output_resolution']['strategy'] == 'placeholder'
+

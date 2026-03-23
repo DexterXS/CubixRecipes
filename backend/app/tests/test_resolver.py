@@ -39,3 +39,13 @@ def test_lang_lookup_strategy():
     result = resolver.resolve(item, {'locale': 'ru_ru'})
     assert result.strategy == 'lang_lookup'
     assert result.display_name == 'Предмет'
+
+
+def test_invalid_model_texture_reference_does_not_crash_resolution():
+    index = AssetIndex()
+    index.register_model('mod:item', {'textures': {'layer0': '#missing'}})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:item>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'placeholder'
+    assert result.icon_url is None
