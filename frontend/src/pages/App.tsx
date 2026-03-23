@@ -218,6 +218,7 @@ export default function App() {
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
+  const settingsRetryCountRef = useRef(0);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -243,6 +244,7 @@ export default function App() {
         }
         setSettings(nextSettings);
         setBackendAvailable(true);
+        settingsRetryCountRef.current = 0;
         const normalized = normalizeUiPreferences(nextSettings);
         if (!hasLocalUiChangesRef.current) {
           latestUiPreferencesRef.current = normalized;
@@ -259,7 +261,8 @@ export default function App() {
         }
         setBackendAvailable(false);
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
-        if (settingsRetryTimerRef.current === null) {
+        if (settingsRetryTimerRef.current === null && settingsRetryCountRef.current < 5) {
+          settingsRetryCountRef.current += 1;
           settingsRetryTimerRef.current = window.setTimeout(() => {
             settingsRetryTimerRef.current = null;
             void loadProjectSettings();
@@ -276,6 +279,7 @@ export default function App() {
         window.clearTimeout(settingsRetryTimerRef.current);
         settingsRetryTimerRef.current = null;
       }
+      settingsRetryCountRef.current = 0;
     };
   }, []);
 

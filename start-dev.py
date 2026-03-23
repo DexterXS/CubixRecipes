@@ -451,6 +451,7 @@ class ProcessControllerApp:
         self.logger.propagate = False
         self._status_snapshot: Optional[tuple[bool, bool]] = None
         self._backend_api_healthy = False
+        self._backend_wait_started_at: Optional[float] = None
 
         self._ui_job_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
         self._unified_log_in_flight = False
@@ -1231,23 +1232,58 @@ class ProcessControllerApp:
         self.stop_frontend()
         self.root.after(RESTART_DELAY_MS, self.start_frontend)
 
-    def _start_frontend_after_backend_ready(self, attempts_remaining: int = 20) -> None:
-        if self.is_running(self.frontend):
-            return
-        if self._backend_api_healthy or self._probe_backend_api(timeout=0.4):
-            self.logger.info('Backend API уже отвечает, запускаю frontend без лишних proxy-ошибок.')
-            self.start_frontend()
-            return
-        if attempts_remaining <= 0:
-            self.logger.warning('Backend API не ответил вовремя, frontend будет запущен без дополнительного ожидания.')
-            self.start_frontend()
-            return
-        self.root.after(500, lambda: self._start_frontend_after_backend_ready(attempts_remaining - 1))
+    def _wait_for_backend_ready(
+        self,
+        on_ready: Any,
+        on_timeout: Any,
+        *,
+        timeout_ms: int = 25000,
+        poll_ms: int = 400,
+    ) -> None:
+        self._backend_wait_started_at = perf_counter()
+        attempt = 0
+
+        # Poll backend HTTP readiness without blocking Tkinter so Start All/Restart All remain responsive.
+        def poll() -> None:
+            nonlocal attempt
+            if not self.is_running(self.backend):
+                self._backend_wait_started_at = None
+                on_timeout(RuntimeError('Backend process stopped before API became ready.'))
+                return
+
+            attempt += 1
+            if self._probe_backend_api(timeout=0.35):
+                self._backend_api_healthy = True
+                elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
+                self._backend_wait_started_at = None
+                self.logger.info('Backend API готов к работе через %sms; теперь запускаю frontend.', elapsed_ms)
+                on_ready()
+                return
+
+            elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
+            if attempt == 1 or attempt % 5 == 0:
+                self.logger.info('Ожидание backend API: попытка %s, elapsed=%sms, endpoint=%s/api/settings/project', attempt, elapsed_ms, BACKEND_API_BASE_URL)
+            if elapsed_ms >= timeout_ms:
+                self._backend_wait_started_at = None
+                on_timeout(RuntimeError(f'Backend API did not become ready within {timeout_ms}ms.'))
+                return
+            self.root.after(poll_ms, poll)
+
+        poll()
 
     def start_all(self) -> None:
-        self.logger.info("Запускаю backend, затем дождусь ответа API и только после этого подниму frontend.")
+        self.logger.info("Запускаю backend, затем жду HTTP-готовности /api/settings/project и только после этого поднимаю frontend.")
         self.start_backend()
-        self._start_frontend_after_backend_ready()
+
+        def on_ready() -> None:
+            self.start_frontend()
+
+        def on_timeout(error: Exception) -> None:
+            self.logger.error('Frontend не будет запущен автоматически: %s', error)
+            self._write_process_line(self.backend, f'[startup wait failed] {error}\n')
+            messagebox.showerror('Start All', 'Backend не успел поднять API, поэтому frontend не был запущен автоматически.\nПроверь backend console и повтори запуск.')
+
+        self._wait_for_backend_ready(on_ready, on_timeout)
 
     def stop_all(self) -> None:
         self.logger.info("Останавливаю все процессы, которые были запущены из панели и ещё активны.")
