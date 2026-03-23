@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Cleaned up frontend/backend address handling: API calls and debug logging now use a shared runtime config, the inline offline hint explains both `/api` and the current dev-proxy target, and Vite proxy target/port are configured from env instead of scattered hardcoded strings.
 - Rebuilt `start-dev.py` logging so the control panel now uses a dedicated action log, bounded in-memory buffers for console/action output, separate stdout/stderr readers, stderr highlighting, and unbuffered child-process env defaults for more reliable live logs.
 - Backend parser now normalizes clipboard text that contains literal escaped whitespace sequences like `\n`/`\t`, so pasted `mods.avaritia.ExtremeCrafting.addShaped(...)` recipes parse correctly.
 - Frontend input panel now auto-parses pasted or manually inserted `addShaped(...)` text instead of only updating the textarea, and the main toolbar action is labeled `Парсить` to better match its behavior.

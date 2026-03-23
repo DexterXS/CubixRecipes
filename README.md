@@ -8,7 +8,7 @@ CubixRecipes — локальное русскоязычное веб-прило
 - Clipboard/parser now also normalizes literal escaped whitespace sequences like `\n` and `\t`, so recipes pasted from chats/forums parse correctly.
 - Входное поле теперь автоматически парсит вставленный или вручную введённый `addShaped(...)` текст, а отдельная кнопка `Парсить` запускает тот же сценарий вручную.
 - При редактировании и сохранении обычных shaped-рецептов backend автоматически обрезает пустую рамку, пересчитывает размер сетки и сохраняет только реально используемые клетки; extreme-рецепты стабильно остаются 9×9.
-- Если backend недоступен, поле ввода показывает явное inline-сообщение с адресом `http://127.0.0.1:8000`, а не оставляет интерфейс в состоянии “ничего не произошло”.
+- Если backend недоступен, поле ввода показывает явное inline-сообщение с двумя адресами: локальный `/api` frontend и текущий `VITE_BACKEND_TARGET` для dev proxy, чтобы не путались frontend-port и backend-port.
 - Поиск рецептов по output item id в локальных `.zs` файлах.
 - Редактируемая сетка рецепта во frontend и отдельный блок отображения/редактирования output item.
 - Control Panel с вкладкой Settings для сохранения путей к `.zs`, модам, ассетам и дополнительным источникам.
@@ -43,12 +43,12 @@ npm install
 npm run dev
 ```
 
-> Vite dev server проксирует запросы `/api` на `http://127.0.0.1:8000`, поэтому frontend в режиме разработки ходит в FastAPI backend без ручной настройки base URL.
+> Vite dev server проксирует запросы `/api` на адрес из `VITE_BACKEND_TARGET` (по умолчанию `http://127.0.0.1:8000`). Если порт frontend занят, Vite может автоматически подняться на `5174`, `5175` и т.д. — это не меняет backend target.
 
 ## Запуск
 - Backend по умолчанию: `http://127.0.0.1:8000`
 - Backend теперь приведён к совместимой типизации для Python 3.9+, поэтому Pydantic-схемы и dataclass-модели не зависят от union-нотации `|`.
-- Frontend Vite: `http://127.0.0.1:5173`
+- Frontend Vite: обычно `http://127.0.0.1:5173`, но если порт занят, Vite автоматически выберет следующий свободный порт
 - Для локального управления можно запустить `python start-dev.py` из корня проекта: откроется Tkinter-панель с кнопками Start/Stop/Restart для backend и frontend и вкладками `Backend Console`, `Frontend Console`, `Debug`, `Settings` и `Action Log`. Во вкладке `Debug` можно запросить подробную сводку по активному config, сканированию `.zs`, индексации ассетов, resolver trace, parse diagnostics, ошибкам и missing links, а также отдельно запускать `Refresh Debug Info`, `Rescan Recipes`, `Rescan Assets` и `Clear Debug Log`. Дополнительно вкладка `Full Debug Log` показывает единый хронологический лог backend/frontend/API/UI с фильтрами по source/level, кнопками `Copy Full Log`, `Save Log To File`, `Clear Log`, `Auto-scroll`, `Test Debug Pipeline`, а также статусной строкой с точным URL/status/body ошибки при проблемах запроса. Режим `Verbose debug logging` сохраняется в общем конфиге. Во вкладке `Settings` можно задать `scripts_dir`, `mods_dir`, `assets_dir`, `recipe_db_path`, `extra_icon_sources` и `extra_recipe_sources`; они сохраняются в `cubixrecipes.config.json` и используются backend при следующем запуске. Backend и frontend запускаются прямо внутри программы без внешних окон, а их stdout/stderr выводится в отдельные вкладки. Текст во вкладках можно выделять и копировать, HTTP/HTTPS-ссылки открываются кликом, а вывод дополнительно очищается от ANSI-кодов и части проблемных символов терминала. Для backend панель теперь заранее проверяет, в каком Python установлен `uvicorn`, и если зависимостей нет, показывает понятную команду установки вместо немого падения процесса. Если frontend не стартует, причина ошибки остаётся видна во вкладке frontend; скрипт также проверяет наличие `frontend/package.json` и `frontend/node_modules` перед запуском.
 
 

@@ -1,3 +1,5 @@
+import { apiPath } from '../config/runtime';
+
 export interface FrontendLogPayload {
   source?: string;
   level?: 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
@@ -43,7 +45,7 @@ export function logFrontendEvent(payload: FrontendLogPayload): void {
   if (shouldSkip(payload) || debugEndpointMutedUntil > Date.now()) {
     return;
   }
-  void fetch('/api/debug/log', {
+  void fetch(apiPath('/debug/log'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

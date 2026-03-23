@@ -4,6 +4,7 @@ import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { TabNav } from '../components/TabNav';
+import { apiPath, getBackendTargetHint } from '../config/runtime';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
@@ -804,7 +805,7 @@ export default function App() {
               </div>
               {!backendAvailable ? (
                 <div className="inline-hint inline-hint-warning">
-                  FastAPI backend не запущен или недоступен по адресу <code>http://127.0.0.1:8000</code>. Запусти backend и повтори вставку.
+                  FastAPI backend недоступен. Frontend ходит в <code>{apiPath('')}</code>, а dev proxy сейчас ожидает backend по адресу <code>{getBackendTargetHint()}</code>. Запусти backend и повтори запрос.
                 </div>
               ) : null}
             </Panel>
