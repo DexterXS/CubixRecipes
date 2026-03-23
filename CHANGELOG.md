@@ -4,6 +4,7 @@
 ### Fixed
 - Backend parser now normalizes clipboard text that contains literal escaped whitespace sequences like `\n`/`\t`, so pasted `mods.avaritia.ExtremeCrafting.addShaped(...)` recipes parse correctly.
 - Frontend input panel now auto-parses pasted or manually inserted `addShaped(...)` text instead of only updating the textarea, and the main toolbar action is labeled `Парсить` to better match its behavior.
+- Frontend now shows an inline warning in the input panel when `/api/parse` cannot reach the backend, so connection-refused failures are visible even if the status panel is hidden.
 
 ### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.

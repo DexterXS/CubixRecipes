@@ -227,6 +227,7 @@ export default function App() {
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
+  const inputStatusTone = lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
 
   useEffect(() => {
     void (async () => {
@@ -775,6 +776,15 @@ export default function App() {
                 </div>
               </div>
               <textarea aria-label="paste-input" value={input} onChange={handleInputChange} onPaste={handleInputPaste} />
+              <div className={`inline-status inline-status-${inputStatusTone}`}>
+                <strong>{t('status.status')}:</strong>
+                <span>{status}</span>
+              </div>
+              {lastApiStatus === t('values.error') && status.includes('Backend unavailable') ? (
+                <div className="inline-hint inline-hint-warning">
+                  FastAPI backend не запущен или недоступен по адресу <code>http://127.0.0.1:8000</code>. Запусти backend и повтори вставку.
+                </div>
+              ) : null}
             </Panel>
           </div>
         );
