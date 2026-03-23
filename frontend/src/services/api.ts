@@ -1,3 +1,4 @@
+import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
 import { ProjectSettings, RecipeView, UiPreferences } from '../types';
 import { logFrontendEvent } from './debugLog';
 
@@ -41,7 +42,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     response = await fetch(path, init);
   } catch (error) {
     const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
-    const message = `Backend unavailable for ${path}. Start FastAPI on http://127.0.0.1:8000 and try again.`;
+    const message = buildBackendUnavailableMessage(path);
     logFrontendEvent({
       level: 'ERROR',
       category: 'API',
@@ -84,7 +85,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export async function parseText(text: string): Promise<ParseResponse> {
-  return request<ParseResponse>('/api/parse', {
+  return request<ParseResponse>(apiPath('/parse'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text })
@@ -92,7 +93,7 @@ export async function parseText(text: string): Promise<ParseResponse> {
 }
 
 export async function createRecipeTemplate(payload: CreateRecipePayload): Promise<RecipeView> {
-  return request<RecipeView>('/api/recipes/create', {
+  return request<RecipeView>(apiPath('/recipes/create'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -100,7 +101,7 @@ export async function createRecipeTemplate(payload: CreateRecipePayload): Promis
 }
 
 export async function updateRecipe(payload: UpdateRecipePayload): Promise<{ ok: boolean; updatedRecipe: RecipeView }> {
-  return request<{ ok: boolean; updatedRecipe: RecipeView }>(`/api/recipes/${payload.recipeUid}`, {
+  return request<{ ok: boolean; updatedRecipe: RecipeView }>(`${apiPath(`/recipes/${payload.recipeUid}`)}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -113,7 +114,7 @@ export async function updateRecipe(payload: UpdateRecipePayload): Promise<{ ok: 
 }
 
 export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolean; new_uid: string; recipe: RecipeView }> {
-  return request<{ ok: boolean; new_uid: string; recipe: RecipeView }>('/api/recipes/save-as', {
+  return request<{ ok: boolean; new_uid: string; recipe: RecipeView }>(apiPath('/recipes/save-as'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -128,11 +129,11 @@ export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolea
 }
 
 export async function getProjectSettings(): Promise<ProjectSettings> {
-  return request<ProjectSettings>('/api/settings/project');
+  return request<ProjectSettings>(apiPath('/settings/project'));
 }
 
 export async function updateProjectUiPreferences(uiPreferences: UiPreferences): Promise<ProjectSettings> {
-  return request<ProjectSettings>('/api/settings/project/ui', {
+  return request<ProjectSettings>(apiPath('/settings/project/ui'), {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(uiPreferences)

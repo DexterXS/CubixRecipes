@@ -4,6 +4,7 @@ import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { TabNav } from '../components/TabNav';
+import { apiPath, getBackendTargetHint } from '../config/runtime';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
@@ -216,6 +217,7 @@ export default function App() {
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
+  const settingsRetryTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -231,9 +233,14 @@ export default function App() {
   const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
 
   useEffect(() => {
-    void (async () => {
+    let cancelled = false;
+
+    async function loadProjectSettings() {
       try {
         const nextSettings = await getProjectSettings();
+        if (cancelled) {
+          return;
+        }
         setSettings(nextSettings);
         setBackendAvailable(true);
         const normalized = normalizeUiPreferences(nextSettings);
@@ -241,11 +248,35 @@ export default function App() {
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
+        setStatus((current) => current === 'Не удалось загрузить UI-настройки, используются значения по умолчанию.' ? 'Подключение к backend восстановлено, UI-настройки загружены.' : current);
+        if (settingsRetryTimerRef.current !== null) {
+          window.clearTimeout(settingsRetryTimerRef.current);
+          settingsRetryTimerRef.current = null;
+        }
       } catch {
+        if (cancelled) {
+          return;
+        }
         setBackendAvailable(false);
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
+        if (settingsRetryTimerRef.current === null) {
+          settingsRetryTimerRef.current = window.setTimeout(() => {
+            settingsRetryTimerRef.current = null;
+            void loadProjectSettings();
+          }, 2000);
+        }
       }
-    })();
+    }
+
+    void loadProjectSettings();
+
+    return () => {
+      cancelled = true;
+      if (settingsRetryTimerRef.current !== null) {
+        window.clearTimeout(settingsRetryTimerRef.current);
+        settingsRetryTimerRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => () => {
@@ -254,6 +285,9 @@ export default function App() {
     }
     if (autoParseTimerRef.current !== null) {
       window.clearTimeout(autoParseTimerRef.current);
+    }
+    if (settingsRetryTimerRef.current !== null) {
+      window.clearTimeout(settingsRetryTimerRef.current);
     }
   }, []);
 
@@ -804,7 +838,7 @@ export default function App() {
               </div>
               {!backendAvailable ? (
                 <div className="inline-hint inline-hint-warning">
-                  FastAPI backend не запущен или недоступен по адресу <code>http://127.0.0.1:8000</code>. Запусти backend и повтори вставку.
+                  FastAPI backend недоступен. Frontend ходит в <code>{apiPath('')}</code>, а dev proxy сейчас ожидает backend по адресу <code>{getBackendTargetHint()}</code>. Запусти backend и повтори запрос.
                 </div>
               ) : null}
             </Panel>

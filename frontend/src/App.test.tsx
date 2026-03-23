@@ -275,7 +275,8 @@ test('shows backend unavailable inline message when parse request cannot reach a
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
   await waitFor(() => expect(screen.getByText(/Backend unavailable for \/api\/parse/)).toBeTruthy());
-  expect(screen.getByText(/FastAPI backend не запущен/)).toBeTruthy();
+  expect(screen.getByText(/FastAPI backend недоступен/)).toBeTruthy();
+  expect(document.body.textContent).toContain('dev proxy сейчас ожидает backend');
 });
 
 

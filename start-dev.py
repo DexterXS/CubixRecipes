@@ -31,8 +31,11 @@ RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
 BACKEND_API_BASE_URL = "http://127.0.0.1:8000"
+BACKEND_HEALTH_URL = f"{BACKEND_API_BASE_URL}/health"
+BACKEND_PANEL_RELOAD = os.environ.get("CUBIXRECIPES_PANEL_BACKEND_RELOAD", "0") == "1"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 URL_RE = re.compile(r"https?://[^\s]+")
+VITE_LOCAL_URL_RE = re.compile(r"Local:\s+(https?://[^\s]+)")
 MOJIBAKE_REPLACEMENTS = {
     "вЫє": "-",
     "вЫ ": "-",
@@ -409,6 +412,7 @@ class ManagedProcess:
         self.reader_thread: Optional[threading.Thread] = None
         self.stderr_thread: Optional[threading.Thread] = None
         self.last_return_code: Optional[int] = None
+        self.detected_url: Optional[str] = None
 
     def is_running(self) -> bool:
         return self.proc is not None and self.proc.poll() is None
@@ -418,6 +422,7 @@ class ManagedProcess:
         self.output_queue = queue.Queue()
         self.reader_thread = None
         self.stderr_thread = None
+        self.detected_url = None
 
 
 class ProcessControllerApp:
@@ -447,6 +452,8 @@ class ProcessControllerApp:
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
         self._status_snapshot: Optional[tuple[bool, bool]] = None
+        self._backend_api_healthy = False
+        self._backend_wait_started_at: Optional[float] = None
 
         self._ui_job_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
         self._unified_log_in_flight = False
@@ -725,9 +732,17 @@ class ProcessControllerApp:
                     break
                 sanitized = self._sanitize_console_text(chunk)
                 if sanitized:
+                    self._capture_runtime_hints(managed, sanitized)
                     prefix = '[stderr] ' if channel == 'stderr' and not sanitized.startswith('[stderr] ') else ''
                     managed.console.append(prefix + sanitized, channel=channel)
         self.root.after(STREAM_POLL_MS, self._poll_process_output)
+
+    def _capture_runtime_hints(self, managed: ManagedProcess, text: str) -> None:
+        if managed.name != 'frontend':
+            return
+        match = VITE_LOCAL_URL_RE.search(text)
+        if match:
+            managed.detected_url = match.group(1).rstrip('/') + '/'
 
     def _stream_process_output(self, managed: ManagedProcess, stream_name: str) -> None:
         proc = managed.proc
@@ -769,19 +784,40 @@ class ProcessControllerApp:
         self.logger.log(level, "Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
         self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
 
+    def _probe_backend_api(self, timeout: float = 1.5) -> bool:
+        try:
+            with urlopen(BACKEND_HEALTH_URL, timeout=timeout) as response:
+                payload = json.loads(response.read().decode('utf-8') or '{}')
+                return response.status == 200 and bool(payload.get('ok'))
+            return True
+        except Exception:
+            return False
+
     def _update_status_labels(self) -> None:
         backend_running = self.is_running(self.backend)
         frontend_running = self.is_running(self.frontend)
         self._report_unexpected_exit(self.backend)
         self._report_unexpected_exit(self.frontend)
-        self.backend_status.config(text="Backend: работает" if backend_running else "Backend: остановлен")
-        self.frontend_status.config(text="Frontend: работает" if frontend_running else "Frontend: остановлен")
+        self._backend_api_healthy = backend_running and self._probe_backend_api()
+        if backend_running:
+            backend_text = 'Backend: работает (API ok)' if self._backend_api_healthy else 'Backend: запущен, API ещё недоступен'
+        else:
+            backend_text = 'Backend: остановлен'
+        if frontend_running:
+            frontend_text = f"Frontend: работает ({self.frontend.detected_url})" if self.frontend.detected_url else 'Frontend: работает'
+        else:
+            frontend_text = 'Frontend: остановлен'
+        self.backend_status.config(text=backend_text)
+        self.frontend_status.config(text=frontend_text)
         self._set_status_snapshot(backend_running, frontend_running)
         self.root.after(POLL_INTERVAL_MS, self._update_status_labels)
 
     def _build_backend_command(self) -> tuple[Union[list[str], str], bool]:
         python_executable = self._select_backend_python()
-        return [python_executable, "-m", "uvicorn", "app.main:app", "--reload"], False
+        command = [python_executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8000"]
+        if BACKEND_PANEL_RELOAD:
+            command.append("--reload")
+        return command, False
 
     def _build_frontend_command(self) -> tuple[Union[list[str], str], bool]:
         if os.name == "nt":
@@ -1130,7 +1166,7 @@ class ProcessControllerApp:
                 shell=use_shell,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                stdin=subprocess.PIPE,
+                stdin=subprocess.DEVNULL,
                 text=True,
                 bufsize=1,
                 encoding="utf-8",
@@ -1147,12 +1183,24 @@ class ProcessControllerApp:
             self.logger.exception("Не удалось запустить %s: %s", managed.name, error)
             messagebox.showerror("Ошибка запуска", f"Не удалось запустить {managed.name}:\n{error}")
 
-    def start_backend(self) -> None:
+    def start_backend(self, wait_for_health: bool = True) -> None:
         if not self._validate_backend_setup():
             return
         command, use_shell = self._build_backend_command()
         self.notebook.select(self.backend_console.frame)
         self._start_process(self.backend, command, use_shell)
+        if not self.is_running(self.backend) or not wait_for_health:
+            return
+
+        def on_ready() -> None:
+            self.logger.info('Backend health-check подтвердил доступность %s.', BACKEND_HEALTH_URL)
+
+        def on_timeout(error: Exception) -> None:
+            self.logger.error('Backend процесс запущен, но health-check не поднялся: %s', error)
+            self._write_process_line(self.backend, f'[health-check failed] {error}\n')
+            messagebox.showerror('Backend startup failed', f'Backend процесс стартовал, но endpoint {BACKEND_HEALTH_URL} не ответил вовремя.\nПроверь backend console.')
+
+        self._wait_for_backend_ready(on_ready, on_timeout)
 
     def start_frontend(self) -> None:
         if not self._validate_frontend_setup():
@@ -1203,10 +1251,58 @@ class ProcessControllerApp:
         self.stop_frontend()
         self.root.after(RESTART_DELAY_MS, self.start_frontend)
 
+    def _wait_for_backend_ready(
+        self,
+        on_ready: Any,
+        on_timeout: Any,
+        *,
+        timeout_ms: int = 30000,
+        poll_ms: int = 400,
+    ) -> None:
+        self._backend_wait_started_at = perf_counter()
+        attempt = 0
+
+        # Poll backend HTTP readiness without blocking Tkinter so Start All/Restart All remain responsive.
+        def poll() -> None:
+            nonlocal attempt
+            if not self.is_running(self.backend):
+                self._backend_wait_started_at = None
+                on_timeout(RuntimeError('Backend process stopped before API became ready.'))
+                return
+
+            attempt += 1
+            if self._probe_backend_api(timeout=1.5):
+                self._backend_api_healthy = True
+                elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
+                self._backend_wait_started_at = None
+                self.logger.info('Backend API готов к работе через %sms; теперь запускаю frontend.', elapsed_ms)
+                on_ready()
+                return
+
+            elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
+            if attempt == 1 or attempt % 5 == 0:
+                self.logger.info('Ожидание backend API: попытка %s, elapsed=%sms, endpoint=%s', attempt, elapsed_ms, BACKEND_HEALTH_URL)
+            if elapsed_ms >= timeout_ms:
+                self._backend_wait_started_at = None
+                on_timeout(RuntimeError(f'Backend API did not become ready within {timeout_ms}ms.'))
+                return
+            self.root.after(poll_ms, poll)
+
+        poll()
+
     def start_all(self) -> None:
-        self.logger.info("Запускаю backend и frontend вместе по команде Start All.")
-        self.start_backend()
-        self.start_frontend()
+        self.logger.info("Запускаю backend, затем жду HTTP-готовности /health и только после этого поднимаю frontend.")
+        self.start_backend(wait_for_health=False)
+
+        def on_ready() -> None:
+            self.start_frontend()
+
+        def on_timeout(error: Exception) -> None:
+            self.logger.error('Frontend не будет запущен автоматически: %s', error)
+            self._write_process_line(self.backend, f'[startup wait failed] {error}\n')
+            messagebox.showerror('Start All', f'Backend не успел поднять health-check {BACKEND_HEALTH_URL}, поэтому frontend не был запущен автоматически.\nПроверь backend console и повтори запуск.')
+
+        self._wait_for_backend_ready(on_ready, on_timeout)
 
     def stop_all(self) -> None:
         self.logger.info("Останавливаю все процессы, которые были запущены из панели и ещё активны.")
@@ -1214,7 +1310,7 @@ class ProcessControllerApp:
         self.stop_frontend()
 
     def restart_all(self) -> None:
-        self.logger.info("Перезапуск всех сервисов: сначала полная остановка, затем общий старт через %sms.", RESTART_ALL_DELAY_MS)
+        self.logger.info("Перезапуск всех сервисов: сначала полная остановка, затем backend и frontend будут подняты последовательно через %sms.", RESTART_ALL_DELAY_MS)
         self.stop_all()
         self.root.after(RESTART_ALL_DELAY_MS, self.start_all)
 

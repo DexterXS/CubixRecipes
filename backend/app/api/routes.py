@@ -12,7 +12,7 @@ from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEven
 from app.config.project_config import ProjectConfigService
 from app.debug.debug_service import DebugService
 from app.debug.log_service import DebugLogService
-from app.domain.models import Recipe, RecipeCell
+from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
@@ -74,19 +74,6 @@ def _resolve_recipe_items(recipe: Recipe, resolver: ItemResolver, debug_service:
                 debug_service.record_resolver(cell.item.raw, cell.item.base_key, resolved, resolver.last_resolution_details.get(cell.item.raw))
                 cell.resolution = resolved.__dict__
     return recipe
-
-
-def _apply_matrix(parser: RecipeParser, matrix: list[list[Optional[str]]]) -> list[list[RecipeCell]]:
-    cells = []
-    for r, row in enumerate(matrix):
-        cell_row = []
-        for c, raw in enumerate(row):
-            item = None
-            if raw is not None:
-                item, _error = parser.parse_item_ref_safe(raw)
-            cell_row.append(RecipeCell(row=r, col=c, raw=raw, item=item))
-        cells.append(cell_row)
-    return cells
 
 
 def _log_api(log_service: DebugLogService, method: str, path: str, payload: dict[str, Any], status: str, started_at: float, response_body: Any = None, level: str = 'INFO') -> None:
@@ -192,10 +179,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.put('/recipes/{recipe_uid}')
     def update_recipe(recipe_uid: str, request: UpdateRecipeRequest):
         started_at = perf_counter()
-        recipe = storage.get_recipe(recipe_uid)
-        recipe.name = request.name
-        recipe.output = parser.parse_item_ref(request.output_raw)
-        recipe.matrix = _apply_matrix(parser, request.matrix)
+        recipe = service.update_recipe(storage.get_recipe(recipe_uid), request.output_raw, request.matrix, request.name)
         rendered = service.render_recipe(recipe)
         updated = storage.save_existing(recipe_uid, rendered)
         debug_service.record_recipe_scan(storage.last_scan_report)
@@ -232,14 +216,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         started_at = perf_counter()
         try:
             recipe = storage.get_recipe(request.recipe_uid)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name)
         except KeyError:
             recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix))
             recipe.recipe_uid = request.recipe_uid
-        recipe.name = request.name
-        recipe.output = parser.parse_item_ref(request.output_raw)
-        recipe.matrix = _apply_matrix(parser, request.matrix)
-        recipe.grid_h = len(recipe.matrix)
-        recipe.grid_w = max((len(row) for row in request.matrix), default=0)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name)
         new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe saved as', {'recipe_uid': request.recipe_uid, 'new_uid': new_uid, 'target_path': request.target_path})
@@ -401,5 +382,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         return JSONResponse({'icon_asset_id': icon_asset_id, 'note': 'MVP placeholder: static icon proxy not implemented in tests'})
 
     app = FastAPI(title='CubixRecipes API')
+
+    @app.get('/health')
+    def health_check():
+        return {'ok': True}
+
     app.include_router(router)
     return app

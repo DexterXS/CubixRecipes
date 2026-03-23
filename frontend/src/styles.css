@@ -64,8 +64,8 @@ main.app-shell { max-width: 1880px; margin: 0 auto; padding: 14px 18px 24px; }
 .panel { border-radius: var(--radius); overflow: hidden; min-height: 100%; display: flex; flex-direction: column; width: 100%; }
 .panel-header { padding: 12px 14px 0; display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
 .panel-header-main { min-width: 0; flex: 1; }
-.panel-title-row { display: flex; align-items: center; gap: 10px; }
-.panel-title-row h2 { margin: 0; font-size: 18px; }
+.panel-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.panel-title-row h2 { margin: 0; font-size: 18px; min-width: 0; overflow-wrap: anywhere; }
 .panel-drag-slot { display: flex; align-items: center; }
 .panel-drag-handle { padding: 5px 7px; min-width: 34px; background: rgba(15, 23, 42, 0.82); border-color: var(--border); cursor: grab; letter-spacing: 2px; }
 .panel-drag-handle:active { cursor: grabbing; }

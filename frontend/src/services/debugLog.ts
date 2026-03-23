@@ -1,3 +1,5 @@
+import { apiPath } from '../config/runtime';
+
 export interface FrontendLogPayload {
   source?: string;
   level?: 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
@@ -10,6 +12,7 @@ export interface FrontendLogPayload {
 const recentEvents = new Map<string, number>();
 const DEDUP_WINDOW_MS = 1500;
 const DEBUG_ENDPOINT_MUTE_MS = 10000;
+const DEBUG_RETRY_DELAYS_MS = [600, 1400, 2600];
 let debugEndpointMutedUntil = 0;
 
 function safeStringify(value: unknown): string {
@@ -39,11 +42,8 @@ function shouldSkip(payload: FrontendLogPayload): boolean {
   return false;
 }
 
-export function logFrontendEvent(payload: FrontendLogPayload): void {
-  if (shouldSkip(payload) || debugEndpointMutedUntil > Date.now()) {
-    return;
-  }
-  void fetch('/api/debug/log', {
+function sendFrontendLog(payload: FrontendLogPayload, attempt: number): void {
+  void fetch(apiPath('/debug/log'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -55,9 +55,20 @@ export function logFrontendEvent(payload: FrontendLogPayload): void {
       verbose_only: payload.verbose_only ?? false
     })
   }).catch(() => {
+    if (attempt < DEBUG_RETRY_DELAYS_MS.length) {
+      window.setTimeout(() => sendFrontendLog(payload, attempt + 1), DEBUG_RETRY_DELAYS_MS[attempt]);
+      return;
+    }
     debugEndpointMutedUntil = Date.now() + DEBUG_ENDPOINT_MUTE_MS;
     // debug logging must never break the app flow
   });
+}
+
+export function logFrontendEvent(payload: FrontendLogPayload): void {
+  if (shouldSkip(payload) || debugEndpointMutedUntil > Date.now()) {
+    return;
+  }
+  sendFrontendLog(payload, 0);
 }
 
 export function installConsoleCapture(): void {
