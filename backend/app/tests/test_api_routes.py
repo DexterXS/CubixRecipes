@@ -31,6 +31,38 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
     assert (tmp_path / 'saved.zs').read_text(encoding='utf-8').strip().startswith('recipes.addShaped("Torch Recipe"')
 
 
+
+
+def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
+
+    response = save_as(
+        type(
+            'Request',
+            (),
+            {
+                'recipe_uid': 'new-recipe',
+                'recipe_type': 'ct_shaped',
+                'output_raw': '<minecraft:chest>',
+                'matrix': [
+                    [None, None, None, None],
+                    [None, '<minecraft:planks>', '<minecraft:planks>', None],
+                    [None, '<minecraft:planks>', '<minecraft:planks>', None],
+                    [None, None, None, None],
+                ],
+                'name': None,
+                'target_path': str(tmp_path / 'trimmed.zs'),
+            },
+        )()
+    )
+
+    assert response['ok'] is True
+    assert response['recipe']['grid_w'] == 2
+    assert response['recipe']['grid_h'] == 2
+    saved_text = (tmp_path / 'trimmed.zs').read_text(encoding='utf-8').strip()
+    assert '[[<minecraft:planks>, <minecraft:planks>], [<minecraft:planks>, <minecraft:planks>]]' in saved_text
+
 def test_update_existing_recipe_persists_changes(tmp_path: Path):
     recipe_file = tmp_path / 'recipes.zs'
     recipe_file.write_text('recipes.addShaped(<minecraft:torch>, [[<minecraft:coal>]]);\n', encoding='utf-8')
