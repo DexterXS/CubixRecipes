@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Backend parser now normalizes clipboard text that contains literal escaped whitespace sequences like `\n`/`\t`, so pasted `mods.avaritia.ExtremeCrafting.addShaped(...)` recipes parse correctly.
+
 ### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
 - Added a utility-bar settings button with an explicit “save current window layout” action that writes the current panel arrangement and zone sizes back to the backend config for reuse on the next app start.

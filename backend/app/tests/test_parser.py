@@ -52,3 +52,15 @@ def test_parse_112_name_syntax():
     recipe = parser.parse(text).recipe
     assert recipe.name == 'CTLeggings'
     assert recipe.output.raw == '<minecraft:iron_leggings>'
+
+
+def test_parse_extreme_recipe_with_escaped_whitespace_from_clipboard():
+    parser = RecipeParser()
+    text = r'''mods.avaritia.ExtremeCrafting.addShaped(<energyadditions:easolartype10>,\n	[[null, null, null, null, null, null, null, null, null],\n	[null, <Avaritia:Resource:5>, <energyadditions:eabeesolartype6>, <energyadditions:easolarp6>, <energyadditions:easolarp5>, <energyadditions:easolarp6>, <energyadditions:easolartype9>, <Avaritia:Resource:5>, null],\n	[null, <energyadditions:eabeesolartype6>, <gendustry:HoneyComb:515>, <cubixcollectors:compressedNeutroniumX3>, <energyadditions:eaenergysource>, <cubixcollectors:compressedNeutroniumX3>, <ExtraBees:honeyComb:26>, <energyadditions:easolartype9>, null],\n	[null, <AdvancedSolarPanel:asp_crafting_items:18>, <cubixcollectors:compressedNeutroniumX3>, <AdvancedSolarPanel:asp_crafting_items:14>, <energyadditions:eaadvmechbase>, <AdvancedSolarPanel:asp_crafting_items:14>, <cubixcollectors:compressedNeutroniumX3>, <AdvancedSolarPanel:asp_crafting_items:18>, null],\n	[null, <draconicrevolt:der_demonicblock:2>, <energyadditions:eakvantumcore:*>, <energyadditions:eaadvmechbase>, <ExtraUtilities:cobblestone_compressed:7>, <energyadditions:eaadvmechbase>, <energyadditions:eakvantumcore:*>, <draconicrevolt:der_demonicblock:2>, null],\n	[null, <AdvancedSolarPanel:asp_crafting_items:18>, <cubixcollectors:compressedNeutroniumX3>, <AdvancedSolarPanel:asp_crafting_items:14>, <energyadditions:eaadvmechbase>, <AdvancedSolarPanel:asp_crafting_items:14>, <cubixcollectors:compressedNeutroniumX3>, <AdvancedSolarPanel:asp_crafting_items:18>, null],\n	[null, <energyadditions:easolartype9>, <ExtraBees:honeyComb:26>, <cubixcollectors:compressedNeutroniumX3>, <energyadditions:eaenergysource>, <cubixcollectors:compressedNeutroniumX3>, <gendustry:HoneyComb:515>, <energyadditions:eadracsolartype6>, null],\n	[null, <Avaritia:Resource:5>, <energyadditions:easolartype9>, <draconicrevolt:der_demoniccore>, <energyadditions:eaadvmechbase>, <draconicrevolt:der_demoniccore>, <energyadditions:eadracsolartype6>, <Avaritia:Resource:5>, null],\n	[null, null, null, null, null, null, null, null, null]]);'''
+    recipe = parser.parse(text).recipe
+    assert recipe.recipe_type == 'avaritia_extreme_shaped'
+    assert recipe.output.raw == '<energyadditions:easolartype10>'
+    assert recipe.grid_w == 9
+    assert recipe.grid_h == 9
+    assert recipe.matrix[4][2].item.meta_mode == MetaMode.WILDCARD
+    assert recipe.matrix[4][4].item.meta_value == 7

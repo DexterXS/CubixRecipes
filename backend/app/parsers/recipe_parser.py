@@ -21,7 +21,7 @@ class ParseResult:
 
 class RecipeParser:
     def parse(self, text: str, source_kind: str = "clipboard") -> ParseResult:
-        stripped = text.strip()
+        stripped = self._normalize_input_text(text)
         if stripped.startswith("<") and stripped.endswith(">") and ".addShaped" not in stripped:
             return ParseResult(kind="item_query", item=self.parse_item_ref(stripped), diagnostics=[])
         if ".addShaped" in stripped:
@@ -45,6 +45,15 @@ class RecipeParser:
             return self.parse_item_ref(raw), None
         except Exception as exc:
             return None, str(exc)
+
+    def _normalize_input_text(self, text: str) -> str:
+        normalized = text.strip()
+        if normalized.startswith('```'):
+            fence_match = re.match(r"^```[a-zA-Z0-9_-]*\n(?P<body>[\s\S]*?)\n```$", normalized)
+            if fence_match:
+                normalized = fence_match.group('body').strip()
+        normalized = normalized.replace('\\r\\n', '\n').replace('\\n', '\n').replace('\\t', ' ')
+        return normalized.strip()
 
     def _parse_recipe(self, text: str, source_kind: str) -> Recipe:
         func, args = self._split_call(text)
