@@ -6,6 +6,7 @@ CubixRecipes — локальное русскоязычное веб-прило
 - Парсинг `recipes.addShaped(...)` и `mods.avaritia.ExtremeCrafting.addShaped(...)`.
 - Поддержка `null`, meta, wildcard `*`, legacy и 1.12 name-синтаксиса.
 - Clipboard/parser now also normalizes literal escaped whitespace sequences like `\n` and `\t`, so recipes pasted from chats/forums parse correctly.
+- Входное поле теперь автоматически парсит вставленный или вручную введённый `addShaped(...)` текст, а отдельная кнопка `Парсить` запускает тот же сценарий вручную.
 - Поиск рецептов по output item id в локальных `.zs` файлах.
 - Редактируемая сетка рецепта во frontend и отдельный блок отображения/редактирования output item.
 - Control Panel с вкладкой Settings для сохранения путей к `.zs`, модам, ассетам и дополнительным источникам.

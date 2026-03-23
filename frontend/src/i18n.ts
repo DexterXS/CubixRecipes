@@ -38,7 +38,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       work: 'Работа',
       saveGroup: 'Сохранение',
       helpGroup: 'Помощь',
-      parse: 'Вставить',
+      parse: 'Парсить',
       paste: 'Вставить из буфера',
       new: 'Создать новый',
       clear: 'Очистить',
@@ -138,7 +138,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       close: 'Закрыть',
       items: [
         'Вставьте `recipes.addShaped(...)` или `mods.avaritia.ExtremeCrafting.addShaped(...)` в верхнее поле.',
-        'Кнопка «Вставить» отправляет текст в backend `/api/parse` и заполняет сетку рецепта.',
+        'Поле автоматически отправляет вставленный `addShaped(...)` текст в backend `/api/parse` и заполняет сетку рецепта.',
         'Блок «Результат» показывает результат крафта и позволяет редактировать raw item id перед сохранением.',
         '«Сохранить» обновляет исходный `.zs` файл для уже существующего рецепта.',
         '«Сохранить как» добавляет текущий рецепт в другой `.zs` файл через backend save-as endpoint.',

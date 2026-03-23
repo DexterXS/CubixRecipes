@@ -226,7 +226,7 @@ test('layout settings button saves the current workspace arrangement explicitly'
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
-  fireEvent.click(screen.getByText('Вставить'));
+  fireEvent.click(screen.getByText('Парсить'));
   await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 
   fireEvent.click(screen.getByText('Сохранить'));
@@ -247,4 +247,11 @@ test('toolbar actions still support save, save-as, create and help/wiki', async 
 
   fireEvent.click(screen.getByText('Вики'));
   expect(window.open).toHaveBeenCalled();
+});
+
+
+test('manual text input with addShaped auto-parses after change', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'mods.avaritia.ExtremeCrafting.addShaped(<minecraft:glass>, [[<minecraft:stone>]])' } });
+  await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 });

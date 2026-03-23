@@ -214,8 +214,10 @@ export default function App() {
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
+  const autoParseTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
+  const lastRequestedParseRef = useRef('');
 
   const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
@@ -245,6 +247,9 @@ export default function App() {
   useEffect(() => () => {
     if (persistTimerRef.current !== null) {
       window.clearTimeout(persistTimerRef.current);
+    }
+    if (autoParseTimerRef.current !== null) {
+      window.clearTimeout(autoParseTimerRef.current);
     }
   }, []);
 
@@ -334,8 +339,28 @@ export default function App() {
     setLastParseResult(t('values.reset'));
   }
 
-  async function handleParse(value: string) {
-    setInput(value);
+  function isParseableInput(value: string) {
+    const trimmed = value.trim();
+    return trimmed.includes('.addShaped') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
+  }
+
+  function handleInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    setInput(event.target.value);
+  }
+
+  function handleInputPaste(event: ClipboardEvent<HTMLTextAreaElement>) {
+    const pasted = event.clipboardData.getData('text');
+    setInput(pasted);
+    event.preventDefault();
+  }
+
+  async function handleParse(value: string, options?: { syncInput?: boolean }) {
+    const syncInput = options?.syncInput ?? true;
+    const normalizedValue = value.trim();
+    if (syncInput) {
+      setInput(value);
+    }
+    lastRequestedParseRef.current = normalizedValue;
     setStatus(t('status.parsing'));
     setLastApiStatus(t('values.pending'));
     try {
@@ -358,6 +383,33 @@ export default function App() {
       setLastParseResult(message);
     }
   }
+
+  useEffect(() => {
+    const trimmed = input.trim();
+    if (!trimmed) {
+      lastRequestedParseRef.current = '';
+      if (autoParseTimerRef.current !== null) {
+        window.clearTimeout(autoParseTimerRef.current);
+        autoParseTimerRef.current = null;
+      }
+      return;
+    }
+    if (!isParseableInput(trimmed) || trimmed === lastRequestedParseRef.current) {
+      return;
+    }
+    if (autoParseTimerRef.current !== null) {
+      window.clearTimeout(autoParseTimerRef.current);
+    }
+    autoParseTimerRef.current = window.setTimeout(() => {
+      void handleParse(trimmed, { syncInput: false });
+    }, 250);
+    return () => {
+      if (autoParseTimerRef.current !== null) {
+        window.clearTimeout(autoParseTimerRef.current);
+        autoParseTimerRef.current = null;
+      }
+    };
+  }, [input]);
 
   async function handlePasteFromClipboard() {
     try {
@@ -722,11 +774,7 @@ export default function App() {
                   <button type="button" className="ghost-button" onClick={() => setInput('')}>{t('toolbar.clear')}</button>
                 </div>
               </div>
-              <textarea aria-label="paste-input" value={input} onChange={(event) => setInput(event.target.value)} onPaste={(event) => {
-                const pasted = event.clipboardData.getData('text');
-                void handleParse(pasted);
-                event.preventDefault();
-              }} />
+              <textarea aria-label="paste-input" value={input} onChange={handleInputChange} onPaste={handleInputPaste} />
             </Panel>
           </div>
         );
