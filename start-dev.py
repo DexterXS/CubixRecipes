@@ -33,6 +33,7 @@ LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
 BACKEND_API_BASE_URL = "http://127.0.0.1:8000"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 URL_RE = re.compile(r"https?://[^\s]+")
+VITE_LOCAL_URL_RE = re.compile(r"Local:\s+(https?://[^\s]+)")
 MOJIBAKE_REPLACEMENTS = {
     "вЫє": "-",
     "вЫ ": "-",
@@ -409,6 +410,7 @@ class ManagedProcess:
         self.reader_thread: Optional[threading.Thread] = None
         self.stderr_thread: Optional[threading.Thread] = None
         self.last_return_code: Optional[int] = None
+        self.detected_url: Optional[str] = None
 
     def is_running(self) -> bool:
         return self.proc is not None and self.proc.poll() is None
@@ -418,6 +420,7 @@ class ManagedProcess:
         self.output_queue = queue.Queue()
         self.reader_thread = None
         self.stderr_thread = None
+        self.detected_url = None
 
 
 class ProcessControllerApp:
@@ -447,6 +450,7 @@ class ProcessControllerApp:
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
         self._status_snapshot: Optional[tuple[bool, bool]] = None
+        self._backend_api_healthy = False
 
         self._ui_job_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
         self._unified_log_in_flight = False
@@ -725,9 +729,17 @@ class ProcessControllerApp:
                     break
                 sanitized = self._sanitize_console_text(chunk)
                 if sanitized:
+                    self._capture_runtime_hints(managed, sanitized)
                     prefix = '[stderr] ' if channel == 'stderr' and not sanitized.startswith('[stderr] ') else ''
                     managed.console.append(prefix + sanitized, channel=channel)
         self.root.after(STREAM_POLL_MS, self._poll_process_output)
+
+    def _capture_runtime_hints(self, managed: ManagedProcess, text: str) -> None:
+        if managed.name != 'frontend':
+            return
+        match = VITE_LOCAL_URL_RE.search(text)
+        if match:
+            managed.detected_url = match.group(1).rstrip('/') + '/'
 
     def _stream_process_output(self, managed: ManagedProcess, stream_name: str) -> None:
         proc = managed.proc
@@ -769,13 +781,29 @@ class ProcessControllerApp:
         self.logger.log(level, "Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
         self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
 
+    def _probe_backend_api(self, timeout: float = 0.35) -> bool:
+        try:
+            self._request_debug_json('/api/settings/project', timeout=timeout)
+            return True
+        except Exception:
+            return False
+
     def _update_status_labels(self) -> None:
         backend_running = self.is_running(self.backend)
         frontend_running = self.is_running(self.frontend)
         self._report_unexpected_exit(self.backend)
         self._report_unexpected_exit(self.frontend)
-        self.backend_status.config(text="Backend: работает" if backend_running else "Backend: остановлен")
-        self.frontend_status.config(text="Frontend: работает" if frontend_running else "Frontend: остановлен")
+        self._backend_api_healthy = backend_running and self._probe_backend_api()
+        if backend_running:
+            backend_text = 'Backend: работает (API ok)' if self._backend_api_healthy else 'Backend: запущен, API ещё недоступен'
+        else:
+            backend_text = 'Backend: остановлен'
+        if frontend_running:
+            frontend_text = f"Frontend: работает ({self.frontend.detected_url})" if self.frontend.detected_url else 'Frontend: работает'
+        else:
+            frontend_text = 'Frontend: остановлен'
+        self.backend_status.config(text=backend_text)
+        self.frontend_status.config(text=frontend_text)
         self._set_status_snapshot(backend_running, frontend_running)
         self.root.after(POLL_INTERVAL_MS, self._update_status_labels)
 
@@ -1203,10 +1231,23 @@ class ProcessControllerApp:
         self.stop_frontend()
         self.root.after(RESTART_DELAY_MS, self.start_frontend)
 
+    def _start_frontend_after_backend_ready(self, attempts_remaining: int = 20) -> None:
+        if self.is_running(self.frontend):
+            return
+        if self._backend_api_healthy or self._probe_backend_api(timeout=0.4):
+            self.logger.info('Backend API уже отвечает, запускаю frontend без лишних proxy-ошибок.')
+            self.start_frontend()
+            return
+        if attempts_remaining <= 0:
+            self.logger.warning('Backend API не ответил вовремя, frontend будет запущен без дополнительного ожидания.')
+            self.start_frontend()
+            return
+        self.root.after(500, lambda: self._start_frontend_after_backend_ready(attempts_remaining - 1))
+
     def start_all(self) -> None:
-        self.logger.info("Запускаю backend и frontend вместе по команде Start All.")
+        self.logger.info("Запускаю backend, затем дождусь ответа API и только после этого подниму frontend.")
         self.start_backend()
-        self.start_frontend()
+        self._start_frontend_after_backend_ready()
 
     def stop_all(self) -> None:
         self.logger.info("Останавливаю все процессы, которые были запущены из панели и ещё активны.")
@@ -1214,7 +1255,7 @@ class ProcessControllerApp:
         self.stop_frontend()
 
     def restart_all(self) -> None:
-        self.logger.info("Перезапуск всех сервисов: сначала полная остановка, затем общий старт через %sms.", RESTART_ALL_DELAY_MS)
+        self.logger.info("Перезапуск всех сервисов: сначала полная остановка, затем backend и frontend будут подняты последовательно через %sms.", RESTART_ALL_DELAY_MS)
         self.stop_all()
         self.root.after(RESTART_ALL_DELAY_MS, self.start_all)
 
