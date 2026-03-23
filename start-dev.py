@@ -782,7 +782,7 @@ class ProcessControllerApp:
         self.logger.log(level, "Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
         self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
 
-    def _probe_backend_api(self, timeout: float = 0.35) -> bool:
+    def _probe_backend_api(self, timeout: float = 1.5) -> bool:
         try:
             self._request_debug_json('/api/settings/project', timeout=timeout)
             return True
@@ -1237,7 +1237,7 @@ class ProcessControllerApp:
         on_ready: Any,
         on_timeout: Any,
         *,
-        timeout_ms: int = 25000,
+        timeout_ms: int = 30000,
         poll_ms: int = 400,
     ) -> None:
         self._backend_wait_started_at = perf_counter()
@@ -1252,7 +1252,7 @@ class ProcessControllerApp:
                 return
 
             attempt += 1
-            if self._probe_backend_api(timeout=0.35):
+            if self._probe_backend_api(timeout=1.5):
                 self._backend_api_healthy = True
                 elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
                 self._backend_wait_started_at = None
