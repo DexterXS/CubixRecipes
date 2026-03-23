@@ -208,14 +208,17 @@ export default function App() {
   const [lastApiStatus, setLastApiStatus] = useState('idle');
   const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
+  const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
+  const autoParseTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
+  const lastRequestedParseRef = useRef('');
 
   const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
@@ -225,18 +228,21 @@ export default function App() {
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
+  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
 
   useEffect(() => {
     void (async () => {
       try {
         const nextSettings = await getProjectSettings();
         setSettings(nextSettings);
+        setBackendAvailable(true);
         const normalized = normalizeUiPreferences(nextSettings);
         if (!hasLocalUiChangesRef.current) {
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
       } catch {
+        setBackendAvailable(false);
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
       }
     })();
@@ -245,6 +251,9 @@ export default function App() {
   useEffect(() => () => {
     if (persistTimerRef.current !== null) {
       window.clearTimeout(persistTimerRef.current);
+    }
+    if (autoParseTimerRef.current !== null) {
+      window.clearTimeout(autoParseTimerRef.current);
     }
   }, []);
 
@@ -256,14 +265,23 @@ export default function App() {
       window.clearTimeout(persistTimerRef.current);
     }
     persistTimerRef.current = window.setTimeout(() => {
+      if (!backendAvailable) {
+        return;
+      }
       void (async () => {
         try {
           const response = await updateProjectUiPreferences(latestUiPreferencesRef.current);
+          setBackendAvailable(true);
           setSettings((current) => ({ ...(current ?? response), ...response }));
           setSaveStatus(createTranslator(latestUiPreferencesRef.current.language)('fields.layoutSaved'));
           logFrontendEvent({ level: 'INFO', category: 'LAYOUT', message: 'Workspace persisted', details: { columns: latestUiPreferencesRef.current.workspace_layout.columns, compact_header: latestUiPreferencesRef.current.workspace_layout.compact_header } });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Unknown error';
+          if (message.includes('Backend unavailable')) {
+            setBackendAvailable(false);
+            setStatus(message);
+            return;
+          }
           setStatus(`${createTranslator(latestUiPreferencesRef.current.language)('status.saveError')}: ${message}`);
         }
       })();
@@ -334,12 +352,33 @@ export default function App() {
     setLastParseResult(t('values.reset'));
   }
 
-  async function handleParse(value: string) {
-    setInput(value);
+  function isParseableInput(value: string) {
+    const trimmed = value.trim();
+    return trimmed.includes('.addShaped') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
+  }
+
+  function handleInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    setInput(event.target.value);
+  }
+
+  function handleInputPaste(event: ClipboardEvent<HTMLTextAreaElement>) {
+    const pasted = event.clipboardData.getData('text');
+    setInput(pasted);
+    event.preventDefault();
+  }
+
+  async function handleParse(value: string, options?: { syncInput?: boolean }) {
+    const syncInput = options?.syncInput ?? true;
+    const normalizedValue = value.trim();
+    if (syncInput) {
+      setInput(value);
+    }
+    lastRequestedParseRef.current = normalizedValue;
     setStatus(t('status.parsing'));
     setLastApiStatus(t('values.pending'));
     try {
       const result = await parseText(value);
+      setBackendAvailable(true);
       setLastApiStatus(t('values.ok'));
       if (result.recipe) {
         applyRecipe(result.recipe, value);
@@ -353,17 +392,53 @@ export default function App() {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`${t('status.parseError')}: ${message}`);
+      if (message.includes('Backend unavailable')) {
+        setBackendAvailable(false);
+        setStatus(message);
+      } else {
+        setStatus(`${t('status.parseError')}: ${message}`);
+      }
       setLastApiStatus(t('values.error'));
       setLastParseResult(message);
     }
   }
 
+  useEffect(() => {
+    const trimmed = input.trim();
+    if (!trimmed) {
+      lastRequestedParseRef.current = '';
+      if (autoParseTimerRef.current !== null) {
+        window.clearTimeout(autoParseTimerRef.current);
+        autoParseTimerRef.current = null;
+      }
+      return;
+    }
+    if (!isParseableInput(trimmed) || trimmed === lastRequestedParseRef.current) {
+      return;
+    }
+    if (autoParseTimerRef.current !== null) {
+      window.clearTimeout(autoParseTimerRef.current);
+    }
+    autoParseTimerRef.current = window.setTimeout(() => {
+      void handleParse(trimmed, { syncInput: false });
+    }, 250);
+    return () => {
+      if (autoParseTimerRef.current !== null) {
+        window.clearTimeout(autoParseTimerRef.current);
+        autoParseTimerRef.current = null;
+      }
+    };
+  }, [input]);
+
   async function handlePasteFromClipboard() {
     try {
       await handleParse(await navigator.clipboard.readText());
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Clipboard unavailable');
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      if (message.includes('Backend unavailable')) {
+        setBackendAvailable(false);
+      }
+      setStatus(message);
       setLastApiStatus(t('values.error'));
     }
   }
@@ -722,11 +797,16 @@ export default function App() {
                   <button type="button" className="ghost-button" onClick={() => setInput('')}>{t('toolbar.clear')}</button>
                 </div>
               </div>
-              <textarea aria-label="paste-input" value={input} onChange={(event) => setInput(event.target.value)} onPaste={(event) => {
-                const pasted = event.clipboardData.getData('text');
-                void handleParse(pasted);
-                event.preventDefault();
-              }} />
+              <textarea aria-label="paste-input" value={input} onChange={handleInputChange} onPaste={handleInputPaste} />
+              <div className={`inline-status inline-status-${inputStatusTone}`}>
+                <strong>{t('status.status')}:</strong>
+                <span>{status}</span>
+              </div>
+              {!backendAvailable ? (
+                <div className="inline-hint inline-hint-warning">
+                  FastAPI backend не запущен или недоступен по адресу <code>http://127.0.0.1:8000</code>. Запусти backend и повтори вставку.
+                </div>
+              ) : null}
             </Panel>
           </div>
         );

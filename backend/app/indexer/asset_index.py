@@ -223,10 +223,19 @@ class AssetIndex:
         missing = []
         for key, model in self.models.items():
             layer0 = (model.get('textures') or {}).get('layer0')
-            if not layer0:
+            if not isinstance(layer0, str):
                 continue
-            namespace, texture_name = layer0.split(':', 1)
-            texture_key = f'{namespace}:{texture_name}'
+            normalized = layer0.strip()
+            if not normalized or normalized.startswith('#'):
+                continue
+            if ':' in normalized:
+                namespace, texture_name = normalized.split(':', 1)
+                if not namespace or not texture_name:
+                    continue
+                texture_key = f'{namespace}:{texture_name}'
+            else:
+                item_namespace = key.split(':', 1)[0]
+                texture_key = f'{item_namespace}:{normalized}'
             if texture_key not in self.icons:
                 missing.append({'item_id': key, 'reason': 'model_texture_not_found', 'checked_key': texture_key})
         return missing

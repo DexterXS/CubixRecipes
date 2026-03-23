@@ -36,7 +36,20 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     verbose_only: true
   });
 
-  const response = await fetch(path, init);
+  let response: Response;
+  try {
+    response = await fetch(path, init);
+  } catch (error) {
+    const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
+    const message = `Backend unavailable for ${path}. Start FastAPI on http://127.0.0.1:8000 and try again.`;
+    logFrontendEvent({
+      level: 'ERROR',
+      category: 'API',
+      message: `${init?.method ?? 'GET'} ${path} network failure`,
+      details: { durationMs, payload: payloadPreview, error: error instanceof Error ? error.message : String(error) }
+    });
+    throw new Error(message);
+  }
   const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
 
   if (!response.ok) {

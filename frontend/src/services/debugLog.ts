@@ -9,6 +9,8 @@ export interface FrontendLogPayload {
 
 const recentEvents = new Map<string, number>();
 const DEDUP_WINDOW_MS = 1500;
+const DEBUG_ENDPOINT_MUTE_MS = 10000;
+let debugEndpointMutedUntil = 0;
 
 function safeStringify(value: unknown): string {
   try {
@@ -38,7 +40,7 @@ function shouldSkip(payload: FrontendLogPayload): boolean {
 }
 
 export function logFrontendEvent(payload: FrontendLogPayload): void {
-  if (shouldSkip(payload)) {
+  if (shouldSkip(payload) || debugEndpointMutedUntil > Date.now()) {
     return;
   }
   void fetch('/api/debug/log', {
@@ -53,6 +55,7 @@ export function logFrontendEvent(payload: FrontendLogPayload): void {
       verbose_only: payload.verbose_only ?? false
     })
   }).catch(() => {
+    debugEndpointMutedUntil = Date.now() + DEBUG_ENDPOINT_MUTE_MS;
     // debug logging must never break the app flow
   });
 }

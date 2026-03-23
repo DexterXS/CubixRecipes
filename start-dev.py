@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+from collections import deque
 import os
 import queue
 import re
@@ -24,6 +25,8 @@ from time import perf_counter
 
 POLL_INTERVAL_MS = 1000
 STREAM_POLL_MS = 120
+MAX_CONSOLE_LINES = 2500
+MAX_ACTION_LOG_LINES = 1200
 RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
@@ -93,26 +96,10 @@ class ProjectConfigStore:
         return []
 
 
-class TkTextHandler(logging.Handler):
-    def __init__(self, widget: ScrolledText) -> None:
-        super().__init__()
-        self.widget = widget
-        self.setFormatter(logging.Formatter(LOG_FORMAT, datefmt="%H:%M:%S"))
-
-    def emit(self, record: logging.LogRecord) -> None:
-        message = self.format(record)
-
-        def append() -> None:
-            self.widget.configure(state=tk.NORMAL)
-            self.widget.insert(tk.END, message + "\n")
-            self.widget.see(tk.END)
-            self.widget.configure(state=tk.DISABLED)
-
-        self.widget.after(0, append)
-
-
 class ConsolePane:
-    def __init__(self, parent: ttk.Notebook, title: str) -> None:
+    def __init__(self, parent: ttk.Notebook, title: str, max_lines: int = MAX_CONSOLE_LINES) -> None:
+        self.max_lines = max_lines
+        self._line_buffer: deque[str] = deque(maxlen=max_lines)
         self.frame = ttk.Frame(parent)
         parent.add(self.frame, text=title)
 
@@ -128,7 +115,7 @@ class ConsolePane:
         self.output = ScrolledText(
             self.frame,
             height=20,
-            state=tk.NORMAL,
+            state=tk.DISABLED,
             font=("Consolas", 9),
             wrap=tk.WORD,
             cursor="xterm",
@@ -137,6 +124,7 @@ class ConsolePane:
         )
         self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
         self.output.tag_configure("link", foreground="#1a73e8", underline=True)
+        self.output.tag_configure("stderr", foreground="#fca5a5")
         self.output.tag_bind("link", "<Button-1>", self._open_clicked_link)
         self.output.tag_bind("link", "<Enter>", lambda _event: self.output.config(cursor="hand2"))
         self.output.tag_bind("link", "<Leave>", lambda _event: self.output.config(cursor="xterm"))
@@ -145,22 +133,47 @@ class ConsolePane:
         self.output.bind("<Button-3>", self._copy_selection)
         self.output.bind("<Key>", self._block_edit_keys)
 
-    def append(self, text: str) -> None:
+    def append(self, text: str, *, channel: str = 'stdout') -> None:
         if not text:
             return
-        start_index = self.output.index(tk.END + "-1c")
-        self.output.insert(tk.END, text)
-        end_index = self.output.index(tk.END + "-1c")
-        self._tag_links(start_index, end_index)
+        lines = text.splitlines(keepends=True)
+        if not lines:
+            lines = [text]
+        for line in lines:
+            self._line_buffer.append(line)
+        self.output.configure(state=tk.NORMAL)
+        self.output.delete("1.0", tk.END)
+        start_offsets: list[tuple[int, int]] = []
+        cursor = 0
+        for line in self._line_buffer:
+            start_offsets.append((cursor, len(line)))
+            cursor += len(line)
+        full_text = ''.join(self._line_buffer)
+        self.output.insert(tk.END, full_text)
+        if channel == 'stderr':
+            # fallback for direct stderr-only append calls
+            self.output.tag_add('stderr', '1.0', tk.END)
+        self.output.tag_remove('stderr', '1.0', tk.END)
+        offset = 0
+        for line in self._line_buffer:
+            if line.startswith('[stderr] '):
+                self.output.tag_add('stderr', f'1.0+{offset}c', f'1.0+{offset + len(line)}c')
+            offset += len(line)
+        self._tag_links('1.0', tk.END)
         self.output.see(tk.END)
+        self.output.configure(state=tk.DISABLED)
 
-    def write_line(self, text: str) -> None:
-        self.append(text.rstrip("\n") + "\n")
+    def write_line(self, text: str, *, channel: str = 'stdout') -> None:
+        self.append(text.rstrip("\n") + "\n", channel=channel)
 
     def clear(self) -> None:
+        self._line_buffer.clear()
+        self.output.configure(state=tk.NORMAL)
         self.output.delete("1.0", tk.END)
+        self.output.configure(state=tk.DISABLED)
 
     def _tag_links(self, start_index: str, end_index: str) -> None:
+        self.output.tag_remove("link", start_index, end_index)
         block = self.output.get(start_index, end_index)
         for match in URL_RE.finditer(block):
             tag_start = f"{start_index}+{match.start()}c"
@@ -190,6 +203,33 @@ class ConsolePane:
         return "break"
 
 
+class ActionLogPane:
+    def __init__(self, parent: ttk.Notebook) -> None:
+        self._line_buffer: deque[str] = deque(maxlen=MAX_ACTION_LOG_LINES)
+        self.frame = ttk.Frame(parent)
+        parent.add(self.frame, text="Action Log")
+        tk.Label(self.frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
+        self.output = ScrolledText(self.frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
+        self.output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+
+    def append_line(self, text: str) -> None:
+        self._line_buffer.append(text.rstrip("\n"))
+        self.output.configure(state=tk.NORMAL)
+        self.output.delete("1.0", tk.END)
+        self.output.insert("1.0", "\n".join(self._line_buffer) + "\n")
+        self.output.see(tk.END)
+        self.output.configure(state=tk.DISABLED)
+
+
+class PanelLogHandler(logging.Handler):
+    def __init__(self, app: 'ProcessControllerApp') -> None:
+        super().__init__()
+        self.app = app
+        self.setFormatter(logging.Formatter(LOG_FORMAT, datefmt="%H:%M:%S"))
+
+    def emit(self, record: logging.LogRecord) -> None:
+        message = self.format(record)
+        self.app.root.after(0, lambda: self.app.action_log_pane.append_line(message))
 
 
 class DebugPane:
@@ -365,8 +405,9 @@ class ManagedProcess:
         self.directory = directory
         self.console = console
         self.proc: Optional[subprocess.Popen[str]] = None
-        self.output_queue: queue.Queue[str] = queue.Queue()
+        self.output_queue: queue.Queue[tuple[str, str]] = queue.Queue()
         self.reader_thread: Optional[threading.Thread] = None
+        self.stderr_thread: Optional[threading.Thread] = None
         self.last_return_code: Optional[int] = None
 
     def is_running(self) -> bool:
@@ -376,6 +417,7 @@ class ManagedProcess:
         self.console.clear()
         self.output_queue = queue.Queue()
         self.reader_thread = None
+        self.stderr_thread = None
 
 
 class ProcessControllerApp:
@@ -394,7 +436,7 @@ class ProcessControllerApp:
 
         self.backend_status: tk.Label
         self.frontend_status: tk.Label
-        self.log_output: ScrolledText
+        self.action_log_pane: ActionLogPane
         self.notebook: ttk.Notebook
         self.settings_vars: dict[str, tk.StringVar] = {}
         self.validation_labels: dict[str, tk.Label] = {}
@@ -470,11 +512,7 @@ class ProcessControllerApp:
         self.debug_pane = DebugPane(self.notebook)
         self.full_log_pane = UnifiedLogPane(self.notebook)
         self._create_settings_tab()
-        log_frame = ttk.Frame(self.notebook)
-        self.notebook.add(log_frame, text="Action Log")
-        tk.Label(log_frame, text="Журнал действий панели", font=("Arial", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 6))
-        self.log_output = ScrolledText(log_frame, height=12, state=tk.DISABLED, font=("Consolas", 9))
-        self.log_output.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
+        self.action_log_pane = ActionLogPane(self.notebook)
         self.debug_pane.refresh_button.configure(command=self.refresh_debug_info)
         self.debug_pane.rescan_recipes_button.configure(command=self.rescan_debug_recipes)
         self.debug_pane.rescan_assets_button.configure(command=self.rescan_debug_assets)
@@ -552,7 +590,7 @@ class ProcessControllerApp:
     def _configure_logging(self) -> None:
         if self.logger.handlers:
             self.logger.handlers.clear()
-        self.logger.addHandler(TkTextHandler(self.log_output))
+        self.logger.addHandler(PanelLogHandler(self))
 
     def _apply_loaded_settings_to_form(self) -> None:
         self.settings_vars["scripts_dir"].set(self.project_config.scripts_dir)
@@ -682,24 +720,29 @@ class ProcessControllerApp:
         for managed in self.managed_processes:
             while True:
                 try:
-                    chunk = managed.output_queue.get_nowait()
+                    channel, chunk = managed.output_queue.get_nowait()
                 except queue.Empty:
                     break
                 sanitized = self._sanitize_console_text(chunk)
                 if sanitized:
-                    managed.console.append(sanitized)
+                    prefix = '[stderr] ' if channel == 'stderr' and not sanitized.startswith('[stderr] ') else ''
+                    managed.console.append(prefix + sanitized, channel=channel)
         self.root.after(STREAM_POLL_MS, self._poll_process_output)
 
-    def _stream_process_output(self, managed: ManagedProcess) -> None:
+    def _stream_process_output(self, managed: ManagedProcess, stream_name: str) -> None:
         proc = managed.proc
-        if proc is None or proc.stdout is None:
+        if proc is None:
+            return
+        stream = proc.stdout if stream_name == 'stdout' else proc.stderr
+        if stream is None:
             return
         try:
-            for line in proc.stdout:
-                managed.output_queue.put(line)
+            for line in iter(stream.readline, ''):
+                if not line:
+                    break
+                managed.output_queue.put((stream_name, line))
         finally:
-            if proc.stdout is not None:
-                proc.stdout.close()
+            stream.close()
 
     def is_running(self, managed: ManagedProcess) -> bool:
         return managed.is_running()
@@ -722,7 +765,8 @@ class ProcessControllerApp:
         if return_code is None or return_code == managed.last_return_code:
             return
         managed.last_return_code = return_code
-        self.logger.warning("Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
+        level = logging.INFO if return_code == 0 else logging.WARNING
+        self.logger.log(level, "Процесс %s завершился с кодом %s. Подробности смотри во вкладке %s.", managed.name, return_code, managed.console.frame.master.tab(managed.console.frame, 'text'))
         self._write_process_line(managed, f"\n[process exited with code {return_code}]\n")
 
     def _update_status_labels(self) -> None:
@@ -1059,6 +1103,7 @@ class ProcessControllerApp:
     def _build_process_env(self) -> dict[str, str]:
         env = os.environ.copy()
         env.setdefault("PYTHONIOENCODING", "utf-8")
+        env.setdefault("PYTHONUNBUFFERED", "1")
         env["FORCE_COLOR"] = "0"
         env["NO_COLOR"] = "1"
         env["CLICOLOR"] = "0"
@@ -1084,7 +1129,7 @@ class ProcessControllerApp:
                 cwd=managed.directory,
                 shell=use_shell,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
+                stderr=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 text=True,
                 bufsize=1,
@@ -1092,8 +1137,10 @@ class ProcessControllerApp:
                 errors="replace",
                 env=self._build_process_env(),
             )
-            managed.reader_thread = threading.Thread(target=self._stream_process_output, args=(managed,), daemon=True)
+            managed.reader_thread = threading.Thread(target=self._stream_process_output, args=(managed, 'stdout'), daemon=True)
+            managed.stderr_thread = threading.Thread(target=self._stream_process_output, args=(managed, 'stderr'), daemon=True)
             managed.reader_thread.start()
+            managed.stderr_thread.start()
             self.logger.info("%s успешно запущен (pid=%s). Вывод доступен во вкладке %s.", managed.name.capitalize(), managed.proc.pid, managed.console.frame.master.tab(managed.console.frame, 'text'))
         except OSError as error:
             managed.proc = None
