@@ -5,6 +5,13 @@ from pathlib import Path
 from app.api.routes import create_app
 
 
+def test_health_endpoint_is_available(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    health_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/health')
+
+    assert health_route() == {'ok': True}
+
+
 def test_save_as_accepts_generated_recipe(tmp_path: Path):
     app = create_app(str(tmp_path))
     save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')

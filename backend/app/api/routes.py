@@ -382,5 +382,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         return JSONResponse({'icon_asset_id': icon_asset_id, 'note': 'MVP placeholder: static icon proxy not implemented in tests'})
 
     app = FastAPI(title='CubixRecipes API')
+
+    @app.get('/health')
+    def health_check():
+        return {'ok': True}
+
     app.include_router(router)
     return app

@@ -31,6 +31,8 @@ RESTART_DELAY_MS = 500
 RESTART_ALL_DELAY_MS = 700
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(message)s"
 BACKEND_API_BASE_URL = "http://127.0.0.1:8000"
+BACKEND_HEALTH_URL = f"{BACKEND_API_BASE_URL}/health"
+BACKEND_PANEL_RELOAD = os.environ.get("CUBIXRECIPES_PANEL_BACKEND_RELOAD", "0") == "1"
 ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\-_]|\[[0-?]*[ -/]*[@-~])")
 URL_RE = re.compile(r"https?://[^\s]+")
 VITE_LOCAL_URL_RE = re.compile(r"Local:\s+(https?://[^\s]+)")
@@ -784,7 +786,9 @@ class ProcessControllerApp:
 
     def _probe_backend_api(self, timeout: float = 1.5) -> bool:
         try:
-            self._request_debug_json('/api/settings/project', timeout=timeout)
+            with urlopen(BACKEND_HEALTH_URL, timeout=timeout) as response:
+                payload = json.loads(response.read().decode('utf-8') or '{}')
+                return response.status == 200 and bool(payload.get('ok'))
             return True
         except Exception:
             return False
@@ -810,7 +814,10 @@ class ProcessControllerApp:
 
     def _build_backend_command(self) -> tuple[Union[list[str], str], bool]:
         python_executable = self._select_backend_python()
-        return [python_executable, "-m", "uvicorn", "app.main:app", "--reload"], False
+        command = [python_executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8000"]
+        if BACKEND_PANEL_RELOAD:
+            command.append("--reload")
+        return command, False
 
     def _build_frontend_command(self) -> tuple[Union[list[str], str], bool]:
         if os.name == "nt":
@@ -1159,7 +1166,7 @@ class ProcessControllerApp:
                 shell=use_shell,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                stdin=subprocess.PIPE,
+                stdin=subprocess.DEVNULL,
                 text=True,
                 bufsize=1,
                 encoding="utf-8",
@@ -1176,12 +1183,24 @@ class ProcessControllerApp:
             self.logger.exception("Не удалось запустить %s: %s", managed.name, error)
             messagebox.showerror("Ошибка запуска", f"Не удалось запустить {managed.name}:\n{error}")
 
-    def start_backend(self) -> None:
+    def start_backend(self, wait_for_health: bool = True) -> None:
         if not self._validate_backend_setup():
             return
         command, use_shell = self._build_backend_command()
         self.notebook.select(self.backend_console.frame)
         self._start_process(self.backend, command, use_shell)
+        if not self.is_running(self.backend) or not wait_for_health:
+            return
+
+        def on_ready() -> None:
+            self.logger.info('Backend health-check подтвердил доступность %s.', BACKEND_HEALTH_URL)
+
+        def on_timeout(error: Exception) -> None:
+            self.logger.error('Backend процесс запущен, но health-check не поднялся: %s', error)
+            self._write_process_line(self.backend, f'[health-check failed] {error}\n')
+            messagebox.showerror('Backend startup failed', f'Backend процесс стартовал, но endpoint {BACKEND_HEALTH_URL} не ответил вовремя.\nПроверь backend console.')
+
+        self._wait_for_backend_ready(on_ready, on_timeout)
 
     def start_frontend(self) -> None:
         if not self._validate_frontend_setup():
@@ -1262,7 +1281,7 @@ class ProcessControllerApp:
 
             elapsed_ms = round((perf_counter() - (self._backend_wait_started_at or perf_counter())) * 1000)
             if attempt == 1 or attempt % 5 == 0:
-                self.logger.info('Ожидание backend API: попытка %s, elapsed=%sms, endpoint=%s/api/settings/project', attempt, elapsed_ms, BACKEND_API_BASE_URL)
+                self.logger.info('Ожидание backend API: попытка %s, elapsed=%sms, endpoint=%s', attempt, elapsed_ms, BACKEND_HEALTH_URL)
             if elapsed_ms >= timeout_ms:
                 self._backend_wait_started_at = None
                 on_timeout(RuntimeError(f'Backend API did not become ready within {timeout_ms}ms.'))
@@ -1272,8 +1291,8 @@ class ProcessControllerApp:
         poll()
 
     def start_all(self) -> None:
-        self.logger.info("Запускаю backend, затем жду HTTP-готовности /api/settings/project и только после этого поднимаю frontend.")
-        self.start_backend()
+        self.logger.info("Запускаю backend, затем жду HTTP-готовности /health и только после этого поднимаю frontend.")
+        self.start_backend(wait_for_health=False)
 
         def on_ready() -> None:
             self.start_frontend()
@@ -1281,7 +1300,7 @@ class ProcessControllerApp:
         def on_timeout(error: Exception) -> None:
             self.logger.error('Frontend не будет запущен автоматически: %s', error)
             self._write_process_line(self.backend, f'[startup wait failed] {error}\n')
-            messagebox.showerror('Start All', 'Backend не успел поднять API, поэтому frontend не был запущен автоматически.\nПроверь backend console и повтори запуск.')
+            messagebox.showerror('Start All', f'Backend не успел поднять health-check {BACKEND_HEALTH_URL}, поэтому frontend не был запущен автоматически.\nПроверь backend console и повтори запуск.')
 
         self._wait_for_backend_ready(on_ready, on_timeout)
 
