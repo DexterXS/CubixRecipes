@@ -277,3 +277,23 @@ test('shows backend unavailable inline message when parse request cannot reach a
   await waitFor(() => expect(screen.getByText(/Backend unavailable for \/api\/parse/)).toBeTruthy());
   expect(screen.getByText(/FastAPI backend не запущен/)).toBeTruthy();
 });
+
+
+test('mutes repeated debug log attempts after backend network failure', async () => {
+  let debugCalls = 0;
+  (global.fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation((input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input);
+    if (url === '/api/debug/log') {
+      debugCalls += 1;
+      return Promise.reject(new TypeError('Failed to fetch'));
+    }
+    if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
+      return Promise.reject(new TypeError('Failed to fetch'));
+    }
+    throw new Error(`Unexpected fetch call: ${url}`);
+  });
+
+  render(<App />);
+  await waitFor(() => expect(screen.getByText(/Не удалось загрузить UI-настройки/)).toBeTruthy());
+  expect(debugCalls).toBe(1);
+});

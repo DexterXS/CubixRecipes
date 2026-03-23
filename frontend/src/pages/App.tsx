@@ -208,6 +208,7 @@ export default function App() {
   const [lastApiStatus, setLastApiStatus] = useState('idle');
   const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
+  const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
@@ -227,19 +228,21 @@ export default function App() {
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
-  const inputStatusTone = lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
+  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
 
   useEffect(() => {
     void (async () => {
       try {
         const nextSettings = await getProjectSettings();
         setSettings(nextSettings);
+        setBackendAvailable(true);
         const normalized = normalizeUiPreferences(nextSettings);
         if (!hasLocalUiChangesRef.current) {
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
       } catch {
+        setBackendAvailable(false);
         setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
       }
     })();
@@ -262,14 +265,23 @@ export default function App() {
       window.clearTimeout(persistTimerRef.current);
     }
     persistTimerRef.current = window.setTimeout(() => {
+      if (!backendAvailable) {
+        return;
+      }
       void (async () => {
         try {
           const response = await updateProjectUiPreferences(latestUiPreferencesRef.current);
+          setBackendAvailable(true);
           setSettings((current) => ({ ...(current ?? response), ...response }));
           setSaveStatus(createTranslator(latestUiPreferencesRef.current.language)('fields.layoutSaved'));
           logFrontendEvent({ level: 'INFO', category: 'LAYOUT', message: 'Workspace persisted', details: { columns: latestUiPreferencesRef.current.workspace_layout.columns, compact_header: latestUiPreferencesRef.current.workspace_layout.compact_header } });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Unknown error';
+          if (message.includes('Backend unavailable')) {
+            setBackendAvailable(false);
+            setStatus(message);
+            return;
+          }
           setStatus(`${createTranslator(latestUiPreferencesRef.current.language)('status.saveError')}: ${message}`);
         }
       })();
@@ -366,6 +378,7 @@ export default function App() {
     setLastApiStatus(t('values.pending'));
     try {
       const result = await parseText(value);
+      setBackendAvailable(true);
       setLastApiStatus(t('values.ok'));
       if (result.recipe) {
         applyRecipe(result.recipe, value);
@@ -379,7 +392,12 @@ export default function App() {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setStatus(`${t('status.parseError')}: ${message}`);
+      if (message.includes('Backend unavailable')) {
+        setBackendAvailable(false);
+        setStatus(message);
+      } else {
+        setStatus(`${t('status.parseError')}: ${message}`);
+      }
       setLastApiStatus(t('values.error'));
       setLastParseResult(message);
     }
@@ -416,7 +434,11 @@ export default function App() {
     try {
       await handleParse(await navigator.clipboard.readText());
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Clipboard unavailable');
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      if (message.includes('Backend unavailable')) {
+        setBackendAvailable(false);
+      }
+      setStatus(message);
       setLastApiStatus(t('values.error'));
     }
   }
@@ -780,7 +802,7 @@ export default function App() {
                 <strong>{t('status.status')}:</strong>
                 <span>{status}</span>
               </div>
-              {lastApiStatus === t('values.error') && status.includes('Backend unavailable') ? (
+              {!backendAvailable ? (
                 <div className="inline-hint inline-hint-warning">
                   FastAPI backend не запущен или недоступен по адресу <code>http://127.0.0.1:8000</code>. Запусти backend и повтори вставку.
                 </div>
