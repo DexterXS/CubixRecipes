@@ -5,6 +5,7 @@ interface Props {
   matrix: { raw: CellValue; resolution?: ResolutionView | null }[][];
   displayMode: DisplayMode;
   editorMode: EditorMode;
+  animateIcons: boolean;
   onCellChange: (row: number, col: number, value: string) => void;
   onCellCopy: (row: number, col: number) => void;
   onCellPaste: (row: number, col: number) => void;
@@ -13,7 +14,7 @@ interface Props {
   onIconClick: (row: number, col: number) => void;
 }
 
-export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, onCellCopy, onCellPaste, onCellClear, resolveCellTitle, onIconClick }: Props) {
+export function RecipeGrid({ matrix, displayMode, editorMode, animateIcons, onCellChange, onCellCopy, onCellPaste, onCellClear, resolveCellTitle, onIconClick }: Props) {
   const size = Math.max(matrix.length, matrix[0]?.length ?? 0, 1);
   const cellClass = size >= 9 ? 'grid-cell size-9' : size >= 5 ? 'grid-cell size-5' : 'grid-cell size-3';
 
@@ -45,7 +46,7 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, onCe
               >
                 <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                   {displayMode === 'icons' && iconUrl
-                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} block3d={isBlockLike && !cell.resolution?.animated} />
+                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} block3d={isBlockLike && !cell.resolution?.animated} enableAnimation={animateIcons} />
                     : <span aria-hidden="true">{displayMode === 'icons' ? '?' : '□'}</span>}
                 </button>
                 <div className="cell-mini-actions">

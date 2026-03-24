@@ -230,6 +230,7 @@ export default function App() {
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map() });
+  const [animateIcons, setAnimateIcons] = useState(true);
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -996,7 +997,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
                 <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
-                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} block3d={outputIsBlockLike && !recipe.output_resolution.animated} /> : <span>?</span>}
+                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} block3d={outputIsBlockLike && !recipe.output_resolution.animated} enableAnimation={animateIcons} /> : <span>?</span>}
                 </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
@@ -1026,6 +1027,7 @@ export default function App() {
                   matrix={matrixWithResolution}
                   displayMode={uiPreferences.display_mode}
                   editorMode={uiPreferences.editor_mode}
+                  animateIcons={animateIcons}
                   resolveCellTitle={resolveCellTitle}
                   onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })}
                   onCellCopy={(row, col) => void handleCellCopy(row, col)}
@@ -1047,6 +1049,7 @@ export default function App() {
                 <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
                 <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
                 <label className="field-block"><span>{t('fields.displayMode')}</span><select value={uiPreferences.display_mode} onChange={(event) => patchUiPreferences({ display_mode: event.target.value as DisplayMode })}><option value="text">text</option><option value="icons">icons</option></select></label>
+                <label className="field-block"><span>Анимация иконок</span><input type="checkbox" checked={animateIcons} onChange={() => setAnimateIcons((value) => !value)} /></label>
                 <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
                 <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
               </div>

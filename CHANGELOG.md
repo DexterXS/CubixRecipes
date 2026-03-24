@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Resolver now prefers `textures/items` icon candidates over `textures/blocks` when both exist for the same key, so inventory-style item textures are chosen first.
+- Added UI setting toggle to enable/disable icon animation, and when animation is disabled animated sprites now render as a static first-frame preview instead of a vertically stacked strip.
 - Added a dedicated resolver fallback for `<Avaritia:Resource_Block:meta>` so meta variants like `<Avaritia:Resource_Block:1>` can resolve via `blocks/resource_block_<meta>.png` aliases when present.
 - Added optional pseudo-3D block icon rendering in frontend (isometric CSS transform + shaded faces) for block-like ids to improve visual depth over flat sprites.
 - Simplified recipe grid cells for icon-first editing: removed redundant in-cell text labels, expanded icon to nearly full cell area, and added compact per-cell `copy/paste/clear` symbol actions under each icon.

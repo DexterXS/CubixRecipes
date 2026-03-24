@@ -60,7 +60,7 @@ class ItemResolver:
         return self._make_result(item_ref, candidates[:1], 0.95, 'contenttweaker_exact', trace)
 
     def _textures_exact(self, item_ref, key, settings, trace, checked_keys, checked_sources):
-        candidates = self.asset_index.icons.get(key, [])
+        candidates = self._prefer_inventory_candidates(self.asset_index.icons.get(key, []))
         trace.append({'strategy': 'textures_exact', 'checked': len(candidates)})
         checked_sources.extend([c['source_type'] for c in candidates])
         return self._make_result(item_ref, candidates[:1], 0.9, 'textures_exact', trace)
@@ -72,7 +72,7 @@ class ItemResolver:
         suffixes = [f'{item_ref.base_key}_{item_ref.meta_value}', f'{item_ref.base_key}{item_ref.meta_value}']
         checked_keys.extend(suffixes)
         for suffix in suffixes:
-            candidates = self.asset_index.icons.get(suffix, [])
+            candidates = self._prefer_inventory_candidates(self.asset_index.icons.get(suffix, []))
             if candidates:
                 checked_sources.extend([c['source_type'] for c in candidates])
                 trace.append({'strategy': 'textures_meta_suffix', 'matched': suffix})
@@ -105,7 +105,7 @@ class ItemResolver:
             if candidates:
                 checked_sources.extend([c['source_type'] for c in candidates])
                 trace.append({'strategy': 'avaritia_resource_block_meta', 'matched': alias})
-                return self._make_result(item_ref, candidates[:1], 0.86, 'avaritia_resource_block_meta', trace)
+                return self._make_result(item_ref, self._prefer_inventory_candidates(candidates)[:1], 0.86, 'avaritia_resource_block_meta', trace)
         trace.append({'strategy': 'avaritia_resource_block_meta', 'matched': None})
         return None
 
@@ -175,6 +175,18 @@ class ItemResolver:
         icon_asset_id = candidate['asset_id']
         icon_url = f"/api/icons/{quote(icon_asset_id, safe='')}"
         return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get('display_name') or item_ref.raw, icon_asset_id=icon_asset_id, icon_url=icon_url, animated=candidate.get('animated', False), animation_meta=candidate.get('animation_meta'), confidence=confidence, strategy=strategy, trace=list(trace))
+
+    def _prefer_inventory_candidates(self, candidates):
+        def rank(candidate):
+            path = str(candidate.get('path') or '').lower()
+            if '/textures/items/' in path or '/textures/item/' in path:
+                return 0
+            if '/models/item/' in path:
+                return 1
+            if '/textures/blocks/' in path or '/textures/block/' in path:
+                return 2
+            return 3
+        return sorted(list(candidates), key=rank)
 
     def _extract_source_from_asset_id(self, icon_asset_id: Optional[str]) -> Optional[str]:
         if not icon_asset_id:

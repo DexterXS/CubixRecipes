@@ -104,3 +104,14 @@ def test_avaritia_resource_block_meta_alias_strategy():
     result = resolver.resolve(item)
     assert result.strategy == 'avaritia_resource_block_meta'
     assert result.icon_asset_id == 'jar:avaritia_resource_block_meta_1'
+
+
+def test_textures_exact_prefers_item_texture_over_block_texture():
+    index = AssetIndex()
+    index.register_icon('demo:blockish', {'asset_id': 'jar:block', 'path': 'assets/demo/textures/blocks/blockish.png', 'source_type': 'jar', 'animated': False})
+    index.register_icon('demo:blockish', {'asset_id': 'jar:item', 'path': 'assets/demo/textures/items/blockish.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<demo:blockish>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'textures_exact'
+    assert result.icon_asset_id == 'jar:item'

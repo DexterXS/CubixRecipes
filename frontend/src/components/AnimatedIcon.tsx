@@ -6,9 +6,10 @@ interface Props {
   animated?: boolean;
   frameTime?: number;
   block3d?: boolean;
+  enableAnimation?: boolean;
 }
 
-export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, block3d = false }: Props) {
+export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, block3d = false, enableAnimation = true }: Props) {
   const [frameCount, setFrameCount] = useState(1);
 
   useEffect(() => {
@@ -31,7 +32,9 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, bl
     return Math.max(300, frameCount * ticks * 50);
   }, [frameCount, frameTime]);
 
-  if (!animated || frameCount <= 1) {
+  const shouldAnimate = enableAnimation && animated && frameCount > 1;
+
+  if (!shouldAnimate) {
     if (block3d) {
       const style = { ['--icon-url' as string]: `url(${iconUrl})` };
       return (
@@ -41,6 +44,9 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, bl
           <span className="icon-3d-face icon-3d-face-side" />
         </span>
       );
+    }
+    if (animated && frameCount > 1) {
+      return <span className="static-icon-frame" style={{ backgroundImage: `url(${iconUrl})` }} role="img" aria-label={alt} />;
     }
     return <img src={iconUrl} alt={alt} />;
   }
