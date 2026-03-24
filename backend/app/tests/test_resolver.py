@@ -115,3 +115,21 @@ def test_textures_exact_prefers_item_texture_over_block_texture():
     result = resolver.resolve(item)
     assert result.strategy == 'textures_exact'
     assert result.icon_asset_id == 'jar:item'
+
+
+def test_avaritia_resource_block_named_fallback_uses_crystal_matrix_for_meta_1():
+    index = AssetIndex()
+    index.register_icon(
+        'avaritia:block_crystal_matrix',
+        {
+            'asset_id': 'jar:avaritia_crystal_block',
+            'path': 'assets/avaritia/textures/blocks/block_crystal_matrix.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource_Block:1>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'avaritia_resource_block_named_fallback'
+    assert result.icon_asset_id == 'jar:avaritia_crystal_block'

@@ -24,6 +24,7 @@ class ItemResolver:
             self._textures_exact,
             self._textures_meta_suffix,
             self._avaritia_resource_block_meta,
+            self._avaritia_resource_block_named_fallback,
             self._grouped_files,
             self._model_texture,
             self._block_texture,
@@ -108,6 +109,36 @@ class ItemResolver:
                 return self._make_result(item_ref, self._prefer_inventory_candidates(candidates)[:1], 0.86, 'avaritia_resource_block_meta', trace)
         trace.append({'strategy': 'avaritia_resource_block_meta', 'matched': None})
         return None
+
+    def _avaritia_resource_block_named_fallback(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        if item_ref.modid != 'avaritia' or item_ref.name != 'resource_block':
+            trace.append({'strategy': 'avaritia_resource_block_named_fallback', 'checked': 0})
+            return None
+        meta_tokens = {
+            0: ['neutronium', 'neutron'],
+            1: ['crystal_matrix', 'crystal', 'matrix'],
+        }
+        tokens = meta_tokens.get(item_ref.meta_value, [])
+        matched_candidates = []
+        matched_keys = []
+        for icon_key, values in self.asset_index.icons.items():
+            if not icon_key.startswith('avaritia:'):
+                continue
+            lowered_key = icon_key.lower()
+            if 'block' not in lowered_key:
+                continue
+            if tokens and not any(token in lowered_key for token in tokens):
+                continue
+            matched_keys.append(icon_key)
+            matched_candidates.extend(values)
+        if not matched_candidates:
+            trace.append({'strategy': 'avaritia_resource_block_named_fallback', 'matched': None})
+            return None
+        checked_keys.extend(matched_keys[:12])
+        preferred = self._prefer_inventory_candidates(matched_candidates)
+        checked_sources.extend([c['source_type'] for c in preferred[:1]])
+        trace.append({'strategy': 'avaritia_resource_block_named_fallback', 'matched': preferred[0].get('path')})
+        return self._make_result(item_ref, preferred[:1], 0.7, 'avaritia_resource_block_named_fallback', trace)
 
     def _model_texture(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         model = self.asset_index.models.get(key)

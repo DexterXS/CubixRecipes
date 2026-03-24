@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Added an additional Avaritia `Resource_Block` fallback strategy that maps meta variants by semantic key tokens (e.g. `meta=1` → crystal-matrix-like block textures) when direct numeric keys are absent.
 - Resolver now prefers `textures/items` icon candidates over `textures/blocks` when both exist for the same key, so inventory-style item textures are chosen first.
 - Added UI setting toggle to enable/disable icon animation, and when animation is disabled animated sprites now render as a static first-frame preview instead of a vertically stacked strip.
 - Added a dedicated resolver fallback for `<Avaritia:Resource_Block:meta>` so meta variants like `<Avaritia:Resource_Block:1>` can resolve via `blocks/resource_block_<meta>.png` aliases when present.
