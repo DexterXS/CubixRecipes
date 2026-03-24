@@ -77,8 +77,7 @@ const defaultRecipe: RecipeView = {
 };
 
 type ItemPanelTranslations = {
-  exact: Map<string, string>;
-  fallback: Map<string, string>;
+  byKey: Map<string, string>;
 };
 
 type CraftEditorTarget =
@@ -93,10 +92,10 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
 }
 
-function parseItemRaw(raw: string): { key: string; meta: string } | null {
+function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean } | null {
   const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
   if (!match) return null;
-  return { key: match[1].toLowerCase(), meta: (match[2] ?? '0').toLowerCase() };
+  return { key: match[1].toLowerCase(), wildcardMeta: (match[2] ?? '').toLowerCase() === '*' };
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -233,7 +232,7 @@ export default function App() {
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
-  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ exact: new Map(), fallback: new Map() });
+  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map() });
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -327,25 +326,20 @@ export default function App() {
         const decoder = new TextDecoder('windows-1251');
         const text = decoder.decode(bytes);
         const lines = text.split(/\r?\n/).slice(1);
-        const exact = new Map<string, string>();
-        const fallback = new Map<string, string>();
+        const byKey = new Map<string, string>();
         lines.forEach((line) => {
           if (!line.trim()) return;
           const parts = line.split(',');
           if (parts.length < 5) return;
           const key = parts[0]?.trim().toLowerCase();
-          const meta = parts[2]?.trim().toLowerCase() || '0';
           const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
           if (!key) return;
           if (display && display !== '-' && display !== '- ') {
-            exact.set(`${key}:${meta}`, display);
-            if (!fallback.has(key)) {
-              fallback.set(key, display);
-            }
+            byKey.set(key, display);
           }
         });
         if (!cancelled) {
-          setItemPanelTranslations({ exact, fallback });
+          setItemPanelTranslations({ byKey });
         }
       } catch {
         // optional source
@@ -457,11 +451,11 @@ export default function App() {
     if (!parsed) {
       return raw;
     }
-    return itemPanelTranslations.exact.get(`${parsed.key}:${parsed.meta}`)
-      ?? itemPanelTranslations.exact.get(`${parsed.key}:1`)
-      ?? itemPanelTranslations.exact.get(`${parsed.key}:0`)
-      ?? itemPanelTranslations.fallback.get(parsed.key)
-      ?? raw;
+    const display = itemPanelTranslations.byKey.get(parsed.key);
+    if (!display) {
+      return raw;
+    }
+    return parsed.wildcardMeta ? `${display}*` : display;
   }
 
   const outputDisplayName = useMemo(() => {
