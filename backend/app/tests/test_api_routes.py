@@ -237,6 +237,102 @@ def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources
     assert any(entry['item_raw'] == '<examplemod:seed>' and entry['checked_sources'] for entry in resolver_payload['entries'])
 
 
+def test_icon_proxy_streams_binary_from_indexed_archive(tmp_path: Path):
+    mods_dir = tmp_path / 'mods'
+    mods_dir.mkdir()
+    archive_path = mods_dir / 'examplemod.jar'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.writestr('assets/examplemod/textures/items/seed.png', b'png-binary')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    resolve_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/resolve')
+    icon_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/icons/{icon_asset_id:path}')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': 'scripts',
+                    'mods_dir': str(mods_dir),
+                    'assets_dir': '',
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [],
+                    'extra_recipe_sources': [],
+                }
+            },
+        )()
+    )
+    resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<examplemod:seed>', 'settings': {}})())
+    encoded_asset_id = resolved['icon_url'].split('/api/icons/', 1)[1]
+    response = icon_route(encoded_asset_id)
+
+    assert response.media_type == 'image/png'
+    assert response.body == b'png-binary'
+    assert '%' in resolved['icon_url']
+
+
+def test_asset_scan_registers_icons_from_mods_json_tree(tmp_path: Path):
+    manifest_path = tmp_path / 'examplemod.jar.json'
+    manifest_payload = {
+        'mod_name': 'examplemod',
+        'mod_path': str(tmp_path / 'mods' / 'examplemod.jar'),
+        'mod_type': 'jar',
+        'tree': {
+            'assets': {
+                'type': 'directory',
+                'children': {
+                    'examplemod': {
+                        'type': 'directory',
+                        'children': {
+                            'textures': {
+                                'type': 'directory',
+                                'children': {
+                                    'items': {
+                                        'type': 'directory',
+                                        'children': {
+                                            'seed.png': {'type': 'file', 'extension': '.png', 'size': 10},
+                                            'seed.png.mcmeta': {'type': 'file', 'extension': '.mcmeta', 'size': 10},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+        },
+    }
+    manifest_path.write_text(json.dumps(manifest_payload), encoding='utf-8')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/settings/project' and 'PUT' in getattr(route, 'methods', set()))
+    resolve_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/resolve')
+
+    put_route(
+        type(
+            'SettingsRequest',
+            (),
+            {
+                'model_dump': lambda self=None: {
+                    'scripts_dir': 'scripts',
+                    'mods_dir': '',
+                    'assets_dir': '',
+                    'recipe_db_path': '',
+                    'extra_icon_sources': [str(tmp_path)],
+                    'extra_recipe_sources': [],
+                }
+            },
+        )()
+    )
+    resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<examplemod:seed>', 'settings': {}})())
+
+    assert resolved['icon_asset_id'] is not None
+    assert resolved['animated'] is True
+
+
 def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
     config_path = tmp_path / 'cubixrecipes.config.json'
     app = create_app(config_path=str(config_path))
@@ -297,4 +393,3 @@ def test_parse_route_tolerates_invalid_model_texture_reference(tmp_path: Path):
     assert response['kind'] == 'recipe'
     assert response['recipe']['output']['raw'] == '<energyadditions:easolartype10>'
     assert response['recipe']['output_resolution']['strategy'] == 'placeholder'
-

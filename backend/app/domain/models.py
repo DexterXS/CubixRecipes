@@ -68,6 +68,7 @@ class ResolutionResult:
     icon_asset_id: Optional[str]
     icon_url: Optional[str]
     animated: bool
+    animation_meta: Optional[dict[str, Any]]
     confidence: float
     strategy: str
     trace: list[dict[str, Any]]

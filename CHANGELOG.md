@@ -10,6 +10,10 @@
 - Frontend now shows an inline warning in the input panel when `/api/parse` cannot reach the backend, so connection-refused failures are visible even if the status panel is hidden.
 - Backend resolver now skips malformed `models/item` texture references instead of crashing `/api/parse` with HTTP 500 when a mod asset uses `#layer0` or another invalid `layer0` value.
 - Frontend now suppresses repeated `/api/debug/log` retries and skips background UI-preference autosaves while the backend is offline, so connection-refused states no longer masquerade as unrelated save errors.
+- Replaced placeholder icon proxy with real binary streaming: `/api/icons/{icon_asset_id}` now reads PNG data from indexed files/jar entries and returns actual images.
+- Resolver/source parsing now correctly handles asset ids for Windows-like paths via a robust `source|relative_path` format while preserving backward compatibility.
+- Fixed icon URLs for Windows/jar-based sources by URL-encoding `icon_asset_id` in resolver responses and decoding it in icon proxy routes, so textures with `:\` and separators now load correctly in browser requests.
+- Fixed noisy asset scan parse errors by only parsing `.png.mcmeta` animation metadata for texture paths under `/textures/items/` and `/textures/blocks/`.
 
 ### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
@@ -19,6 +23,8 @@
 - Fixed backend asset indexing so `mods_dir` directories now scan nested `.jar`/`.zip` files, boot logs show raw/normalized config and final index paths, and resolver diagnostics include non-empty checked sources from real asset paths.
 - Added project path configuration storage in `cubixrecipes.config.json`, backend settings endpoints, and a new Control Panel `Settings` tab with browse actions and path validation.
 - Added recipe output rendering/editing in the React UI, including output resolution metadata in API responses for future icon/name display.
+- Added `mods_json` manifest indexing support: backend now reads JSON tree snapshots of mods/jars, registers texture candidates from those trees, and marks animated textures when paired `.png.mcmeta` entries exist.
+- Added animated output icon rendering in frontend using sprite-sheet playback for resources marked as animated.
 
 ### Changed
 - Backend now reloads storage/index inputs from the shared project config and serializes output/item resolution data together with parsed recipes.

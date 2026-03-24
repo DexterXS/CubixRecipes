@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from urllib.parse import quote
 from typing import Any, Optional
 
 from app.domain.models import ItemRef, ResolutionResult
@@ -32,7 +33,7 @@ class ItemResolver:
             result = strategy(item_ref, key, settings, trace, checked_keys, checked_sources)
             if result is not None:
                 self.last_resolution_details[item_ref.raw] = {
-                    'source': result.icon_asset_id.split(':', 1)[0] if result.icon_asset_id else 'lang/manual',
+                    'source': self._extract_source_from_asset_id(result.icon_asset_id) if result.icon_asset_id else 'lang/manual',
                     'checked_sources': list(dict.fromkeys(checked_sources)),
                     'checked_keys': checked_keys,
                     'reason': f'matched via {result.strategy}',
@@ -40,7 +41,7 @@ class ItemResolver:
                 if self.log_service is not None:
                     self.log_service.log('BACKEND', 'INFO', 'RESOLVER', 'Item resolved', {'raw_item_id': item_ref.raw, 'normalized_key': key, 'strategy': result.strategy, 'confidence': result.confidence, 'icon_asset_id': result.icon_asset_id, 'checked_keys': checked_keys, 'checked_sources': list(dict.fromkeys(checked_sources)), 'display_name': result.display_name}, verbose_only=True)
                 return result
-        result = ResolutionResult(item_raw=item_ref.raw, display_name=item_ref.raw, icon_asset_id=None, icon_url=None, animated=False, confidence=0.1, strategy='placeholder', trace=trace)
+        result = ResolutionResult(item_raw=item_ref.raw, display_name=item_ref.raw, icon_asset_id=None, icon_url=None, animated=False, animation_meta=None, confidence=0.1, strategy='placeholder', trace=trace)
         self.last_resolution_details[item_ref.raw] = {
             'source': None,
             'checked_sources': list(dict.fromkeys(checked_sources)),
@@ -136,7 +137,7 @@ class ItemResolver:
         candidate = mapping.get(lang_keys[0]) or mapping.get(lang_keys[1])
         trace.append({'strategy': 'lang_lookup', 'locale': locale, 'found': bool(candidate)})
         if candidate:
-            return ResolutionResult(item_raw=item_ref.raw, display_name=candidate, icon_asset_id=None, icon_url=None, animated=False, confidence=0.9, strategy='lang_lookup', trace=list(trace))
+            return ResolutionResult(item_raw=item_ref.raw, display_name=candidate, icon_asset_id=None, icon_url=None, animated=False, animation_meta=None, confidence=0.9, strategy='lang_lookup', trace=list(trace))
         return None
 
     def _manual_override(self, item_ref, key, settings, trace, checked_keys, checked_sources):
@@ -145,10 +146,21 @@ class ItemResolver:
         if item_ref.raw not in overrides:
             return None
         override = overrides[item_ref.raw]
-        return ResolutionResult(item_raw=item_ref.raw, display_name=override.get('display_name'), icon_asset_id=override.get('icon_asset_id'), icon_url=override.get('icon_url'), animated=False, confidence=0.99, strategy='manual_override', trace=list(trace))
+        return ResolutionResult(item_raw=item_ref.raw, display_name=override.get('display_name'), icon_asset_id=override.get('icon_asset_id'), icon_url=override.get('icon_url'), animated=False, animation_meta=override.get('animation_meta'), confidence=0.99, strategy='manual_override', trace=list(trace))
 
     def _make_result(self, item_ref, candidates, confidence, strategy, trace):
         if not candidates:
             return None
         candidate = candidates[0]
-        return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get('display_name') or item_ref.raw, icon_asset_id=candidate['asset_id'], icon_url=f"/api/icons/{candidate['asset_id']}", animated=candidate.get('animated', False), confidence=confidence, strategy=strategy, trace=list(trace))
+        icon_asset_id = candidate['asset_id']
+        icon_url = f"/api/icons/{quote(icon_asset_id, safe='')}"
+        return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get('display_name') or item_ref.raw, icon_asset_id=icon_asset_id, icon_url=icon_url, animated=candidate.get('animated', False), animation_meta=candidate.get('animation_meta'), confidence=confidence, strategy=strategy, trace=list(trace))
+
+    def _extract_source_from_asset_id(self, icon_asset_id: Optional[str]) -> Optional[str]:
+        if not icon_asset_id:
+            return None
+        if '|' in icon_asset_id:
+            return icon_asset_id.split('|', 1)[0]
+        if ':' in icon_asset_id:
+            return icon_asset_id.split(':', 1)[0]
+        return icon_asset_id
