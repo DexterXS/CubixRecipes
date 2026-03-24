@@ -49,3 +49,13 @@ def test_invalid_model_texture_reference_does_not_crash_resolution():
     result = resolver.resolve(item)
     assert result.strategy == 'placeholder'
     assert result.icon_url is None
+
+
+def test_uppercase_item_key_matches_lowercase_icon_index():
+    index = AssetIndex()
+    index.register_icon('avaritia:resource_block_1', {'asset_id': 'jar:avaritia_resource_block_1', 'path': 'assets/avaritia/textures/items/resource_block_1.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource_Block:1>')
+    result = resolver.resolve(item)
+    assert result.strategy in {'textures_meta_suffix', 'grouped_files'}
+    assert result.icon_asset_id == 'jar:avaritia_resource_block_1'

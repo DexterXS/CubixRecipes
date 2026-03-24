@@ -7,7 +7,7 @@ interface Props {
   editorMode: EditorMode;
   onCellChange: (row: number, col: number, value: string) => void;
   resolveCellTitle: (raw: string) => string;
-  onIconClick: () => void;
+  onIconClick: (row: number, col: number) => void;
 }
 
 function shortenCellValue(value: string): string {
@@ -29,7 +29,10 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
             const value = isEmpty ? '' : String(raw);
             const placeholder = displayMode === 'icons' ? '?' : '∅';
             const iconUrl = cell?.resolution?.icon_url ?? null;
-            const title = value ? resolveCellTitle(value) : 'Пустая ячейка';
+            const resolverTitle = cell?.resolution?.display_name?.trim();
+            const title = value
+              ? (resolverTitle && resolverTitle !== value && !resolverTitle.startsWith('<') ? resolverTitle : resolveCellTitle(value))
+              : 'Пустая ячейка';
 
             return (
               <label
@@ -38,7 +41,7 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
                 title={title}
               >
                 <span className="cell-coord">{rowIndex + 1},{colIndex + 1}</span>
-                <button type="button" className="cell-icon-slot" aria-label="open-craft-editor" title={title} onClick={onIconClick}>
+                <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                   {displayMode === 'icons' && iconUrl
                     ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} />
                     : <span aria-hidden="true">{displayMode === 'icons' ? '?' : '□'}</span>}
@@ -46,11 +49,12 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
                 <input
                   aria-label={`cell-${rowIndex}-${colIndex}`}
                   value={value}
+                  title={title}
                   placeholder={placeholder}
                   readOnly={editorMode === 'view'}
                   onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
                 />
-                <span className="cell-preview">{value ? shortenCellValue(value) : 'empty'}</span>
+                <span className="cell-preview" title={title}>{value ? shortenCellValue(value) : 'empty'}</span>
               </label>
             );
           })}

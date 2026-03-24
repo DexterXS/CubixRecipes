@@ -26,7 +26,7 @@ class ItemRef:
 
     @property
     def base_key(self) -> str:
-        return f"{self.modid}:{self.name}"
+        return f"{self.modid}:{self.name}".lower()
 
 
 @dataclass

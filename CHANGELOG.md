@@ -4,6 +4,8 @@
 ### Fixed
 - Recipe grid now renders resolved item icons directly in cells, shows Russian hover names sourced from `itempanel.csv` (by `item key + meta` fallback), and allows opening craft-edit modal from grid/output icons.
 - Added a dedicated craft-edit modal with `Очистить / Скопировать / Вставить / Применить` actions that operate on parsed CraftTweaker `addShaped(...)` source format for quick round-trip editing.
+- Fixed recipe/item key normalization across parser/index/resolver so mixed-case ids like `<Avaritia:Resource_Block:1>` resolve against lowercase indexed textures.
+- Grid icon click editor now opens per-item editing context (output or a specific cell) instead of a shared full-recipe text modal.
 - Cleaned up frontend/backend address handling: API calls and debug logging now use a shared runtime config, the inline offline hint explains both `/api` and the current dev-proxy target, and Vite proxy target/port are configured from env instead of scattered hardcoded strings.
 - Fixed startup race between backend and frontend: the control panel now waits for backend health-check readiness before launching frontend, status labels reflect API readiness more accurately, the panel backend now starts in stable no-reload mode by default, and the SPA retries loading UI settings after temporary backend unavailability.
 - Rebuilt `start-dev.py` logging so the control panel now uses a dedicated action log, bounded in-memory buffers for console/action output, separate stdout/stderr readers, stderr highlighting, and unbuffered child-process env defaults for more reliable live logs.

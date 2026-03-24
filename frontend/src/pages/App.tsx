@@ -81,6 +81,10 @@ type ItemPanelTranslations = {
   fallback: Map<string, string>;
 };
 
+type CraftEditorTarget =
+  | { kind: 'output' }
+  | { kind: 'cell'; row: number; col: number };
+
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
 }
@@ -93,12 +97,6 @@ function parseItemRaw(raw: string): { key: string; meta: string } | null {
   const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
   if (!match) return null;
   return { key: match[1].toLowerCase(), meta: (match[2] ?? '0').toLowerCase() };
-}
-
-function buildRecipeSource(recipeType: string, output: string, matrix: CellValue[][]): string {
-  const rows = matrix.map((row) => `[${row.map((cell) => (cell ? cell : 'null')).join(', ')}]`).join(', ');
-  const call = recipeType === 'avaritia_extreme_shaped' ? 'mods.avaritia.ExtremeCrafting.addShaped' : 'recipes.addShaped';
-  return `${call}(${output || '<minecraft:stone>'}, [${rows}]);`;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -223,6 +221,7 @@ export default function App() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
+  const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>({ kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState('');
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
@@ -462,6 +461,27 @@ export default function App() {
       ?? raw;
   }
 
+  function getCellRaw(target: CraftEditorTarget): string {
+    if (target.kind === 'output') {
+      return outputRaw;
+    }
+    return matrix[target.row]?.[target.col] ?? '';
+  }
+
+  function setCellRaw(target: CraftEditorTarget, raw: string) {
+    if (target.kind === 'output') {
+      setOutputRaw(raw);
+      setRecipe((current) => ({ ...current, output: { ...current.output, raw } }));
+      setSaveStatus(t('values.unsavedChanges'));
+      return;
+    }
+    setMatrix((current) => current.map((row, rowIndex) => row.map((cell, colIndex) => {
+      if (rowIndex !== target.row || colIndex !== target.col) return cell;
+      return raw === '' || raw === 'null' ? null : raw;
+    })));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
   function isParseableInput(value: string) {
     const trimmed = value.trim();
     return trimmed.includes('.addShaped') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
@@ -553,8 +573,9 @@ export default function App() {
     }
   }
 
-  function openCraftEditorModal() {
-    setCraftSourceDraft(buildRecipeSource(recipe.recipe_type, outputRaw, matrix));
+  function openCraftEditorModal(target: CraftEditorTarget) {
+    setCraftEditorTarget(target);
+    setCraftSourceDraft(getCellRaw(target));
     setIsCraftEditorOpen(true);
   }
 
@@ -562,9 +583,6 @@ export default function App() {
     try {
       const pasted = await navigator.clipboard.readText();
       setCraftSourceDraft(pasted);
-      if (isParseableInput(pasted.trim())) {
-        await handleParse(pasted);
-      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Clipboard unavailable';
       setStatus(message);
@@ -572,9 +590,9 @@ export default function App() {
   }
 
   async function handleCraftModalCopy() {
-    const payload = craftSourceDraft || buildRecipeSource(recipe.recipe_type, outputRaw, matrix);
+    const payload = craftSourceDraft || getCellRaw(craftEditorTarget);
     await navigator.clipboard.writeText(payload);
-    setStatus('Скопировано в формате addShaped.');
+    setStatus('Скопировано значение предмета.');
   }
 
   async function handleSave() {
@@ -949,7 +967,7 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
-                <button type="button" className="output-icon-slot output-icon-button" onClick={openCraftEditorModal} title={t('panel.output')}>
+                <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
                   {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} /> : <span>?</span>}
                 </button>
                 <div className="output-details">
@@ -976,7 +994,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={openCraftEditorModal} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
                   setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
                   setSaveStatus(t('values.unsavedChanges'));
                 }} />
@@ -1142,12 +1160,12 @@ export default function App() {
         <div className="modal-backdrop" role="presentation" onClick={() => setIsCraftEditorOpen(false)}>
           <div className="modal" role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>Редактирование крафта</h2>
+              <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
               <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
-                <span>CraftTweaker source</span>
+                <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
               </label>
               <div className="inline-actions">
@@ -1157,9 +1175,13 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (isParseableInput(craftSourceDraft.trim())) {
+                    const trimmed = craftSourceDraft.trim();
+                    if (trimmed.includes('.addShaped')) {
                       void handleParse(craftSourceDraft);
+                      return;
                     }
+                    setCellRaw(craftEditorTarget, trimmed);
+                    setIsCraftEditorOpen(false);
                   }}
                 >
                   Применить

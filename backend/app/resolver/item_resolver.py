@@ -117,9 +117,9 @@ class ItemResolver:
         if ':' in normalized:
             namespace, texture_name = normalized.split(':', 1)
             if namespace and texture_name:
-                return f'{namespace}:{texture_name}'
+                return f'{namespace}:{texture_name}'.lower()
             return None
-        return f'{item_ref.modid}:{normalized}'
+        return f'{item_ref.modid}:{normalized}'.lower()
 
     def _block_texture(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         block_key = f'{item_ref.modid}:{item_ref.name}'
