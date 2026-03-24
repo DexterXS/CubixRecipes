@@ -76,12 +76,29 @@ const defaultRecipe: RecipeView = {
   source: { kind: 'generated', path: null }
 };
 
+type ItemPanelTranslations = {
+  exact: Map<string, string>;
+  fallback: Map<string, string>;
+};
+
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
 }
 
 function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
+}
+
+function parseItemRaw(raw: string): { key: string; meta: string } | null {
+  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
+  if (!match) return null;
+  return { key: match[1].toLowerCase(), meta: (match[2] ?? '0').toLowerCase() };
+}
+
+function buildRecipeSource(recipeType: string, output: string, matrix: CellValue[][]): string {
+  const rows = matrix.map((row) => `[${row.map((cell) => (cell ? cell : 'null')).join(', ')}]`).join(', ');
+  const call = recipeType === 'avaritia_extreme_shaped' ? 'mods.avaritia.ExtremeCrafting.addShaped' : 'recipes.addShaped';
+  return `${call}(${output || '<minecraft:stone>'}, [${rows}]);`;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -205,6 +222,8 @@ export default function App() {
   const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
+  const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
+  const [craftSourceDraft, setCraftSourceDraft] = useState('');
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -215,6 +234,7 @@ export default function App() {
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
+  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ exact: new Map(), fallback: new Map() });
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -232,6 +252,10 @@ export default function App() {
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
   const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
+  const matrixWithResolution = useMemo(
+    () => matrix.map((row, rowIndex) => row.map((cell, colIndex) => ({ raw: cell, resolution: recipe.matrix[rowIndex]?.[colIndex]?.resolution ?? null }))),
+    [matrix, recipe.matrix]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -290,6 +314,46 @@ export default function App() {
     if (settingsRetryTimerRef.current !== null) {
       window.clearTimeout(settingsRetryTimerRef.current);
     }
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadItemPanelTranslations() {
+      try {
+        const response = await fetch('/itempanel.csv');
+        if (!response.ok) {
+          return;
+        }
+        const bytes = await response.arrayBuffer();
+        const decoder = new TextDecoder('windows-1251');
+        const text = decoder.decode(bytes);
+        const lines = text.split(/\r?\n/).slice(1);
+        const exact = new Map<string, string>();
+        const fallback = new Map<string, string>();
+        lines.forEach((line) => {
+          if (!line.trim()) return;
+          const parts = line.split(',');
+          if (parts.length < 5) return;
+          const key = parts[0]?.trim().toLowerCase();
+          const meta = parts[2]?.trim().toLowerCase() || '0';
+          const display = parts.slice(4).join(',').trim();
+          if (!key || !display) return;
+          exact.set(`${key}:${meta}`, display);
+          if (!fallback.has(key)) {
+            fallback.set(key, display);
+          }
+        });
+        if (!cancelled) {
+          setItemPanelTranslations({ exact, fallback });
+        }
+      } catch {
+        // optional source
+      }
+    }
+    void loadItemPanelTranslations();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function persistUiPreferences(next: UiPreferences) {
@@ -387,6 +451,17 @@ export default function App() {
     setLastParseResult(t('values.reset'));
   }
 
+  function resolveCellTitle(raw: string): string {
+    const parsed = parseItemRaw(raw);
+    if (!parsed) {
+      return raw;
+    }
+    return itemPanelTranslations.exact.get(`${parsed.key}:${parsed.meta}`)
+      ?? itemPanelTranslations.exact.get(`${parsed.key}:0`)
+      ?? itemPanelTranslations.fallback.get(parsed.key)
+      ?? raw;
+  }
+
   function isParseableInput(value: string) {
     const trimmed = value.trim();
     return trimmed.includes('.addShaped') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
@@ -476,6 +551,30 @@ export default function App() {
       setStatus(message);
       setLastApiStatus(t('values.error'));
     }
+  }
+
+  function openCraftEditorModal() {
+    setCraftSourceDraft(buildRecipeSource(recipe.recipe_type, outputRaw, matrix));
+    setIsCraftEditorOpen(true);
+  }
+
+  async function handleCraftModalPaste() {
+    try {
+      const pasted = await navigator.clipboard.readText();
+      setCraftSourceDraft(pasted);
+      if (isParseableInput(pasted.trim())) {
+        await handleParse(pasted);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      setStatus(message);
+    }
+  }
+
+  async function handleCraftModalCopy() {
+    const payload = craftSourceDraft || buildRecipeSource(recipe.recipe_type, outputRaw, matrix);
+    await navigator.clipboard.writeText(payload);
+    setStatus('Скопировано в формате addShaped.');
   }
 
   async function handleSave() {
@@ -850,7 +949,9 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
-                <div className="output-icon-slot">{uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} /> : <span>?</span>}</div>
+                <button type="button" className="output-icon-slot output-icon-button" onClick={openCraftEditorModal} title={t('panel.output')}>
+                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} /> : <span>?</span>}
+                </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
                   <label className="field-block"><span>{t('fields.rawOutput')}</span><input aria-label="output-raw" type="text" value={outputRaw} onChange={(event) => {
@@ -875,7 +976,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrix} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={openCraftEditorModal} onCellChange={(row, col, value) => {
                   setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
                   setSaveStatus(t('values.unsavedChanges'));
                 }} />
@@ -1031,6 +1132,38 @@ export default function App() {
               <div className="view-menu-actions">
                 <button type="button" onClick={() => void saveCurrentWindowLayout()}>{t('layoutSettings.saveCurrent')}</button>
                 <button type="button" className="ghost-button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isCraftEditorOpen ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsCraftEditorOpen(false)}>
+          <div className="modal" role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Редактирование крафта</h2>
+              <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
+            </div>
+            <div className="settings-modal-body">
+              <label className="field-block">
+                <span>CraftTweaker source</span>
+                <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
+              </label>
+              <div className="inline-actions">
+                <button type="button" className="ghost-button" onClick={() => setCraftSourceDraft('')}>Очистить</button>
+                <button type="button" className="secondary-button" onClick={() => void handleCraftModalCopy()}>Скопировать</button>
+                <button type="button" className="secondary-button" onClick={() => void handleCraftModalPaste()}>Вставить</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isParseableInput(craftSourceDraft.trim())) {
+                      void handleParse(craftSourceDraft);
+                    }
+                  }}
+                >
+                  Применить
+                </button>
               </div>
             </div>
           </div>
