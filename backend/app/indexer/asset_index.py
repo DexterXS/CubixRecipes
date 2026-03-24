@@ -5,10 +5,13 @@ from pathlib import Path
 from typing import Any, Optional
 from zipfile import ZipFile
 
+from app.indexer.mod_parsers import ModParserRegistry, TextureContext
+
 
 class AssetIndex:
     def __init__(self, log_service: Any = None) -> None:
         self.log_service = log_service
+        self.mod_parsers = ModParserRegistry()
         self.icons: dict[str, list[dict]] = {}
         self.icon_assets: dict[str, dict[str, Any]] = {}
         self.models: dict[str, dict] = {}
@@ -198,34 +201,37 @@ class AssetIndex:
                 if self.log_service is not None:
                     self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Registered item model', {'item_key': f'{namespace}:{item_name}', 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
                 recognized = True
-            if rel_path.endswith('.png') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
-                namespace, item_name = self._extract_texture_key(rel_path)
-                key = f'{namespace}:{item_name}'
-                self.register_icon(
-                    key,
-                    {
-                        'asset_id': self._build_asset_id(source, rel_path),
-                        'path': rel_path,
-                        'source_type': source,
-                        'animated': False,
-                        'locator': locator,
-                    },
-                )
-                if self.log_service is not None:
-                    self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_key': key, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
-                counter_key = 'textures_items' if '/textures/items/' in rel_path else 'textures_blocks'
+            texture_ref = self._extract_texture_reference(rel_path[:-7] if rel_path.endswith('.png.mcmeta') else rel_path)
+            if rel_path.endswith('.png') and texture_ref is not None:
+                namespace, item_names, texture_kind = texture_ref
+                for item_name in item_names:
+                    key = f'{namespace}:{item_name}'
+                    self.register_icon(
+                        key,
+                        {
+                            'asset_id': self._build_asset_id(source, rel_path),
+                            'path': rel_path,
+                            'source_type': source,
+                            'animated': False,
+                            'locator': locator,
+                        },
+                    )
+                    report['registered_keys'].append(key)
+                    source_report['registered_keys'].append(key)
+                    if self.log_service is not None:
+                        self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_key': key, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
+                counter_key = 'textures_items' if texture_kind == 'items' else 'textures_blocks'
                 report['counters'][counter_key] += 1
-                report['registered_keys'].append(key)
-                source_report['registered_keys'].append(key)
                 recognized = True
-            if rel_path.endswith('.png.mcmeta') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
+            if rel_path.endswith('.png.mcmeta') and texture_ref is not None:
                 target = rel_path[:-7]
-                namespace, item_name = self._extract_texture_key(target)
-                key = f'{namespace}:{item_name}'
                 animation_meta = self._parse_animation_mcmeta(data)
-                self._mark_icon_animated(key, source, target, locator, animation_meta)
-                report['registered_keys'].append(key)
-                source_report['registered_keys'].append(key)
+                namespace, item_names, _ = texture_ref
+                for item_name in item_names:
+                    key = f'{namespace}:{item_name}'
+                    self._mark_icon_animated(key, source, target, locator, animation_meta)
+                    report['registered_keys'].append(key)
+                    source_report['registered_keys'].append(key)
                 recognized = True
             if not recognized:
                 source_report['skipped_files'].append({'path': rel_path, 'reason': 'unsupported_or_irrelevant'})
@@ -243,10 +249,34 @@ class AssetIndex:
         name = rel_path.split(f'/{folder}/', 1)[1][:-len(suffix)].lower()
         return namespace, name
 
-    def _extract_texture_key(self, rel_path: str) -> tuple[str, str]:
-        namespace = rel_path.split('/')[1].lower()
-        name = rel_path.split('/textures/', 1)[1].split('/', 1)[1][:-4].lower()
-        return namespace, name
+    def _extract_texture_reference(self, rel_path: str) -> Optional[tuple[str, list[str], str]]:
+        normalized = rel_path.replace('\\', '/')
+        if '/textures/' not in normalized or not normalized.endswith('.png'):
+            return None
+        chunks = normalized.split('/')
+        if len(chunks) < 4 or chunks[0] != 'assets':
+            return None
+        namespace = chunks[1].lower()
+        try:
+            texture_tail = normalized.split('/textures/', 1)[1]
+            texture_kind, texture_path = texture_tail.split('/', 1)
+        except ValueError:
+            return None
+        texture_kind = texture_kind.lower()
+        if texture_kind not in {'items', 'item', 'blocks', 'block'}:
+            return None
+        parser = self.mod_parsers.resolve(namespace)
+        names = parser.build_item_names(
+            TextureContext(
+                namespace=namespace,
+                texture_path=texture_path.lower(),
+                texture_kind='items' if texture_kind in {'items', 'item'} else 'blocks',
+            )
+        )
+        if not names:
+            return None
+        normalized_kind = 'items' if texture_kind in {'items', 'item'} else 'blocks'
+        return namespace, names, normalized_kind
 
     def _parse_lang(self, rel_path: str, data: bytes) -> dict[str, str]:
         text = data.decode('utf-8')
@@ -338,27 +368,26 @@ class AssetIndex:
             return False
         textures, mcmeta = self._collect_manifest_textures(tree)
         for texture_rel_path in textures:
-            if '/textures/' not in texture_rel_path:
+            texture_ref = self._extract_texture_reference(texture_rel_path)
+            if texture_ref is None:
                 continue
-            try:
-                namespace, item_name = self._extract_texture_key(texture_rel_path)
-            except Exception:
-                continue
-            key = f'{namespace}:{item_name}'
+            namespace, item_names, texture_kind = texture_ref
             texture_locator = {'kind': 'archive_entry', 'archive_path': mod_path, 'entry_path': texture_rel_path}
-            self.register_icon(
-                key,
-                {
-                    'asset_id': self._build_asset_id(mod_path, texture_rel_path),
-                    'path': texture_rel_path,
-                    'source_type': mod_path,
-                    'animated': f'{texture_rel_path}.mcmeta' in mcmeta,
-                    'locator': texture_locator,
-                },
-            )
-            report['registered_keys'].append(key)
-            source_report['registered_keys'].append(key)
-            counter_key = 'textures_items' if '/textures/items/' in texture_rel_path else 'textures_blocks'
+            for item_name in item_names:
+                key = f'{namespace}:{item_name}'
+                self.register_icon(
+                    key,
+                    {
+                        'asset_id': self._build_asset_id(mod_path, texture_rel_path),
+                        'path': texture_rel_path,
+                        'source_type': mod_path,
+                        'animated': f'{texture_rel_path}.mcmeta' in mcmeta,
+                        'locator': texture_locator,
+                    },
+                )
+                report['registered_keys'].append(key)
+                source_report['registered_keys'].append(key)
+            counter_key = 'textures_items' if texture_kind == 'items' else 'textures_blocks'
             report['counters'][counter_key] += 1
         return bool(textures)
 
@@ -409,6 +438,13 @@ class AssetIndex:
             else:
                 item_namespace = key.split(':', 1)[0]
                 texture_key = f'{item_namespace}:{normalized}'
+            if texture_key in self.icons:
+                continue
+            texture_key_without_folder = texture_key.replace(':items/', ':').replace(':item/', ':').replace(':blocks/', ':').replace(':block/', ':')
+            if texture_key_without_folder in self.icons:
+                continue
+            if texture_key_without_folder.replace('/', '_') in self.icons:
+                continue
             if texture_key not in self.icons:
                 missing.append({'item_id': key, 'reason': 'model_texture_not_found', 'checked_key': texture_key})
         return missing

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Refactored backend icon indexing into modular per-mod parser registry (`backend/app/indexer/mod_parsers`) and fixed texture-key extraction so mods using `textures/item` (singular) and nested texture paths resolve correctly to `/api/icons/...`.
 - Hardened frontend `itempanel.csv` ingestion so replacing the file no longer breaks localization/icon UX: loader now auto-detects delimiter (`,`/`;`/tab), handles quoted CSV cells, and uses UTF-8-first decoding with CP1251 fallback for Russian datasets.
 - Recipe grid now renders resolved item icons directly in cells, shows Russian hover names sourced from `itempanel.csv` (by `item key + meta` fallback), and allows opening craft-edit modal from grid/output icons.
 - Added a dedicated craft-edit modal with `Очистить / Скопировать / Вставить / Применить` actions that operate on parsed CraftTweaker `addShaped(...)` source format for quick round-trip editing.

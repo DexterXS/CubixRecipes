@@ -59,3 +59,30 @@ def test_uppercase_item_key_matches_lowercase_icon_index():
     result = resolver.resolve(item)
     assert result.strategy in {'textures_meta_suffix', 'grouped_files'}
     assert result.icon_asset_id == 'jar:avaritia_resource_block_1'
+
+
+def test_scan_supports_singular_item_texture_folder(tmp_path):
+    textures_dir = tmp_path / 'assets' / 'examplemod' / 'textures' / 'item'
+    textures_dir.mkdir(parents=True)
+    (textures_dir / 'seed.png').write_bytes(b'png')
+    index = AssetIndex()
+    index.scan_paths([str(tmp_path)])
+
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<examplemod:seed>')
+    result = resolver.resolve(item)
+    assert result.icon_asset_id is not None
+    assert result.strategy == 'textures_exact'
+
+
+def test_scan_registers_nested_texture_aliases_from_mod_parser(tmp_path):
+    textures_dir = tmp_path / 'assets' / 'contenttweaker' / 'textures' / 'items' / 'item'
+    textures_dir.mkdir(parents=True)
+    (textures_dir / 'bot_photonium.png').write_bytes(b'png')
+    index = AssetIndex()
+    index.scan_paths([str(tmp_path)])
+
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<contenttweaker:bot_photonium>')
+    result = resolver.resolve(item)
+    assert result.icon_asset_id is not None
