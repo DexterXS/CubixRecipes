@@ -30,8 +30,11 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
             const placeholder = displayMode === 'icons' ? '?' : '∅';
             const iconUrl = cell?.resolution?.icon_url ?? null;
             const resolverTitle = cell?.resolution?.display_name?.trim();
+            const localizedTitle = value ? resolveCellTitle(value) : '';
             const title = value
-              ? (resolverTitle && resolverTitle !== value && !resolverTitle.startsWith('<') ? resolverTitle : resolveCellTitle(value))
+              ? (localizedTitle && localizedTitle !== value
+                ? localizedTitle
+                : (resolverTitle && resolverTitle !== value && !resolverTitle.startsWith('<') ? resolverTitle : value))
               : 'Пустая ячейка';
 
             return (
