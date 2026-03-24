@@ -10,6 +10,7 @@ import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
+import { parseItemPanelCsvBuffer, type ItemPanelTranslations } from '../utils/itemPanelCsv';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -74,10 +75,6 @@ const defaultRecipe: RecipeView = {
   grid_h: 3,
   matrix: defaultMatrix.map((row) => row.map((cell) => ({ raw: cell }))),
   source: { kind: 'generated', path: null }
-};
-
-type ItemPanelTranslations = {
-  byKey: Map<string, string>;
 };
 
 type CraftEditorTarget =
@@ -323,21 +320,7 @@ export default function App() {
           return;
         }
         const bytes = await response.arrayBuffer();
-        const decoder = new TextDecoder('windows-1251');
-        const text = decoder.decode(bytes);
-        const lines = text.split(/\r?\n/).slice(1);
-        const byKey = new Map<string, string>();
-        lines.forEach((line) => {
-          if (!line.trim()) return;
-          const parts = line.split(',');
-          if (parts.length < 5) return;
-          const key = parts[0]?.trim().toLowerCase();
-          const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          if (!key) return;
-          if (display && display !== '-' && display !== '- ') {
-            byKey.set(key, display);
-          }
-        });
+        const { byKey } = parseItemPanelCsvBuffer(bytes);
         if (!cancelled) {
           setItemPanelTranslations({ byKey });
         }
