@@ -6,15 +6,14 @@ interface Props {
   displayMode: DisplayMode;
   editorMode: EditorMode;
   onCellChange: (row: number, col: number, value: string) => void;
+  onCellCopy: (row: number, col: number) => void;
+  onCellPaste: (row: number, col: number) => void;
+  onCellClear: (row: number, col: number) => void;
   resolveCellTitle: (raw: string) => string;
   onIconClick: (row: number, col: number) => void;
 }
 
-function shortenCellValue(value: string): string {
-  return value.length > 14 ? `${value.slice(0, 12)}…` : value;
-}
-
-export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, resolveCellTitle, onIconClick }: Props) {
+export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, onCellCopy, onCellPaste, onCellClear, resolveCellTitle, onIconClick }: Props) {
   const size = Math.max(matrix.length, matrix[0]?.length ?? 0, 1);
   const cellClass = size >= 9 ? 'grid-cell size-9' : size >= 5 ? 'grid-cell size-5' : 'grid-cell size-3';
 
@@ -38,27 +37,33 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
               : 'Пустая ячейка';
 
             return (
-              <label
+              <div
                 key={`${rowIndex}-${colIndex}`}
                 className={`${cellClass} ${isEmpty ? 'is-empty' : 'is-filled'} ${isInvalid ? 'is-invalid' : ''} ${editorMode === 'view' ? 'is-view' : 'is-edit'}`.trim()}
                 title={title}
               >
-                <span className="cell-coord">{rowIndex + 1},{colIndex + 1}</span>
                 <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                   {displayMode === 'icons' && iconUrl
                     ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} />
                     : <span aria-hidden="true">{displayMode === 'icons' ? '?' : '□'}</span>}
                 </button>
-                <input
-                  aria-label={`cell-${rowIndex}-${colIndex}`}
-                  value={value}
-                  title={title}
-                  placeholder={placeholder}
-                  readOnly={editorMode === 'view'}
-                  onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
-                />
-                <span className="cell-preview" title={title}>{value ? shortenCellValue(value) : 'empty'}</span>
-              </label>
+                <div className="cell-mini-actions">
+                  <button type="button" aria-label={`copy-cell-${rowIndex}-${colIndex}`} className="cell-mini-button" title="Копировать" onClick={() => onCellCopy(rowIndex, colIndex)}>⧉</button>
+                  <button type="button" aria-label={`paste-cell-${rowIndex}-${colIndex}`} className="cell-mini-button" title="Вставить" onClick={() => onCellPaste(rowIndex, colIndex)}>⎘</button>
+                  <button type="button" aria-label={`clear-cell-${rowIndex}-${colIndex}`} className="cell-mini-button" title="Очистить" onClick={() => onCellClear(rowIndex, colIndex)}>⌫</button>
+                </div>
+                {editorMode === 'edit' ? (
+                  <input
+                    aria-label={`cell-${rowIndex}-${colIndex}`}
+                    value={value}
+                    title={title}
+                    placeholder={placeholder}
+                    readOnly={editorMode === 'view'}
+                    onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
+                    className="cell-hidden-input"
+                  />
+                ) : null}
+              </div>
             );
           })}
         </div>

@@ -237,6 +237,7 @@ export default function App() {
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
+  const cellClipboardRef = useRef<CellValue>(null);
 
   const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
@@ -471,6 +472,41 @@ export default function App() {
       return raw === '' || raw === 'null' ? null : raw;
     })));
     setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function updateMatrixCell(row: number, col: number, value: CellValue) {
+    setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? value : cell))));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  async function handleCellCopy(row: number, col: number) {
+    const value = matrix[row]?.[col] ?? null;
+    cellClipboardRef.current = value;
+    try {
+      await navigator.clipboard.writeText(value ?? '');
+    } catch {
+      // local clipboard fallback via ref only
+    }
+    setStatus(value ? `Скопировано: ${value}` : 'Ячейка пуста, скопировано пустое значение');
+  }
+
+  async function handleCellPaste(row: number, col: number) {
+    let value = cellClipboardRef.current;
+    if ((value === null || value === '') && navigator.clipboard) {
+      try {
+        const fromSystem = await navigator.clipboard.readText();
+        value = fromSystem.trim() ? fromSystem.trim() : null;
+      } catch {
+        // local clipboard fallback
+      }
+    }
+    updateMatrixCell(row, col, value === '' || value === 'null' ? null : value);
+    setStatus(value ? `Вставлено в ${row + 1},${col + 1}` : `Очищено ${row + 1},${col + 1}`);
+  }
+
+  function handleCellClear(row: number, col: number) {
+    updateMatrixCell(row, col, null);
+    setStatus(`Ячейка ${row + 1},${col + 1} очищена`);
   }
 
   function isParseableInput(value: string) {
@@ -985,10 +1021,19 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
-                  setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
-                  setSaveStatus(t('values.unsavedChanges'));
-                }} />
+                <RecipeGrid
+                  matrix={matrixWithResolution}
+                  displayMode={uiPreferences.display_mode}
+                  editorMode={uiPreferences.editor_mode}
+                  resolveCellTitle={resolveCellTitle}
+                  onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })}
+                  onCellCopy={(row, col) => void handleCellCopy(row, col)}
+                  onCellPaste={(row, col) => void handleCellPaste(row, col)}
+                  onCellClear={handleCellClear}
+                  onCellChange={(row, col, value) => {
+                    updateMatrixCell(row, col, value === 'null' || value === '' ? null : value);
+                  }}
+                />
               </div>
             </Panel>
           </div>
