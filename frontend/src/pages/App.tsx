@@ -244,7 +244,7 @@ export default function App() {
 
   const t = createTranslator(uiPreferences.language);
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
-  const outputDisplayName = recipe.output_resolution?.display_name;
+  const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
   const nullCells = useMemo(() => matrix.flat().filter((cell) => !cell || cell === 'null').length, [matrix]);
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
@@ -335,11 +335,13 @@ export default function App() {
           if (parts.length < 5) return;
           const key = parts[0]?.trim().toLowerCase();
           const meta = parts[2]?.trim().toLowerCase() || '0';
-          const display = parts.slice(4).join(',').trim();
-          if (!key || !display) return;
-          exact.set(`${key}:${meta}`, display);
-          if (!fallback.has(key)) {
-            fallback.set(key, display);
+          const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
+          if (!key) return;
+          if (display && display !== '-' && display !== '- ') {
+            exact.set(`${key}:${meta}`, display);
+            if (!fallback.has(key)) {
+              fallback.set(key, display);
+            }
           }
         });
         if (!cancelled) {
@@ -456,10 +458,22 @@ export default function App() {
       return raw;
     }
     return itemPanelTranslations.exact.get(`${parsed.key}:${parsed.meta}`)
+      ?? itemPanelTranslations.exact.get(`${parsed.key}:1`)
       ?? itemPanelTranslations.exact.get(`${parsed.key}:0`)
       ?? itemPanelTranslations.fallback.get(parsed.key)
       ?? raw;
   }
+
+  const outputDisplayName = useMemo(() => {
+    const localized = resolveCellTitle(outputRaw);
+    if (localized && localized !== outputRaw) {
+      return localized;
+    }
+    if (outputDisplayNameFromResolver && !outputDisplayNameFromResolver.startsWith('<')) {
+      return outputDisplayNameFromResolver;
+    }
+    return localized;
+  }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
 
   function getCellRaw(target: CraftEditorTarget): string {
     if (target.kind === 'output') {
