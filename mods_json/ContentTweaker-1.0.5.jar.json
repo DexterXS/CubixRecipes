@@ -1,0 +1,267 @@
+{
+  "mod_name": "ContentTweaker-1.0.5.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ContentTweaker-1.0.5.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ContentTweaker-1.0.5.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 3418640,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "contentTweaker": {
+            "type": "directory",
+            "children": {
+              "Tweaker.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7643
+              },
+              "api": {
+                "type": "directory",
+                "children": {
+                  "EnchantHelper$EnchantmentWithLevel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1619
+                  },
+                  "EnchantHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2775
+                  }
+                }
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "render": {
+                    "type": "directory",
+                    "children": {
+                      "LiquidRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1582
+                      }
+                    }
+                  }
+                }
+              },
+              "content": {
+                "type": "directory",
+                "children": {
+                  "ContentBlock$Add.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2740
+                  },
+                  "ContentBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2285
+                  },
+                  "ContentFluid$Add.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4544
+                  },
+                  "ContentFluid.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1469
+                  },
+                  "ContentItem$Add.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2362
+                  },
+                  "ContentItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1777
+                  },
+                  "ContentMaterials$Add.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3905
+                  },
+                  "ContentMaterials.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4404
+                  },
+                  "blocks": {
+                    "type": "directory",
+                    "children": {
+                      "BlockCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2907
+                      }
+                    }
+                  },
+                  "fluids": {
+                    "type": "directory",
+                    "children": {
+                      "BlockFluidCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 917
+                      },
+                      "FluidCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3189
+                      }
+                    }
+                  },
+                  "items": {
+                    "type": "directory",
+                    "children": {
+                      "ItemCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1435
+                      },
+                      "ItemFluidBucket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1750
+                      }
+                    }
+                  },
+                  "materials": {
+                    "type": "directory",
+                    "children": {
+                      "MaterialCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6270
+                      }
+                    }
+                  }
+                }
+              },
+              "events": {
+                "type": "directory",
+                "children": {
+                  "ToolEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5255
+                  },
+                  "TweakerEvents.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2831
+                  }
+                }
+              },
+              "helpers": {
+                "type": "directory",
+                "children": {
+                  "ContentHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6066
+                  }
+                }
+              },
+              "proxy": {
+                "type": "directory",
+                "children": {
+                  "ClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 736
+                  },
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 412
+                  },
+                  "IProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 148
+                  }
+                }
+              }
+            }
+          },
+          "ContentTweakerLogo.jpg": {
+            "type": "file",
+            "extension": ".jpg",
+            "size": 2155703
+          },
+          "CTLogo.jpg": {
+            "type": "file",
+            "extension": ".jpg",
+            "size": 2177773
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 365
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "contenttweaker": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "bucket.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2929
+                          },
+                          "bucket_overlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3005
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 93
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4362
+          }
+        }
+      }
+    }
+  }
+}

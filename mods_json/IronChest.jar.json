@@ -1,0 +1,627 @@
+{
+  "mod_name": "IronChest.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\IronChest.jar",
+  "mod_type": "jar",
+  "tree": {
+    "IronChest.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 160295,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "cpw": {
+            "type": "directory",
+            "children": {
+              "mods": {
+                "type": "directory",
+                "children": {
+                  "ironchest": {
+                    "type": "directory",
+                    "children": {
+                      "ItemIronChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1217
+                      },
+                      "TileEntityObsidianChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 497
+                      },
+                      "TileEntitySilverChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 489
+                      },
+                      "Version.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1159
+                      },
+                      "PacketHandler$IronChestCodec.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3281
+                      },
+                      "TileEntityDiamondChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 493
+                      },
+                      "ContainerIronChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3921
+                      },
+                      "TileEntityCopperChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 489
+                      },
+                      "TileEntityDirtChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2511
+                      },
+                      "PacketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3940
+                      },
+                      "PacketHandler$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 225
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1970
+                      },
+                      "TileEntityCrystalChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 493
+                      },
+                      "ValidatingSlot.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 885
+                      },
+                      "BlockIronChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10646
+                      },
+                      "ItemChestChanger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5138
+                      },
+                      "TileEntityIronChest$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1187
+                      },
+                      "PacketHandler$IronChestMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 551
+                      },
+                      "TileEntityGoldChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 481
+                      },
+                      "IronChestAIOcelotSit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 545
+                      },
+                      "TileEntityIronChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12064
+                      },
+                      "OcelotsSitOnChestsHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2209
+                      },
+                      "ChestChangerType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5432
+                      },
+                      "MappableItemStackWrapper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 988
+                      },
+                      "PacketHandler$IronChestMessageHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2315
+                      },
+                      "IronChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5591
+                      },
+                      "IronChestType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10978
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "GUIChest$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 224
+                          },
+                          "GUIChest$GUI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3975
+                          },
+                          "GUIChest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2671
+                          },
+                          "GUIChest$ResourceList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1996
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2725
+                          },
+                          "TileEntityIronChestRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6943
+                          },
+                          "TileEntityIronChestRenderer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1325
+                          },
+                          "IronChestRenderHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2076
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 558
+          },
+          "version.properties": {
+            "type": "file",
+            "extension": ".properties",
+            "size": 249
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "ironchest": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "sv_SE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 880
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 998
+                      },
+                      "da_DK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 879
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1968
+                      },
+                      "et_EE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 866
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 990
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2221
+                      },
+                      "en_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1878
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2009
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 901
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1005
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1395
+                      },
+                      "nb_NO.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2022
+                      },
+                      "el_GR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1479
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2178
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1700
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2054
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2268
+                      },
+                      "pt_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 932
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1713
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2090
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ironGoldUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 526
+                          },
+                          "diamondObsidianUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 466
+                          },
+                          "copperIronUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 480
+                          },
+                          "diamondCrystalUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 418
+                          },
+                          "silverGoldUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 526
+                          },
+                          "woodIronUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 540
+                          },
+                          "copperSilverUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 480
+                          },
+                          "woodCopperUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 542
+                          },
+                          "goldDiamondUpgrade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 480
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "ironchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4295
+                          },
+                          "goldchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4284
+                          },
+                          "obsidianchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2042
+                          },
+                          "silverchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3934
+                          },
+                          "diamondchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4094
+                          },
+                          "dirtchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6110
+                          },
+                          "crystalchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4096
+                          },
+                          "copperchest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4073
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "coppercontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3677
+                          },
+                          "ironcontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3724
+                          },
+                          "dirtcontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3588
+                          },
+                          "goldcontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4242
+                          },
+                          "diamondcontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3826
+                          },
+                          "silvercontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3818
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "crystal_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 396
+                          },
+                          "diamond_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 762
+                          },
+                          "obsidian_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 586
+                          },
+                          "obsidian_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 593
+                          },
+                          "dirtchest9000_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3212
+                          },
+                          "copper_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 661
+                          },
+                          "crystal_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 382
+                          },
+                          "iron_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 787
+                          },
+                          "iron_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 726
+                          },
+                          "silver_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 625
+                          },
+                          "crystal_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 396
+                          },
+                          "dirtchest9000_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3194
+                          },
+                          "iron_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 572
+                          },
+                          "gold_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 784
+                          },
+                          "silver_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 527
+                          },
+                          "gold_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 726
+                          },
+                          "dirtchest9000_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3202
+                          },
+                          "diamond_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 719
+                          },
+                          "copper_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 679
+                          },
+                          "diamond_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 572
+                          },
+                          "copper_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 546
+                          },
+                          "silver_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 608
+                          },
+                          "gold_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 572
+                          },
+                          "obsidian_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 604
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2568
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4582
+          }
+        }
+      }
+    }
+  }
+}

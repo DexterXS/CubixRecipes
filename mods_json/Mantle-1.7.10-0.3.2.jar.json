@@ -1,0 +1,807 @@
+{
+  "mod_name": "Mantle-1.7.10-0.3.2.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Mantle-1.7.10-0.3.2.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Mantle-1.7.10-0.3.2.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 200113,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "mantle": {
+            "type": "directory",
+            "children": {
+              "Mantle.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3593
+              },
+              "utils": {
+                "type": "directory",
+                "children": {
+                  "ItemMetaWrapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1399
+                  },
+                  "ItemStackNBTWrapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1269
+                  },
+                  "RecipeRemover.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3968
+                  },
+                  "ItemStackWrapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1357
+                  }
+                }
+              },
+              "items": {
+                "type": "directory",
+                "children": {
+                  "ItemUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 980
+                  },
+                  "Manual.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3980
+                  },
+                  "abstracts": {
+                    "type": "directory",
+                    "children": {
+                      "CraftingItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3320
+                      }
+                    }
+                  },
+                  "iface": {
+                    "type": "directory",
+                    "children": {
+                      "IDebugItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 120
+                      }
+                    }
+                  }
+                }
+              },
+              "crash": {
+                "type": "directory",
+                "children": {
+                  "CallableUnsuppConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1815
+                  },
+                  "CallableSuppConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 938
+                  }
+                }
+              },
+              "blocks": {
+                "type": "directory",
+                "children": {
+                  "BlockUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1488
+                  },
+                  "MantleBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1802
+                  },
+                  "abstracts": {
+                    "type": "directory",
+                    "children": {
+                      "MultiItemBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2655
+                      },
+                      "InventoryBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7640
+                      },
+                      "InventoryLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6441
+                      },
+                      "AdaptiveInventoryLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3040
+                      },
+                      "ExpandableInventoryLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5988
+                      },
+                      "InventorySlab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2419
+                      },
+                      "MultiServantLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6624
+                      }
+                    }
+                  },
+                  "iface": {
+                    "type": "directory",
+                    "children": {
+                      "IMasterLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 192
+                      },
+                      "IFacingLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 427
+                      },
+                      "IServantLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 441
+                      },
+                      "IMasterNode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 307
+                      },
+                      "IActiveLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 178
+                      }
+                    }
+                  }
+                }
+              },
+              "module": {
+                "type": "directory",
+                "children": {
+                  "ModuleController$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 923
+                  },
+                  "ModuleController$State.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1257
+                  },
+                  "ModuleController.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5645
+                  },
+                  "ILoadableModule.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 267
+                  }
+                }
+              },
+              "common": {
+                "type": "directory",
+                "children": {
+                  "MProxyCommon.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1097
+                  },
+                  "ComparisonHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1314
+                  },
+                  "IDDumps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2058
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "PacketUpdateTE.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2492
+                      },
+                      "AbstractPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 526
+                      }
+                    }
+                  }
+                }
+              },
+              "lib": {
+                "type": "directory",
+                "children": {
+                  "CoreRepo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 668
+                  },
+                  "CoreConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3555
+                  },
+                  "TabTools.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 823
+                  },
+                  "environment": {
+                    "type": "directory",
+                    "children": {
+                      "EnvironmentChecks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2427
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "MantleClientRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2834
+                      }
+                    }
+                  }
+                }
+              },
+              "pulsar": {
+                "type": "directory",
+                "children": {
+                  "internal": {
+                    "type": "directory",
+                    "children": {
+                      "Configuration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7072
+                      },
+                      "Configuration$GsonConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1191
+                      },
+                      "Configuration$FileNotReadWritableException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 546
+                      },
+                      "Configuration$ConfigEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1017
+                      },
+                      "Configuration$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 722
+                      },
+                      "logging": {
+                        "type": "directory",
+                        "children": {
+                          "JULLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1195
+                          },
+                          "Log4jLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1267
+                          },
+                          "ILogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 245
+                          },
+                          "LogManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1156
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "IConfiguration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 230
+                      },
+                      "ForgeCFG.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1829
+                      }
+                    }
+                  },
+                  "pulse": {
+                    "type": "directory",
+                    "children": {
+                      "IPulse.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 424
+                      },
+                      "PulseProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 545
+                      },
+                      "Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 427
+                      },
+                      "PulseMeta.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 969
+                      },
+                      "Pulse.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 652
+                      }
+                    }
+                  },
+                  "control": {
+                    "type": "directory",
+                    "children": {
+                      "PulseManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10308
+                      },
+                      "PulseManager$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 709
+                      }
+                    }
+                  }
+                }
+              },
+              "event": {
+                "type": "directory",
+                "children": {
+                  "ManualOpenEvent$Pre.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 995
+                  },
+                  "ManualOpenEvent.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1143
+                  },
+                  "Migration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3593
+                  },
+                  "ManualOpenEvent$Post.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 998
+                  }
+                }
+              },
+              "player": {
+                "type": "directory",
+                "children": {
+                  "PlayerUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 814
+                  }
+                }
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "SmallFontRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 17370
+                  },
+                  "RenderItemCopy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15714
+                  },
+                  "MProxyClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4645
+                  },
+                  "pages": {
+                    "type": "directory",
+                    "children": {
+                      "PicturePage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2543
+                      },
+                      "CraftingPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4920
+                      },
+                      "TitlePage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "FurnacePage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3877
+                      },
+                      "SectionPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1695
+                      },
+                      "BookPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 742
+                      },
+                      "TextPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1412
+                      },
+                      "BlankPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 619
+                      },
+                      "SidebarPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2948
+                      },
+                      "ContentsTablePage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3159
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiManual.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5461
+                      },
+                      "TurnPageButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1744
+                      }
+                    }
+                  }
+                }
+              },
+              "books": {
+                "type": "directory",
+                "children": {
+                  "ManualReader.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2153
+                  },
+                  "BookData.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1643
+                  },
+                  "BookDataStore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2764
+                  },
+                  "external": {
+                    "type": "directory",
+                    "children": {
+                      "ZipLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11440
+                      },
+                      "BookIS.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 533
+                      },
+                      "BookLoad.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 633
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "BookImage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 683
+                      }
+                    }
+                  }
+                }
+              },
+              "debug": {
+                "type": "directory",
+                "children": {
+                  "DebugHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1997
+                  },
+                  "IDebuggable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 210
+                  },
+                  "DebugData.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 588
+                  },
+                  "TracingPrintStream.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1400
+                  },
+                  "LogIdentifier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1546
+                  }
+                }
+              },
+              "world": {
+                "type": "directory",
+                "children": {
+                  "DirectionUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 984
+                  },
+                  "CoordTuple.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3386
+                  },
+                  "DimensionCoordTuple.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1512
+                  },
+                  "WorldHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1227
+                  },
+                  "ChunkCoord.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2229
+                  },
+                  "CoordTupleSort.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 762
+                  },
+                  "CoordTuplePair.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 727
+                  },
+                  "DimensionCoordPair.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1410
+                  }
+                }
+              },
+              "math": {
+                "type": "directory",
+                "children": {
+                  "Dozenal.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1952
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 477
+          },
+          "Mantle.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 17948
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "mantle": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "tinkerbook_green.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 465
+                          },
+                          "tinkerbook_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 468
+                          },
+                          "tinkerbook_toolstation.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 455
+                          },
+                          "tinkerbook_smeltery.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 436
+                          },
+                          "tinkerbook_diary.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 464
+                          },
+                          "mantlebook_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 468
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "tinkerbook_green.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 465
+                          },
+                          "tinkerbook_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 468
+                          },
+                          "bookfurnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1664
+                          },
+                          "bookleft.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11940
+                          },
+                          "bookcrafting.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3756
+                          },
+                          "missingno.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3021
+                          },
+                          "book.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7914
+                          },
+                          "bookright.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8536
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "manuals": {
+                    "type": "directory",
+                    "children": {
+                      "test.xml": {
+                        "type": "file",
+                        "extension": ".xml",
+                        "size": 9540
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 573
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 8593
+          }
+        }
+      }
+    }
+  }
+}

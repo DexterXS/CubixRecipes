@@ -1,0 +1,292 @@
+{
+  "mod_name": "BGM-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BGM-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BGM-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 48750,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 65
+              },
+              "at_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 297
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "bgm": {
+                    "type": "directory",
+                    "children": {
+                      "BGM.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2302
+                      },
+                      "BGMConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3742
+                      },
+                      "capa": {
+                        "type": "directory",
+                        "children": {
+                          "BGMPlayerProperties.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3717
+                          }
+                        }
+                      },
+                      "command": {
+                        "type": "directory",
+                        "children": {
+                          "BuilderAGMCommand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 932
+                          },
+                          "BuilderGMCommand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1507
+                          }
+                        }
+                      },
+                      "events": {
+                        "type": "directory",
+                        "children": {
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3086
+                          },
+                          "ServerEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6193
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "ButtonChooseTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4112
+                              },
+                              "GuiBGM.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13948
+                              }
+                            }
+                          },
+                          "ContainerBGM$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1112
+                          },
+                          "ContainerBGM$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1753
+                          },
+                          "ContainerBGM$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1385
+                          },
+                          "ContainerBGM.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6992
+                          },
+                          "GuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1179
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1315
+                          },
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1315
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3196
+                          },
+                          "BGMNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7336
+                          },
+                          "messages": {
+                            "type": "directory",
+                            "children": {
+                              "MessageCreativeChooseTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1569
+                              },
+                              "MessageCreativeRemoveAll.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1305
+                              },
+                              "MessageCreativeSlotClick.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1947
+                              },
+                              "MessageOpenCreative.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1734
+                              },
+                              "MessageOpenGuiRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1289
+                              },
+                              "MessageUpdateCreativeList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3285
+                              },
+                              "MessageUpdateRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3233
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1781
+                          },
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1756
+                          }
+                        }
+                      },
+                      "wgintegration": {
+                        "type": "directory",
+                        "children": {
+                          "BukkitUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 680
+                          },
+                          "PluginPatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1731
+                          },
+                          "WGInjectionCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 548
+                          },
+                          "WGInjector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1184
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "bgm": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "tabs.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 269
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 340
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 28
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7115
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,552 @@
+{
+  "mod_name": "CubixImg.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixImg.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixImg.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 13093015,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "mryarik666": {
+                "type": "directory",
+                "children": {
+                  "xmodpanel": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 701
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 383
+                      },
+                      "DataArt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 539
+                      },
+                      "XMain.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4533
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "ArtBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3190
+                          },
+                          "ArtRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4729
+                          },
+                          "ArtTileEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 915
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "xmodpanel": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "Boss2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21983
+                          },
+                          "ghast.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 47684
+                          },
+                          "heart0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 733
+                          },
+                          "heart1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 896
+                          },
+                          "heart2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2656
+                          },
+                          "mem2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 673088
+                          },
+                          "mem3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 506825
+                          },
+                          "mine.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1307051
+                          },
+                          "olen1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 26024
+                          },
+                          "olen2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 26673
+                          },
+                          "olen3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22823
+                          },
+                          "olen4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19216
+                          },
+                          "olen5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25439
+                          },
+                          "olen6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27393
+                          },
+                          "olen7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19163
+                          },
+                          "olen8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18759
+                          },
+                          "olen9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 24739
+                          },
+                          "pedra.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 268822
+                          },
+                          "player.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 122643
+                          },
+                          "skeleton.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 514275
+                          },
+                          "villager.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 31524
+                          },
+                          "Boss1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 23013
+                          },
+                          "Boss3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18137
+                          },
+                          "Boss4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 32447
+                          },
+                          "Boss5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25548
+                          },
+                          "Boss6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 37311
+                          },
+                          "Boss7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22415
+                          },
+                          "Boss8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 32063
+                          },
+                          "Boss9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 29246
+                          },
+                          "Boss10.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25059
+                          },
+                          "Boss11.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21767
+                          },
+                          "cookie.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19725
+                          },
+                          "diamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13222
+                          },
+                          "dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 169688
+                          }
+                        }
+                      },
+                      "art": {
+                        "type": "directory",
+                        "children": {
+                          "4arka.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 146360
+                          },
+                          "Boss1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 23013
+                          },
+                          "Boss10.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25059
+                          },
+                          "Boss11.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21767
+                          },
+                          "Boss2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21983
+                          },
+                          "Boss3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 14895
+                          },
+                          "Boss4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 32447
+                          },
+                          "Boss5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18170
+                          },
+                          "Boss6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 24406
+                          },
+                          "Boss7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11782
+                          },
+                          "Boss8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 32063
+                          },
+                          "Boss9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 29246
+                          },
+                          "case.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 200504
+                          },
+                          "cookie.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19725
+                          },
+                          "diamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13222
+                          },
+                          "dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 169688
+                          },
+                          "EnJay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2079601
+                          },
+                          "ghast.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 47684
+                          },
+                          "heart0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 733
+                          },
+                          "heart1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 896
+                          },
+                          "heart2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2656
+                          },
+                          "hello.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 243581
+                          },
+                          "HiTech_hello.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 196542
+                          },
+                          "kit_start.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8310
+                          },
+                          "logo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 170720
+                          },
+                          "mem1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 175008
+                          },
+                          "mem2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 673088
+                          },
+                          "mem3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 506825
+                          },
+                          "mine.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1307051
+                          },
+                          "olen1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 26024
+                          },
+                          "olen2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 26673
+                          },
+                          "olen3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22823
+                          },
+                          "olen4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19216
+                          },
+                          "olen5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25439
+                          },
+                          "olen6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27393
+                          },
+                          "olen7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19163
+                          },
+                          "olen8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18759
+                          },
+                          "olen9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 24739
+                          },
+                          "pedra.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 268822
+                          },
+                          "player.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 122643
+                          },
+                          "portals.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 242669
+                          },
+                          "pvp.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9445
+                          },
+                          "pvp_arena.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 83320
+                          },
+                          "rtp.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7591
+                          },
+                          "skeleton.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 514275
+                          },
+                          "SkyTech1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 36321
+                          },
+                          "SkyTech2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 595302
+                          },
+                          "tutorials.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 169773
+                          },
+                          "villager.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 31524
+                          },
+                          "vk.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 324637
+                          },
+                          "who_case.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 113699
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2925
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1061
+          }
+        }
+      }
+    }
+  }
+}

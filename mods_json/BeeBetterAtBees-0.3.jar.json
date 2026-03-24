@@ -1,0 +1,207 @@
+{
+  "mod_name": "BeeBetterAtBees-0.3.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BeeBetterAtBees-0.3.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BeeBetterAtBees-0.3.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 34733,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 78
+              },
+              "beebetteratbees_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 157
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 330
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "beebetteratbees": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 36
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "neiBlank.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1827
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "hellfirepvp": {
+            "type": "directory",
+            "children": {
+              "beebetteratbees": {
+                "type": "directory",
+                "children": {
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1038
+                      },
+                      "NEIBBABConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 739
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractTreeGUIHandler$RecipeTransferRect.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1118
+                          },
+                          "AbstractTreeGUIHandler$RecipeTransferRectHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6596
+                          },
+                          "AbstractTreeGUIHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11171
+                          },
+                          "BBABGuiRecipeTreeHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13668
+                          },
+                          "CachedBeeMutationTree$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2005
+                          },
+                          "CachedBeeMutationTree$PositionedMutationNodeStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2341
+                          },
+                          "CachedBeeMutationTree.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7888
+                          },
+                          "CachedRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4269
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "SimpleBinaryTree$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 276
+                          },
+                          "SimpleBinaryTree$Leaf.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1557
+                          },
+                          "SimpleBinaryTree$Node.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3211
+                          },
+                          "SimpleBinaryTree$RootProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 760
+                          },
+                          "SimpleBinaryTree.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3647
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "BeeBetterAtBees.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2394
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 403
+                      },
+                      "ModConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1308
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 76
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2333
+          }
+        }
+      }
+    }
+  }
+}

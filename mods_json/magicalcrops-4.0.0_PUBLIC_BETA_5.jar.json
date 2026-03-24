@@ -1,0 +1,3147 @@
+{
+  "mod_name": "magicalcrops-4.0.0_PUBLIC_BETA_5.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\magicalcrops-4.0.0_PUBLIC_BETA_5.jar",
+  "mod_type": "jar",
+  "tree": {
+    "magicalcrops-4.0.0_PUBLIC_BETA_5.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1515947,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "mark719": {
+                "type": "directory",
+                "children": {
+                  "magicalcrops": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 381
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1542
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5277
+                      },
+                      "MagicalCrops.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3961
+                      },
+                      "tabMagical.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1149
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockCropBooster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2615
+                          },
+                          "BlockCropBooster2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2618
+                          },
+                          "BlockCropBooster3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2618
+                          },
+                          "BlockEssenceStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2938
+                          },
+                          "BlockMagicalCrops.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8101
+                          },
+                          "BlockMinicioOre.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1820
+                          },
+                          "BlockMinicioOreEnd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1833
+                          },
+                          "BlockMinicioOreNether.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1845
+                          },
+                          "BlockWitherProof.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1920
+                          },
+                          "BlockWitherProofGlass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2542
+                          },
+                          "crops": {
+                            "type": "directory",
+                            "children": {
+                              "AirCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1883
+                              },
+                              "AirshardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "AluminiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1872
+                              },
+                              "AlumiteCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1863
+                              },
+                              "AmberCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1851
+                              },
+                              "ArditeCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "BlazeCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1896
+                              },
+                              "BlizzCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1852
+                              },
+                              "BronzeCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "CertusQuartzCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1888
+                              },
+                              "ChickenCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1908
+                              },
+                              "CoalCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1889
+                              },
+                              "CobaltCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "ConductiveIronCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1905
+                              },
+                              "CopperCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "CowCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1884
+                              },
+                              "CreeperCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1908
+                              },
+                              "DarkSteelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "DiamondCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1907
+                              },
+                              "DraconiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "DyeCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1883
+                              },
+                              "EarthCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1895
+                              },
+                              "EarthshardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1881
+                              },
+                              "ElectricalSteelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1911
+                              },
+                              "ElectrumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "EmeraldCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1907
+                              },
+                              "EnderiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "EndermanCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1914
+                              },
+                              "EnergeticAlloyCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1905
+                              },
+                              "EntropyshardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1893
+                              },
+                              "ExperienceCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1917
+                              },
+                              "FireCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1889
+                              },
+                              "FireshardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "FluixCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1851
+                              },
+                              "GhastCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1896
+                              },
+                              "GlowstoneCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1919
+                              },
+                              "GoldCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1889
+                              },
+                              "InvarCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1851
+                              },
+                              "IronCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1889
+                              },
+                              "LapisCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1895
+                              },
+                              "LeadCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1845
+                              },
+                              "LumiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "ManasteelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "ManyullynCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "MinicioCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1907
+                              },
+                              "NatureCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1901
+                              },
+                              "NetherCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1901
+                              },
+                              "NickelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "ObsidianCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1913
+                              },
+                              "OrdershardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1881
+                              },
+                              "OsmiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "PeridotCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1863
+                              },
+                              "PigCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1884
+                              },
+                              "PlatinumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "PulsatingIronCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1899
+                              },
+                              "QuartzCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1901
+                              },
+                              "QuicksilverCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1887
+                              },
+                              "RedstoneAlloyCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1899
+                              },
+                              "RedstoneCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1913
+                              },
+                              "RubberCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "RubyCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1845
+                              },
+                              "SaltpeterCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "SapphireCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "SheepCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1896
+                              },
+                              "SignalumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "SilverCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "SkeletonCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1914
+                              },
+                              "SlimeCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1896
+                              },
+                              "SoulariumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              },
+                              "SpiderCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              },
+                              "SteelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1851
+                              },
+                              "SulfurCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1857
+                              },
+                              "TerrasteelCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1881
+                              },
+                              "ThaumiumCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1869
+                              },
+                              "TinCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1839
+                              },
+                              "VibrantAlloyCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1893
+                              },
+                              "WaterCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1895
+                              },
+                              "WatershardCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1881
+                              },
+                              "WitherCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              },
+                              "YelloriteCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1875
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "ConfigCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9148
+                          },
+                          "ConfigDisable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6593
+                          },
+                          "ConfigMain.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4908
+                          }
+                        }
+                      },
+                      "events": {
+                        "type": "directory",
+                        "children": {
+                          "MobDropEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2566
+                          }
+                        }
+                      },
+                      "furnace": {
+                        "type": "directory",
+                        "children": {
+                          "AccioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8792
+                          },
+                          "ContainerAccioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4505
+                          },
+                          "ContainerCrucioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4513
+                          },
+                          "ContainerImperioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4521
+                          },
+                          "ContainerUltimateFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4529
+                          },
+                          "ContainerZivicioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4521
+                          },
+                          "CrucioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8801
+                          },
+                          "GuiAccioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3087
+                          },
+                          "GuiCrucioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3095
+                          },
+                          "GuiImperioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3103
+                          },
+                          "GuiUltimateFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3111
+                          },
+                          "GuiZivicioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3103
+                          },
+                          "ImperioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8810
+                          },
+                          "TileEntityAccioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9655
+                          },
+                          "TileEntityCrucioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9659
+                          },
+                          "TileEntityImperioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9664
+                          },
+                          "TileEntityUltimateFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9667
+                          },
+                          "TileEntityZivicioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9664
+                          },
+                          "UltimateFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8819
+                          },
+                          "ZivicioFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8810
+                          }
+                        }
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Essence.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5005
+                          },
+                          "MBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2919
+                          },
+                          "MCrops.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4072
+                          },
+                          "MItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1810
+                          },
+                          "ModCompat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 43915
+                          },
+                          "MSeeds.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6419
+                          }
+                        }
+                      },
+                      "help": {
+                        "type": "directory",
+                        "children": {
+                          "BlockRegisterHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 785
+                          },
+                          "CropRandom.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 408
+                          },
+                          "ItemRegisterHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 744
+                          },
+                          "OreCheck.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 828
+                          },
+                          "Reference.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 572
+                          },
+                          "StemRandom.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 592
+                          }
+                        }
+                      },
+                      "itemblock": {
+                        "type": "directory",
+                        "children": {
+                          "ItemBlockEssenceStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2079
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemExperienceBook.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4198
+                          },
+                          "ItemInfusionStone1Weak.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3240
+                          },
+                          "ItemInfusionStone2Regular.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2930
+                          },
+                          "ItemInfusionStone3Strong.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2988
+                          },
+                          "ItemInfusionStone4Extreme.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2929
+                          },
+                          "ItemInfusionStone5Master.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2936
+                          },
+                          "ItemMagicalFertilizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3760
+                          },
+                          "essence": {
+                            "type": "directory",
+                            "children": {
+                              "AccioEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1270
+                              },
+                              "AirEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "AirshardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "AluminiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "AlumiteEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "AmberEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "ArditeEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "BlazeEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "BlizzEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "BronzeEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "CertusQuartzEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 777
+                              },
+                              "ChickenEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "CoalEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "CobaltEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "ConductiveIronEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 790
+                              },
+                              "CopperEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "CowEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "CreeperEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "CrucioEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1276
+                              },
+                              "DarkSteelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "DiamondEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "DraconiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "DyeEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "EarthEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "EarthshardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "ElectricalSteelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 794
+                              },
+                              "ElectrumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "EmeraldEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "EnderiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "EndermanEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 763
+                              },
+                              "EnergeticAlloyEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 790
+                              },
+                              "EntropyshardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 782
+                              },
+                              "ExperienceEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "FireEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "FireshardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "FluixEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "GhastEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "GlowstoneEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "GoldEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "ImperioEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1278
+                              },
+                              "InvarEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "IronEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "LapisEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "LeadEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "LumiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "ManasteelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "ManyullynEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "MinicioEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1279
+                              },
+                              "NatureEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3139
+                              },
+                              "NetherEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "NickelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "ObsidianEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "OrdershardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "OsmiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "PeridotEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "PigEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "PlatinumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "PulsatingIronEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 786
+                              },
+                              "QuartzEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "QuicksilverEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 778
+                              },
+                              "RedstoneAlloyEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 786
+                              },
+                              "RedstoneEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "RubberEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "RubyEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 750
+                              },
+                              "SaltpeterEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "SapphireEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "SheepEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "SignalumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "SilverEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "SkeletonEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "SlimeEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "SoulariumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "SpiderEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "SteelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "SulfurEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "TaintedEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1282
+                              },
+                              "TerrasteelEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "ThaumiumEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "TinEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "VibrantAlloyEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 782
+                              },
+                              "WaterEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 754
+                              },
+                              "WatershardEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "WitherEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 758
+                              },
+                              "YelloriteEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "ZivicioEssence.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1286
+                              }
+                            }
+                          },
+                          "seeds": {
+                            "type": "directory",
+                            "children": {
+                              "AirSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 720
+                              },
+                              "AirshardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "AluminiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "AlumiteSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1058
+                              },
+                              "AmberSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "ArditeSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "BlazeSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "BlizzSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "BronzeSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "CertusQuartzSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1073
+                              },
+                              "ChickenSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 732
+                              },
+                              "CoalSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 723
+                              },
+                              "CobaltSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "ConductiveIronSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1079
+                              },
+                              "CopperSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "CowSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 720
+                              },
+                              "CreeperSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 732
+                              },
+                              "DarkSteelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "DiamondSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 732
+                              },
+                              "DraconiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "DyeSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 720
+                              },
+                              "EarthSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "EarthshardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1067
+                              },
+                              "ElectricalSteelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1082
+                              },
+                              "ElectrumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "EmeraldSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 732
+                              },
+                              "EnderiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "EndermanSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 735
+                              },
+                              "EnergeticAlloySeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1079
+                              },
+                              "EntropyshardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1073
+                              },
+                              "ExperienceSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 741
+                              },
+                              "FireSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 723
+                              },
+                              "FireshardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "FluixSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "GhastSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "GlowstoneSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 738
+                              },
+                              "GoldSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 723
+                              },
+                              "InvarSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "IronSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 723
+                              },
+                              "LapisSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "LeadSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1049
+                              },
+                              "LumiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "ManasteelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "ManyullynSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "MinicioSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 732
+                              },
+                              "NatureSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 729
+                              },
+                              "NetherSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 729
+                              },
+                              "NickelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "ObsidianSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 735
+                              },
+                              "OrdershardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1067
+                              },
+                              "OsmiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "PeridotSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1058
+                              },
+                              "PigSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 720
+                              },
+                              "PlatinumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "PulsatingIronSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1076
+                              },
+                              "QuartzSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 729
+                              },
+                              "QuicksilverSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1070
+                              },
+                              "RedstoneAlloySeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1076
+                              },
+                              "RedstoneSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 735
+                              },
+                              "RubberSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "RubySeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1049
+                              },
+                              "SaltpeterSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "SapphireSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "SheepSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "SignalumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "SilverSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "SkeletonSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 735
+                              },
+                              "SlimeSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "SoulariumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              },
+                              "SpiderSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 729
+                              },
+                              "SteelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "SulfurSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1055
+                              },
+                              "TerrasteelSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1067
+                              },
+                              "ThaumiumSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "TinSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1046
+                              },
+                              "VibrantAlloySeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1073
+                              },
+                              "WaterSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "WatershardSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1067
+                              },
+                              "WitherSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 729
+                              },
+                              "YelloriteSeeds.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1064
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "recipes": {
+                        "type": "directory",
+                        "children": {
+                          "BlockRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3420
+                          },
+                          "EnchantmentRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15897
+                          },
+                          "ItemRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4373
+                          },
+                          "ResourceRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12531
+                          },
+                          "SeedRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10058
+                          }
+                        }
+                      },
+                      "register": {
+                        "type": "directory",
+                        "children": {
+                          "BlockRegister.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3463
+                          },
+                          "ItemRegister.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4584
+                          },
+                          "OreDictionaryRegister.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4140
+                          }
+                        }
+                      },
+                      "seedbags": {
+                        "type": "directory",
+                        "children": {
+                          "DisabledSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 859
+                          },
+                          "ItemSeedBagAccio.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "ItemSeedBagCrucio.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1625
+                          },
+                          "ItemSeedBagImperio.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1626
+                          },
+                          "ItemSeedBagZivicio.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1626
+                          },
+                          "Planter$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 951
+                          },
+                          "Planter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6275
+                          },
+                          "PlantingLogic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2708
+                          },
+                          "Point.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1635
+                          },
+                          "SeedContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3730
+                          },
+                          "SeedInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4816
+                          },
+                          "SeedPlanterGui.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2809
+                          },
+                          "SeedSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 834
+                          },
+                          "VeinPlanterInstance.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4788
+                          }
+                        }
+                      },
+                      "worldgen": {
+                        "type": "directory",
+                        "children": {
+                          "WorldGenEssence.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2175
+                          },
+                          "WorldGenEssenceEnd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2161
+                          },
+                          "WorldGenEssenceNether.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2182
+                          },
+                          "WorldGenMineableEnd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3295
+                          },
+                          "WorldGenMineableNether.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3304
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 761
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "magicalcrops": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 11569
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 16408
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "magical_title.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 23851
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "booster_block.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4085
+                          },
+                          "booster_block.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 57
+                          },
+                          "CropAirshard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4401
+                          },
+                          "CropAir_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4354
+                          },
+                          "CropAlumin_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4355
+                          },
+                          "CropAlumite_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4381
+                          },
+                          "CropAmber_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4399
+                          },
+                          "CropArdite_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4346
+                          },
+                          "CropBacon_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4421
+                          },
+                          "CropBlaze_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4246
+                          },
+                          "CropBlizz_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4242
+                          },
+                          "CropBronze_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4380
+                          },
+                          "CropChicken_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4234
+                          },
+                          "CropCoal_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4387
+                          },
+                          "CropCobalt_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4347
+                          },
+                          "CropConductiveIron_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4388
+                          },
+                          "CropCopper_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4387
+                          },
+                          "CropCow_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4228
+                          },
+                          "CropCQuartz_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4383
+                          },
+                          "CropCreeper_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4287
+                          },
+                          "CropDarkSteel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4391
+                          },
+                          "CropDiamond_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4369
+                          },
+                          "CropDraconium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4390
+                          },
+                          "CropDye_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5537
+                          },
+                          "CropDye_3.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 40
+                          },
+                          "CropEarthshard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4341
+                          },
+                          "CropEarth_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4366
+                          },
+                          "CropElectricalSteel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4398
+                          },
+                          "CropElectrum_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4411
+                          },
+                          "CropEmerald_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4378
+                          },
+                          "CropEnderium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4383
+                          },
+                          "CropEnderman_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4140
+                          },
+                          "CropEnergeticAlloy_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4395
+                          },
+                          "CropEntropyshard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4392
+                          },
+                          "CropFireshard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4373
+                          },
+                          "CropFire_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4365
+                          },
+                          "CropFluix_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4371
+                          },
+                          "CropGhast_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4213
+                          },
+                          "CropGlowstone_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4335
+                          },
+                          "CropGold_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4332
+                          },
+                          "CropInvar_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4421
+                          },
+                          "CropIron_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4338
+                          },
+                          "CropLapis_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4382
+                          },
+                          "CropLead_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4389
+                          },
+                          "CropLumium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4403
+                          },
+                          "CropManasteel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4409
+                          },
+                          "CropManyullyn_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4388
+                          },
+                          "CropMinicio_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4393
+                          },
+                          "CropNature_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4367
+                          },
+                          "CropNether_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4398
+                          },
+                          "CropNickel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4428
+                          },
+                          "CropObsidian_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4382
+                          },
+                          "CropOrdershard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4408
+                          },
+                          "CropOsmium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4349
+                          },
+                          "CropPeridot_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4391
+                          },
+                          "CropPig_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4265
+                          },
+                          "CropPlatinum_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4393
+                          },
+                          "CropPulsatingIron_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4379
+                          },
+                          "CropQuartz_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4419
+                          },
+                          "CropQuicksilver_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4416
+                          },
+                          "CropRedstoneAlloy_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4380
+                          },
+                          "CropRedstone_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4318
+                          },
+                          "CropRubber_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4396
+                          },
+                          "CropRuby_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4399
+                          },
+                          "CropSaltpeter_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4469
+                          },
+                          "CropSapphire_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4401
+                          },
+                          "CropSheep_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4268
+                          },
+                          "CropSignalum_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4400
+                          },
+                          "CropSilver_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4418
+                          },
+                          "CropSkeleton_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4246
+                          },
+                          "CropSlime_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4200
+                          },
+                          "CropSoularium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4378
+                          },
+                          "CropSpider_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4236
+                          },
+                          "CropSteel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4368
+                          },
+                          "CropSulfur_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4355
+                          },
+                          "CropTerrasteel_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4415
+                          },
+                          "CropThaumcraft_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4399
+                          },
+                          "CropThaumium_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4394
+                          },
+                          "CropTin_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4397
+                          },
+                          "CropVibrantAlloy_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4391
+                          },
+                          "CropWatershard_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4370
+                          },
+                          "CropWater_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4386
+                          },
+                          "CropWither_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4215
+                          },
+                          "CropXP_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4405
+                          },
+                          "CropYellorite_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4350
+                          },
+                          "Crop_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3302
+                          },
+                          "Crop_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3744
+                          },
+                          "Crop_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4002
+                          },
+                          "Crop_S0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3243
+                          },
+                          "Crop_S1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3725
+                          },
+                          "Crop_S2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3975
+                          },
+                          "dust_block_accio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3294
+                          },
+                          "dust_block_crucio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3203
+                          },
+                          "dust_block_imperio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3335
+                          },
+                          "dust_block_minicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3336
+                          },
+                          "dust_block_zivicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3322
+                          },
+                          "dust_block_zivicio_extra.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3318
+                          },
+                          "EssenceOre.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22441
+                          },
+                          "EssenceOre.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 39
+                          },
+                          "EssenceOreEnd.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 20964
+                          },
+                          "EssenceOreEnd.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 39
+                          },
+                          "EssenceOreNether.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 24404
+                          },
+                          "EssenceOreNether.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 39
+                          },
+                          "furnace_flower_accio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3176
+                          },
+                          "furnace_flower_crucio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3205
+                          },
+                          "furnace_flower_imperio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3193
+                          },
+                          "furnace_flower_ultimate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3218
+                          },
+                          "furnace_flower_zivicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3234
+                          },
+                          "wither_block.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3209
+                          },
+                          "wither_glass.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2928
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "accio_furnace_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 30649
+                          },
+                          "crucio_furnace_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 35001
+                          },
+                          "imperio_furnace_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 34522
+                          },
+                          "ultimate_furnace_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 30307
+                          },
+                          "zivicio_furnace_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 30980
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "cropessence_air.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2923
+                          },
+                          "cropessence_airshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "cropessence_aluminium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 221
+                          },
+                          "cropessence_alumite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2990
+                          },
+                          "cropessence_amber.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2931
+                          },
+                          "cropessence_ardite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 230
+                          },
+                          "cropessence_blaze.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2993
+                          },
+                          "cropessence_blizz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2989
+                          },
+                          "cropessence_bronze.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2990
+                          },
+                          "cropessence_chicken.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2986
+                          },
+                          "cropessence_christmas.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2947
+                          },
+                          "cropessence_coal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2956
+                          },
+                          "cropessence_cobalt.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 263
+                          },
+                          "cropessence_conductiveiron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2986
+                          },
+                          "cropessence_copper.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 253
+                          },
+                          "cropessence_cow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "cropessence_cquartz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2947
+                          },
+                          "cropessence_creeper.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2952
+                          },
+                          "cropessence_darkiron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2934
+                          },
+                          "cropessence_darksteel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2962
+                          },
+                          "cropessence_diamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2936
+                          },
+                          "cropessence_draconium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2962
+                          },
+                          "cropessence_dye.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 426
+                          },
+                          "cropessence_earth.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2953
+                          },
+                          "cropessence_earthshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "cropessence_electricalsteel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2928
+                          },
+                          "cropessence_electrum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2983
+                          },
+                          "cropessence_emerald.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2954
+                          },
+                          "cropessence_ender.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2965
+                          },
+                          "cropessence_enderium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2983
+                          },
+                          "cropessence_energeticalloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2986
+                          },
+                          "cropessence_entropyshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2952
+                          },
+                          "cropessence_experience.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2993
+                          },
+                          "cropessence_fire.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2975
+                          },
+                          "cropessence_fireshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2959
+                          },
+                          "cropessence_fluix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2969
+                          },
+                          "cropessence_ghast.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2926
+                          },
+                          "cropessence_glowstone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2935
+                          },
+                          "cropessence_gold.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2932
+                          },
+                          "cropessence_invar.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2988
+                          },
+                          "cropessence_iridium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1062
+                          },
+                          "cropessence_iron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2974
+                          },
+                          "cropessence_lapis.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3001
+                          },
+                          "cropessence_lead.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 211
+                          },
+                          "cropessence_lumium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2986
+                          },
+                          "cropessence_manasteel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2993
+                          },
+                          "cropessence_manganese.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2917
+                          },
+                          "cropessence_manyullyn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2988
+                          },
+                          "cropessence_nature.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2957
+                          },
+                          "cropessence_nether.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2983
+                          },
+                          "cropessence_nickel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 308
+                          },
+                          "cropessence_obsidian.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3000
+                          },
+                          "cropessence_ordershard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2964
+                          },
+                          "cropessence_osmium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2947
+                          },
+                          "cropessence_peridot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 254
+                          },
+                          "cropessence_pig.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2974
+                          },
+                          "cropessence_platinum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 272
+                          },
+                          "cropessence_pulsatingiron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2991
+                          },
+                          "cropessence_quartz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 253
+                          },
+                          "cropessence_quicksilver.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2935
+                          },
+                          "cropessence_redstone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2941
+                          },
+                          "cropessence_redstonealloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2972
+                          },
+                          "cropessence_rubber.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 255
+                          },
+                          "cropessence_ruby.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 195
+                          },
+                          "cropessence_saltpeter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2971
+                          },
+                          "cropessence_sapphire.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 228
+                          },
+                          "cropessence_sheep.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2964
+                          },
+                          "cropessence_signalum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2985
+                          },
+                          "cropessence_silver.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 271
+                          },
+                          "cropessence_skeleton.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2946
+                          },
+                          "cropessence_slime.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2981
+                          },
+                          "cropessence_soularium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2989
+                          },
+                          "cropessence_spider.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2931
+                          },
+                          "cropessence_steel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2934
+                          },
+                          "cropessence_sulfur.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2936
+                          },
+                          "cropessence_tainted.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3228
+                          },
+                          "cropessence_terrasteel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2988
+                          },
+                          "cropessence_thaumium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2984
+                          },
+                          "cropessence_tin.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 188
+                          },
+                          "cropessence_uranium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 292
+                          },
+                          "cropessence_vibrantalloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2976
+                          },
+                          "cropessence_water.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2941
+                          },
+                          "cropessence_watershard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2965
+                          },
+                          "cropessence_wither.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2965
+                          },
+                          "cropessence_yellorite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2935
+                          },
+                          "experience_book.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3310
+                          },
+                          "experience_book_accio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3284
+                          },
+                          "experience_book_crucio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3243
+                          },
+                          "experience_book_imperio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3283
+                          },
+                          "experience_book_zivicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3300
+                          },
+                          "GrowthPowder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3010
+                          },
+                          "infusionstone_extreme.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3231
+                          },
+                          "infusionstone_master.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3235
+                          },
+                          "infusionstone_regular.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3221
+                          },
+                          "infusionstone_strong.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3245
+                          },
+                          "infusionstone_weak.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3206
+                          },
+                          "MagicalFertilizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3010
+                          },
+                          "magicessence_accio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3121
+                          },
+                          "magicessence_crucio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3068
+                          },
+                          "magicessence_imperio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3152
+                          },
+                          "magicessence_minicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3150
+                          },
+                          "magicessence_zivicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3122
+                          },
+                          "seedbag_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3117
+                          },
+                          "seedbag_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3122
+                          },
+                          "seedbag_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3092
+                          },
+                          "seedbag_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3119
+                          },
+                          "seedbag_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3108
+                          },
+                          "seeds_air.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3013
+                          },
+                          "seeds_blank.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "seeds_blank1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2934
+                          },
+                          "seeds_blaze.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3072
+                          },
+                          "seeds_chicken.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3009
+                          },
+                          "seeds_coal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2949
+                          },
+                          "seeds_cow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3046
+                          },
+                          "seeds_creeper.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3027
+                          },
+                          "seeds_diamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2964
+                          },
+                          "seeds_dye.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2966
+                          },
+                          "seeds_earth.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "seeds_emerald.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2932
+                          },
+                          "seeds_ender.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3088
+                          },
+                          "seeds_experience.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2922
+                          },
+                          "seeds_fire.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2941
+                          },
+                          "seeds_ghast.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3082
+                          },
+                          "seeds_glowstone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2944
+                          },
+                          "seeds_gold.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2926
+                          },
+                          "seeds_iron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2942
+                          },
+                          "seeds_lapis.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2932
+                          },
+                          "seeds_minicio.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2933
+                          },
+                          "seeds_nature.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "seeds_nether.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2953
+                          },
+                          "seeds_obsidian.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2953
+                          },
+                          "seeds_pig.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3095
+                          },
+                          "seeds_quartz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2955
+                          },
+                          "seeds_redstone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2948
+                          },
+                          "seeds_sheep.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3080
+                          },
+                          "seeds_skeleton.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3045
+                          },
+                          "seeds_slime.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3088
+                          },
+                          "seeds_spider.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3090
+                          },
+                          "seeds_water.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2945
+                          },
+                          "seeds_wither.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3069
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "minecraft": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "creative_inventory": {
+                                "type": "directory",
+                                "children": {
+                                  "tab_magicalcrops.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4322
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12679
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 92411
+          }
+        }
+      }
+    }
+  }
+}

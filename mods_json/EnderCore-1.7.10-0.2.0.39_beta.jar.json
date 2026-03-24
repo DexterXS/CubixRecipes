@@ -1,0 +1,1677 @@
+{
+  "mod_name": "EnderCore-1.7.10-0.2.0.39_beta.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\EnderCore-1.7.10-0.2.0.39_beta.jar",
+  "mod_type": "jar",
+  "tree": {
+    "EnderCore-1.7.10-0.2.0.39_beta.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 476209,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 148
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "enderio": {
+                "type": "directory",
+                "children": {
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "IEnderMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 188
+                      },
+                      "EnderCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7416
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1136
+                          },
+                          "EnderCoreModConflictException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1701
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "SimpleModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2471
+                              },
+                              "CustomRenderBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17276
+                              },
+                              "DirectionalModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5983
+                              },
+                              "ConnectedTextureRenderer$DefaultTextureCallback.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1462
+                              },
+                              "RenderUtil$EdgeNeighbour.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 882
+                              },
+                              "EnderWidget.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6034
+                              },
+                              "ConnectedTextureRenderer$TextureCallback.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 392
+                              },
+                              "BoundingBox.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12978
+                              },
+                              "IconUtil$IIconProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 348
+                              },
+                              "CubeRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9701
+                              },
+                              "CustomWidgetIcon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1595
+                              },
+                              "RenderUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 25987
+                              },
+                              "TechneUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 22271
+                              },
+                              "ColorUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2835
+                              },
+                              "IconUtil$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1131
+                              },
+                              "DirectionalModelRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1080
+                              },
+                              "CustomCubeRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2875
+                              },
+                              "VertexTranslation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1880
+                              },
+                              "ConnectedTextureRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14070
+                              },
+                              "IconUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2803
+                              },
+                              "VertexTransformComposite.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2127
+                              },
+                              "RenderUtil$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 987
+                              },
+                              "BoundingBox$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 990
+                              },
+                              "CustomRenderBlocks$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1011
+                              },
+                              "VertexRotationFacing.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1552
+                              },
+                              "TechneModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4178
+                              },
+                              "VertexRotation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2130
+                              }
+                            }
+                          },
+                          "sound": {
+                            "type": "directory",
+                            "children": {
+                              "BlockSound.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1538
+                              }
+                            }
+                          },
+                          "handlers": {
+                            "type": "directory",
+                            "children": {
+                              "OreDictTooltipHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2801
+                              },
+                              "SpecialTooltipHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9481
+                              },
+                              "ClientHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1254
+                              },
+                              "EnchantTooltipHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3017
+                              },
+                              "SpecialTooltipHandler$ITooltipCallback.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 410
+                              }
+                            }
+                          },
+                          "config": {
+                            "type": "directory",
+                            "children": {
+                              "BaseConfigGui.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3713
+                              },
+                              "BaseConfigGui$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 249
+                              },
+                              "BaseConfigGui$ConfigSection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3298
+                              },
+                              "BaseConfigGui$ConfigElementExtended.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2656
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiIconRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2766
+                              },
+                              "ToolTipManager$ToolTipRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 579
+                              },
+                              "GhostSlotHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7490
+                              },
+                              "GuiScreenBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5886
+                              },
+                              "ToolTipManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3270
+                              },
+                              "GuiContainerBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20404
+                              },
+                              "widget": {
+                                "type": "directory",
+                                "children": {
+                                  "TextFieldEnder$2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 820
+                                  },
+                                  "TextFieldEnder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3486
+                                  },
+                                  "TextFieldEnder$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1006
+                                  },
+                                  "VScrollbar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5847
+                                  },
+                                  "TextFieldEnder$ICharFilter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 337
+                                  },
+                                  "GhostBackgroundItemSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2310
+                                  },
+                                  "GuiScrollableList.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10030
+                                  },
+                                  "GuiToolTip.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2800
+                                  },
+                                  "TextFieldEnder$3.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 957
+                                  },
+                                  "GhostSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1891
+                                  }
+                                }
+                              },
+                              "button": {
+                                "type": "directory",
+                                "children": {
+                                  "MultiIconButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2396
+                                  },
+                                  "ToggleButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3305
+                                  },
+                                  "ColorButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3493
+                                  },
+                                  "CycleButton$ICycleEnum.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 424
+                                  },
+                                  "IconToggleButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1141
+                                  },
+                                  "CycleButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3207
+                                  },
+                                  "IconButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5671
+                                  },
+                                  "ItemButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2864
+                                  },
+                                  "CheckBox.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 812
+                                  },
+                                  "IIconButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3002
+                                  }
+                                }
+                              },
+                              "bettermodlist": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiEnhancedModList$ModComparator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2336
+                                  },
+                                  "GuiEnhancedModList$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 922
+                                  },
+                                  "GuiEnhancedModList.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11804
+                                  },
+                                  "GuiEnhancedModList$SortType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2760
+                                  },
+                                  "EventHandlerGui.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2290
+                                  },
+                                  "GuiEnhancedModList$InfoButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2132
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "BlockEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10561
+                          },
+                          "Handlers$HandlerType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2027
+                          },
+                          "TileEntityEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5023
+                          },
+                          "ContainerEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5935
+                          },
+                          "Handlers$Handler$Inst.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1582
+                          },
+                          "OreDict.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4036
+                          },
+                          "Lang.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3140
+                          },
+                          "Handlers$Handler$HandlerType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1354
+                          },
+                          "Handlers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9453
+                          },
+                          "Handlers$Handler$HandlerSide.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1666
+                          },
+                          "Handlers$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1222
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1361
+                          },
+                          "imc": {
+                            "type": "directory",
+                            "children": {
+                              "IMCRegistry$IIMC.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 462
+                              },
+                              "IMCRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2392
+                              },
+                              "IMCRegistry$IMCBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 668
+                              },
+                              "handlers": {
+                                "type": "directory",
+                                "children": {
+                                  "IMCRightClickCrop.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1739
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "tweaks": {
+                            "type": "directory",
+                            "children": {
+                              "SlabRecipes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2458
+                              },
+                              "Tweaks$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1004
+                              },
+                              "Tweak.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 935
+                              },
+                              "Tweaks$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 992
+                              },
+                              "Tweaks$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 972
+                              },
+                              "Tweaks$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 815
+                              },
+                              "Tweaks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1655
+                              },
+                              "InfiniBow.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2552
+                              },
+                              "Tweaks$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 800
+                              }
+                            }
+                          },
+                          "interfaces": {
+                            "type": "directory",
+                            "children": {
+                              "IComparatorOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 186
+                              }
+                            }
+                          },
+                          "handlers": {
+                            "type": "directory",
+                            "children": {
+                              "XPBoostHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7184
+                              },
+                              "FireworkHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4918
+                              },
+                              "AutoSmeltHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4438
+                              },
+                              "XPBoostHandler$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1160
+                              },
+                              "RightClickCropHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4319
+                              },
+                              "RightClickCropHandler$PlantInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1824
+                              }
+                            }
+                          },
+                          "event": {
+                            "type": "directory",
+                            "children": {
+                              "ItemStackEvent$ItemRarityEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1136
+                              },
+                              "ConfigFileChangedEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1148
+                              },
+                              "ItemStackEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1123
+                              },
+                              "ItemStackEvent$ItemEnchantabilityEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1116
+                              },
+                              "ArrowUpdateEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 895
+                              }
+                            }
+                          },
+                          "config": {
+                            "type": "directory",
+                            "children": {
+                              "ITweakConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 218
+                              },
+                              "ConfigProcessor$IReloadCallback.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 332
+                              },
+                              "ConfigProcessor$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 938
+                              },
+                              "TypeAdapterBase$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 565
+                              },
+                              "JsonConfigReader$ModToken.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1000
+                              },
+                              "TypeAdapterBase$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2037
+                              },
+                              "ConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7339
+                              },
+                              "PacketConfigSync$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1853
+                              },
+                              "TypeAdapterBase$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 564
+                              },
+                              "ConfigProcessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18020
+                              },
+                              "TypeAdapterBase$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1732
+                              },
+                              "AbstractConfigHandler$RestartReqs.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1851
+                              },
+                              "ConfigProcessor$ITypeAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 954
+                              },
+                              "TypeAdapterBase$11.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 566
+                              },
+                              "BaseConfigFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1503
+                              },
+                              "TypeAdapterBase$7.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 563
+                              },
+                              "TypeAdapterBase$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2028
+                              },
+                              "TypeAdapterBase$8.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2161
+                              },
+                              "AbstractConfigHandler$Section.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1697
+                              },
+                              "TypeAdapterBase$12.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1963
+                              },
+                              "TypeAdapterBase$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1921
+                              },
+                              "TypeAdapterBase$9.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 565
+                              },
+                              "PacketConfigSync.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3201
+                              },
+                              "TypeAdapterBase$10.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2039
+                              },
+                              "TypeAdapterBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6524
+                              },
+                              "JsonConfigReader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6323
+                              },
+                              "AbstractConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18768
+                              },
+                              "TypeAdapterBase$TypeAdapterSame.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1940
+                              },
+                              "annot": {
+                                "type": "directory",
+                                "children": {
+                                  "NoSync.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 441
+                                  },
+                                  "Range.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 529
+                                  },
+                                  "Comment.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 510
+                                  },
+                                  "RestartReq.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 808
+                                  },
+                                  "Config.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 511
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "compat": {
+                            "type": "directory",
+                            "children": {
+                              "CompatRegistry$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 252
+                              },
+                              "CompatRegistry$Registration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3039
+                              },
+                              "ICompat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 203
+                              },
+                              "CompatRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6087
+                              }
+                            }
+                          },
+                          "enchant": {
+                            "type": "directory",
+                            "children": {
+                              "EnchantAutoSmelt.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3126
+                              },
+                              "EnchantXPBoost.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2771
+                              }
+                            }
+                          },
+                          "command": {
+                            "type": "directory",
+                            "children": {
+                              "CommandScoreboardInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4079
+                              },
+                              "CommandReloadConfigs.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5083
+                              }
+                            }
+                          },
+                          "network": {
+                            "type": "directory",
+                            "children": {
+                              "CompressedDataInput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 961
+                              },
+                              "CompressedDataOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1120
+                              },
+                              "MessageTileEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3114
+                              },
+                              "MessageTileNBT.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3805
+                              },
+                              "PacketProgress.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1612
+                              },
+                              "PacketGhostSlot.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2125
+                              },
+                              "EnderPacketHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3085
+                              },
+                              "NetworkUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2195
+                              },
+                              "PacketGhostSlot$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2393
+                              },
+                              "PacketProgress$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1920
+                              }
+                            }
+                          },
+                          "transform": {
+                            "type": "directory",
+                            "children": {
+                              "EnderCoreTransformerClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2045
+                              },
+                              "EnderCoreTransformer$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2251
+                              },
+                              "EnderCoreTransformer$ObfSafeName.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1144
+                              },
+                              "EnderCoreTransformer$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2750
+                              },
+                              "EnderCoreTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6491
+                              },
+                              "EnderCoreTransformerClient$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3353
+                              },
+                              "EnderCoreTransformer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2247
+                              },
+                              "EnderCoreTransformer$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2387
+                              },
+                              "EnderCoreTransformerClient$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2843
+                              },
+                              "EnderCorePlugin.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1879
+                              },
+                              "EnderCoreTransformer$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2353
+                              },
+                              "EnderCoreTransformer$Transform.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 605
+                              },
+                              "EnderCoreMethods.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5535
+                              },
+                              "EnderCoreTransformer$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2513
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "ResourcePackAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7300
+                              },
+                              "ItemUtil$ISlotIterator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 279
+                              },
+                              "ItemUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13580
+                              },
+                              "EnderFileUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10057
+                              },
+                              "Bound.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3510
+                              },
+                              "WorldCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10123
+                              },
+                              "Scheduler$ITask.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 282
+                              },
+                              "ItemUtil$sidedSlotter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1025
+                              },
+                              "TextureErrorRemover.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3618
+                              },
+                              "ChatUtil$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 230
+                              },
+                              "FluidUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14573
+                              },
+                              "DyeColor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4610
+                              },
+                              "RoundRobinIterator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1571
+                              },
+                              "EnderStringUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3681
+                              },
+                              "Log.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 989
+                              },
+                              "ChatUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5021
+                              },
+                              "CreativeTabsCustom.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1529
+                              },
+                              "OreDictionaryHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2043
+                              },
+                              "PermanentCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2985
+                              },
+                              "ChatUtil$PacketNoSpamChat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2295
+                              },
+                              "SoundUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1523
+                              },
+                              "ResourcePackAssembler$CustomFile.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1491
+                              },
+                              "IBlockAccessWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2286
+                              },
+                              "ItemUtil$invSlotter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1015
+                              },
+                              "ChatUtil$PacketNoSpamChat$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1612
+                              },
+                              "Scheduler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4392
+                              },
+                              "RegisterTime.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1985
+                              },
+                              "EnderRegistryUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4753
+                              },
+                              "FluidUtil$FluidAndStack.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 857
+                              },
+                              "InventoryWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3296
+                              },
+                              "PlayerUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1583
+                              },
+                              "BlockCoord.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7177
+                              },
+                              "ForgeDirectionOffsets.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2467
+                              },
+                              "ResourcePackAssembler$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 269
+                              },
+                              "EntityUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8390
+                              },
+                              "FluidUtil$FluidAndStackResult.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1601
+                              },
+                              "MetadataUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1425
+                              },
+                              "Scheduler$Task.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1122
+                              },
+                              "Scheduler$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 233
+                              },
+                              "ArrayInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2225
+                              },
+                              "Util.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16367
+                              },
+                              "blockiterators": {
+                                "type": "directory",
+                                "children": {
+                                  "PlanarBlockIterator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2099
+                                  },
+                                  "CubicBlockIterator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1624
+                                  },
+                                  "AbstractBlockIterator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1094
+                                  },
+                                  "PlanarBlockIterator$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1545
+                                  },
+                                  "PlanarBlockIterator$Orientation.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2048
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "vecmath": {
+                            "type": "directory",
+                            "children": {
+                              "Vector2f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2700
+                              },
+                              "ViewFrustum.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5553
+                              },
+                              "Vector4d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2447
+                              },
+                              "Camera.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5281
+                              },
+                              "VecmathUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10206
+                              },
+                              "Matrix4d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12065
+                              },
+                              "Vector3f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3243
+                              },
+                              "Vertex.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5135
+                              },
+                              "Vector4f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3073
+                              },
+                              "Vector2d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2688
+                              },
+                              "Quat4d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2184
+                              },
+                              "Vector3d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4568
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "VertexTransform.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 336
+                                  },
+                                  "IConnectedTextureRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 200
+                                  },
+                                  "IWidgetMap$WidgetMapImpl.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3487
+                                  },
+                                  "IRenderFace.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 575
+                                  },
+                                  "IWidgetMap.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 809
+                                  },
+                                  "IWidgetIcon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 426
+                                  }
+                                }
+                              },
+                              "gui": {
+                                "type": "directory",
+                                "children": {
+                                  "IResourceTooltipProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 253
+                                  },
+                                  "ListSelectionListener.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 380
+                                  },
+                                  "IAdvancedTooltipProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 661
+                                  },
+                                  "IGuiScreen.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 644
+                                  },
+                                  "ITabPanel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 435
+                                  },
+                                  "IGuiOverlay.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 393
+                                  }
+                                }
+                              },
+                              "model": {
+                                "type": "directory",
+                                "children": {
+                                  "IEnderModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 234
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "common": {
+                            "type": "directory",
+                            "children": {
+                              "imc": {
+                                "type": "directory",
+                                "children": {
+                                  "IMC.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 397
+                                  }
+                                }
+                              },
+                              "config": {
+                                "type": "directory",
+                                "children": {
+                                  "IConfigHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 682
+                                  }
+                                }
+                              },
+                              "enchant": {
+                                "type": "directory",
+                                "children": {
+                                  "IAdvancedEnchant.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 231
+                                  }
+                                }
+                              },
+                              "util": {
+                                "type": "directory",
+                                "children": {
+                                  "ITankAccess.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 337
+                                  },
+                                  "IItemReceptor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 365
+                                  },
+                                  "IProgressTile.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 397
+                                  },
+                                  "IFluidReceptor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 215
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 265
+                  },
+                  "CoFHAPIProps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 365
+                  },
+                  "transport": {
+                    "type": "directory",
+                    "children": {
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 285
+                      },
+                      "IEnderDestination.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 347
+                      },
+                      "RegistryEnderAttuned$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1645
+                      },
+                      "IEnderAttuned.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 266
+                      },
+                      "IEnderItemHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 316
+                      },
+                      "RegistryEnderAttuned.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10990
+                      },
+                      "IEnderFluidHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 336
+                      },
+                      "IEnderEnergyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 267
+                      },
+                      "RegistryEnderAttuned$EnderDestination.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1990
+                      },
+                      "IItemDuct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 251
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 92
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 391
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "endercore": {
+                "type": "directory",
+                "children": {
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "cropConfig.json": {
+                        "type": "file",
+                        "extension": ".json",
+                        "size": 444
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "widgets.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 42826
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 83
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1601
+                      },
+                      "pt_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 87
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 408
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 354
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 87
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 90
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1176
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1143
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 83
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 320
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 37855
+          }
+        }
+      }
+    }
+  }
+}

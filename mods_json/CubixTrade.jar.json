@@ -1,0 +1,392 @@
+{
+  "mod_name": "CubixTrade.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixTrade.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixTrade.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 435261,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 65
+              },
+              "at_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 334
+              },
+              "CubixTrade.kotlin_module": {
+                "type": "file",
+                "extension": ".kotlin_module",
+                "size": 16
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixtrade": {
+                "type": "directory",
+                "children": {
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "ProximaNova-Bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 129556
+                      },
+                      "ProximaNova-Regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 130636
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "amount_strannaya.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4129
+                          },
+                          "bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 140638
+                          },
+                          "bg_pretty.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4977
+                          },
+                          "chat_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1375
+                          },
+                          "chat_btn_open.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1847
+                          },
+                          "close_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5673
+                          },
+                          "cubix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 68463
+                          },
+                          "galochka.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 440
+                          },
+                          "line_strannaya.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2408
+                          },
+                          "no_ready.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1967
+                          },
+                          "ready.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1860
+                          },
+                          "send.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 690
+                          },
+                          "strannaya.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2016
+                          },
+                          "trade_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2570
+                          },
+                          "trade_btn_active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2569
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "zarak": {
+            "type": "directory",
+            "children": {
+              "cubixtrade": {
+                "type": "directory",
+                "children": {
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1595
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "ChatLine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2622
+                          },
+                          "GuiField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12670
+                          },
+                          "GuiTrade.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 37657
+                          },
+                          "PartInnerChat$scroll$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2524
+                          },
+                          "PartInnerChat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20480
+                          }
+                        }
+                      },
+                      "TradeSyncVars.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1233
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "BaseInv.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4388
+                      },
+                      "ContainerTrade$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 885
+                      },
+                      "ContainerTrade$onContainerClosed$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2940
+                      },
+                      "ContainerTrade$SlotOther.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1899
+                      },
+                      "ContainerTrade$SlotOwner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3709
+                      },
+                      "ContainerTrade$SlotTradeBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1549
+                      },
+                      "ContainerTrade.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11807
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2428
+                      },
+                      "InvType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1312
+                      }
+                    }
+                  },
+                  "CubixTrade.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3808
+                  },
+                  "networking": {
+                    "type": "directory",
+                    "children": {
+                      "CPacketGalochkaBtnClick$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3068
+                      },
+                      "CPacketGalochkaBtnClick.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1812
+                      },
+                      "CPacketReadyBtnClick$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3103
+                      },
+                      "CPacketReadyBtnClick.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1797
+                      },
+                      "CPacketSetCubixAmount$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3482
+                      },
+                      "CPacketSetCubixAmount.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2521
+                      },
+                      "CPacketTradeBtnClick$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3722
+                      },
+                      "CPacketTradeBtnClick.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2560
+                      },
+                      "CPacketTradeMsg$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3441
+                      },
+                      "CPacketTradeMsg.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2829
+                      },
+                      "PacketSystem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2862
+                      },
+                      "SPacketSyncTradeInvStack$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2628
+                      },
+                      "SPacketSyncTradeInvStack$WhenMappings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 577
+                      },
+                      "SPacketSyncTradeInvStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4135
+                      },
+                      "SPacketSyncTradeName.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2744
+                      },
+                      "SPacketSyncTradeVars$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2685
+                      },
+                      "SPacketSyncTradeVars.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5331
+                      },
+                      "SPacketTradeMsg$handle$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1916
+                      },
+                      "SPacketTradeMsg.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3288
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1546
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2588
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2071
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 650
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 39451
+          }
+        }
+      }
+    }
+  }
+}

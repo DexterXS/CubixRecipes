@@ -1,0 +1,337 @@
+{
+  "mod_name": "FoamFix-1.7.10-universal-1.0.0-beta2.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\FoamFix-1.7.10-universal-1.0.0-beta2.jar",
+  "mod_type": "jar",
+  "tree": {
+    "FoamFix-1.7.10-universal-1.0.0-beta2.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 63685,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 134
+              }
+            }
+          },
+          "pl": {
+            "type": "directory",
+            "children": {
+              "asie": {
+                "type": "directory",
+                "children": {
+                  "foamfix": {
+                    "type": "directory",
+                    "children": {
+                      "FoamFixMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4281
+                      },
+                      "ghostbuster": {
+                        "type": "directory",
+                        "children": {
+                          "GhostBusterLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5104
+                          },
+                          "GhostBusterSafeAccessors.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1663
+                          },
+                          "CommandGhostBuster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1710
+                          }
+                        }
+                      },
+                      "coremod": {
+                        "type": "directory",
+                        "children": {
+                          "patchers": {
+                            "type": "directory",
+                            "children": {
+                              "GhostBusterHookPatcher.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1934
+                              },
+                              "GhostBusterWrapperPatcher.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3667
+                              },
+                              "GhostBusterEarlyReturnPatcher.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4391
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "ClassSplicingUtil$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 951
+                              },
+                              "ClassSplicingUtil$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 965
+                              },
+                              "ClassSplicingUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7075
+                              }
+                            }
+                          },
+                          "FoamFixCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2700
+                          },
+                          "FoamFixCoreContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1305
+                          }
+                        }
+                      },
+                      "LaunchWrapperRuntimeFix.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1930
+                      },
+                      "forkage": {
+                        "type": "directory",
+                        "children": {
+                          "coremod": {
+                            "type": "directory",
+                            "children": {
+                              "injects": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityLivingBaseItemNBTRenderFixInject.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1657
+                                  },
+                                  "TessellatorAlphaPassWrapFixInject.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1087
+                                  }
+                                }
+                              },
+                              "patchers": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityLivingBaseItemNBTRenderFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1757
+                                  },
+                                  "SoundSystemUnpauseFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4881
+                                  },
+                                  "TessellatorAlphaPassWrapFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1741
+                                  },
+                                  "JarDiscovererMemoryLeakFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2744
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "bugfixmod": {
+                        "type": "directory",
+                        "children": {
+                          "coremod": {
+                            "type": "directory",
+                            "children": {
+                              "patchers": {
+                                "type": "directory",
+                                "children": {
+                                  "HeartFlashFixCompatPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2980
+                                  },
+                                  "ItemStairBounceFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2291
+                                  },
+                                  "VillageAnvilTweakPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3084
+                                  },
+                                  "HeartBlinkFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1777
+                                  },
+                                  "ModificationPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 447
+                                  },
+                                  "GlobalModificationPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 241
+                                  },
+                                  "BoatDesyncFixPatcher_Extra.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2127
+                                  },
+                                  "BoatDesyncFixPatcher_Main.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2208
+                                  },
+                                  "SnowballFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2077
+                                  },
+                                  "ChickenLureTweakPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4413
+                                  },
+                                  "HeartFlashFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2422
+                                  },
+                                  "AbstractPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4743
+                                  },
+                                  "ItemHopperBounceFixPatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2382
+                                  }
+                                }
+                              },
+                              "BugfixModClassTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14064
+                              },
+                              "MappingRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4377
+                              }
+                            }
+                          },
+                          "mod": {
+                            "type": "directory",
+                            "children": {
+                              "ToolDesyncFixEventHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2061
+                              },
+                              "ArrowDingTweakEventHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1639
+                              }
+                            }
+                          },
+                          "BugfixModSettings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1195
+                          }
+                        }
+                      },
+                      "LaunchWrapperRuntimeFix$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2357
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "LICENSE": {
+            "type": "file",
+            "extension": "",
+            "size": 1104
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 570
+          },
+          "changelog": {
+            "type": "directory",
+            "children": {
+              "1.0.0-beta2.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 629
+              },
+              "1.0.0-beta1.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 463
+              }
+            }
+          },
+          "foamfix_dev_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 53
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4249
+          }
+        }
+      }
+    }
+  }
+}

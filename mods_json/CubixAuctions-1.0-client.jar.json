@@ -1,0 +1,992 @@
+{
+  "mod_name": "CubixAuctions-1.0-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixAuctions-1.0-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixAuctions-1.0-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 223358,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "vizzi": {
+                "type": "directory",
+                "children": {
+                  "cubixauctions": {
+                    "type": "directory",
+                    "children": {
+                      "packet": {
+                        "type": "directory",
+                        "children": {
+                          "PackeyUpdateAllReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3655
+                          },
+                          "PacketGetAllAuctionProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 876
+                          },
+                          "PacketUpdateMoneySerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1369
+                          },
+                          "PackeyUpdateAllRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 558
+                          },
+                          "PacketAddRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4324
+                          },
+                          "PacketRemoveRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 552
+                          },
+                          "PacketUpdateMoneySerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2224
+                          },
+                          "PackeyUpdateAllRewardV2Provider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 892
+                          },
+                          "PacketRemoveBidProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 546
+                          },
+                          "PacketUpdateAllBidSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2728
+                          },
+                          "PacketAddBid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3552
+                          },
+                          "PacketDrawMessageSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2201
+                          },
+                          "PacketUpdateWinnersSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4173
+                          },
+                          "PacketDrawMessageSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1198
+                          },
+                          "PacketGetAllAuction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2994
+                          },
+                          "PacketDrawMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3765
+                          },
+                          "PacketAddTabDataSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1201
+                          },
+                          "CSPacketSendBidProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 860
+                          },
+                          "PacketAddBidProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 848
+                          },
+                          "PacketAuctionRemove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2764
+                          },
+                          "PacketGetReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2703
+                          },
+                          "PacketAddRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 860
+                          },
+                          "PacketAuctionRemoveProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 876
+                          },
+                          "PacketAddBidProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 540
+                          },
+                          "PacketUpdateAuctionProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 876
+                          },
+                          "PacketUpdateAuctionSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5363
+                          },
+                          "PacketRemoveBidSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1153
+                          },
+                          "PacketGetAllAuctionProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 554
+                          },
+                          "PacketUpdateAuction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2800
+                          },
+                          "PacketUpdateWinnersProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 554
+                          },
+                          "PacketAddTabData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2960
+                          },
+                          "PacketUpdateAllBidV2Provider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 880
+                          },
+                          "PacketUpdateAuctionProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 554
+                          },
+                          "PacketUpdateAllBidProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 872
+                          },
+                          "PacketRemoveBidProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 860
+                          },
+                          "PacketGetRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1158
+                          },
+                          "PacketRemoveRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2136
+                          },
+                          "PacketUpdateMoney.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2726
+                          },
+                          "PacketRemoveBid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2801
+                          },
+                          "CSPacketSendBidSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2290
+                          },
+                          "PacketAddReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3139
+                          },
+                          "PacketAuctionAdd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3096
+                          },
+                          "PacketAuctionRemoveSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1227
+                          },
+                          "PackeyUpdateAllRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 884
+                          },
+                          "PacketGetAllAuctionSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3758
+                          },
+                          "PacketUpdateAllBid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2903
+                          },
+                          "CSPacketSendBidSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1242
+                          },
+                          "PacketUpdateRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4360
+                          },
+                          "PacketUpdateAllBidV2Serializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5073
+                          },
+                          "PacketAuctionAddSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5327
+                          },
+                          "CSPacketSendBidProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 546
+                          },
+                          "PacketGetRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 546
+                          },
+                          "PacketUpdateReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2830
+                          },
+                          "PacketAuctionAddSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3117
+                          },
+                          "PacketOpenGui.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2431
+                          },
+                          "PackeyUpdateAllRewardV2Provider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 562
+                          },
+                          "PacketAddTabDataSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2275
+                          },
+                          "PacketUpdateMoneyProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 868
+                          },
+                          "PacketOpenGuiSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1123
+                          },
+                          "PacketUpdateRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 552
+                          },
+                          "PacketAuctionAddProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 864
+                          },
+                          "PacketDrawMessageProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 868
+                          },
+                          "PacketUpdateMoneyProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 550
+                          },
+                          "PackeyUpdateAllRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5585
+                          },
+                          "PacketAuctionRemoveProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 554
+                          },
+                          "PacketDrawMessageProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 550
+                          },
+                          "PacketUpdateWinnersProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 876
+                          },
+                          "PacketUpdateAllBidV2Serializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2850
+                          },
+                          "PacketAuctionRemoveSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2148
+                          },
+                          "PacketRemoveReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2779
+                          },
+                          "PackeyUpdateAllRewardV2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2972
+                          },
+                          "PacketUpdateAllBidProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 552
+                          },
+                          "PacketGetAllAuctionSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6529
+                          },
+                          "PacketOpenGuiSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2086
+                          },
+                          "PacketRemoveRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 872
+                          },
+                          "PackeyUpdateAllRewardV2Serializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3080
+                          },
+                          "PacketRemoveRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1208
+                          },
+                          "PacketAddBidSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3722
+                          },
+                          "PacketUpdateRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2409
+                          },
+                          "PacketAddTabDataProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 548
+                          },
+                          "PacketUpdateAllBidSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5005
+                          },
+                          "PacketGetRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 860
+                          },
+                          "PacketOpenGuiProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 852
+                          },
+                          "PacketRemoveBidSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2102
+                          },
+                          "PacketUpdateWinnersSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2060
+                          },
+                          "PacketUpdateAllBidV2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3605
+                          },
+                          "PackeyUpdateAllRewardV2Serializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5585
+                          },
+                          "PacketOpenGuiProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 542
+                          },
+                          "PacketAddRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2352
+                          },
+                          "PacketAddTabDataProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 864
+                          },
+                          "PacketAuctionAddProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 548
+                          },
+                          "PacketAddBidSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 2045
+                          },
+                          "CSPacketSendBid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2977
+                          },
+                          "PacketUpdateAllBidV2Provider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 556
+                          },
+                          "PacketGetRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2107
+                          },
+                          "PackeyUpdateAllRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3119
+                          },
+                          "PacketUpdateAuctionSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3174
+                          },
+                          "PacketUpdateRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 872
+                          },
+                          "PacketUpdateWinners.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2821
+                          },
+                          "PacketAddRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 546
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "DateHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3065
+                          },
+                          "TimeUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4008
+                          },
+                          "SkinHolder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5290
+                          },
+                          "GuiHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1191
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "Currency.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1089
+                          },
+                          "reward": {
+                            "type": "directory",
+                            "children": {
+                              "CellType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1159
+                              },
+                              "RewardItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1818
+                              }
+                            }
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6204
+                          },
+                          "ClientData$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 771
+                          },
+                          "ActionData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3063
+                          },
+                          "AuctionState.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1222
+                          },
+                          "AuctionBid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1351
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiButtonCustomXText.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1796
+                          },
+                          "GuiAuctionScreen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11288
+                          },
+                          "GuiModuleMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4050
+                          },
+                          "GuiAuction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9939
+                          },
+                          "GuiModuleAuctionView$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 797
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 132
+                          },
+                          "SlotRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 683
+                          },
+                          "GuiScroll.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3627
+                          },
+                          "GuiAuctionScreen$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 785
+                          },
+                          "GuiModuleHelp.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6066
+                          },
+                          "ToolTipRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1023
+                          },
+                          "GuiModuleAuctionView.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 22664
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 646
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 726
+                          }
+                        }
+                      },
+                      "Main.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3173
+                      },
+                      "ManagerResource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3365
+                      }
+                    }
+                  }
+                }
+              },
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      },
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixauctions": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "button_disable.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 379
+                          },
+                          "button_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 418
+                          },
+                          "money_bonus.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 779
+                          },
+                          "checked_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 643
+                          },
+                          "up_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 601
+                          },
+                          "money_cubix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2330
+                          },
+                          "help_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 275
+                          },
+                          "slot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 408
+                          },
+                          "exit_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 279
+                          },
+                          "help_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 332
+                          },
+                          "module_help.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5383
+                          },
+                          "background.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 30470
+                          },
+                          "up_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 573
+                          },
+                          "checked_active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 796
+                          },
+                          "down_disable.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 482
+                          },
+                          "checked_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 636
+                          },
+                          "down_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 569
+                          },
+                          "button_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 421
+                          },
+                          "auctionbg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9145
+                          },
+                          "down_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 611
+                          },
+                          "history.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1573
+                          },
+                          "up_disable.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 483
+                          },
+                          "auction.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5018
+                          },
+                          "auction_closed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5180
+                          },
+                          "exit_normal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 335
+                          },
+                          "module_error.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1932
+                          },
+                          "money_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3305
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 49
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 14472
+                      }
+                    }
+                  },
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "MinecraftRus.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 21808
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tmp_generated": {
+            "type": "directory",
+            "children": {
+              "timeOffsetBetweenInitAndProcess.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 3
+              },
+              "cachedModid.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 13
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "services": {
+                "type": "directory",
+                "children": {
+                  "hohserg.elegant.networking.impl.IPacketProvider": {
+                    "type": "file",
+                    "extension": ".ipacketprovider",
+                    "size": 1125
+                  },
+                  "hohserg.elegant.networking.impl.ISerializerBase": {
+                    "type": "file",
+                    "extension": ".iserializerbase",
+                    "size": 1165
+                  }
+                }
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1253
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 25758
+          }
+        }
+      }
+    }
+  }
+}

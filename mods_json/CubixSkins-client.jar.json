@@ -1,0 +1,132 @@
+{
+  "mod_name": "CubixSkins-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixSkins-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixSkins-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 15193,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixskins": {
+                    "type": "directory",
+                    "children": {
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 145
+                          },
+                          "resources": {
+                            "type": "directory",
+                            "children": {
+                              "SkinManagerCustom$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1658
+                              },
+                              "SkinManagerCustom.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14311
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2339
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1220
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 957
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3776
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "mixin": {
+                            "type": "directory",
+                            "children": {
+                              "MixinSkinManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4196
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mixins.cubixskins.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 253
+          },
+          "mixins.cubixskins.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 0
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 282
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 286
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2944
+          }
+        }
+      }
+    }
+  }
+}

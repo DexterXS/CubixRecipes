@@ -1,0 +1,237 @@
+{
+  "mod_name": "CubixTops[Client][1.0.0][All].jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixTops[Client][1.0.0][All].jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixTops[Client][1.0.0][All].jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 62233,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixtops": {
+                    "type": "directory",
+                    "children": {
+                      "CubixTops.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1797
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "ClientEvents$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 939
+                          },
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4594
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1357
+                          },
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1357
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3606
+                          },
+                          "message": {
+                            "type": "directory",
+                            "children": {
+                              "MessageInfoSync.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4436
+                              },
+                              "MessageUpdateRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1216
+                              }
+                            }
+                          },
+                          "PacketDispatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6842
+                          },
+                          "provider": {
+                            "type": "directory",
+                            "children": {
+                              "ProviderChallengeKills.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2400
+                              },
+                              "ProviderChallengeMoney.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2025
+                              },
+                              "ProviderChallengeOnline.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2454
+                              },
+                              "ProviderChallengeQuiz.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2389
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "props": {
+                        "type": "directory",
+                        "children": {
+                          "ModPlayerProperties.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 868
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2464
+                          },
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1405
+                          }
+                        }
+                      },
+                      "thread": {
+                        "type": "directory",
+                        "children": {
+                          "Calculator$ChallengeType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1304
+                          },
+                          "Calculator$DataEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1128
+                          },
+                          "Calculator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 653
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixtops": {
+                "type": "directory",
+                "children": {
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "TOPFULL.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 35604
+                      }
+                    }
+                  },
+                  "icon": {
+                    "type": "directory",
+                    "children": {
+                      "icon_kill.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 645
+                      },
+                      "icon_money.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 636
+                      },
+                      "icon_online.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 641
+                      },
+                      "icon_quiz.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 514
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 279
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 143
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2172
+          }
+        }
+      }
+    }
+  }
+}

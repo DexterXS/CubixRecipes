@@ -1,0 +1,2247 @@
+{
+  "mod_name": "CubixDraconicRevolution-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixDraconicRevolution-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixDraconicRevolution-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 4049246,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "draconicrevolt": {
+                    "type": "directory",
+                    "children": {
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "DraconicItems$15.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2265
+                          },
+                          "DraconicItems$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2385
+                          },
+                          "usable": {
+                            "type": "directory",
+                            "children": {
+                              "CrystalDragonInvoker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4172
+                              },
+                              "DraconicTeleporter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5286
+                              },
+                              "DraconicHeartType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5490
+                              },
+                              "DraconicHeart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1904
+                              }
+                            }
+                          },
+                          "DraconicItems$18.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2353
+                          },
+                          "DraconicItems$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2411
+                          },
+                          "electric": {
+                            "type": "directory",
+                            "children": {
+                              "armor": {
+                                "type": "directory",
+                                "children": {
+                                  "DraconicArmorType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8994
+                                  },
+                                  "DraconicArmor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1391
+                                  },
+                                  "DraconicArmor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 36250
+                                  }
+                                }
+                              },
+                              "weapon": {
+                                "type": "directory",
+                                "children": {
+                                  "DraconicBow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 27300
+                                  },
+                                  "DraconicSwordType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8789
+                                  },
+                                  "DraconicSword.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 24132
+                                  },
+                                  "DraconicSword$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1365
+                                  },
+                                  "DraconicBow$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1412
+                                  },
+                                  "DraconicBowType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8658
+                                  },
+                                  "DraconicStaffType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9764
+                                  },
+                                  "DraconicStaff.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 19143
+                                  }
+                                }
+                              },
+                              "capacitor": {
+                                "type": "directory",
+                                "children": {
+                                  "DraconicCapacitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1325
+                                  },
+                                  "DraconicCapacitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14967
+                                  },
+                                  "DraconicCapacitorType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7242
+                                  }
+                                }
+                              },
+                              "DraconicElectricItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12610
+                              }
+                            }
+                          },
+                          "DraconicItems$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2266
+                          },
+                          "relic": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicRelic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5672
+                              },
+                              "DraconicRelicType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10917
+                              }
+                            }
+                          },
+                          "DraconicItems$13.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2408
+                          },
+                          "DraconicItems$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2292
+                          },
+                          "DraconicItems$12.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2300
+                          },
+                          "DraconicItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 23341
+                          },
+                          "DraconicItems$11.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2452
+                          },
+                          "DraconicItems$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2280
+                          },
+                          "DraconicItems$14.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2287
+                          },
+                          "DraconicItems$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2372
+                          },
+                          "DraconicItems$8.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2279
+                          },
+                          "DraconicItems$17.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2310
+                          },
+                          "DraconicItems$10.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2481
+                          },
+                          "DraconicItems$9.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2299
+                          },
+                          "DraconicItems$16.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2401
+                          },
+                          "DraconicItems$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2351
+                          },
+                          "DraconicItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3513
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicProjectileRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9200
+                              },
+                              "geo": {
+                                "type": "directory",
+                                "children": {
+                                  "ChaoticDragonRender.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2973
+                                  },
+                                  "DemonicDragonRender.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2969
+                                  },
+                                  "CrystalDragonRender.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3007
+                                  },
+                                  "OrichalcumDragonRender.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2974
+                                  }
+                                }
+                              },
+                              "DragonRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18733
+                              },
+                              "LightningBoltRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6408
+                              },
+                              "DraconicCrystalRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7919
+                              },
+                              "DraconicHeartRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8231
+                              },
+                              "LightningBoltColoredRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6465
+                              }
+                            }
+                          },
+                          "dragon": {
+                            "type": "directory",
+                            "children": {
+                              "types": {
+                                "type": "directory",
+                                "children": {
+                                  "CrystalDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11450
+                                  },
+                                  "ChaoticDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11766
+                                  },
+                                  "OrichalcumDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11360
+                                  },
+                                  "DemonicDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11801
+                                  }
+                                }
+                              },
+                              "DraconicBaseDragon$WeightedBehaviour.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1013
+                              },
+                              "DraconicBaseDragon$WeightedAttack.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 746
+                              },
+                              "DraconicBaseDragon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 46327
+                              },
+                              "DraconicProjectile.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23817
+                              },
+                              "DraconicDragonType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3696
+                              },
+                              "DraconicBaseDragon$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1713
+                              },
+                              "DraconicBaseDragon$EnumBehaviour.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5638
+                              }
+                            }
+                          },
+                          "crystal": {
+                            "type": "directory",
+                            "children": {
+                              "type": {
+                                "type": "directory",
+                                "children": {
+                                  "DemonicCrystal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2721
+                                  },
+                                  "OrichalcumCrystal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3742
+                                  },
+                                  "ChaoticCrystal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2783
+                                  }
+                                }
+                              },
+                              "DraconicCrystal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15888
+                              }
+                            }
+                          },
+                          "factory": {
+                            "type": "directory",
+                            "children": {
+                              "SimpleDragonFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5680
+                              }
+                            }
+                          },
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "EntityDraconicHeartItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8319
+                              },
+                              "EntityDraconicHeart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20576
+                              },
+                              "EntityInvulnerableItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10885
+                              }
+                            }
+                          },
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "EntityEnergyLightningBoltColored.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6487
+                              },
+                              "EntityEnergyLightningBolt.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6022
+                              }
+                            }
+                          },
+                          "DraconicEntities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5859
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1583
+                          },
+                          "messages": {
+                            "type": "directory",
+                            "children": {
+                              "MessageParticle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3859
+                              },
+                              "MessageSyncRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2379
+                              },
+                              "MessageLightningBolt.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2473
+                              },
+                              "MessageLightningBoltColored.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3029
+                              },
+                              "MessageSyncProps.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2697
+                              },
+                              "handler": {
+                                "type": "directory",
+                                "children": {
+                                  "ClientPacketHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4312
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11071
+                          },
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1566
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6612
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "IDragonLevelItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 183
+                          },
+                          "IScaledArmor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 173
+                          },
+                          "ILeveledEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 423
+                          },
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "TriConsumer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2336
+                              }
+                            }
+                          },
+                          "IRarityBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 205
+                          },
+                          "IDraconicRelic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 246
+                          }
+                        }
+                      },
+                      "worldgen": {
+                        "type": "directory",
+                        "children": {
+                          "isles": {
+                            "type": "directory",
+                            "children": {
+                              "type": {
+                                "type": "directory",
+                                "children": {
+                                  "DraconicIslandType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8861
+                                  },
+                                  "DraconicOreGeneratorType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5102
+                                  },
+                                  "DraconicCometType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6004
+                                  },
+                                  "IsleGeneratorType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7954
+                                  }
+                                }
+                              },
+                              "DraconicIsles$DraconicIslesWorldProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5708
+                              },
+                              "DraconicIsles$DraconicIslesChunkProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9210
+                              },
+                              "DraconicIsles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1171
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "utility": {
+                        "type": "directory",
+                        "children": {
+                          "TeleportUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1522
+                          },
+                          "fake": {
+                            "type": "directory",
+                            "children": {
+                              "FakeNetHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7015
+                              },
+                              "FakePlayer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2079
+                              }
+                            }
+                          },
+                          "chunkloader": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11138
+                              }
+                            }
+                          },
+                          "weighted": {
+                            "type": "directory",
+                            "children": {
+                              "ElementContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1281
+                              },
+                              "IWeightedEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 308
+                              },
+                              "WeightedSelector.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2700
+                              }
+                            }
+                          },
+                          "DraconicRarity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4883
+                          },
+                          "NBTManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1047
+                          },
+                          "TeleportUtils$TeleportLocation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6041
+                          },
+                          "Utilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 42284
+                          },
+                          "EntityUtilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4409
+                          },
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "ToolDataPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4933
+                              }
+                            }
+                          },
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "Triple.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1190
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "model": {
+                            "type": "directory",
+                            "children": {
+                              "item": {
+                                "type": "directory",
+                                "children": {
+                                  "DraconicBowRenderer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1299
+                                  },
+                                  "DraconicSwordRenderer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1307
+                                  },
+                                  "DraconicBowRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5948
+                                  },
+                                  "DraconicShardRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5429
+                                  },
+                                  "DraconicStaffRenderer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1347
+                                  },
+                                  "DraconicStaffRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6312
+                                  },
+                                  "DraconicSwordRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6771
+                                  },
+                                  "DraconicArmorRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4780
+                                  }
+                                }
+                              },
+                              "ArmorModelHolder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7407
+                              },
+                              "DraconicArmorModel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7737
+                              },
+                              "ArmorModelCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9908
+                              },
+                              "ArmorModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4403
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "ColorEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 634
+                              },
+                              "RenderUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12503
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "draconic": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicBlockType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7083
+                              },
+                              "DraconicMetaBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10063
+                              }
+                            }
+                          },
+                          "DraconicTileBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7523
+                          },
+                          "logic": {
+                            "type": "directory",
+                            "children": {
+                              "BlockDraconicUgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5945
+                              }
+                            }
+                          },
+                          "tesr": {
+                            "type": "directory",
+                            "children": {
+                              "TESRDraconicUpgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10715
+                              },
+                              "RenderDraconicUpgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2638
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerDraconicUpgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9859
+                              },
+                              "ContainerDraconicUpgradeTweaker$SlotUpgradable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              }
+                            }
+                          },
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "TileDraconicUpgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10567
+                              },
+                              "TileDraconicResurrection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20466
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GUIDraconicUpgradeTweaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23298
+                              },
+                              "DraconicGUIHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2930
+                              }
+                            }
+                          },
+                          "DraconicBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7869
+                          },
+                          "DraconicBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11524
+                          },
+                          "itemblock": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicMetaItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9774
+                              },
+                              "DraconicItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1525
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "DraconicInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4081
+                          },
+                          "DraconicTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3932
+                          },
+                          "DraconicConfiguration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 74315
+                          },
+                          "DraconicRevolution.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7151
+                          }
+                        }
+                      },
+                      "module": {
+                        "type": "directory",
+                        "children": {
+                          "mana": {
+                            "type": "directory",
+                            "children": {
+                              "BotSwordModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2552
+                              }
+                            }
+                          },
+                          "ic2": {
+                            "type": "directory",
+                            "children": {
+                              "IC2Module.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2630
+                              }
+                            }
+                          },
+                          "IDamageModule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 250
+                          },
+                          "rf": {
+                            "type": "directory",
+                            "children": {
+                              "RFModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4231
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11596
+                          },
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8943
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "ClientEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9122
+                          },
+                          "ServerEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11302
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "KeyBindings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 371
+                          },
+                          "particle": {
+                            "type": "directory",
+                            "children": {
+                              "DraconicParticleHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6944
+                              },
+                              "DraconicProjectileParticle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5316
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "capability": {
+                        "type": "directory",
+                        "children": {
+                          "DraconicIEEP.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7995
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1800
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3852
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "draconicrevolt": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "animated": {
+                            "type": "directory",
+                            "children": {
+                              "der_orichalcumore_overworld.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_chaoticblock_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7821
+                              },
+                              "der_orichalcumore_isles.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9280
+                              },
+                              "der_chaoticore_overworld.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9753
+                              },
+                              "der_orichalcumblock_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6641
+                              },
+                              "der_chaoticore_nether.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9139
+                              },
+                              "der_demonicore_isles.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8824
+                              },
+                              "der_orichalcumore_nether.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9821
+                              },
+                              "der_chaoticblock_0.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_chaoticore_isles.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_orichalcumblock_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4692
+                              },
+                              "der_orichalcumore_nether.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_demonicore_nether.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9972
+                              },
+                              "der_awakeneddemonicblock.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7255
+                              },
+                              "der_demonicblock_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8388
+                              },
+                              "der_demonicore_overworld.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10816
+                              },
+                              "der_chaoticore_isles.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7344
+                              },
+                              "der_chaoticblock_2.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_awakenedchaoticblock.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7231
+                              },
+                              "der_orichalcumore_overworld.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10484
+                              },
+                              "der_chaoticore_overworld.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_awakenedorichalcumblock.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_demonicblock_2.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_demonicore_nether.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_demonicblock_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5055
+                              },
+                              "der_chaoticblock_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6081
+                              },
+                              "der_awakenedorichalcumblock.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2523
+                              },
+                              "der_awakeneddemonicblock.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_orichalcumblock_0.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_demonicore_overworld.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_orichalcumblock_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8751
+                              },
+                              "der_chaoticore_nether.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_orichalcumblock_2.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_demonicblock_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1919
+                              },
+                              "der_chaoticblock_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5035
+                              },
+                              "der_demonicore_isles.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              },
+                              "der_awakenedchaoticblock.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_demonicblock_0.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 57
+                              },
+                              "der_orichalcumore_isles.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 730
+                              }
+                            }
+                          },
+                          "filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          },
+                          "der_draconite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2114
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "der_demonicenergytalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1303
+                          },
+                          "der_dragonfurytalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3144
+                          },
+                          "der_swiftwindshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1280
+                          },
+                          "der_orichalcumcrystalpart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          },
+                          "der_sparklingvortexshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1295
+                          },
+                          "der_demoniccore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5103
+                          },
+                          "der_orichalcumenergytalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1238
+                          },
+                          "der_chaoticnugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1559
+                          },
+                          "der_demonicdust.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 413
+                          },
+                          "der_dragonruthlessnesstalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3144
+                          },
+                          "der_hauntedforgepiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1274
+                          },
+                          "der_orichalcumdragonheart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4705
+                          },
+                          "der_chaoticdust.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 370
+                          },
+                          "der_orichalcumingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 536
+                          },
+                          "der_chaoticawakenednugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2062
+                          },
+                          "der_cursedcoinpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1352
+                          },
+                          "der_undergroundfireshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1367
+                          },
+                          "der_unpredictabilitypiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1375
+                          },
+                          "der_chaoticrelict.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1276
+                          },
+                          "der_demonicspellfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1344
+                          },
+                          "der_crystaldragoninvoker.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2311
+                          },
+                          "der_chaoticcapacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4938
+                          },
+                          "der_chaoticawakenedingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1890
+                          },
+                          "der_orichalcumdragonclaw.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1502
+                          },
+                          "der_demonicnugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1944
+                          },
+                          "der_hellsteelpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1354
+                          },
+                          "der_darklightningshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1262
+                          },
+                          "der_chaoticenergytalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1250
+                          },
+                          "der_demonicawakenednugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2216
+                          },
+                          "der_chargedmetalpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1273
+                          },
+                          "der_demoniccapacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4975
+                          },
+                          "der_firebreathfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1256
+                          },
+                          "der_crystaldragonskin.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2295
+                          },
+                          "der_demonicbloodthirsttalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3051
+                          },
+                          "der_shiftingsandfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1245
+                          },
+                          "der_chaoticcore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5120
+                          },
+                          "der_chaoticcrushingpowertalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3057
+                          },
+                          "der_limitlesspowerpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1343
+                          },
+                          "der_nightshadowfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1253
+                          },
+                          "der_orichalcumbloodthirsttalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3091
+                          },
+                          "der_forbiddenchargepiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1345
+                          },
+                          "der_spiritgreedshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1367
+                          },
+                          "der_orichalcumrelict.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1166
+                          },
+                          "der_magicflameshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1376
+                          },
+                          "der_forgottentreasurefragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1229
+                          },
+                          "der_orichalcumawakenednugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1855
+                          },
+                          "der_demonicawakenedingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2141
+                          },
+                          "der_chaoticdragonclaw.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1442
+                          },
+                          "der_sinisterroarpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1287
+                          },
+                          "der_orichalcumnugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1566
+                          },
+                          "der_orichalcumcore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5099
+                          },
+                          "der_defiantenergyfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1299
+                          },
+                          "der_orichalcumawakenedingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2339
+                          },
+                          "der_demonicdragonclaw.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1434
+                          },
+                          "der_demoniccrystalpart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          },
+                          "der_teleporter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2063
+                          },
+                          "der_demonicdragonheart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4643
+                          },
+                          "der_dragonfeatherpiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1274
+                          },
+                          "der_orichalcumcapacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5126
+                          },
+                          "der_demonicingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 551
+                          },
+                          "der_eternalsteelfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1214
+                          },
+                          "der_demoniccrushingpowertalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3074
+                          },
+                          "der_lightningcrystalshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1345
+                          },
+                          "der_demonicgreed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1370
+                          },
+                          "der_darkradiationfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1279
+                          },
+                          "der_orichalcumcrushingpowertalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3007
+                          },
+                          "der_chaosabyssshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1328
+                          },
+                          "der_chaoticdragonheart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2239
+                          },
+                          "der_unqueflamefragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1459
+                          },
+                          "der_draconicamulet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 442
+                          },
+                          "der_distortedrealityfragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1326
+                          },
+                          "der_vortexmadnesspiece.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1312
+                          },
+                          "der_timewarpshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1429
+                          },
+                          "der_orichalcumdust.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 393
+                          },
+                          "der_chaoticcrystalpart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          },
+                          "der_demonicrelict.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1313
+                          },
+                          "der_chaoticbloodthirsttalisman.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3098
+                          },
+                          "filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          },
+                          "der_hellfireshard.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1252
+                          },
+                          "der_chaoticingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 506
+                          },
+                          "der_crystaldragonheart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2198
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "demonic_dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 23706
+                          },
+                          "chaotic_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8583
+                          },
+                          "orichalcum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 20976
+                          },
+                          "crystal_dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 23706
+                          },
+                          "crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 38800
+                          },
+                          "demonic_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9723
+                          },
+                          "projectile_chaos.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 35765
+                          },
+                          "orichalcum_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10986
+                          },
+                          "chaotic.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 47890
+                          },
+                          "projectile_fire.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 58071
+                          },
+                          "demonic.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 73017
+                          },
+                          "projectile_energy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 42141
+                          },
+                          "orichalcum_dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 23518
+                          },
+                          "chaotic_dragon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22732
+                          },
+                          "projectile_ignition.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 49865
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "der_shard_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 27121
+                              },
+                              "der_shard_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23192
+                              },
+                              "der_shard_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22736
+                              },
+                              "demonictools.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 163
+                              },
+                              "chaotictools.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 163
+                              },
+                              "orichalcumtools.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 146
+                              }
+                            }
+                          },
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "chaotic_armor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 178
+                              },
+                              "orichalcum_armor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 217
+                              },
+                              "demonic_armor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 179
+                              }
+                            }
+                          },
+                          "upgrade_modifier_gear.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13010
+                          },
+                          "energy_infuser_texture_sheet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 20305
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_upgrade_tweaker.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 29681
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "geo": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "orichalcum.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 60582
+                          },
+                          "crystal.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 66811
+                          },
+                          "demonic.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 92922
+                          },
+                          "chaotic.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 75153
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "orichalcum_rightarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 387785
+                          },
+                          "chaotic_leftboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 268255
+                          },
+                          "demonic_rightleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 382805
+                          },
+                          "orichalcum_helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 335981
+                          },
+                          "orichalcum_belt.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 221450
+                          },
+                          "demonic_rightarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 626433
+                          },
+                          "orichalcum_rightleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 244973
+                          },
+                          "demonic_leftboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 242473
+                          },
+                          "demonic_leftarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 626636
+                          },
+                          "chaotic_rightboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 268710
+                          },
+                          "orichalcum_leftleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 244540
+                          },
+                          "orichalcum_leftarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 387356
+                          },
+                          "chaotic_helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 369317
+                          },
+                          "demonic_leftleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 383750
+                          },
+                          "orichalcum_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 576069
+                          },
+                          "orichalcum_leftboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 371087
+                          },
+                          "orichalcum_rightboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 371626
+                          },
+                          "chaotic_belt.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 261707
+                          },
+                          "deminic_belt.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 350978
+                          },
+                          "chaotic_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 464382
+                          },
+                          "demonic_helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 579023
+                          },
+                          "chaotic_rightarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 442381
+                          },
+                          "demonic_rightboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 242988
+                          },
+                          "chaotic_leftleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 250400
+                          },
+                          "demonic_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 718370
+                          },
+                          "chaotic_leftarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 442946
+                          },
+                          "chaotic_rightleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 249959
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "der_chaoticbow.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 483737
+                          },
+                          "der_demonicstaff.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 691176
+                          },
+                          "der_orichalcumsword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 314305
+                          },
+                          "der_demonicbow.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 478067
+                          },
+                          "der_chaoticstaff.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 649834
+                          },
+                          "der_orichalcumbow.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 483738
+                          },
+                          "der_demonicsword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 460959
+                          },
+                          "der_chaoticsword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 318439
+                          },
+                          "der_shard1.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 13695
+                          },
+                          "der_orichalcumstaff.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 536389
+                          },
+                          "der_shard.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 28890
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "animations": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "crystal.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 191494
+                          },
+                          "demonic.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 22885
+                          },
+                          "orichalcum.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 122207
+                          },
+                          "chaotic.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 22395
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 12021
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 12021
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 90
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 392
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11202
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 26482
+          }
+        }
+      }
+    }
+  }
+}

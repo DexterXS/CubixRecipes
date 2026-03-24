@@ -1,0 +1,1582 @@
+{
+  "mod_name": "CubixCustomization[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCustomization[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCustomization[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 17108259,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixcustomization": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "rin": {
+                            "type": "directory",
+                            "children": {
+                              "ring6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 479
+                              },
+                              "ring11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 16970
+                              },
+                              "ring2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3167
+                              },
+                              "ring9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 59437
+                              },
+                              "ring5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 38858
+                              },
+                              "ring1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2874
+                              },
+                              "ring12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3232
+                              },
+                              "ring4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 56772
+                              },
+                              "ring0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "ring13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22877
+                              },
+                              "ring7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1176
+                              },
+                              "ring3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2875
+                              },
+                              "ring10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 37563
+                              },
+                              "ring8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 453
+                              }
+                            }
+                          },
+                          "bea": {
+                            "type": "directory",
+                            "children": {
+                              "beard4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 75592
+                              },
+                              "beard8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 70924
+                              },
+                              "beard1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 43795
+                              },
+                              "beard5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 197012
+                              },
+                              "beard0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4159
+                              },
+                              "beard9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 54285
+                              },
+                              "beard2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 147189
+                              },
+                              "beard6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 145913
+                              },
+                              "beard3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 86626
+                              },
+                              "beard7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 178088
+                              }
+                            }
+                          },
+                          "hat": {
+                            "type": "directory",
+                            "children": {
+                              "hat11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 34871
+                              },
+                              "hat5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 92975
+                              },
+                              "hat1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 441561
+                              },
+                              "hat18.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8553
+                              },
+                              "hat23.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22033
+                              },
+                              "hat9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7609
+                              },
+                              "hat14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 37989
+                              },
+                              "hat22.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2906
+                              },
+                              "hat10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 156751
+                              },
+                              "hat2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 153073
+                              },
+                              "hat19.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 38802
+                              },
+                              "hat6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 132472
+                              },
+                              "hat15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 121784
+                              },
+                              "hat3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 62861
+                              },
+                              "hat21.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10483
+                              },
+                              "hat13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 133546
+                              },
+                              "hat25.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 152673
+                              },
+                              "hat16.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 24555
+                              },
+                              "hat0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1253
+                              },
+                              "hat7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 151670
+                              },
+                              "hat20.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6967
+                              },
+                              "hat12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13608
+                              },
+                              "hat4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23064
+                              },
+                              "hat24.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8024
+                              },
+                              "hat8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 161867
+                              },
+                              "hat17.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3697
+                              }
+                            }
+                          },
+                          "pet": {
+                            "type": "directory",
+                            "children": {
+                              "pet20.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 17700
+                              },
+                              "pet12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 24550
+                              },
+                              "pet9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13468
+                              },
+                              "pet5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12888
+                              },
+                              "pet19.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19558
+                              },
+                              "pet24.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 31191
+                              },
+                              "pet2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12775
+                              },
+                              "petbag1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12832
+                              },
+                              "f3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 31197
+                              },
+                              "pet15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12995
+                              },
+                              "pet21.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23510
+                              },
+                              "pet6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11949
+                              },
+                              "pet18.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 21586
+                              },
+                              "pet1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11961
+                              },
+                              "f4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 25428
+                              },
+                              "pet14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13366
+                              },
+                              "pet0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1253
+                              },
+                              "pet22.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 36401
+                              },
+                              "pet10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11958
+                              },
+                              "pet7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12219
+                              },
+                              "pet17.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 21517
+                              },
+                              "petbag3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12751
+                              },
+                              "f5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 31197
+                              },
+                              "pet13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12235
+                              },
+                              "pet4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12702
+                              },
+                              "f1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7524
+                              },
+                              "pet11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12178
+                              },
+                              "pet8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12303
+                              },
+                              "pet23.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 39843
+                              },
+                              "f6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 31572
+                              },
+                              "pet16.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11021
+                              },
+                              "petbag2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12915
+                              },
+                              "f2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4328
+                              },
+                              "pet3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12958
+                              }
+                            }
+                          },
+                          "buf": {
+                            "type": "directory",
+                            "children": {
+                              "buff2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 230588
+                              },
+                              "buff26.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 157426
+                              },
+                              "buff22.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 251335
+                              },
+                              "buff18.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 217888
+                              },
+                              "buff29.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 155488
+                              },
+                              "buff6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 348651
+                              },
+                              "buff14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 234787
+                              },
+                              "buff31.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 155765
+                              },
+                              "buff17.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 211850
+                              },
+                              "buff3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 352511
+                              },
+                              "buff23.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 246307
+                              },
+                              "buff13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 173880
+                              },
+                              "buff30.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 154679
+                              },
+                              "buff7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 394380
+                              },
+                              "buff28.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 156938
+                              },
+                              "buff16.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 215414
+                              },
+                              "buff24.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 311262
+                              },
+                              "buff0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1617
+                              },
+                              "buff4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 352276
+                              },
+                              "buff20.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 311444
+                              },
+                              "buff12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 173160
+                              },
+                              "buff8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 170351
+                              },
+                              "buff27.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 157087
+                              },
+                              "buff1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 67012
+                              },
+                              "buff25.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 301553
+                              },
+                              "buff10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 173053
+                              },
+                              "buff5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 353148
+                              },
+                              "buff19.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 236570
+                              },
+                              "buff11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 170562
+                              },
+                              "buff21.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 307932
+                              },
+                              "buff15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 215673
+                              },
+                              "buff9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 170546
+                              }
+                            }
+                          },
+                          "eff": {
+                            "type": "directory",
+                            "children": {
+                              "effect11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3802
+                              },
+                              "effect7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5753
+                              },
+                              "effect4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5253
+                              },
+                              "effect1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11218
+                              },
+                              "effect14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3899
+                              },
+                              "effect5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6297
+                              },
+                              "effect2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5267
+                              },
+                              "effect9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3918
+                              },
+                              "effect13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4264
+                              },
+                              "effect6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6236
+                              },
+                              "effect10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3825
+                              },
+                              "effect12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4360
+                              },
+                              "effect8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5288
+                              },
+                              "effect3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5927
+                              }
+                            }
+                          },
+                          "win": {
+                            "type": "directory",
+                            "children": {
+                              "wings0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "wings7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 725
+                              },
+                              "wings3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 110458
+                              },
+                              "wings1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 350
+                              },
+                              "wings6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 612
+                              },
+                              "wings2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 337
+                              },
+                              "wings9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 272
+                              },
+                              "wings5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 855
+                              },
+                              "wings8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2238
+                              },
+                              "wings4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 272
+                              },
+                              "wings10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2501
+                              }
+                            }
+                          },
+                          "hai": {
+                            "type": "directory",
+                            "children": {
+                              "hair3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 180
+                              },
+                              "hair13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11766
+                              },
+                              "hair7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 270
+                              },
+                              "hair16.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11467
+                              },
+                              "hair4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 152
+                              },
+                              "hair10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 281
+                              },
+                              "hair0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1297
+                              },
+                              "hair9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 281
+                              },
+                              "hair8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 184
+                              },
+                              "hair15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15152
+                              },
+                              "hair11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 472
+                              },
+                              "hair1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 592
+                              },
+                              "hair14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11268
+                              },
+                              "hair5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 184
+                              },
+                              "hair2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 102
+                              },
+                              "hair12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 380
+                              },
+                              "hair6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "hair17.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12580
+                              }
+                            }
+                          },
+                          "gla": {
+                            "type": "directory",
+                            "children": {
+                              "glasses16.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23464
+                              },
+                              "glasses8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 48903
+                              },
+                              "glasses1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 62531
+                              },
+                              "glasses12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 119508
+                              },
+                              "glasses5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 69567
+                              },
+                              "glasses0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1253
+                              },
+                              "glasses9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 91089
+                              },
+                              "glasses15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 26785
+                              },
+                              "glasses4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 66742
+                              },
+                              "glasses11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 92889
+                              },
+                              "glasses6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 69953
+                              },
+                              "glasses14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 92889
+                              },
+                              "glasses3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 33104
+                              },
+                              "glasses10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 53836
+                              },
+                              "glasses7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23464
+                              },
+                              "glasses2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 62416
+                              },
+                              "glasses13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 26785
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "customization": {
+                            "type": "directory",
+                            "children": {
+                              "reset.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 610
+                              },
+                              "setup.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2302
+                              },
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "head_passive.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 14511
+                                  },
+                                  "applyButton.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 932
+                                  },
+                                  "head_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 14840
+                                  }
+                                }
+                              },
+                              "pushMessages": {
+                                "type": "directory",
+                                "children": {
+                                  "iconCryst.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 16266
+                                  },
+                                  "giftBox.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 10047
+                                  },
+                                  "close_passive.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 498
+                                  },
+                                  "frame.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 93347
+                                  },
+                                  "donate_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 28576
+                                  },
+                                  "box.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2917
+                                  },
+                                  "donate_passive.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 502
+                                  }
+                                }
+                              },
+                              "boxPurchases.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 83584
+                              },
+                              "rarka3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5253
+                              },
+                              "types": {
+                                "type": "directory",
+                                "children": {
+                                  "MAGICWAND.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 24536
+                                  },
+                                  "PET.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 46418
+                                  },
+                                  "AURA.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 34145
+                                  },
+                                  "HAIRCUT.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 35371
+                                  },
+                                  "GLASSES.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 23241
+                                  },
+                                  "CAP.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 30634
+                                  },
+                                  "HEARTWINGS.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 25521
+                                  },
+                                  "BRACELET.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 26404
+                                  },
+                                  "BEARD.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 31736
+                                  }
+                                }
+                              },
+                              "free.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1112
+                              },
+                              "installed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5292
+                              },
+                              "boxPayment.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1430
+                              },
+                              "boxBalances.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22431
+                              },
+                              "boxRare_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3519
+                              },
+                              "purchased.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 937
+                              },
+                              "fire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7516
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4249453
+                              },
+                              "rarka1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5734
+                              },
+                              "boxRare_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3102
+                              },
+                              "random.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1983
+                              },
+                              "resetAndSave.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2949
+                              },
+                              "save.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 199
+                              },
+                              "titleSection.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1148
+                              },
+                              "boxRare_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3228
+                              },
+                              "rarka2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6275
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 182
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 242
+                      }
+                    }
+                  },
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "fractal.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 171248
+                      },
+                      "bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 351544
+                      },
+                      "proxima.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 132104
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "cubixworld": {
+                "type": "directory",
+                "children": {
+                  "cubixcustomization": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "CubixPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6332
+                          },
+                          "entity": {
+                            "type": "directory",
+                            "children": {
+                              "EntityPlayerPet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5268
+                              },
+                              "EntityTameableFlying.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4769
+                              },
+                              "EntityPlayerPetFlying.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8498
+                              },
+                              "RegisterEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 922
+                              },
+                              "EntityClientPlayerCustomizationHead.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 633
+                              },
+                              "EntityClientPlayerCustomization.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 621
+                              },
+                              "ai": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityAIFlyingFollowOwner.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3710
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "CommonUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3783
+                              }
+                            }
+                          },
+                          "ModelData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1273
+                          },
+                          "SectionTypes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2724
+                          },
+                          "CommonEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1256
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "Scaler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1709
+                                  },
+                                  "Scrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4934
+                                  },
+                                  "RenderUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5449
+                                  }
+                                }
+                              },
+                              "GuiCustomization.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 36559
+                              },
+                              "MethodsUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2064
+                              },
+                              "GuiCustomization$PushMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2086
+                              }
+                            }
+                          },
+                          "ClientEvents$CustomGuiButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2628
+                          },
+                          "font": {
+                            "type": "directory",
+                            "children": {
+                              "CustomFont.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 747
+                              },
+                              "CustomFontRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10280
+                              },
+                              "PlaceType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1194
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderPlayerPet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1391
+                              },
+                              "RenderPlayerCustomization.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19180
+                              },
+                              "effects": {
+                                "type": "directory",
+                                "children": {
+                                  "EffectWaveRing.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1602
+                                  },
+                                  "EffectSpiral.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2108
+                                  },
+                                  "EffectFlameRings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2269
+                                  }
+                                }
+                              },
+                              "models": {
+                                "type": "directory",
+                                "children": {
+                                  "ModelPetFlying.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2183
+                                  },
+                                  "ModelPet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2159
+                                  }
+                                }
+                              },
+                              "RenderPlayerCustomizationHead.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19403
+                              },
+                              "RenderTypes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7137
+                              },
+                              "RenderPlayerPetFlying.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1415
+                              }
+                            }
+                          },
+                          "KeyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2433
+                          },
+                          "ModelsData$LoadingModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6587
+                          },
+                          "data": {
+                            "type": "directory",
+                            "children": {
+                              "IModelCustomCubix.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 823
+                              },
+                              "ClientModels.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 698
+                              }
+                            }
+                          },
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4081
+                          },
+                          "CRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4024
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "ClientUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1172
+                              },
+                              "ClientUtils$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 697
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 145
+                          },
+                          "ModelsData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3240
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13215
+                          },
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 673
+                          },
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5452
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3886
+                          }
+                        }
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2584
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3517
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3577
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 488
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 328
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11392
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 8973
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "mod_name": "CustomDiscord-1.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CustomDiscord-1.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CustomDiscord-1.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 620143,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "discord": {
+            "type": "directory",
+            "children": {
+              "rpc": {
+                "type": "directory",
+                "children": {
+                  "DiscordEventHandlers$OnGameUpdate.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 299
+                  },
+                  "DiscordEventHandlers$OnJoinRequest.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 315
+                  },
+                  "DiscordEventHandlers$OnReady.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 271
+                  },
+                  "DiscordEventHandlers$OnStatus.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 292
+                  },
+                  "DiscordEventHandlers.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2147
+                  },
+                  "DiscordJoinRequest.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1535
+                  },
+                  "DiscordRichPresence.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3438
+                  },
+                  "DiscordRPC.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1254
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "mryarik666": {
+                "type": "directory",
+                "children": {
+                  "discord": {
+                    "type": "directory",
+                    "children": {
+                      "Discord.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2689
+                      },
+                      "Main.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1951
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "darwin": {
+            "type": "directory",
+            "children": {
+              "libdiscord-rpc.dylib": {
+                "type": "file",
+                "extension": ".dylib",
+                "size": 260256
+              }
+            }
+          },
+          "linux-x86-64": {
+            "type": "directory",
+            "children": {
+              "libdiscord-rpc.so": {
+                "type": "file",
+                "extension": ".so",
+                "size": 661146
+              }
+            }
+          },
+          "win32-x86": {
+            "type": "directory",
+            "children": {
+              "discord-rpc.dll": {
+                "type": "file",
+                "extension": ".dll",
+                "size": 307720
+              }
+            }
+          },
+          "win32-x86-64": {
+            "type": "directory",
+            "children": {
+              "discord-rpc.dll": {
+                "type": "file",
+                "extension": ".dll",
+                "size": 400392
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 743
+          }
+        }
+      }
+    }
+  }
+}

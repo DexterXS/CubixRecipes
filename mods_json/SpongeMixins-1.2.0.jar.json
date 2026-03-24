@@ -1,0 +1,2962 @@
+{
+  "mod_name": "SpongeMixins-1.2.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\SpongeMixins-1.2.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "SpongeMixins-1.2.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 975902,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 197
+              },
+              "services": {
+                "type": "directory",
+                "children": {
+                  "javax.annotation.processing.Processor": {
+                    "type": "file",
+                    "extension": ".processor",
+                    "size": 142
+                  },
+                  "org.spongepowered.asm.service.IGlobalPropertyService": {
+                    "type": "file",
+                    "extension": ".iglobalpropertyservice",
+                    "size": 47
+                  },
+                  "org.spongepowered.asm.service.IMixinService": {
+                    "type": "file",
+                    "extension": ".imixinservice",
+                    "size": 62
+                  },
+                  "org.spongepowered.asm.service.IMixinServiceBootstrap": {
+                    "type": "file",
+                    "extension": ".imixinservicebootstrap",
+                    "size": 71
+                  },
+                  "org.spongepowered.tools.obfuscation.service.IObfuscationService": {
+                    "type": "file",
+                    "extension": ".iobfuscationservice",
+                    "size": 61
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "timeconqueror": {
+                "type": "directory",
+                "children": {
+                  "spongemixins": {
+                    "type": "directory",
+                    "children": {
+                      "SpongeMixins.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 804
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "SpongeMixinsCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4117
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 381
+          },
+          "LICENSE.txt": {
+            "type": "file",
+            "extension": ".txt",
+            "size": 1065
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "spongepowered": {
+                "type": "directory",
+                "children": {
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "bridge": {
+                        "type": "directory",
+                        "children": {
+                          "RemapperAdapter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2825
+                          },
+                          "RemapperAdapterFML.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2936
+                          }
+                        }
+                      },
+                      "launch": {
+                        "type": "directory",
+                        "children": {
+                          "GlobalProperties$Keys.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1040
+                          },
+                          "GlobalProperties.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2092
+                          },
+                          "MixinBootstrap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4766
+                          },
+                          "MixinInitialisationError.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 850
+                          },
+                          "MixinTweaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1593
+                          },
+                          "platform": {
+                            "type": "directory",
+                            "children": {
+                              "IMixinPlatformAgent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 305
+                              },
+                              "MainAttributes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2496
+                              },
+                              "MixinContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4693
+                              },
+                              "MixinPlatformAgentAbstract.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1878
+                              },
+                              "MixinPlatformAgentDefault.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2118
+                              },
+                              "MixinPlatformAgentFML.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11122
+                              },
+                              "MixinPlatformManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9332
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "lib": {
+                        "type": "directory",
+                        "children": {
+                          "AnnotationVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1569
+                          },
+                          "AnnotationWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6132
+                          },
+                          "Attribute.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2776
+                          },
+                          "ByteVector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3723
+                          },
+                          "ClassReader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 35414
+                          },
+                          "ClassVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3129
+                          },
+                          "ClassWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21979
+                          },
+                          "Context.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 821
+                          },
+                          "CurrentFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1020
+                          },
+                          "Edge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 458
+                          },
+                          "FieldVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1565
+                          },
+                          "FieldWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4742
+                          },
+                          "Frame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13395
+                          },
+                          "Handle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2047
+                          },
+                          "Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1177
+                          },
+                          "Item.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2767
+                          },
+                          "Label.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4549
+                          },
+                          "MethodVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7299
+                          },
+                          "MethodWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 30796
+                          },
+                          "Opcodes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6862
+                          },
+                          "Type.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10004
+                          },
+                          "TypePath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2253
+                          },
+                          "TypeReference.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3238
+                          },
+                          "commons": {
+                            "type": "directory",
+                            "children": {
+                              "AnnotationRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1972
+                              },
+                              "ClassRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4832
+                              },
+                              "FieldRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1818
+                              },
+                              "MethodRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6806
+                              },
+                              "Remapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5200
+                              },
+                              "SignatureRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3756
+                              },
+                              "SimpleRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1989
+                              }
+                            }
+                          },
+                          "package.html": {
+                            "type": "file",
+                            "extension": ".html",
+                            "size": 4363
+                          },
+                          "signature": {
+                            "type": "directory",
+                            "children": {
+                              "SignatureReader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2802
+                              },
+                              "SignatureVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2068
+                              },
+                              "SignatureWriter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3019
+                              },
+                              "package.html": {
+                                "type": "file",
+                                "extension": ".html",
+                                "size": 1744
+                              }
+                            }
+                          },
+                          "tree": {
+                            "type": "directory",
+                            "children": {
+                              "AbstractInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4776
+                              },
+                              "AnnotationNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5521
+                              },
+                              "ClassNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7220
+                              },
+                              "FieldInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1751
+                              },
+                              "FieldNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4359
+                              },
+                              "FrameNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3230
+                              },
+                              "IincInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1488
+                              },
+                              "InnerClassNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 874
+                              },
+                              "InsnList$InsnListIterator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2765
+                              },
+                              "InsnList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5583
+                              },
+                              "InsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1390
+                              },
+                              "IntInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1558
+                              },
+                              "InvokeDynamicInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1803
+                              },
+                              "JumpInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1921
+                              },
+                              "LabelNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1721
+                              },
+                              "LdcInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1464
+                              },
+                              "LineNumberNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1673
+                              },
+                              "LocalVariableAnnotationNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2868
+                              },
+                              "LocalVariableNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1356
+                              },
+                              "LookupSwitchInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3038
+                              },
+                              "MethodInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1935
+                              },
+                              "MethodNode$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 912
+                              },
+                              "MethodNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17281
+                              },
+                              "MultiANewArrayInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1567
+                              },
+                              "ParameterNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 730
+                              },
+                              "TableSwitchInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2717
+                              },
+                              "TryCatchBlockNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2650
+                              },
+                              "TypeAnnotationNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 969
+                              },
+                              "TypeInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1597
+                              },
+                              "VarInsnNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1554
+                              },
+                              "analysis": {
+                                "type": "directory",
+                                "children": {
+                                  "Analyzer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13570
+                                  },
+                                  "AnalyzerException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1546
+                                  },
+                                  "BasicInterpreter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9527
+                                  },
+                                  "BasicValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2020
+                                  },
+                                  "BasicVerifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10571
+                                  },
+                                  "Frame.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12771
+                                  },
+                                  "Interpreter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2643
+                                  },
+                                  "SimpleVerifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7038
+                                  },
+                                  "SmallSet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2331
+                                  },
+                                  "SourceInterpreter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7730
+                                  },
+                                  "SourceValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1604
+                                  },
+                                  "Subroutine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1927
+                                  },
+                                  "Value.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 155
+                                  },
+                                  "package.html": {
+                                    "type": "file",
+                                    "extension": ".html",
+                                    "size": 2589
+                                  }
+                                }
+                              },
+                              "package.html": {
+                                "type": "file",
+                                "extension": ".html",
+                                "size": 6338
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "ASMifiable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 348
+                              },
+                              "ASMifier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 29057
+                              },
+                              "CheckAnnotationAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2988
+                              },
+                              "CheckClassAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17889
+                              },
+                              "CheckFieldAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2662
+                              },
+                              "CheckMethodAdapter$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2863
+                              },
+                              "CheckMethodAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23870
+                              },
+                              "CheckSignatureAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4572
+                              },
+                              "Printer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8842
+                              },
+                              "Textifiable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 315
+                              },
+                              "Textifier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 30244
+                              },
+                              "TraceAnnotationVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2082
+                              },
+                              "TraceClassVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5045
+                              },
+                              "TraceFieldVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2305
+                              },
+                              "TraceMethodVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8541
+                              },
+                              "TraceSignatureVisitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4858
+                              },
+                              "package.html": {
+                                "type": "file",
+                                "extension": ".html",
+                                "size": 2041
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "mixin": {
+                        "type": "directory",
+                        "children": {
+                          "Debug.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 485
+                          },
+                          "Dynamic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 565
+                          },
+                          "EnvironmentStateTweaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1844
+                          },
+                          "Final.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 404
+                          },
+                          "Implements.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 450
+                          },
+                          "Interface$Remap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1508
+                          },
+                          "Interface.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 794
+                          },
+                          "Intrinsic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 456
+                          },
+                          "Mixin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 619
+                          },
+                          "MixinEnvironment$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 252
+                          },
+                          "MixinEnvironment$CompatibilityLevel$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1008
+                          },
+                          "MixinEnvironment$CompatibilityLevel$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1008
+                          },
+                          "MixinEnvironment$CompatibilityLevel$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 888
+                          },
+                          "MixinEnvironment$CompatibilityLevel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3198
+                          },
+                          "MixinEnvironment$MixinLogWatcher$MixinAppender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1910
+                          },
+                          "MixinEnvironment$MixinLogWatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1668
+                          },
+                          "MixinEnvironment$Option$Inherit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          },
+                          "MixinEnvironment$Option.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9925
+                          },
+                          "MixinEnvironment$Phase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2182
+                          },
+                          "MixinEnvironment$Side$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 728
+                          },
+                          "MixinEnvironment$Side$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1082
+                          },
+                          "MixinEnvironment$Side$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1153
+                          },
+                          "MixinEnvironment$Side.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1788
+                          },
+                          "MixinEnvironment$TokenProviderWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2004
+                          },
+                          "MixinEnvironment.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18224
+                          },
+                          "Mixins.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4249
+                          },
+                          "Mutable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 394
+                          },
+                          "Overwrite.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 563
+                          },
+                          "Pseudo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 389
+                          },
+                          "Shadow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 572
+                          },
+                          "SoftOverride.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 403
+                          },
+                          "Unique.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 475
+                          },
+                          "extensibility": {
+                            "type": "directory",
+                            "children": {
+                              "IEnvironmentTokenProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 368
+                              },
+                              "IMixinConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 593
+                              },
+                              "IMixinConfigPlugin.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 744
+                              },
+                              "IMixinErrorHandler$ErrorAction.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1693
+                              },
+                              "IMixinErrorHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 860
+                              },
+                              "IMixinInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 802
+                              },
+                              "IRemapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 374
+                              }
+                            }
+                          },
+                          "gen": {
+                            "type": "directory",
+                            "children": {
+                              "Accessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 500
+                              },
+                              "AccessorGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1447
+                              },
+                              "AccessorGeneratorField.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1056
+                              },
+                              "AccessorGeneratorFieldGetter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2003
+                              },
+                              "AccessorGeneratorFieldSetter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2144
+                              },
+                              "AccessorGeneratorMethodProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2707
+                              },
+                              "AccessorInfo$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 852
+                              },
+                              "AccessorInfo$AccessorType$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1218
+                              },
+                              "AccessorInfo$AccessorType$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1218
+                              },
+                              "AccessorInfo$AccessorType$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1218
+                              },
+                              "AccessorInfo$AccessorType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2892
+                              },
+                              "AccessorInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12006
+                              },
+                              "Invoker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 498
+                              },
+                              "InvokerInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2123
+                              },
+                              "throwables": {
+                                "type": "directory",
+                                "children": {
+                                  "InvalidAccessorException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2001
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "injection": {
+                            "type": "directory",
+                            "children": {
+                              "At$Shift.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1269
+                              },
+                              "At.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 834
+                              },
+                              "Coerce.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 309
+                              },
+                              "Constant$Condition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2429
+                              },
+                              "Constant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1004
+                              },
+                              "Group.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 526
+                              },
+                              "IInjectionPointContext.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 383
+                              },
+                              "Inject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1012
+                              },
+                              "InjectionPoint$AtCode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 553
+                              },
+                              "InjectionPoint$CompositeInjectionPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1432
+                              },
+                              "InjectionPoint$Intersection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2370
+                              },
+                              "InjectionPoint$Selector.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1372
+                              },
+                              "InjectionPoint$Shift.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2716
+                              },
+                              "InjectionPoint$ShiftByViolationBehaviour.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1456
+                              },
+                              "InjectionPoint$Union.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1706
+                              },
+                              "InjectionPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19404
+                              },
+                              "ModifyArg.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 862
+                              },
+                              "ModifyArgs.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 839
+                              },
+                              "ModifyConstant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 820
+                              },
+                              "ModifyVariable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 981
+                              },
+                              "Redirect.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 835
+                              },
+                              "Slice.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 543
+                              },
+                              "Surrogate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 409
+                              },
+                              "callback": {
+                                "type": "directory",
+                                "children": {
+                                  "CallbackInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2574
+                                  },
+                                  "CallbackInfoReturnable.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5032
+                                  },
+                                  "CallbackInjector$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 892
+                                  },
+                                  "CallbackInjector$Callback.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7396
+                                  },
+                                  "CallbackInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 20431
+                                  },
+                                  "Cancellable.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 322
+                                  },
+                                  "CancellationException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 888
+                                  },
+                                  "LocalCapture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1771
+                                  }
+                                }
+                              },
+                              "code": {
+                                "type": "directory",
+                                "children": {
+                                  "ISliceContext.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 316
+                                  },
+                                  "Injector$TargetNode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1530
+                                  },
+                                  "Injector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13018
+                                  },
+                                  "InjectorTarget.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4349
+                                  },
+                                  "MethodSlice$InsnListSlice$SliceIterator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2917
+                                  },
+                                  "MethodSlice$InsnListSlice.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2807
+                                  },
+                                  "MethodSlice.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8334
+                                  },
+                                  "MethodSlices.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3381
+                                  },
+                                  "ReadOnlyInsnList.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3237
+                                  }
+                                }
+                              },
+                              "invoke": {
+                                "type": "directory",
+                                "children": {
+                                  "InvokeInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5632
+                                  },
+                                  "ModifyArgInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6390
+                                  },
+                                  "ModifyArgsInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6485
+                                  },
+                                  "ModifyConstantInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10118
+                                  },
+                                  "RedirectInjector$ConstructorRedirectData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 688
+                                  },
+                                  "RedirectInjector$Meta.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1105
+                                  },
+                                  "RedirectInjector$RedirectedInvoke.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1889
+                                  },
+                                  "RedirectInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 22840
+                                  },
+                                  "arg": {
+                                    "type": "directory",
+                                    "children": {
+                                      "Args.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 769
+                                      },
+                                      "ArgsClassGenerator.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 11727
+                                      },
+                                      "ArgumentCountException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 920
+                                      },
+                                      "ArgumentIndexOutOfBoundsException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 811
+                                      }
+                                    }
+                                  },
+                                  "util": {
+                                    "type": "directory",
+                                    "children": {
+                                      "InsnFinder$AnalysisResultException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 894
+                                      },
+                                      "InsnFinder$AnalyzerState.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1430
+                                      },
+                                      "InsnFinder$PopAnalyzer$PopFrame.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3240
+                                      },
+                                      "InsnFinder$PopAnalyzer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1429
+                                      },
+                                      "InsnFinder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2275
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "modify": {
+                                "type": "directory",
+                                "children": {
+                                  "AfterStoreLocal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 923
+                                  },
+                                  "BeforeLoadLocal$SearchState.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1993
+                                  },
+                                  "BeforeLoadLocal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4498
+                                  },
+                                  "InvalidImplicitDiscriminatorException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 765
+                                  },
+                                  "LocalVariableDiscriminator$Context$Local.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1422
+                                  },
+                                  "LocalVariableDiscriminator$Context.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5727
+                                  },
+                                  "LocalVariableDiscriminator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5523
+                                  },
+                                  "ModifyVariableInjector$Context.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1176
+                                  },
+                                  "ModifyVariableInjector$ContextualInjectionPoint.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1993
+                                  },
+                                  "ModifyVariableInjector.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10521
+                                  }
+                                }
+                              },
+                              "points": {
+                                "type": "directory",
+                                "children": {
+                                  "AfterInvoke.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2321
+                                  },
+                                  "BeforeConstant.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12083
+                                  },
+                                  "BeforeFieldAccess.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5017
+                                  },
+                                  "BeforeFinalReturn.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2899
+                                  },
+                                  "BeforeInvoke$SearchType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1338
+                                  },
+                                  "BeforeInvoke.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8045
+                                  },
+                                  "BeforeNew.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4657
+                                  },
+                                  "BeforeReturn.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2619
+                                  },
+                                  "BeforeStringInvoke.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3584
+                                  },
+                                  "JumpInsnPoint.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2479
+                                  },
+                                  "MethodHead.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1677
+                                  }
+                                }
+                              },
+                              "struct": {
+                                "type": "directory",
+                                "children": {
+                                  "CallbackInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2160
+                                  },
+                                  "InjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 19989
+                                  },
+                                  "InjectionNodes$InjectionNode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3989
+                                  },
+                                  "InjectionNodes.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2175
+                                  },
+                                  "InjectionPointData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9034
+                                  },
+                                  "InjectorGroupInfo$Map.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3582
+                                  },
+                                  "InjectorGroupInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4688
+                                  },
+                                  "InvalidMemberDescriptorException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 863
+                                  },
+                                  "MemberInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13824
+                                  },
+                                  "ModifyArgInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1601
+                                  },
+                                  "ModifyArgsInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1297
+                                  },
+                                  "ModifyConstantInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3950
+                                  },
+                                  "ModifyVariableInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1604
+                                  },
+                                  "RedirectInjectionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1269
+                                  },
+                                  "Target.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12219
+                                  }
+                                }
+                              },
+                              "throwables": {
+                                "type": "directory",
+                                "children": {
+                                  "InjectionError.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 860
+                                  },
+                                  "InjectionValidationException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 879
+                                  },
+                                  "InvalidInjectionException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2101
+                                  },
+                                  "InvalidInjectionPointException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2034
+                                  },
+                                  "InvalidSliceException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1871
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "refmap": {
+                            "type": "directory",
+                            "children": {
+                              "IMixinContext.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 869
+                              },
+                              "IReferenceMapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 488
+                              },
+                              "ReferenceMapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6911
+                              },
+                              "RemappingReferenceMapper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1676
+                              },
+                              "RemappingReferenceMapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6197
+                              }
+                            }
+                          },
+                          "struct": {
+                            "type": "directory",
+                            "children": {
+                              "MemberRef$Field.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1905
+                              },
+                              "MemberRef$Handle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2794
+                              },
+                              "MemberRef$Method.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1912
+                              },
+                              "MemberRef.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2138
+                              },
+                              "SourceMap$File.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2800
+                              },
+                              "SourceMap$Stratum.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2303
+                              },
+                              "SourceMap.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3753
+                              },
+                              "SpecialMethodInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1558
+                              }
+                            }
+                          },
+                          "throwables": {
+                            "type": "directory",
+                            "children": {
+                              "ClassAlreadyLoadedException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 836
+                              },
+                              "MixinApplyError.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 762
+                              },
+                              "MixinException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 851
+                              },
+                              "MixinPrepareError.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 768
+                              }
+                            }
+                          },
+                          "transformer": {
+                            "type": "directory",
+                            "children": {
+                              "ClassContext.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3885
+                              },
+                              "ClassInfo$Field.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3222
+                              },
+                              "ClassInfo$FrameData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1582
+                              },
+                              "ClassInfo$InterfaceMethod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1153
+                              },
+                              "ClassInfo$Member$Type.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1353
+                              },
+                              "ClassInfo$Member.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4601
+                              },
+                              "ClassInfo$Method.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7538
+                              },
+                              "ClassInfo$SearchType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1292
+                              },
+                              "ClassInfo$Traversal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2495
+                              },
+                              "ClassInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 28956
+                              },
+                              "Config.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2172
+                              },
+                              "InnerClassGenerator$InnerClassAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2796
+                              },
+                              "InnerClassGenerator$InnerClassInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3486
+                              },
+                              "InnerClassGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4934
+                              },
+                              "InterfaceInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6240
+                              },
+                              "MethodMapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5351
+                              },
+                              "MixinApplicatorInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4485
+                              },
+                              "MixinApplicatorStandard$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1023
+                              },
+                              "MixinApplicatorStandard$ApplicatorPass.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1469
+                              },
+                              "MixinApplicatorStandard$InitialiserInjectionMode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1484
+                              },
+                              "MixinApplicatorStandard$Range.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1594
+                              },
+                              "MixinApplicatorStandard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 30458
+                              },
+                              "MixinConfig$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 911
+                              },
+                              "MixinConfig$IListener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 347
+                              },
+                              "MixinConfig$InjectorOptions.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 918
+                              },
+                              "MixinConfig$OverwriteOptions.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 712
+                              },
+                              "MixinConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21742
+                              },
+                              "MixinInfo$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1353
+                              },
+                              "MixinInfo$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1533
+                              },
+                              "MixinInfo$MixinClassNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1952
+                              },
+                              "MixinInfo$MixinMethodNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2932
+                              },
+                              "MixinInfo$Reloaded.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3021
+                              },
+                              "MixinInfo$State.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11667
+                              },
+                              "MixinInfo$SubType$Accessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4170
+                              },
+                              "MixinInfo$SubType$Interface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3294
+                              },
+                              "MixinInfo$SubType$Standard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4200
+                              },
+                              "MixinInfo$SubType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3957
+                              },
+                              "MixinInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17827
+                              },
+                              "MixinPostProcessor$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1861
+                              },
+                              "MixinPostProcessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9033
+                              },
+                              "MixinPreProcessorAccessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 889
+                              },
+                              "MixinPreProcessorInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2923
+                              },
+                              "MixinPreProcessorStandard$SpecialMethod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2686
+                              },
+                              "MixinPreProcessorStandard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 27373
+                              },
+                              "MixinTargetContext.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 34278
+                              },
+                              "MixinTransformer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1523
+                              },
+                              "MixinTransformer$ErrorPhase$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2735
+                              },
+                              "MixinTransformer$ErrorPhase$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2490
+                              },
+                              "MixinTransformer$ErrorPhase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4056
+                              },
+                              "MixinTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 29779
+                              },
+                              "Proxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2240
+                              },
+                              "TargetClassContext.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12274
+                              },
+                              "debug": {
+                                "type": "directory",
+                                "children": {
+                                  "RuntimeDecompiler$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1261
+                                  },
+                                  "RuntimeDecompiler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6774
+                                  },
+                                  "RuntimeDecompilerAsync.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2748
+                                  }
+                                }
+                              },
+                              "ext": {
+                                "type": "directory",
+                                "children": {
+                                  "Extensions.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6904
+                                  },
+                                  "IClassGenerator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 199
+                                  },
+                                  "IDecompiler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 187
+                                  },
+                                  "IExtension.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 419
+                                  },
+                                  "IHotSwap.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 250
+                                  },
+                                  "ITargetClassContext.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 312
+                                  },
+                                  "extensions": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ExtensionCheckClass$ValidationFailedException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1035
+                                      },
+                                      "ExtensionCheckClass.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2315
+                                      },
+                                      "ExtensionCheckInterfaces.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8627
+                                      },
+                                      "ExtensionClassExporter.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6958
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "meta": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinInner.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 468
+                                  },
+                                  "MixinMerged.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 484
+                                  },
+                                  "MixinRenamed.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 502
+                                  }
+                                }
+                              },
+                              "throwables": {
+                                "type": "directory",
+                                "children": {
+                                  "InvalidInterfaceMixinException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1759
+                                  },
+                                  "InvalidMixinException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2059
+                                  },
+                                  "MixinReloadException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 871
+                                  },
+                                  "MixinTargetAlreadyLoadedException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1354
+                                  },
+                                  "MixinTransformerError.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 804
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "obfuscation": {
+                        "type": "directory",
+                        "children": {
+                          "RemapperChain.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2874
+                          },
+                          "mapping": {
+                            "type": "directory",
+                            "children": {
+                              "IMapping$Type.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1344
+                              },
+                              "IMapping.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 747
+                              },
+                              "common": {
+                                "type": "directory",
+                                "children": {
+                                  "MappingField.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3440
+                                  },
+                                  "MappingMethod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4600
+                                  }
+                                }
+                              },
+                              "mcp": {
+                                "type": "directory",
+                                "children": {
+                                  "MappingFieldSrg.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1608
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "service": {
+                        "type": "directory",
+                        "children": {
+                          "IClassBytecodeProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 454
+                          },
+                          "IClassProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 520
+                          },
+                          "IGlobalPropertyService.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 563
+                          },
+                          "ILegacyClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 360
+                          },
+                          "IMixinService.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1276
+                          },
+                          "IMixinServiceBootstrap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 252
+                          },
+                          "ITransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 135
+                          },
+                          "MixinService.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3642
+                          },
+                          "ServiceNotAvailableError.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 484
+                          },
+                          "mojang": {
+                            "type": "directory",
+                            "children": {
+                              "Blackboard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1626
+                              },
+                              "LaunchClassLoaderUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3635
+                              },
+                              "LegacyTransformerHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1309
+                              },
+                              "MixinServiceLaunchWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14298
+                              },
+                              "MixinServiceLaunchWrapperBootstrap.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1368
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "transformers": {
+                        "type": "directory",
+                        "children": {
+                          "MixinClassWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 994
+                          },
+                          "TreeTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1718
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "Annotations$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1114
+                          },
+                          "Annotations.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12866
+                          },
+                          "Bytecode$Visibility.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          },
+                          "Bytecode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 25017
+                          },
+                          "ClassSignature$IToken.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 655
+                          },
+                          "ClassSignature$Lazy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 810
+                          },
+                          "ClassSignature$SignatureParser$BoundElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2172
+                          },
+                          "ClassSignature$SignatureParser$FormalParamElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1519
+                          },
+                          "ClassSignature$SignatureParser$InterfaceElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1190
+                          },
+                          "ClassSignature$SignatureParser$SignatureElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 794
+                          },
+                          "ClassSignature$SignatureParser$SuperClassElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1194
+                          },
+                          "ClassSignature$SignatureParser$TokenElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3885
+                          },
+                          "ClassSignature$SignatureParser$TypeArgElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2937
+                          },
+                          "ClassSignature$SignatureParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2228
+                          },
+                          "ClassSignature$SignatureRemapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1514
+                          },
+                          "ClassSignature$Token.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6582
+                          },
+                          "ClassSignature$TokenHandle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2529
+                          },
+                          "ClassSignature$TypeVar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1628
+                          },
+                          "ClassSignature.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10370
+                          },
+                          "Constants$ManifestAttributes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 813
+                          },
+                          "Constants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1360
+                          },
+                          "ConstraintParser$Constraint.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5559
+                          },
+                          "ConstraintParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1815
+                          },
+                          "Counter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 637
+                          },
+                          "ITokenProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 197
+                          },
+                          "JavaVersion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1210
+                          },
+                          "Locals.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12934
+                          },
+                          "ObfuscationUtil$IClassRemapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 320
+                          },
+                          "ObfuscationUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2190
+                          },
+                          "PrettyPrinter$Alignment.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1206
+                          },
+                          "PrettyPrinter$CentredText.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1171
+                          },
+                          "PrettyPrinter$Column.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3141
+                          },
+                          "PrettyPrinter$HorizontalRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 994
+                          },
+                          "PrettyPrinter$IPrettyPrintable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 311
+                          },
+                          "PrettyPrinter$ISpecialEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 241
+                          },
+                          "PrettyPrinter$IVariableWidthEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 278
+                          },
+                          "PrettyPrinter$KeyValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1178
+                          },
+                          "PrettyPrinter$Row.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1997
+                          },
+                          "PrettyPrinter$Table.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4946
+                          },
+                          "PrettyPrinter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17422
+                          },
+                          "ReEntranceLock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1412
+                          },
+                          "SignaturePrinter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7798
+                          },
+                          "VersionNumber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4551
+                          },
+                          "asm": {
+                            "type": "directory",
+                            "children": {
+                              "MethodVisitorEx.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 826
+                              },
+                              "MixinVerifier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2939
+                              }
+                            }
+                          },
+                          "perf": {
+                            "type": "directory",
+                            "children": {
+                              "Profiler$LiveSection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2756
+                              },
+                              "Profiler$Section.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3110
+                              },
+                              "Profiler$SubSection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1911
+                              },
+                              "Profiler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9551
+                              }
+                            }
+                          },
+                          "throwables": {
+                            "type": "directory",
+                            "children": {
+                              "ConstraintViolationException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2751
+                              },
+                              "InvalidConstraintException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 897
+                              },
+                              "LVTGeneratorException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 703
+                              },
+                              "SyntheticBridgeException$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1152
+                              },
+                              "SyntheticBridgeException$Problem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3430
+                              },
+                              "SyntheticBridgeException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11437
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "tools": {
+                    "type": "directory",
+                    "children": {
+                      "agent": {
+                        "type": "directory",
+                        "children": {
+                          "MixinAgent$Transformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5211
+                          },
+                          "MixinAgent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3142
+                          },
+                          "MixinAgentClassLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3701
+                          }
+                        }
+                      },
+                      "obfuscation": {
+                        "type": "directory",
+                        "children": {
+                          "AnnotatedMixin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17051
+                          },
+                          "AnnotatedMixinElementHandler$AliasedElementName.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2080
+                          },
+                          "AnnotatedMixinElementHandler$AnnotatedElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2753
+                          },
+                          "AnnotatedMixinElementHandler$ShadowElementName.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3104
+                          },
+                          "AnnotatedMixinElementHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14773
+                          },
+                          "AnnotatedMixinElementHandlerAccessor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 982
+                          },
+                          "AnnotatedMixinElementHandlerAccessor$AnnotatedElementAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4160
+                          },
+                          "AnnotatedMixinElementHandlerAccessor$AnnotatedElementInvoker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1903
+                          },
+                          "AnnotatedMixinElementHandlerAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11018
+                          },
+                          "AnnotatedMixinElementHandlerInjector$AnnotatedElementInjectionPoint.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3117
+                          },
+                          "AnnotatedMixinElementHandlerInjector$AnnotatedElementInjector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3176
+                          },
+                          "AnnotatedMixinElementHandlerInjector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13781
+                          },
+                          "AnnotatedMixinElementHandlerOverwrite$AnnotatedElementOverwrite.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1401
+                          },
+                          "AnnotatedMixinElementHandlerOverwrite.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7644
+                          },
+                          "AnnotatedMixinElementHandlerShadow$AnnotatedElementShadow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5062
+                          },
+                          "AnnotatedMixinElementHandlerShadow$AnnotatedElementShadowField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3787
+                          },
+                          "AnnotatedMixinElementHandlerShadow$AnnotatedElementShadowMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3770
+                          },
+                          "AnnotatedMixinElementHandlerShadow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6235
+                          },
+                          "AnnotatedMixinElementHandlerSoftImplements.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8605
+                          },
+                          "AnnotatedMixins.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 19939
+                          },
+                          "Mappings$MappingConflictException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1358
+                          },
+                          "Mappings$UniqueMappings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4850
+                          },
+                          "Mappings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5002
+                          },
+                          "MixinObfuscationProcessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3059
+                          },
+                          "MixinObfuscationProcessorInjection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4893
+                          },
+                          "MixinObfuscationProcessorTargets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6201
+                          },
+                          "MixinValidator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3934
+                          },
+                          "ObfuscationData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3521
+                          },
+                          "ObfuscationDataProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12710
+                          },
+                          "ObfuscationEnvironment$RemapperProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1319
+                          },
+                          "ObfuscationEnvironment.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11744
+                          },
+                          "ObfuscationManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3681
+                          },
+                          "ObfuscationType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5885
+                          },
+                          "ReferenceManager$ReferenceConflictException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 925
+                          },
+                          "ReferenceManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9279
+                          },
+                          "SupportedOptions.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1973
+                          },
+                          "TargetMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8024
+                          },
+                          "interfaces": {
+                            "type": "directory",
+                            "children": {
+                              "IJavadocProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 238
+                              },
+                              "IMixinAnnotationProcessor$CompilerEnvironment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1511
+                              },
+                              "IMixinAnnotationProcessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1044
+                              },
+                              "IMixinValidator$ValidationPass.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1449
+                              },
+                              "IMixinValidator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 797
+                              },
+                              "IObfuscationDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2448
+                              },
+                              "IObfuscationEnvironment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1412
+                              },
+                              "IObfuscationManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 691
+                              },
+                              "IOptionProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 219
+                              },
+                              "IReferenceManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1419
+                              },
+                              "ITypeHandleProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 409
+                              }
+                            }
+                          },
+                          "mapping": {
+                            "type": "directory",
+                            "children": {
+                              "IMappingConsumer$MappingSet$Pair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1942
+                              },
+                              "IMappingConsumer$MappingSet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1008
+                              },
+                              "IMappingConsumer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1332
+                              },
+                              "IMappingProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 698
+                              },
+                              "IMappingWriter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 953
+                              },
+                              "common": {
+                                "type": "directory",
+                                "children": {
+                                  "MappingProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2882
+                                  },
+                                  "MappingWriter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2595
+                                  }
+                                }
+                              },
+                              "mcp": {
+                                "type": "directory",
+                                "children": {
+                                  "MappingProviderSrg$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3025
+                                  },
+                                  "MappingProviderSrg.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2772
+                                  },
+                                  "MappingWriterSrg.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5804
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "mcp": {
+                            "type": "directory",
+                            "children": {
+                              "ObfuscationEnvironmentMCP.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1377
+                              },
+                              "ObfuscationServiceMCP.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2019
+                              }
+                            }
+                          },
+                          "mirror": {
+                            "type": "directory",
+                            "children": {
+                              "AnnotationHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7311
+                              },
+                              "FieldHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3658
+                              },
+                              "MemberHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1246
+                              },
+                              "MethodHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3424
+                              },
+                              "TypeHandle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11741
+                              },
+                              "TypeHandleSimulated.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5707
+                              },
+                              "TypeReference.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2903
+                              },
+                              "TypeUtils$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1592
+                              },
+                              "TypeUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10046
+                              },
+                              "Visibility.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1246
+                              },
+                              "mapping": {
+                                "type": "directory",
+                                "children": {
+                                  "ResolvableMappingMethod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3034
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "service": {
+                            "type": "directory",
+                            "children": {
+                              "IObfuscationService.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 438
+                              },
+                              "ObfuscationServices.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4959
+                              },
+                              "ObfuscationTypeDescriptor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2019
+                              }
+                            }
+                          },
+                          "struct": {
+                            "type": "directory",
+                            "children": {
+                              "InjectorRemap.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1803
+                              },
+                              "Message.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3810
+                              }
+                            }
+                          },
+                          "validation": {
+                            "type": "directory",
+                            "children": {
+                              "ParentValidator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2465
+                              },
+                              "TargetValidator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6284
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 57099
+          }
+        }
+      }
+    }
+  }
+}

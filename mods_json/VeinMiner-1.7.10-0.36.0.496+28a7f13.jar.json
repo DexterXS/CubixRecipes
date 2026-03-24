@@ -1,0 +1,497 @@
+{
+  "mod_name": "VeinMiner-1.7.10-0.36.0.496+28a7f13.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\VeinMiner-1.7.10-0.36.0.496+28a7f13.jar",
+  "mod_type": "jar",
+  "tree": {
+    "VeinMiner-1.7.10-0.36.0.496+28a7f13.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 120603,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "portablejim": {
+            "type": "directory",
+            "children": {
+              "veinminer": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 279
+                      },
+                      "IMCMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1579
+                      },
+                      "Permission.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1366
+                      },
+                      "VeinminerNoToolCheck.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1081
+                      },
+                      "Point.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2050
+                      },
+                      "VeinminerHarvestFailedCheck.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1390
+                      },
+                      "VeinminerInitalToolCheck.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1443
+                      },
+                      "VeinminerPostUseTool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1057
+                      }
+                    }
+                  },
+                  "configuration": {
+                    "type": "directory",
+                    "children": {
+                      "ConfigOptionBoolean.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 595
+                      },
+                      "ConfigOptionString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 605
+                      },
+                      "ConfigToolValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2016
+                      },
+                      "Tool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2272
+                      },
+                      "json": {
+                        "type": "directory",
+                        "children": {
+                          "ToolStruct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 449
+                          }
+                        }
+                      },
+                      "ToolType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1233
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ConfigGuiFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1565
+                          },
+                          "ConfigGuiScreen$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1590
+                          },
+                          "ConfigGuiScreen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7513
+                          },
+                          "elements": {
+                            "type": "directory",
+                            "children": {
+                              "IGuiElementValuePersist.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 471
+                              },
+                              "GuiElementSlotToolTypeList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4183
+                              },
+                              "GuiElementSlider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3518
+                              },
+                              "GuiElementSliderLog.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1771
+                              },
+                              "GuiElementSlotItemlist.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5011
+                              }
+                            }
+                          },
+                          "ToolDisplay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 559
+                          },
+                          "ItemlistConfigGuiScreen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7797
+                          }
+                        }
+                      },
+                      "ConfigurationSettings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16545
+                      },
+                      "ConfigurationValues.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12638
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "BlockID.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3567
+                      },
+                      "PlayerStatus.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1163
+                      },
+                      "ItemStackID.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1605
+                      },
+                      "PreferredMode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 562
+                      },
+                      "ExpCalculator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1417
+                      },
+                      "Compatibility.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 813
+                      }
+                    }
+                  },
+                  "lib": {
+                    "type": "directory",
+                    "children": {
+                      "IconRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2591
+                      },
+                      "BlockLib.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1109
+                      },
+                      "MinerLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 911
+                      },
+                      "ModInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 750
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "EntityDropHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3989
+                      },
+                      "MinerInstance.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17837
+                      },
+                      "CoreEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4173
+                      }
+                    }
+                  },
+                  "server": {
+                    "type": "directory",
+                    "children": {
+                      "MinerServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5633
+                      },
+                      "CommandSenderServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1451
+                      },
+                      "ICustomCommandSender.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 309
+                      },
+                      "CommandSenderPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2717
+                      },
+                      "MinerCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12468
+                      }
+                    }
+                  },
+                  "event": {
+                    "type": "directory",
+                    "children": {
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ItemNameTooltip.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2407
+                          },
+                          "ActivateMinerKeybindManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2592
+                          }
+                        }
+                      },
+                      "server": {
+                        "type": "directory",
+                        "children": {
+                          "PlayerServerEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2892
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "GenericHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1458
+                      },
+                      "PacketMinerActivate$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2290
+                      },
+                      "PacketMinerActivate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 990
+                      },
+                      "PacketPingClient$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1959
+                      },
+                      "PacketPingClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 710
+                      },
+                      "PacketChangeMode$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3701
+                      },
+                      "PacketChangeMode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1093
+                      },
+                      "PacketClientPresent$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3039
+                      },
+                      "PacketClientPresent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1151
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1357
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1199
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3549
+                      }
+                    }
+                  },
+                  "VeinMiner.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13091
+                  }
+                }
+              },
+              "veinminermodsupport": {
+                "type": "directory",
+                "children": {
+                  "ModInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 451
+                  },
+                  "VeinMinerModSupport.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 17970
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "veinminer": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4582
+                      },
+                      "hu_HU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4668
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4882
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4756
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5498
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 937
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 220
+          },
+          "version.properties": {
+            "type": "file",
+            "extension": ".properties",
+            "size": 138
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 128
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7968
+          }
+        }
+      }
+    }
+  }
+}

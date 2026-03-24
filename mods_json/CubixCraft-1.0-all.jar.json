@@ -1,0 +1,1567 @@
+{
+  "mod_name": "CubixCraft-1.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCraft-1.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCraft-1.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 714699,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 155
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "cubix_craft": {
+                    "type": "directory",
+                    "children": {
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "AEFilteredMonitorWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6472
+                          },
+                          "MEMonitorHandlerWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1313
+                          },
+                          "AstralCraftingDetails.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6263
+                          },
+                          "AstralExternalStorageHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3078
+                          },
+                          "FuzzyHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1934
+                          },
+                          "InfinityAEInventory$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1015
+                          },
+                          "InfinityAEInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10949
+                          },
+                          "InfinityMEInvWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3721
+                          },
+                          "ParallelepipedStructure.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3692
+                          },
+                          "StructureParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2130
+                          },
+                          "Structures.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3563
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "astral": {
+                            "type": "directory",
+                            "children": {
+                              "AstralAccelerators$AstralAccelerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2343
+                              },
+                              "AstralAccelerators.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2788
+                              },
+                              "AstralModules$AstralModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3184
+                              },
+                              "AstralModules.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2138
+                              },
+                              "CraftCancelError.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2676
+                              },
+                              "CraftStartError.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2672
+                              },
+                              "IAstralAccelerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 742
+                              },
+                              "IAstralStorageTile.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1498
+                              },
+                              "IAstralTerminalHost.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1761
+                              }
+                            }
+                          },
+                          "config": {
+                            "type": "directory",
+                            "children": {
+                              "ConfigHandler$handlers$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2251
+                              },
+                              "ConfigHandler$handlers$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2254
+                              },
+                              "ConfigHandler$handlers$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2260
+                              },
+                              "ConfigHandler$handlers$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2257
+                              },
+                              "ConfigHandler$handlers$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2275
+                              },
+                              "ConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8751
+                              },
+                              "ConfigValue.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1102
+                              },
+                              "ObjectConfigHandler$handlers$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2459
+                              },
+                              "ObjectConfigHandler$handlers$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2462
+                              },
+                              "ObjectConfigHandler$handlers$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2468
+                              },
+                              "ObjectConfigHandler$handlers$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2465
+                              },
+                              "ObjectConfigHandler$handlers$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2471
+                              },
+                              "ObjectConfigHandler$handlers$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2483
+                              },
+                              "ObjectConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12708
+                              }
+                            }
+                          },
+                          "INeiRecipeOverlayListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 731
+                          },
+                          "ISpecialTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 743
+                          },
+                          "IStructure.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1014
+                          },
+                          "IStructureBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 998
+                          },
+                          "IStructureComponent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 834
+                          },
+                          "IStructureCoreComponent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 715
+                          },
+                          "IStructureProxyTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 875
+                          },
+                          "ISyncSizeContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 681
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "astral": {
+                            "type": "directory",
+                            "children": {
+                              "AstralEncoderBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3869
+                              },
+                              "AstralModuleBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2390
+                              },
+                              "AstralStorageBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6493
+                              }
+                            }
+                          },
+                          "StructureBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8021
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiAstralScrollbar$Companion.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1042
+                                  },
+                                  "GuiAstralScrollbar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3251
+                                  },
+                                  "HoverButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3694
+                                  },
+                                  "NoTextureButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1204
+                                  }
+                                }
+                              },
+                              "GuiAstralAEStorage$Companion$getTexture$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2134
+                              },
+                              "GuiAstralAEStorage$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3002
+                              },
+                              "GuiAstralAEStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3540
+                              },
+                              "GuiAstralAEStorageAstral.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1676
+                              },
+                              "GuiAstralAEStorageMeta.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1670
+                              },
+                              "GuiAstralAEStorageOmega.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1673
+                              },
+                              "GuiAstralAEStorageQuant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1673
+                              },
+                              "GuiAstralEncoder$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1010
+                              },
+                              "GuiAstralEncoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5736
+                              },
+                              "GuiAstralStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4809
+                              },
+                              "GuiAstralStorageAstral$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1028
+                              },
+                              "GuiAstralStorageAstral.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2842
+                              },
+                              "GuiAstralStorageMeta$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1022
+                              },
+                              "GuiAstralStorageMeta.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2824
+                              },
+                              "GuiAstralStorageOmega$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1025
+                              },
+                              "GuiAstralStorageOmega.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2829
+                              },
+                              "GuiAstralStorageQuant$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1025
+                              },
+                              "GuiAstralStorageQuant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2829
+                              },
+                              "GuiAstralTerminal$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1823
+                              },
+                              "GuiAstralTerminal$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1383
+                              },
+                              "GuiAstralTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 26380
+                              },
+                              "GuiCraftAmountProxy$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1022
+                              },
+                              "GuiCraftAmountProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10578
+                              },
+                              "GuiCraftConfirmProxy$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1026
+                              },
+                              "GuiCraftConfirmProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15944
+                              },
+                              "GuiCraftStatusProxy$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1022
+                              },
+                              "GuiCraftStatusProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17190
+                              },
+                              "GuiSetEncoderCount$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1018
+                              },
+                              "GuiSetEncoderCount.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9011
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "item": {
+                                "type": "directory",
+                                "children": {
+                                  "AstralAcceleratorItemRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4054
+                                  },
+                                  "AstralModuleItemRenderer$WhenMappings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1008
+                                  },
+                                  "AstralModuleItemRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4515
+                                  },
+                                  "RenderEncodedTemplate.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3730
+                                  }
+                                }
+                              },
+                              "tile": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderAstralEncoder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3918
+                                  },
+                                  "RenderTileAstralNode$WhenMappings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 941
+                                  },
+                                  "RenderTileAstralNode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5818
+                                  },
+                                  "RenderTileAstralStorage$getTexture$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2083
+                                  },
+                                  "RenderTileAstralStorage.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6184
+                                  },
+                                  "RenderTileAstralSynthesizer$getAcceleratorTexture$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2128
+                                  },
+                                  "RenderTileAstralSynthesizer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6389
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerAstralAEStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3889
+                          },
+                          "ContainerAstralAEStorageAstral.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1638
+                          },
+                          "ContainerAstralAEStorageMeta.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1634
+                          },
+                          "ContainerAstralAEStorageOmega.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1637
+                          },
+                          "ContainerAstralAEStorageQuant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1637
+                          },
+                          "ContainerAstralEncoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7803
+                          },
+                          "ContainerAstralStorage$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1051
+                          },
+                          "ContainerAstralStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5297
+                          },
+                          "ContainerAstralStorageAstral.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1622
+                          },
+                          "ContainerAstralStorageMeta.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "ContainerAstralStorageOmega.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1621
+                          },
+                          "ContainerAstralStorageQuant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1622
+                          },
+                          "ContainerAstralTerminal$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1055
+                          },
+                          "ContainerAstralTerminal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13663
+                          },
+                          "ContainerCraftAmountProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1351
+                          },
+                          "ContainerCraftConfirmProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1067
+                          },
+                          "ContainerCraftConfirmProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4912
+                          },
+                          "ContainerCraftStatusProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1063
+                          },
+                          "ContainerCraftStatusProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4748
+                          },
+                          "ContainerSetEncoderCount.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3600
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "AESlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2121
+                              },
+                              "SlotFakeLocked.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1469
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "AstralCraftingManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3955
+                          },
+                          "AstralRecipe$inputs$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3408
+                          },
+                          "AstralRecipe$output$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1820
+                          },
+                          "AstralRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3678
+                          }
+                        }
+                      },
+                      "CubixCraft$creativeTab$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1648
+                      },
+                      "CubixCraft.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4569
+                      },
+                      "CubixCraftConfig$Accelerator$Astral.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1566
+                      },
+                      "CubixCraftConfig$Accelerator$Meta.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1551
+                      },
+                      "CubixCraftConfig$Accelerator$Omega.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1563
+                      },
+                      "CubixCraftConfig$Accelerator$Quant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1563
+                      },
+                      "CubixCraftConfig$Accelerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1564
+                      },
+                      "CubixCraftConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1932
+                      },
+                      "ext": {
+                        "type": "directory",
+                        "children": {
+                          "CraftingCPUClusterHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1425
+                          },
+                          "DrawUtilsKt$drawTexture$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1867
+                          },
+                          "DrawUtilsKt$drawTexture$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1870
+                          },
+                          "DrawUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4616
+                          },
+                          "RegistryUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1381
+                          },
+                          "UtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4931
+                          }
+                        }
+                      },
+                      "handler": {
+                        "type": "directory",
+                        "children": {
+                          "TickHandlerServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2581
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "AstralAcceleratorItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2079
+                          },
+                          "AstralModuleItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2932
+                          },
+                          "AstralStorageItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2956
+                          },
+                          "AstralTemplateEncodedItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4429
+                          },
+                          "TexturedItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1219
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "CCDefaultPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4218
+                          },
+                          "CCNetworkClientHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3593
+                          },
+                          "CCNetworkManager$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1360
+                          },
+                          "CCNetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10218
+                          },
+                          "CCNetworkServerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1463
+                          },
+                          "CCPackets$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1833
+                          },
+                          "CCPackets$packetConstructor$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2927
+                          },
+                          "CCPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7791
+                          },
+                          "packets": {
+                            "type": "directory",
+                            "children": {
+                              "NEIRecipeOverlayPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2917
+                              },
+                              "PacketCraft.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2451
+                              },
+                              "PacketOpenGui.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1798
+                              },
+                              "PacketSyncSize.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3571
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CCGuiBridgeProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4692
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7577
+                          },
+                          "CommonProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9899
+                          },
+                          "CommonProxy$preInit$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1509
+                          },
+                          "CommonProxy$preInit$10.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1583
+                          },
+                          "CommonProxy$preInit$11.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1584
+                          },
+                          "CommonProxy$preInit$12.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1584
+                          },
+                          "CommonProxy$preInit$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1515
+                          },
+                          "CommonProxy$preInit$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1508
+                          },
+                          "CommonProxy$preInit$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1513
+                          },
+                          "CommonProxy$preInit$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1581
+                          },
+                          "CommonProxy$preInit$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1579
+                          },
+                          "CommonProxy$preInit$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1580
+                          },
+                          "CommonProxy$preInit$8.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1580
+                          },
+                          "CommonProxy$preInit$9.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1583
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12941
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileAstralAEStorage$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 963
+                          },
+                          "TileAstralAEStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3507
+                          },
+                          "TileAstralAEStorageAstral.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1110
+                          },
+                          "TileAstralAEStorageMeta.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1102
+                          },
+                          "TileAstralAEStorageOmega.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1106
+                          },
+                          "TileAstralAEStorageQuant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1106
+                          },
+                          "TileAstralEncoder$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2054
+                          },
+                          "TileAstralEncoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3185
+                          },
+                          "TileAstralFramework.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1165
+                          },
+                          "TileAstralNode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3496
+                          },
+                          "TileAstralProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5010
+                          },
+                          "TileAstralStorage$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2011
+                          },
+                          "TileAstralStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10711
+                          },
+                          "TileAstralStorageAstral$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 975
+                          },
+                          "TileAstralStorageAstral.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2251
+                          },
+                          "TileAstralStorageMeta$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 969
+                          },
+                          "TileAstralStorageMeta.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2239
+                          },
+                          "TileAstralStorageOmega$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 972
+                          },
+                          "TileAstralStorageOmega.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2245
+                          },
+                          "TileAstralStorageQuant$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 972
+                          },
+                          "TileAstralStorageQuant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2245
+                          },
+                          "TileAstralSynthesizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14698
+                          }
+                        }
+                      },
+                      "xmod": {
+                        "type": "directory",
+                        "children": {
+                          "minetweaker": {
+                            "type": "directory",
+                            "children": {
+                              "DefaultMTAction.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1219
+                              },
+                              "ZenAstralRecipe$AddRecipeAction.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1792
+                              },
+                              "ZenAstralRecipe$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4247
+                              },
+                              "ZenAstralRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1697
+                              }
+                            }
+                          },
+                          "MineTweakerIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1957
+                          },
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "AstralBuildRecipe$AstralBuildRecipeCached.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1437
+                              },
+                              "AstralBuildRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5119
+                              },
+                              "AstralRecipeOverlay.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2777
+                              },
+                              "AstralRecipePage$AstralRecipeCached.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5606
+                              },
+                              "AstralRecipePage$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1004
+                              },
+                              "AstralRecipePage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11217
+                              }
+                            }
+                          },
+                          "NEIIntegrationConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2674
+                          },
+                          "waila": {
+                            "type": "directory",
+                            "children": {
+                              "StructureDecorator$Companion$stack$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1777
+                              },
+                              "StructureDecorator$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1602
+                              },
+                              "StructureDecorator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5195
+                              }
+                            }
+                          },
+                          "WailaIntegration$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1987
+                          },
+                          "WailaIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1247
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixcraft": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3947
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "astral_core.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1934
+                          },
+                          "astral_frame.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2115
+                          },
+                          "astral_node.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2145
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "ae_storage_1_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12068
+                          },
+                          "ae_storage_2_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12042
+                          },
+                          "ae_storage_3_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12197
+                          },
+                          "ae_storage_4_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 14518
+                          },
+                          "astral_fusion.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6724
+                          },
+                          "astral_synthesis_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6920
+                          },
+                          "astral_terminal_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11289
+                          },
+                          "build": {
+                            "type": "directory",
+                            "children": {
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6347
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9023
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9205
+                              },
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11688
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12185
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11647
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13577
+                              },
+                              "8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13110
+                              },
+                              "9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12271
+                              }
+                            }
+                          },
+                          "confirm_craft.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7080
+                          },
+                          "default_storage_1_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6221
+                          },
+                          "default_storage_2_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6826
+                          },
+                          "default_storage_3_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7734
+                          },
+                          "default_storage_4_lvl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8685
+                          },
+                          "pattern_block.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13971
+                          },
+                          "select_count.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3751
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "emptyTemplate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1491
+                          },
+                          "template.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1795
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "center": {
+                            "type": "directory",
+                            "children": {
+                              "astralCrafter.mtl": {
+                                "type": "file",
+                                "extension": ".mtl",
+                                "size": 268
+                              },
+                              "astralCrafter.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 150233
+                              },
+                              "astralCrafter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14425
+                              },
+                              "core.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 1350
+                              }
+                            }
+                          },
+                          "coder": {
+                            "type": "directory",
+                            "children": {
+                              "astralCoder.mtl": {
+                                "type": "file",
+                                "extension": ".mtl",
+                                "size": 326
+                              },
+                              "astralCoder.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 181560
+                              },
+                              "astralCoder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14425
+                              }
+                            }
+                          },
+                          "module": {
+                            "type": "directory",
+                            "children": {
+                              "chaosModule.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2691
+                              },
+                              "commonModule.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2436
+                              },
+                              "module.mtl": {
+                                "type": "file",
+                                "extension": ".mtl",
+                                "size": 269
+                              },
+                              "module.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 3843
+                              },
+                              "resonantModule.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2713
+                              },
+                              "terminalModule.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2582
+                              }
+                            }
+                          },
+                          "speed": {
+                            "type": "directory",
+                            "children": {
+                              "astralSpeed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2017
+                              },
+                              "metaSpeed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2320
+                              },
+                              "module_speed.mtl": {
+                                "type": "file",
+                                "extension": ".mtl",
+                                "size": 264
+                              },
+                              "module_speed.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 1346
+                              },
+                              "omegaSpeed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2280
+                              },
+                              "quantSpeed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2286
+                              }
+                            }
+                          },
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "ae_astralStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3128
+                              },
+                              "ae_metaStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3149
+                              },
+                              "ae_omegaStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3139
+                              },
+                              "ae_quantStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3187
+                              },
+                              "astralStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6129
+                              },
+                              "metaStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3018
+                              },
+                              "omegaStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3010
+                              },
+                              "quantStorage.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3061
+                              },
+                              "storage.mtl": {
+                                "type": "file",
+                                "extension": ".mtl",
+                                "size": 268
+                              },
+                              "storage.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 6322
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2663
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 208818
+          }
+        }
+      }
+    }
+  }
+}

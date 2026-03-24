@@ -1,0 +1,657 @@
+{
+  "mod_name": "NEIIntegration-1.4.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\NEIIntegration-1.4.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "NEIIntegration-1.4.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 162196,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "tonius": {
+            "type": "directory",
+            "children": {
+              "neiintegration": {
+                "type": "directory",
+                "children": {
+                  "NEIConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1399
+                  },
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "ConfigGui.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2376
+                      },
+                      "Defaults.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1157
+                      },
+                      "ConfigGuiFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1475
+                      },
+                      "Config.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8627
+                      },
+                      "Section.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 751
+                      }
+                    }
+                  },
+                  "RecipeHandlerBase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9215
+                  },
+                  "RecipeHandlerBase$CachedBaseRecipe.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2986
+                  },
+                  "Utils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6145
+                  },
+                  "IRecipeHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 246
+                  },
+                  "NEIIntegration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2004
+                  },
+                  "IntegrationBase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 934
+                  },
+                  "PositionedFluidTank.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5585
+                  },
+                  "PositionedStackAdv.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3608
+                  },
+                  "mods": {
+                    "type": "directory",
+                    "children": {
+                      "electricalage": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerElnBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2595
+                          },
+                          "RecipeHandlerElnBase$CachedElnRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1488
+                          },
+                          "RecipeHandlerMagnetizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 983
+                          },
+                          "RecipeHandlerCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 983
+                          },
+                          "ElectricalAgeIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1183
+                          },
+                          "RecipeHandlerPlateMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 995
+                          },
+                          "RecipeHandlerMacerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 977
+                          }
+                        }
+                      },
+                      "minefactoryreloaded": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerGrinder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4306
+                          },
+                          "RecipeHandlerMeatPacker$CachedMeatPackerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1896
+                          },
+                          "RecipeHandlerLaserDrill$CachedLaserDrillRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1822
+                          },
+                          "RecipeHandlerSlaughterhouse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4381
+                          },
+                          "RecipeHandlerComposter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4630
+                          },
+                          "RecipeHandlerHarvester$CachedHarvesterRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1745
+                          },
+                          "RecipeHandlerSewer$CachedSewerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1895
+                          },
+                          "RecipeHandlerSludgeBoiler$CachedSludgeBoilerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2096
+                          },
+                          "RecipeHandlerGrinder$CachedGrinderRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1733
+                          },
+                          "RecipeHandlerHarvester.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4433
+                          },
+                          "RecipeHandlerBioReactor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5536
+                          },
+                          "RecipeHandlerLavaFabricator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4012
+                          },
+                          "MFRIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1786
+                          },
+                          "RecipeHandlerBioReactor$CachedBioReactorRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2123
+                          },
+                          "RecipeHandlerLavaFabricator$CachedLavaFabricatorRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1786
+                          },
+                          "RecipeHandlerLaserDrill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7922
+                          },
+                          "RecipeHandlerComposter$CachedComposterRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2040
+                          },
+                          "RecipeHandlerSewer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4007
+                          },
+                          "RecipeHandlerMeatPacker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5314
+                          },
+                          "RecipeHandlerSlaughterhouse$CachedSlaughterhouseRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2183
+                          },
+                          "RecipeHandlerSludgeBoiler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5966
+                          }
+                        }
+                      },
+                      "bigreactors": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerCyaniteReprocessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5044
+                          },
+                          "RecipeHandlerCyaniteReprocessor$CachedCyaniteReprocessorRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2320
+                          },
+                          "BigReactorsIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 914
+                          }
+                        }
+                      },
+                      "mcforge": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerFluidRegistry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8340
+                          },
+                          "dumpers": {
+                            "type": "directory",
+                            "children": {
+                              "MCForgeDumpers.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1330
+                              },
+                              "EntityDumper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1457
+                              },
+                              "OreDictionaryDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2834
+                              },
+                              "LoadedModDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2242
+                              },
+                              "InventoryDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3388
+                              },
+                              "EntityDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3887
+                              },
+                              "FluidDumper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1233
+                              },
+                              "TileEntityDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2437
+                              },
+                              "FluidDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3315
+                              },
+                              "RecipeHandlerDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1952
+                              },
+                              "DimensionDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2537
+                              },
+                              "FluidContainerDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3657
+                              },
+                              "TileEntityDumper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1406
+                              },
+                              "FluidContainerDumper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1805
+                              },
+                              "ChestLootDumper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3241
+                              }
+                            }
+                          },
+                          "RecipeHandlerOreDictionary$CachedOreDictionaryRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1856
+                          },
+                          "RecipeHandlerOreDictionary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5317
+                          },
+                          "MCForgeTooltipHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4681
+                          },
+                          "RecipeHandlerFluidRegistry$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1327
+                          },
+                          "RecipeHandlerFluidRegistry$CachedFluidRegistryRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4337
+                          },
+                          "MCForgeIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1249
+                          }
+                        }
+                      },
+                      "Integrations.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1256
+                      },
+                      "harvestcraft": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerHCBase$CachedHCRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2027
+                          },
+                          "RecipeHandlerChurn.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1685
+                          },
+                          "RecipeHandlerQuern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1688
+                          },
+                          "RecipeHandlerHCBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4045
+                          },
+                          "RecipeHandlerPresser$CachedPresserRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1756
+                          },
+                          "RecipeHandlerApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3094
+                          },
+                          "RecipeHandlerPresserOld.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2222
+                          },
+                          "RecipeHandlerOven.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1681
+                          },
+                          "RecipeHandlerPresser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4184
+                          },
+                          "RecipeHandlerApiary$CachedApiaryRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2639
+                          },
+                          "HarvestCraftIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1874
+                          }
+                        }
+                      },
+                      "railcraft": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHandlerRockCrusher$CachedRockCrusherRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3179
+                          },
+                          "RecipeHandlerRockCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4534
+                          },
+                          "RecipeHandlerCokeOven.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4988
+                          },
+                          "RecipeHandlerBlastFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4624
+                          },
+                          "RecipeHandlerRollingMachineShaped.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4519
+                          },
+                          "RecipeHandlerRollingMachineShapeless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4565
+                          },
+                          "RecipeHandlerBlastFurnace$CachedBlastFurnaceRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2429
+                          },
+                          "RailcraftIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1242
+                          },
+                          "RecipeHandlerCokeOven$CachedCokeOvenRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2655
+                          },
+                          "RecipeHandlerRollingMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1902
+                          },
+                          "RecipeHandlerRollingMachineShaped$CachedRollingMachineShapedRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3966
+                          },
+                          "RecipeHandlerRollingMachineShapeless$CachedRollingMachineShapelessRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4227
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 609
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "neiintegration": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "fluidRegistry.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 1834
+                      },
+                      "harvestcraft": {
+                        "type": "directory",
+                        "children": {
+                          "churn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2067
+                          },
+                          "oven.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1950
+                          },
+                          "presser.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1882
+                          },
+                          "presserOld.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1849
+                          },
+                          "quern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2272
+                          }
+                        }
+                      },
+                      "basicProcessing.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 1849
+                      },
+                      "blank.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 1827
+                      },
+                      "overlays.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 2090
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4571
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4576
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4648
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4491
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5625
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 89
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 551
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7677
+          }
+        }
+      }
+    }
+  }
+}

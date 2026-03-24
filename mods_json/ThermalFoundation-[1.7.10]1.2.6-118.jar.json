@@ -1,0 +1,2977 @@
+{
+  "mod_name": "ThermalFoundation-[1.7.10]1.2.6-118.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ThermalFoundation-[1.7.10]1.2.6-118.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ThermalFoundation-[1.7.10]1.2.6-118.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 2322349,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 125
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "thermalfoundation": {
+                "type": "directory",
+                "children": {
+                  "ThermalFoundation$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 801
+                  },
+                  "ThermalFoundation$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 802
+                  },
+                  "ThermalFoundation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10047
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "BlockOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4681
+                      },
+                      "BlockStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6464
+                      },
+                      "ItemBlockOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1407
+                      },
+                      "ItemBlockStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1488
+                      },
+                      "TFBlocks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2016
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "Proxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2337
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5406
+                      },
+                      "TFProps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 601
+                      }
+                    }
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "monster": {
+                        "type": "directory",
+                        "children": {
+                          "EntityBasalz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11362
+                          },
+                          "EntityBlitz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11366
+                          },
+                          "EntityBlizz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11602
+                          }
+                        }
+                      },
+                      "projectile": {
+                        "type": "directory",
+                        "children": {
+                          "EntityBasalzBolt$DamageSourceBasalz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1106
+                          },
+                          "EntityBasalzBolt$PotionEffectBasalz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 708
+                          },
+                          "EntityBasalzBolt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3144
+                          },
+                          "EntityBlazeBolt$DamageSourceBlaze.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1099
+                          },
+                          "EntityBlazeBolt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2824
+                          },
+                          "EntityBlitzBolt$DamageSourceBlitz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1099
+                          },
+                          "EntityBlitzBolt$PotionEffectBlitz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 703
+                          },
+                          "EntityBlitzBolt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3129
+                          },
+                          "EntityBlizzBolt$DamageSourceBlizz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1099
+                          },
+                          "EntityBlizzBolt$PotionEffectBlizz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 703
+                          },
+                          "EntityBlizzBolt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4230
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "fluid": {
+                    "type": "directory",
+                    "children": {
+                      "BlockFluidAerotheum.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6171
+                      },
+                      "BlockFluidCoal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2479
+                      },
+                      "BlockFluidCryotheum.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7354
+                      },
+                      "BlockFluidEnder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2889
+                      },
+                      "BlockFluidGlowstone.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6196
+                      },
+                      "BlockFluidMana.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6830
+                      },
+                      "BlockFluidPetrotheum.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5716
+                      },
+                      "BlockFluidPyrotheum.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7164
+                      },
+                      "BlockFluidRedstone.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2575
+                      },
+                      "BlockFluidSteam.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1512
+                      },
+                      "TFFluids.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2939
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiConfigTF.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1417
+                      },
+                      "GuiConfigTFFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1171
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2223
+                      },
+                      "TFCreativeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1283
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "GuiLexiconStudy$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2585
+                          },
+                          "GuiLexiconStudy$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1350
+                          },
+                          "GuiLexiconStudy$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 816
+                          },
+                          "GuiLexiconStudy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6889
+                          },
+                          "GuiLexiconTransmute.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4224
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerLexiconStudy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4838
+                          },
+                          "ContainerLexiconTransmute.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8787
+                          },
+                          "InventoryLexiconStudy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1377
+                          },
+                          "InventoryLexiconTransmute.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2062
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "Equipment$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1542
+                      },
+                      "Equipment$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1608
+                      },
+                      "Equipment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13707
+                      },
+                      "ItemLexicon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7592
+                      },
+                      "TFItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10962
+                      },
+                      "VanillaEquipment$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1269
+                      },
+                      "VanillaEquipment$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1240
+                      },
+                      "VanillaEquipment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8347
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "PacketTFBase$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 847
+                      },
+                      "PacketTFBase$PacketTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1219
+                      },
+                      "PacketTFBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2841
+                      }
+                    }
+                  },
+                  "plugins": {
+                    "type": "directory",
+                    "children": {
+                      "TFPlugins$Plugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1940
+                      },
+                      "TFPlugins.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2283
+                      },
+                      "ee3": {
+                        "type": "directory",
+                        "children": {
+                          "EE3Plugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2116
+                          }
+                        }
+                      },
+                      "mfr": {
+                        "type": "directory",
+                        "children": {
+                          "DrinkHandlerAerotheum.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 929
+                          },
+                          "DrinkHandlerCoal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 914
+                          },
+                          "DrinkHandlerCryotheum$InternalCryotheumDamage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1002
+                          },
+                          "DrinkHandlerCryotheum.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1221
+                          },
+                          "DrinkHandlerEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2338
+                          },
+                          "DrinkHandlerGlowstone.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 980
+                          },
+                          "DrinkHandlerPetrotheum$InternalPetrotheumDamage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 979
+                          },
+                          "DrinkHandlerPetrotheum.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1246
+                          },
+                          "DrinkHandlerPyrotheum$InternalPyrotheumDamage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1002
+                          },
+                          "DrinkHandlerPyrotheum.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1309
+                          },
+                          "DrinkHandlerRedstone.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1893
+                          },
+                          "MFRPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3681
+                          }
+                        }
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "NEIThermalFoundationConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2339
+                          }
+                        }
+                      },
+                      "tconstruct": {
+                        "type": "directory",
+                        "children": {
+                          "TConstructPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5957
+                          }
+                        }
+                      },
+                      "thaumcraft": {
+                        "type": "directory",
+                        "children": {
+                          "ThaumcraftPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6130
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "render": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "RenderEntityAsIcon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2462
+                          },
+                          "RenderEntityBasalz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1806
+                          },
+                          "RenderEntityBlitz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1799
+                          },
+                          "RenderEntityBlizz.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1980
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "ModelElemental.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2097
+                          }
+                        }
+                      },
+                      "shader": {
+                        "type": "directory",
+                        "children": {
+                          "ShaderStarfield$EnderCallBack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1150
+                          },
+                          "ShaderStarfield.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1492
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "EventHandlerLexicon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3808
+                      },
+                      "IMCHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2356
+                      },
+                      "LexiconManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8144
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "baubles": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "BaubleType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 906
+                  },
+                  "BaublesApi.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1166
+                  },
+                  "IBauble.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 445
+                  },
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 267
+                  }
+                }
+              }
+            }
+          },
+          "powercrystals": {
+            "type": "directory",
+            "children": {
+              "minefactoryreloaded": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "FactoryRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1478
+                      },
+                      "ILiquidDrinkHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "ValuedItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1281
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "thermalfoundation": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "fluid": {
+                            "type": "directory",
+                            "children": {
+                              "Fluid_Redstone_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Redstone_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7360
+                              },
+                              "Fluid_Pyrotheum_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Aerotheum_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Aerotheum_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10527
+                              },
+                              "Fluid_Mana_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7385
+                              },
+                              "Fluid_Glowstone_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11604
+                              },
+                              "Fluid_Ender_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Mana_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Redstone_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Steam_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Cryotheum_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Petrotheum_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Aerotheum_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10602
+                              },
+                              "Fluid_Steam_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7328
+                              },
+                              "Fluid_Coal_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3714
+                              },
+                              "Fluid_Petrotheum_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Pyrotheum_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Mana_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Glowstone_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Pyrotheum_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11952
+                              },
+                              "Fluid_Ender_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7679
+                              },
+                              "Fluid_Coal_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5532
+                              },
+                              "Fluid_Glowstone_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Steam_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6283
+                              },
+                              "Fluid_Glowstone_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11717
+                              },
+                              "Fluid_Coal_Still.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Fluid_Cryotheum_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Petrotheum_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20565
+                              },
+                              "Fluid_Ender_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Mana_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9483
+                              },
+                              "Fluid_Cryotheum_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9224
+                              },
+                              "Fluid_Aerotheum_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Cryotheum_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7010
+                              },
+                              "Fluid_Redstone_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9007
+                              },
+                              "Fluid_Petrotheum_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20568
+                              },
+                              "Fluid_Pyrotheum_Still.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11735
+                              },
+                              "Fluid_Coal_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Fluid_Ender_Flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9694
+                              },
+                              "Fluid_Steam_Flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              }
+                            }
+                          },
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "Block_Mithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3389
+                              },
+                              "Block_Tin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3330
+                              },
+                              "Block_Lead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3305
+                              },
+                              "Block_Invar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3586
+                              },
+                              "Block_Lumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3248
+                              },
+                              "Block_Copper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Block_Nickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3300
+                              },
+                              "Block_Silver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3319
+                              },
+                              "Block_Signalum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3364
+                              },
+                              "Block_Electrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3325
+                              },
+                              "Block_Platinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3330
+                              },
+                              "Block_Enderium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3332
+                              },
+                              "Block_Bronze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3363
+                              }
+                            }
+                          },
+                          "ore": {
+                            "type": "directory",
+                            "children": {
+                              "Ore_Silver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3236
+                              },
+                              "Ore_Nickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3445
+                              },
+                              "Ore_Tin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3257
+                              },
+                              "Ore_Mithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3329
+                              },
+                              "Ore_Platinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3319
+                              },
+                              "Ore_Copper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Ore_Lead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3311
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "material": {
+                            "type": "directory",
+                            "children": {
+                              "IngotLumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3257
+                              },
+                              "GearCopper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "DustSignalum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3100
+                              },
+                              "NuggetNickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2992
+                              },
+                              "GearPlatinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3464
+                              },
+                              "GearInvar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3460
+                              },
+                              "NuggetTin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2996
+                              },
+                              "NuggetLead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2997
+                              },
+                              "DustBlitz.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "GearNickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3469
+                              },
+                              "DustEnderium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3190
+                              },
+                              "NuggetSilver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2990
+                              },
+                              "DustBronze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3190
+                              },
+                              "DustPyrotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "DustBlizz.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "DustMithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3182
+                              },
+                              "DustElectrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 457
+                              },
+                              "DustBlaze.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "IngotTin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 633
+                              },
+                              "IngotElectrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 526
+                              },
+                              "CrystalCinnabar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 579
+                              },
+                              "RodBlitz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2952
+                              },
+                              "GearTin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3480
+                              },
+                              "GearMithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3474
+                              },
+                              "IngotSilver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 640
+                              },
+                              "NuggetIron.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2959
+                              },
+                              "DustBlitz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4347
+                              },
+                              "IngotInvar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3287
+                              },
+                              "GearGold.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3417
+                              },
+                              "DustAerotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4012
+                              },
+                              "DustSulfur.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3071
+                              },
+                              "NuggetMithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3013
+                              },
+                              "NuggetInvar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2973
+                              },
+                              "DustGold.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 445
+                              },
+                              "GearEnderium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3324
+                              },
+                              "IngotNickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 607
+                              },
+                              "IngotSignalum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3242
+                              },
+                              "NuggetBronze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3012
+                              },
+                              "DustObsidian.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 478
+                              },
+                              "DustLead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 485
+                              },
+                              "DustPetrotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3975
+                              },
+                              "DustPlatinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 546
+                              },
+                              "DustIron.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 530
+                              },
+                              "DustMana.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5115
+                              },
+                              "IngotCopper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "DustCoal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3076
+                              },
+                              "DustNickel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 523
+                              },
+                              "DustTin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 469
+                              },
+                              "IngotEnderium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3222
+                              },
+                              "IngotMithril.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3294
+                              },
+                              "DustPetrotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "DustCryotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "DustBasalz.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "GearLumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3367
+                              },
+                              "NuggetSignalum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3001
+                              },
+                              "NuggetEnderium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2964
+                              },
+                              "GearIron.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3406
+                              },
+                              "GearLead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3464
+                              },
+                              "DustCopper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "NuggetPlatinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2999
+                              },
+                              "DustBlizz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4412
+                              },
+                              "GearElectrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3427
+                              },
+                              "NuggetLumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2992
+                              },
+                              "IngotPlatinum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 476
+                              },
+                              "RodBasalz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2938
+                              },
+                              "DustPyrotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4816
+                              },
+                              "GearBronze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3495
+                              },
+                              "DustInvar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3120
+                              },
+                              "IngotLead.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 587
+                              },
+                              "GearSignalum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3422
+                              },
+                              "DustBlaze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4492
+                              },
+                              "DustBasalz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4435
+                              },
+                              "DustAerotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "DustNiter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3046
+                              },
+                              "DustCharcoal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3097
+                              },
+                              "RodBlizz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3067
+                              },
+                              "DustSilver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 540
+                              },
+                              "NuggetCopper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "DustLumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3159
+                              },
+                              "NuggetElectrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2996
+                              },
+                              "DustCryotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5005
+                              },
+                              "IngotBronze.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3375
+                              },
+                              "GearSilver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3468
+                              },
+                              "DustMana.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 209
+                              }
+                            }
+                          },
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "invar": {
+                                "type": "directory",
+                                "children": {
+                                  "InvarBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3186
+                                  },
+                                  "InvarAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3151
+                                  },
+                                  "InvarFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3272
+                                  },
+                                  "InvarBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3161
+                                  },
+                                  "InvarPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3076
+                                  },
+                                  "InvarSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "InvarFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3249
+                                  },
+                                  "InvarShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  }
+                                }
+                              },
+                              "silver": {
+                                "type": "directory",
+                                "children": {
+                                  "SilverBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3130
+                                  },
+                                  "SilverShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3057
+                                  },
+                                  "SilverFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3103
+                                  },
+                                  "SilverBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3120
+                                  },
+                                  "SilverSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3143
+                                  },
+                                  "SilverSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3153
+                                  },
+                                  "SilverHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3058
+                                  },
+                                  "SilverPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3145
+                                  },
+                                  "SilverShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3120
+                                  },
+                                  "SilverFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3061
+                                  },
+                                  "SilverAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3079
+                                  },
+                                  "SilverBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3042
+                                  },
+                                  "SilverBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3106
+                                  }
+                                }
+                              },
+                              "platinum": {
+                                "type": "directory",
+                                "children": {
+                                  "PlatinumAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3085
+                                  },
+                                  "PlatinumFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3095
+                                  },
+                                  "PlatinumSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3131
+                                  },
+                                  "PlatinumBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3099
+                                  },
+                                  "PlatinumSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3174
+                                  },
+                                  "PlatinumPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3205
+                                  },
+                                  "PlatinumBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3140
+                                  },
+                                  "PlatinumShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3051
+                                  },
+                                  "PlatinumFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3062
+                                  },
+                                  "PlatinumBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3133
+                                  },
+                                  "PlatinumShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3128
+                                  },
+                                  "PlatinumBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3045
+                                  },
+                                  "PlatinumHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3038
+                                  }
+                                }
+                              },
+                              "iron": {
+                                "type": "directory",
+                                "children": {
+                                  "IronSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3323
+                                  },
+                                  "IronBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3194
+                                  },
+                                  "IronFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3273
+                                  },
+                                  "IronBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3173
+                                  },
+                                  "IronFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3254
+                                  },
+                                  "IronBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3173
+                                  },
+                                  "IronBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3076
+                                  }
+                                }
+                              },
+                              "nickel": {
+                                "type": "directory",
+                                "children": {
+                                  "NickelBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3084
+                                  },
+                                  "NickelBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3031
+                                  },
+                                  "NickelSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "NickelBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3129
+                                  },
+                                  "NickelFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3078
+                                  },
+                                  "NickelSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3185
+                                  },
+                                  "NickelHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3058
+                                  },
+                                  "NickelPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3201
+                                  },
+                                  "NickelBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3133
+                                  },
+                                  "NickelShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3063
+                                  },
+                                  "NickelShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "NickelAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3083
+                                  },
+                                  "NickelFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3037
+                                  }
+                                }
+                              },
+                              "electrum": {
+                                "type": "directory",
+                                "children": {
+                                  "ElectrumFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3069
+                                  },
+                                  "ElectrumBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3129
+                                  },
+                                  "ElectrumBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3085
+                                  },
+                                  "ElectrumFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3032
+                                  },
+                                  "ElectrumSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "ElectrumShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3049
+                                  },
+                                  "ElectrumShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3124
+                                  },
+                                  "ElectrumPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3201
+                                  },
+                                  "ElectrumSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3121
+                                  },
+                                  "ElectrumBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3113
+                                  },
+                                  "ElectrumBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3028
+                                  },
+                                  "ElectrumHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3045
+                                  },
+                                  "ElectrumAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3069
+                                  }
+                                }
+                              },
+                              "bronze": {
+                                "type": "directory",
+                                "children": {
+                                  "BronzeShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3044
+                                  },
+                                  "BronzeBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "BronzeBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3130
+                                  },
+                                  "BronzeHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3035
+                                  },
+                                  "BronzeBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3027
+                                  },
+                                  "BronzeAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3081
+                                  },
+                                  "BronzeBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3092
+                                  },
+                                  "BronzeFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3078
+                                  },
+                                  "BronzePickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3202
+                                  },
+                                  "BronzeSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "BronzeShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3132
+                                  },
+                                  "BronzeFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3042
+                                  },
+                                  "BronzeSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  }
+                                }
+                              },
+                              "stone": {
+                                "type": "directory",
+                                "children": {
+                                  "StoneFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3039
+                                  },
+                                  "StoneSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3012
+                                  },
+                                  "StoneBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3062
+                                  },
+                                  "StoneFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3007
+                                  },
+                                  "StoneBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3091
+                                  },
+                                  "StoneShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3073
+                                  },
+                                  "StoneBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3091
+                                  },
+                                  "StoneBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2992
+                                  }
+                                }
+                              },
+                              "tin": {
+                                "type": "directory",
+                                "children": {
+                                  "TinHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3044
+                                  },
+                                  "TinFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3083
+                                  },
+                                  "TinFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3217
+                                  },
+                                  "TinPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3194
+                                  },
+                                  "TinBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3177
+                                  },
+                                  "TinSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3189
+                                  },
+                                  "TinAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3081
+                                  },
+                                  "TinBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3260
+                                  },
+                                  "TinShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3123
+                                  },
+                                  "TinBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3098
+                                  },
+                                  "TinBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3243
+                                  },
+                                  "TinShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3066
+                                  },
+                                  "TinSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3142
+                                  }
+                                }
+                              },
+                              "copper": {
+                                "type": "directory",
+                                "children": {
+                                  "CopperBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3160
+                                  },
+                                  "CopperFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3036
+                                  },
+                                  "CopperSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3127
+                                  },
+                                  "CopperShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3038
+                                  },
+                                  "CopperSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3114
+                                  },
+                                  "CopperBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3142
+                                  },
+                                  "CopperHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3014
+                                  },
+                                  "CopperFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3076
+                                  },
+                                  "CopperPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3110
+                                  },
+                                  "CopperShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3137
+                                  },
+                                  "CopperAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3066
+                                  },
+                                  "CopperBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3233
+                                  },
+                                  "CopperBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3039
+                                  }
+                                }
+                              },
+                              "diamond": {
+                                "type": "directory",
+                                "children": {
+                                  "DiamondFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2985
+                                  },
+                                  "DiamondSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3034
+                                  },
+                                  "DiamondBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3063
+                                  },
+                                  "DiamondShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3089
+                                  },
+                                  "DiamondBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3082
+                                  },
+                                  "DiamondBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3079
+                                  },
+                                  "DiamondBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2974
+                                  },
+                                  "DiamondFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3016
+                                  }
+                                }
+                              },
+                              "lead": {
+                                "type": "directory",
+                                "children": {
+                                  "LeadSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3133
+                                  },
+                                  "LeadShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3125
+                                  },
+                                  "LeadHoe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3045
+                                  },
+                                  "LeadAxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3080
+                                  },
+                                  "LeadSword.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3216
+                                  },
+                                  "LeadBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3094
+                                  },
+                                  "LeadFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3064
+                                  },
+                                  "LeadShovel.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3055
+                                  },
+                                  "LeadBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3047
+                                  },
+                                  "LeadFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3098
+                                  },
+                                  "LeadBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3116
+                                  },
+                                  "LeadBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3145
+                                  },
+                                  "LeadPickaxe.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3207
+                                  }
+                                }
+                              },
+                              "gold": {
+                                "type": "directory",
+                                "children": {
+                                  "GoldFishingRod_Cast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3080
+                                  },
+                                  "GoldFishingRod_Uncast.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3120
+                                  },
+                                  "GoldBow_0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3081
+                                  },
+                                  "GoldShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3082
+                                  },
+                                  "GoldBow_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3098
+                                  },
+                                  "GoldSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3026
+                                  },
+                                  "GoldBow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2971
+                                  },
+                                  "GoldBow_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3063
+                                  }
+                                }
+                              },
+                              "wood": {
+                                "type": "directory",
+                                "children": {
+                                  "WoodShears.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3070
+                                  },
+                                  "WoodSickle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3003
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "lead": {
+                                "type": "directory",
+                                "children": {
+                                  "LeadBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3110
+                                  },
+                                  "LeadHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3058
+                                  },
+                                  "LeadLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3104
+                                  },
+                                  "LeadChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3203
+                                  }
+                                }
+                              },
+                              "tin": {
+                                "type": "directory",
+                                "children": {
+                                  "TinLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3085
+                                  },
+                                  "TinBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3103
+                                  },
+                                  "TinHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3044
+                                  },
+                                  "TinChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3187
+                                  }
+                                }
+                              },
+                              "platinum": {
+                                "type": "directory",
+                                "children": {
+                                  "PlatinumHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3056
+                                  },
+                                  "PlatinumChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3245
+                                  },
+                                  "PlatinumLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3132
+                                  },
+                                  "PlatinumBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3134
+                                  }
+                                }
+                              },
+                              "electrum": {
+                                "type": "directory",
+                                "children": {
+                                  "ElectrumBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3079
+                                  },
+                                  "ElectrumLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3077
+                                  },
+                                  "ElectrumHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3023
+                                  },
+                                  "ElectrumChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3181
+                                  }
+                                }
+                              },
+                              "bronze": {
+                                "type": "directory",
+                                "children": {
+                                  "BronzeLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3117
+                                  },
+                                  "BronzeHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3048
+                                  },
+                                  "BronzeBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3091
+                                  },
+                                  "BronzeChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3224
+                                  }
+                                }
+                              },
+                              "copper": {
+                                "type": "directory",
+                                "children": {
+                                  "CopperChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3197
+                                  },
+                                  "CopperHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3027
+                                  },
+                                  "CopperLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3077
+                                  },
+                                  "CopperBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3086
+                                  }
+                                }
+                              },
+                              "nickel": {
+                                "type": "directory",
+                                "children": {
+                                  "NickelChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3186
+                                  },
+                                  "NickelLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3080
+                                  },
+                                  "NickelBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3085
+                                  },
+                                  "NickelHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3031
+                                  }
+                                }
+                              },
+                              "silver": {
+                                "type": "directory",
+                                "children": {
+                                  "SilverChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3200
+                                  },
+                                  "SilverHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3052
+                                  },
+                                  "SilverBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3122
+                                  },
+                                  "SilverLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3108
+                                  }
+                                }
+                              },
+                              "invar": {
+                                "type": "directory",
+                                "children": {
+                                  "InvarBoots.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3032
+                                  },
+                                  "InvarChestplate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3119
+                                  },
+                                  "InvarHelmet.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3009
+                                  },
+                                  "InvarLegs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3039
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "bucket": {
+                            "type": "directory",
+                            "children": {
+                              "BucketCoal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4657
+                              },
+                              "BucketGlowstone.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4494
+                              },
+                              "BucketCoal.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketCryotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketAerotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 24068
+                              },
+                              "BucketPetrotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketGlowstone.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketPetrotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22110
+                              },
+                              "BucketPyrotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 209
+                              },
+                              "BucketRedstone.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3937
+                              },
+                              "BucketEnder.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "OverlayIcon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 195
+                              },
+                              "BucketCryotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 602
+                              },
+                              "BucketMana.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketMana.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4151
+                              },
+                              "BucketRedstone.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketAerotheum.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "BucketPyrotheum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5895
+                              },
+                              "BucketEnder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4159
+                              }
+                            }
+                          },
+                          "tome": {
+                            "type": "directory",
+                            "children": {
+                              "Lexicon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3338
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "Electrum_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4789
+                          },
+                          "Electrum_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3648
+                          },
+                          "Silver_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4815
+                          },
+                          "Tin_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4801
+                          },
+                          "Invar_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4888
+                          },
+                          "Nickel_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3644
+                          },
+                          "Nickel_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4795
+                          },
+                          "Bronze_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3654
+                          },
+                          "Platinum_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4805
+                          },
+                          "Lead_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3641
+                          },
+                          "Copper_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3663
+                          },
+                          "Tin_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3645
+                          },
+                          "Invar_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3699
+                          },
+                          "Lead_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4806
+                          },
+                          "Platinum_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3649
+                          },
+                          "Silver_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3652
+                          },
+                          "Bronze_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4842
+                          },
+                          "Copper_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4801
+                          }
+                        }
+                      },
+                      "cageStarfield.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 23566
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "LexiconStudy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 36128
+                          },
+                          "LexiconTransmute.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 34436
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "xmas": {
+                            "type": "directory",
+                            "children": {
+                              "Blizz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4395
+                              }
+                            }
+                          },
+                          "Basalz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4073
+                          },
+                          "Blitz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4058
+                          },
+                          "Blizz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4361
+                          }
+                        }
+                      },
+                      "logo.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 21066
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 17847
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 36316
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 17824
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 19623
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 16827
+                      },
+                      "en_GB.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1381
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 17921
+                      },
+                      "sk_SK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 18176
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 16495
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 18263
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 17331
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8299
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 18198
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 18265
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8600
+                      },
+                      "en_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6709
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 40915
+                      },
+                      "fr_FR": {
+                        "type": "file",
+                        "extension": "",
+                        "size": 1435
+                      }
+                    }
+                  },
+                  "world": {
+                    "type": "directory",
+                    "children": {
+                      "ThermalFoundation-Ores.json": {
+                        "type": "file",
+                        "extension": ".json",
+                        "size": 3445
+                      }
+                    }
+                  },
+                  "shaders": {
+                    "type": "directory",
+                    "children": {
+                      "starfield.vert": {
+                        "type": "file",
+                        "extension": ".vert",
+                        "size": 160
+                      },
+                      "starfield.frag": {
+                        "type": "file",
+                        "extension": ".frag",
+                        "size": 4701
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "mob": {
+                        "type": "directory",
+                        "children": {
+                          "basalz": {
+                            "type": "directory",
+                            "children": {
+                              "breathe1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 23000
+                              },
+                              "attack.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 7702
+                              },
+                              "breathe0.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 48141
+                              },
+                              "ambient.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 98785
+                              }
+                            }
+                          },
+                          "blitz": {
+                            "type": "directory",
+                            "children": {
+                              "ambient.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 101158
+                              },
+                              "breathe0.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 17123
+                              },
+                              "breathe1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 36123
+                              },
+                              "breathe2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 15901
+                              },
+                              "attack.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 7941
+                              }
+                            }
+                          },
+                          "blizz": {
+                            "type": "directory",
+                            "children": {
+                              "breathe2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 26989
+                              },
+                              "breathe0.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 31744
+                              },
+                              "attack.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 7941
+                              },
+                              "breathe1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 48581
+                              },
+                              "ambient.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 267025
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 2796
+                  }
+                }
+              }
+            }
+          },
+          "CoFH_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 3107
+          },
+          "vers.prop": {
+            "type": "file",
+            "extension": ".prop",
+            "size": 18
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 569
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 24255
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 13797
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1327 @@
+{
+  "mod_name": "IC2-Energistics-Cubix-1.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\IC2-Energistics-Cubix-1.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "IC2-Energistics-Cubix-1.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 498361,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "ice": {
+                    "type": "directory",
+                    "children": {
+                      "integration": {
+                        "type": "directory",
+                        "children": {
+                          "mt": {
+                            "type": "directory",
+                            "children": {
+                              "ReplicatorMTRecipe$Add.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1382
+                              },
+                              "ReplicatorMTRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1200
+                              },
+                              "MineTweakerIntegration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1920
+                              },
+                              "ReplicatorRecipes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3270
+                              }
+                            }
+                          },
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "NeiConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3118
+                              },
+                              "ReplicatorNeiHandler$RCachedRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2097
+                              },
+                              "ReplicatorNeiHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7620
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11622
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockAutoCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2102
+                          },
+                          "BlockAutoExtractor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2091
+                          },
+                          "BlockAutoFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2078
+                          },
+                          "BlockAutoIC2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6762
+                          },
+                          "BlockAutoMacerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2082
+                          },
+                          "BlockAutoMetalFormer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2125
+                          },
+                          "BlockAutoMolecular.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2092
+                          },
+                          "BlockEUEnergyReceiver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2399
+                          },
+                          "BlockEUStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4678
+                          },
+                          "BlockReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2082
+                          },
+                          "BlockScanner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2653
+                          },
+                          "ItemBlockIC2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4019
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "MetalFormerButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2532
+                                  },
+                                  "NoTextureBtn.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1209
+                                  },
+                                  "TwoStateButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3236
+                                  }
+                                }
+                              },
+                              "GuiAutoCompressor$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1001
+                              },
+                              "GuiAutoCompressor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2294
+                              },
+                              "GuiAutoExtractor$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 997
+                              },
+                              "GuiAutoExtractor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2289
+                              },
+                              "GuiAutoFurnace$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 989
+                              },
+                              "GuiAutoFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2353
+                              },
+                              "GuiAutoIC2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4088
+                              },
+                              "GuiAutoMacerator$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 997
+                              },
+                              "GuiAutoMacerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2486
+                              },
+                              "GuiAutoMetalFormer$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1242
+                              },
+                              "GuiAutoMetalFormer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4601
+                              },
+                              "GuiAutoMolecular$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 997
+                              },
+                              "GuiAutoMolecular.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2219
+                              },
+                              "GuiEUStorage$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1218
+                              },
+                              "GuiEUStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7290
+                              },
+                              "GuiReplicator$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1222
+                              },
+                              "GuiReplicator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2421
+                              },
+                              "GuiScanner$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2444
+                              },
+                              "GuiScanner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6933
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "ICETESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5631
+                              },
+                              "ICETESR2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5799
+                              },
+                              "ItemReplicatorPatternRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3965
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerAutoCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1821
+                          },
+                          "ContainerAutoExtractor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1818
+                          },
+                          "ContainerAutoFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1812
+                          },
+                          "ContainerAutoIC2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8157
+                          },
+                          "ContainerAutoMacerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1818
+                          },
+                          "ContainerAutoMetalFormer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2806
+                          },
+                          "ContainerAutoMolecular.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2159
+                          },
+                          "ContainerEUStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6977
+                          },
+                          "ContainerReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2638
+                          },
+                          "ContainerScanner$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1180
+                          },
+                          "ContainerScanner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5387
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1928
+                              },
+                              "SlotOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1665
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ext": {
+                        "type": "directory",
+                        "children": {
+                          "RegistryUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2361
+                          },
+                          "UtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2746
+                          }
+                        }
+                      },
+                      "IC2Energistics$creativeTab$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1409
+                      },
+                      "IC2Energistics.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4531
+                      },
+                      "IC2EnergisticsConfig$Compressor$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1602
+                      },
+                      "IC2EnergisticsConfig$Compressor$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1609
+                      },
+                      "IC2EnergisticsConfig$Compressor$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1605
+                      },
+                      "IC2EnergisticsConfig$Compressor$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1602
+                      },
+                      "IC2EnergisticsConfig$Compressor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1253
+                      },
+                      "IC2EnergisticsConfig$EU_Storage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1198
+                      },
+                      "IC2EnergisticsConfig$Extractor$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "IC2EnergisticsConfig$Extractor$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1605
+                      },
+                      "IC2EnergisticsConfig$Extractor$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1601
+                      },
+                      "IC2EnergisticsConfig$Extractor$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "IC2EnergisticsConfig$Extractor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1246
+                      },
+                      "IC2EnergisticsConfig$Furnace$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1590
+                      },
+                      "IC2EnergisticsConfig$Furnace$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1597
+                      },
+                      "IC2EnergisticsConfig$Furnace$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1593
+                      },
+                      "IC2EnergisticsConfig$Furnace$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1590
+                      },
+                      "IC2EnergisticsConfig$Furnace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1232
+                      },
+                      "IC2EnergisticsConfig$Macerator$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "IC2EnergisticsConfig$Macerator$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1605
+                      },
+                      "IC2EnergisticsConfig$Macerator$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1601
+                      },
+                      "IC2EnergisticsConfig$Macerator$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "IC2EnergisticsConfig$Macerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1246
+                      },
+                      "IC2EnergisticsConfig$MetalFormer$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1606
+                      },
+                      "IC2EnergisticsConfig$MetalFormer$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1613
+                      },
+                      "IC2EnergisticsConfig$MetalFormer$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1609
+                      },
+                      "IC2EnergisticsConfig$MetalFormer$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1606
+                      },
+                      "IC2EnergisticsConfig$MetalFormer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1260
+                      },
+                      "IC2EnergisticsConfig$MolecularTransformer$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1621
+                      },
+                      "IC2EnergisticsConfig$MolecularTransformer$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1628
+                      },
+                      "IC2EnergisticsConfig$MolecularTransformer$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1624
+                      },
+                      "IC2EnergisticsConfig$MolecularTransformer$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1621
+                      },
+                      "IC2EnergisticsConfig$MolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1323
+                      },
+                      "IC2EnergisticsConfig$Replicator$FirstTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1581
+                      },
+                      "IC2EnergisticsConfig$Replicator$FourthTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1588
+                      },
+                      "IC2EnergisticsConfig$Replicator$SecondTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1584
+                      },
+                      "IC2EnergisticsConfig$Replicator$ThirdTier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1581
+                      },
+                      "IC2EnergisticsConfig$Replicator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1253
+                      },
+                      "IC2EnergisticsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2483
+                      },
+                      "IC2EnergisticsGuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5904
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemEUEnergy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 850
+                          },
+                          "ItemReplicatorEncodedPattern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6442
+                          }
+                        }
+                      },
+                      "me": {
+                        "type": "directory",
+                        "children": {
+                          "EUEnergyStorageHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7776
+                          },
+                          "ReplicatorPattern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5077
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "ICEDefaultPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4161
+                          },
+                          "ICENetworkClientHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3535
+                          },
+                          "ICENetworkManager$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1337
+                          },
+                          "ICENetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10120
+                          },
+                          "ICENetworkServerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1461
+                          },
+                          "ICEPackets$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1782
+                          },
+                          "ICEPackets$packetConstructor$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2868
+                          },
+                          "ICEPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7262
+                          },
+                          "packets": {
+                            "type": "directory",
+                            "children": {
+                              "ChangeMetalFormerType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1389
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10983
+                          },
+                          "CommonProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14464
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14683
+                          },
+                          "ServerEventListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1688
+                          },
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 600
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileAbsoluteReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1204
+                          },
+                          "TileAdvancedReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1204
+                          },
+                          "TileAutoCompressor$craftingTick$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1899
+                          },
+                          "TileAutoCompressor$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2459
+                          },
+                          "TileAutoCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4578
+                          },
+                          "TileAutoCompressorFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 928
+                          },
+                          "TileAutoCompressorFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 932
+                          },
+                          "TileAutoCompressorSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 932
+                          },
+                          "TileAutoCompressorThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 928
+                          },
+                          "TileAutoExtractor$craftingTick$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1893
+                          },
+                          "TileAutoExtractor$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2451
+                          },
+                          "TileAutoExtractor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4564
+                          },
+                          "TileAutoExtractorFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 921
+                          },
+                          "TileAutoExtractorFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 925
+                          },
+                          "TileAutoExtractorSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 925
+                          },
+                          "TileAutoExtractorThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 921
+                          },
+                          "TileAutoFurnace$craftingTick$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1881
+                          },
+                          "TileAutoFurnace$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2435
+                          },
+                          "TileAutoFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4545
+                          },
+                          "TileAutoFurnaceFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 907
+                          },
+                          "TileAutoFurnaceFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 911
+                          },
+                          "TileAutoFurnaceSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 911
+                          },
+                          "TileAutoFurnaceThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 907
+                          },
+                          "TileAutoIC2$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1118
+                          },
+                          "TileAutoIC2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21421
+                          },
+                          "TileAutoMacerator$craftingTick$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1893
+                          },
+                          "TileAutoMacerator$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2451
+                          },
+                          "TileAutoMacerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4564
+                          },
+                          "TileAutoMaceratorFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 921
+                          },
+                          "TileAutoMaceratorFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 925
+                          },
+                          "TileAutoMaceratorSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 925
+                          },
+                          "TileAutoMaceratorThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 921
+                          },
+                          "TileAutoMetalFormer$craftingTick$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1919
+                          },
+                          "TileAutoMetalFormer$craftingTick$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1919
+                          },
+                          "TileAutoMetalFormer$craftingTick$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1923
+                          },
+                          "TileAutoMetalFormer$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2740
+                          },
+                          "TileAutoMetalFormer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6257
+                          },
+                          "TileAutoMetalFormerFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 935
+                          },
+                          "TileAutoMetalFormerFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 939
+                          },
+                          "TileAutoMetalFormerSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 939
+                          },
+                          "TileAutoMetalFormerThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 935
+                          },
+                          "TileAutoMolecular$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1142
+                          },
+                          "TileAutoMolecular$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2462
+                          },
+                          "TileAutoMolecular.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7156
+                          },
+                          "TileAutoMolecularFirstTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 923
+                          },
+                          "TileAutoMolecularFourthTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 927
+                          },
+                          "TileAutoMolecularSecondTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 927
+                          },
+                          "TileAutoMolecularThirdTier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 923
+                          },
+                          "TileEUEnergyReceiver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2209
+                          },
+                          "TileEUStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9563
+                          },
+                          "TileReplicator$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1130
+                          },
+                          "TileReplicator$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1918
+                          },
+                          "TileReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5460
+                          },
+                          "TileScanner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5411
+                          },
+                          "TileUltimateReplicator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1202
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "ic2_energistics": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3153
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "compressor.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 13850
+                      },
+                      "electric_furnace.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 29778
+                      },
+                      "energy_receiver.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 10997
+                      },
+                      "eu_storage.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 46476
+                      },
+                      "extractor.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 66786
+                      },
+                      "macerator.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 24686
+                      },
+                      "metal_forming_mechanism.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 11039
+                      },
+                      "molecular.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 15258
+                      },
+                      "replicator.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28867
+                      },
+                      "scanner.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28953
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "compressor1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2814
+                          },
+                          "compressor2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2960
+                          },
+                          "compressor3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2908
+                          },
+                          "compressor4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4271
+                          },
+                          "electric_furnace1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3347
+                          },
+                          "electric_furnace2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3364
+                          },
+                          "electric_furnace3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3367
+                          },
+                          "electric_furnace4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4688
+                          },
+                          "energy_receiver1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2652
+                          },
+                          "eu_storage_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1307
+                          },
+                          "extractor1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3086
+                          },
+                          "extractor2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3197
+                          },
+                          "extractor3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3147
+                          },
+                          "extractor4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4536
+                          },
+                          "macerator1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3083
+                          },
+                          "macerator2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3126
+                          },
+                          "macerator3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3169
+                          },
+                          "macerator4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4511
+                          },
+                          "metal_forming_mechanism1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3174
+                          },
+                          "metal_forming_mechanism2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3284
+                          },
+                          "metal_forming_mechanism3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3215
+                          },
+                          "metal_forming_mechanism4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4607
+                          },
+                          "molecular1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2165
+                          },
+                          "molecular2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2165
+                          },
+                          "molecular3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2153
+                          },
+                          "molecular4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2366
+                          },
+                          "replicator1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 990
+                          },
+                          "replicator2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 976
+                          },
+                          "replicator3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 973
+                          },
+                          "replicator4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2852
+                          },
+                          "scanner_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1371
+                          }
+                        }
+                      },
+                      "guis": {
+                        "type": "directory",
+                        "children": {
+                          "compressor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6733
+                          },
+                          "extractor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7036
+                          },
+                          "furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7260
+                          },
+                          "macerator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7225
+                          },
+                          "metal_former.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7572
+                          },
+                          "molecular.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6985
+                          },
+                          "replicator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7433
+                          },
+                          "replicator_nei.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7121
+                          },
+                          "scanner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6724
+                          },
+                          "storage.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6172
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "encoded_pattern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2189
+                          },
+                          "energy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1741
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2525
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 172383
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "mod_name": "slf4j-api-1.7.25.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\slf4j-api-1.7.25.jar",
+  "mod_type": "jar",
+  "tree": {
+    "slf4j-api-1.7.25.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 42261,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 666
+              },
+              "maven": {
+                "type": "directory",
+                "children": {
+                  "org.slf4j": {
+                    "type": "directory",
+                    "children": {
+                      "slf4j-api": {
+                        "type": "directory",
+                        "children": {
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 3833
+                          },
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 109
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "slf4j": {
+                "type": "directory",
+                "children": {
+                  "event": {
+                    "type": "directory",
+                    "children": {
+                      "EventConstants.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 555
+                      },
+                      "EventRecodingLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8889
+                      },
+                      "Level.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1450
+                      },
+                      "LoggingEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 432
+                      },
+                      "SubstituteLoggingEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2615
+                      }
+                    }
+                  },
+                  "helpers": {
+                    "type": "directory",
+                    "children": {
+                      "BasicMarker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3310
+                      },
+                      "BasicMarkerFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1634
+                      },
+                      "BasicMDCAdapter$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1259
+                      },
+                      "BasicMDCAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2618
+                      },
+                      "FormattingTuple.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1091
+                      },
+                      "MarkerIgnoringBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4773
+                      },
+                      "MessageFormatter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7545
+                      },
+                      "NamedLoggerBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 823
+                      },
+                      "NOPLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3267
+                      },
+                      "NOPLoggerFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 584
+                      },
+                      "NOPMDCAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1249
+                      },
+                      "SubstituteLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10416
+                      },
+                      "SubstituteLoggerFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2199
+                      },
+                      "Util$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 196
+                      },
+                      "Util$ClassContextSecurityManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 765
+                      },
+                      "Util.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2962
+                      }
+                    }
+                  },
+                  "spi": {
+                    "type": "directory",
+                    "children": {
+                      "LocationAwareLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 455
+                      },
+                      "LoggerFactoryBinder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 249
+                      },
+                      "MarkerFactoryBinder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 249
+                      },
+                      "MDCAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 529
+                      }
+                    }
+                  },
+                  "ILoggerFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 180
+                  },
+                  "IMarkerFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 272
+                  },
+                  "Logger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1375
+                  },
+                  "LoggerFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12594
+                  },
+                  "Marker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 666
+                  },
+                  "MarkerFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1621
+                  },
+                  "MDC$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 177
+                  },
+                  "MDC$MDCCloseable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 749
+                  },
+                  "MDC.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3675
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

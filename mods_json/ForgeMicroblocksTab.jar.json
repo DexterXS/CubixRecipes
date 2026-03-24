@@ -1,0 +1,62 @@
+{
+  "mod_name": "ForgeMicroblocksTab.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ForgeMicroblocksTab.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ForgeMicroblocksTab.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 3331,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "theandrey": {
+            "type": "directory",
+            "children": {
+              "forgemicroblocks": {
+                "type": "directory",
+                "children": {
+                  "ForgeMicroblocksTab.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2203
+                  },
+                  "ModTab.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1062
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 658
+          }
+        }
+      }
+    }
+  }
+}

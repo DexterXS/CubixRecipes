@@ -1,0 +1,842 @@
+{
+  "mod_name": "cubixenderio-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\cubixenderio-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "cubixenderio-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 338365,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 143
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "assolb": {
+                "type": "directory",
+                "children": {
+                  "cubixenderio": {
+                    "type": "directory",
+                    "children": {
+                      "capacitors": {
+                        "type": "directory",
+                        "children": {
+                          "CubixItemCapacitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3439
+                          }
+                        }
+                      },
+                      "conduits": {
+                        "type": "directory",
+                        "children": {
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "IridiumItemConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4322
+                              },
+                              "EnderItemConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8268
+                              },
+                              "IridiumItemConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7263
+                              },
+                              "EnderItemConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4392
+                              },
+                              "EnderItemConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 403
+                              },
+                              "IridiumItemItemConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5845
+                              },
+                              "EnderItemItemConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5329
+                              },
+                              "IridiumItemConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 407
+                              }
+                            }
+                          },
+                          "liquid": {
+                            "type": "directory",
+                            "children": {
+                              "IridiumItemLiquidConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5263
+                              },
+                              "QuantLiquidConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6069
+                              },
+                              "IridiumLiquidConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7304
+                              },
+                              "IridiumLiquidConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6676
+                              },
+                              "QuantLiquidConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4824
+                              },
+                              "QuantItemLiquidConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5743
+                              },
+                              "ReflectionCached.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6530
+                              },
+                              "QuantLiquidConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7243
+                              },
+                              "IridiumLiquidConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3863
+                              }
+                            }
+                          },
+                          "power": {
+                            "type": "directory",
+                            "children": {
+                              "IridiumPowerConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9838
+                              },
+                              "QuantPowerConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4837
+                              },
+                              "QuantItemPowerConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6203
+                              },
+                              "IridiumPowerConduit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3829
+                              },
+                              "IridiumPowerConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 413
+                              },
+                              "QuantPowerConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9475
+                              },
+                              "IridiumItemPowerConduit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6232
+                              },
+                              "QuantPowerConduitNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 409
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "data": {
+                            "type": "directory",
+                            "children": {
+                              "machines": {
+                                "type": "directory",
+                                "children": {
+                                  "CreatorSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1123
+                                  },
+                                  "StirlingGeneratorSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1426
+                                  },
+                                  "SliceAndSpliceSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 913
+                                  },
+                                  "AlloySmelterSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 907
+                                  },
+                                  "FarmStationSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1374
+                                  },
+                                  "ElectricSpawnerSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1146
+                                  },
+                                  "PainterSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 892
+                                  },
+                                  "CrusherSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 892
+                                  },
+                                  "SoulBinderSettings.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 901
+                                  }
+                                }
+                              },
+                              "QuantCapacitorConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4120
+                              },
+                              "IridiumCapacitorConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5179
+                              },
+                              "CapacitorType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1199
+                              },
+                              "CapacitorsConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1885
+                              },
+                              "AdvancedCapacitorConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3602
+                              },
+                              "ConduitsConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1834
+                              }
+                            }
+                          },
+                          "ServerConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1320
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "CommonEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1278
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "C0PacketSyncConfig$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1934
+                          },
+                          "C0PacketSyncConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1597
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 971
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2326
+                          }
+                        }
+                      },
+                      "Constants.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4153
+                      },
+                      "CubixEnderIO.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16408
+                      },
+                      "RegistryConstants.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6122
+                      }
+                    }
+                  },
+                  "hooklib": {
+                    "type": "directory",
+                    "children": {
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "ClassMetadataReader$FindMethodClassVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4778
+                          },
+                          "HookInjectorFactory$MethodExit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1746
+                          },
+                          "Hook$ReturnValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 398
+                          },
+                          "HookInjectorFactory$MethodEnter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1587
+                          },
+                          "ReturnCondition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4863
+                          },
+                          "AsmHook$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 995
+                          },
+                          "ReturnValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4259
+                          },
+                          "HookContainerParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17709
+                          },
+                          "HookContainerParser$HookAnnotationVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2144
+                          },
+                          "HookLogger$SystemOutLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3359
+                          },
+                          "AsmHook.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 25332
+                          },
+                          "HookClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10302
+                          },
+                          "HookInjectorMethodVisitor$MethodExit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1642
+                          },
+                          "HookLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 445
+                          },
+                          "HookPriority.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4682
+                          },
+                          "HookContainerParser$HookMethodVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3117
+                          },
+                          "HookInjectorMethodVisitor$LineNumber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1886
+                          },
+                          "HookContainerParser$HookClassVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2528
+                          },
+                          "ReadClassHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3610
+                          },
+                          "ClassMetadataReader$MethodReference.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3821
+                          },
+                          "TypeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7058
+                          },
+                          "SafeClassWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3696
+                          },
+                          "HookInjectorFactory$LineNumber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1667
+                          },
+                          "HookContainerParser$HookMethodVisitor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1744
+                          },
+                          "VariableIdHelper$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1929
+                          },
+                          "HookInjectorMethodVisitor$MethodEnter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1243
+                          },
+                          "ClassMetadataReader$CheckSuperClassVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1263
+                          },
+                          "HookLogger$VanillaLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1672
+                          },
+                          "HookInjectorClassVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4687
+                          },
+                          "Hook$LocalVariable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 416
+                          },
+                          "VariableIdHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3846
+                          },
+                          "VariableIdHelper$1$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4114
+                          },
+                          "HookInjectorMethodVisitor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2899
+                          },
+                          "Hook.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1511
+                          },
+                          "HookInjectorFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1081
+                          },
+                          "AsmHook$Builder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20367
+                          },
+                          "ClassMetadataReader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11667
+                          }
+                        }
+                      },
+                      "disk": {
+                        "type": "directory",
+                        "children": {
+                          "DiskHookLib.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6859
+                          }
+                        }
+                      },
+                      "example": {
+                        "type": "directory",
+                        "children": {
+                          "HookAbstractMachineEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6146
+                          },
+                          "HookAbstractConduit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1948
+                          },
+                          "HookAbstractPoweredTaskEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8413
+                          },
+                          "ExampleHookLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3866
+                          },
+                          "HookAbstractPoweredMachineEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12845
+                          },
+                          "HookAbstractPowerConsumerEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3017
+                          },
+                          "HookAbstractConduitNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2821
+                          },
+                          "HookGuiStirlingGenerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11205
+                          }
+                        }
+                      },
+                      "minecraft": {
+                        "type": "directory",
+                        "children": {
+                          "PrimaryClassTransformer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1919
+                          },
+                          "PrimaryClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7900
+                          },
+                          "SecondaryTransformerHook.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3093
+                          },
+                          "HookLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3196
+                          },
+                          "MinecraftClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9976
+                          },
+                          "HookLibPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5221
+                          },
+                          "MinecraftClassTransformer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2794
+                          },
+                          "DeobfuscationMetadataReader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9180
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixenderio": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 686
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1076
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "iridiumLiquidConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1662
+                          },
+                          "iridiumLiquidConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2750
+                          },
+                          "quantLiquidConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 324
+                          },
+                          "iridiumItemConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3159
+                          },
+                          "quantLiquidConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2627
+                          },
+                          "enderItemConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3282
+                          },
+                          "quantPowerConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1131
+                          },
+                          "iridiumItemConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2560
+                          },
+                          "enderItemConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2287
+                          },
+                          "iridiumPowerConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 336
+                          },
+                          "iridiumPowerConduitCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1072
+                          },
+                          "quantPowerConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 324
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "iridium_capacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2283
+                          },
+                          "absolute_capacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2323
+                          },
+                          "quantItemLiquidConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "quantItemPowerConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8398
+                          },
+                          "enderItemItemConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11408
+                          },
+                          "enderItemItemConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "iridiumItemPowerConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8214
+                          },
+                          "iridiumItemLiquidConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4737
+                          },
+                          "quantItemLiquidConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4493
+                          },
+                          "iridiumItemItemConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "iridiumItemLiquidConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "quantItemPowerConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "quant_capacitor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2306
+                          },
+                          "iridiumItemPowerConduit.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 470
+                          },
+                          "iridiumItemItemConduit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10454
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "methods.bin": {
+            "type": "file",
+            "extension": ".bin",
+            "size": 84382
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 479
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1559
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 13053
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "mod_name": "PNGDecoder (2).jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\PNGDecoder (2).jar",
+  "mod_type": "jar",
+  "tree": {
+    "PNGDecoder (2).jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 11679,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 128
+              }
+            }
+          },
+          "de": {
+            "type": "directory",
+            "children": {
+              "matthiasmann": {
+                "type": "directory",
+                "children": {
+                  "twl": {
+                    "type": "directory",
+                    "children": {
+                      "license.txt": {
+                        "type": "file",
+                        "extension": ".txt",
+                        "size": 1648
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "PNGDecoder$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1075
+                          },
+                          "PNGDecoder$Format.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1761
+                          },
+                          "PNGDecoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15791
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

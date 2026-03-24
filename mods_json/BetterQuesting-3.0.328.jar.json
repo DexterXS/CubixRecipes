@@ -1,0 +1,2577 @@
+{
+  "mod_name": "BetterQuesting-3.0.328.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BetterQuesting-3.0.328.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BetterQuesting-3.0.328.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1360081,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "betterquesting": {
+                "type": "directory",
+                "children": {
+                  "bq_themes.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 11009
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 15323
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 24453
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "page_flip0.wav": {
+                        "type": "file",
+                        "extension": ".wav",
+                        "size": 172104
+                      },
+                      "page_flip1.wav": {
+                        "type": "file",
+                        "extension": ".wav",
+                        "size": 147528
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "fluid_placeholder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 473
+                          },
+                          "submit_station_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1660
+                          },
+                          "submit_station_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1612
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "default_title.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 231708
+                          },
+                          "editor_icons.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22903
+                          },
+                          "new_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5053
+                          },
+                          "null_texture.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2785
+                          },
+                          "quest_frames.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 37948
+                          },
+                          "simple_frames.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 49657
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "heart_full.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 228
+                          },
+                          "heart_half.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 236
+                          },
+                          "heart_quarter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 228
+                          },
+                          "placeholder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 206
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "betterquesting": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "ApiKey.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 434
+                      },
+                      "ApiReference.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2778
+                      },
+                      "QuestingAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2837
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiYesNoLocked.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 991
+                          },
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "INeedsRefresh.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 253
+                              },
+                              "IVolatileScreen.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 230
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "importers": {
+                        "type": "directory",
+                        "children": {
+                          "IImporter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 405
+                          },
+                          "IImportRegistry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 361
+                          }
+                        }
+                      },
+                      "toolbox": {
+                        "type": "directory",
+                        "children": {
+                          "IToolboxTool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 730
+                          },
+                          "IToolRegistry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 505
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "enums": {
+                    "type": "directory",
+                    "children": {
+                      "EnumLogic$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 834
+                      },
+                      "EnumLogic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1688
+                      },
+                      "EnumPartyStatus.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1113
+                      },
+                      "EnumQuestState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1169
+                      },
+                      "EnumQuestVisibility.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1307
+                      }
+                    }
+                  },
+                  "events": {
+                    "type": "directory",
+                    "children": {
+                      "BQLivingUpdateEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1062
+                      },
+                      "DatabaseEvent$DBType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1388
+                      },
+                      "DatabaseEvent$Load.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1111
+                      },
+                      "DatabaseEvent$Save.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1111
+                      },
+                      "DatabaseEvent$Update.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1117
+                      },
+                      "DatabaseEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1431
+                      },
+                      "NbtDocEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1289
+                      },
+                      "QuestEvent$Type.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1199
+                      },
+                      "QuestEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2307
+                      }
+                    }
+                  },
+                  "misc": {
+                    "type": "directory",
+                    "children": {
+                      "ICallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 246
+                      }
+                    }
+                  },
+                  "nbt_doc": {
+                    "type": "directory",
+                    "children": {
+                      "INbtDoc.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 413
+                      },
+                      "NbtDocBasic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1868
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "IPacketRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1362
+                      },
+                      "IPacketSender.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 704
+                      },
+                      "QuestingPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 802
+                      }
+                    }
+                  },
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 283
+                  },
+                  "placeholders": {
+                    "type": "directory",
+                    "children": {
+                      "EntityPlaceholder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1853
+                      },
+                      "FluidPlaceholder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 557
+                      },
+                      "ItemPlaceholder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3327
+                      },
+                      "PlaceholderConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4585
+                      },
+                      "rewards": {
+                        "type": "directory",
+                        "children": {
+                          "FactoryRewardPlaceholder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1854
+                          },
+                          "RewardPlaceholder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3706
+                          }
+                        }
+                      },
+                      "tasks": {
+                        "type": "directory",
+                        "children": {
+                          "FactoryTaskPlaceholder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1822
+                          },
+                          "TaskPlaceholder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4808
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "properties": {
+                    "type": "directory",
+                    "children": {
+                      "basic": {
+                        "type": "directory",
+                        "children": {
+                          "PropertyTypeBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1165
+                          },
+                          "PropertyTypeBoolean.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1951
+                          },
+                          "PropertyTypeByte.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1680
+                          },
+                          "PropertyTypeDouble.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1704
+                          },
+                          "PropertyTypeEnum.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2288
+                          },
+                          "PropertyTypeFloat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1692
+                          },
+                          "PropertyTypeInteger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1708
+                          },
+                          "PropertyTypeItemStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1985
+                          },
+                          "PropertyTypeString.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1605
+                          }
+                        }
+                      },
+                      "IPropertyContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1161
+                      },
+                      "IPropertyType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 546
+                      },
+                      "NativeProps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5817
+                      }
+                    }
+                  },
+                  "questing": {
+                    "type": "directory",
+                    "children": {
+                      "IQuest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1845
+                      },
+                      "IQuestDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 623
+                      },
+                      "IQuestLine.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 873
+                      },
+                      "IQuestLineDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 767
+                      },
+                      "IQuestLineEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 569
+                      },
+                      "party": {
+                        "type": "directory",
+                        "children": {
+                          "IParty.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1015
+                          },
+                          "IPartyDatabase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 855
+                          }
+                        }
+                      },
+                      "rewards": {
+                        "type": "directory",
+                        "children": {
+                          "IReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1718
+                          }
+                        }
+                      },
+                      "tasks": {
+                        "type": "directory",
+                        "children": {
+                          "IFluidTask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 795
+                          },
+                          "IItemTask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 743
+                          },
+                          "ITask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1757
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "storage": {
+                    "type": "directory",
+                    "children": {
+                      "BQ_Settings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 766
+                      },
+                      "ILifeDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 420
+                      },
+                      "INameCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 767
+                      },
+                      "IQuestSettings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 284
+                      }
+                    }
+                  },
+                  "utils": {
+                    "type": "directory",
+                    "children": {
+                      "BigItemStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6854
+                      },
+                      "FileExtensionFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1066
+                      },
+                      "ItemComparison.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5634
+                      },
+                      "JsonHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16080
+                      },
+                      "NBTConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10659
+                      },
+                      "RenderUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22035
+                      }
+                    }
+                  }
+                }
+              },
+              "api2": {
+                "type": "directory",
+                "children": {
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "controls": {
+                            "type": "directory",
+                            "children": {
+                              "callbacks": {
+                                "type": "directory",
+                                "children": {
+                                  "CallbackMulti.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1259
+                                  },
+                                  "CallbackNBTPrimitive.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4161
+                                  },
+                                  "CallbackNBTTagString.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1613
+                                  }
+                                }
+                              },
+                              "filters": {
+                                "type": "directory",
+                                "children": {
+                                  "FieldFilterNumber$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1118
+                                  },
+                                  "FieldFilterNumber$2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1113
+                                  },
+                                  "FieldFilterNumber$3.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1108
+                                  },
+                                  "FieldFilterNumber$4.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1119
+                                  },
+                                  "FieldFilterNumber$5.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1113
+                                  },
+                                  "FieldFilterNumber$6.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1108
+                                  },
+                                  "FieldFilterNumber.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2715
+                                  },
+                                  "FieldFilterString.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1381
+                                  }
+                                }
+                              },
+                              "IFieldFilter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 408
+                              },
+                              "io": {
+                                "type": "directory",
+                                "children": {
+                                  "FloatSimpleIO.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2728
+                                  },
+                                  "ValueFuncIO.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1596
+                                  }
+                                }
+                              },
+                              "IPanelButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 310
+                              },
+                              "IValueIO.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 384
+                              },
+                              "PanelButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10191
+                              },
+                              "PanelButtonQuest$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 875
+                              },
+                              "PanelButtonQuest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12309
+                              },
+                              "PanelButtonStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2399
+                              },
+                              "PanelTextField.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18987
+                              }
+                            }
+                          },
+                          "events": {
+                            "type": "directory",
+                            "children": {
+                              "IPEventListener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 312
+                              },
+                              "PanelEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 770
+                              },
+                              "PEventBroadcaster.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6384
+                              },
+                              "PEventEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2878
+                              },
+                              "PEventFilter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1518
+                              },
+                              "types": {
+                                "type": "directory",
+                                "children": {
+                                  "PEventButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 753
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "GuiContainerCanvas.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13974
+                          },
+                          "GuiScreenCanvas.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13707
+                          },
+                          "GuiScreenTest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4723
+                          },
+                          "help": {
+                            "type": "directory",
+                            "children": {
+                              "HelpRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1958
+                              },
+                              "HelpTopic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1149
+                              }
+                            }
+                          },
+                          "IScene.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 361
+                          },
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "ComparatorGuiDepth.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1203
+                              },
+                              "GuiAlign$ImmutableVec4f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1400
+                              },
+                              "GuiAlign.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2026
+                              },
+                              "GuiPadding.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1569
+                              },
+                              "GuiRectangle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2274
+                              },
+                              "GuiRectLerp.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3054
+                              },
+                              "GuiTransform.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4175
+                              },
+                              "IGuiRect.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 536
+                              },
+                              "ProxyRect.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2000
+                              }
+                            }
+                          },
+                          "panels": {
+                            "type": "directory",
+                            "children": {
+                              "bars": {
+                                "type": "directory",
+                                "children": {
+                                  "IBarFill.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 902
+                                  },
+                                  "IScrollBar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 974
+                                  },
+                                  "PanelHBarFill.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5614
+                                  },
+                                  "PanelHScrollBar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6356
+                                  },
+                                  "PanelVBarFill.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5515
+                                  },
+                                  "PanelVScrollBar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6356
+                                  }
+                                }
+                              },
+                              "CanvasEmpty.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4738
+                              },
+                              "CanvasResizeable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7056
+                              },
+                              "CanvasTextured.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1417
+                              },
+                              "content": {
+                                "type": "directory",
+                                "children": {
+                                  "PanelEntityPreview.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5559
+                                  },
+                                  "PanelFluidSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4061
+                                  },
+                                  "PanelGeneric.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3492
+                                  },
+                                  "PanelItemSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7617
+                                  },
+                                  "PanelLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2851
+                                  },
+                                  "PanelPlayerPortrait.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6906
+                                  },
+                                  "PanelTextBox$GuiRectText.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2245
+                                  },
+                                  "PanelTextBox.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5609
+                                  }
+                                }
+                              },
+                              "IGuiCanvas.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 577
+                              },
+                              "IGuiPanel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 537
+                              },
+                              "lists": {
+                                "type": "directory",
+                                "children": {
+                                  "CanvasCullingManager$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 296
+                                  },
+                                  "CanvasCullingManager$RegionInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3364
+                                  },
+                                  "CanvasCullingManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5915
+                                  },
+                                  "CanvasEntityDatabase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2859
+                                  },
+                                  "CanvasFileDirectory$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 293
+                                  },
+                                  "CanvasFileDirectory$FileSort.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1606
+                                  },
+                                  "CanvasFileDirectory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3429
+                                  },
+                                  "CanvasFluidDatabase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3823
+                                  },
+                                  "CanvasHoverTray.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3849
+                                  },
+                                  "CanvasItemDatabase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6504
+                                  },
+                                  "CanvasQuestDatabase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3050
+                                  },
+                                  "CanvasQuestLine$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 880
+                                  },
+                                  "CanvasQuestLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10778
+                                  },
+                                  "CanvasScrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12864
+                                  },
+                                  "CanvasSearch.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3458
+                                  }
+                                }
+                              },
+                              "CanvasMinimum$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2085
+                              },
+                              "CanvasMinimum.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5860
+                              }
+                            }
+                          },
+                          "popups": {
+                            "type": "directory",
+                            "children": {
+                              "PopChoice.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6292
+                              },
+                              "PopContextMenu$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 266
+                              },
+                              "PopContextMenu$ContextCategory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4155
+                              },
+                              "PopContextMenu$ContextEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1647
+                              },
+                              "PopContextMenu.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7855
+                              },
+                              "PopMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5006
+                              }
+                            }
+                          },
+                          "resources": {
+                            "type": "directory",
+                            "children": {
+                              "colors": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiColorPulse.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2222
+                                  },
+                                  "GuiColorSequence.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1680
+                                  },
+                                  "GuiColorStatic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1587
+                                  },
+                                  "GuiColorTransition.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2665
+                                  },
+                                  "IGuiColor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 278
+                                  }
+                                }
+                              },
+                              "factories": {
+                                "type": "directory",
+                                "children": {
+                                  "colors": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FactoryColorPulse.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3919
+                                      },
+                                      "FactoryColorSequence.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4486
+                                      },
+                                      "FactoryColorStatic.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2181
+                                      }
+                                    }
+                                  },
+                                  "lines": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FactorySimpleLine.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2446
+                                      }
+                                    }
+                                  },
+                                  "textures": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FactoryColorTexture.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4097
+                                      },
+                                      "FactoryLayeredTexture.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4584
+                                      },
+                                      "FactorySimpleTexture.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3157
+                                      },
+                                      "FactorySlicedTexture.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3994
+                                      },
+                                      "FactorySlideShowTexture.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4891
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "lines": {
+                                "type": "directory",
+                                "children": {
+                                  "BoxLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2086
+                                  },
+                                  "GuiLineSequence.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1552
+                                  },
+                                  "IGuiLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 322
+                                  },
+                                  "SimpleLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1788
+                                  }
+                                }
+                              },
+                              "textures": {
+                                "type": "directory",
+                                "children": {
+                                  "ColorTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2576
+                                  },
+                                  "FluidTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4849
+                                  },
+                                  "GuiTextureColored.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1676
+                                  },
+                                  "IGuiTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 400
+                                  },
+                                  "ItemTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3592
+                                  },
+                                  "LayeredTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1832
+                                  },
+                                  "OreDictTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5113
+                                  },
+                                  "SimpleTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3156
+                                  },
+                                  "SlicedTexture$SliceMode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1437
+                                  },
+                                  "SlicedTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8716
+                                  },
+                                  "SlideShowTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2488
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "SceneController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1368
+                          },
+                          "themes": {
+                            "type": "directory",
+                            "children": {
+                              "GuiKey.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1113
+                              },
+                              "gui_args": {
+                                "type": "directory",
+                                "children": {
+                                  "GArgsCallback.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1138
+                                  },
+                                  "GArgsFileBrowser.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1234
+                                  },
+                                  "GArgsNBT.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1382
+                                  },
+                                  "GArgsNone.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 693
+                                  }
+                                }
+                              },
+                              "IGuiTheme.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 970
+                              },
+                              "IResourceReg.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1005
+                              },
+                              "IThemeRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2102
+                              },
+                              "presets": {
+                                "type": "directory",
+                                "children": {
+                                  "PresetColor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5189
+                                  },
+                                  "PresetGUIs.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2133
+                                  },
+                                  "PresetIcon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10784
+                                  },
+                                  "PresetLine.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2997
+                                  },
+                                  "PresetTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9149
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "toolbox": {
+                        "type": "directory",
+                        "children": {
+                          "IToolTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 430
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 285
+                  },
+                  "cache": {
+                    "type": "directory",
+                    "children": {
+                      "QuestCache$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 230
+                      },
+                      "QuestCache$QResetTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1581
+                      },
+                      "QuestCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10606
+                      }
+                    }
+                  },
+                  "registry": {
+                    "type": "directory",
+                    "children": {
+                      "IFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 316
+                      },
+                      "IFactoryData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 473
+                      },
+                      "IRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 749
+                      },
+                      "SimpleRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2678
+                      }
+                    }
+                  },
+                  "storage": {
+                    "type": "directory",
+                    "children": {
+                      "BigDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1700
+                      },
+                      "DBEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1922
+                      },
+                      "IDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 824
+                      },
+                      "IDatabaseNBT.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 550
+                      },
+                      "INBTPartial.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 515
+                      },
+                      "INBTProgress.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 526
+                      },
+                      "INBTSaveLoad.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 376
+                      },
+                      "SimpleDatabase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4798
+                      }
+                    }
+                  },
+                  "utils": {
+                    "type": "directory",
+                    "children": {
+                      "BQThreadedIO.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1890
+                      },
+                      "EntityPlayerPreview.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1540
+                      },
+                      "OreIngredient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2333
+                      },
+                      "ParticipantInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5975
+                      },
+                      "QuestLineSorter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1528
+                      },
+                      "QuestTranslation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 952
+                      },
+                      "Tuple2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 897
+                      }
+                    }
+                  }
+                }
+              },
+              "blocks": {
+                "type": "directory",
+                "children": {
+                  "BlockSubmitStation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5160
+                  },
+                  "SSItemHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2226
+                  },
+                  "TileSubmitStation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13896
+                  }
+                }
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "BQ_Keybindings.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 749
+                  },
+                  "CreativeTabQuesting.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 662
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiBQConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1992
+                      }
+                    }
+                  },
+                  "gui2": {
+                    "type": "directory",
+                    "children": {
+                      "editors": {
+                        "type": "directory",
+                        "children": {
+                          "designer": {
+                            "type": "directory",
+                            "children": {
+                              "GuiDesigner$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1217
+                              },
+                              "GuiDesigner$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1217
+                              },
+                              "GuiDesigner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9693
+                              },
+                              "PanelToolController$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1521
+                              },
+                              "PanelToolController$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1521
+                              },
+                              "PanelToolController.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9732
+                              }
+                            }
+                          },
+                          "GuiFileBrowser$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5275
+                          },
+                          "GuiFileBrowser$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2048
+                          },
+                          "GuiFileBrowser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13181
+                          },
+                          "GuiImporters.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10025
+                          },
+                          "GuiPrerequisiteEditor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3531
+                          },
+                          "GuiPrerequisiteEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14191
+                          },
+                          "GuiQuestEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12159
+                          },
+                          "GuiQuestLineAddRemove$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3497
+                          },
+                          "GuiQuestLineAddRemove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15146
+                          },
+                          "GuiQuestLinesEditor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3068
+                          },
+                          "GuiQuestLinesEditor$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2365
+                          },
+                          "GuiQuestLinesEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17245
+                          },
+                          "GuiRewardEditor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5002
+                          },
+                          "GuiRewardEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13015
+                          },
+                          "GuiTaskEditor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4946
+                          },
+                          "GuiTaskEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12961
+                          },
+                          "GuiTextEditor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7614
+                          },
+                          "nbt": {
+                            "type": "directory",
+                            "children": {
+                              "callback": {
+                                "type": "directory",
+                                "children": {
+                                  "NbtEntityCallback.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1511
+                                  },
+                                  "NbtFluidCallback.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1444
+                                  },
+                                  "NbtItemCallback.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1424
+                                  }
+                                }
+                              },
+                              "GuiEntitySelection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10981
+                              },
+                              "GuiFluidSelection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13471
+                              },
+                              "GuiItemSelection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15132
+                              },
+                              "GuiNbtAdd.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13017
+                              },
+                              "GuiNbtEditor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7876
+                              },
+                              "GuiNbtType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5467
+                              },
+                              "PanelScrollingNBT.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 22060
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "GuiHome.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12508
+                      },
+                      "GuiQuest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13545
+                      },
+                      "GuiQuestHelp$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1188
+                      },
+                      "GuiQuestHelp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6654
+                      },
+                      "GuiQuestLines.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23332
+                      },
+                      "GuiThemes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12434
+                      },
+                      "inventory": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerSubmitStation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1260
+                          },
+                          "ContainerSubmitStation$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1122
+                          },
+                          "ContainerSubmitStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3755
+                          },
+                          "GuiSubmitStation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1208
+                          },
+                          "GuiSubmitStation$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1208
+                          },
+                          "GuiSubmitStation$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1208
+                          },
+                          "GuiSubmitStation$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1208
+                          },
+                          "GuiSubmitStation$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2472
+                          },
+                          "GuiSubmitStation$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1517
+                          },
+                          "GuiSubmitStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14168
+                          }
+                        }
+                      },
+                      "party": {
+                        "type": "directory",
+                        "children": {
+                          "GuiPartyCreate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15230
+                          },
+                          "GuiPartyInvite.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11313
+                          },
+                          "GuiPartyManage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15277
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "importers": {
+                    "type": "directory",
+                    "children": {
+                      "ImportedQuestLines.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5862
+                      },
+                      "ImportedQuests.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4448
+                      },
+                      "ImporterRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1424
+                      }
+                    }
+                  },
+                  "QuestNotification$QuestNotice.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1308
+                  },
+                  "QuestNotification.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5299
+                  },
+                  "renderer": {
+                    "type": "directory",
+                    "children": {
+                      "EntityPlaceholderRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1219
+                      }
+                    }
+                  },
+                  "themes": {
+                    "type": "directory",
+                    "children": {
+                      "LegacyThemeLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3560
+                      },
+                      "ResourceRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4325
+                      },
+                      "ResourceTheme.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5136
+                      },
+                      "ThemeLegacy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6945
+                      },
+                      "ThemeRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23613
+                      }
+                    }
+                  },
+                  "toolbox": {
+                    "type": "directory",
+                    "children": {
+                      "PanelTabMain$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "PanelTabMain$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3379
+                      },
+                      "PanelTabMain$ToolEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2043
+                      },
+                      "PanelTabMain.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11138
+                      },
+                      "ToolboxRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2110
+                      },
+                      "ToolboxTabMain.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4468
+                      },
+                      "tools": {
+                        "type": "directory",
+                        "children": {
+                          "ToolboxToolComplete.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4039
+                          },
+                          "ToolboxToolCopy$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 265
+                          },
+                          "ToolboxToolCopy$GrabEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1737
+                          },
+                          "ToolboxToolCopy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9401
+                          },
+                          "ToolboxToolDelete.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3939
+                          },
+                          "ToolboxToolFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4882
+                          },
+                          "ToolboxToolGrab$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 265
+                          },
+                          "ToolboxToolGrab$GrabEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1737
+                          },
+                          "ToolboxToolGrab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7769
+                          },
+                          "ToolboxToolIcon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6254
+                          },
+                          "ToolboxToolLink.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7290
+                          },
+                          "ToolboxToolNew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5403
+                          },
+                          "ToolboxToolOpen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3252
+                          },
+                          "ToolboxToolRemove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4706
+                          },
+                          "ToolboxToolReset.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4021
+                          },
+                          "ToolboxToolScale$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 268
+                          },
+                          "ToolboxToolScale$GrabEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2297
+                          },
+                          "ToolboxToolScale.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9548
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "commands": {
+                "type": "directory",
+                "children": {
+                  "admin": {
+                    "type": "directory",
+                    "children": {
+                      "QuestCommandComplete.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4618
+                      },
+                      "QuestCommandDefaults.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7355
+                      },
+                      "QuestCommandDelete.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4352
+                      },
+                      "QuestCommandEdit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3654
+                      },
+                      "QuestCommandHardcore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3673
+                      },
+                      "QuestCommandLives.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6617
+                      },
+                      "QuestCommandPurge.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3386
+                      },
+                      "QuestCommandReset.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5933
+                      }
+                    }
+                  },
+                  "BQ_CommandAdmin.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4712
+                  },
+                  "BQ_CommandDebug.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 853
+                  },
+                  "BQ_CommandUser.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4631
+                  },
+                  "QuestCommandBase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3369
+                  },
+                  "user": {
+                    "type": "directory",
+                    "children": {
+                      "QuestCommandHelp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1534
+                      },
+                      "QuestCommandRefresh.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2739
+                      },
+                      "QuestCommandSPHardcore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2586
+                      }
+                    }
+                  }
+                }
+              },
+              "core": {
+                "type": "directory",
+                "children": {
+                  "BetterQuesting.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7695
+                  },
+                  "ExpansionLoader.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2945
+                  },
+                  "proxies": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3597
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1577
+                      }
+                    }
+                  }
+                }
+              },
+              "handlers": {
+                "type": "directory",
+                "children": {
+                  "ConfigGuiFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1479
+                  },
+                  "ConfigHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1910
+                  },
+                  "EventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 23490
+                  },
+                  "GuiHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1850
+                  },
+                  "SaveLoadHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8920
+                  }
+                }
+              },
+              "items": {
+                "type": "directory",
+                "children": {
+                  "ItemExtraLife.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5799
+                  },
+                  "ItemGuideBook.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1946
+                  }
+                }
+              },
+              "legacy": {
+                "type": "directory",
+                "children": {
+                  "ILegacyLoader.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 218
+                  },
+                  "LegacyLoaderRegistry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1051
+                  },
+                  "v0": {
+                    "type": "directory",
+                    "children": {
+                      "LegacyLoader_v0.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10376
+                      }
+                    }
+                  }
+                }
+              },
+              "misc": {
+                "type": "directory",
+                "children": {
+                  "QuestResourcesFile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6537
+                  },
+                  "QuestResourcesFolder.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3458
+                  }
+                }
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "handlers": {
+                    "type": "directory",
+                    "children": {
+                      "NetBFTag.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3428
+                      },
+                      "NetBulkSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6684
+                      },
+                      "NetCacheSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3586
+                      },
+                      "NetChapterEdit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8427
+                      },
+                      "NetChapterSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7657
+                      },
+                      "NetImport.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9552
+                      },
+                      "NetInviteSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4806
+                      },
+                      "NetLifeSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3613
+                      },
+                      "NetNameSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8647
+                      },
+                      "NetNotices.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3948
+                      },
+                      "NetPartyAction$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 800
+                      },
+                      "NetPartyAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12340
+                      },
+                      "NetPartySync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8233
+                      },
+                      "NetQuestAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6398
+                      },
+                      "NetQuestEdit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10710
+                      },
+                      "NetQuestSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9064
+                      },
+                      "NetSettingSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5609
+                      },
+                      "NetStationEdit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4853
+                      }
+                    }
+                  },
+                  "PacketAssembly.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5422
+                  },
+                  "PacketQuesting$HandleClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4286
+                  },
+                  "PacketQuesting$HandleServer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5132
+                  },
+                  "PacketQuesting.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1273
+                  },
+                  "PacketSender.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5552
+                  },
+                  "PacketTypeRegistry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4669
+                  }
+                }
+              },
+              "questing": {
+                "type": "directory",
+                "children": {
+                  "party": {
+                    "type": "directory",
+                    "children": {
+                      "PartyInstance.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7641
+                      },
+                      "PartyInvitations.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11614
+                      },
+                      "PartyManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5324
+                      }
+                    }
+                  },
+                  "QuestDatabase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5690
+                  },
+                  "QuestInstance.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 19968
+                  },
+                  "QuestLine.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8455
+                  },
+                  "QuestLineDatabase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5958
+                  },
+                  "QuestLineEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2825
+                  },
+                  "rewards": {
+                    "type": "directory",
+                    "children": {
+                      "RewardRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5073
+                      },
+                      "RewardStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5169
+                      }
+                    }
+                  },
+                  "tasks": {
+                    "type": "directory",
+                    "children": {
+                      "TaskRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5003
+                      },
+                      "TaskStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5928
+                      }
+                    }
+                  }
+                }
+              },
+              "storage": {
+                "type": "directory",
+                "children": {
+                  "LifeDatabase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5140
+                  },
+                  "NameCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5355
+                  },
+                  "PropertyContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5881
+                  },
+                  "QuestSettings.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3032
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 386
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "betterquesting": {
+                    "type": "directory",
+                    "children": {
+                      "BetterQuestingPlayerController.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6256
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "title.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 6728
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 779
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 48760
+          }
+        }
+      }
+    }
+  }
+}

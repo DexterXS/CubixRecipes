@@ -1,0 +1,332 @@
+{
+  "mod_name": "DraconicEvolution_Expansion-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\DraconicEvolution_Expansion-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "DraconicEvolution_Expansion-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 217640,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "draconicevolution_expansion": {
+                    "type": "directory",
+                    "children": {
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "DEHooks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 730
+                          },
+                          "ASMUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13603
+                          },
+                          "ASMTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10745
+                          },
+                          "ASMModCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3143
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "proxy": {
+                            "type": "directory",
+                            "children": {
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderTileAdvancedCrystal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10290
+                                  },
+                                  "RenderItemAdvancedCrystal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4794
+                                  }
+                                }
+                              },
+                              "ClientProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6484
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DraconicEvolutionExpansion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5986
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1310
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "LinkedEnergyDeviceIC2$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2572
+                          },
+                          "TileTEnergyRelay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3445
+                          },
+                          "LinkedEnergyDeviceIC2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4367
+                          },
+                          "TileTWirelessEnergyTransceiver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6878
+                          },
+                          "TileTEnergyTranciever.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8553
+                          }
+                        }
+                      },
+                      "DraconicEvolutionExpansion$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1005
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "ItemBlockEnergyTranciever.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3238
+                          },
+                          "BlockEnergyTranciever.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17613
+                          }
+                        }
+                      },
+                      "DConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3152
+                      },
+                      "DModBlocks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4239
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1804
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2849
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "draconicevolution_expansion": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "AdvancedCrystalPurpleTransparent.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18912
+                          },
+                          "AdvancedCrystalRedAlpha.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 43907
+                          },
+                          "AdvancedCrystalBlueAlpha.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 38826
+                          },
+                          "AdvancedEnergyCrystalOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6691
+                          },
+                          "AdvancedCrystalRed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11454
+                          },
+                          "AdvancedCrystalBlue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 29656
+                          },
+                          "AdvancedEnergyCrystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3392
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "advanced_crystal_transceiver.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 3489
+                      },
+                      "advanced_crystal.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 1129
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 760
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 758
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 350
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 182
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 731
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4718
+          }
+        }
+      }
+    }
+  }
+}

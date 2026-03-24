@@ -1,0 +1,207 @@
+{
+  "mod_name": "TiCTooltips-mc1.7.10-1.2.5.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\TiCTooltips-mc1.7.10-1.2.5.jar",
+  "mod_type": "jar",
+  "tree": {
+    "TiCTooltips-mc1.7.10-1.2.5.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 53127,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "squeek": {
+            "type": "directory",
+            "children": {
+              "tictooltips": {
+                "type": "directory",
+                "children": {
+                  "ModInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 399
+                  },
+                  "ModTiCTooltips.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2624
+                  },
+                  "TooltipHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 31653
+                  },
+                  "helpers": {
+                    "type": "directory",
+                    "children": {
+                      "ColorHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1400
+                      },
+                      "CompatibilityHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1237
+                      },
+                      "KeyHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 706
+                      },
+                      "PatternHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3067
+                      },
+                      "RomanNumeralHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2347
+                      },
+                      "StringHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4892
+                      },
+                      "ToolHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10274
+                      },
+                      "ToolPartHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13726
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ProxyExtraTiC$PartInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5112
+                      },
+                      "ProxyExtraTiC.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2678
+                      },
+                      "ProxyIguanaTweaks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2032
+                      },
+                      "ProxyMariculture.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3616
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 411
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "tictooltips": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2228
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2448
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2082
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2210
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2568
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2200
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1305
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2945
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2530
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2530
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 273
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1793
+          }
+        }
+      }
+    }
+  }
+}

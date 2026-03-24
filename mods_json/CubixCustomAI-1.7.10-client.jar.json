@@ -1,0 +1,1047 @@
+{
+  "mod_name": "CubixCustomAI-1.7.10-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCustomAI-1.7.10-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCustomAI-1.7.10-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 942531,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubix_custom_ai": {
+                    "type": "directory",
+                    "children": {
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "packet": {
+                            "type": "directory",
+                            "children": {
+                              "client": {
+                                "type": "directory",
+                                "children": {
+                                  "CMessagePetSetActionStateWithServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2866
+                                  },
+                                  "CMessagePetSetActionStateWithServer$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2470
+                                  },
+                                  "CMessageSendTargetBlockOnServer$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2455
+                                  },
+                                  "CMessageSendTargetBlockOnServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2501
+                                  }
+                                }
+                              },
+                              "server": {
+                                "type": "directory",
+                                "children": {
+                                  "SMessagePetSyncSayToPlayerWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2763
+                                  },
+                                  "SMessageGetTargetBlockOnClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4265
+                                  },
+                                  "SMessagePetSyncSayToPlayerWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3810
+                                  },
+                                  "SMessagePetSyncActionStateWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2874
+                                  },
+                                  "SMessageOpenGuiContainerOnClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3495
+                                  },
+                                  "SMessagePetSyncPetBasicDataWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2716
+                                  },
+                                  "SMessagePetSyncAITasksWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4109
+                                  },
+                                  "SMessagePetSyncPetBasicDataWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2602
+                                  },
+                                  "SMessageGetTargetBlockOnClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1645
+                                  },
+                                  "SMessagePetSyncAnimationStateWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3846
+                                  },
+                                  "SMessagePetSyncAnimationStateWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2960
+                                  },
+                                  "SMessageSyncItemPetPropertiesWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2872
+                                  },
+                                  "SMessagePetSyncAITasksWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4789
+                                  },
+                                  "SMessagePetSyncPetBasicDynamicDataWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2981
+                                  },
+                                  "SMessagePetSyncActionStateWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3777
+                                  },
+                                  "SMessageOpenGuiContainerOnClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2188
+                                  },
+                                  "SMessagePetSyncPetBasicDynamicDataWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3419
+                                  },
+                                  "SMessageSyncItemPetPropertiesWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3813
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5199
+                          },
+                          "ByteBufUtilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7142
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "renderer": {
+                            "type": "directory",
+                            "children": {
+                              "entity": {
+                                "type": "directory",
+                                "children": {
+                                  "pet": {
+                                    "type": "directory",
+                                    "children": {
+                                      "RenderEntityPet.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1668
+                                      },
+                                      "ModelEntityPet.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6392
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "AuxiliaryRenderInWorldForPet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18033
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 150
+                          },
+                          "visualizer": {
+                            "type": "directory",
+                            "children": {
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "elements": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ElementVisualizerCylinder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3269
+                                      },
+                                      "ElementVisualizerGrid.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8274
+                                      },
+                                      "ElementVisualizerCube.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3939
+                                      }
+                                    }
+                                  },
+                                  "BlockTrackerVisualizer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5381
+                                  },
+                                  "TreeVisualizer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5301
+                                  }
+                                }
+                              },
+                              "event": {
+                                "type": "directory",
+                                "children": {
+                                  "VisualizerEventHolder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4090
+                                  }
+                                }
+                              },
+                              "base": {
+                                "type": "directory",
+                                "children": {
+                                  "ActionVisualizerResult.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3007
+                                  },
+                                  "IVisualizerWrapper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1312
+                                  },
+                                  "VisualizerType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2881
+                                  }
+                                }
+                              },
+                              "ClientVisualizerManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3419
+                              }
+                            }
+                          },
+                          "javazoom": {
+                            "type": "directory",
+                            "children": {
+                              "player": {
+                                "type": "directory",
+                                "children": {
+                                  "ISmartPlayerListener.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 292
+                                  },
+                                  "SmartPlayer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4940
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "font": {
+                            "type": "directory",
+                            "children": {
+                              "AIFontType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7226
+                              }
+                            }
+                          },
+                          "pet": {
+                            "type": "directory",
+                            "children": {
+                              "ai": {
+                                "type": "directory",
+                                "children": {
+                                  "PetAIHolderClient$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1024
+                                  },
+                                  "PetAIHolderClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6140
+                                  },
+                                  "list": {
+                                    "type": "directory",
+                                    "children": {
+                                      "LightingAITaskClient.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5821
+                                      },
+                                      "base": {
+                                        "type": "directory",
+                                        "children": {
+                                          "AITaskClient.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 389
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1639
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "container": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiContainerPet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6625
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "service": {
+                            "type": "directory",
+                            "children": {
+                              "ai": {
+                                "type": "directory",
+                                "children": {
+                                  "request": {
+                                    "type": "directory",
+                                    "children": {
+                                      "AIVoiceRequest.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 891
+                                      },
+                                      "AIRequest.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 642
+                                      }
+                                    }
+                                  },
+                                  "response": {
+                                    "type": "directory",
+                                    "children": {
+                                      "AIResponse.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3646
+                                      },
+                                      "AIVoiceResponse.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1321
+                                      },
+                                      "AIResponseType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9447
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "custom": {
+                            "type": "directory",
+                            "children": {
+                              "inventory": {
+                                "type": "directory",
+                                "children": {
+                                  "slot": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CustomSlotType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3473
+                                      }
+                                    }
+                                  },
+                                  "InventoryCustom.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7420
+                                  }
+                                }
+                              },
+                              "element": {
+                                "type": "directory",
+                                "children": {
+                                  "CustomElement.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 650
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "pet": {
+                            "type": "directory",
+                            "children": {
+                              "property": {
+                                "type": "directory",
+                                "children": {
+                                  "PetProperties.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13217
+                                  }
+                                }
+                              },
+                              "PetActionState.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6590
+                              },
+                              "inventory": {
+                                "type": "directory",
+                                "children": {
+                                  "InventoryPet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11370
+                                  }
+                                }
+                              },
+                              "animation": {
+                                "type": "directory",
+                                "children": {
+                                  "PetAnimationState.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5654
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "pet": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemPet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12877
+                                  }
+                                }
+                              },
+                              "AIItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4080
+                              }
+                            }
+                          },
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "lightning": {
+                                "type": "directory",
+                                "children": {
+                                  "BlockLighting.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3644
+                                  }
+                                }
+                              },
+                              "AIBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3602
+                              }
+                            }
+                          },
+                          "tracker": {
+                            "type": "directory",
+                            "children": {
+                              "data": {
+                                "type": "directory",
+                                "children": {
+                                  "TreeData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1357
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "http": {
+                            "type": "directory",
+                            "children": {
+                              "HttpUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4263
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "entity": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2304
+                                  }
+                                }
+                              },
+                              "world": {
+                                "type": "directory",
+                                "children": {
+                                  "WorldUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4552
+                                  }
+                                }
+                              },
+                              "CustomUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2541
+                              }
+                            }
+                          },
+                          "event": {
+                            "type": "directory",
+                            "children": {
+                              "CommonEvents.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1704
+                              }
+                            }
+                          },
+                          "entity": {
+                            "type": "directory",
+                            "children": {
+                              "properties": {
+                                "type": "directory",
+                                "children": {
+                                  "CustomAIPlayer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7491
+                                  }
+                                }
+                              },
+                              "pet": {
+                                "type": "directory",
+                                "children": {
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "IPet.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 820
+                                      }
+                                    }
+                                  },
+                                  "EntityPet.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 20636
+                                  },
+                                  "data": {
+                                    "type": "directory",
+                                    "children": {
+                                      "PetBasicData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7838
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "EntityManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3181
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerPet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5205
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "Proxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5570
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4900
+                          }
+                        }
+                      },
+                      "Core$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 750
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5382
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3285
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "crops": {
+                            "type": "directory",
+                            "children": {
+                              "ICrops.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 485
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "multiserver": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "api": {
+                            "type": "directory",
+                            "children": {
+                              "chunkLoader": {
+                                "type": "directory",
+                                "children": {
+                                  "IRealmChunkLoader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 204
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubix_custom_ai": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "yoda_egg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 670
+                          },
+                          "darth_vader_egg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 563
+                          },
+                          "clone_rex_egg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 683
+                          }
+                        }
+                      },
+                      "ui": {
+                        "type": "directory",
+                        "children": {
+                          "world": {
+                            "type": "directory",
+                            "children": {
+                              "inventory.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 843
+                              },
+                              "pet": {
+                                "type": "directory",
+                                "children": {
+                                  "head_darth_vader.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2300
+                                  },
+                                  "head_yoda.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2234
+                                  },
+                                  "head_clone_rex.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1135
+                                  }
+                                }
+                              },
+                              "icon_distance.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8624
+                              }
+                            }
+                          },
+                          "pet": {
+                            "type": "directory",
+                            "children": {
+                              "ai_type": {
+                                "type": "directory",
+                                "children": {
+                                  "icons": {
+                                    "type": "directory",
+                                    "children": {
+                                      "harvest_crops.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 341
+                                      },
+                                      "shear_wool.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 396
+                                      },
+                                      "cycle_break_block.gif": {
+                                        "type": "file",
+                                        "extension": ".gif",
+                                        "size": 736
+                                      },
+                                      "lighting.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 401
+                                      },
+                                      "chunk_loader.gif": {
+                                        "type": "file",
+                                        "extension": ".gif",
+                                        "size": 1225
+                                      },
+                                      "break_block.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 359
+                                      },
+                                      "kill_mob.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 292
+                                      },
+                                      "break_tree.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 322
+                                      },
+                                      "follow_me.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 309
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "action_type": {
+                                "type": "directory",
+                                "children": {
+                                  "icons": {
+                                    "type": "directory",
+                                    "children": {
+                                      "think.gif": {
+                                        "type": "file",
+                                        "extension": ".gif",
+                                        "size": 794
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "pet": {
+                                "type": "directory",
+                                "children": {
+                                  "bg.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5939
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "clone_rex.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1953
+                          },
+                          "yoda.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2707
+                          },
+                          "darth_vader.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2300
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "animations": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "darth_vader.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 11660
+                          },
+                          "clone_rex.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 9100
+                          },
+                          "yoda.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 22529
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "geo": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "yoda.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 12985
+                          },
+                          "darth_vader.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 11450
+                          },
+                          "clone_rex.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 8720
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 27
+                      }
+                    }
+                  },
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "montserrat_regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 263192
+                      },
+                      "montserrat_semibold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 364672
+                      },
+                      "montserrat_black.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 275192
+                      },
+                      "montserrat_medium.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 260236
+                      },
+                      "montserrat_bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 262608
+                      },
+                      "montserrat_light.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 259416
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 267
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1815
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 8961
+          }
+        }
+      }
+    }
+  }
+}

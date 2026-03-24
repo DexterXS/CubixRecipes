@@ -1,0 +1,117 @@
+{
+  "mod_name": "jnlp.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\jnlp.jar",
+  "mod_type": "jar",
+  "tree": {
+    "jnlp.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 7171,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 90
+              }
+            }
+          },
+          "javax": {
+            "type": "directory",
+            "children": {
+              "jnlp": {
+                "type": "directory",
+                "children": {
+                  "BasicService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 258
+                  },
+                  "ClipboardService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 251
+                  },
+                  "DownloadService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1392
+                  },
+                  "DownloadServiceListener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 349
+                  },
+                  "ExtensionInstallerService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 659
+                  },
+                  "FileContents.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 598
+                  },
+                  "FileOpenService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 370
+                  },
+                  "FileSaveService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 430
+                  },
+                  "JNLPRandomAccessFile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1451
+                  },
+                  "PersistenceService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 688
+                  },
+                  "PrintService.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 350
+                  },
+                  "ServiceManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 851
+                  },
+                  "ServiceManagerStub.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 303
+                  },
+                  "UnavailableServiceException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 328
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

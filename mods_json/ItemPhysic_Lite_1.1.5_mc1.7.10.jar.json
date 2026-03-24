@@ -1,0 +1,162 @@
+{
+  "mod_name": "ItemPhysic_Lite_1.1.5_mc1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ItemPhysic_Lite_1.1.5_mc1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ItemPhysic_Lite_1.1.5_mc1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 48492,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 108
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "creativemd": {
+                "type": "directory",
+                "children": {
+                  "itemphysic": {
+                    "type": "directory",
+                    "children": {
+                      "ClientHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11588
+                      },
+                      "EventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11721
+                      },
+                      "ItemDummyContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5521
+                      },
+                      "ItemPatchingLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1627
+                      },
+                      "ItemTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11787
+                      },
+                      "configuration": {
+                        "type": "directory",
+                        "children": {
+                          "ItemConfigSystem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5058
+                          }
+                        }
+                      },
+                      "packet": {
+                        "type": "directory",
+                        "children": {
+                          "ChannelHandler$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 794
+                          },
+                          "ChannelHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3392
+                          },
+                          "DropPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1645
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1926
+                          },
+                          "PickupPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1782
+                          }
+                        }
+                      },
+                      "physics": {
+                        "type": "directory",
+                        "children": {
+                          "ClientPhysic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11407
+                          },
+                          "ServerPhysic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18648
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "ItemConfigSystem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1349
+                          },
+                          "ItemPhysicBranch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2598
+                          }
+                        }
+                      },
+                      "EventHandlerLite.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1203
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "itemphysic_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 137
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 286
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,992 @@
+{
+  "mod_name": "StandardExpansion-3.0.181.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\StandardExpansion-3.0.181.jar",
+  "mod_type": "jar",
+  "tree": {
+    "StandardExpansion-3.0.181.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 410915,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bq_standard": {
+            "type": "directory",
+            "children": {
+              "AdminExecute.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1383
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "editors": {
+                        "type": "directory",
+                        "children": {
+                          "GuiEditLootEntry$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1440
+                          },
+                          "GuiEditLootEntry$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4110
+                          },
+                          "GuiEditLootEntry$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1318
+                          },
+                          "GuiEditLootEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12972
+                          },
+                          "GuiEditLootGroup$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1355
+                          },
+                          "GuiEditLootGroup$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1679
+                          },
+                          "GuiEditLootGroup$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1318
+                          },
+                          "GuiEditLootGroup.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12472
+                          },
+                          "tasks": {
+                            "type": "directory",
+                            "children": {
+                              "GuiEditTaskHunt$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3826
+                              },
+                              "GuiEditTaskHunt$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3047
+                              },
+                              "GuiEditTaskHunt$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1347
+                              },
+                              "GuiEditTaskHunt.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9572
+                              },
+                              "GuiEditTaskMeeting$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3766
+                              },
+                              "GuiEditTaskMeeting$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3077
+                              },
+                              "GuiEditTaskMeeting$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1368
+                              },
+                              "GuiEditTaskMeeting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9624
+                              },
+                              "GuiEditTaskScoreboard$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2076
+                              },
+                              "GuiEditTaskScoreboard$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3107
+                              },
+                              "GuiEditTaskScoreboard$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1389
+                              },
+                              "GuiEditTaskScoreboard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8666
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "GuiBQSConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1159
+                      },
+                      "GuiLootChest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4120
+                      },
+                      "rewards": {
+                        "type": "directory",
+                        "children": {
+                          "PanelRewardChoice.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5378
+                          },
+                          "PanelRewardCommand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2905
+                          },
+                          "PanelRewardItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2663
+                          },
+                          "PanelRewardScoreboard.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2651
+                          },
+                          "PanelRewardXP.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3396
+                          }
+                        }
+                      },
+                      "tasks": {
+                        "type": "directory",
+                        "children": {
+                          "PanelTaskBlockBreak.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4148
+                          },
+                          "PanelTaskCheckbox$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1745
+                          },
+                          "PanelTaskCheckbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3704
+                          },
+                          "PanelTaskCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7289
+                          },
+                          "PanelTaskFluid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5632
+                          },
+                          "PanelTaskHunt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5012
+                          },
+                          "PanelTaskInteractEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6726
+                          },
+                          "PanelTaskInteractItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4881
+                          },
+                          "PanelTaskLocation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3873
+                          },
+                          "PanelTaskLocation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4721
+                          },
+                          "PanelTaskMeeting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4705
+                          },
+                          "PanelTaskRetrieval.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6035
+                          },
+                          "PanelTaskScoreboard.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3700
+                          },
+                          "PanelTaskXP.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4746
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "theme": {
+                    "type": "directory",
+                    "children": {
+                      "BQSTextures.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3163
+                      }
+                    }
+                  }
+                }
+              },
+              "commands": {
+                "type": "directory",
+                "children": {
+                  "BQS_Commands.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4241
+                  }
+                }
+              },
+              "core": {
+                "type": "directory",
+                "children": {
+                  "BQS_Settings.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 385
+                  },
+                  "BQ_Standard.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4724
+                  },
+                  "proxies": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1531
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5035
+                      }
+                    }
+                  }
+                }
+              },
+              "handlers": {
+                "type": "directory",
+                "children": {
+                  "ConfigGuiFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1555
+                  },
+                  "ConfigHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1235
+                  },
+                  "EventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15178
+                  },
+                  "GuiHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 984
+                  },
+                  "LootSaveLoad.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2576
+                  },
+                  "PlayerContainerListener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3793
+                  }
+                }
+              },
+              "importers": {
+                "type": "directory",
+                "children": {
+                  "ftbq": {
+                    "type": "directory",
+                    "children": {
+                      "converters": {
+                        "type": "directory",
+                        "children": {
+                          "rewards": {
+                            "type": "directory",
+                            "children": {
+                              "FtbqRewardCommand.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1112
+                              },
+                              "FtbqRewardItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1112
+                              },
+                              "FtbqRewardXP.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1042
+                              }
+                            }
+                          },
+                          "tasks": {
+                            "type": "directory",
+                            "children": {
+                              "FtbqTaskDimension.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1631
+                              },
+                              "FtbqTaskEnergy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2019
+                              },
+                              "FtbqTaskFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2385
+                              },
+                              "FtbqTaskItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2733
+                              },
+                              "FtbqTaskKill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1386
+                              },
+                              "FtbqTaskLocation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1722
+                              },
+                              "FtbqTaskStat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1705
+                              },
+                              "FtbqTaskXP.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1182
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "FTBEntry$FTBEntryType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1237
+                      },
+                      "FTBEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 689
+                      },
+                      "FTBQFileFIlter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 708
+                      },
+                      "FTBQQuestImporter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17434
+                      },
+                      "FTBQUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2570
+                      }
+                    }
+                  },
+                  "hqm": {
+                    "type": "directory",
+                    "children": {
+                      "converters": {
+                        "type": "directory",
+                        "children": {
+                          "HQMRep.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1142
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "HQMItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 240
+                              },
+                              "HQMItemBag.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 831
+                              },
+                              "HQMItemHeart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1223
+                              }
+                            }
+                          },
+                          "rewards": {
+                            "type": "directory",
+                            "children": {
+                              "HQMRewardChoice.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1467
+                              },
+                              "HQMRewardCommand.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1704
+                              },
+                              "HQMRewardReputation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3019
+                              },
+                              "HQMRewardStandard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1467
+                              }
+                            }
+                          },
+                          "tasks": {
+                            "type": "directory",
+                            "children": {
+                              "HQMTaskBlockBreak.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2647
+                              },
+                              "HQMTaskBlockPlace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2610
+                              },
+                              "HQMTaskCraft.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1559
+                              },
+                              "HQMTaskDetect.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2360
+                              },
+                              "HQMTaskKill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2374
+                              },
+                              "HQMTaskLocation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2499
+                              },
+                              "HQMTaskReputaion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3694
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "HQMBagImporter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6160
+                      },
+                      "HQMQuestImporter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 19501
+                      },
+                      "HQMUtilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5808
+                      }
+                    }
+                  },
+                  "NativeFileImporter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5552
+                  }
+                }
+              },
+              "items": {
+                "type": "directory",
+                "children": {
+                  "ItemLootChest.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10345
+                  }
+                }
+              },
+              "NbtBlockType.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3409
+              },
+              "NBTReplaceUtil.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2231
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "handlers": {
+                    "type": "directory",
+                    "children": {
+                      "NetLootClaim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4625
+                      },
+                      "NetLootImport.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4911
+                      },
+                      "NetLootSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5865
+                      },
+                      "NetRewardChoice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6203
+                      },
+                      "NetScoreSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3703
+                      },
+                      "NetTaskCheckbox.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4303
+                      },
+                      "NetTaskInteract.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4781
+                      }
+                    }
+                  }
+                }
+              },
+              "rewards": {
+                "type": "directory",
+                "children": {
+                  "factory": {
+                    "type": "directory",
+                    "children": {
+                      "FactoryRewardChoice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1643
+                      },
+                      "FactoryRewardCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1651
+                      },
+                      "FactoryRewardItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1627
+                      },
+                      "FactoryRewardScoreboard.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1675
+                      },
+                      "FactoryRewardXP.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1611
+                      }
+                    }
+                  },
+                  "loot": {
+                    "type": "directory",
+                    "children": {
+                      "LootGroup$LootEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2778
+                      },
+                      "LootGroup.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4325
+                      },
+                      "LootRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6012
+                      }
+                    }
+                  },
+                  "RewardChoice.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7743
+                  },
+                  "RewardCommand$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 227
+                  },
+                  "RewardCommand$RewardCommandSender.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1743
+                  },
+                  "RewardCommand.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6979
+                  },
+                  "RewardItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6415
+                  },
+                  "RewardScoreboard.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6369
+                  },
+                  "RewardXP.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4064
+                  }
+                }
+              },
+              "ScoreboardBQ.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4552
+              },
+              "ScoreBQ.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3822
+              },
+              "tasks": {
+                "type": "directory",
+                "children": {
+                  "factory": {
+                    "type": "directory",
+                    "children": {
+                      "FactoryTaskBlockBreak.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1723
+                      },
+                      "FactoryTaskCheckbox.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1602
+                      },
+                      "FactoryTaskCrafting.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1602
+                      },
+                      "FactoryTaskFluid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1578
+                      },
+                      "FactoryTaskHunt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1570
+                      },
+                      "FactoryTaskInteractEntity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1754
+                      },
+                      "FactoryTaskInteractItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1738
+                      },
+                      "FactoryTaskLocation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1602
+                      },
+                      "FactoryTaskMeeting.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1594
+                      },
+                      "FactoryTaskRetrieval.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1610
+                      },
+                      "FactoryTaskScoreboard.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1618
+                      },
+                      "FactoryTaskXP.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1554
+                      }
+                    }
+                  },
+                  "ITaskInventory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 517
+                  },
+                  "ITaskTickable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 506
+                  },
+                  "TaskBlockBreak.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15564
+                  },
+                  "TaskCheckbox.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6774
+                  },
+                  "TaskCrafting.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15779
+                  },
+                  "TaskFluid.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 20761
+                  },
+                  "TaskHunt.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13624
+                  },
+                  "TaskInteractEntity.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 14894
+                  },
+                  "TaskInteractItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15086
+                  },
+                  "TaskLocation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12434
+                  },
+                  "TaskMeeting.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10614
+                  },
+                  "TaskRetrieval.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 19177
+                  },
+                  "TaskScoreboard$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 985
+                  },
+                  "TaskScoreboard$ScoreOperation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2145
+                  },
+                  "TaskScoreboard.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10833
+                  },
+                  "TaskXP.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10955
+                  }
+                }
+              },
+              "XPHelper.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2611
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "bq_standard": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5367
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_elements.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13837
+                          },
+                          "gui_themes.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 51325
+                          },
+                          "midnight_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19805
+                          },
+                          "reinforced_neon_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8903
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "loot_chest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1294
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "bq_themes.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 30180
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 517
+          },
+          "title.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 7898
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 271
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 21285
+          }
+        }
+      }
+    }
+  }
+}

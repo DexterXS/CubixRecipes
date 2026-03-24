@@ -1,0 +1,922 @@
+{
+  "mod_name": "CubixJobs.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixJobs.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixJobs.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 5435310,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 65
+              },
+              "CubixJobs.kotlin_module": {
+                "type": "file",
+                "extension": ".kotlin_module",
+                "size": 16
+              },
+              "at_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 382
+              }
+            }
+          },
+          "mcp": {
+            "type": "directory",
+            "children": {
+              "mobius": {
+                "type": "directory",
+                "children": {
+                  "waila": {
+                    "type": "directory",
+                    "children": {
+                      "overlay": {
+                        "type": "directory",
+                        "children": {
+                          "OverlayRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4570
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "zarak": {
+            "type": "directory",
+            "children": {
+              "cubixjobs": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "JobType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1224
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 795
+                      }
+                    }
+                  },
+                  "backend": {
+                    "type": "directory",
+                    "children": {
+                      "blockSlice": {
+                        "type": "directory",
+                        "children": {
+                          "BlockSliced.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11277
+                          }
+                        }
+                      },
+                      "JobsDataPlayer$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4903
+                      },
+                      "JobsDataPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2364
+                      },
+                      "markers": {
+                        "type": "directory",
+                        "children": {
+                          "CMarkerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2725
+                          },
+                          "Marker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5679
+                          },
+                          "SMarkerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2335
+                          }
+                        }
+                      },
+                      "session": {
+                        "type": "directory",
+                        "children": {
+                          "JobSession$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1180
+                          },
+                          "JobSession.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7824
+                          },
+                          "JobSessionLambert$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 924
+                          },
+                          "JobSessionLambert.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17050
+                          },
+                          "JobSessionMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17305
+                          },
+                          "SessionHandler$WhenMappings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 554
+                          },
+                          "SessionHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4679
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "blocks": {
+                    "type": "directory",
+                    "children": {
+                      "BlockJobOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7485
+                      },
+                      "BlockRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3994
+                      },
+                      "BlockTree.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7526
+                      },
+                      "IJobBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 410
+                      }
+                    }
+                  },
+                  "capa": {
+                    "type": "directory",
+                    "children": {
+                      "JobsProperties$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1750
+                      },
+                      "JobsProperties.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5487
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12053
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "dialog": {
+                            "type": "directory",
+                            "children": {
+                              "GuiDialogBase$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2463
+                              },
+                              "GuiDialogBase$drawEntity$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3525
+                              },
+                              "GuiDialogBase$playSound$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3462
+                              },
+                              "GuiDialogBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15845
+                              },
+                              "GuiDialogLambert$confirmExit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1517
+                              },
+                              "GuiDialogLambert$confirmNewSession$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1363
+                              },
+                              "GuiDialogLambert$entity$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1733
+                              },
+                              "GuiDialogLambert$sessionHasMoneyContinueBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1547
+                              },
+                              "GuiDialogLambert$sessionHasMoneyEndBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2046
+                              },
+                              "GuiDialogLambert$sessionNoMoneyContinueBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1545
+                              },
+                              "GuiDialogLambert$sessionNoMoneyEndBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1828
+                              },
+                              "GuiDialogLambert$startNoBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1515
+                              },
+                              "GuiDialogLambert$startYesBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1876
+                              },
+                              "GuiDialogLambert.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9416
+                              },
+                              "GuiDialogMiner$confirmExit$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1505
+                              },
+                              "GuiDialogMiner$confirmNewSession$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1346
+                              },
+                              "GuiDialogMiner$entity$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1713
+                              },
+                              "GuiDialogMiner$sessionHasMoneyContinueBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1535
+                              },
+                              "GuiDialogMiner$sessionHasMoneyEndBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2039
+                              },
+                              "GuiDialogMiner$sessionNoMoneyContinueBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1533
+                              },
+                              "GuiDialogMiner$sessionNoMoneyEndBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1834
+                              },
+                              "GuiDialogMiner$startNoBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1503
+                              },
+                              "GuiDialogMiner$startYesBtn$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1864
+                              },
+                              "GuiDialogMiner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9356
+                              },
+                              "PartDialogButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15202
+                              },
+                              "PartDialogTextCanvas$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1073
+                              },
+                              "PartDialogTextCanvas.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16160
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "JobsSyncData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1773
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "ModelLambert.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 141820
+                          },
+                          "ModelMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 130350
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "FastRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3565
+                          },
+                          "RenderItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5203
+                          },
+                          "RenderLambert.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3841
+                          },
+                          "RenderMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3831
+                          },
+                          "RenderTileOre$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1445
+                          },
+                          "RenderTileOre.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4708
+                          },
+                          "RenderTileTree.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5096
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "JobsConfig$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2415
+                      },
+                      "JobsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6135
+                      },
+                      "LambertConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6773
+                      },
+                      "MinerConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4982
+                      }
+                    }
+                  },
+                  "CubixJobs.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3297
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "EntityLambert.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4072
+                      },
+                      "EntityMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4051
+                      },
+                      "EntityNPC.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5350
+                      },
+                      "EntityRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2214
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "ItemGraphicCard.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2258
+                      },
+                      "ItemLambertAxe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2012
+                      },
+                      "ItemMinerPickaxe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1908
+                      },
+                      "ItemRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3849
+                      },
+                      "ItemSummoner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4515
+                      }
+                    }
+                  },
+                  "networking": {
+                    "type": "directory",
+                    "children": {
+                      "packets": {
+                        "type": "directory",
+                        "children": {
+                          "CPacketEndSession$handle$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2237
+                          },
+                          "CPacketEndSession.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1651
+                          },
+                          "CPacketStartSession$handle$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3634
+                          },
+                          "CPacketStartSession.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2664
+                          },
+                          "SPacketActionMarker$handle$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2088
+                          },
+                          "SPacketActionMarker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5262
+                          },
+                          "SPacketSyncConfig$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1601
+                          },
+                          "SPacketSyncConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3536
+                          },
+                          "SPacketSyncDataPlayer$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2057
+                          },
+                          "SPacketSyncDataPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3446
+                          },
+                          "SPacketSyncSession.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4031
+                          }
+                        }
+                      },
+                      "PacketSystem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2674
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2804
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2865
+                      }
+                    }
+                  },
+                  "tile": {
+                    "type": "directory",
+                    "children": {
+                      "TileJob.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      },
+                      "TileOreBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3839
+                      },
+                      "TileTreeBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2999
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixjobs": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 629
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 629
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "axe.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 1044080
+                      },
+                      "pickaxe.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 2878174
+                      },
+                      "tree_tier0.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 86352
+                      },
+                      "tree_tier0_stamp.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 5196
+                      },
+                      "tree_tier1.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 235592
+                      },
+                      "tree_tier1_stamp.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 6679
+                      },
+                      "tree_tier2.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 132491
+                      },
+                      "tree_tier2_stamp.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 10868
+                      },
+                      "wood_1.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 305901
+                      },
+                      "wood_2.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 334391
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "lambert": {
+                        "type": "directory",
+                        "children": {
+                          "ehh.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 59212
+                          },
+                          "o_ti_eshche_tut.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 36414
+                          },
+                          "poka_poka.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 19871
+                          },
+                          "ti_uzhe_vse.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 137748
+                          },
+                          "ti_zhe_nichego_ne_zarabotal.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 42046
+                          },
+                          "zdarova.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 274607
+                          },
+                          "zhelaesh.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 46713
+                          }
+                        }
+                      },
+                      "miner": {
+                        "type": "directory",
+                        "children": {
+                          "chego_prishel.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 206132
+                          },
+                          "davay_davay.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 49189
+                          },
+                          "eto_chto_vse.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 135576
+                          },
+                          "privetic.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 833898
+                          },
+                          "ti_ne_soskochil.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 121970
+                          },
+                          "ya_dumala_ty_upravishsa.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 77365
+                          },
+                          "zakonchil_sho_le.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 247690
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 2375
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "ore_tier0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1390
+                          },
+                          "ore_tier1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1334
+                          },
+                          "ore_tier2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1195
+                          },
+                          "tree_tier0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 90462
+                          },
+                          "tree_tier1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 100568
+                          },
+                          "tree_tier2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 97061
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "lambert.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1494
+                          },
+                          "miner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1478
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "circle_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22921
+                          },
+                          "circle_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12518
+                          },
+                          "klaksa_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27375
+                          },
+                          "klaksa_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 60189
+                          },
+                          "rays.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9987
+                          },
+                          "rays_long.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 17246
+                          },
+                          "smoke_plane.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 81775
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "lambert_axe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 153
+                          },
+                          "miner_pick.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 327
+                          },
+                          "summon_lambert.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 837013
+                          },
+                          "summon_miner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 805897
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1705
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 88282
+          }
+        }
+      }
+    }
+  }
+}

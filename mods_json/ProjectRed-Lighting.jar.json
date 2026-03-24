@@ -1,0 +1,752 @@
+{
+  "mod_name": "ProjectRed-Lighting.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ProjectRed-Lighting.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ProjectRed-Lighting.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 691156,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "lights": {
+                            "type": "directory",
+                            "children": {
+                              "button": {
+                                "type": "directory",
+                                "children": {
+                                  "0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2941
+                                  },
+                                  "1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2941
+                                  },
+                                  "10.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2952
+                                  },
+                                  "11.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2944
+                                  },
+                                  "12.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2949
+                                  },
+                                  "13.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2946
+                                  },
+                                  "14.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2925
+                                  },
+                                  "15.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2940
+                                  },
+                                  "2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2947
+                                  },
+                                  "3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2938
+                                  },
+                                  "4.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2952
+                                  },
+                                  "5.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2941
+                                  },
+                                  "6.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2956
+                                  },
+                                  "7.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2941
+                                  },
+                                  "8.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2940
+                                  },
+                                  "9.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2937
+                                  }
+                                }
+                              },
+                              "cagelamp.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19842
+                              },
+                              "fallout.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19763
+                              },
+                              "fixture.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18903
+                              },
+                              "lampoff": {
+                                "type": "directory",
+                                "children": {
+                                  "0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4166
+                                  },
+                                  "1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3916
+                                  },
+                                  "10.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3136
+                                  },
+                                  "11.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3095
+                                  },
+                                  "12.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3070
+                                  },
+                                  "13.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3099
+                                  },
+                                  "14.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3112
+                                  },
+                                  "15.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3002
+                                  },
+                                  "2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3949
+                                  },
+                                  "3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3196
+                                  },
+                                  "4.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3143
+                                  },
+                                  "5.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3202
+                                  },
+                                  "6.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3205
+                                  },
+                                  "7.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3075
+                                  },
+                                  "8.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3101
+                                  },
+                                  "9.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3095
+                                  }
+                                }
+                              },
+                              "lampon": {
+                                "type": "directory",
+                                "children": {
+                                  "0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3202
+                                  },
+                                  "1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3131
+                                  },
+                                  "10.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3138
+                                  },
+                                  "11.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3090
+                                  },
+                                  "12.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3064
+                                  },
+                                  "13.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3063
+                                  },
+                                  "14.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3102
+                                  },
+                                  "15.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3019
+                                  },
+                                  "2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3150
+                                  },
+                                  "3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3158
+                                  },
+                                  "4.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3110
+                                  },
+                                  "5.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3139
+                                  },
+                                  "6.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3173
+                                  },
+                                  "7.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3103
+                                  },
+                                  "8.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3144
+                                  },
+                                  "9.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3097
+                                  }
+                                }
+                              },
+                              "lantern.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19530
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "obj": {
+                        "type": "directory",
+                        "children": {
+                          "lights": {
+                            "type": "directory",
+                            "children": {
+                              "cagelamp.blend": {
+                                "type": "file",
+                                "extension": ".blend",
+                                "size": 547460
+                              },
+                              "cagelamp.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 2296
+                              },
+                              "fallout.blend": {
+                                "type": "file",
+                                "extension": ".blend",
+                                "size": 565804
+                              },
+                              "fallout.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 9604
+                              },
+                              "fixture.blend": {
+                                "type": "file",
+                                "extension": ".blend",
+                                "size": 548452
+                              },
+                              "fixture.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 9953
+                              },
+                              "lantern.blend": {
+                                "type": "file",
+                                "extension": ".blend",
+                                "size": 4809940
+                              },
+                              "lantern.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 4395
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 304
+          },
+          "mrtjp": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "ProjectRedIllumination$$anon$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1151
+                  },
+                  "ProjectRedIllumination$.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3438
+                  },
+                  "ProjectRedIllumination.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3667
+                  },
+                  "illumination": {
+                    "type": "directory",
+                    "children": {
+                      "BaseLightFacePart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1784
+                      },
+                      "BaseLightPart$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1141
+                      },
+                      "BaseLightPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13586
+                      },
+                      "BlockAirousLight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7118
+                      },
+                      "BlockLamp$$anonfun$getSubBlocks$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1642
+                      },
+                      "BlockLamp$$anonfun$registerBlockIcons$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2400
+                      },
+                      "BlockLamp$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1250
+                      },
+                      "BlockLamp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7657
+                      },
+                      "ButtonRenderCommons$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5627
+                      },
+                      "ButtonRenderCommons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2487
+                      },
+                      "FLightButtonPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4580
+                      },
+                      "ILight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 169
+                      },
+                      "IlluminationProxy$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 462
+                      },
+                      "IlluminationProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1649
+                      },
+                      "IlluminationProxy_client$$anonfun$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1235
+                      },
+                      "IlluminationProxy_client$$anonfun$init$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1322
+                      },
+                      "IlluminationProxy_client.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3320
+                      },
+                      "IlluminationProxy_server$$anonfun$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1567
+                      },
+                      "IlluminationProxy_server$$anonfun$init$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1277
+                      },
+                      "IlluminationProxy_server$$anonfun$init$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1322
+                      },
+                      "IlluminationProxy_server.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6937
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2608
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2818
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2345
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2747
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2642
+                      },
+                      "IlluminationRecipes$$anonfun$initLighting$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2696
+                      },
+                      "IlluminationRecipes$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1642
+                      },
+                      "IlluminationRecipes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1258
+                      },
+                      "ItemBaseLight$$anonfun$getSubItems$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1522
+                      },
+                      "ItemBaseLight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7507
+                      },
+                      "ItemPartButton$$anonfun$registerIcons$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1983
+                      },
+                      "ItemPartButton$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 714
+                      },
+                      "ItemPartButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2626
+                      },
+                      "ItemPartButtonCommons$$anonfun$getSubItems$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1562
+                      },
+                      "ItemPartButtonCommons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6872
+                      },
+                      "ItemPartFButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1144
+                      },
+                      "LampTESR$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5603
+                      },
+                      "LampTESR.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2823
+                      },
+                      "LightButtonPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11109
+                      },
+                      "LightObjCage$$anonfun$loadModels$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1525
+                      },
+                      "LightObjCage$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3727
+                      },
+                      "LightObjCage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5273
+                      },
+                      "LightObjFallout$$anonfun$loadModels$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1537
+                      },
+                      "LightObjFallout$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3810
+                      },
+                      "LightObjFallout.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5292
+                      },
+                      "LightObjFixture$$anonfun$loadModels$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1537
+                      },
+                      "LightObjFixture$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3730
+                      },
+                      "LightObjFixture.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5292
+                      },
+                      "LightObjLantern$$anonfun$loadModels$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2678
+                      },
+                      "LightObjLantern$$anonfun$loadModels$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1167
+                      },
+                      "LightObjLantern$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6397
+                      },
+                      "LightObjLantern.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5735
+                      },
+                      "LightObject$$anon$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3087
+                      },
+                      "LightObject$$anonfun$bakedBoxes$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1930
+                      },
+                      "LightObject$$anonfun$parseModel$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1371
+                      },
+                      "LightObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13575
+                      },
+                      "RenderButton$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3706
+                      },
+                      "RenderButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2056
+                      },
+                      "RenderFButton$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5465
+                      },
+                      "RenderFButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2464
+                      },
+                      "TAirousLight$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2406
+                      },
+                      "TAirousLight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 745
+                      },
+                      "TileAirousLight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5005
+                      },
+                      "TileLamp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5517
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2832
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 43782
+          }
+        }
+      }
+    }
+  }
+}

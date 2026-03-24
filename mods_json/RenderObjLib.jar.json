@@ -1,0 +1,92 @@
+{
+  "mod_name": "RenderObjLib.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\RenderObjLib.jar",
+  "mod_type": "jar",
+  "tree": {
+    "RenderObjLib.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 15963,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 82
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "renderobj": {
+                    "type": "directory",
+                    "children": {
+                      "Face.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4368
+                      },
+                      "IModel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 430
+                      },
+                      "Normal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2766
+                      },
+                      "OBJModel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4241
+                      },
+                      "OBJModelLoader$getOrLoadAsync$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3813
+                      },
+                      "OBJModelLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7682
+                      },
+                      "Texture.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2457
+                      },
+                      "Vertex.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2766
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

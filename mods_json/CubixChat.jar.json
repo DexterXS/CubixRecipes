@@ -1,0 +1,872 @@
+{
+  "mod_name": "CubixChat.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixChat.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixChat.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 535821,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 65
+              },
+              "CubixChat.kotlin_module": {
+                "type": "file",
+                "extension": ".kotlin_module",
+                "size": 16
+              },
+              "at_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 625
+              }
+            }
+          },
+          "zarak": {
+            "type": "directory",
+            "children": {
+              "cubixchat": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "ChatUserData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1328
+                      },
+                      "IChatMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 483
+                      },
+                      "prefixies": {
+                        "type": "directory",
+                        "children": {
+                          "Prefix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2125
+                          },
+                          "PrefixHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2271
+                          }
+                        }
+                      },
+                      "smiles": {
+                        "type": "directory",
+                        "children": {
+                          "Smile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 781
+                          },
+                          "SmileHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6204
+                          }
+                        }
+                      },
+                      "stickers": {
+                        "type": "directory",
+                        "children": {
+                          "Sticker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 793
+                          },
+                          "StickersHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5168
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "CubixChat.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2133
+                  },
+                  "networking": {
+                    "type": "directory",
+                    "children": {
+                      "packets": {
+                        "type": "directory",
+                        "children": {
+                          "CPacketEditBlackList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3199
+                          },
+                          "CPacketRemoveMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1781
+                          },
+                          "CPacketReqPrefix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3479
+                          },
+                          "CPacketSendMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2715
+                          },
+                          "CPacketSendSticker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2500
+                          },
+                          "SPacketClearPrefixes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2686
+                          },
+                          "SPacketRemoveMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4764
+                          },
+                          "SPacketSendMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4526
+                          },
+                          "SPacketSyncBloggerData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4255
+                          },
+                          "SPacketSyncChatGlobalData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3463
+                          },
+                          "SPacketSyncChatUserData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3001
+                          },
+                          "SPacketSyncPrefix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3387
+                          },
+                          "ServerExecutor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1114
+                          }
+                        }
+                      },
+                      "PacketSystem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2443
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2094
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2183
+                      }
+                    }
+                  },
+                  "References.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1011
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "CChatConfig$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4643
+                      },
+                      "CChatConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7326
+                      },
+                      "ChatSyncData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3501
+                      },
+                      "ClientCache$Companion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4926
+                      },
+                      "ClientCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5308
+                      },
+                      "ClientChatProtocol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4644
+                      },
+                      "ClientEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9658
+                      },
+                      "ClientPrefix$clickAction$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1316
+                      },
+                      "ClientPrefix.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3100
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiCubixChat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21650
+                          },
+                          "GuiCubixNewChat$drawChat$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3031
+                          },
+                          "GuiCubixNewChat$scroll$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4413
+                          },
+                          "GuiCubixNewChat$window$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3626
+                          },
+                          "GuiCubixNewChat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 29357
+                          },
+                          "parts": {
+                            "type": "directory",
+                            "children": {
+                              "BtnOpenSmile.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12597
+                              },
+                              "BtnSendMsg.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13289
+                              },
+                              "ChannelsTab$draw$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9463
+                              },
+                              "ChannelsTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 24269
+                              },
+                              "CommandsTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19510
+                              },
+                              "CubixBanPart$acceptPart$1$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1663
+                              },
+                              "CubixBanPart$acceptPart$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1349
+                              },
+                              "CubixBanPart$drawFrame$1$1$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1615
+                              },
+                              "CubixBanPart$drawFrame$1$2$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1850
+                              },
+                              "CubixBanPart$drawFrame$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10087
+                              },
+                              "CubixBanPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21764
+                              },
+                              "GuiInputField.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21562
+                              },
+                              "Macros.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1802
+                              },
+                              "MacrosPart$drawFrame$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6872
+                              },
+                              "MacrosPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 27652
+                              },
+                              "MenuPane$Button.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13366
+                              },
+                              "MenuPane$rebuildButtons$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2620
+                              },
+                              "MenuPane$rebuildButtons$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1439
+                              },
+                              "MenuPane$rebuildButtons$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1439
+                              },
+                              "MenuPane$rebuildButtons$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2163
+                              },
+                              "MenuPane$rebuildButtons$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1106
+                              },
+                              "MenuPane$rebuildButtons$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1634
+                              },
+                              "MenuPane.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20175
+                              },
+                              "PartSettings$draw$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2763
+                              },
+                              "PartSettings.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21170
+                              },
+                              "PartUserHelper$draw$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4477
+                              },
+                              "PartUserHelper$onAdded$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1291
+                              },
+                              "PartUserHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15053
+                              },
+                              "PrivateMessages$drawFrame$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7278
+                              },
+                              "PrivateMessages$scroll$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2872
+                              },
+                              "PrivateMessages.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21584
+                              },
+                              "SmileHistory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18913
+                              },
+                              "SmilesTab$drawFrame$$inlined$run$lambda$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4907
+                              },
+                              "SmilesTab$scroll$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4648
+                              },
+                              "SmilesTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 26875
+                              },
+                              "StickersPreview.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12632
+                              },
+                              "StickersTab$drawFrame$$inlined$run$lambda$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5406
+                              },
+                              "StickersTab$scroll$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4675
+                              },
+                              "StickersTab.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 26392
+                              }
+                            }
+                          },
+                          "ZChatLine$bloggerAspect$$inlined$let$lambda$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3083
+                          },
+                          "ZChatLine$bloggerAspect$1$2$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1658
+                          },
+                          "ZChatLine$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 963
+                          },
+                          "ZChatLine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 47550
+                          },
+                          "ZChatLineWithImage$drawTextMsg$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1582
+                          },
+                          "ZChatLineWithImage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6847
+                          },
+                          "ZFkngChatLine$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1271
+                          },
+                          "ZFkngChatLine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18567
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "blogger": {
+                            "type": "directory",
+                            "children": {
+                              "BloggerInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4551
+                              }
+                            }
+                          },
+                          "smile": {
+                            "type": "directory",
+                            "children": {
+                              "SmileRenderer$drawStringWithSmiles$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3902
+                              },
+                              "SmileRenderer$renderSmile$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1934
+                              },
+                              "SmileRenderer$splitLinesWithSmile$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2127
+                              },
+                              "SmileRenderer$splitLinesWithSmile$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1735
+                              },
+                              "SmileRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20155
+                              },
+                              "SmilesLoader$downloadAllSmiles$loadImages$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3690
+                              },
+                              "SmilesLoader$generateImages$1$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2604
+                              },
+                              "SmilesLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8376
+                              }
+                            }
+                          },
+                          "StickersLoader$downloadAllStickers$loadImages$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4166
+                          },
+                          "StickersLoader$generateImages$1$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2612
+                          },
+                          "StickersLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8080
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixchat": {
+                "type": "directory",
+                "children": {
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "ProximaNova-Bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 129556
+                      },
+                      "ProximaNova-Regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 130636
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 330
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 330
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "arrows.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1228
+                          },
+                          "btn_classic.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13486
+                          },
+                          "btn_modif.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13516
+                          },
+                          "channels_ico": {
+                            "type": "directory",
+                            "children": {
+                              "admin.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2631
+                              },
+                              "all.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2803
+                              },
+                              "global.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3827
+                              },
+                              "local.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3269
+                              },
+                              "market.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2848
+                              }
+                            }
+                          },
+                          "check_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 668
+                          },
+                          "cubix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2317
+                          },
+                          "edit_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 665
+                          },
+                          "groups_ico": {
+                            "type": "directory",
+                            "children": {
+                              "agent.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2801
+                              },
+                              "big_b.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 672
+                              },
+                              "bloger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3251
+                              },
+                              "bmoder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2981
+                              },
+                              "creative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2075
+                              },
+                              "default.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2253
+                              },
+                              "deluxe.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2306
+                              },
+                              "king.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 761
+                              },
+                              "kotik.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3358
+                              },
+                              "premium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2640
+                              },
+                              "sbmoder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2774
+                              },
+                              "shpion.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2693
+                              },
+                              "smile_ico.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 744
+                              },
+                              "test.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 744
+                              },
+                              "vip.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2306
+                              },
+                              "phantom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 726
+                              }
+                            }
+                          },
+                          "move_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 975
+                          },
+                          "plus_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 997
+                          },
+                          "remove_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 952
+                          },
+                          "resize_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1013
+                          },
+                          "search_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 715
+                          },
+                          "settings.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 331
+                          },
+                          "smile_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 744
+                          },
+                          "stickers_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 300
+                          },
+                          "tg_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 798
+                          },
+                          "trash_ico.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1645
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 259
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1664
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 96275
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "mod_name": "archaicfix-mc1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\archaicfix-mc1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "archaicfix-mc1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 39192,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 358
+              },
+              "archaicfix_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 2164
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 334
+          },
+          "mixins.archaicfix.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 587
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "embeddedt": {
+                "type": "directory",
+                "children": {
+                  "archaicfix": {
+                    "type": "directory",
+                    "children": {
+                      "ArchaicCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1474
+                      },
+                      "ArchaicFix.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4859
+                      },
+                      "ArchaicLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 570
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "ArchaicConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1714
+                          }
+                        }
+                      },
+                      "FixHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6031
+                      },
+                      "helpers": {
+                        "type": "directory",
+                        "children": {
+                          "InventoryHelper$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2414
+                          },
+                          "InventoryHelper$DefaultInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1919
+                          },
+                          "InventoryHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 804
+                          },
+                          "Mipmaps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1002
+                          },
+                          "NEISearchHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 878
+                          }
+                        }
+                      },
+                      "LeftClickEventHandler$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1088
+                      },
+                      "LeftClickEventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4623
+                      },
+                      "mixins": {
+                        "type": "directory",
+                        "children": {
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "core": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinEntityRender.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1771
+                                  },
+                                  "MixinGuiConnecting.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1937
+                                  },
+                                  "MixinGuiContainerCreative.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9551
+                                  },
+                                  "MixinGuiMerchant.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2813
+                                  },
+                                  "MixinMinecraft.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4137
+                                  },
+                                  "MixinSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1781
+                                  },
+                                  "MixinSlotFurnace.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1174
+                                  }
+                                }
+                              },
+                              "mrtjpcore": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinUpdateChecker.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 796
+                                  },
+                                  "MixinUpdateCheckerCore.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 795
+                                  }
+                                }
+                              },
+                              "optifine": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinVersionCheckThread.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1093
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3643
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 459
+                          }
+                        }
+                      },
+                      "Tags.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 528
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mixins.archaicfix.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 3666
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12783
+          }
+        }
+      }
+    }
+  }
+}

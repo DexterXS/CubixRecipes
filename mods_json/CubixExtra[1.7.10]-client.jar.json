@@ -1,0 +1,432 @@
+{
+  "mod_name": "CubixExtra[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixExtra[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixExtra[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 72286,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "mixins.cubixextra.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 5768
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixextra": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "mixins": {
+                            "type": "directory",
+                            "children": {
+                              "client": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinFolderResourcePack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1185
+                                  },
+                                  "MixinItem.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1231
+                                  },
+                                  "MixinNetworkManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1449
+                                  },
+                                  "MixinContainer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1673
+                                  },
+                                  "MixinJarDiscoverer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 641
+                                  },
+                                  "MixinSimpleTexture.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2214
+                                  },
+                                  "package-info.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 108
+                                  },
+                                  "MixinTesselatorVertexState.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 543
+                                  },
+                                  "MixinMinecraft.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5412
+                                  },
+                                  "MixinRenderGlobal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2238
+                                  },
+                                  "MixinTessellator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 756
+                                  },
+                                  "MixinTileEntity.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1319
+                                  },
+                                  "MixinAbstractResourcePack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1368
+                                  },
+                                  "MixinNetHandlerPlayClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1363
+                                  },
+                                  "MixinRenderItem.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1118
+                                  },
+                                  "MixinWorldChunkManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1920
+                                  },
+                                  "MixinEntityRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1593
+                                  },
+                                  "MixinModelBiped.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3201
+                                  },
+                                  "MixinDefaultResourcePack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1703
+                                  },
+                                  "MixinS33PacketUpdateSign.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2176
+                                  },
+                                  "MixinTextureAtlasSprite.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 994
+                                  },
+                                  "MixinOpenGlHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 725
+                                  },
+                                  "MixinItemStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1647
+                                  },
+                                  "MixinStitcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1009
+                                  },
+                                  "MixinChunk.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1251
+                                  },
+                                  "MixinItemRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 819
+                                  },
+                                  "MixinGuiGameOver.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1170
+                                  },
+                                  "MixinTextureMap.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1204
+                                  },
+                                  "MixinCrashReport.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2305
+                                  },
+                                  "MixinEntity.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1179
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "BFSplashProgress.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7247
+                              },
+                              "BFSplashProgress$Draw.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9925
+                              },
+                              "minecraft": {
+                                "type": "directory",
+                                "children": {
+                                  "network": {
+                                    "type": "directory",
+                                    "children": {
+                                      "NetworkManagerHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1645
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "BFSplashProgress$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 106
+                              },
+                              "windows": {
+                                "type": "directory",
+                                "children": {
+                                  "WindowsCMDHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1312
+                                  }
+                                }
+                              },
+                              "BFSplashProgress$ResourceElements.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2118
+                              }
+                            }
+                          },
+                          "optimization": {
+                            "type": "directory",
+                            "children": {
+                              "discovery": {
+                                "type": "directory",
+                                "children": {
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "TypeSerializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1767
+                                      },
+                                      "ModDiscovererUtils.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3799
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "deobfuscation": {
+                                "type": "directory",
+                                "children": {
+                                  "transform": {
+                                    "type": "directory",
+                                    "children": {
+                                      "DeobfuscationManager.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1118
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "IiIIIiIiIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 195
+                      },
+                      "iiiiIiiIIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3633
+                      },
+                      "IiIIIiIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2633
+                      },
+                      "IIiIiiIiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3143
+                      },
+                      "IIIIIiiiiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1537
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 889
+                      },
+                      "IiiiiIiIIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 88
+                      },
+                      "IiiIIIiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1303
+                      },
+                      "iiiiIiiIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1045
+                      },
+                      "IIiiiiIiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 115
+                      },
+                      "iiiiiIIiiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2967
+                      },
+                      "iIIIIiiIIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 583
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 421
+                      },
+                      "iiIiIIIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3832
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 817
+                      },
+                      "IIiIiiIIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 88
+                      },
+                      "IIiIIiIiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6482
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1288
+                      },
+                      "IIIiiiiiIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2065
+                      },
+                      "iIiiIIiiIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2510
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 286
+              }
+            }
+          },
+          "mixins.cubixextra.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 1172
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 259
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 25447
+          }
+        }
+      }
+    }
+  }
+}

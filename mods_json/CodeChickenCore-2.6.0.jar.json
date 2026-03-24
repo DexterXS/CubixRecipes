@@ -1,0 +1,587 @@
+{
+  "mod_name": "CodeChickenCore-2.6.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CodeChickenCore-2.6.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CodeChickenCore-2.6.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 144865,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 109
+              }
+            }
+          },
+          "codechicken": {
+            "type": "directory",
+            "children": {
+              "core": {
+                "type": "directory",
+                "children": {
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "CodeChickenAccessTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3138
+                      },
+                      "CodeChickenCoreModContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4286
+                      },
+                      "DefaultImplementationTransformer$InterfaceImpl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3394
+                      },
+                      "DefaultImplementationTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3022
+                      },
+                      "DelegatedTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6861
+                      },
+                      "DependancyLister$DependancyMethodLister.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1437
+                      },
+                      "DependancyLister.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3030
+                      },
+                      "InterfaceDependancies.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 414
+                      },
+                      "MCPDeobfuscationTransformer$LoadPlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1241
+                      },
+                      "MCPDeobfuscationTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10193
+                      },
+                      "MethodASMifier.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3082
+                      },
+                      "TweakTransformer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2158
+                      },
+                      "TweakTransformer$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1966
+                      },
+                      "TweakTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4051
+                      },
+                      "Tags.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 491
+                      }
+                    }
+                  },
+                  "CCUpdateChecker$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2014
+                  },
+                  "CCUpdateChecker$ThreadUpdateCheck.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1010
+                  },
+                  "CCUpdateChecker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2886
+                  },
+                  "ClassDiscoverer$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 603
+                  },
+                  "ClassDiscoverer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7101
+                  },
+                  "ClientUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3867
+                  },
+                  "commands": {
+                    "type": "directory",
+                    "children": {
+                      "CoreCommand$WCommandSender.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2875
+                      },
+                      "CoreCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4022
+                      },
+                      "PlayerCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3404
+                      },
+                      "ServerCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 973
+                      }
+                    }
+                  },
+                  "CommonUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2907
+                  },
+                  "featurehack": {
+                    "type": "directory",
+                    "children": {
+                      "EntityRenderHook$IRenderCallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 343
+                      },
+                      "EntityRenderHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1506
+                      },
+                      "EntityUpdateHook$IUpdateCallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 307
+                      },
+                      "EntityUpdateHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1380
+                      },
+                      "FeatureHack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1524
+                      },
+                      "GameDataManipulator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2122
+                      },
+                      "LiquidTextures.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3114
+                      },
+                      "mc": {
+                        "type": "directory",
+                        "children": {
+                          "TextureLavaFlowFX.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2985
+                          },
+                          "TextureLavaFX.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2499
+                          },
+                          "TextureWaterFlowFX.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2788
+                          },
+                          "TextureWaterFX.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2270
+                          }
+                        }
+                      },
+                      "RenderEntityRenderHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1438
+                      },
+                      "RenderNull.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 758
+                      },
+                      "TweakTransformerHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2280
+                      }
+                    }
+                  },
+                  "fluid": {
+                    "type": "directory",
+                    "children": {
+                      "ExtendedFluidTank.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3166
+                      },
+                      "FluidUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4726
+                      },
+                      "TankAccess.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1488
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "ClickCounter$ClickCount.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1086
+                      },
+                      "ClickCounter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2130
+                      },
+                      "GuiCCButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3554
+                      },
+                      "GuiCCTextField.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4485
+                      },
+                      "GuiScreenWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4548
+                      },
+                      "GuiScrollPane.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5718
+                      },
+                      "GuiScrollSlot.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4226
+                      },
+                      "GuiWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2929
+                      },
+                      "IGuiActionListener.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 207
+                      }
+                    }
+                  },
+                  "GuiModListScroll.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6212
+                  },
+                  "IGuiPacketSender.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 202
+                  },
+                  "internal": {
+                    "type": "directory",
+                    "children": {
+                      "CCCEventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2336
+                      }
+                    }
+                  },
+                  "inventory": {
+                    "type": "directory",
+                    "children": {
+                      "GuiContainerWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4347
+                      }
+                    }
+                  },
+                  "IStringMatcher.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 168
+                  },
+                  "launch": {
+                    "type": "directory",
+                    "children": {
+                      "CodeChickenCorePlugin$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1322
+                      },
+                      "CodeChickenCorePlugin$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1319
+                      },
+                      "CodeChickenCorePlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11784
+                      },
+                      "DepLoader$Dependency.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 790
+                      },
+                      "DepLoader$DepLoadInst.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13884
+                      },
+                      "DepLoader$Downloader$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1219
+                      },
+                      "DepLoader$Downloader$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1002
+                      },
+                      "DepLoader$Downloader$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1513
+                      },
+                      "DepLoader$Downloader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5641
+                      },
+                      "DepLoader$DummyDownloader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1377
+                      },
+                      "DepLoader$IDownloadDisplay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 548
+                      },
+                      "DepLoader$VersionedFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1268
+                      },
+                      "DepLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2630
+                      }
+                    }
+                  },
+                  "ProfileTimer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1531
+                  },
+                  "ReflectionManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11413
+                  },
+                  "ServerUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5778
+                  },
+                  "TaskProfiler$ProfilerResult.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 620
+                  },
+                  "TaskProfiler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2483
+                  }
+                }
+              },
+              "obfuscator": {
+                "type": "directory",
+                "children": {
+                  "ConstantObfuscator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3628
+                  },
+                  "DummyOutputStream.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 510
+                  },
+                  "IHeirachyEvaluator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 591
+                  },
+                  "ILogStreams.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 180
+                  },
+                  "ObfDirection.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1268
+                  },
+                  "ObfRemapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3024
+                  },
+                  "ObfuscationMap$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2305
+                  },
+                  "ObfuscationMap$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1425
+                  },
+                  "ObfuscationMap$ClassEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3504
+                  },
+                  "ObfuscationMap$ObfuscationEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 834
+                  },
+                  "ObfuscationMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10248
+                  },
+                  "ObfuscationRun.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9892
+                  },
+                  "SystemLogStreams.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 675
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "codechickencore": {
+                "type": "directory",
+                "children": {
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "tweaks.asm": {
+                        "type": "file",
+                        "extension": ".asm",
+                        "size": 1074
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 56
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 52
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 59
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 59
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 389
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 157
+          }
+        }
+      }
+    }
+  }
+}

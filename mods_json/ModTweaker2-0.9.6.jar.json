@@ -1,0 +1,2527 @@
+{
+  "mod_name": "ModTweaker2-0.9.6.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ModTweaker2-0.9.6.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ModTweaker2-0.9.6.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 583785,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "modtweaker2": {
+            "type": "directory",
+            "children": {
+              "Commands$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 753
+              },
+              "ClientEvents.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2265
+              },
+              "ModProps.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 623
+              },
+              "ModTweaker2.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5032
+              },
+              "ModTweaker2$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1262
+              },
+              "Commands.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6978
+              },
+              "proxy": {
+                "type": "directory",
+                "children": {
+                  "ClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 426
+                  },
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 413
+                  }
+                }
+              },
+              "mods": {
+                "type": "directory",
+                "children": {
+                  "ic2c": {
+                    "type": "directory",
+                    "children": {
+                      "IC2C.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 963
+                      },
+                      "mods": {
+                        "type": "directory",
+                        "children": {
+                          "Macerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2660
+                          },
+                          "MetalFormerRolling$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1616
+                          },
+                          "Recycler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2653
+                          },
+                          "MetalFormerExtruding$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1908
+                          },
+                          "Compressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2667
+                          },
+                          "MetalFormerExtruding.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2737
+                          },
+                          "MetalFormerCutting$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1896
+                          },
+                          "BlastFurnace$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1580
+                          },
+                          "Recycler$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1556
+                          },
+                          "Extractor$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1842
+                          },
+                          "MetalFormerRolling.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2723
+                          },
+                          "MetalFormerCutting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2723
+                          },
+                          "BlastFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2681
+                          },
+                          "OreWashing$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1848
+                          },
+                          "MetalFormerExtruding$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1628
+                          },
+                          "BlockCutter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2674
+                          },
+                          "Macerator$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1562
+                          },
+                          "Extractor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2660
+                          },
+                          "Compressor$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1568
+                          },
+                          "MetalFormerCutting$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1616
+                          },
+                          "Extractor$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1562
+                          },
+                          "Macerator$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1842
+                          },
+                          "BlockCutter$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1854
+                          },
+                          "OreWashing$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1568
+                          },
+                          "Centrifuge$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1568
+                          },
+                          "BlockCutter$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1574
+                          },
+                          "Centrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2667
+                          },
+                          "Recycler$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1836
+                          },
+                          "Compressor$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1848
+                          },
+                          "OreWashing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2667
+                          },
+                          "MetalFormerRolling$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1896
+                          },
+                          "Centrifuge$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1848
+                          },
+                          "BlastFurnace$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1860
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "chisel": {
+                    "type": "directory",
+                    "children": {
+                      "ChiselHelper$CarvingGroup.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2685
+                      },
+                      "ChiselHelper$CarvingGroup$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "ChiselHelper$CarvingVariation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 988
+                      },
+                      "Chisel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 430
+                      },
+                      "ChiselHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3045
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Groups$RemoveVariation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2373
+                          },
+                          "Groups.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3230
+                          },
+                          "Groups$AddVariation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2295
+                          },
+                          "Groups$AddGroup.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1762
+                          },
+                          "Groups$RemoveGroup.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1771
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "ChiselVariationLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4373
+                          },
+                          "ChiselGroupLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2205
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "thermalexpansion": {
+                    "type": "directory",
+                    "children": {
+                      "ThermalHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7307
+                      },
+                      "ThermalExpansion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 890
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Insolator$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1435
+                          },
+                          "Sawmill$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2988
+                          },
+                          "Smelter$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3097
+                          },
+                          "Crucible$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1425
+                          },
+                          "Transposer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3887
+                          },
+                          "Transposer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4187
+                          },
+                          "Transposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7041
+                          },
+                          "Pulverizer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3057
+                          },
+                          "Transposer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 881
+                          },
+                          "Insolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4117
+                          },
+                          "Transposer$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1541
+                          },
+                          "Crucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4271
+                          },
+                          "Crucible$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 258
+                          },
+                          "Sawmill$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1415
+                          },
+                          "Crucible$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2940
+                          },
+                          "Smelter$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2889
+                          },
+                          "Furnace$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 255
+                          },
+                          "Furnace$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1415
+                          },
+                          "Insolator$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2933
+                          },
+                          "Sawmill$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 255
+                          },
+                          "Insolator$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3143
+                          },
+                          "Smelter$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 255
+                          },
+                          "Smelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4772
+                          },
+                          "Furnace$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2660
+                          },
+                          "Sawmill$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2780
+                          },
+                          "Furnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4102
+                          },
+                          "Furnace$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2868
+                          },
+                          "Sawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4532
+                          },
+                          "Crucible$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2730
+                          },
+                          "Pulverizer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2843
+                          },
+                          "Pulverizer$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1445
+                          },
+                          "Pulverizer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 264
+                          },
+                          "Smelter$Refresh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1415
+                          },
+                          "Insolator$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 261
+                          },
+                          "Transposer$RecipeType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1303
+                          },
+                          "Pulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4607
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "ThermalExpansionLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8531
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "appeng": {
+                    "type": "directory",
+                    "children": {
+                      "AppliedEnergistics.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 522
+                      },
+                      "AppliedEnergisticsHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1974
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Inscriber$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2926
+                          },
+                          "Inscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5157
+                          },
+                          "Inscriber$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2785
+                          },
+                          "Grind.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6108
+                          },
+                          "Grind$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1975
+                          },
+                          "Grind$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1714
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "AppliedEnergisticsLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4485
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "factorization": {
+                    "type": "directory",
+                    "children": {
+                      "FactorizationHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2743
+                      },
+                      "Factorization.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 608
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "SlagFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3130
+                          },
+                          "Lacerator$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1288
+                          },
+                          "SlagFurnace$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1366
+                          },
+                          "Lacerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3092
+                          },
+                          "Crystallizer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1346
+                          },
+                          "Lacerator$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1328
+                          },
+                          "SlagFurnace$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1333
+                          },
+                          "Crystallizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3143
+                          },
+                          "Crystallizer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1306
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "FactorizationLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3898
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "metallurgy": {
+                    "type": "directory",
+                    "children": {
+                      "Metallurgy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 514
+                      },
+                      "MetallurgyHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2584
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Crusher$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2450
+                          },
+                          "Alloyer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2907
+                          },
+                          "Crusher$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2368
+                          },
+                          "Crusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2804
+                          },
+                          "Alloyer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1696
+                          },
+                          "Alloyer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1589
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "extendedworkbench": {
+                    "type": "directory",
+                    "children": {
+                      "ExtendedWorkbench.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 506
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "ExtendedCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3704
+                          },
+                          "ExtendedCrafting$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1032
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "exnihilo": {
+                    "type": "directory",
+                    "children": {
+                      "ExNihilo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 612
+                      },
+                      "ExNihiloHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 713
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Sieve$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3955
+                          },
+                          "Compost$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1705
+                          },
+                          "Crucible$RemoveHeatSource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1642
+                          },
+                          "Sieve$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4649
+                          },
+                          "Compost.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3638
+                          },
+                          "Sieve.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6595
+                          },
+                          "Crucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6009
+                          },
+                          "Hammer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6715
+                          },
+                          "Hammer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4573
+                          },
+                          "Crucible$AddRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1813
+                          },
+                          "Crucible$RemoveRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1820
+                          },
+                          "Compost$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1712
+                          },
+                          "Crucible$AddHeatSource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1635
+                          },
+                          "Hammer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3919
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "ExNihiloLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6260
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "botania": {
+                    "type": "directory",
+                    "children": {
+                      "BotaniaHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1909
+                      },
+                      "Botania.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1452
+                      },
+                      "lexicon": {
+                        "type": "directory",
+                        "children": {
+                          "SetEntryKnowledgeType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1765
+                          },
+                          "SetCategoryIcon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1815
+                          },
+                          "AddCategory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1525
+                          },
+                          "AddRecipeMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1595
+                          },
+                          "RemoveCategory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1534
+                          },
+                          "RemoveEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1778
+                          },
+                          "SetCategoryPriority.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1626
+                          },
+                          "AddPage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1723
+                          },
+                          "AddEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1769
+                          },
+                          "RemoveRecipeMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1922
+                          },
+                          "RemovePage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1745
+                          },
+                          "commands": {
+                            "type": "directory",
+                            "children": {
+                              "LexiconCategoryLogger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2180
+                              },
+                              "LexiconEntryLogger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2664
+                              },
+                              "LexiconKnowledgeTypesLogger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2139
+                              },
+                              "LexiconPageLogger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2968
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Brew$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1378
+                          },
+                          "ManaInfusion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3344
+                          },
+                          "Orechid$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1673
+                          },
+                          "RuneAltar$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1367
+                          },
+                          "ElvenTrade.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2989
+                          },
+                          "Orechid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1452
+                          },
+                          "ElvenTrade$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1445
+                          },
+                          "ManaInfusion$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          },
+                          "ElvenTrade$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1379
+                          },
+                          "Apothecary$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1409
+                          },
+                          "Lexicon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14882
+                          },
+                          "RuneAltar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2995
+                          },
+                          "PureDaisy$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "Brew$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1318
+                          },
+                          "PureDaisy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3522
+                          },
+                          "PureDaisy$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1551
+                          },
+                          "Brew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3295
+                          },
+                          "ManaInfusion$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1400
+                          },
+                          "RuneAltar$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1432
+                          },
+                          "Orechid$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1747
+                          },
+                          "Apothecary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3349
+                          },
+                          "Apothecary$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1347
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "BotaniaOrechidLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2265
+                          },
+                          "BotaniaBrewLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2070
+                          },
+                          "BotaniaLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5397
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "forestry": {
+                    "type": "directory",
+                    "children": {
+                      "ForestryListRemoval.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2802
+                      },
+                      "ForestryListAddition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3046
+                      },
+                      "Forestry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 806
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Moistener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5081
+                          },
+                          "ThermionicFabricator$AddSmelting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1761
+                          },
+                          "Squeezer$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1657
+                          },
+                          "Still$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1689
+                          },
+                          "Squeezer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4853
+                          },
+                          "Carpenter$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1809
+                          },
+                          "Fermenter$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1599
+                          },
+                          "Fermenter$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1679
+                          },
+                          "Moistener$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1597
+                          },
+                          "ThermionicFabricator$AddCast.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1688
+                          },
+                          "Squeezer$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1736
+                          },
+                          "Still.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3833
+                          },
+                          "Carpenter$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1729
+                          },
+                          "Fermenter$RemoveFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1639
+                          },
+                          "ThermionicFabricator$RemoveSmelting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1850
+                          },
+                          "Fermenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5680
+                          },
+                          "Still$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1613
+                          },
+                          "ThermionicFabricator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6245
+                          },
+                          "ThermionicFabricator$RemoveCasts.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1772
+                          },
+                          "Moistener$AddFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1674
+                          },
+                          "Moistener$RemoveFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1643
+                          },
+                          "Centrifuge$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1689
+                          },
+                          "Centrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4296
+                          },
+                          "Carpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5724
+                          },
+                          "Moistener$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1677
+                          },
+                          "Centrifuge$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1608
+                          },
+                          "Fermenter$AddFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1670
+                          }
+                        }
+                      },
+                      "recipes": {
+                        "type": "directory",
+                        "children": {
+                          "MoistenerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 905
+                          },
+                          "SqueezerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1381
+                          },
+                          "FabricatorSmeltingRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1336
+                          },
+                          "StillRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1219
+                          },
+                          "FabricatorRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2616
+                          },
+                          "CentrifugeRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3117
+                          },
+                          "FermenterRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2188
+                          },
+                          "CarpenterRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          },
+                          "DescriptiveRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2205
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "extraUtils": {
+                    "type": "directory",
+                    "children": {
+                      "ExtraUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 451
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "QED$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1283
+                          },
+                          "QED.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3088
+                          },
+                          "QED$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1394
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "botanicaladdons": {
+                    "type": "directory",
+                    "children": {
+                      "BotanicalAddons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 564
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "DendricSuffuser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3794
+                          },
+                          "DendricSuffuser$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1550
+                          },
+                          "DendricSuffuser$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1636
+                          },
+                          "IridescentTree$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1757
+                          },
+                          "IridescentTree$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1849
+                          },
+                          "IridescentTree.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4589
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "BotanicalAddonsDendricLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2643
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mekanism": {
+                    "type": "directory",
+                    "children": {
+                      "Mekanism.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1788
+                      },
+                      "MekanismHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1380
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "ChemicalWasher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4350
+                          },
+                          "ChemicalInjection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5511
+                          },
+                          "Compressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5805
+                          },
+                          "Combiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5762
+                          },
+                          "ChemicalDissolution.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4823
+                          },
+                          "SolarEvaporation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4438
+                          },
+                          "SolarNeutronActivator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4405
+                          },
+                          "EnergizedSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4323
+                          },
+                          "ChemicalInfuser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4700
+                          },
+                          "Separator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5188
+                          },
+                          "Purification.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5807
+                          },
+                          "ChemicalCrystallizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4810
+                          },
+                          "Reaction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6381
+                          },
+                          "Infuser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5243
+                          },
+                          "Enrichment.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4318
+                          },
+                          "ChemicalOxidizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4783
+                          },
+                          "Crusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4283
+                          },
+                          "Sawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4973
+                          }
+                        }
+                      },
+                      "gas": {
+                        "type": "directory",
+                        "children": {
+                          "GasBracketHandler$GasReferenceSymbol.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1733
+                          },
+                          "GasBracketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3776
+                          },
+                          "IGasDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 627
+                          },
+                          "IGasStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 908
+                          },
+                          "MCGasStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3659
+                          },
+                          "MCGasDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1046
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "GasLogger$Compare.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1231
+                          },
+                          "GasLogger$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 245
+                          },
+                          "MekanismLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12297
+                          },
+                          "GasLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2629
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "AddMekanismRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3809
+                          },
+                          "RemoveMekanismRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3112
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "auracascade": {
+                    "type": "directory",
+                    "children": {
+                      "AuraCascade.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 606
+                      },
+                      "AuraCascadeHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 947
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Pylon$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1445
+                          },
+                          "Pylon$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1438
+                          },
+                          "Pylon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4074
+                          }
+                        }
+                      },
+                      "aura": {
+                        "type": "directory",
+                        "children": {
+                          "AuraBracketHandler$AuraReferenceSymbol.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1767
+                          },
+                          "MCAuraDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1210
+                          },
+                          "IAuraDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 646
+                          },
+                          "IAuraStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 893
+                          },
+                          "AuraBracketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3833
+                          },
+                          "MCAuraStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1516
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "AuraLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1987
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "thaumcraft": {
+                    "type": "directory",
+                    "children": {
+                      "ThaumcraftHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6210
+                      },
+                      "Thaumcraft.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 955
+                      },
+                      "aspect": {
+                        "type": "directory",
+                        "children": {
+                          "IAspectStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1007
+                          },
+                          "AspectBracketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3914
+                          },
+                          "MCAspectDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 536
+                          },
+                          "AspectBracketHandler$AspectReferenceSymbol.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1793
+                          },
+                          "MCAspectStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6146
+                          },
+                          "IAspectDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 150
+                          },
+                          "AspectStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1702
+                          }
+                        }
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Loot$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1459
+                          },
+                          "Warp$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2490
+                          },
+                          "Research.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9105
+                          },
+                          "Loot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3587
+                          },
+                          "Aspects$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2141
+                          },
+                          "Crucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3255
+                          },
+                          "Crucible$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1448
+                          },
+                          "Infusion$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1504
+                          },
+                          "Arcane$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1603
+                          },
+                          "Loot$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1549
+                          },
+                          "Aspects$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2293
+                          },
+                          "Aspects$AddEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1760
+                          },
+                          "Arcane.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3788
+                          },
+                          "Aspects.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2706
+                          },
+                          "Warp$RemoveType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1258
+                          },
+                          "Infusion$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1602
+                          },
+                          "Infusion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5562
+                          },
+                          "Aspects$RemoveEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1769
+                          },
+                          "Infusion$RemoveEnchant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1579
+                          },
+                          "Warp.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2156
+                          },
+                          "Crucible$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1367
+                          },
+                          "Infusion$AddEnchant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1493
+                          },
+                          "Arcane$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1523
+                          },
+                          "Warp$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2465
+                          },
+                          "Warp$MassRemove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2772
+                          },
+                          "Research$SetType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          }
+                        }
+                      },
+                      "recipe": {
+                        "type": "directory",
+                        "children": {
+                          "MTInfusionRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3116
+                          }
+                        }
+                      },
+                      "research": {
+                        "type": "directory",
+                        "children": {
+                          "AddResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2404
+                          },
+                          "RefreshResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4206
+                          },
+                          "ClearPrereqs.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2315
+                          },
+                          "RemoveTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1751
+                          },
+                          "ClearPages.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2166
+                          },
+                          "AddTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1697
+                          },
+                          "OrphanResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4602
+                          },
+                          "ClearSiblings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2055
+                          },
+                          "AddSibling.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2290
+                          },
+                          "AddPrereq.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2676
+                          },
+                          "AddPage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5399
+                          },
+                          "RemoveResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2064
+                          },
+                          "Difficulty.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2784
+                          },
+                          "SetResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4117
+                          },
+                          "MoveResearch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3375
+                          },
+                          "SetAspects.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2731
+                          },
+                          "commands": {
+                            "type": "directory",
+                            "children": {
+                              "ResearchLogger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2227
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "AspectLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2012
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mariculture": {
+                    "type": "directory",
+                    "children": {
+                      "MaricultureHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2631
+                      },
+                      "Mariculture.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 696
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Fishing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3996
+                          },
+                          "Vat$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1588
+                          },
+                          "Crucible$RemoveFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          },
+                          "Casting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4536
+                          },
+                          "Anvil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3321
+                          },
+                          "Crucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5728
+                          },
+                          "Crucible$AddRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1488
+                          },
+                          "Anvil$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1945
+                          },
+                          "Crucible$RemoveRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1565
+                          },
+                          "Casting$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1695
+                          },
+                          "Crucible$AddFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1586
+                          },
+                          "Anvil$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1864
+                          },
+                          "Casting$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1961
+                          },
+                          "Fishing$RemoveLoot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3103
+                          },
+                          "Vat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6148
+                          },
+                          "Fishing$AddLoot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1933
+                          },
+                          "Vat$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1661
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "pneumaticcraft": {
+                    "type": "directory",
+                    "children": {
+                      "PneumaticCraft.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 544
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Pressure.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3214
+                          },
+                          "Assembly$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1485
+                          },
+                          "Pressure$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1459
+                          },
+                          "Assembly.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4569
+                          },
+                          "Assembly$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1573
+                          },
+                          "Pressure$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1388
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "railcraft": {
+                    "type": "directory",
+                    "children": {
+                      "Railcraft.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 640
+                      },
+                      "RailcraftHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4535
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "BlastFurnace$RemoveFuels.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1331
+                          },
+                          "RollingMachine$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 872
+                          },
+                          "RockCrusher$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1415
+                          },
+                          "CokeOven$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1541
+                          },
+                          "BlastFurnace$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1497
+                          },
+                          "CokeOven.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4304
+                          },
+                          "RollingMachine$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 849
+                          },
+                          "BlastFurnace$AddFuels.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1324
+                          },
+                          "RockCrusher$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1475
+                          },
+                          "BlastFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5307
+                          },
+                          "CokeOven$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1449
+                          },
+                          "RollingMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2887
+                          },
+                          "RockCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4226
+                          },
+                          "BlastFurnace$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1426
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "RailcraftLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6051
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "tconstruct": {
+                    "type": "directory",
+                    "children": {
+                      "TConstruct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 756
+                      },
+                      "TConstructHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4485
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "Smeltery$RemoveFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1731
+                          },
+                          "Smeltery$AddFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1724
+                          },
+                          "Drying$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1581
+                          },
+                          "ToolStats$SetToolStats.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2939
+                          },
+                          "ToolStats$SetBowStats.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1981
+                          },
+                          "Smeltery.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7838
+                          },
+                          "ToolStats$SetArrowStats.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1983
+                          },
+                          "Smeltery$MeltingRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1507
+                          },
+                          "Casting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5021
+                          },
+                          "TiCTweaks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3241
+                          },
+                          "Modifiers$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1354
+                          },
+                          "Smeltery$AddMelting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2843
+                          },
+                          "Smeltery$RemoveMelting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2850
+                          },
+                          "Casting$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1466
+                          },
+                          "TiCTweaks$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1613
+                          },
+                          "ToolStats.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5318
+                          },
+                          "Casting$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1575
+                          },
+                          "Smeltery$RemoveAlloy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1500
+                          },
+                          "Drying$Add.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1473
+                          },
+                          "Drying.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3217
+                          },
+                          "TiCTweaks$Remove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1687
+                          },
+                          "Smeltery$AddAlloy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1440
+                          },
+                          "Modifiers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1903
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "MaterialLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1756
+                          },
+                          "ModifierLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1641
+                          },
+                          "TConstructLogger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5998
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "commands": {
+                "type": "directory",
+                "children": {
+                  "EntityMappingLogger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2389
+                  }
+                }
+              },
+              "utils": {
+                "type": "directory",
+                "children": {
+                  "BaseMapModification.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2121
+                  },
+                  "BaseCraftingRemoval.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2415
+                  },
+                  "ArrayUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 871
+                  },
+                  "BaseListRemoval.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2951
+                  },
+                  "BaseCraftingAddition.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1568
+                  },
+                  "BaseUndoable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1498
+                  },
+                  "BaseListModification.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2944
+                  },
+                  "BaseMapAddition.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3844
+                  },
+                  "BaseListAddition.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2946
+                  },
+                  "BaseMultiModification.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1811
+                  },
+                  "BaseMapRemoval.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3246
+                  },
+                  "TweakerPlugin.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1384
+                  }
+                }
+              },
+              "helpers": {
+                "type": "directory",
+                "children": {
+                  "ReflectionHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5717
+                  },
+                  "InputHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7089
+                  },
+                  "StringHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2375
+                  },
+                  "ForgeHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2855
+                  },
+                  "StackHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3507
+                  },
+                  "LogHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7948
+                  }
+                }
+              }
+            }
+          },
+          "mariculture_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 737
+          },
+          "micdoodlecore_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 2391
+          },
+          "IMC Todo": {
+            "type": "file",
+            "extension": "",
+            "size": 34
+          },
+          "CoFH_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 3401
+          },
+          "TConstruct_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 2066
+          },
+          "hee_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 1359
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 383
+          },
+          "tfc_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 1528
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 102122
+          }
+        }
+      }
+    }
+  }
+}

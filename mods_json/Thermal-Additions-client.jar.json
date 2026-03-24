@@ -1,0 +1,487 @@
+{
+  "mod_name": "Thermal-Additions-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Thermal-Additions-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Thermal-Additions-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 228753,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "thermal": {
+            "type": "directory",
+            "children": {
+              "additions": {
+                "type": "directory",
+                "children": {
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "TileAdvancedExtruder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 21364
+                      },
+                      "BlockAdvancedMachine.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18857
+                      },
+                      "TileAdvancedPrecipitator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17106
+                      },
+                      "ItemBlockAdvancedFrame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3114
+                      },
+                      "TileAdvancedAssembler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16584
+                      },
+                      "BlockAdvancedMachine$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1774
+                      },
+                      "ItemAdvancedMachineBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9618
+                      },
+                      "TileAdvancedFurnace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10884
+                      },
+                      "BlockAdvancedMachine$Types.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5572
+                      },
+                      "TileAdvancedSmelter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14049
+                      },
+                      "TileAdvancedTransposer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23119
+                      },
+                      "BlockAdvancedFrame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14803
+                      },
+                      "BlockAdvancedFrame$Types.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2962
+                      },
+                      "TileAdvancedInsolator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17603
+                      },
+                      "TileAdvancedCrucible.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18196
+                      },
+                      "TileAdvancedSawmill.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10144
+                      },
+                      "TileAdvancedPulverizer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10224
+                      },
+                      "TileAdvancedMachineBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22652
+                      }
+                    }
+                  },
+                  "plugins": {
+                    "type": "directory",
+                    "children": {
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "handlers": {
+                            "type": "directory",
+                            "children": {
+                              "RecipeHandlerCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13407
+                              },
+                              "RecipeHandlerPulverizer$NEIRecipePulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2929
+                              },
+                              "RecipeHandlerFurnace$NEIRecipeFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1822
+                              },
+                              "RecipeHandlerFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9461
+                              },
+                              "RecipeHandlerSawmill$NEIRecipeSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2829
+                              },
+                              "RecipeHandlerPulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10667
+                              },
+                              "RecipeHandlerCrucible$NEIRecipeCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1852
+                              },
+                              "RecipeHandlerBase$NEIRecipeBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8565
+                              },
+                              "RecipeHandlerSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10733
+                              },
+                              "RecipeHandlerBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16126
+                              },
+                              "RecipeHandlerSmelter$NEIRecipeSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2272
+                              },
+                              "RecipeHandlerSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10634
+                              }
+                            }
+                          },
+                          "NEIExpansionConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3422
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "container": {
+                    "type": "directory",
+                    "children": {
+                      "ContainerAdvancedSmelter$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1462
+                      },
+                      "ContainerAdvancedPrecipitator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1774
+                      },
+                      "ContainerAdvancedPulverizer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2041
+                      },
+                      "ContainerAdvancedFurnace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2484
+                      },
+                      "ContainerAdvancedAssembler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6880
+                      },
+                      "ContainerAdvancedInsolator$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1732
+                      },
+                      "ContainerAdvancedCrucible.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1788
+                      },
+                      "ContainerAdvancedInsolator$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1399
+                      },
+                      "ContainerAdvancedSmelter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2134
+                      },
+                      "ContainerAdvancedSmelter$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1730
+                      },
+                      "ContainerAdvancedTransposer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2451
+                      },
+                      "ContainerAdvancedExtruder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "ContainerAdvancedInsolator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2098
+                      },
+                      "ContainerAdvancedSawmill.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2103
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiAdvancedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6452
+                          },
+                          "GuiAdvancedSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7580
+                          },
+                          "GuiAdvancedCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7413
+                          },
+                          "GuiAdvancedSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10658
+                          },
+                          "GuiAdvancedAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6341
+                          },
+                          "GuiAdvancedPulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7663
+                          },
+                          "GuiAdvancedExtruder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9956
+                          },
+                          "GuiAdvancedTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12785
+                          },
+                          "GuiAdvancedPrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10349
+                          },
+                          "GuiAdvancedInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10971
+                          }
+                        }
+                      },
+                      "EventClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1330
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "RenderFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9771
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ThermalAdditions.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5770
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1787
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3257
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "thermal_additions": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "infinity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4676
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1219
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "thermal_origgit.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 0
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 289
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 65
+              },
+              "TA_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 232
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 84
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5541
+          }
+        }
+      }
+    }
+  }
+}

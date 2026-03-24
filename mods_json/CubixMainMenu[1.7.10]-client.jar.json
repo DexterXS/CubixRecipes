@@ -1,0 +1,482 @@
+{
+  "mod_name": "CubixMainMenu[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixMainMenu[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixMainMenu[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1943449,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixmainmenu": {
+                    "type": "directory",
+                    "children": {
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3298
+                      },
+                      "iiIiIIIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1838
+                      },
+                      "IiiiiIiIIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2778
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1324
+                      },
+                      "IIIiiiiiIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13989
+                      },
+                      "iIiiIIiiIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1316
+                      },
+                      "IIiIiiIiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20649
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 436
+                      },
+                      "IiiIIIiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3739
+                      },
+                      "iiiiIiiIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2784
+                      },
+                      "iIIIIiiIIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1083
+                      },
+                      "IIiIIiIiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5058
+                      },
+                      "IiIIIiIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1909
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixmainmenu": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "ui": {
+                        "type": "directory",
+                        "children": {
+                          "in_game_menu": {
+                            "type": "directory",
+                            "children": {
+                              "vector_exit.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1090
+                              },
+                              "social_networks": {
+                                "type": "directory",
+                                "children": {
+                                  "box_network_telegram.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 420
+                                  },
+                                  "box_network_discord.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 424
+                                  },
+                                  "icon_network_discord.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 362
+                                  },
+                                  "icon_network_youtube.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 315
+                                  },
+                                  "icon_network_telegram.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 303
+                                  },
+                                  "box_network_vk.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 416
+                                  },
+                                  "box_network_youtube.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 397
+                                  },
+                                  "icon_network_vk.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 343
+                                  }
+                                }
+                              },
+                              "box_features.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 16502
+                              },
+                              "vector_play.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1143
+                              },
+                              "vector_settings.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1127
+                              },
+                              "box_features_small.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15851
+                              },
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "btn_long2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 37501
+                                  },
+                                  "btn_exit.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 42318
+                                  },
+                                  "btn_short.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 13999
+                                  },
+                                  "btn_mini_games.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 37501
+                                  },
+                                  "btn_long.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 30383
+                                  }
+                                }
+                              },
+                              "vector_bonus.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 433
+                              },
+                              "box_bonus.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 49365
+                              },
+                              "logo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4316
+                              },
+                              "vector_mini_games.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 522
+                              },
+                              "header.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 31022
+                              },
+                              "vector_donate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 960
+                              }
+                            }
+                          },
+                          "main_menu": {
+                            "type": "directory",
+                            "children": {
+                              "social_networks": {
+                                "type": "directory",
+                                "children": {
+                                  "icon_network_telegram.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 303
+                                  },
+                                  "box_network_youtube.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 397
+                                  },
+                                  "box_network_discord.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 424
+                                  },
+                                  "icon_network_discord.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 362
+                                  },
+                                  "icon_network_youtube.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 315
+                                  },
+                                  "box_network_telegram.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 420
+                                  },
+                                  "icon_network_vk.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 343
+                                  },
+                                  "box_network_vk.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 416
+                                  }
+                                }
+                              },
+                              "server_info": {
+                                "type": "directory",
+                                "children": {
+                                  "line_online_fill.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 211
+                                  },
+                                  "box.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 108892
+                                  },
+                                  "vector_play.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 392
+                                  },
+                                  "icon_online.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 652
+                                  },
+                                  "box_online.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 447
+                                  },
+                                  "frame_online.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 518
+                                  },
+                                  "line_online.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 196
+                                  }
+                                }
+                              },
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "icon_settings_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 504
+                                  },
+                                  "icon_exit.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 412
+                                  },
+                                  "icon_settings.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 511
+                                  },
+                                  "icon_exit_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 419
+                                  },
+                                  "btn_default.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 711
+                                  },
+                                  "icon_donate.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 834
+                                  },
+                                  "icon_single_game.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 426
+                                  },
+                                  "icon_single_game_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 439
+                                  },
+                                  "btn_close.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 34861
+                                  }
+                                }
+                              },
+                              "bg_default.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2854
+                              },
+                              "logo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4316
+                              },
+                              "bg_first.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 851400
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "montserrat_regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 263192
+                      },
+                      "montserrat_medium.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 260236
+                      },
+                      "montserrat_semibold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 364672
+                      },
+                      "montserrat_light.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 259416
+                      },
+                      "montserrat_bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 262608
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1911
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1477
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 292
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3600
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1867
+          }
+        }
+      }
+    }
+  }
+}

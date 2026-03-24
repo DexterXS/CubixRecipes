@@ -1,0 +1,1592 @@
+{
+  "mod_name": "ArchitectureCraft-1.7.2-mc1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ArchitectureCraft-1.7.2-mc1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ArchitectureCraft-1.7.2-mc1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 693743,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "gcewing": {
+            "type": "directory",
+            "children": {
+              "architecture": {
+                "type": "directory",
+                "children": {
+                  "ArchitectureCraft.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5021
+                  },
+                  "ArchitectureCraftClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1786
+                  },
+                  "BaseBlock$IOrientationHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 750
+                  },
+                  "BaseBlock$Orient1Way.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1096
+                  },
+                  "BaseBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 28000
+                  },
+                  "BaseBlockUtils$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 737
+                  },
+                  "BaseBlockUtils$MetaBlockState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1681
+                  },
+                  "BaseBlockUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8321
+                  },
+                  "BaseConfiguration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2940
+                  },
+                  "BaseContainer$SlotRange.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1109
+                  },
+                  "BaseContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5777
+                  },
+                  "BaseDataChannel$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 235
+                  },
+                  "BaseDataChannel$ChannelInput.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 652
+                  },
+                  "BaseDataChannel$ChannelInputStream.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2110
+                  },
+                  "BaseDataChannel$ChannelOutput.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 619
+                  },
+                  "BaseDataChannel$ClassCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 833
+                  },
+                  "BaseDataChannel$ClientMessageHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 460
+                  },
+                  "BaseDataChannel$DataHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2839
+                  },
+                  "BaseDataChannel$DataPacket.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4051
+                  },
+                  "BaseDataChannel$HandlerMap$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 807
+                  },
+                  "BaseDataChannel$HandlerMap$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 807
+                  },
+                  "BaseDataChannel$HandlerMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2953
+                  },
+                  "BaseDataChannel$MethodCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 413
+                  },
+                  "BaseDataChannel$ServerMessageHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 460
+                  },
+                  "BaseDataChannel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7925
+                  },
+                  "BaseDirections.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 808
+                  },
+                  "BaseGLRenderTarget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4674
+                  },
+                  "BaseGui$Action.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 221
+                  },
+                  "BaseGui$FieldRef.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1227
+                  },
+                  "BaseGui$Group.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2888
+                  },
+                  "BaseGui$GState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 893
+                  },
+                  "BaseGui$IWidget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1080
+                  },
+                  "BaseGui$IWidgetContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 404
+                  },
+                  "BaseGui$MethodAction.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1111
+                  },
+                  "BaseGui$MouseCoords.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 752
+                  },
+                  "BaseGui$PropertyRef.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1360
+                  },
+                  "BaseGui$Ref.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 266
+                  },
+                  "BaseGui$Root.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1764
+                  },
+                  "BaseGui$Screen.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10060
+                  },
+                  "BaseGui$Widget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2966
+                  },
+                  "BaseGui.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2413
+                  },
+                  "BaseInventoryUtils$InventorySide.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 475
+                  },
+                  "BaseInventoryUtils$SidedInventorySide.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1321
+                  },
+                  "BaseInventoryUtils$UnsidedInventorySide.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 978
+                  },
+                  "BaseInventoryUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1149
+                  },
+                  "BaseItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1357
+                  },
+                  "BaseItemBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3765
+                  },
+                  "BaseMod$IBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 821
+                  },
+                  "BaseMod$IDBinding.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 428
+                  },
+                  "BaseMod$IItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 468
+                  },
+                  "BaseMod$ISetMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 252
+                  },
+                  "BaseMod$ITextureConsumer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 267
+                  },
+                  "BaseMod$ITileEntity.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 238
+                  },
+                  "BaseMod$ModelSpec.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 722
+                  },
+                  "BaseMod$VSBinding.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 440
+                  },
+                  "BaseMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 25406
+                  },
+                  "BaseModClient$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 970
+                  },
+                  "BaseModClient$AltBlockAccess.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1730
+                  },
+                  "BaseModClient$BlockRenderDispatcher.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4007
+                  },
+                  "BaseModClient$ICustomRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 700
+                  },
+                  "BaseModClient$IModel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 644
+                  },
+                  "BaseModClient$IRenderTarget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 716
+                  },
+                  "BaseModClient$ItemRenderDispatcher.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3607
+                  },
+                  "BaseModClient$ITexture.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 856
+                  },
+                  "BaseModClient$ITiledTexture.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 366
+                  },
+                  "BaseModClient$TextureCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 515
+                  },
+                  "BaseModClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 21761
+                  },
+                  "BaseModel$Face.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 415
+                  },
+                  "BaseModel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3828
+                  },
+                  "BaseModelRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3071
+                  },
+                  "BaseOrientation$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 780
+                  },
+                  "BaseOrientation$Orient24WaysByTE.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1194
+                  },
+                  "BaseOrientation$Orient4WaysByState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2907
+                  },
+                  "BaseOrientation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 909
+                  },
+                  "BaseRenderTarget$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 872
+                  },
+                  "BaseRenderTarget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4195
+                  },
+                  "BaseStringUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1222
+                  },
+                  "BaseSubsystem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3103
+                  },
+                  "BaseTexture$Debug.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1379
+                  },
+                  "BaseTexture$Image.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 512
+                  },
+                  "BaseTexture$Proxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1167
+                  },
+                  "BaseTexture$Solid.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 547
+                  },
+                  "BaseTexture$Sprite.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1074
+                  },
+                  "BaseTexture$Tile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 973
+                  },
+                  "BaseTexture$TileSet.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 947
+                  },
+                  "BaseTexture.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2609
+                  },
+                  "BaseTileEntity.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7362
+                  },
+                  "BaseTileInventory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3928
+                  },
+                  "BaseUtils$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 717
+                  },
+                  "BaseUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11034
+                  },
+                  "BaseWorldRenderTarget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4906
+                  },
+                  "BlockPos.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1585
+                  },
+                  "BlockState$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 835
+                  },
+                  "BlockState$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1000
+                  },
+                  "BlockState$StateImplementation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5918
+                  },
+                  "BlockState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5018
+                  },
+                  "BlockStateBase$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1352
+                  },
+                  "BlockStateBase.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3227
+                  },
+                  "Cartesian$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 217
+                  },
+                  "Cartesian$GetList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 924
+                  },
+                  "Cartesian$Product$ProductIterator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2350
+                  },
+                  "Cartesian$Product.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1413
+                  },
+                  "Cartesian.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2494
+                  },
+                  "ChiselItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2654
+                  },
+                  "CladdingItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2138
+                  },
+                  "CladdingRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2483
+                  },
+                  "EnumWorldBlockLayer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1371
+                  },
+                  "HammerItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1066
+                  },
+                  "IBlockState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1102
+                  },
+                  "Info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 459
+                  },
+                  "InventoryHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2670
+                  },
+                  "IProperty.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 491
+                  },
+                  "IStringSerializable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 181
+                  },
+                  "ITickable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 143
+                  },
+                  "MapPopulator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1290
+                  },
+                  "Matrix3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2713
+                  },
+                  "Plane$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 624
+                  },
+                  "Plane.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2432
+                  },
+                  "Profile$Generic.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1811
+                  },
+                  "Profile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1468
+                  },
+                  "PropertyBool.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1271
+                  },
+                  "PropertyDirection.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1675
+                  },
+                  "PropertyEnum.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3755
+                  },
+                  "PropertyHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1654
+                  },
+                  "PropertyInteger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2283
+                  },
+                  "PropertyTurn.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 855
+                  },
+                  "RenderRoof$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 946
+                  },
+                  "RenderRoof.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13423
+                  },
+                  "RenderShape.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1712
+                  },
+                  "RenderWindow$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 736
+                  },
+                  "RenderWindow$WindowModels.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1085
+                  },
+                  "RenderWindow.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6959
+                  },
+                  "SawbenchBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2558
+                  },
+                  "SawbenchContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5181
+                  },
+                  "SawbenchGui.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6103
+                  },
+                  "SawbenchTE.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8887
+                  },
+                  "Shape$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1026
+                  },
+                  "Shape.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 17611
+                  },
+                  "ShapeBlock.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11585
+                  },
+                  "ShapeFlags.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 309
+                  },
+                  "ShapeItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3945
+                  },
+                  "ShapeKind$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1639
+                  },
+                  "ShapeKind$Banister.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3189
+                  },
+                  "ShapeKind$Cladding.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1052
+                  },
+                  "ShapeKind$Model.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4102
+                  },
+                  "ShapeKind$Roof$RoofProfile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1276
+                  },
+                  "ShapeKind$Roof.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2095
+                  },
+                  "ShapeKind$Window$FrameKind.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1183
+                  },
+                  "ShapeKind$Window.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6066
+                  },
+                  "ShapeKind.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9536
+                  },
+                  "ShapePage.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 584
+                  },
+                  "ShapeRenderDispatch.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3640
+                  },
+                  "ShapeSymmetry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 999
+                  },
+                  "ShapeTE.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7808
+                  },
+                  "SlotSawbench.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 748
+                  },
+                  "SlotSawbenchResult.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 383
+                  },
+                  "Trans3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6612
+                  },
+                  "Utils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2536
+                  },
+                  "Vec3i.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2355
+                  },
+                  "Vector3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6114
+                  },
+                  "WindowShapeKinds$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1168
+                  },
+                  "WindowShapeKinds$CornerWindow.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4179
+                  },
+                  "WindowShapeKinds$MullionWindow.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 801
+                  },
+                  "WindowShapeKinds$PlainWindow.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2801
+                  },
+                  "WindowShapeKinds.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 839
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 427
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "architecturecraft": {
+                "type": "directory",
+                "children": {
+                  "blockstates": {
+                    "type": "directory",
+                    "children": {
+                      "sawbench.json": {
+                        "type": "file",
+                        "extension": ".json",
+                        "size": 66
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 375
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "sawbench.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 95
+                          },
+                          "sawbench.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 87381
+                          },
+                          "sawbench_all.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 83097
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "chisel.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 352
+                          },
+                          "hammer.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 352
+                          },
+                          "largePulley.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 357
+                          },
+                          "sawbench.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 197
+                          },
+                          "sawblade.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 354
+                          }
+                        }
+                      },
+                      "shape": {
+                        "type": "directory",
+                        "children": {
+                          "arch_d1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 7087
+                          },
+                          "arch_d2.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4526
+                          },
+                          "arch_d3a.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3855
+                          },
+                          "arch_d3b.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4047
+                          },
+                          "arch_d3c.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4326
+                          },
+                          "arch_d4a.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3353
+                          },
+                          "arch_d4b.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4333
+                          },
+                          "arch_d4c.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3168
+                          },
+                          "architrave.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 8627
+                          },
+                          "architrave_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 14173
+                          },
+                          "balustrade_fancy.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 156879
+                          },
+                          "balustrade_fancy.smeg copy": {
+                            "type": "file",
+                            "extension": ".smeg copy",
+                            "size": 156879
+                          },
+                          "balustrade_fancy_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 228814
+                          },
+                          "balustrade_fancy_corner.smeg copy": {
+                            "type": "file",
+                            "extension": ".smeg copy",
+                            "size": 228882
+                          },
+                          "balustrade_fancy_newel.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 11130
+                          },
+                          "balustrade_fancy_newel_tall.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 13611
+                          },
+                          "balustrade_fancy_with_newel.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 116778
+                          },
+                          "balustrade_plain.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 7826
+                          },
+                          "balustrade_plain_end.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4927
+                          },
+                          "balustrade_plain_end_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3118
+                          },
+                          "balustrade_plain_end_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3270
+                          },
+                          "balustrade_plain_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6665
+                          },
+                          "balustrade_plain_outer_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 13368
+                          },
+                          "balustrade_plain_with_newel.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 7493
+                          },
+                          "balustrade_stair_fancy.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 163897
+                          },
+                          "balustrade_stair_fancy_bottom.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 165474
+                          },
+                          "balustrade_stair_fancy_end.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 122839
+                          },
+                          "balustrade_stair_fancy_top.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 168557
+                          },
+                          "balustrade_stair_plain.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 12606
+                          },
+                          "balustrade_stair_plain_bottom.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 12484
+                          },
+                          "balustrade_stair_plain_end.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 11846
+                          },
+                          "balustrade_stair_plain_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6813
+                          },
+                          "balustrade_stair_plain_top.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 14498
+                          },
+                          "bevelled_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1433
+                          },
+                          "bevelled_outer_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 793
+                          },
+                          "cladding.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1429
+                          },
+                          "corinthian_capital.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 169296
+                          },
+                          "cornice_bottom.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2306
+                          },
+                          "cornice_end_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6248
+                          },
+                          "cornice_end_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5043
+                          },
+                          "cornice_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5315
+                          },
+                          "cornice_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4525
+                          },
+                          "cornice_ridge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4941
+                          },
+                          "cornice_valley.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4673
+                          },
+                          "cylinder_full_r8h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 19935
+                          },
+                          "cylinder_half_r8h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6420
+                          },
+                          "cylinder_quarter_r16h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5677
+                          },
+                          "cylinder_quarter_r8h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6471
+                          },
+                          "cylinder_r2h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 22485
+                          },
+                          "cylinder_r4h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 20645
+                          },
+                          "cylinder_r6h16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 20305
+                          },
+                          "doric_capital.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 87298
+                          },
+                          "doric_metope.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6672
+                          },
+                          "doric_triglyph.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 17462
+                          },
+                          "doric_triglyph_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 22731
+                          },
+                          "ionic_capital.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 31513
+                          },
+                          "mullion_glass_edge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 803
+                          },
+                          "pillar_base.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 239634
+                          },
+                          "railing.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1702
+                          },
+                          "railing_end.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1905
+                          },
+                          "railing_end_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1882
+                          },
+                          "railing_end_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1775
+                          },
+                          "railing_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2739
+                          },
+                          "railing_outer_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3139
+                          },
+                          "railing_stair.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3322
+                          },
+                          "railing_stair_bottom.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3747
+                          },
+                          "railing_stair_top.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5133
+                          },
+                          "roof_overhang.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2840
+                          },
+                          "roof_overhang_gable_end_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4930
+                          },
+                          "roof_overhang_gable_end_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4451
+                          },
+                          "roof_overhang_gable_lh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 6461
+                          },
+                          "roof_overhang_gable_rh.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5571
+                          },
+                          "roof_overhang_gable_ridge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 10965
+                          },
+                          "roof_overhang_gable_valley.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5346
+                          },
+                          "roof_overhang_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5601
+                          },
+                          "roof_overhang_outer_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 4688
+                          },
+                          "round_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3905
+                          },
+                          "slab.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1345
+                          },
+                          "sphere_eighth_r16.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 27019
+                          },
+                          "sphere_eighth_r16_rev.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 26843
+                          },
+                          "sphere_eighth_r8.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 26067
+                          },
+                          "sphere_full_r8.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 192871
+                          },
+                          "sphere_half_r8.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 101537
+                          },
+                          "sphere_quarter_r8.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 50717
+                          },
+                          "stairs.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3285
+                          },
+                          "stairs_inner_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3045
+                          },
+                          "stairs_outer_corner.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3199
+                          },
+                          "window_corner_centre.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3715
+                          },
+                          "window_corner_centre_end0.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3350
+                          },
+                          "window_corner_centre_end2.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3229
+                          },
+                          "window_corner_glass.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 1465
+                          },
+                          "window_corner_glass_edge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 600
+                          },
+                          "window_corner_side1_end1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5750
+                          },
+                          "window_corner_side3_end1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5944
+                          },
+                          "window_corner_thumb.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 28129
+                          },
+                          "window_corner_topbot.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5427
+                          },
+                          "window_corner_topbot_end1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2742
+                          },
+                          "window_frame.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 9993
+                          },
+                          "window_frame_end0.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2386
+                          },
+                          "window_frame_end1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2732
+                          },
+                          "window_frame_side.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 2408
+                          },
+                          "window_glass.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 729
+                          },
+                          "window_glass_edge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 292
+                          },
+                          "window_mullion_centre.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 3735
+                          },
+                          "window_mullion_centre_end0.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5256
+                          },
+                          "window_mullion_centre_end1.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5178
+                          },
+                          "window_mullion_centre_end2.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5178
+                          },
+                          "window_mullion_glass_edge.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 803
+                          },
+                          "window_mullion_thumbnail.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 24528
+                          },
+                          "window_mullion_topbot.smeg": {
+                            "type": "file",
+                            "extension": ".smeg",
+                            "size": 5385
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "sawbench-metal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1138
+                          },
+                          "sawbench-wood.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1201
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_sawbench.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3864
+                          },
+                          "shapemenu_bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3257
+                          },
+                          "shapemenu_items.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 146482
+                          },
+                          "shapes.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7828
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "chisel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1039
+                          },
+                          "hammer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1024
+                          },
+                          "largePulley.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1047
+                          },
+                          "sawblade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1238
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7040
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11172
+          }
+        }
+      }
+    }
+  }
+}

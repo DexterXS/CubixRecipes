@@ -1,0 +1,927 @@
+{
+  "mod_name": "Schematica-1.7.10-1.7.6.131-universal.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Schematica-1.7.10-1.7.6.131-universal.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Schematica-1.7.10-1.7.6.131-universal.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 250566,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 18866
+              },
+              "schematica_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 151
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "github": {
+                "type": "directory",
+                "children": {
+                  "lunatrius": {
+                    "type": "directory",
+                    "children": {
+                      "schematica": {
+                        "type": "directory",
+                        "children": {
+                          "FileFilterSchematic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 817
+                          },
+                          "Schematica.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2532
+                          },
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "gui": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1517
+                                  },
+                                  "GuiHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2324
+                                  },
+                                  "GuiModConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2493
+                                  },
+                                  "control": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiSchematicControl.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8600
+                                      },
+                                      "GuiSchematicMaterials.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8261
+                                      },
+                                      "GuiSchematicMaterialsSlot.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3613
+                                      }
+                                    }
+                                  },
+                                  "load": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiSchematicEntry.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1738
+                                      },
+                                      "GuiSchematicLoad.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7886
+                                      },
+                                      "GuiSchematicLoadSlot.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3418
+                                      }
+                                    }
+                                  },
+                                  "save": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiSchematicSave.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7488
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "printer": {
+                                "type": "directory",
+                                "children": {
+                                  "SchematicPrinter$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1203
+                                  },
+                                  "SchematicPrinter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16350
+                                  },
+                                  "registry": {
+                                    "type": "directory",
+                                    "children": {
+                                      "IExtraClick.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 218
+                                      },
+                                      "PlacementData$PlacementType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1484
+                                      },
+                                      "PlacementData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3923
+                                      },
+                                      "PlacementRegistry$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1115
+                                      },
+                                      "PlacementRegistry.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7958
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "renderer": {
+                                "type": "directory",
+                                "children": {
+                                  "RendererSchematicChunk.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12587
+                                  },
+                                  "RendererSchematicChunkComparator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2217
+                                  },
+                                  "RendererSchematicGlobal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8195
+                                  },
+                                  "RenderHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8807
+                                  },
+                                  "shader": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ShaderProgram.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4625
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "util": {
+                                "type": "directory",
+                                "children": {
+                                  "BlockList$WrappedItemStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1577
+                                  },
+                                  "BlockList.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4902
+                                  },
+                                  "BlockToItemStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1713
+                                  }
+                                }
+                              },
+                              "world": {
+                                "type": "directory",
+                                "children": {
+                                  "SchematicUpdater.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4291
+                                  },
+                                  "SchematicWorld.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10145
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "command": {
+                            "type": "directory",
+                            "children": {
+                              "CommandSchematicaBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 763
+                              },
+                              "CommandSchematicaDownload.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4741
+                              },
+                              "CommandSchematicaList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6232
+                              },
+                              "CommandSchematicaRemove.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4995
+                              },
+                              "CommandSchematicaSave.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3984
+                              }
+                            }
+                          },
+                          "handler": {
+                            "type": "directory",
+                            "children": {
+                              "ConfigurationHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11732
+                              },
+                              "DownloadHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5050
+                              },
+                              "PlayerHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2647
+                              },
+                              "QueueTickHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4391
+                              },
+                              "client": {
+                                "type": "directory",
+                                "children": {
+                                  "ChatEventHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2300
+                                  },
+                                  "InputHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6662
+                                  },
+                                  "OverlayHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3258
+                                  },
+                                  "RenderTickHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3091
+                                  },
+                                  "TickHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3816
+                                  },
+                                  "WorldHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2178
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "nbt": {
+                            "type": "directory",
+                            "children": {
+                              "ForgeMultipart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8272
+                              },
+                              "NBTConversionException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 971
+                              },
+                              "NBTHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7749
+                              }
+                            }
+                          },
+                          "network": {
+                            "type": "directory",
+                            "children": {
+                              "PacketHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1676
+                              },
+                              "message": {
+                                "type": "directory",
+                                "children": {
+                                  "MessageCapabilities.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2882
+                                  },
+                                  "MessageDownloadBegin.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3030
+                                  },
+                                  "MessageDownloadBeginAck.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2815
+                                  },
+                                  "MessageDownloadChunk.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6249
+                                  },
+                                  "MessageDownloadChunkAck.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2944
+                                  },
+                                  "MessageDownloadEnd.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3335
+                                  }
+                                }
+                              },
+                              "transfer": {
+                                "type": "directory",
+                                "children": {
+                                  "SchematicTransfer$State.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1816
+                                  },
+                                  "SchematicTransfer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1866
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "proxy": {
+                            "type": "directory",
+                            "children": {
+                              "ClientProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9740
+                              },
+                              "CommonProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10413
+                              },
+                              "ServerProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4133
+                              }
+                            }
+                          },
+                          "reference": {
+                            "type": "directory",
+                            "children": {
+                              "Constants$Inventory$InventoryOffset.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 664
+                              },
+                              "Constants$Inventory$Size.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              },
+                              "Constants$Inventory$SlotOffset.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 749
+                              },
+                              "Constants$Inventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 755
+                              },
+                              "Constants$Network.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 532
+                              },
+                              "Constants$SchematicChunk.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 570
+                              },
+                              "Constants$World.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 538
+                              },
+                              "Constants.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 709
+                              },
+                              "Names$Command$Download$Message.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1052
+                              },
+                              "Names$Command$Download.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 716
+                              },
+                              "Names$Command$List$Message.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1132
+                              },
+                              "Names$Command$List.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 696
+                              },
+                              "Names$Command$Remove$Message.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1083
+                              },
+                              "Names$Command$Remove.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 706
+                              },
+                              "Names$Command$Save$Message.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1189
+                              },
+                              "Names$Command$Save.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 696
+                              },
+                              "Names$Command.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "Names$Config$Category.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 850
+                              },
+                              "Names$Config.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4280
+                              },
+                              "Names$Gui$Control.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1507
+                              },
+                              "Names$Gui$Load.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 776
+                              },
+                              "Names$Gui$Save.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "Names$Gui.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 964
+                              },
+                              "Names$Keys.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 782
+                              },
+                              "Names$ModId.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 508
+                              },
+                              "Names$NBT.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1177
+                              },
+                              "Names$SBC.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 627
+                              },
+                              "Names.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 868
+                              },
+                              "Reference.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1060
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "FileUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2021
+                              },
+                              "ItemStackSortType$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1533
+                              },
+                              "ItemStackSortType$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1533
+                              },
+                              "ItemStackSortType$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1355
+                              },
+                              "ItemStackSortType$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1355
+                              },
+                              "ItemStackSortType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3515
+                              }
+                            }
+                          },
+                          "world": {
+                            "type": "directory",
+                            "children": {
+                              "WorldDummy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              },
+                              "chunk": {
+                                "type": "directory",
+                                "children": {
+                                  "ChunkProviderSchematic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2448
+                                  },
+                                  "SchematicContainer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2649
+                                  }
+                                }
+                              },
+                              "schematic": {
+                                "type": "directory",
+                                "children": {
+                                  "SchematicAlpha.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10262
+                                  },
+                                  "SchematicClassic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 963
+                                  },
+                                  "SchematicFormat.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4267
+                                  },
+                                  "SchematicUtil.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3431
+                                  },
+                                  "UnsupportedFormatException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 619
+                                  }
+                                }
+                              },
+                              "storage": {
+                                "type": "directory",
+                                "children": {
+                                  "SaveHandlerSchematic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1827
+                                  },
+                                  "Schematic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5897
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "api": {
+                            "type": "directory",
+                            "children": {
+                              "ISchematic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 998
+                              },
+                              "package-info.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 291
+                              },
+                              "event": {
+                                "type": "directory",
+                                "children": {
+                                  "DuplicateMappingException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 445
+                                  },
+                                  "package-info.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 307
+                                  },
+                                  "PostSchematicCaptureEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 998
+                                  },
+                                  "PreSchematicSaveEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2625
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 706
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 77
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "schematica": {
+                "type": "directory",
+                "children": {
+                  "logo.png": {
+                    "type": "file",
+                    "extension": ".png",
+                    "size": 29678
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ca_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1278
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1375
+                      },
+                      "da_DK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1290
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4165
+                      },
+                      "en_GB.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3544
+                      },
+                      "en_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1347
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7477
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1299
+                      },
+                      "es_MX.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1287
+                      },
+                      "fi_FI.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1352
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1416
+                      },
+                      "hu_HU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1371
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1335
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4661
+                      },
+                      "la_LA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 495
+                      },
+                      "lt_LT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1370
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1332
+                      },
+                      "no_NO.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3305
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1327
+                      },
+                      "pt_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1397
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1674
+                      },
+                      "sk_SK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1392
+                      },
+                      "sl_SI.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1332
+                      },
+                      "th_TH.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1810
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1367
+                      },
+                      "uk_UA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1845
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1354
+                      }
+                    }
+                  },
+                  "shaders": {
+                    "type": "directory",
+                    "children": {
+                      "alpha.frag": {
+                        "type": "file",
+                        "extension": ".frag",
+                        "size": 227
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 753
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 13714
+          }
+        }
+      }
+    }
+  }
+}

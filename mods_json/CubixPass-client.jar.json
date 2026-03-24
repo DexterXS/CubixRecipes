@@ -1,0 +1,947 @@
+{
+  "mod_name": "CubixPass-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixPass-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixPass-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1296135,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "vizzi": {
+                "type": "directory",
+                "children": {
+                  "cubixpass": {
+                    "type": "directory",
+                    "children": {
+                      "packet": {
+                        "type": "directory",
+                        "children": {
+                          "PacketBuyPassProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2601
+                          },
+                          "PacketSyncTask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5560
+                          },
+                          "PacketGetRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2615
+                          },
+                          "PacketSyncClientDataProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2631
+                          },
+                          "PacketTimeLeftDay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5238
+                          },
+                          "PacketErrorMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6956
+                          },
+                          "PacketTimeLeftDayProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2530
+                          },
+                          "PacketBuyPassSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2569
+                          },
+                          "PacketGetAllRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2603
+                          },
+                          "PacketErrorMessageProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2561
+                          },
+                          "PacketSyncRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2555
+                          },
+                          "PacketOpenGuiSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3085
+                          },
+                          "PacketGetRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3101
+                          },
+                          "PacketSyncClientDataSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3366
+                          },
+                          "PacketSyncOneRewardProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2555
+                          },
+                          "PacketGetAllReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4347
+                          },
+                          "PacketSyncOneReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7181
+                          },
+                          "PacketSyncReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7934
+                          },
+                          "PacketTimeLeftDaySerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2940
+                          },
+                          "PacketSyncRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5334
+                          },
+                          "PacketOpenGuiProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2626
+                          },
+                          "PacketSyncTaskProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2637
+                          },
+                          "PacketGetAllRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2608
+                          },
+                          "PacketBuyPass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1886
+                          },
+                          "PacketErrorMessageSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3192
+                          },
+                          "PacketGetReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6733
+                          },
+                          "PacketSyncOneRewardSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3297
+                          },
+                          "PacketChangeTaskSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2606
+                          },
+                          "PacketSyncTaskSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8078
+                          },
+                          "PacketOpenGui.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5998
+                          },
+                          "PacketChangeTask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1528
+                          },
+                          "PacketSyncClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6666
+                          },
+                          "PacketChangeTaskProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2582
+                          },
+                          "PacketBuyPassProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 530
+                          },
+                          "PacketSyncRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1845
+                          },
+                          "PacketSyncOneRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1327
+                          },
+                          "PacketTimeLeftDaySerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1185
+                          },
+                          "PacketSyncTaskProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 532
+                          },
+                          "PacketSyncRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 536
+                          },
+                          "PacketOpenGuiSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1199
+                          },
+                          "PacketSyncTaskSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 3230
+                          },
+                          "PacketSyncClientDataProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 544
+                          },
+                          "PacketGetRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 534
+                          },
+                          "PacketSyncClientDataSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1491
+                          },
+                          "PacketChangeTaskProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 536
+                          },
+                          "PacketOpenGuiProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 530
+                          },
+                          "PacketErrorMessageSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1298
+                          },
+                          "PacketTimeLeftDayProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 538
+                          },
+                          "PacketGetAllRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1125
+                          },
+                          "PacketSyncOneRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 542
+                          },
+                          "PacketGetRewardSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1231
+                          },
+                          "PacketGetAllRewardProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 540
+                          },
+                          "PacketBuyPassSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1030
+                          },
+                          "PacketErrorMessageProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 540
+                          },
+                          "PacketChangeTaskSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1087
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "reward": {
+                            "type": "directory",
+                            "children": {
+                              "type": {
+                                "type": "directory",
+                                "children": {
+                                  "RewardMoney.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2756
+                                  },
+                                  "Reward.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1437
+                                  },
+                                  "RewardCase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6827
+                                  },
+                                  "RewardItem.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3812
+                                  },
+                                  "RewardType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4173
+                                  }
+                                }
+                              },
+                              "RewardObject$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1251
+                              },
+                              "RewardObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7533
+                              },
+                              "RewardInfo$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1130
+                              },
+                              "RewardInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7098
+                              }
+                            }
+                          },
+                          "task": {
+                            "type": "directory",
+                            "children": {
+                              "TaskPlayerKill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2847
+                              },
+                              "TaskBlockPlace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5891
+                              },
+                              "TaskInteract.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6385
+                              },
+                              "Task.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5828
+                              },
+                              "TaskBlockBreak.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6921
+                              },
+                              "TaskType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5006
+                              },
+                              "TaskMobKill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6945
+                              },
+                              "TaskChatMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4621
+                              },
+                              "TaskPickup.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6460
+                              }
+                            }
+                          },
+                          "TaskClient$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1305
+                          },
+                          "ClientEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2138
+                          },
+                          "TaskClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11461
+                          }
+                        }
+                      },
+                      "Main.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5964
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiMessageModule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7605
+                          },
+                          "GuiScreenReward.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14410
+                          },
+                          "GuiScreenTask.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8978
+                          },
+                          "GuiSmallScreen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4871
+                          },
+                          "GuiBattlePass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 24511
+                          },
+                          "ScrollObject.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2246
+                          },
+                          "GuiBuyModule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9027
+                          },
+                          "GuiScreenHelp.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3971
+                          }
+                        }
+                      },
+                      "Resource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13401
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 873
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 701
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "ItemStackUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6484
+                          },
+                          "TimeUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9561
+                          },
+                          "CommonUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7098
+                          }
+                        }
+                      },
+                      "Fonts.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4350
+                      }
+                    }
+                  }
+                }
+              },
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1787
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3842
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixpass": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "almaz.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3398
+                          },
+                          "refresh.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 471
+                          },
+                          "rewardModule": {
+                            "type": "directory",
+                            "children": {
+                              "case": {
+                                "type": "directory",
+                                "children": {
+                                  "rare.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 29663
+                                  },
+                                  "mega.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 29847
+                                  },
+                                  "ultra.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 29204
+                                  },
+                                  "uncommon.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 34710
+                                  },
+                                  "common.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 31423
+                                  }
+                                }
+                              },
+                              "blur_big.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9544
+                              },
+                              "donate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 21402
+                              },
+                              "donate_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22418
+                              },
+                              "common.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 428
+                              },
+                              "blur.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4477
+                              },
+                              "common_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6428
+                              }
+                            }
+                          },
+                          "lock.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 553
+                          },
+                          "help": {
+                            "type": "directory",
+                            "children": {
+                              "pvp-kill.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6845
+                              },
+                              "mob-kill.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6959
+                              },
+                              "command.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6929
+                              },
+                              "chat.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1960
+                              }
+                            }
+                          },
+                          "buttonupdate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 263
+                          },
+                          "quest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 47853
+                          },
+                          "right_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5077
+                          },
+                          "textCubixPasspng.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15038
+                          },
+                          "help.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 541
+                          },
+                          "right.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 863
+                          },
+                          "exit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 724
+                          },
+                          "getrewardsmall.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1126
+                          },
+                          "getrewardbig.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1219
+                          },
+                          "left_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4911
+                          },
+                          "textbattlepass.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10457
+                          },
+                          "free.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18769
+                          },
+                          "buttonupdate_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2270
+                          },
+                          "left.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 853
+                          },
+                          "eclipse.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 178
+                          },
+                          "button1_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 324
+                          },
+                          "zvezda_active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 483
+                          },
+                          "bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 372400
+                          },
+                          "cubix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 14203
+                          },
+                          "emodji2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 16520
+                          },
+                          "donate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 39993
+                          },
+                          "exit_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 735
+                          },
+                          "button1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12985
+                          },
+                          "zvezda.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 448
+                          },
+                          "emodji1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12929
+                          },
+                          "rect_wipe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27159
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "ProximaNova-Semibold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 130760
+                      },
+                      "ProximaNova-Bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 129556
+                      },
+                      "ProximaNova-Regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 130636
+                      },
+                      "ProximaNova-Extrabld.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 129440
+                      },
+                      "ProximaNova-Light.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 132104
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2691
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1863
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "services": {
+                "type": "directory",
+                "children": {
+                  "hohserg.elegant.networking.impl.IPacketProvider": {
+                    "type": "file",
+                    "extension": ".ipacketprovider",
+                    "size": 564
+                  },
+                  "hohserg.elegant.networking.impl.ISerializerBase": {
+                    "type": "file",
+                    "extension": ".iserializerbase",
+                    "size": 586
+                  }
+                }
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "tmp_generated": {
+            "type": "directory",
+            "children": {
+              "cachedModid.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 9
+              },
+              "timeOffsetBetweenInitAndProcess.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 3
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 300
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2003
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 18433
+          }
+        }
+      }
+    }
+  }
+}

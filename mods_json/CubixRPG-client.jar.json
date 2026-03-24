@@ -1,0 +1,3017 @@
+{
+  "mod_name": "CubixRPG-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixRPG-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixRPG-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 11057666,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixrpg": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "ability": {
+                            "type": "directory",
+                            "children": {
+                              "list": {
+                                "type": "directory",
+                                "children": {
+                                  "AbilityHungerOfConscience.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2873
+                                  },
+                                  "AbilityExile.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8930
+                                  },
+                                  "AbilityPunching.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4226
+                                  },
+                                  "AbilityRoots.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4166
+                                  },
+                                  "AbilityAttraction.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3451
+                                  },
+                                  "AbilityDisarmament.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5349
+                                  },
+                                  "AbilitySuckingLife.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4455
+                                  },
+                                  "AbilityDamageLimitation.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5631
+                                  },
+                                  "AbilityClotOfMucus.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5172
+                                  },
+                                  "AbilityMagicalReflection.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4589
+                                  },
+                                  "AbilityPillarFire$Pillar.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6809
+                                  },
+                                  "AbilityDarkLightning.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5098
+                                  },
+                                  "AbilityCircleOfFireballs.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4810
+                                  },
+                                  "AbilityAnGod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4018
+                                  },
+                                  "AbilityInstantaneousMovement.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3257
+                                  },
+                                  "AbilityAnFly.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4070
+                                  },
+                                  "AbilityLordOfScourgeStrike.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7616
+                                  },
+                                  "AbilityStan.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4100
+                                  },
+                                  "AbilityRandomTeleportation.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8106
+                                  },
+                                  "AbilityPillarFire.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6591
+                                  },
+                                  "AbilityFumes.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4477
+                                  },
+                                  "AbilityClotDarkEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5113
+                                  },
+                                  "AbilityJump.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2921
+                                  },
+                                  "AbilityDevastation.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3523
+                                  },
+                                  "AbilityBansheeCry.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4254
+                                  },
+                                  "AbilityStrikeOnSquare.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3400
+                                  },
+                                  "AbilityHeavenlyPunishment.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3248
+                                  },
+                                  "AbilitySummoningDead.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4146
+                                  },
+                                  "AbilityFear.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3048
+                                  },
+                                  "AbilityExile$Location.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2665
+                                  },
+                                  "AbilityEnergyShield.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5062
+                                  },
+                                  "AbilityHauntingFireball.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5118
+                                  },
+                                  "AbilityDestruction.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3834
+                                  },
+                                  "AbilitySteelShield.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2917
+                                  },
+                                  "AbilityBundleOfEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4889
+                                  },
+                                  "AbilityOutburstAnger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5077
+                                  },
+                                  "AbilityDrowning.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3032
+                                  },
+                                  "AbilitySubstitution.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2814
+                                  },
+                                  "AbilitySpoilageDisease.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4792
+                                  },
+                                  "AbilityStealingHealth.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2852
+                                  },
+                                  "AbilityHauntingClotDarkEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5160
+                                  },
+                                  "AbilityImmobilization.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3414
+                                  },
+                                  "AbilityLightning.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3662
+                                  },
+                                  "AbilityAbsorptionOfRock.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3593
+                                  },
+                                  "AbilityScytheThrow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4049
+                                  },
+                                  "AbilityUndressing.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1016
+                                  },
+                                  "AbilityFieryBreath.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4680
+                                  },
+                                  "AbilityFireball.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5051
+                                  }
+                                }
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "AbilityDamageSource.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1199
+                                  },
+                                  "HealthWrapper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 761
+                                  },
+                                  "HurtWrapper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1606
+                                  },
+                                  "TypeOfAbilityUsage.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5464
+                                  }
+                                }
+                              },
+                              "AbilityWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8023
+                              },
+                              "ActiveAbilityWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1311
+                              },
+                              "AbilityTypes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12765
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "artefacts": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemFlaskWithSpirit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5470
+                                  },
+                                  "ItemCoreOfTheWeatherLord.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2159
+                                  },
+                                  "ItemFireRod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2196
+                                  },
+                                  "ItemPlaitForestOpudala.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2230
+                                  },
+                                  "ItemDarkCore.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2129
+                                  },
+                                  "ItemArtefact.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4403
+                                  },
+                                  "ItemChainOfSuffering.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5537
+                                  },
+                                  "ItemStaffOfFear.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2229
+                                  },
+                                  "ItemHelmetOfDomination.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4631
+                                  },
+                                  "ItemCursedMantle.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2258
+                                  },
+                                  "ItemStoneHeart.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2306
+                                  }
+                                }
+                              },
+                              "other": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemFragmentSoul.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2592
+                                  },
+                                  "ItemSpawnerEgg.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13617
+                                  },
+                                  "ItemSpawnerEgg$EntityEggStuff.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 830
+                                  },
+                                  "ItemCompendium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2785
+                                  }
+                                }
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemCubixRPG.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 852
+                                  }
+                                }
+                              },
+                              "RPGItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7232
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "directory",
+                            "children": {
+                              "mobs": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityAshBearer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10128
+                                  },
+                                  "EntityGuardian.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7996
+                                  },
+                                  "EntityLesnoeOpudalo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10941
+                                  },
+                                  "EntityMermaid.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21351
+                                  },
+                                  "EntityDefiledMechanicalGolem.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10212
+                                  },
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "EntityInfo.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 12677
+                                      },
+                                      "MobRankTypes.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5809
+                                      },
+                                      "EntityMobCubixRPG.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 21227
+                                      },
+                                      "EntityInfo$ItemDrop.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1287
+                                      },
+                                      "IMobLivingUpdate.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 229
+                                      },
+                                      "MobActions.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7991
+                                      }
+                                    }
+                                  },
+                                  "EntityPainfulSpoilage.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11828
+                                  },
+                                  "EntityDefiledBanshee.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8445
+                                  },
+                                  "EntityWalkSpirit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9958
+                                  },
+                                  "EntityWarden.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10191
+                                  },
+                                  "EntityEnderHunter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8296
+                                  },
+                                  "EntityPoltergeist.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11485
+                                  },
+                                  "EntityLordOfScourge.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13051
+                                  },
+                                  "EntityWoodSpirit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8467
+                                  },
+                                  "EntityFieryAspect.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8973
+                                  },
+                                  "EntityOmnipresentOko.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11325
+                                  },
+                                  "EntityDesertWanderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10055
+                                  }
+                                }
+                              },
+                              "weather": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityLightningBoltColored.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5619
+                                  }
+                                }
+                              },
+                              "EntityManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12219
+                              },
+                              "ai": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityAINearestAttackableTargetWithFilter$Sorter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3843
+                                  },
+                                  "EntityAINearestAttackableTargetWithFilter$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3801
+                                  },
+                                  "AINearestAttackableTarget$Sorter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1584
+                                  },
+                                  "EntityAINearestAttackableTargetWithFilter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7626
+                                  },
+                                  "AINearestAttackableTarget.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5639
+                                  }
+                                }
+                              },
+                              "abilities": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityClotOfMucus.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16192
+                                  },
+                                  "EntityBundleOfEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 15776
+                                  },
+                                  "EntityClotDarkEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17280
+                                  },
+                                  "EntityScytheThrow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16971
+                                  },
+                                  "EntityFireball.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17721
+                                  }
+                                }
+                              },
+                              "artefacts": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityChainOfSuffering.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17484
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "hooklib": {
+                            "type": "directory",
+                            "children": {
+                              "minecraft": {
+                                "type": "directory",
+                                "children": {
+                                  "DeobfuscationMetadataReader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9351
+                                  },
+                                  "PrimaryClassTransformer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2160
+                                  },
+                                  "MinecraftClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10405
+                                  },
+                                  "MinecraftClassTransformer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3037
+                                  },
+                                  "HookLoader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3433
+                                  },
+                                  "HookLibPlugin.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4349
+                                  },
+                                  "SecondaryTransformerHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3213
+                                  },
+                                  "PrimaryClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8846
+                                  }
+                                }
+                              },
+                              "asm": {
+                                "type": "directory",
+                                "children": {
+                                  "HookInjectorFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1119
+                                  },
+                                  "Hook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1630
+                                  },
+                                  "HookInjectorFactory$MethodEnter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1803
+                                  },
+                                  "HookInjectorMethodVisitor$MethodExit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1748
+                                  },
+                                  "SafeClassWriter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3886
+                                  },
+                                  "ReadClassHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3599
+                                  },
+                                  "HookContainerParser$HookAnnotationVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2298
+                                  },
+                                  "ClassMetadataReader$CheckSuperClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1333
+                                  },
+                                  "Hook$LocalVariable.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 450
+                                  },
+                                  "HookContainerParser$HookClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2588
+                                  },
+                                  "VariableIdHelper$1$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4648
+                                  },
+                                  "HookInjectorFactory$LineNumber.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1855
+                                  },
+                                  "HookInjectorClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4921
+                                  },
+                                  "AsmHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 26848
+                                  },
+                                  "Hook$ReturnValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 432
+                                  },
+                                  "HookContainerParser$HookMethodVisitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1880
+                                  },
+                                  "HookInjectorMethodVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3022
+                                  },
+                                  "HookContainerParser.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 18420
+                                  },
+                                  "ReturnValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4867
+                                  },
+                                  "ClassMetadataReader$FindMethodClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4890
+                                  },
+                                  "ClassMetadataReader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11816
+                                  },
+                                  "HookLogger$SystemOutLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3932
+                                  },
+                                  "HookClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10686
+                                  },
+                                  "AsmHook$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1121
+                                  },
+                                  "HookInjectorMethodVisitor$LineNumber.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2013
+                                  },
+                                  "VariableIdHelper$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2049
+                                  },
+                                  "TypeHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7140
+                                  },
+                                  "ReturnCondition.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4958
+                                  },
+                                  "HookLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 496
+                                  },
+                                  "HookInjectorMethodVisitor$MethodEnter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1378
+                                  },
+                                  "ClassMetadataReader$MethodReference.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3387
+                                  },
+                                  "HookContainerParser$HookMethodVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3375
+                                  },
+                                  "HookPriority.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4785
+                                  },
+                                  "AsmHook$Builder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21331
+                                  },
+                                  "HookLogger$VanillaLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1685
+                                  },
+                                  "VariableIdHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3869
+                                  },
+                                  "HookInjectorFactory$MethodExit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1955
+                                  }
+                                }
+                              },
+                              "example": {
+                                "type": "directory",
+                                "children": {
+                                  "ExampleHookLoader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2680
+                                  },
+                                  "AnnotationHooks.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 363
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "CommonUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17934
+                              },
+                              "DamageManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10066
+                              },
+                              "aabb": {
+                                "type": "directory",
+                                "children": {
+                                  "AABBWrapper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7765
+                                  }
+                                }
+                              },
+                              "math": {
+                                "type": "directory",
+                                "children": {
+                                  "Mat4.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2857
+                                  },
+                                  "Vector3.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14197
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "altarBuilder": {
+                                "type": "directory",
+                                "children": {
+                                  "BlockAltarBuilder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5305
+                                  }
+                                }
+                              },
+                              "tiles": {
+                                "type": "directory",
+                                "children": {
+                                  "TileHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2436
+                                  },
+                                  "altarBuilder": {
+                                    "type": "directory",
+                                    "children": {
+                                      "TileEntityAltarBuilder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 14371
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "RPGBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1016
+                              }
+                            }
+                          },
+                          "CommonEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 327
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "altarBuilder": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiAltarBuilder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16489
+                                  }
+                                }
+                              },
+                              "element": {
+                                "type": "directory",
+                                "children": {
+                                  "Scrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12882
+                                  }
+                                }
+                              },
+                              "compendium": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiCompendium$StraightScrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13173
+                                  },
+                                  "GuiCompendium$IDropData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 578
+                                  },
+                                  "GuiCompendium$ClientEntityInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11584
+                                  },
+                                  "GuiCompendium$ClientEntityInfo$2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1830
+                                  },
+                                  "GuiCompendium$ClientEntityInfo$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2285
+                                  },
+                                  "GuiCompendium$DropType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3231
+                                  },
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiScreenCompendium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7233
+                                      }
+                                    }
+                                  },
+                                  "GuiCompendium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 47969
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "entities": {
+                                "type": "directory",
+                                "children": {
+                                  "renderers": {
+                                    "type": "directory",
+                                    "children": {
+                                      "mobs": {
+                                        "type": "directory",
+                                        "children": {
+                                          "RenderDefiledMechanicalGolem.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4088
+                                          },
+                                          "RenderOmnipresentOko.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8593
+                                          },
+                                          "RenderWalkSpirit.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4071
+                                          },
+                                          "RenderLesnoeOpudalo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4099
+                                          },
+                                          "RenderFieryAspect.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4101
+                                          },
+                                          "RenderDesertWanderer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4058
+                                          },
+                                          "RenderPainfulSpoilage.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2868
+                                          },
+                                          "RenderMermaid.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4049
+                                          },
+                                          "RenderWoodSpirit.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4098
+                                          },
+                                          "RenderWarden.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4004
+                                          },
+                                          "RenderAshBearer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4088
+                                          },
+                                          "RenderDefiledBanshee.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4093
+                                          },
+                                          "RenderEnderHunter.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4041
+                                          },
+                                          "RenderLordOfScourge.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4026
+                                          },
+                                          "RenderPoltergeist.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4058
+                                          },
+                                          "RenderGuardian.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3988
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "models": {
+                                    "type": "directory",
+                                    "children": {
+                                      "mobs": {
+                                        "type": "directory",
+                                        "children": {
+                                          "DesertWandererModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8113
+                                          },
+                                          "WoodSpiritModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8429
+                                          },
+                                          "GuardianModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 10638
+                                          },
+                                          "EnderHunterModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8008
+                                          },
+                                          "DefiledBansheeModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 7947
+                                          },
+                                          "FieryAspectModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 9675
+                                          },
+                                          "PainfulSpoilageModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3969
+                                          },
+                                          "AshBearerModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 16263
+                                          },
+                                          "WalkSpiritModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8820
+                                          },
+                                          "LordOfScourgeModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 14775
+                                          },
+                                          "LesnoeOpudaloModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 13335
+                                          },
+                                          "PoltergeistModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 11989
+                                          },
+                                          "MermaidModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 7641
+                                          },
+                                          "DefiledMechanicalGolemModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 9877
+                                          },
+                                          "WardenModel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 16039
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "blocks": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderTileEntityAltarBuilder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8005
+                                  }
+                                }
+                              },
+                              "abilities": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderEntityFireball.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4744
+                                  },
+                                  "RenderScytheThrow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5451
+                                  },
+                                  "RenderEntityBundleOfEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7312
+                                  },
+                                  "RenderEntityClotDarkEnergy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7173
+                                  },
+                                  "RenderEntityClotOfMucus.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3279
+                                  }
+                                }
+                              },
+                              "effects": {
+                                "type": "directory",
+                                "children": {
+                                  "LightningFX.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9221
+                                  },
+                                  "LightningArcFX.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2682
+                                  }
+                                }
+                              },
+                              "artefacts": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderArtefacts.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10316
+                                  },
+                                  "RenderArtefacts$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1235
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "rpg": {
+                            "type": "directory",
+                            "children": {
+                              "abilities": {
+                                "type": "directory",
+                                "children": {
+                                  "effects": {
+                                    "type": "directory",
+                                    "children": {
+                                      "AbilityEffects.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 25492
+                                      },
+                                      "particles": {
+                                        "type": "directory",
+                                        "children": {
+                                          "ParticleLightningBoltCommon$Segment.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 6065
+                                          },
+                                          "ParticleCustom.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5274
+                                          },
+                                          "FXBoreSparkle.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 12124
+                                          },
+                                          "ParticleLightningBoltCommon$SegmentLightSorter.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1936
+                                          },
+                                          "ParticleLightningBoltCommon$SegmentSorter.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2349
+                                          },
+                                          "ParticleLightningBolt.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 15815
+                                          },
+                                          "EntityLineArc.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 12947
+                                          },
+                                          "ParticleLightningBoltCommon$BoltPoint.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1498
+                                          },
+                                          "ParticleLightningBoltCommon.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 10561
+                                          }
+                                        }
+                                      },
+                                      "render": {
+                                        "type": "directory",
+                                        "children": {
+                                          "ParticleRenderer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 12526
+                                          }
+                                        }
+                                      },
+                                      "AbilityEffects$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2822
+                                      }
+                                    }
+                                  },
+                                  "ClientAbilityHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4704
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "HooksUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3243
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "directory",
+                            "children": {
+                              "renderers": {
+                                "type": "directory",
+                                "children": {
+                                  "weather": {
+                                    "type": "directory",
+                                    "children": {
+                                      "RenderLightningBoltColored.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6507
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "CTickHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10037
+                          },
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10386
+                          },
+                          "texture": {
+                            "type": "directory",
+                            "children": {
+                              "ResourceManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5905
+                              }
+                            }
+                          },
+                          "KeyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 975
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 143
+                          },
+                          "ClientEvents$FreezeMovementInput.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1550
+                          },
+                          "effects": {
+                            "type": "directory",
+                            "children": {
+                              "EffectHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3980
+                              }
+                            }
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8125
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 669
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11890
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15197
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "NetworkUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2300
+                              }
+                            }
+                          },
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9452
+                          }
+                        }
+                      },
+                      "Core$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 784
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7514
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5545
+                      },
+                      "Core$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 782
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3852
+                      },
+                      "Core$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 784
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3317
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixrpg": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "artefacts": {
+                            "type": "directory",
+                            "children": {
+                              "helmetOfDomination.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 50691
+                              },
+                              "plaitForestOpudala.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14840
+                              },
+                              "chainOfSuffering.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 22864
+                              },
+                              "fireRod.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13324
+                              },
+                              "cursedMantle.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 26628
+                              },
+                              "darkCore.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 51882
+                              },
+                              "coreOfTheWeatherLord.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 23746
+                              },
+                              "staffOfFear.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 21624
+                              },
+                              "stoneHeart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19407
+                              },
+                              "flaskWithSpirit.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18774
+                              }
+                            }
+                          },
+                          "compendium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 83492
+                          },
+                          "fragmentSoul.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2486
+                          }
+                        }
+                      },
+                      "mobs": {
+                        "type": "directory",
+                        "children": {
+                          "walkSpirit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8836
+                          },
+                          "ashBearer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10005
+                          },
+                          "defiledMechanicalGolem.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3844
+                          },
+                          "enderHunter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5744
+                          },
+                          "woodSpirit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12399
+                          },
+                          "lesnoeOpudalo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5015
+                          },
+                          "defiledBanshee.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4016
+                          },
+                          "guardian.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9739
+                          },
+                          "mermaid.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3640
+                          },
+                          "lordOfScourge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11074
+                          },
+                          "painfulSpoilage.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3973
+                          },
+                          "poltergeist.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2982
+                          },
+                          "desertWanderer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2123
+                          },
+                          "fieryAspect.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5045
+                          },
+                          "warden.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9961
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "artefacts": {
+                            "type": "directory",
+                            "children": {
+                              "darkCore.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4533
+                              },
+                              "cursedMantle.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3405
+                              },
+                              "chainOfSuffering.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 848
+                              },
+                              "flaskWithSpirit.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3453
+                              },
+                              "plaitForestOpudala.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3164
+                              },
+                              "coreOfTheWeatherLord.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2425
+                              },
+                              "fireRod.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 811
+                              },
+                              "helmetOfDomination.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3673
+                              },
+                              "staffOfFear.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1528
+                              },
+                              "stoneHeart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3118
+                              }
+                            }
+                          },
+                          "abilities": {
+                            "type": "directory",
+                            "children": {
+                              "fireball.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2441
+                              }
+                            }
+                          },
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "altar_builder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12762
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "misc": {
+                        "type": "directory",
+                        "children": {
+                          "particles2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 48449
+                          },
+                          "p_large.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 904
+                          },
+                          "particles.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 35
+                          },
+                          "particles2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 35
+                          },
+                          "particles.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 94673
+                          },
+                          "p_small.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 408
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "compendium": {
+                            "type": "directory",
+                            "children": {
+                              "current": {
+                                "type": "directory",
+                                "children": {
+                                  "specifications": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_bow.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 2641
+                                      },
+                                      "icon_swords.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 760
+                                      },
+                                      "icon_heart.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 281
+                                      },
+                                      "icon_agro.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 608
+                                      },
+                                      "icon_shield.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 2791
+                                      },
+                                      "icon_body.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 1161
+                                      },
+                                      "icon_eye.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 2565
+                                      }
+                                    }
+                                  },
+                                  "btn_back.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 6029
+                                  },
+                                  "ritual.gif": {
+                                    "type": "file",
+                                    "extension": ".gif",
+                                    "size": 382828
+                                  },
+                                  "box_drop.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 921
+                                  },
+                                  "mobs": {
+                                    "type": "directory",
+                                    "children": {
+                                      "box_rank_epic.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 533
+                                      },
+                                      "box_rank_supreme.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 535
+                                      },
+                                      "box_name.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 804
+                                      },
+                                      "box_rank_common.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 536
+                                      },
+                                      "box_mob.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 1663
+                                      }
+                                    }
+                                  },
+                                  "box_description.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 8859
+                                  },
+                                  "box_name.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2708
+                                  },
+                                  "box_entity.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 16933
+                                  },
+                                  "box_specifications.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 7092
+                                  },
+                                  "box_rank_common.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2410
+                                  },
+                                  "box_rank_supreme.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2352
+                                  },
+                                  "box_rank_epic.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2362
+                                  },
+                                  "box_drops.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 6987
+                                  },
+                                  "box_mobs.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5504
+                                  }
+                                }
+                              },
+                              "box_name.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4003
+                              },
+                              "box_rank_supreme.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2143
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 541829
+                              },
+                              "logo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5008
+                              },
+                              "card.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13381
+                              },
+                              "box_rank_epic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2145
+                              },
+                              "gear_bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10463
+                              },
+                              "small_gear.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10271
+                              },
+                              "small_gear1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9023
+                              },
+                              "gear.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19824
+                              },
+                              "box_rank_common.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2132
+                              }
+                            }
+                          },
+                          "altarBuilder": {
+                            "type": "directory",
+                            "children": {
+                              "slot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 403
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2625
+                              },
+                              "btn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 603
+                              },
+                              "title.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1759
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "other": {
+                        "type": "directory",
+                        "children": {
+                          "abilities": {
+                            "type": "directory",
+                            "children": {
+                              "shard.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 60472
+                              },
+                              "particles_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 60335
+                              },
+                              "particles.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 73669
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "particle": {
+                        "type": "directory",
+                        "children": {
+                          "particles.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 17429
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "red.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 185
+                          },
+                          "altar_builder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2708
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "mobs": {
+                        "type": "directory",
+                        "children": {
+                          "lesnoeOpudalo": {
+                            "type": "directory",
+                            "children": {
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 36142
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 15671
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 36656
+                              }
+                            }
+                          },
+                          "poltergeist": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 130653
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 352360
+                              },
+                              "hit.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 106399
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 94695
+                              }
+                            }
+                          },
+                          "fieryAspect": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 30376
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 6681
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 18322
+                              }
+                            }
+                          },
+                          "warden": {
+                            "type": "directory",
+                            "children": {
+                              "hit.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 95824
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 141208
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 104144
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 352498
+                              }
+                            }
+                          },
+                          "defiledMechanicalGolem": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 22919
+                              },
+                              "activationHeart.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 12449
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 49438
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 6640
+                              },
+                              "deactivationHeart.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 10862
+                              }
+                            }
+                          },
+                          "woodSpirit": {
+                            "type": "directory",
+                            "children": {
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 62087
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 9858
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 40922
+                              }
+                            }
+                          },
+                          "walkSpirit": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 27145
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 10235
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 27805
+                              }
+                            }
+                          },
+                          "omnipresentOko": {
+                            "type": "directory",
+                            "children": {
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 11448
+                              },
+                              "say3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 12732
+                              },
+                              "say2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 14142
+                              },
+                              "say1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 16907
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 16366
+                              }
+                            }
+                          },
+                          "desertWanderer": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 42538
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 10903
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 35004
+                              }
+                            }
+                          },
+                          "lordOfScourge": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 132427
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 373102
+                              },
+                              "hit.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 66332
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 70316
+                              }
+                            }
+                          },
+                          "defiledBanshee": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 16217
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 20502
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 59664
+                              }
+                            }
+                          },
+                          "painfulSpoilage": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 28715
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 8937
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 130708
+                              }
+                            }
+                          },
+                          "guardian": {
+                            "type": "directory",
+                            "children": {
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 7145
+                              }
+                            }
+                          },
+                          "mermaid": {
+                            "type": "directory",
+                            "children": {
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 42266
+                              },
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 28394
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 11417
+                              }
+                            }
+                          },
+                          "ashBearer": {
+                            "type": "directory",
+                            "children": {
+                              "say.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 169693
+                              },
+                              "hurt.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 66496
+                              },
+                              "hit.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 84533
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 143722
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "abilities": {
+                        "type": "directory",
+                        "children": {
+                          "hungerOfConscience": {
+                            "type": "directory",
+                            "children": {
+                              "sound3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 591195
+                              },
+                              "sound2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 617871
+                              },
+                              "sound1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 419559
+                              }
+                            }
+                          },
+                          "clotOfMucus": {
+                            "type": "directory",
+                            "children": {
+                              "dead2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 9033
+                              },
+                              "dead1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 9655
+                              }
+                            }
+                          },
+                          "fumes": {
+                            "type": "directory",
+                            "children": {
+                              "fumes.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 11467
+                              }
+                            }
+                          },
+                          "devastation": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 438879
+                              }
+                            }
+                          },
+                          "outburstAnger": {
+                            "type": "directory",
+                            "children": {
+                              "sound1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 155355
+                              },
+                              "sound2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 68682
+                              }
+                            }
+                          },
+                          "spoilageDisease": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 22750
+                              }
+                            }
+                          },
+                          "anGod": {
+                            "type": "directory",
+                            "children": {
+                              "sound4.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 68163
+                              },
+                              "sound3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 94614
+                              },
+                              "sound2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 86618
+                              },
+                              "sound1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 85969
+                              },
+                              "sound5.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 66866
+                              }
+                            }
+                          },
+                          "bansheeCry": {
+                            "type": "directory",
+                            "children": {
+                              "cry.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 62811
+                              }
+                            }
+                          },
+                          "fear": {
+                            "type": "directory",
+                            "children": {
+                              "fear4.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 17638
+                              },
+                              "fear1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 20533
+                              },
+                              "fear2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 21047
+                              },
+                              "fear3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 22043
+                              }
+                            }
+                          },
+                          "punching": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 88631
+                              }
+                            }
+                          },
+                          "fieryBreath": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 315408
+                              }
+                            }
+                          },
+                          "immobilization": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 38891
+                              }
+                            }
+                          },
+                          "substitution": {
+                            "type": "directory",
+                            "children": {
+                              "change.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 16989
+                              }
+                            }
+                          },
+                          "lordOfScourgeStrike": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 25084
+                              }
+                            }
+                          },
+                          "exile": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 457265
+                              }
+                            }
+                          },
+                          "scytheThrow": {
+                            "type": "directory",
+                            "children": {
+                              "cast.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 16491
+                              }
+                            }
+                          },
+                          "roots": {
+                            "type": "directory",
+                            "children": {
+                              "roots1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 13912
+                              },
+                              "roots2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 14732
+                              },
+                              "roots3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 14100
+                              }
+                            }
+                          },
+                          "energyShield": {
+                            "type": "directory",
+                            "children": {
+                              "shieldStart.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 15923
+                              },
+                              "shieldBlock.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 5961
+                              },
+                              "shieldStop.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 21330
+                              }
+                            }
+                          },
+                          "anFly": {
+                            "type": "directory",
+                            "children": {
+                              "say1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 11844
+                              },
+                              "say2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 12569
+                              },
+                              "say3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 13975
+                              }
+                            }
+                          },
+                          "bundleOfEnergy": {
+                            "type": "directory",
+                            "children": {
+                              "dead1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 13557
+                              },
+                              "dead2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 13554
+                              }
+                            }
+                          },
+                          "summoningDead": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 300973
+                              }
+                            }
+                          },
+                          "darkLightning": {
+                            "type": "directory",
+                            "children": {
+                              "lightning1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 6583
+                              },
+                              "lightning2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 7344
+                              }
+                            }
+                          },
+                          "destruction": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 108291
+                              }
+                            }
+                          },
+                          "pillarFire": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 243073
+                              }
+                            }
+                          },
+                          "stealingHealth": {
+                            "type": "directory",
+                            "children": {
+                              "steal.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 6490
+                              }
+                            }
+                          },
+                          "instantaneousMovement": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 92693
+                              }
+                            }
+                          },
+                          "disarmament": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 19390
+                              }
+                            }
+                          },
+                          "jump": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 21143
+                              }
+                            }
+                          },
+                          "drowning": {
+                            "type": "directory",
+                            "children": {
+                              "sound.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 21303
+                              }
+                            }
+                          },
+                          "randomTeleportation": {
+                            "type": "directory",
+                            "children": {
+                              "teleport.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 12848
+                              }
+                            }
+                          },
+                          "strikeOnSquare": {
+                            "type": "directory",
+                            "children": {
+                              "earth.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 51379
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "altarBuilder": {
+                            "type": "directory",
+                            "children": {
+                              "build.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 32808
+                              },
+                              "scanning.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 11654
+                              },
+                              "stop.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 17122
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2704
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2106
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "abilities": {
+                        "type": "directory",
+                        "children": {
+                          "fireball.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 7715
+                          }
+                        }
+                      },
+                      "artefacts": {
+                        "type": "directory",
+                        "children": {
+                          "fireRod.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 13440
+                          },
+                          "flaskWithSpirit.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 9856
+                          },
+                          "chainOfSuffering.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 30672
+                          },
+                          "plaitForestOpudala.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 7776
+                          },
+                          "cursedMantle.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 10928
+                          },
+                          "darkCore.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 31328
+                          },
+                          "staffOfFear.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 22672
+                          },
+                          "coreOfTheWeatherLord.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 22544
+                          },
+                          "stoneHeart.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 15024
+                          },
+                          "helmetOfDomination.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 8464
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "altar_builder.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 35808
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 12682
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 281
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 185
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 9878
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 26916
+          }
+        }
+      }
+    }
+  }
+}

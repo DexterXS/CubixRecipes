@@ -1,0 +1,2527 @@
+{
+  "mod_name": "CubixFish-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixFish-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixFish-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1735011,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixfish": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "fishing_rod": {
+                                "type": "directory",
+                                "children": {
+                                  "element": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ItemFishingBait.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4173
+                                      },
+                                      "ItemFishingSpool.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6467
+                                      },
+                                      "ItemFishingHook.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5928
+                                      },
+                                      "base": {
+                                        "type": "directory",
+                                        "children": {
+                                          "FishingBaitData.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3222
+                                          },
+                                          "FishingSpoolData.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4338
+                                          },
+                                          "IFishingRodElement$ElementLevel.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5404
+                                          },
+                                          "IFishingRodElementData.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 490
+                                          },
+                                          "IFishingRodElement.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 631
+                                          },
+                                          "FishingLineData.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3150
+                                          },
+                                          "FishingHookData.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3877
+                                          },
+                                          "IFishingRodElementDuration.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 618
+                                          }
+                                        }
+                                      },
+                                      "ItemFishingLine.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4927
+                                      },
+                                      "ItemFishingRodElement.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 11650
+                                      }
+                                    }
+                                  },
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FishingRodTypes.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5377
+                                      },
+                                      "IFishingRod.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1476
+                                      },
+                                      "IFishingRod$ElementType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4712
+                                      },
+                                      "FishingRodData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2622
+                                      }
+                                    }
+                                  },
+                                  "ItemFishingRod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 23512
+                                  }
+                                }
+                              },
+                              "lake": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemLakeCreator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3195
+                                  }
+                                }
+                              },
+                              "combinator": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4170
+                                  }
+                                }
+                              },
+                              "fish_module": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemFishModule.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8541
+                                  }
+                                }
+                              },
+                              "terrarium": {
+                                "type": "directory",
+                                "children": {
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "AquaTerrariumType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3458
+                                      },
+                                      "IAquaTerrarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 895
+                                      }
+                                    }
+                                  },
+                                  "ItemAquaTerrarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8621
+                                  }
+                                }
+                              },
+                              "fish": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemFish.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21707
+                                  },
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "IFish.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2266
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5665
+                                  },
+                                  "ItemEntropyAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4943
+                                  }
+                                }
+                              },
+                              "FishItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12547
+                              },
+                              "board": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemInformationBoard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2680
+                                  }
+                                }
+                              },
+                              "entropy_register": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemEntropyRegister.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3434
+                                  }
+                                }
+                              },
+                              "fish_food": {
+                                "type": "directory",
+                                "children": {
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FishFoodType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4657
+                                      },
+                                      "IFishFood.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 259
+                                      }
+                                    }
+                                  },
+                                  "ItemFishFood.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5857
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "lake": {
+                            "type": "directory",
+                            "children": {
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "LakeUtils$AquaCombinatorManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2364
+                                  },
+                                  "LakeUtils$AquariumManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2397
+                                  },
+                                  "TempFishData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 941
+                                  },
+                                  "LakeUtils$EntropyAquariumManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2422
+                                  },
+                                  "LakeUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3886
+                                  },
+                                  "TempProductData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 889
+                                  }
+                                }
+                              },
+                              "fish": {
+                                "type": "directory",
+                                "children": {
+                                  "FishData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 18471
+                                  },
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "IFishData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1395
+                                      },
+                                      "FishGenomes.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2912
+                                      },
+                                      "FishModel.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6411
+                                      }
+                                    }
+                                  },
+                                  "FishData$FishProduct.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1739
+                                  },
+                                  "FishType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5943
+                                  }
+                                }
+                              },
+                              "miniGame": {
+                                "type": "directory",
+                                "children": {
+                                  "MiniGameData$Actions.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3723
+                                  },
+                                  "MiniGameData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1651
+                                  }
+                                }
+                              },
+                              "Lake.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9246
+                              },
+                              "board": {
+                                "type": "directory",
+                                "children": {
+                                  "BoardData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3640
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "entropy": {
+                            "type": "directory",
+                            "children": {
+                              "EntropyFishData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3397
+                              }
+                            }
+                          },
+                          "modules": {
+                            "type": "directory",
+                            "children": {
+                              "FishModule$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1128
+                              },
+                              "FishModule$IncreaseSatiety.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5326
+                              },
+                              "FishModule$EntropyLightCycleControl.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6555
+                              },
+                              "FishModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5810
+                              },
+                              "FishModule$EntropyLuck.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6276
+                              },
+                              "FishModule$GeneMutation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6123
+                              },
+                              "FishModule$GeneFiltration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7313
+                              },
+                              "FishModule$SafeEnvironment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5656
+                              },
+                              "FishModule$EntropyIncreaseSatiety.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6427
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "IFishModule.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 509
+                                  }
+                                }
+                              },
+                              "FishModule$EntropyFishLeveling.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6279
+                              }
+                            }
+                          },
+                          "tile": {
+                            "type": "directory",
+                            "children": {
+                              "list": {
+                                "type": "directory",
+                                "children": {
+                                  "TileEntityEntropyAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 20933
+                                  },
+                                  "TileEntityFakeAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10638
+                                  },
+                                  "TileEntityAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21450
+                                  },
+                                  "TileEntityFakeEntropyAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10151
+                                  },
+                                  "TileEntityBoardFake.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4538
+                                  },
+                                  "TileEntityBoard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11131
+                                  },
+                                  "TileEntityFakeAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10409
+                                  },
+                                  "TileEntityAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 19214
+                                  }
+                                }
+                              },
+                              "TileHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4956
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "entropy": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ContainerEntropyAquarium$SlotFish.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1891
+                                      },
+                                      "ContainerEntropyAquarium$SlotProduct.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1294
+                                      },
+                                      "ContainerEntropyAquarium$SlotFishFood.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1869
+                                      },
+                                      "ContainerEntropyAquarium$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1232
+                                      },
+                                      "ContainerEntropyAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 10711
+                                      }
+                                    }
+                                  },
+                                  "ContainerAquarium$SlotProduct.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1271
+                                  },
+                                  "inventory": {
+                                    "type": "directory",
+                                    "children": {
+                                      "InventoryAquariumProducts.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 13788
+                                      },
+                                      "InventoryAquariumFishFood.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8408
+                                      },
+                                      "InventoryAquariumFish.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9495
+                                      }
+                                    }
+                                  },
+                                  "ContainerAquarium$SlotFish.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1999
+                                  },
+                                  "ContainerAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10665
+                                  },
+                                  "ContainerAquarium$SlotFishFood.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1785
+                                  }
+                                }
+                              },
+                              "terrarium": {
+                                "type": "directory",
+                                "children": {
+                                  "ContainerAquaTerrarium$SlotAquaTerrarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3484
+                                  },
+                                  "inventory": {
+                                    "type": "directory",
+                                    "children": {
+                                      "InventoryAquaTerrarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5675
+                                      }
+                                    }
+                                  },
+                                  "ContainerAquaTerrarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12888
+                                  }
+                                }
+                              },
+                              "combinator": {
+                                "type": "directory",
+                                "children": {
+                                  "ContainerAquaCombinator$SlotResult.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1186
+                                  },
+                                  "ContainerAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6582
+                                  },
+                                  "ContainerAquaCombinator$SlotFood.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1873
+                                  },
+                                  "ContainerAquaCombinator$SlotFish.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2253
+                                  }
+                                }
+                              },
+                              "fishing_rod": {
+                                "type": "directory",
+                                "children": {
+                                  "ContainerFishingRod$SlotFishingRodElement.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4462
+                                  },
+                                  "ContainerFishingRod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11562
+                                  },
+                                  "InventoryFishingRodElements.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5604
+                                  }
+                                }
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "slot": {
+                                    "type": "directory",
+                                    "children": {
+                                      "SlotModule.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2771
+                                      }
+                                    }
+                                  },
+                                  "InventoryModules.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11043
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "combinator": {
+                                "type": "directory",
+                                "children": {
+                                  "BlockAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5262
+                                  },
+                                  "BlockFakeAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5261
+                                  }
+                                }
+                              },
+                              "aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "IBlockFakeAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 171
+                                      },
+                                      "IBlockAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 262
+                                      },
+                                      "AquariumType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5209
+                                      }
+                                    }
+                                  },
+                                  "original": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5466
+                                      },
+                                      "BlockFakeAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5476
+                                      }
+                                    }
+                                  },
+                                  "entropy": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockFakeEntropyAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5771
+                                      },
+                                      "BlockEntropyAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6550
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "board": {
+                                "type": "directory",
+                                "children": {
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockBoardType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3051
+                                      },
+                                      "IBoard.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 254
+                                      }
+                                    }
+                                  },
+                                  "BlockInformationBoard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7070
+                                  }
+                                }
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "IBlockIgnoreHighlight.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 166
+                                  }
+                                }
+                              },
+                              "FishBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5049
+                              }
+                            }
+                          },
+                          "GuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6024
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "CommonUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7367
+                              },
+                              "fisherman": {
+                                "type": "directory",
+                                "children": {
+                                  "FishermanPlayer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4591
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "currency": {
+                            "type": "directory",
+                            "children": {
+                              "CurrencyType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6981
+                              }
+                            }
+                          },
+                          "mixin": {
+                            "type": "directory",
+                            "children": {
+                              "MixinS0EPacketSpawnObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3579
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "directory",
+                            "children": {
+                              "fishing": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityFishingHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 23466
+                                  }
+                                }
+                              },
+                              "EntityManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3243
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3657
+                          },
+                          "grid": {
+                            "type": "directory",
+                            "children": {
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "PointCube.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2022
+                                  },
+                                  "Vector3.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13577
+                                  },
+                                  "GridUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4607
+                                  },
+                                  "Vector3m.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3830
+                                  },
+                                  "Vector2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13116
+                                  }
+                                }
+                              },
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "Render3DBox.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2433
+                                  },
+                                  "Render3DGrid.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4437
+                                  }
+                                }
+                              },
+                              "GridHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10673
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "container": {
+                                "type": "directory",
+                                "children": {
+                                  "aquarium": {
+                                    "type": "directory",
+                                    "children": {
+                                      "entropy": {
+                                        "type": "directory",
+                                        "children": {
+                                          "GuiContainerEntropyAquarium.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 10681
+                                          }
+                                        }
+                                      },
+                                      "GuiContainerAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 20331
+                                      }
+                                    }
+                                  },
+                                  "fishing_rod": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiContainerFishingRod.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 10450
+                                      }
+                                    }
+                                  },
+                                  "terrarium": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiContainerAquaTerrarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5846
+                                      }
+                                    }
+                                  },
+                                  "combinator": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiContainerAquaCombinator.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8991
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "mini_game": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiFishingRodMiniGame$HookTypes.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4295
+                                  },
+                                  "GuiFishingRodMiniGame.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21969
+                                  },
+                                  "GuiFishingRodMiniGame$ItemData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1046
+                                  }
+                                }
+                              },
+                              "registry_entropic": {
+                                "type": "directory",
+                                "children": {
+                                  "UIEntropyRegister.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 32698
+                                  },
+                                  "UIEntropyRegister$HoveringTextData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3451
+                                  }
+                                }
+                              },
+                              "board": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiBoard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 19945
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "items": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderAquarium$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1200
+                                  },
+                                  "RenderAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3632
+                                  },
+                                  "RenderFish.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4494
+                                  },
+                                  "RenderAquaTerrarium$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1202
+                                  },
+                                  "RenderFish$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1225
+                                  },
+                                  "RenderAquaTerrarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6810
+                                  },
+                                  "RenderAquaCombinator$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1261
+                                  },
+                                  "RenderFishingRod$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1320
+                                  },
+                                  "RenderEntropyAquarium$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1251
+                                  },
+                                  "RenderEntropyAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4363
+                                  },
+                                  "RenderFishingRod.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10872
+                                  },
+                                  "RenderAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4683
+                                  }
+                                }
+                              },
+                              "aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "entropy": {
+                                    "type": "directory",
+                                    "children": {
+                                      "RenderTileEntityEntropyAquarium.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 10186
+                                      }
+                                    }
+                                  },
+                                  "RenderTileEntityAquarium.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13127
+                                  }
+                                }
+                              },
+                              "board": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderTileEntityBoard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11534
+                                  }
+                                }
+                              },
+                              "combinator": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderTileEntityAquaCombinator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11700
+                                  }
+                                }
+                              },
+                              "fishing_hook": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderFishingHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10314
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "ResourcePathUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4244
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 144
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5899
+                          },
+                          "ClientFishManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2662
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16521
+                          },
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9912
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10433
+                          },
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 670
+                          }
+                        }
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4838
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4905
+                      },
+                      "Core$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 744
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3270
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6238
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixfish": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "fishing": {
+                            "type": "directory",
+                            "children": {
+                              "fish": {
+                                "type": "directory",
+                                "children": {
+                                  "fish_type_10_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2241
+                                  },
+                                  "fish_type_2_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3164
+                                  },
+                                  "fish_type_13_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 930
+                                  },
+                                  "fish_type_19_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1168
+                                  },
+                                  "fish_type_6_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 951
+                                  },
+                                  "fish_type_5_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3044
+                                  },
+                                  "fish_type_17_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 945
+                                  },
+                                  "fish_type_8_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2751
+                                  },
+                                  "fish_type_15_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 981
+                                  },
+                                  "fish_type_7_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2965
+                                  },
+                                  "fish_type_11_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 906
+                                  },
+                                  "fish_type_14_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1224
+                                  },
+                                  "fish_type_18_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1149
+                                  },
+                                  "fish_type_16_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1221
+                                  },
+                                  "fish_type_12_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1068
+                                  },
+                                  "fish_type_20_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 987
+                                  },
+                                  "fish_type_13_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 738
+                                  },
+                                  "fish_type_16_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1098
+                                  },
+                                  "fish_type_20_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 871
+                                  },
+                                  "fish_type_17_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 969
+                                  },
+                                  "fish_type_1_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3425
+                                  },
+                                  "fish_type_14_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1095
+                                  },
+                                  "fish_type_9_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 997
+                                  },
+                                  "fish_type_2_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2982
+                                  },
+                                  "fish_type_11_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1025
+                                  },
+                                  "fish_type_18_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1136
+                                  },
+                                  "fish_type_15_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1102
+                                  },
+                                  "fish_type_12_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 998
+                                  },
+                                  "fish_type_1_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4020
+                                  },
+                                  "fish_type_4_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1644
+                                  },
+                                  "fish_type_3_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4067
+                                  },
+                                  "fish_type_16_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1075
+                                  },
+                                  "fish_type_9_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 791
+                                  },
+                                  "fish_type_5_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2987
+                                  },
+                                  "fish_type_13_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 870
+                                  },
+                                  "fish_type_20_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1055
+                                  },
+                                  "fish_type_10_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1920
+                                  },
+                                  "fish_type_2_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3038
+                                  },
+                                  "fish_type_14_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1061
+                                  },
+                                  "fish_type_4_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1307
+                                  },
+                                  "fish_type_1_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3991
+                                  },
+                                  "fish_type_8_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2769
+                                  },
+                                  "fish_type_19_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 985
+                                  },
+                                  "fish_type_6_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1042
+                                  },
+                                  "fish_type_3_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4191
+                                  },
+                                  "fish_type_7_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2902
+                                  },
+                                  "fish_type_15_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1010
+                                  },
+                                  "fish_type_17_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1253
+                                  },
+                                  "fish_type_6_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1002
+                                  },
+                                  "fish_type_9_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 750
+                                  },
+                                  "fish_type_10_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2003
+                                  },
+                                  "fish_type_3_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3829
+                                  },
+                                  "fish_type_8_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2698
+                                  },
+                                  "fish_type_5_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2933
+                                  },
+                                  "fish_type_18_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1145
+                                  },
+                                  "fish_type_11_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1024
+                                  },
+                                  "fish_type_19_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1076
+                                  },
+                                  "fish_type_7_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2931
+                                  },
+                                  "fish_type_12_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1068
+                                  },
+                                  "fish_type_4_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1490
+                                  }
+                                }
+                              },
+                              "aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "level_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 10241
+                                  },
+                                  "level_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 9956
+                                  }
+                                }
+                              },
+                              "rods": {
+                                "type": "directory",
+                                "children": {
+                                  "level_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3408
+                                  },
+                                  "level_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4404
+                                  },
+                                  "level_3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3847
+                                  }
+                                }
+                              },
+                              "entropy_aquarium": {
+                                "type": "directory",
+                                "children": {
+                                  "level_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3649
+                                  }
+                                }
+                              },
+                              "aqua_combinator": {
+                                "type": "directory",
+                                "children": {
+                                  "texture.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 7788
+                                  }
+                                }
+                              },
+                              "aqua_terrarium": {
+                                "type": "directory",
+                                "children": {
+                                  "level_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5217
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "entropy_aquarium": {
+                            "type": "directory",
+                            "children": {
+                              "title_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 550
+                              },
+                              "title_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 568
+                              },
+                              "icon_fish_leveling.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3254
+                              },
+                              "icon_entropy_increase_satiety.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3055
+                              },
+                              "bg_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11145
+                              },
+                              "icon_entropy_luck.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3082
+                              },
+                              "bg_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10758
+                              },
+                              "bg_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10478
+                              },
+                              "icon_entropy_light_cycle_control.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3082
+                              }
+                            }
+                          },
+                          "entropy_register": {
+                            "type": "directory",
+                            "children": {
+                              "current": {
+                                "type": "directory",
+                                "children": {
+                                  "btn_back_passive.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2493
+                                  },
+                                  "bg.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 31286
+                                  },
+                                  "slot.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2253
+                                  },
+                                  "btn_buy_passive.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3635
+                                  },
+                                  "btn_buy_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5068
+                                  },
+                                  "btn_back_hover.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4026
+                                  }
+                                }
+                              },
+                              "scroll": {
+                                "type": "directory",
+                                "children": {
+                                  "scroll_btn.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4990
+                                  },
+                                  "scroll_path_small.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2483
+                                  },
+                                  "scroll_path.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2652
+                                  }
+                                }
+                              },
+                              "currency_gift.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 474
+                              },
+                              "box_card.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3494
+                              },
+                              "currency_crystal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 496
+                              },
+                              "currency_cubix.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 482
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 52177
+                              }
+                            }
+                          },
+                          "board": {
+                            "type": "directory",
+                            "children": {
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15633
+                              },
+                              "scroll_btn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 703
+                              },
+                              "scroll_path.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2254
+                              },
+                              "slot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1096
+                              }
+                            }
+                          },
+                          "mini_game": {
+                            "type": "directory",
+                            "children": {
+                              "hook_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1244
+                              },
+                              "box_info.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1670
+                              },
+                              "slot_success.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 578
+                              },
+                              "hook_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 963
+                              },
+                              "icon_time.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 900
+                              },
+                              "progress.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 63814
+                              },
+                              "slot_miss.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 577
+                              },
+                              "icon_quantity.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 641
+                              },
+                              "slot_default.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 577
+                              }
+                            }
+                          },
+                          "fishing_rod": {
+                            "type": "directory",
+                            "children": {
+                              "title_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6052
+                              },
+                              "title_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 252
+                              }
+                            }
+                          },
+                          "aquarium": {
+                            "type": "directory",
+                            "children": {
+                              "icon_gene_filtration.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2863
+                              },
+                              "icon_increase_satiety.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2954
+                              },
+                              "slot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 178
+                              },
+                              "title_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 568
+                              },
+                              "scroll_path.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 244
+                              },
+                              "scroll_btn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 258
+                              },
+                              "title_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 550
+                              },
+                              "icon_safe_environment.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2913
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6988
+                              }
+                            }
+                          },
+                          "aqua_combinator": {
+                            "type": "directory",
+                            "children": {
+                              "title_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 475
+                              },
+                              "icon_feed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 146
+                              },
+                              "title_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 493
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6470
+                              },
+                              "icon_fish.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 173
+                              },
+                              "icon_gene_mutation.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3049
+                              }
+                            }
+                          },
+                          "aqua_terrarium": {
+                            "type": "directory",
+                            "children": {
+                              "title_ru.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 429
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4093
+                              },
+                              "title_en.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 495
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "module": {
+                            "type": "directory",
+                            "children": {
+                              "gene_filtration_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 537
+                              },
+                              "entropy_light_cycle_control_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 409
+                              },
+                              "entropy_luck_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 378
+                              },
+                              "entropy_fish_leveling_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 513
+                              },
+                              "entropy_increase_satiety_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 398
+                              },
+                              "gene_mutation_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 504
+                              },
+                              "increase_satiety_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 493
+                              },
+                              "entropy_increase_satiety_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 429
+                              },
+                              "entropy_light_cycle_control_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 434
+                              },
+                              "safe_environment_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 391
+                              },
+                              "increase_satiety_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 493
+                              },
+                              "gene_mutation_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 498
+                              },
+                              "entropy_increase_satiety_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 433
+                              },
+                              "increase_satiety_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 500
+                              },
+                              "gene_mutation_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 511
+                              },
+                              "entropy_luck_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 373
+                              },
+                              "gene_filtration_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 462
+                              },
+                              "entropy_light_cycle_control_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 394
+                              },
+                              "entropy_fish_leveling_level_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 511
+                              },
+                              "entropy_luck_level_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 414
+                              },
+                              "entropy_fish_leveling_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 467
+                              },
+                              "gene_filtration_level_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 475
+                              }
+                            }
+                          },
+                          "fish_food_level_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 491
+                          },
+                          "hook_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 403
+                          },
+                          "line_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 387
+                          },
+                          "spool_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 528
+                          },
+                          "hook_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 389
+                          },
+                          "line_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 442
+                          },
+                          "fish_food_level_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 405
+                          },
+                          "hook_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 415
+                          },
+                          "spool_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 601
+                          },
+                          "bait_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 455
+                          },
+                          "fish_entropy_register.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 462
+                          },
+                          "bait_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 471
+                          },
+                          "hook_5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 350
+                          },
+                          "fish_food_level_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 555
+                          },
+                          "line_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 377
+                          },
+                          "hook_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 358
+                          },
+                          "bait_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 294
+                          },
+                          "spool_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 457
+                          },
+                          "line_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 347
+                          },
+                          "spool_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 326
+                          },
+                          "bait_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 475
+                          },
+                          "null.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 198
+                          }
+                        }
+                      },
+                      "board": {
+                        "type": "directory",
+                        "children": {
+                          "overlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9096
+                          },
+                          "icon_time.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 530
+                          },
+                          "icon_description.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 355
+                          },
+                          "icon_fish.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 442
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "null.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 198
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "fishing": {
+                        "type": "directory",
+                        "children": {
+                          "fish": {
+                            "type": "directory",
+                            "children": {
+                              "fish_type_16.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 13776
+                              },
+                              "fish_type_4.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 8240
+                              },
+                              "fish_type_12.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 11264
+                              },
+                              "fish_type_8.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 14880
+                              },
+                              "fish_type_17.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 16336
+                              },
+                              "fish_type_19.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 13680
+                              },
+                              "fish_type_3.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 11008
+                              },
+                              "fish_type_13.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 13312
+                              },
+                              "fish_type_20.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 11952
+                              },
+                              "fish_type_7.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 12000
+                              },
+                              "fish_type_18.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 16688
+                              },
+                              "fish_type_2.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 18048
+                              },
+                              "fish_type_14.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 12448
+                              },
+                              "fish_type_6.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 8976
+                              },
+                              "fish_type_10.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 15424
+                              },
+                              "fish_type_1.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 18592
+                              },
+                              "fish_type_15.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 13312
+                              },
+                              "fish_type_5.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 24800
+                              },
+                              "fish_type_11.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 10752
+                              },
+                              "fish_type_9.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 5600
+                              }
+                            }
+                          },
+                          "aqua_terrarium": {
+                            "type": "directory",
+                            "children": {
+                              "level_1.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 19680
+                              }
+                            }
+                          },
+                          "entropy_aquarium": {
+                            "type": "directory",
+                            "children": {
+                              "level_1.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 26496
+                              }
+                            }
+                          },
+                          "rods": {
+                            "type": "directory",
+                            "children": {
+                              "level_3.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 19504
+                              },
+                              "level_2.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 17152
+                              },
+                              "level_1.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 19040
+                              }
+                            }
+                          },
+                          "aquarium": {
+                            "type": "directory",
+                            "children": {
+                              "level_1.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 39584
+                              }
+                            }
+                          },
+                          "aqua_combinator": {
+                            "type": "directory",
+                            "children": {
+                              "model.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 38336
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "minigame": {
+                        "type": "directory",
+                        "children": {
+                          "start.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 50388
+                          },
+                          "miss.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 6411
+                          },
+                          "notCaughtFish.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 66066
+                          },
+                          "caughtFish.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 131077
+                          },
+                          "got.ogg": {
+                            "type": "file",
+                            "extension": ".ogg",
+                            "size": 23865
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 11707
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8489
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 643
+                  }
+                }
+              }
+            }
+          },
+          "mixins.cubixfish.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 516
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 257
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 361
+              },
+              "cubixfish_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 983
+              }
+            }
+          },
+          "methods.bin": {
+            "type": "file",
+            "extension": ".bin",
+            "size": 84382
+          },
+          "mixins.cubixfish.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 293
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 10903
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 19688
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1042 @@
+{
+  "mod_name": "ic2",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ic2",
+  "mod_type": "directory",
+  "tree": {
+    "ic2": {
+      "type": "directory",
+      "children": {
+        "EJML-core-0.26.jar": {
+          "type": "file",
+          "extension": ".jar",
+          "size": 345923,
+          "jar_contents": {
+            "type": "jar",
+            "children": {
+              "META-INF": {
+                "type": "directory",
+                "children": {
+                  "MANIFEST.MF": {
+                    "type": "file",
+                    "extension": ".mf",
+                    "size": 4129
+                  }
+                }
+              },
+              "org": {
+                "type": "directory",
+                "children": {
+                  "ejml": {
+                    "type": "directory",
+                    "children": {
+                      "EjmlParameters$MemoryUsage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1109
+                      },
+                      "UtilEjml.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2926
+                      },
+                      "UtilEjml$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1005
+                      },
+                      "EjmlParameters.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 952
+                      },
+                      "factory": {
+                        "type": "directory",
+                        "children": {
+                          "LinearSolverFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3459
+                          },
+                          "SingularMatrixException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 483
+                          },
+                          "DecompositionFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7859
+                          }
+                        }
+                      },
+                      "interfaces": {
+                        "type": "directory",
+                        "children": {
+                          "decomposition": {
+                            "type": "directory",
+                            "children": {
+                              "TridiagonalSimilarDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 675
+                              },
+                              "DecompositionInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 328
+                              },
+                              "EigenDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 544
+                              },
+                              "CholeskyLDLDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 538
+                              },
+                              "QRDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 457
+                              },
+                              "BidiagonalDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 632
+                              },
+                              "QRPDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 510
+                              },
+                              "CholeskyDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 504
+                              },
+                              "LUDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 552
+                              },
+                              "SingularValueDecomposition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 704
+                              }
+                            }
+                          },
+                          "linsol": {
+                            "type": "directory",
+                            "children": {
+                              "LinearSolver.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 493
+                              },
+                              "ReducedRowEchelonForm.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 318
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "data": {
+                        "type": "directory",
+                        "children": {
+                          "DenseMatrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5363
+                          },
+                          "FixedMatrix6_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2757
+                          },
+                          "FixedMatrix4x4_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3607
+                          },
+                          "MatrixIterator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2328
+                          },
+                          "RowD1Matrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 304
+                          },
+                          "FixedMatrix4_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2559
+                          },
+                          "Complex64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1612
+                          },
+                          "FixedMatrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 154
+                          },
+                          "Eigenpair.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 449
+                          },
+                          "FixedMatrix6x6_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5561
+                          },
+                          "FixedMatrix3x3_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2919
+                          },
+                          "FixedMatrix5_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2657
+                          },
+                          "D1Matrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1640
+                          },
+                          "FixedMatrix2x2_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2422
+                          },
+                          "Matrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 426
+                          },
+                          "FixedMatrix3_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2461
+                          },
+                          "ReshapeMatrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1728
+                          },
+                          "FixedMatrix2_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2363
+                          },
+                          "D1Submatrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2214
+                          },
+                          "BlockMatrix64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3265
+                          },
+                          "FixedMatrix5x5_64F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4487
+                          }
+                        }
+                      },
+                      "simple": {
+                        "type": "directory",
+                        "children": {
+                          "SimpleEVD.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2798
+                          },
+                          "SimpleSVD.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3507
+                          },
+                          "SimpleBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15346
+                          },
+                          "SimpleMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2895
+                          }
+                        }
+                      },
+                      "alg": {
+                        "type": "directory",
+                        "children": {
+                          "fixed": {
+                            "type": "directory",
+                            "children": {
+                              "FixedOps2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6076
+                              },
+                              "FixedOps3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8874
+                              },
+                              "FixedOps5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 24644
+                              },
+                              "FixedOps4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13892
+                              },
+                              "FixedOps6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23366
+                              }
+                            }
+                          },
+                          "generic": {
+                            "type": "directory",
+                            "children": {
+                              "GenericMatrixOps.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2469
+                              },
+                              "CodeGeneratorMisc.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1080
+                              }
+                            }
+                          },
+                          "block": {
+                            "type": "directory",
+                            "children": {
+                              "BlockMatrixOps.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13486
+                              },
+                              "BlockTriangularSolver.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7653
+                              },
+                              "GeneratorBlockInnerMultiplication.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9675
+                              },
+                              "BlockMultiplication.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5758
+                              },
+                              "BlockInnerMultiplication.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6933
+                              },
+                              "BlockInnerRankUpdate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5607
+                              },
+                              "GeneratorBlockInnerMultiplication$Operation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1360
+                              },
+                              "BlockVectorOps.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5598
+                              },
+                              "BlockInnerTriangularSolver.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3076
+                              },
+                              "GeneratorBlockInnerMultiplication$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1030
+                              },
+                              "decomposition": {
+                                "type": "directory",
+                                "children": {
+                                  "chol": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CholeskyOuterForm_B64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3605
+                                      },
+                                      "InnerCholesky_B64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1827
+                                      }
+                                    }
+                                  },
+                                  "qr": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockHouseHolder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 14409
+                                      },
+                                      "QRDecompositionHouseholder_B64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6873
+                                      }
+                                    }
+                                  },
+                                  "hessenberg": {
+                                    "type": "directory",
+                                    "children": {
+                                      "TridiagonalHelper_B64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4899
+                                      },
+                                      "TridiagonalDecompositionHouseholder_B64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6864
+                                      }
+                                    }
+                                  },
+                                  "bidiagonal": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BidiagonalHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1745
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "linsol": {
+                                "type": "directory",
+                                "children": {
+                                  "chol": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockCholeskyOuterSolver.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3463
+                                      }
+                                    }
+                                  },
+                                  "qr": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BlockQrHouseHolderSolver.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3655
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "dense": {
+                            "type": "directory",
+                            "children": {
+                              "decomposition": {
+                                "type": "directory",
+                                "children": {
+                                  "BaseDecomposition_B64_to_D64.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2350
+                                  },
+                                  "TriangularSolver.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2887
+                                  },
+                                  "chol": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CholeskyDecompositionInner_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1773
+                                      },
+                                      "CholeskyDecomposition_B64_to_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1927
+                                      },
+                                      "CholeskyDecompositionBlock_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3678
+                                      },
+                                      "CholeskyBlockHelper_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1481
+                                      },
+                                      "CholeskyDecompositionLDL_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3156
+                                      },
+                                      "CholeskyDecompositionCommon_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2822
+                                      }
+                                    }
+                                  },
+                                  "lu": {
+                                    "type": "directory",
+                                    "children": {
+                                      "LUDecompositionBase_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4715
+                                      },
+                                      "LUDecompositionAlt_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2051
+                                      }
+                                    }
+                                  },
+                                  "qr": {
+                                    "type": "directory",
+                                    "children": {
+                                      "QrUpdate.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6290
+                                      },
+                                      "QRDecomposition_B64_to_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2551
+                                      },
+                                      "QRDecompositionHouseholderTran_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5727
+                                      },
+                                      "QRDecompositionHouseholderColumn_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5153
+                                      },
+                                      "QRColPivDecompositionHouseholderColumn_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5755
+                                      },
+                                      "QrHelperFunctions.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4153
+                                      },
+                                      "QRDecompositionHouseholder_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5363
+                                      }
+                                    }
+                                  },
+                                  "hessenberg": {
+                                    "type": "directory",
+                                    "children": {
+                                      "HessenbergSimilarDecomposition_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3913
+                                      },
+                                      "TridiagonalDecomposition_B64_to_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2902
+                                      },
+                                      "TridiagonalDecompositionHouseholder_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5562
+                                      },
+                                      "TridiagonalDecompositionHouseholderOrig_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4411
+                                      }
+                                    }
+                                  },
+                                  "svd": {
+                                    "type": "directory",
+                                    "children": {
+                                      "SafeSvd.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2986
+                                      },
+                                      "SvdImplicitQrDecompose_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6680
+                                      },
+                                      "implicitqr": {
+                                        "type": "directory",
+                                        "children": {
+                                          "SvdImplicitQrAlgorithm.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 12424
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "eig": {
+                                    "type": "directory",
+                                    "children": {
+                                      "EigenvalueSmall.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2039
+                                      },
+                                      "SymmetricQRAlgorithmDecomposition_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5133
+                                      },
+                                      "WatchedDoubleStepQRDecomposition_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2993
+                                      },
+                                      "SwitchingEigenDecomposition.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2734
+                                      },
+                                      "EigenPowerMethod.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3534
+                                      },
+                                      "EigenvalueExtractor.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 306
+                                      },
+                                      "watched": {
+                                        "type": "directory",
+                                        "children": {
+                                          "WatchedDoubleStepQREigen.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 11674
+                                          },
+                                          "WatchedDoubleStepQREigenvector.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 7166
+                                          },
+                                          "WatchedDoubleStepQREigenvalue.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2886
+                                          }
+                                        }
+                                      },
+                                      "symm": {
+                                        "type": "directory",
+                                        "children": {
+                                          "SymmetricQrAlgorithm.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3272
+                                          },
+                                          "SymmetricQREigenHelper.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 8406
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "bidiagonal": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BidiagonalDecompositionRow_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6665
+                                      },
+                                      "BidiagonalDecompositionNaive_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3382
+                                      },
+                                      "BidiagonalDecompositionTall_D64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4764
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "mult": {
+                                "type": "directory",
+                                "children": {
+                                  "VectorVectorMult.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4372
+                                  },
+                                  "MatrixDimensionException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 496
+                                  },
+                                  "SubmatrixOps.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 889
+                                  },
+                                  "MatrixMatrixMult.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 18254
+                                  },
+                                  "MatrixVectorMult.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3829
+                                  },
+                                  "MatrixMultProduct.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2393
+                                  }
+                                }
+                              },
+                              "misc": {
+                                "type": "directory",
+                                "children": {
+                                  "TransposeAlgs.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1859
+                                  },
+                                  "ImplCommonOps_Matrix64F.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 889
+                                  },
+                                  "DeterminantFromMinor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3649
+                                  },
+                                  "UnrolledDeterminantFromMinor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10443
+                                  },
+                                  "ImplCommonOps_DenseMatrix64F.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1005
+                                  },
+                                  "UnrolledInverseFromMinor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10566
+                                  },
+                                  "RrefGaussJordanRowPivot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2430
+                                  }
+                                }
+                              },
+                              "linsol": {
+                                "type": "directory",
+                                "children": {
+                                  "LinearSolverUnrolled.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2091
+                                  },
+                                  "LinearSolver_B64_to_D64.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2794
+                                  },
+                                  "InvertUsingSolve.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1962
+                                  },
+                                  "LinearSolverSafe.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2819
+                                  },
+                                  "AdjustableLinearSolver.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 373
+                                  },
+                                  "LinearSolverAbstract.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1315
+                                  },
+                                  "chol": {
+                                    "type": "directory",
+                                    "children": {
+                                      "LinearSolverCholLDL.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3912
+                                      },
+                                      "LinearSolverCholBlock64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1504
+                                      },
+                                      "LinearSolverChol.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3926
+                                      }
+                                    }
+                                  },
+                                  "lu": {
+                                    "type": "directory",
+                                    "children": {
+                                      "LinearSolverLuBase.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3073
+                                      },
+                                      "LinearSolverLuKJI.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2442
+                                      },
+                                      "LinearSolverLu.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1916
+                                      }
+                                    }
+                                  },
+                                  "qr": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BaseLinearSolverQrp.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4370
+                                      },
+                                      "LinearSolverQrHouseCol.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3543
+                                      },
+                                      "AdjLinearSolverQr.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2080
+                                      },
+                                      "LinearSolverQrBlock64.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 506
+                                      },
+                                      "LinearSolverQrHouseTran.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3505
+                                      },
+                                      "LinearSolverQrHouse.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2981
+                                      },
+                                      "SolvePseudoInverseQrp.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3161
+                                      },
+                                      "LinearSolverQrpHouseCol.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2932
+                                      },
+                                      "LinearSolverQr.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3818
+                                      }
+                                    }
+                                  },
+                                  "svd": {
+                                    "type": "directory",
+                                    "children": {
+                                      "SolvePseudoInverseSvd.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3996
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ops": {
+                        "type": "directory",
+                        "children": {
+                          "SpecializedOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6475
+                          },
+                          "CovarianceOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2584
+                          },
+                          "MatrixIO.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5233
+                          },
+                          "CommonOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 24296
+                          },
+                          "RandomMatrices.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6939
+                          },
+                          "MatrixFeatures.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9555
+                          },
+                          "MatrixComponent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2041
+                          },
+                          "SingularOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6142
+                          },
+                          "EjmlUnitTests$TestException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 471
+                          },
+                          "ConvertMatrixType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12702
+                          },
+                          "NormOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5803
+                          },
+                          "ReadMatrixCsv.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2125
+                          },
+                          "ReadCsv.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2274
+                          },
+                          "EigenOps.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5577
+                          },
+                          "CovarianceRandomDraw.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1886
+                          },
+                          "EjmlUnitTests.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4035
+                          },
+                          "MatrixVisualization.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1154
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "bf_transformers.dat": {
+                "type": "file",
+                "extension": ".dat",
+                "size": 12
+              },
+              "bf_transformers_assets.dat": {
+                "type": "file",
+                "extension": ".dat",
+                "size": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

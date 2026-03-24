@@ -1,0 +1,357 @@
+{
+  "mod_name": "BetterBuildersWands-0.8.1-1.7.10r92+aec06c3.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BetterBuildersWands-0.8.1-1.7.10r92+aec06c3.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BetterBuildersWands-0.8.1-1.7.10r92+aec06c3.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 60093,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "portablejim": {
+            "type": "directory",
+            "children": {
+              "bbw": {
+                "type": "directory",
+                "children": {
+                  "basics": {
+                    "type": "directory",
+                    "children": {
+                      "Point3d$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 913
+                      },
+                      "Point3d.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2377
+                      },
+                      "EnumLock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1757
+                      },
+                      "EnumFluidLock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1325
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "IWandItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 508
+                          },
+                          "ItemRestrictedWandAdvanced$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 751
+                          },
+                          "ItemRestrictedWandAdvanced.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2377
+                          },
+                          "ItemBasicWand$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1294
+                          },
+                          "ItemBasicWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10529
+                          },
+                          "ItemUnrestrictedWand$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1315
+                          },
+                          "ItemUnrestrictedWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4130
+                          },
+                          "ItemRestrictedWandBasic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2048
+                          }
+                        }
+                      },
+                      "wands": {
+                        "type": "directory",
+                        "children": {
+                          "IWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 273
+                          },
+                          "RestrictedWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1146
+                          },
+                          "UnbreakingWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 866
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "KeyEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2111
+                          }
+                        }
+                      },
+                      "conversion": {
+                        "type": "directory",
+                        "children": {
+                          "CustomMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1409
+                          },
+                          "CustomMappingManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4346
+                          },
+                          "StackedBlockManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4414
+                          }
+                        }
+                      },
+                      "OopsCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5154
+                      },
+                      "BlockEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5188
+                      },
+                      "ConfigValues.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4022
+                      },
+                      "WandWorker$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 918
+                      },
+                      "WandWorker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11355
+                      }
+                    }
+                  },
+                  "shims": {
+                    "type": "directory",
+                    "children": {
+                      "IWorldShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 769
+                      },
+                      "IPlayerShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 505
+                      },
+                      "CreativePlayerShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1070
+                      },
+                      "BasicPlayerShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5112
+                      },
+                      "BasicWorldShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3438
+                      },
+                      "BlockShim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1400
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "GenericHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1440
+                      },
+                      "PacketWandActivate$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3061
+                      },
+                      "PacketWandActivate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1048
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "IProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 146
+                      },
+                      "ServerProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 319
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 412
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 875
+                      }
+                    }
+                  },
+                  "BetterBuildersWandsMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7723
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "betterbuilderswands": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "wandIron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 333
+                          },
+                          "wandWood.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 332
+                          },
+                          "wandStone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 309
+                          },
+                          "wandDiamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 328
+                          },
+                          "wandUnbreakable.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 247
+                          },
+                          ".directory": {
+                            "type": "file",
+                            "extension": "",
+                            "size": 68
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2094
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "version.properties": {
+            "type": "file",
+            "extension": ".properties",
+            "size": 39
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 324
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 336
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2971
+          }
+        }
+      }
+    }
+  }
+}

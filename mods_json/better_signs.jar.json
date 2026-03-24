@@ -1,0 +1,112 @@
+{
+  "mod_name": "better_signs.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\better_signs.jar",
+  "mod_type": "jar",
+  "tree": {
+    "better_signs.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 15161,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "bettersigns": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "sign.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1745
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 357
+          },
+          "me": {
+            "type": "directory",
+            "children": {
+              "limito": {
+                "type": "directory",
+                "children": {
+                  "bettersigns": {
+                    "type": "directory",
+                    "children": {
+                      "BetterSigns.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2012
+                      },
+                      "GuiHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3990
+                      },
+                      "MGuiEditSign.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7589
+                      },
+                      "MModelSign.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1048
+                      },
+                      "MTileEntitySignRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4884
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 40
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1542
+          }
+        }
+      }
+    }
+  }
+}

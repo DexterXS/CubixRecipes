@@ -1,0 +1,412 @@
+{
+  "mod_name": "CubixBuilder-1.7.10-1.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixBuilder-1.7.10-1.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixBuilder-1.7.10-1.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 87831,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "cb": {
+                    "type": "directory",
+                    "children": {
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4397
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiBuilderWandAEItem$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1008
+                              },
+                              "GuiBuilderWandAEItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2478
+                              },
+                              "GuiBuilderWandItem$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1000
+                              },
+                              "GuiBuilderWandItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2463
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderItemBuilderWand.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4567
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "CubixBuilderConfig$AEWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1856
+                          },
+                          "CubixBuilderConfig$General$isBlackListed$1$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1981
+                          },
+                          "CubixBuilderConfig$General.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5659
+                          },
+                          "CubixBuilderConfig$Wand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1808
+                          },
+                          "CubixBuilderConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1930
+                          },
+                          "data": {
+                            "type": "directory",
+                            "children": {
+                              "AEWandConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2735
+                              },
+                              "BlacklistHolder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2964
+                              },
+                              "WandConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2611
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerBuilderWandAEItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5297
+                          },
+                          "ContainerBuilderWandItem$fakeInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1250
+                          },
+                          "ContainerBuilderWandItem$syncAll$1$packet$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1793
+                          },
+                          "ContainerBuilderWandItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8728
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotDisabled.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1573
+                              },
+                              "SlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1495
+                              },
+                              "SlotWand.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1311
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "CubixBuilder$creativeTab$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1366
+                      },
+                      "CubixBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4589
+                      },
+                      "CubixBuilderGuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2671
+                      },
+                      "ext": {
+                        "type": "directory",
+                        "children": {
+                          "SideUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2687
+                          },
+                          "UtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2687
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemBuilderWand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5221
+                          },
+                          "ItemBuilderWandAE$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1748
+                          },
+                          "ItemBuilderWandAE.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7095
+                          },
+                          "ItemBuilderWandAEInventory$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1700
+                          },
+                          "ItemBuilderWandAEInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4379
+                          },
+                          "ItemBuilderWandBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8165
+                          },
+                          "PotentialBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3566
+                          },
+                          "PotentialBlockState.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1659
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "CBNetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2043
+                          },
+                          "packets": {
+                            "type": "directory",
+                            "children": {
+                              "SyncWandContainerData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2883
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1417
+                          },
+                          "CommonProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1705
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4972
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "ItemInventoryBasic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5001
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubix_builder": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 584
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "guis": {
+                        "type": "directory",
+                        "children": {
+                          "ae_builder_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2069
+                          },
+                          "builder_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1770
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "advanced_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 362
+                          },
+                          "ae_advanced_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 434
+                          },
+                          "ae_base_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 426
+                          },
+                          "ae_hybrid_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 446
+                          },
+                          "ae_ultimate_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 458
+                          },
+                          "base_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 304
+                          },
+                          "hybrid_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 428
+                          },
+                          "ultimate_wand.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 503
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 501
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 40696
+          }
+        }
+      }
+    }
+  }
+}

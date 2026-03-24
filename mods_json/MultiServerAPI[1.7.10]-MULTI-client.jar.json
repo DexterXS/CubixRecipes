@@ -1,0 +1,67 @@
+{
+  "mod_name": "MultiServerAPI[1.7.10]-MULTI-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\MultiServerAPI[1.7.10]-MULTI-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "MultiServerAPI[1.7.10]-MULTI-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1310,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "multiserver": {
+                    "type": "directory",
+                    "children": {
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "common": {
+                            "type": "directory",
+                            "children": {
+                              "MultiServerType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1182
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "mod_name": "elegant-networking-1.7.10-3.14.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\elegant-networking-1.7.10-3.14.jar",
+  "mod_type": "jar",
+  "tree": {
+    "elegant-networking-1.7.10-3.14.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 49196,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "hohserg": {
+            "type": "directory",
+            "children": {
+              "elegant": {
+                "type": "directory",
+                "children": {
+                  "networking": {
+                    "type": "directory",
+                    "children": {
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "ClientToServerPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 664
+                          },
+                          "ElegantNetworking.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1426
+                          },
+                          "NbtSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3426
+                          },
+                          "ServerToClientPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1953
+                          },
+                          "ElegantPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 487
+                          },
+                          "ElegantSerializable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 420
+                          },
+                          "IByteBufSerializable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 597
+                          }
+                        }
+                      },
+                      "impl": {
+                        "type": "directory",
+                        "children": {
+                          "CCLNetworkImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8270
+                          },
+                          "ForgeNetworkImpl$ClientToServerUniversalPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1108
+                          },
+                          "ForgeNetworkImpl$ServerToClientUniversalPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1108
+                          },
+                          "ForgeNetworkImpl$UniversalPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2538
+                          },
+                          "ForgeNetworkImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10325
+                          },
+                          "ISerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4276
+                          },
+                          "Main.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2680
+                          },
+                          "Network.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3645
+                          },
+                          "RegistrableSingletonSerializer$RegistryHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4340
+                          },
+                          "RegistrableSingletonSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2857
+                          },
+                          "Config$BackgroundPacketSystem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1283
+                          },
+                          "Config.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4447
+                          },
+                          "IPacketProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 327
+                          },
+                          "IRegistryHandlerBase$IdMapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2940
+                          },
+                          "IRegistryHandlerBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3839
+                          },
+                          "ISerializerBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5102
+                          },
+                          "Init.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10269
+                          },
+                          "InvalidPacketProviderException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 899
+                          },
+                          "MultipleRuntimeException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1701
+                          },
+                          "PacketProviderMark.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 419
+                          },
+                          "Registry$PacketInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1963
+                          },
+                          "Registry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5940
+                          },
+                          "SerializerMark.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 553
+                          }
+                        }
+                      },
+                      "Refs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2952
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "ChannelValidator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1322
+                          },
+                          "PrintUtils$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1403
+                          },
+                          "PrintUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 891
+                          },
+                          "ServiceUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2947
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 668
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4382
+          }
+        }
+      }
+    }
+  }
+}

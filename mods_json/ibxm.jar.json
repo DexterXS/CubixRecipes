@@ -1,0 +1,102 @@
+{
+  "mod_name": "ibxm.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ibxm.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ibxm.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 37852,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ibxm": {
+            "type": "directory",
+            "children": {
+              "FastTracker2.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6997
+              },
+              "Sample.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5983
+              },
+              "Instrument.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2174
+              },
+              "IBXM.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6194
+              },
+              "ProTracker.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5650
+              },
+              "Envelope.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2573
+              },
+              "ScreamTracker3.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 9026
+              },
+              "Pattern.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1079
+              },
+              "OpenALMODPlayer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4903
+              },
+              "Module.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3124
+              },
+              "LogTable.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3518
+              },
+              "Channel.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 13377
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

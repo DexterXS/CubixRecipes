@@ -1,0 +1,707 @@
+{
+  "mod_name": "AdvancedSolarPanelsClient.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\AdvancedSolarPanelsClient.jar",
+  "mod_type": "jar",
+  "tree": {
+    "AdvancedSolarPanelsClient.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 328913,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "advsolar": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "ASPItemAPI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1811
+                  },
+                  "IMTRecipeManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 215
+                  },
+                  "MTAPI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 382
+                  }
+                }
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "ASPClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3718
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiAdvSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3676
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2475
+                      },
+                      "GuiMolecularTransformer$captionRecord.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 666
+                      },
+                      "GuiMolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6567
+                      },
+                      "GuiQGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5103
+                      }
+                    }
+                  },
+                  "renderers": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "BlockMolecularTransformerRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1704
+                          }
+                        }
+                      },
+                      "tile": {
+                        "type": "directory",
+                        "children": {
+                          "ModelMolecularTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6345
+                          },
+                          "TileMolecularTransformerRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7560
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "nei": {
+                    "type": "directory",
+                    "children": {
+                      "MTRecipeHandler$CachedMTRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1228
+                      },
+                      "MTRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4944
+                      },
+                      "NEIASPConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1076
+                      }
+                    }
+                  }
+                }
+              },
+              "common": {
+                "type": "directory",
+                "children": {
+                  "AdvancedSolarPanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 19220
+                  },
+                  "ASPServerProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2149
+                  },
+                  "CompileFlag.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 344
+                  },
+                  "blocks": {
+                    "type": "directory",
+                    "children": {
+                      "BlockAdvSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9785
+                      },
+                      "BlockMolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5861
+                      }
+                    }
+                  },
+                  "container": {
+                    "type": "directory",
+                    "children": {
+                      "ContainerAdvSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4902
+                      },
+                      "ContainerMolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4991
+                      },
+                      "ContainerQGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2607
+                      }
+                    }
+                  },
+                  "items": {
+                    "type": "directory",
+                    "children": {
+                      "ItemAdvanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4983
+                      },
+                      "ItemAdvancedSolarHelmet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10024
+                      },
+                      "ItemAdvSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2094
+                      },
+                      "ItemMolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1243
+                      }
+                    }
+                  },
+                  "tiles": {
+                    "type": "directory",
+                    "children": {
+                      "TileEntityAdvancedSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 712
+                      },
+                      "TileEntityBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2269
+                      },
+                      "TileEntityHybridSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 696
+                      },
+                      "TileEntityMolecularTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16266
+                      },
+                      "TileEntityQGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7879
+                      },
+                      "TileEntityQuantumSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 708
+                      },
+                      "TileEntityQuantumSuperSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 738
+                      },
+                      "TileEntitySolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11624
+                      },
+                      "TileEntityU1923SolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 702
+                      },
+                      "TileEntityUltimateSolarPanel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 708
+                      }
+                    }
+                  }
+                }
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "ASPChannelHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3001
+                  },
+                  "ASPPacketHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3052
+                  },
+                  "IHasButton.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 153
+                  },
+                  "IPacket.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 499
+                  },
+                  "IReceiveServerEvents.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 203
+                  },
+                  "PacketChangeState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2859
+                  },
+                  "PacketGUIPressButton.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2697
+                  }
+                }
+              },
+              "utils": {
+                "type": "directory",
+                "children": {
+                  "ItemStackUtil.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 702
+                  },
+                  "MTRecipeConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12582
+                  },
+                  "MTRecipeManager$RawItemData.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 577
+                  },
+                  "MTRecipeManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5962
+                  },
+                  "MTRecipeRecord.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 406
+                  },
+                  "MySlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 825
+                  },
+                  "RecipeRecord.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 400
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 583
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "advancedsolarpanel": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1819
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2665
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "advancedSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3340
+                          },
+                          "hybridSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3326
+                          },
+                          "ultimateSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3311
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "asp_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1232
+                          },
+                          "asp_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1347
+                          },
+                          "asp_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1223
+                          },
+                          "hsp_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1390
+                          },
+                          "hsp_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1427
+                          },
+                          "hsp_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1271
+                          },
+                          "qgen_a_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1456
+                          },
+                          "qgen_d_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1422
+                          },
+                          "qsp_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1261
+                          },
+                          "qsp_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15359
+                          },
+                          "qsp_side_copy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1397
+                          },
+                          "qsp_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1127
+                          },
+                          "qssp_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1144
+                          },
+                          "qssp_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 919
+                          },
+                          "qssp_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 844
+                          },
+                          "qup_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1144
+                          },
+                          "qup_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 914
+                          },
+                          "qup_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 893
+                          },
+                          "usp_bottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1250
+                          },
+                          "usp_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1317
+                          },
+                          "usp_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1300
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GUIAdvancedSolarPanel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15090
+                          },
+                          "guiMolecularTransformer_nei.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3697
+                          },
+                          "guiMolecularTransformerNew.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27535
+                          },
+                          "GUIQuantumGenerator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4594
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "AdvSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1076
+                          },
+                          "CompressedSunnariumAlloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1382
+                          },
+                          "ElementHammer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1312
+                          },
+                          "EnrichedSunnarium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1329
+                          },
+                          "EnrichedSunnariumAlloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1132
+                          },
+                          "Hammer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1373
+                          },
+                          "HybridSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1085
+                          },
+                          "IridiumIgnot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1106
+                          },
+                          "IridiumIronPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1296
+                          },
+                          "IrradiantGlassPane.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1184
+                          },
+                          "IrradiantReinforcedPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1343
+                          },
+                          "IrradiantUranium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1202
+                          },
+                          "MTCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "QuantumCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1195
+                          },
+                          "qup_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 893
+                          },
+                          "ReinforcedIridiumIronPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1292
+                          },
+                          "Sunnarium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1336
+                          },
+                          "SunnariumAlloy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1132
+                          },
+                          "SunnariumPart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1128
+                          },
+                          "SuperQuantumCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1443
+                          },
+                          "UltimateSolarHelmet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1082
+                          },
+                          "UnstableCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1401
+                          },
+                          "UnstableSunnarium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1447
+                          },
+                          "UranIngot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 589
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "particles.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 63585
+                          },
+                          "plazma.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 60472
+                          },
+                          "textureMolecularTransformer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2134
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2973
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5617
+          }
+        }
+      }
+    }
+  }
+}

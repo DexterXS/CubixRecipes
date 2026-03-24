@@ -1,0 +1,777 @@
+{
+  "mod_name": "CubixVendingClient.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixVendingClient.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixVendingClient.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 10658640,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "cubixvending": {
+                "type": "directory",
+                "children": {
+                  "b0oer55itlbublgakz7i.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1864
+                  },
+                  "b96srtjf1az7j8rzb2ga.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1318
+                  },
+                  "bj5g4mfyfanw60auyh9i.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 661
+                  },
+                  "blezvwnehzci74w1n1pu.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 793
+                  },
+                  "cx311rug9673ll8vlch7.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2552
+                  },
+                  "dfhrav4r91qyzxf6rlxm.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1367
+                  },
+                  "dvdhtonddqzflbdd6nhg.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2344
+                  },
+                  "e9bldsmequo5nb7z8gpt.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1328
+                  },
+                  "etr4dswg9wr499c35ir.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7813
+                  },
+                  "ffzjujoie271lzz0zmp.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2573
+                  },
+                  "fomhg84o7oy5dk0zl0z.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5611
+                  },
+                  "fth36vyvmf1dqvxn3tny.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1082
+                  },
+                  "g4j3viryf182vm45nv7.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3284
+                  },
+                  "g6q9i1b23ujxxt5ul.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1807
+                  },
+                  "g8h0tf5fv39c1bovtr.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 680
+                  },
+                  "gca1z59uioxxtpqqk80j.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 698
+                  },
+                  "gdolsbh53fiud7evese6.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3172
+                  },
+                  "gf2csu3t4v8sowyed.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2475
+                  },
+                  "hdd0o8o49zvblyxg38d.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2983
+                  },
+                  "hstr4irftgd60oz34n.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10027
+                  },
+                  "ib2a2djvwoeonosh5.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2291
+                  },
+                  "ikvum06ijvho3e0u13ad.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 215
+                  },
+                  "j22gp73o6imtx8rw3xt5.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 705
+                  },
+                  "k39038akiukesqrpapnl.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1161
+                  },
+                  "k6rqvone9yexhpht6nnu.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 932
+                  },
+                  "kh8vqafa8s71qmb5t44l.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7288
+                  },
+                  "ksu1x28v3gw64lq9bhdq.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 718
+                  },
+                  "kuwp62pm7ezqxoep6ebb.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 934
+                  },
+                  "kze9pahyhx642nokf0b4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 812
+                  },
+                  "l7b0eoxv0e5uakgjjtt9.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 936
+                  },
+                  "ldpkh75vd1zcz1qlqqdg.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 661
+                  },
+                  "n6bkbkww0n0js3mcjut9.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2187
+                  },
+                  "nktexqqug57az6vbc17r.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 457
+                  },
+                  "o5ob33l6ie5pk6vnqsya.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7004
+                  },
+                  "o8wn3721rpclkkws46n8.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1130
+                  },
+                  "qaf1cspciycafmwyifop.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1002
+                  },
+                  "r2wrlzp74a9lq7dkxmfs.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 669
+                  },
+                  "rp288d9uh64rqrvc642f.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 435
+                  },
+                  "segqbxwaewr4wr4fwfji.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 936
+                  },
+                  "ucqp91dqecrvl8bgie1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 580
+                  },
+                  "uf6c9ljnunv3f5n1dwre.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4501
+                  },
+                  "ukuyxe04bi3egyxk8lxj.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 714
+                  },
+                  "v3bz6dxon9qkpu532xkb.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1560
+                  },
+                  "vdzbbtljg5z58ch6pg1u.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4868
+                  },
+                  "vhfij0xohfefijaxpaw4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10309
+                  },
+                  "vvdmhbv8czw2niy17shj.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 669
+                  },
+                  "w0i19yu7p72ska3ctlc.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1003
+                  },
+                  "wglcyg0scleqqlo30c1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1006
+                  },
+                  "wgpb4je3xpmtnk43qmsu.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1411
+                  },
+                  "y34jswmptwrxlh4y2p0z.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 273
+                  },
+                  "yi0m5eixzikihw7j6t.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1168
+                  },
+                  "yxh1y1uk6jfyh4o6gtcm.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1170
+                  },
+                  "yz4jpupl6rmzkqkznaja.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 997
+                  },
+                  "zi029czaybrw2yr3fspf.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 460
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "xmodshop": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 322
+                      }
+                    }
+                  },
+                  "obj": {
+                    "type": "directory",
+                    "children": {
+                      "drawer_chest.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 20941
+                      },
+                      "drawer_chest.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4346
+                      },
+                      "folding_chair.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 20887
+                      },
+                      "folding_chair.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4032
+                      },
+                      "golden_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 9818
+                      },
+                      "golden_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3489
+                      },
+                      "hitech_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 33610
+                      },
+                      "hitech_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3403
+                      },
+                      "marble_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 6370
+                      },
+                      "marble_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3112
+                      },
+                      "metall_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 14020
+                      },
+                      "metall_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4094
+                      },
+                      "metall_wooden_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 9821
+                      },
+                      "metall_wooden_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3502
+                      },
+                      "metall_wooden_stool.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 10772
+                      },
+                      "metall_wooden_stool.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3405
+                      },
+                      "model.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 576720
+                      },
+                      "model.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 807347
+                      },
+                      "pedestal1.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 118121
+                      },
+                      "pedestal1.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 434823
+                      },
+                      "pedestal2.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 5649368
+                      },
+                      "pedestal2.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 519731
+                      },
+                      "pedestal3.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 259622
+                      },
+                      "pedestal3.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 359977
+                      },
+                      "pedestal4.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 377387
+                      },
+                      "pedestal4.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 499940
+                      },
+                      "pedestal5.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 259039
+                      },
+                      "pedestal5.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 271242
+                      },
+                      "pedestal6.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 653052
+                      },
+                      "pedestal6.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 451590
+                      },
+                      "pedestal7.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 68198
+                      },
+                      "pedestal7.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 176576
+                      },
+                      "red_log_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 9104
+                      },
+                      "red_log_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3629
+                      },
+                      "shoe_rack.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 23628
+                      },
+                      "shoe_rack.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3408
+                      },
+                      "small_table.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 12973
+                      },
+                      "small_table.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3240
+                      },
+                      "stone_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 10156
+                      },
+                      "stone_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4321
+                      },
+                      "stool.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 13107
+                      },
+                      "stool.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3455
+                      },
+                      "stool_modern.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 26228
+                      },
+                      "stool_modern.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4650
+                      },
+                      "stool_with_tablecloth.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 11742
+                      },
+                      "stool_with_tablecloth.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4042
+                      },
+                      "s_stand.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 6325
+                      },
+                      "s_stand.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3325
+                      },
+                      "toilet.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 651545
+                      },
+                      "toilet.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4755838
+                      },
+                      "vase.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 4954
+                      },
+                      "vase.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3408
+                      },
+                      "vase_2.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 7664
+                      },
+                      "vase_2.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3882
+                      },
+                      "vat_water.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 22170
+                      },
+                      "vat_water.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4742
+                      },
+                      "vault.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 1217
+                      },
+                      "vault.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3240
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "vendor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 445
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "ArrowRightGray.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 381
+                          },
+                          "buy_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 616
+                          },
+                          "edit_model.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7115
+                          },
+                          "edit_shop.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9079
+                          },
+                          "exit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2498
+                          },
+                          "GUITradeOMatClosed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1346
+                          },
+                          "item_no.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 223
+                          },
+                          "item_ok.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 182
+                          },
+                          "left.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 382
+                          },
+                          "logo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4990
+                          },
+                          "model_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 611
+                          },
+                          "money_shop.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8270
+                          },
+                          "ok_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 530
+                          },
+                          "right.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 382
+                          },
+                          "sell_btn.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 580
+                          },
+                          "sell_no.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 237
+                          },
+                          "sell_ok.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 231
+                          },
+                          "slots.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1208
+                          },
+                          "wantBuy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 0
+                          },
+                          "wantSell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 0
+                          },
+                          "want_buy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 600
+                          },
+                          "want_sell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 595
+                          }
+                        }
+                      },
+                      "slots": {
+                        "type": "directory",
+                        "children": {
+                          "slotBase.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2828
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2450
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 6587
+          }
+        }
+      }
+    }
+  }
+}

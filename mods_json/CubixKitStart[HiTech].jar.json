@@ -1,0 +1,497 @@
+{
+  "mod_name": "CubixKitStart[HiTech].jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixKitStart[HiTech].jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixKitStart[HiTech].jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 4126418,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cbxkitstart": {
+                    "type": "directory",
+                    "children": {
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CubixKitStart.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1726
+                          },
+                          "Info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 622
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "Armor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6009
+                              }
+                            }
+                          },
+                          "KItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2024
+                          },
+                          "KItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2373
+                          },
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "KAxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2353
+                              },
+                              "KHoe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2280
+                              },
+                              "KPickaxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2369
+                              },
+                              "KShovel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2364
+                              },
+                              "KSword.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2288
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "KClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2183
+                          },
+                          "KServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 951
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "model": {
+                            "type": "directory",
+                            "children": {
+                              "armor": {
+                                "type": "directory",
+                                "children": {
+                                  "ArmorLookHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4035
+                                  },
+                                  "ArmorModelCache.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2292
+                                  },
+                                  "ArmorModelRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2977
+                                  },
+                                  "ArmorRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3183
+                                  },
+                                  "KArmorModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5488
+                                  }
+                                }
+                              },
+                              "IModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 411
+                              },
+                              "ItemModelRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1010
+                              },
+                              "ItemModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5859
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2280
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Utilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 674
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cbx_kitstart": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 447
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 447
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "m_belt.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 343698
+                          },
+                          "m_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 2339168
+                          },
+                          "m_helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 56537
+                          },
+                          "m_larm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 954861
+                          },
+                          "m_lboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 737048
+                          },
+                          "m_lleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1032119
+                          },
+                          "m_rarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 954632
+                          },
+                          "m_rboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 736363
+                          },
+                          "m_rleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1040815
+                          },
+                          "t_belt.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 195863
+                          },
+                          "t_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1186323
+                          },
+                          "t_helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 892727
+                          },
+                          "t_larm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1239504
+                          },
+                          "t_lboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 345960
+                          },
+                          "t_lleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 848679
+                          },
+                          "t_lobj.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 345959
+                          },
+                          "t_rarm.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1240301
+                          },
+                          "t_rboot.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 344843
+                          },
+                          "t_rleg.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 847823
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "kitaxe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 99067
+                          },
+                          "kithoe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 88053
+                          },
+                          "kitpickaxe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 110623
+                          },
+                          "kitshovel.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 91954
+                          },
+                          "kitsword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 122226
+                          },
+                          "m_axe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 2667244
+                          },
+                          "m_hoe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1516041
+                          },
+                          "m_pickaxe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 2232508
+                          },
+                          "m_shovel.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 1490023
+                          },
+                          "m_sword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 2630465
+                          },
+                          "t_axe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 781702
+                          },
+                          "t_hoe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 585788
+                          },
+                          "t_pickaxe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 572115
+                          },
+                          "t_shovel.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 477677
+                          },
+                          "t_sword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 460043
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "kitarmor_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 137
+                              },
+                              "kitarmor_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 137
+                              },
+                              "m_helmet.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 250
+                              },
+                              "m_kitstart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 253
+                              },
+                              "t_kitstart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 275
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "m_kitstart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 810
+                              },
+                              "m_sword.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 199
+                              },
+                              "t_kitstart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 275
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1778
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4462
+          }
+        }
+      }
+    }
+  }
+}

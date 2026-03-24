@@ -1,0 +1,2217 @@
+{
+  "mod_name": "geckolib-1.0.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\geckolib-1.0.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "geckolib-1.0.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1174889,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 89
+              },
+              "joml.kotlin_module": {
+                "type": "file",
+                "extension": ".kotlin_module",
+                "size": 303
+              }
+            }
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "im51111n355": {
+                "type": "directory",
+                "children": {
+                  "portlib": {
+                    "type": "directory",
+                    "children": {
+                      "BlockPos.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 437
+                      },
+                      "Direction$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1206
+                      },
+                      "Direction$Axis$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1107
+                      },
+                      "Direction$Axis$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1107
+                      },
+                      "Direction$Axis$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1108
+                      },
+                      "Direction$Axis.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3432
+                      },
+                      "Direction$AxisDirection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1812
+                      },
+                      "Direction$Plane.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3102
+                      },
+                      "Direction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13491
+                      },
+                      "FastColor$ABGR32.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1060
+                      },
+                      "FastColor$ARGB32.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1354
+                      },
+                      "FastColor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 449
+                      },
+                      "FrameSize.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 535
+                      },
+                      "GsonHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23243
+                      },
+                      "Mth.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13875
+                      },
+                      "Pair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1211
+                      },
+                      "PoseStack$Pose.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 913
+                      },
+                      "PoseStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4129
+                      },
+                      "TriConsumer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 404
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "Axis.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2544
+                          },
+                          "NumberUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 650
+                          },
+                          "ReflectionHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2753
+                          },
+                          "RenderHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 819
+                          }
+                        }
+                      },
+                      "Vec3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8977
+                      },
+                      "Vec3i.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6241
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "software": {
+            "type": "directory",
+            "children": {
+              "bernie": {
+                "type": "directory",
+                "children": {
+                  "geckolib": {
+                    "type": "directory",
+                    "children": {
+                      "animatable": {
+                        "type": "directory",
+                        "children": {
+                          "GeoBlockEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4403
+                          },
+                          "GeoEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3252
+                          },
+                          "GeoItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3860
+                          },
+                          "SingletonGeoAnimatable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4761
+                          }
+                        }
+                      },
+                      "cache": {
+                        "type": "directory",
+                        "children": {
+                          "GeckoLibCache$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 773
+                          },
+                          "GeckoLibCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16945
+                          },
+                          "object": {
+                            "type": "directory",
+                            "children": {
+                              "BakedGeoModel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3309
+                              },
+                              "GeoBone.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11347
+                              },
+                              "GeoCube.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2653
+                              },
+                              "GeoQuad.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3300
+                              },
+                              "GeoVertex.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2289
+                              }
+                            }
+                          },
+                          "texture": {
+                            "type": "directory",
+                            "children": {
+                              "AnimatableTexture$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 277
+                              },
+                              "AnimatableTexture$AnimationContents$Texture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3891
+                              },
+                              "AnimatableTexture$AnimationContents.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7088
+                              },
+                              "AnimatableTexture$Frame.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2111
+                              },
+                              "AnimatableTexture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6602
+                              },
+                              "AutoGlowingTexture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5365
+                              },
+                              "GeoAbstractTexture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3012
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "constant": {
+                        "type": "directory",
+                        "children": {
+                          "DataTickets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4819
+                          },
+                          "DefaultAnimations.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12519
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "animatable": {
+                            "type": "directory",
+                            "children": {
+                              "GeoAnimatable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1163
+                              },
+                              "instance": {
+                                "type": "directory",
+                                "children": {
+                                  "AnimatableInstanceCache.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1863
+                                  },
+                                  "InstancedAnimatableInstanceCache.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1174
+                                  },
+                                  "SingletonAnimatableInstanceCache.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1492
+                                  }
+                                }
+                              },
+                              "model": {
+                                "type": "directory",
+                                "children": {
+                                  "CoreBakedGeoModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1516
+                                  },
+                                  "CoreGeoBone.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2432
+                                  },
+                                  "CoreGeoModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2381
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "animation": {
+                            "type": "directory",
+                            "children": {
+                              "AnimatableManager$ControllerRegistrar.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4296
+                              },
+                              "AnimatableManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5583
+                              },
+                              "Animation$Keyframes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2456
+                              },
+                              "Animation$LoopType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4193
+                              },
+                              "Animation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3791
+                              },
+                              "AnimationController$AnimationStateHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 725
+                              },
+                              "AnimationController$CustomKeyframeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 673
+                              },
+                              "AnimationController$ParticleKeyframeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 659
+                              },
+                              "AnimationController$SoundKeyframeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 647
+                              },
+                              "AnimationController$State.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1435
+                              },
+                              "AnimationController.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 30993
+                              },
+                              "AnimationProcessor$QueuedAnimation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2125
+                              },
+                              "AnimationProcessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14516
+                              },
+                              "AnimationState.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5924
+                              },
+                              "ContextAwareAnimatableManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5133
+                              },
+                              "EasingType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15789
+                              },
+                              "RawAnimation$Stage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2300
+                              },
+                              "RawAnimation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3402
+                              }
+                            }
+                          },
+                          "keyframe": {
+                            "type": "directory",
+                            "children": {
+                              "AnimationPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2460
+                              },
+                              "AnimationPointQueue.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 530
+                              },
+                              "BoneAnimation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3172
+                              },
+                              "BoneAnimationQueue.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9171
+                              },
+                              "event": {
+                                "type": "directory",
+                                "children": {
+                                  "CustomInstructionKeyframeEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2222
+                                  },
+                                  "data": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CustomInstructionKeyframeData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 972
+                                      },
+                                      "KeyFrameData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 985
+                                      },
+                                      "ParticleKeyframeData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1213
+                                      },
+                                      "SoundKeyframeData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 983
+                                      }
+                                    }
+                                  },
+                                  "KeyFrameEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2150
+                                  },
+                                  "ParticleKeyframeEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2127
+                                  },
+                                  "SoundKeyframeEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2085
+                                  }
+                                }
+                              },
+                              "Keyframe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3866
+                              },
+                              "KeyframeLocation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2155
+                              },
+                              "KeyframeStack.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3729
+                              }
+                            }
+                          },
+                          "molang": {
+                            "type": "directory",
+                            "children": {
+                              "expressions": {
+                                "type": "directory",
+                                "children": {
+                                  "MolangCompoundValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1965
+                                  },
+                                  "MolangValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1685
+                                  },
+                                  "MolangVariableHolder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1309
+                                  }
+                                }
+                              },
+                              "functions": {
+                                "type": "directory",
+                                "children": {
+                                  "CosDegrees.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 922
+                                  },
+                                  "SinDegrees.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 922
+                                  }
+                                }
+                              },
+                              "LazyVariable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2076
+                              },
+                              "MolangException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 475
+                              },
+                              "MolangParser$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1085
+                              },
+                              "MolangParser.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10567
+                              },
+                              "MolangQueries.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1127
+                              }
+                            }
+                          },
+                          "object": {
+                            "type": "directory",
+                            "children": {
+                              "Axis.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1095
+                              },
+                              "Color.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4779
+                              },
+                              "DataTicket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1623
+                              },
+                              "PlayState.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1092
+                              }
+                            }
+                          },
+                          "state": {
+                            "type": "directory",
+                            "children": {
+                              "BoneSnapshot.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4445
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "GeckoLib.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1524
+                      },
+                      "GeckoLibException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1122
+                      },
+                      "loading": {
+                        "type": "directory",
+                        "children": {
+                          "FileLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3611
+                          },
+                          "json": {
+                            "type": "directory",
+                            "children": {
+                              "FormatVersion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1265
+                              },
+                              "raw": {
+                                "type": "directory",
+                                "children": {
+                                  "Bone.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9300
+                                  },
+                                  "Cube.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5058
+                                  },
+                                  "FaceUV.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3741
+                                  },
+                                  "LocatorClass.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3807
+                                  },
+                                  "LocatorValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3769
+                                  },
+                                  "MinecraftGeometry.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4562
+                                  },
+                                  "Model.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4265
+                                  },
+                                  "ModelProperties.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8137
+                                  },
+                                  "PolyMesh.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4594
+                                  },
+                                  "PolysUnion$Type.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1390
+                                  },
+                                  "PolysUnion.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4582
+                                  },
+                                  "TextureMesh.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4157
+                                  },
+                                  "UVFaces$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 903
+                                  },
+                                  "UVFaces.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5217
+                                  },
+                                  "UVUnion.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4039
+                                  }
+                                }
+                              },
+                              "typeadapter": {
+                                "type": "directory",
+                                "children": {
+                                  "BakedAnimationsAdapter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14146
+                                  },
+                                  "KeyFramesAdapter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5723
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "object": {
+                            "type": "directory",
+                            "children": {
+                              "BakedAnimations.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2105
+                              },
+                              "BakedModelFactory$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 929
+                              },
+                              "BakedModelFactory$Builtin.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5875
+                              },
+                              "BakedModelFactory$VertexSet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5309
+                              },
+                              "BakedModelFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6094
+                              },
+                              "BoneStructure.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2294
+                              },
+                              "GeometryTree.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4863
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "data": {
+                            "type": "directory",
+                            "children": {
+                              "EntityModelData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1967
+                              }
+                            }
+                          },
+                          "DefaultedBlockGeoModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1814
+                          },
+                          "DefaultedEntityGeoModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3666
+                          },
+                          "DefaultedGeoModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3159
+                          },
+                          "DefaultedItemGeoModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1807
+                          },
+                          "GeoModel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12634
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "GeckoLibNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6673
+                          },
+                          "packet": {
+                            "type": "directory",
+                            "children": {
+                              "AnimDataSyncPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2777
+                              },
+                              "AnimDataSyncPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3282
+                              },
+                              "AnimTriggerPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2623
+                              },
+                              "AnimTriggerPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2291
+                              },
+                              "BlockEntityAnimDataSyncPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2759
+                              },
+                              "BlockEntityAnimDataSyncPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3365
+                              },
+                              "BlockEntityAnimTriggerPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2589
+                              },
+                              "BlockEntityAnimTriggerPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2446
+                              },
+                              "EntityAnimDataSyncPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2625
+                              },
+                              "EntityAnimDataSyncPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3066
+                              },
+                              "EntityAnimTriggerPacket$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2383
+                              },
+                              "EntityAnimTriggerPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2152
+                              }
+                            }
+                          },
+                          "SerializableDataTicket$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1666
+                          },
+                          "SerializableDataTicket$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1655
+                          },
+                          "SerializableDataTicket$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1677
+                          },
+                          "SerializableDataTicket$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1661
+                          },
+                          "SerializableDataTicket$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1904
+                          },
+                          "SerializableDataTicket$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1898
+                          },
+                          "SerializableDataTicket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3354
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1421
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 602
+                          }
+                        }
+                      },
+                      "renderer": {
+                        "type": "directory",
+                        "children": {
+                          "GeoBlockRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7257
+                          },
+                          "GeoEntityRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9738
+                          },
+                          "GeoItemRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8205
+                          },
+                          "GeoObjectRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5471
+                          },
+                          "GeoRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15156
+                          },
+                          "layer": {
+                            "type": "directory",
+                            "children": {
+                              "AutoGlowingGeoLayer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3118
+                              },
+                              "BoneFilterGeoLayer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4171
+                              },
+                              "FastBoneFilterGeoLayer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5367
+                              },
+                              "GeoRenderLayer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3463
+                              },
+                              "GeoRenderLayersContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2042
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "resource": {
+                        "type": "directory",
+                        "children": {
+                          "GeoGlowingTextureMeta$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4063
+                          },
+                          "GeoGlowingTextureMeta$Pixel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2339
+                          },
+                          "GeoGlowingTextureMeta.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3134
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "ClientUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 768
+                          },
+                          "GeckoLibUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3547
+                          },
+                          "JsonUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7557
+                          },
+                          "RenderUtils$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 757
+                          },
+                          "RenderUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6408
+                          }
+                        }
+                      },
+                      "lib": {
+                        "type": "directory",
+                        "children": {
+                          "com": {
+                            "type": "directory",
+                            "children": {
+                              "eliotlash": {
+                                "type": "directory",
+                                "children": {
+                                  "mclib": {
+                                    "type": "directory",
+                                    "children": {
+                                      "Library.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 428
+                                      },
+                                      "math": {
+                                        "type": "directory",
+                                        "children": {
+                                          "Constant.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 804
+                                          },
+                                          "functions": {
+                                            "type": "directory",
+                                            "children": {
+                                              "classic": {
+                                                "type": "directory",
+                                                "children": {
+                                                  "Abs.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 925
+                                                  },
+                                                  "ACos.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 929
+                                                  },
+                                                  "ASin.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 929
+                                                  },
+                                                  "ATan.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 929
+                                                  },
+                                                  "ATan2.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 939
+                                                  },
+                                                  "Cos.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 925
+                                                  },
+                                                  "Exp.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 925
+                                                  },
+                                                  "Ln.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 922
+                                                  },
+                                                  "Mod.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 885
+                                                  },
+                                                  "Pi.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 770
+                                                  },
+                                                  "Pow.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 931
+                                                  },
+                                                  "Sin.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 925
+                                                  },
+                                                  "Sqrt.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 929
+                                                  }
+                                                }
+                                              },
+                                              "Function.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1924
+                                              },
+                                              "limit": {
+                                                "type": "directory",
+                                                "children": {
+                                                  "Clamp.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 991
+                                                  },
+                                                  "Max.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 927
+                                                  },
+                                                  "Min.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 927
+                                                  }
+                                                }
+                                              },
+                                              "rounding": {
+                                                "type": "directory",
+                                                "children": {
+                                                  "Ceil.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 931
+                                                  },
+                                                  "Floor.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 935
+                                                  },
+                                                  "Round.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 936
+                                                  },
+                                                  "Trunc.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1023
+                                                  }
+                                                }
+                                              },
+                                              "utility": {
+                                                "type": "directory",
+                                                "children": {
+                                                  "DieRoll.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1135
+                                                  },
+                                                  "DieRollInteger.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1191
+                                                  },
+                                                  "HermiteBlend.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1165
+                                                  },
+                                                  "Lerp.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 996
+                                                  },
+                                                  "LerpRotate.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1017
+                                                  },
+                                                  "Random.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1288
+                                                  },
+                                                  "RandomInteger.class": {
+                                                    "type": "file",
+                                                    "extension": ".class",
+                                                    "size": 1151
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "Group.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 937
+                                          },
+                                          "IValue.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 167
+                                          },
+                                          "MathBuilder.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 15204
+                                          },
+                                          "Negate.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 965
+                                          },
+                                          "Negative.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 935
+                                          },
+                                          "Operation$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 797
+                                          },
+                                          "Operation$10.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 913
+                                          },
+                                          "Operation$11.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 913
+                                          },
+                                          "Operation$12.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 913
+                                          },
+                                          "Operation$13.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 942
+                                          },
+                                          "Operation$14.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 942
+                                          },
+                                          "Operation$2.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 876
+                                          },
+                                          "Operation$3.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 876
+                                          },
+                                          "Operation$4.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 926
+                                          },
+                                          "Operation$5.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 876
+                                          },
+                                          "Operation$6.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 914
+                                          },
+                                          "Operation$7.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 917
+                                          },
+                                          "Operation$8.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 918
+                                          },
+                                          "Operation$9.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 911
+                                          },
+                                          "Operation.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4179
+                                          },
+                                          "Operator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1398
+                                          },
+                                          "Ternary.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1241
+                                          },
+                                          "Variable.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 896
+                                          }
+                                        }
+                                      },
+                                      "utils": {
+                                        "type": "directory",
+                                        "children": {
+                                          "Interpolation$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 906
+                                          },
+                                          "Interpolation$10.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1094
+                                          },
+                                          "Interpolation$2.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 901
+                                          },
+                                          "Interpolation$3.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 903
+                                          },
+                                          "Interpolation$4.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 974
+                                          },
+                                          "Interpolation$5.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 903
+                                          },
+                                          "Interpolation$6.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 913
+                                          },
+                                          "Interpolation$7.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 976
+                                          },
+                                          "Interpolation$8.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 970
+                                          },
+                                          "Interpolation$9.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 971
+                                          },
+                                          "Interpolation.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3491
+                                          },
+                                          "Interpolations.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4762
+                                          },
+                                          "JsonUtils.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1207
+                                          },
+                                          "MathHelper.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 845
+                                          },
+                                          "MathUtils.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1110
+                                          },
+                                          "Timer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1338
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "org": {
+                            "type": "directory",
+                            "children": {
+                              "joml": {
+                                "type": "directory",
+                                "children": {
+                                  "Matrix4fStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3266
+                                  },
+                                  "PolygonsIntersection.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5005
+                                  },
+                                  "Matrix4x3fStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3286
+                                  },
+                                  "Vector2ic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1607
+                                  },
+                                  "Runtime.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4526
+                                  },
+                                  "Math.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12851
+                                  },
+                                  "ConfigurationException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 569
+                                  },
+                                  "Matrix3x2d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 31241
+                                  },
+                                  "Vector3Lc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1627
+                                  },
+                                  "Quaterniondc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5661
+                                  },
+                                  "Quaterniond.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 63276
+                                  },
+                                  "Matrix2fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2786
+                                  },
+                                  "GeometryUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4765
+                                  },
+                                  "QuaternionfInterpolator$SvdDecomposition3f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5422
+                                  },
+                                  "Options.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2386
+                                  },
+                                  "Matrix4x3d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 142390
+                                  },
+                                  "FrustumRayBuilder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3365
+                                  },
+                                  "Vector2L.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 15338
+                                  },
+                                  "MemUtil$MemUtilUnsafe.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 71361
+                                  },
+                                  "Matrix4x3dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10455
+                                  },
+                                  "Intersectiond.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 55830
+                                  },
+                                  "Interpolationd.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3744
+                                  },
+                                  "Vector4L.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 22653
+                                  },
+                                  "SimplexNoise$Vector3b.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 600
+                                  },
+                                  "sampling": {
+                                    "type": "directory",
+                                    "children": {
+                                      "PoissonSampling$Disk.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3518
+                                      },
+                                      "UniformSampling.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 567
+                                      },
+                                      "PoissonSampling.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 475
+                                      },
+                                      "Math.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1169
+                                      },
+                                      "BestCandidateSampling$Cube$2.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1780
+                                      },
+                                      "BestCandidateSampling$Quad.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3729
+                                      },
+                                      "SpiralSampling.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1788
+                                      },
+                                      "StratifiedSampling.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1555
+                                      },
+                                      "BestCandidateSampling.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1173
+                                      },
+                                      "BestCandidateSampling$Sphere$2.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1794
+                                      },
+                                      "BestCandidateSampling$Disk.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3742
+                                      },
+                                      "BestCandidateSampling$Cube$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1584
+                                      },
+                                      "Callback2d.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 178
+                                      },
+                                      "BestCandidateSampling$Disk$2.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1735
+                                      },
+                                      "UniformSampling$Disk.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1468
+                                      },
+                                      "BestCandidateSampling$Sphere$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1598
+                                      },
+                                      "BestCandidateSampling$QuadTree.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2875
+                                      },
+                                      "UniformSampling$Sphere.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1498
+                                      },
+                                      "BestCandidateSampling$Quad$2.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1735
+                                      },
+                                      "Convolution.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2148
+                                      },
+                                      "BestCandidateSampling$Octree.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3419
+                                      },
+                                      "BestCandidateSampling$Quad$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1548
+                                      },
+                                      "BestCandidateSampling$Cube.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3786
+                                      },
+                                      "BestCandidateSampling$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 323
+                                      },
+                                      "BestCandidateSampling$Sphere.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4228
+                                      },
+                                      "BestCandidateSampling$Disk$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1547
+                                      },
+                                      "BestCandidateSampling$IntHolder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 875
+                                      },
+                                      "BestCandidateSampling$Sphere$Node.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5997
+                                      },
+                                      "Callback3d.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 179
+                                      }
+                                    }
+                                  },
+                                  "Matrix2d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 25659
+                                  },
+                                  "FrustumIntersection.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14810
+                                  },
+                                  "Matrix4fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14251
+                                  },
+                                  "Matrix3dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6699
+                                  },
+                                  "Vector4Lc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1981
+                                  },
+                                  "SimplexNoise.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10142
+                                  },
+                                  "Random$Xorshiro128.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1897
+                                  },
+                                  "MemUtil$MemUtilNIO.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 79254
+                                  },
+                                  "Matrix2dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3129
+                                  },
+                                  "AxisAngle4f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 18899
+                                  },
+                                  "Matrix3x2dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3806
+                                  },
+                                  "Matrix4x3fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9718
+                                  },
+                                  "Vector2f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 21784
+                                  },
+                                  "Vector3L.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17528
+                                  },
+                                  "Vector3fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5700
+                                  },
+                                  "Vector3d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 52475
+                                  },
+                                  "Matrix2f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 22428
+                                  },
+                                  "RayAabIntersection.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8679
+                                  },
+                                  "Matrix4d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 241756
+                                  },
+                                  "Matrix3f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 68639
+                                  },
+                                  "Vector4i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 20482
+                                  },
+                                  "Interpolationf.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3732
+                                  },
+                                  "PolygonsIntersection$ByStartComparator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 986
+                                  },
+                                  "Vector2dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3173
+                                  },
+                                  "Vector2i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14051
+                                  },
+                                  "Matrix3x2fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3439
+                                  },
+                                  "Matrix3x2fStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3286
+                                  },
+                                  "Vector4ic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1653
+                                  },
+                                  "Vector4dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4446
+                                  },
+                                  "Matrix3x2dStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3313
+                                  },
+                                  "Vector3f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 46845
+                                  },
+                                  "Matrix4dStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3266
+                                  },
+                                  "Matrix4f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 221311
+                                  },
+                                  "Matrix4x3f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 132421
+                                  },
+                                  "QuaterniondInterpolator$SvdDecomposition3d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5422
+                                  },
+                                  "AxisAngle4d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 20767
+                                  },
+                                  "SimplexNoise$Vector4b.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 644
+                                  },
+                                  "Matrix3dStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3266
+                                  },
+                                  "Vector3dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7002
+                                  },
+                                  "MemUtil.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12742
+                                  },
+                                  "PolygonsIntersection$IntervalTreeNode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2435
+                                  },
+                                  "Matrix3x2f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 29312
+                                  },
+                                  "Vector3ic.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1623
+                                  },
+                                  "Matrix4dc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 15318
+                                  },
+                                  "Quaternionf.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 66654
+                                  },
+                                  "Intersectionf.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 55472
+                                  },
+                                  "PolygonsIntersection$ByEndComparator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 978
+                                  },
+                                  "Vector2fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2916
+                                  },
+                                  "Matrix3d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 78543
+                                  },
+                                  "RoundingMode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 546
+                                  },
+                                  "Vector4d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 42093
+                                  },
+                                  "Matrix3fStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3266
+                                  },
+                                  "Vector3i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17860
+                                  },
+                                  "PolygonsIntersection$Interval.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 567
+                                  },
+                                  "Quaternionfc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6129
+                                  },
+                                  "Vector4f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 37661
+                                  },
+                                  "QuaternionfInterpolator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3056
+                                  },
+                                  "Matrix4x3dStack.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3286
+                                  },
+                                  "Vector4fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3788
+                                  },
+                                  "QuaterniondInterpolator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2907
+                                  },
+                                  "Vector2Lc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1605
+                                  },
+                                  "Matrix3fc.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5637
+                                  },
+                                  "Vector2d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 23254
+                                  },
+                                  "Random.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1644
+                                  },
+                                  "Matrix3fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7765
+                                  },
+                                  "Vector2iKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9464
+                                  },
+                                  "Matrix4x3dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10547
+                                  },
+                                  "Vector4iKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10245
+                                  },
+                                  "Vector3iKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9611
+                                  },
+                                  "Matrix2fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5919
+                                  },
+                                  "Vector4dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14618
+                                  },
+                                  "Vector2fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10041
+                                  },
+                                  "Matrix2dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6798
+                                  },
+                                  "Vector3fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13194
+                                  },
+                                  "Matrix4fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7765
+                                  },
+                                  "Matrix3x2dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4961
+                                  },
+                                  "Matrix3x2fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4949
+                                  },
+                                  "QuaterniondKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7029
+                                  },
+                                  "Vector4fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11382
+                                  },
+                                  "QuaternionfKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5685
+                                  },
+                                  "Matrix4x3fKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7863
+                                  },
+                                  "Matrix3dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11072
+                                  },
+                                  "Vector2dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12529
+                                  },
+                                  "Vector3dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 14988
+                                  },
+                                  "Matrix4dKt.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10403
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 139547
+          }
+        }
+      }
+    }
+  }
+}

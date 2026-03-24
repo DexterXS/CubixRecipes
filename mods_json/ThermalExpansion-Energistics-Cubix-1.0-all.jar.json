@@ -1,0 +1,1362 @@
+{
+  "mod_name": "ThermalExpansion-Energistics-Cubix-1.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ThermalExpansion-Energistics-Cubix-1.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ThermalExpansion-Energistics-Cubix-1.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 554889,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 155
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "tee": {
+                    "type": "directory",
+                    "children": {
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileBaseOreCrusher$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1118
+                          },
+                          "TileBaseOreCrusher$TileAbsoluteOreCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 940
+                          },
+                          "TileBaseOreCrusher$TileAdvancedOreCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 940
+                          },
+                          "TileBaseOreCrusher$TileUltimateOreCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 940
+                          },
+                          "TileBaseOreCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13326
+                          },
+                          "InsolatorCraftingDetails.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5056
+                          },
+                          "TileAbsoluteCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2067
+                          },
+                          "TileAbsoluteInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2764
+                          },
+                          "TileAbsolutePrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1438
+                          },
+                          "TileAbsolutePulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2671
+                          },
+                          "TileAbsoluteRedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2080
+                          },
+                          "TileAbsoluteSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileAbsoluteSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileAbsoluteTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1975
+                          },
+                          "TileAdvancedCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2067
+                          },
+                          "TileAdvancedInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2764
+                          },
+                          "TileAdvancedPrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1438
+                          },
+                          "TileAdvancedPulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2671
+                          },
+                          "TileAdvancedRedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2080
+                          },
+                          "TileAdvancedSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileAdvancedSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileAdvancedTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1975
+                          },
+                          "TileBaseCrucible$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1151
+                          },
+                          "TileBaseCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13152
+                          },
+                          "TileBaseInsolator$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1155
+                          },
+                          "TileBaseInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6321
+                          },
+                          "TileBasePrecipitator$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1334
+                          },
+                          "TileBasePrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11625
+                          },
+                          "TileBasePulverizer$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1159
+                          },
+                          "TileBasePulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5952
+                          },
+                          "TileBaseRedFurnace$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1159
+                          },
+                          "TileBaseRedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5824
+                          },
+                          "TileBaseSawmill$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1147
+                          },
+                          "TileBaseSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5901
+                          },
+                          "TileBaseSmelter$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1147
+                          },
+                          "TileBaseSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5916
+                          },
+                          "TileBaseTransposer$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1159
+                          },
+                          "TileBaseTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11776
+                          },
+                          "TileTEE$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2395
+                          },
+                          "TileTEE.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16013
+                          },
+                          "TileThermalRFProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3149
+                          },
+                          "TileUltimateCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2067
+                          },
+                          "TileUltimateInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2764
+                          },
+                          "TileUltimatePrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1438
+                          },
+                          "TileUltimatePulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2671
+                          },
+                          "TileUltimateRedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2080
+                          },
+                          "TileUltimateSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileUltimateSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2635
+                          },
+                          "TileUltimateTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1975
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "TEEBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1482
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiCrucible$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4067
+                              },
+                              "GuiCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4341
+                              },
+                              "GuiCrusher$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 986
+                              },
+                              "GuiCrusher.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2943
+                              },
+                              "GuiInsolator$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1231
+                              },
+                              "GuiInsolator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2632
+                              },
+                              "GuiPrecipitator$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1243
+                              },
+                              "GuiPrecipitator$PrecipitatorButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1775
+                              },
+                              "GuiPrecipitator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7204
+                              },
+                              "GuiPulverizer$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1235
+                              },
+                              "GuiPulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2640
+                              },
+                              "GuiRedFurnace$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1235
+                              },
+                              "GuiRedFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2641
+                              },
+                              "GuiSawmill$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1223
+                              },
+                              "GuiSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2647
+                              },
+                              "GuiSmelter$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1223
+                              },
+                              "GuiSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2616
+                              },
+                              "GuiTEE.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2690
+                              },
+                              "GuiTransposer$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1235
+                              },
+                              "GuiTransposer$TransposerButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2176
+                              },
+                              "GuiTransposer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6958
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "TEETESR$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1842
+                              },
+                              "TEETESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7246
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4712
+                          },
+                          "ContainerCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3561
+                          },
+                          "ContainerInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2446
+                          },
+                          "ContainerPrecipitator$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1169
+                          },
+                          "ContainerPrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6734
+                          },
+                          "ContainerPulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2458
+                          },
+                          "ContainerRedFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2401
+                          },
+                          "ContainerSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2434
+                          },
+                          "ContainerSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2459
+                          },
+                          "ContainerTEE.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6927
+                          },
+                          "ContainerTransposer$SlotFakeTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2302
+                          },
+                          "ContainerTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7017
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "AESlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1715
+                              },
+                              "SlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1701
+                              },
+                              "SlotOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1549
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ext": {
+                        "type": "directory",
+                        "children": {
+                          "PlatformHelperKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7785
+                          },
+                          "PrecipitatorRecipeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3924
+                          },
+                          "RecipeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 22581
+                          },
+                          "RegistryUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2373
+                          },
+                          "UtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2759
+                          }
+                        }
+                      },
+                      "integration": {
+                        "type": "directory",
+                        "children": {
+                          "NEIIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2312
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "TEEItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2913
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy$preInit$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2384
+                          },
+                          "ClientProxy$registerTesr$1$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2565
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8082
+                          },
+                          "CommonProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12653
+                          },
+                          "CommonProxy$preInit$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$10.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1479
+                          },
+                          "CommonProxy$preInit$11.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$12.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$13.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$14.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1481
+                          },
+                          "CommonProxy$preInit$15.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1485
+                          },
+                          "CommonProxy$preInit$16.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1485
+                          },
+                          "CommonProxy$preInit$17.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1485
+                          },
+                          "CommonProxy$preInit$18.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1480
+                          },
+                          "CommonProxy$preInit$19.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1480
+                          },
+                          "CommonProxy$preInit$20.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$21.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$22.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1479
+                          },
+                          "CommonProxy$preInit$23.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$24.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$25.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1483
+                          },
+                          "CommonProxy$preInit$26.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$27.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1488
+                          },
+                          "CommonProxy$preInit$28.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1488
+                          },
+                          "CommonProxy$preInit$29.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1488
+                          },
+                          "CommonProxy$preInit$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$30.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1482
+                          },
+                          "CommonProxy$preInit$31.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$32.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$33.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$34.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1482
+                          },
+                          "CommonProxy$preInit$35.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1505
+                          },
+                          "CommonProxy$preInit$36.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1505
+                          },
+                          "CommonProxy$preInit$37.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1505
+                          },
+                          "CommonProxy$preInit$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1480
+                          },
+                          "CommonProxy$preInit$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$8.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$9.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16045
+                          }
+                        }
+                      },
+                      "TEEConfig$Crucible$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1854
+                      },
+                      "TEEConfig$Crucible$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1850
+                      },
+                      "TEEConfig$Crucible$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1838
+                      },
+                      "TEEConfig$Crucible$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1850
+                      },
+                      "TEEConfig$Crucible.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1144
+                      },
+                      "TEEConfig$Crusher$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1738
+                      },
+                      "TEEConfig$Crusher$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1737
+                      },
+                      "TEEConfig$Crusher$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1724
+                      },
+                      "TEEConfig$Crusher$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1739
+                      },
+                      "TEEConfig$Crusher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1137
+                      },
+                      "TEEConfig$Insolator$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2165
+                      },
+                      "TEEConfig$Insolator$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2153
+                      },
+                      "TEEConfig$Insolator$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2141
+                      },
+                      "TEEConfig$Insolator$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2161
+                      },
+                      "TEEConfig$Insolator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1151
+                      },
+                      "TEEConfig$Precipitator$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1870
+                      },
+                      "TEEConfig$Precipitator$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1866
+                      },
+                      "TEEConfig$Precipitator$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1854
+                      },
+                      "TEEConfig$Precipitator$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1866
+                      },
+                      "TEEConfig$Precipitator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1172
+                      },
+                      "TEEConfig$Pulverizer$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2169
+                      },
+                      "TEEConfig$Pulverizer$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2157
+                      },
+                      "TEEConfig$Pulverizer$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2145
+                      },
+                      "TEEConfig$Pulverizer$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2165
+                      },
+                      "TEEConfig$Pulverizer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1158
+                      },
+                      "TEEConfig$RedFurnace$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1862
+                      },
+                      "TEEConfig$RedFurnace$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1858
+                      },
+                      "TEEConfig$RedFurnace$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1846
+                      },
+                      "TEEConfig$RedFurnace$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1858
+                      },
+                      "TEEConfig$RedFurnace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1158
+                      },
+                      "TEEConfig$Sawmill$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2157
+                      },
+                      "TEEConfig$Sawmill$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2145
+                      },
+                      "TEEConfig$Sawmill$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2133
+                      },
+                      "TEEConfig$Sawmill$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2153
+                      },
+                      "TEEConfig$Sawmill.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1137
+                      },
+                      "TEEConfig$Smelter$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2157
+                      },
+                      "TEEConfig$Smelter$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2145
+                      },
+                      "TEEConfig$Smelter$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2133
+                      },
+                      "TEEConfig$Smelter$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2153
+                      },
+                      "TEEConfig$Smelter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1137
+                      },
+                      "TEEConfig$Transposer$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1862
+                      },
+                      "TEEConfig$Transposer$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1858
+                      },
+                      "TEEConfig$Transposer$Base.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1846
+                      },
+                      "TEEConfig$Transposer$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1858
+                      },
+                      "TEEConfig$Transposer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1158
+                      },
+                      "TEEConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2404
+                      },
+                      "ThermalExpansionEnergistics$creativeTab$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "ThermalExpansionEnergistics.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4255
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "te_energistics": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3206
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "crucible.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 25357
+                      },
+                      "insolator.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 30063
+                      },
+                      "ore_crusher.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 71646
+                      },
+                      "precipitator.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 33638
+                      },
+                      "pulverizer.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 33630
+                      },
+                      "red_furnace.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28908
+                      },
+                      "rf_provider.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 16924
+                      },
+                      "sawmill.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 39162
+                      },
+                      "smelter.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28888
+                      },
+                      "transposer.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 40876
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "absolute_crucible.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2362
+                          },
+                          "absolute_insolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2536
+                          },
+                          "absolute_ore_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10148
+                          },
+                          "absolute_precipitator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3010
+                          },
+                          "absolute_pulverizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2447
+                          },
+                          "absolute_red_furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2773
+                          },
+                          "absolute_sawmill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2978
+                          },
+                          "absolute_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2662
+                          },
+                          "absolute_transposer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2832
+                          },
+                          "advanced_crucible.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1013
+                          },
+                          "advanced_insolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1129
+                          },
+                          "advanced_ore_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10056
+                          },
+                          "advanced_precipitator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1455
+                          },
+                          "advanced_pulverizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1107
+                          },
+                          "advanced_red_furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1470
+                          },
+                          "advanced_sawmill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1609
+                          },
+                          "advanced_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1339
+                          },
+                          "advanced_transposer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1454
+                          },
+                          "base_crucible.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1017
+                          },
+                          "base_insolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1162
+                          },
+                          "base_ore_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10133
+                          },
+                          "base_precipitator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1437
+                          },
+                          "base_pulverizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1104
+                          },
+                          "base_red_furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1495
+                          },
+                          "base_sawmill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1607
+                          },
+                          "base_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1351
+                          },
+                          "base_transposer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1489
+                          },
+                          "rf_provider.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1332
+                          },
+                          "ultimate_crucible.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1019
+                          },
+                          "ultimate_insolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1198
+                          },
+                          "ultimate_ore_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9767
+                          },
+                          "ultimate_precipitator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1470
+                          },
+                          "ultimate_pulverizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1096
+                          },
+                          "ultimate_red_furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1475
+                          },
+                          "ultimate_sawmill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1588
+                          },
+                          "ultimate_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1347
+                          },
+                          "ultimate_transposer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1471
+                          }
+                        }
+                      },
+                      "guis": {
+                        "type": "directory",
+                        "children": {
+                          "crucible.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13751
+                          },
+                          "crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13101
+                          },
+                          "insolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12644
+                          },
+                          "precipitator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10077
+                          },
+                          "pulverizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11349
+                          },
+                          "red_furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12180
+                          },
+                          "sawmill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10377
+                          },
+                          "smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13205
+                          },
+                          "transposer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9209
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2757
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 178766
+          }
+        }
+      }
+    }
+  }
+}

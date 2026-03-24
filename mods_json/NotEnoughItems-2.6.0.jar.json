@@ -1,0 +1,4002 @@
+{
+  "mod_name": "NotEnoughItems-2.6.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\NotEnoughItems-2.6.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "NotEnoughItems-2.6.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1534369,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 116
+              },
+              "nei_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 1070
+              },
+              "LICENSE.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 11358
+              },
+              "NOTICE.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 173
+              },
+              "maven": {
+                "type": "directory",
+                "children": {
+                  "org.apache.commons": {
+                    "type": "directory",
+                    "children": {
+                      "commons-csv": {
+                        "type": "directory",
+                        "children": {
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 20282
+                          },
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 65
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "org.antlr": {
+                    "type": "directory",
+                    "children": {
+                      "antlr4-runtime": {
+                        "type": "directory",
+                        "children": {
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 3617
+                          },
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 119
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "codechicken": {
+            "type": "directory",
+            "children": {
+              "nei": {
+                "type": "directory",
+                "children": {
+                  "AbstractSubpanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5954
+                  },
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "API.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15374
+                      },
+                      "DefaultOverlayRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3275
+                      },
+                      "GuiInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5084
+                      },
+                      "IBookmarkContainerHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1744
+                      },
+                      "IConfigureNEI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 216
+                      },
+                      "IGuiContainerOverlay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 456
+                      },
+                      "IHighlightHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 936
+                      },
+                      "IInfiniteItemHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 483
+                      },
+                      "INEIGuiAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2510
+                      },
+                      "INEIGuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 968
+                      },
+                      "INEIModeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 160
+                      },
+                      "IOverlayHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5671
+                      },
+                      "IRecipeFilter$IRecipeFilterProvider.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 309
+                      },
+                      "IRecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 307
+                      },
+                      "IRecipeOverlayRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 250
+                      },
+                      "IStackPositioner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 342
+                      },
+                      "IStackStringifyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1103
+                      },
+                      "ItemFilter$ItemFilterProvider.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 285
+                      },
+                      "ItemFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 282
+                      },
+                      "ItemInfo$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1234
+                      },
+                      "ItemInfo$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2464
+                      },
+                      "ItemInfo$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2521
+                      },
+                      "ItemInfo$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1603
+                      },
+                      "ItemInfo$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1953
+                      },
+                      "ItemInfo$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2793
+                      },
+                      "ItemInfo$Layout.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1212
+                      },
+                      "ItemInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22829
+                      },
+                      "LayoutStyle.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 769
+                      },
+                      "NEIInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1693
+                      },
+                      "ShortcutInputHandler$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 248
+                      },
+                      "ShortcutInputHandler$HotkeysCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1944
+                      },
+                      "ShortcutInputHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 21378
+                      },
+                      "TaggedInventoryArea.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1787
+                      }
+                    }
+                  },
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "GuiContainerManagerAPITransformer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2142
+                      },
+                      "GuiContainerManagerAPITransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1623
+                      },
+                      "NEICorePlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2708
+                      },
+                      "NEITransformer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1997
+                      },
+                      "NEITransformer$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2383
+                      },
+                      "NEITransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13390
+                      },
+                      "OreDictionaryVisitor$ClassInitializerVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1446
+                      },
+                      "OreDictionaryVisitor$GetOreIDVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2504
+                      },
+                      "OreDictionaryVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2163
+                      }
+                    }
+                  },
+                  "AutoFocusWidget$INEIAutoFocusSearchEnable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 249
+                  },
+                  "AutoFocusWidget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4345
+                  },
+                  "bookmark": {
+                    "type": "directory",
+                    "children": {
+                      "BookmarkGrid$BookmarkMouseContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1865
+                      },
+                      "BookmarkGrid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 40654
+                      },
+                      "BookmarkGridGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16537
+                      },
+                      "BookmarkGroup.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2347
+                      },
+                      "BookmarkItem$BookmarkItemType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1653
+                      },
+                      "BookmarkItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10495
+                      },
+                      "BookmarksGridSlot$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 950
+                      },
+                      "BookmarksGridSlot$ShownItemType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1371
+                      },
+                      "BookmarksGridSlot.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13461
+                      },
+                      "BookmarkStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15522
+                      },
+                      "GroupingItem$PointEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 646
+                      },
+                      "GroupingItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6397
+                      },
+                      "RecipeChainDetails$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 904
+                      },
+                      "RecipeChainDetails$BookmarkChainItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2914
+                      },
+                      "RecipeChainDetails$CalculatedType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1716
+                      },
+                      "RecipeChainDetails.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15287
+                      },
+                      "SortableGroup.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3003
+                      },
+                      "SortableItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9929
+                      }
+                    }
+                  },
+                  "BookmarkContainerInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2138
+                  },
+                  "BookmarkPanel$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 940
+                  },
+                  "BookmarkPanel$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 940
+                  },
+                  "BookmarkPanel$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1107
+                  },
+                  "BookmarkPanel$BookmarkRecipe.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1783
+                  },
+                  "BookmarkPanel$BookmarkViewMode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1247
+                  },
+                  "BookmarkPanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 36749
+                  },
+                  "Button.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2439
+                  },
+                  "ButtonCycled.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 701
+                  },
+                  "ClientHandler$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1471
+                  },
+                  "ClientHandler$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1363
+                  },
+                  "ClientHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 25153
+                  },
+                  "CollapsibleItems$GroupItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1465
+                  },
+                  "CollapsibleItems.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9872
+                  },
+                  "commands": {
+                    "type": "directory",
+                    "children": {
+                      "CommandBookmarkAdd.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2189
+                      },
+                      "CommandRecipeId$ProcessDiffThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7506
+                      },
+                      "CommandRecipeId$ProcessDumpThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8146
+                      },
+                      "CommandRecipeId.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4175
+                      },
+                      "CommandUntranslator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3135
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "ArrayDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1497
+                      },
+                      "ConfigSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1422
+                      },
+                      "DataDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6649
+                      },
+                      "GuiHighlightTips.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6100
+                      },
+                      "GuiItemIconDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8517
+                      },
+                      "GuiItemSorter$SortItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1654
+                      },
+                      "GuiItemSorter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6220
+                      },
+                      "GuiNEIOptionList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1297
+                      },
+                      "GuiOptionList$OptionScrollSlot.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7253
+                      },
+                      "GuiOptionList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4764
+                      },
+                      "GuiOptionPane$ScrollPane.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 824
+                      },
+                      "GuiOptionPane.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3818
+                      },
+                      "GuiPanelSettings$PanelPlaceholder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6662
+                      },
+                      "GuiPanelSettings$PanelResizeButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      },
+                      "GuiPanelSettings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3725
+                      },
+                      "HandlerDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5220
+                      },
+                      "IMCHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9918
+                      },
+                      "ItemPanelDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7102
+                      },
+                      "Option.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7151
+                      },
+                      "OptionButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5192
+                      },
+                      "OptionCycled.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2162
+                      },
+                      "OptionGamemodes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 953
+                      },
+                      "OptionIntegerField.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2071
+                      },
+                      "OptionKeyBind.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3960
+                      },
+                      "OptionList$RootOptionList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1182
+                      },
+                      "OptionList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5522
+                      },
+                      "OptionOpenGui.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1976
+                      },
+                      "OptionScrollPane.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3382
+                      },
+                      "OptionStringSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6129
+                      },
+                      "OptionTextField$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1730
+                      },
+                      "OptionTextField.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3797
+                      },
+                      "OptionToggleButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1581
+                      },
+                      "OptionToggleButtonBoubs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2710
+                      },
+                      "OptionUtilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2461
+                      },
+                      "preset": {
+                        "type": "directory",
+                        "children": {
+                          "CheckboxButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1677
+                          },
+                          "GuiPresetList$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 885
+                          },
+                          "GuiPresetList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9672
+                          },
+                          "GuiPresetSettings$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1200
+                          },
+                          "GuiPresetSettings$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1275
+                          },
+                          "GuiPresetSettings$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1126
+                          },
+                          "GuiPresetSettings$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1634
+                          },
+                          "GuiPresetSettings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7332
+                          },
+                          "LeftPanel$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2789
+                          },
+                          "LeftPanel$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 952
+                          },
+                          "LeftPanel$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1314
+                          },
+                          "LeftPanel$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1316
+                          },
+                          "LeftPanel$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1316
+                          },
+                          "LeftPanel$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1315
+                          },
+                          "LeftPanel$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1116
+                          },
+                          "LeftPanel$MouseSelection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 971
+                          },
+                          "LeftPanel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9126
+                          },
+                          "PresetItemsGrid$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3385
+                          },
+                          "PresetItemsGrid$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 896
+                          },
+                          "PresetItemsGrid$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 934
+                          },
+                          "PresetItemsGrid$PresetsGridSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1648
+                          },
+                          "PresetItemsGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4666
+                          },
+                          "RightPanel$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4826
+                          },
+                          "RightPanel$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1137
+                          },
+                          "RightPanel$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1029
+                          },
+                          "RightPanel$MouseSelection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1042
+                          },
+                          "RightPanel$PresetSearchField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3776
+                          },
+                          "RightPanel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9025
+                          }
+                        }
+                      },
+                      "RegistryDumper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1772
+                      }
+                    }
+                  },
+                  "ContainerCreativeInv$SlotArmor.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1710
+                  },
+                  "ContainerCreativeInv$SlotBlockArmor.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 991
+                  },
+                  "ContainerCreativeInv.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3161
+                  },
+                  "ContainerEnchantmentModifier$EnchantmentHash.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 722
+                  },
+                  "ContainerEnchantmentModifier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10311
+                  },
+                  "ContainerPotionCreator$InventoryPotionStore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1065
+                  },
+                  "ContainerPotionCreator$SlotPotion.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1766
+                  },
+                  "ContainerPotionCreator$SlotPotionStore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2263
+                  },
+                  "ContainerPotionCreator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4723
+                  },
+                  "DefaultBookmarkContainerHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2088
+                  },
+                  "DefaultHighlightHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3030
+                  },
+                  "drawable": {
+                    "type": "directory",
+                    "children": {
+                      "DrawableBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1832
+                      },
+                      "DrawableResource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3887
+                      }
+                    }
+                  },
+                  "event": {
+                    "type": "directory",
+                    "children": {
+                      "NEIConfigsLoadedEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 828
+                      },
+                      "NEIRegisterHandlerInfosEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3193
+                      }
+                    }
+                  },
+                  "ExtendedCreativeInv.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2761
+                  },
+                  "FastTransferManager$SlotPositionComparator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1409
+                  },
+                  "FastTransferManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11063
+                  },
+                  "FavoriteRecipes.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11589
+                  },
+                  "filter": {
+                    "type": "directory",
+                    "children": {
+                      "AllMultiRecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2067
+                      },
+                      "AllOthersRecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1548
+                      },
+                      "AnyMultiRecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2067
+                      },
+                      "AnyOthersRecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1548
+                      },
+                      "RecipeFilter$FilterContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1523
+                      },
+                      "RecipeFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2500
+                      }
+                    }
+                  },
+                  "FormattedTextField$TextFormatter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1077
+                  },
+                  "FormattedTextField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7795
+                  },
+                  "GuiEnchantmentModifier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5029
+                  },
+                  "GuiExtendedCreativeInv.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3535
+                  },
+                  "guihook": {
+                    "type": "directory",
+                    "children": {
+                      "DefaultSlotClickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1390
+                      },
+                      "GuiContainerManager$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 253
+                      },
+                      "GuiContainerManager$ResourcePackReloaded.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1517
+                      },
+                      "GuiContainerManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 35937
+                      },
+                      "HideousLinkedList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8564
+                      },
+                      "IContainerDrawHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1071
+                      },
+                      "IContainerInputHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 644
+                      },
+                      "IContainerObjectHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 539
+                      },
+                      "IContainerSlotClickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 411
+                      },
+                      "IContainerTooltipHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2163
+                      },
+                      "IGuiClientSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 133
+                      },
+                      "IGuiHandleMouseWheel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 176
+                      },
+                      "IGuiSlotDraw.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 238
+                      }
+                    }
+                  },
+                  "GuiNEIButton.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2491
+                  },
+                  "GuiPotionCreator$GuiDurationField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3258
+                  },
+                  "GuiPotionCreator$GuiSlotPotionEffects.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7196
+                  },
+                  "GuiPotionCreator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4305
+                  },
+                  "HeldItemHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4442
+                  },
+                  "HUDRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5552
+                  },
+                  "Image.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 472
+                  },
+                  "InfiniteStackSizeHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1999
+                  },
+                  "InfiniteToolHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1715
+                  },
+                  "InventoryCraftingDummy$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 638
+                  },
+                  "InventoryCraftingDummy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 491
+                  },
+                  "ItemCraftablesPanel$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4858
+                  },
+                  "ItemCraftablesPanel$CraftablesGridSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3307
+                  },
+                  "ItemCraftablesPanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11675
+                  },
+                  "ItemHistoryPanel$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2230
+                  },
+                  "ItemHistoryPanel$HistoryGridSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1006
+                  },
+                  "ItemHistoryPanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3693
+                  },
+                  "ItemList$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 14829
+                  },
+                  "ItemList$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1301
+                  },
+                  "ItemList$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3552
+                  },
+                  "ItemList$AllMultiItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2203
+                  },
+                  "ItemList$AnyMultiItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1923
+                  },
+                  "ItemList$EverythingItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 599
+                  },
+                  "ItemList$ItemsLoadedCallback.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 244
+                  },
+                  "ItemList$NegatedItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 775
+                  },
+                  "ItemList$NothingItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 590
+                  },
+                  "ItemList$PatternItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1659
+                  },
+                  "ItemList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6046
+                  },
+                  "ItemMobSpawner.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7934
+                  },
+                  "ItemPanel$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1444
+                  },
+                  "ItemPanel$ItemPanelSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1789
+                  },
+                  "ItemPanel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9167
+                  },
+                  "ItemPanels.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 565
+                  },
+                  "ItemQuantityField$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2239
+                  },
+                  "ItemQuantityField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3047
+                  },
+                  "ItemsGrid$ItemsGridSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3251
+                  },
+                  "ItemsGrid$MouseContext.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1038
+                  },
+                  "ItemsGrid$ScreenCapture.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3363
+                  },
+                  "ItemsGrid.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11685
+                  },
+                  "ItemSorter$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1050
+                  },
+                  "ItemSorter$SortEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1377
+                  },
+                  "ItemSorter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7712
+                  },
+                  "ItemsPanelGrid$ItemsPanelGridSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2679
+                  },
+                  "ItemsPanelGrid.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9123
+                  },
+                  "ItemStackAmount.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6401
+                  },
+                  "ItemStackMap$DetailMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6346
+                  },
+                  "ItemStackMap$Entry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 799
+                  },
+                  "ItemStackMap$StackMetaKey.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1566
+                  },
+                  "ItemStackMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6323
+                  },
+                  "ItemStackSet.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3179
+                  },
+                  "ItemsTooltipLineHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8271
+                  },
+                  "ItemZoom.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9311
+                  },
+                  "KeyManager$IKeyStateTracker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 246
+                  },
+                  "KeyManager$KeyState.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 426
+                  },
+                  "KeyManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2300
+                  },
+                  "Label.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 946
+                  },
+                  "LayoutManager$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3382
+                  },
+                  "LayoutManager$10.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 855
+                  },
+                  "LayoutManager$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1414
+                  },
+                  "LayoutManager$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1068
+                  },
+                  "LayoutManager$4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1068
+                  },
+                  "LayoutManager$5.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2200
+                  },
+                  "LayoutManager$6.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1667
+                  },
+                  "LayoutManager$7.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 893
+                  },
+                  "LayoutManager$8.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 834
+                  },
+                  "LayoutManager$9.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1205
+                  },
+                  "LayoutManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 27167
+                  },
+                  "LayoutStyleMinecraft.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8390
+                  },
+                  "LRUCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 940
+                  },
+                  "NEIActions.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3131
+                  },
+                  "NEIChestGuiHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2054
+                  },
+                  "NEIClientConfig$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 765
+                  },
+                  "NEIClientConfig$10.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1336
+                  },
+                  "NEIClientConfig$11.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 871
+                  },
+                  "NEIClientConfig$12.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 927
+                  },
+                  "NEIClientConfig$13.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2146
+                  },
+                  "NEIClientConfig$14.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1368
+                  },
+                  "NEIClientConfig$15.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2162
+                  },
+                  "NEIClientConfig$16.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2156
+                  },
+                  "NEIClientConfig$17.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2154
+                  },
+                  "NEIClientConfig$18.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2154
+                  },
+                  "NEIClientConfig$19.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2161
+                  },
+                  "NEIClientConfig$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 831
+                  },
+                  "NEIClientConfig$20.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 688
+                  },
+                  "NEIClientConfig$21.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 791
+                  },
+                  "NEIClientConfig$22.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3547
+                  },
+                  "NEIClientConfig$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 811
+                  },
+                  "NEIClientConfig$4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 732
+                  },
+                  "NEIClientConfig$5.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 651
+                  },
+                  "NEIClientConfig$6.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 841
+                  },
+                  "NEIClientConfig$7.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 897
+                  },
+                  "NEIClientConfig$8.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 726
+                  },
+                  "NEIClientConfig$9.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 730
+                  },
+                  "NEIClientConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 34409
+                  },
+                  "NEIClientUtils$Alignment.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1267
+                  },
+                  "NEIClientUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 25179
+                  },
+                  "NEICompatibility.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 305
+                  },
+                  "NEIController.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11041
+                  },
+                  "NEICPH.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11059
+                  },
+                  "NEICreativeGuiHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1062
+                  },
+                  "NEIDummySlotHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1518
+                  },
+                  "NEIModContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7424
+                  },
+                  "NEIPotionGuiHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2299
+                  },
+                  "NEIServerConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13591
+                  },
+                  "NEIServerUtils$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 924
+                  },
+                  "NEIServerUtils$GTMetaBaseItemHolder.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1275
+                  },
+                  "NEIServerUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 23035
+                  },
+                  "NEISPH.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13271
+                  },
+                  "OffsetPositioner.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1255
+                  },
+                  "PacketIDs$C2S.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1169
+                  },
+                  "PacketIDs$S2C.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 762
+                  },
+                  "PacketIDs.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 405
+                  },
+                  "PanelWidget$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1209
+                  },
+                  "PanelWidget$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1220
+                  },
+                  "PanelWidget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10173
+                  },
+                  "PlayerSave.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4397
+                  },
+                  "PopupInputHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2154
+                  },
+                  "PositionedStack.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8334
+                  },
+                  "PresetsList$ItemPanelFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2882
+                  },
+                  "PresetsList$Preset.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1504
+                  },
+                  "PresetsList$PresetMode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1288
+                  },
+                  "PresetsList$PresetRecipeFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4205
+                  },
+                  "PresetsList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7845
+                  },
+                  "recipe": {
+                    "type": "directory",
+                    "children": {
+                      "AcceptsFollowingTooltipLineHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3377
+                      },
+                      "AutoCraftingManager$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4867
+                      },
+                      "AutoCraftingManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3048
+                      },
+                      "BookmarkRecipeId.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5069
+                      },
+                      "BrewingOverlayHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1429
+                      },
+                      "BrewingRecipeHandler$BrewingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1334
+                      },
+                      "BrewingRecipeHandler$CachedBrewingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1803
+                      },
+                      "BrewingRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12985
+                      },
+                      "CatalystInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 666
+                      },
+                      "CatalystInfoList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4607
+                      },
+                      "chain": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeChainIterator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7042
+                          },
+                          "RecipeChainMath$ContainerItemResult.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 727
+                          },
+                          "RecipeChainMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 19258
+                          },
+                          "RecipeChainTooltipLineHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10855
+                          }
+                        }
+                      },
+                      "CheatItemHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2078
+                      },
+                      "ContainerRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1897
+                      },
+                      "DebugHandlerWidget$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1620
+                      },
+                      "DebugHandlerWidget$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1264
+                      },
+                      "DebugHandlerWidget$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1453
+                      },
+                      "DebugHandlerWidget$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1885
+                      },
+                      "DebugHandlerWidget$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1379
+                      },
+                      "DebugHandlerWidget$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1345
+                      },
+                      "DebugHandlerWidget$IntegerField$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2044
+                      },
+                      "DebugHandlerWidget$IntegerField.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1992
+                      },
+                      "DebugHandlerWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18769
+                      },
+                      "DefaultOverlayHandler$DistributedIngred.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 871
+                      },
+                      "DefaultOverlayHandler$IngredientDistribution.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 934
+                      },
+                      "DefaultOverlayHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18398
+                      },
+                      "FillFluidContainerHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3113
+                      },
+                      "FireworkRecipeHandler$CachedFireworkRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3248
+                      },
+                      "FireworkRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7492
+                      },
+                      "FuelRecipeHandler$CachedFuelRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1750
+                      },
+                      "FuelRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6618
+                      },
+                      "FurnaceRecipeHandler$FuelPair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 742
+                      },
+                      "FurnaceRecipeHandler$SmeltingPair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1879
+                      },
+                      "FurnaceRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5042
+                      },
+                      "GuiCraftingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10952
+                      },
+                      "GuiFavoriteButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11472
+                      },
+                      "GuiOverlayButton$ItemOverlayFormat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1511
+                      },
+                      "GuiOverlayButton$ItemOverlayState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1375
+                      },
+                      "GuiOverlayButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14743
+                      },
+                      "GuiRecipe$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2099
+                      },
+                      "GuiRecipe$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1289
+                      },
+                      "GuiRecipe$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 892
+                      },
+                      "GuiRecipe$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 775
+                      },
+                      "GuiRecipe$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 978
+                      },
+                      "GuiRecipe$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 978
+                      },
+                      "GuiRecipe$7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1014
+                      },
+                      "GuiRecipe$8.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1014
+                      },
+                      "GuiRecipe$9.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1163
+                      },
+                      "GuiRecipe$CompatibilityHacks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3185
+                      },
+                      "GuiRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 28924
+                      },
+                      "GuiRecipeButton$UpdateRecipeButtonsEvent$Post.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1565
+                      },
+                      "GuiRecipeButton$UpdateRecipeButtonsEvent$Pre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1806
+                      },
+                      "GuiRecipeButton$UpdateRecipeButtonsEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1871
+                      },
+                      "GuiRecipeButton.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1834
+                      },
+                      "GuiRecipeCatalyst$ItemStackWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2312
+                      },
+                      "GuiRecipeCatalyst.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5847
+                      },
+                      "GuiRecipeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14741
+                      },
+                      "GuiRecipeTabCreative.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1573
+                      },
+                      "GuiRecipeTabJEI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1486
+                      },
+                      "GuiRecipeTabs$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 880
+                      },
+                      "GuiRecipeTabs$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 876
+                      },
+                      "GuiRecipeTabs$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 967
+                      },
+                      "GuiRecipeTabs$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 962
+                      },
+                      "GuiRecipeTabs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5889
+                      },
+                      "GuiUsageRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6486
+                      },
+                      "HandlerInfo$Builder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4317
+                      },
+                      "HandlerInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5533
+                      },
+                      "ICraftingHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 291
+                      },
+                      "InformationHandler$CachedInfoPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2354
+                      },
+                      "InformationHandler$InformationPage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1354
+                      },
+                      "InformationHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5947
+                      },
+                      "IRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2489
+                      },
+                      "IUsageHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 566
+                      },
+                      "NEIRecipeWidget.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22625
+                      },
+                      "ProfilerRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7321
+                      },
+                      "Recipe$RecipeId.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10035
+                      },
+                      "Recipe$RecipeIngredient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5329
+                      },
+                      "Recipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7021
+                      },
+                      "RecipeCatalysts.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 19135
+                      },
+                      "RecipeHandlerQuery.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8978
+                      },
+                      "RecipeHandlerRef.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10025
+                      },
+                      "RecipeInfo$OverlayKey.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1287
+                      },
+                      "RecipeInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7433
+                      },
+                      "RecipeItemInputHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7840
+                      },
+                      "RecipePageManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5851
+                      },
+                      "RecipeTooltipLineHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4494
+                      },
+                      "SearchInputDropHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1087
+                      },
+                      "SearchRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6461
+                      },
+                      "ShapedRecipeHandler$CachedShapedRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2838
+                      },
+                      "ShapedRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7854
+                      },
+                      "ShapelessRecipeHandler$CachedShapelessRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3544
+                      },
+                      "ShapelessRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5481
+                      },
+                      "stackinfo": {
+                        "type": "directory",
+                        "children": {
+                          "DefaultStackStringifyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2962
+                          },
+                          "GTFluidStackStringifyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5597
+                          }
+                        }
+                      },
+                      "StackInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10896
+                      },
+                      "TemplateRecipeHandler$CachedRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5542
+                      },
+                      "TemplateRecipeHandler$RecipeTransferRect.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1062
+                      },
+                      "TemplateRecipeHandler$RecipeTransferRectHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7080
+                      },
+                      "TemplateRecipeHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18435
+                      }
+                    }
+                  },
+                  "RecipeSearchField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4643
+                  },
+                  "RestartableTask$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 972
+                  },
+                  "RestartableTask.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1934
+                  },
+                  "scroll": {
+                    "type": "directory",
+                    "children": {
+                      "GuiHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3865
+                      },
+                      "ScrollBar$OverflowType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1335
+                      },
+                      "ScrollBar$ScrollPlace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1221
+                      },
+                      "ScrollBar$ScrollType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1224
+                      },
+                      "ScrollBar.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11024
+                      },
+                      "ScrollContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10808
+                      }
+                    }
+                  },
+                  "search": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractSearchExpressionVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1042
+                      },
+                      "IdentifierFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1939
+                      },
+                      "ItemFilterVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13052
+                      },
+                      "ModNameFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2963
+                      },
+                      "OreDictionaryFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1768
+                      },
+                      "RecipeFilterVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6076
+                      },
+                      "SearchExpressionErrorListener.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1714
+                      },
+                      "SearchExpressionFormatVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9199
+                      },
+                      "SearchExpressionLexer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7325
+                      },
+                      "SearchExpressionParser$NegateExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2319
+                      },
+                      "SearchExpressionParser$OrExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2790
+                      },
+                      "SearchExpressionParser$PlainTextContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2312
+                      },
+                      "SearchExpressionParser$PrefixedExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2409
+                      },
+                      "SearchExpressionParser$QuotedContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2298
+                      },
+                      "SearchExpressionParser$RecipeClauseExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2653
+                      },
+                      "SearchExpressionParser$RecipeSearchExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2420
+                      },
+                      "SearchExpressionParser$RegexContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2292
+                      },
+                      "SearchExpressionParser$SearchExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2330
+                      },
+                      "SearchExpressionParser$SequenceExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2808
+                      },
+                      "SearchExpressionParser$TokenContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2713
+                      },
+                      "SearchExpressionParser$UnaryExpressionContext.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3167
+                      },
+                      "SearchExpressionParser.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18207
+                      },
+                      "SearchExpressionParserBaseVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6536
+                      },
+                      "SearchExpressionParserVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4168
+                      },
+                      "SearchExpressionUtils$HIGHLIGHTS.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2118
+                      },
+                      "SearchExpressionUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6060
+                      },
+                      "SearchToken.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3519
+                      },
+                      "TooltipFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2810
+                      }
+                    }
+                  },
+                  "SearchField$GuiSearchField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2501
+                  },
+                  "SearchField$ISearchProvider.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 402
+                  },
+                  "SearchField$SearchParserProvider.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2868
+                  },
+                  "SearchField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9438
+                  },
+                  "SearchTextFormatter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4369
+                  },
+                  "SearchTokenParser$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 231
+                  },
+                  "SearchTokenParser$ISearchParserProvider.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1313
+                  },
+                  "SearchTokenParser$IsRegisteredItemFilter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1136
+                  },
+                  "SearchTokenParser$ProvidersCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1103
+                  },
+                  "SearchTokenParser$SearchMode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1506
+                  },
+                  "SearchTokenParser.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15819
+                  },
+                  "ServerHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8167
+                  },
+                  "SlotOP.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 369
+                  },
+                  "SpawnerRenderer$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 966
+                  },
+                  "SpawnerRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4489
+                  },
+                  "SubsetWidget$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 216
+                  },
+                  "SubsetWidget$DefaultParserProvider.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4550
+                  },
+                  "SubsetWidget$SubsetTag$SubsetSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4583
+                  },
+                  "SubsetWidget$SubsetTag.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7122
+                  },
+                  "SubsetWidget$UpdateStateTask.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5068
+                  },
+                  "SubsetWidget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 21705
+                  },
+                  "TextField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3659
+                  },
+                  "ThreadOperationTimer$TimeoutException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 694
+                  },
+                  "ThreadOperationTimer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2419
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "AsyncTaskProfiler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3869
+                      },
+                      "ItemStackFilterParser.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10004
+                      },
+                      "ItemStackKey.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1331
+                      },
+                      "ItemUntranslator$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 238
+                      },
+                      "ItemUntranslator$LanguageRegistryPatch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4717
+                      },
+                      "ItemUntranslator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13175
+                      },
+                      "NBTHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4798
+                      },
+                      "NBTJson.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10843
+                      },
+                      "NEIKeyboardUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2422
+                      },
+                      "NEIMouseUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1816
+                      },
+                      "ReadableNumberConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3409
+                      },
+                      "RenderTooltipEventHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2346
+                      },
+                      "SlotInaccessible.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2023
+                      },
+                      "TextHistory$Direction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1213
+                      },
+                      "TextHistory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2212
+                      }
+                    }
+                  },
+                  "VisiblityData.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 924
+                  },
+                  "Widget.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3427
+                  },
+                  "WidgetContainer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7363
+                  },
+                  "WidgetZOrder.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 900
+                  },
+                  "WorldOverlayRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11199
+                  },
+                  "shadow": {
+                    "type": "directory",
+                    "children": {
+                      "org": {
+                        "type": "directory",
+                        "children": {
+                          "apache": {
+                            "type": "directory",
+                            "children": {
+                              "commons": {
+                                "type": "directory",
+                                "children": {
+                                  "csv": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CSVFormat$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 953
+                                      },
+                                      "CSVFormat$Builder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 12432
+                                      },
+                                      "CSVFormat$Predefined.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2588
+                                      },
+                                      "CSVFormat.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 33623
+                                      },
+                                      "CSVParser$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1022
+                                      },
+                                      "CSVParser$CSVRecordIterator.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2325
+                                      },
+                                      "CSVParser$Headers.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 921
+                                      },
+                                      "CSVParser.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 13574
+                                      },
+                                      "CSVPrinter.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7026
+                                      },
+                                      "CSVRecord.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7036
+                                      },
+                                      "Constants.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1316
+                                      },
+                                      "DuplicateHeaderMode.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1279
+                                      },
+                                      "ExtendedBufferedReader.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2701
+                                      },
+                                      "IOUtils.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2032
+                                      },
+                                      "Lexer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7901
+                                      },
+                                      "QuoteMode.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1312
+                                      },
+                                      "Token$Type.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1402
+                                      },
+                                      "Token.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1166
+                                      },
+                                      "package-info.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 151
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "antlr": {
+                            "type": "directory",
+                            "children": {
+                              "v4": {
+                                "type": "directory",
+                                "children": {
+                                  "runtime": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BailErrorStrategy.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1965
+                                      },
+                                      "tree": {
+                                        "type": "directory",
+                                        "children": {
+                                          "xpath": {
+                                            "type": "directory",
+                                            "children": {
+                                              "XPathLexerErrorListener.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1285
+                                              },
+                                              "XPathRuleAnywhereElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1187
+                                              },
+                                              "XPath$1.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1232
+                                              },
+                                              "XPathTokenElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 2203
+                                              },
+                                              "XPathLexer.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 5316
+                                              },
+                                              "XPathTokenAnywhereElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1192
+                                              },
+                                              "XPathRuleElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 2055
+                                              },
+                                              "XPathElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1220
+                                              },
+                                              "XPath.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 8149
+                                              },
+                                              "XPathWildcardAnywhereElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1182
+                                              },
+                                              "XPathWildcardElement.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1779
+                                              }
+                                            }
+                                          },
+                                          "ErrorNodeImpl.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1281
+                                          },
+                                          "TerminalNodeImpl.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3517
+                                          },
+                                          "pattern": {
+                                            "type": "directory",
+                                            "children": {
+                                              "TextChunk.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 968
+                                              },
+                                              "TokenTagToken.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1361
+                                              },
+                                              "ParseTreePatternMatcher$CannotInvokeStartRule.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 667
+                                              },
+                                              "ParseTreePattern.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 3801
+                                              },
+                                              "ParseTreePatternMatcher$StartRuleDoesNotConsumeFullPattern.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 642
+                                              },
+                                              "ParseTreePatternMatcher.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 15667
+                                              },
+                                              "ParseTreeMatch.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 4185
+                                              },
+                                              "TagChunk.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 1285
+                                              },
+                                              "RuleTagToken.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 2397
+                                              },
+                                              "Chunk.class": {
+                                                "type": "file",
+                                                "extension": ".class",
+                                                "size": 354
+                                              }
+                                            }
+                                          },
+                                          "Trees.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 10494
+                                          },
+                                          "ErrorNode.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 217
+                                          },
+                                          "SyntaxTree.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 303
+                                          },
+                                          "ParseTreeListener.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 466
+                                          },
+                                          "TerminalNode.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 296
+                                          },
+                                          "AbstractParseTreeVisitor.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3385
+                                          },
+                                          "ParseTree.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 837
+                                          },
+                                          "Tree.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 418
+                                          },
+                                          "RuleNode.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 299
+                                          },
+                                          "ParseTreeVisitor.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 954
+                                          }
+                                        }
+                                      },
+                                      "CommonTokenStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2055
+                                      },
+                                      "TokenStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 731
+                                      },
+                                      "TokenFactory.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 741
+                                      },
+                                      "atn": {
+                                        "type": "directory",
+                                        "children": {
+                                          "EmptyPredictionContext.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1222
+                                          },
+                                          "PredicateEvalInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1169
+                                          },
+                                          "LexerCustomAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2006
+                                          },
+                                          "ATNDeserializer$3.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1142
+                                          },
+                                          "ATNType.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1143
+                                          },
+                                          "BlockEndState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 569
+                                          },
+                                          "ContextSensitivityInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 932
+                                          },
+                                          "DecisionInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2312
+                                          },
+                                          "PredictionMode$AltAndContextMap.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1101
+                                          },
+                                          "ActionTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1570
+                                          },
+                                          "RuleStopState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 480
+                                          },
+                                          "BlockStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 496
+                                          },
+                                          "SemanticContext$AND.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5305
+                                          },
+                                          "LexerPopModeAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1758
+                                          },
+                                          "SetTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1564
+                                          },
+                                          "ProfilingATNSimulator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 9168
+                                          },
+                                          "AbstractPredicateTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 587
+                                          },
+                                          "LexerATNSimulator$SimState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 804
+                                          },
+                                          "ATNConfigSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 10352
+                                          },
+                                          "ATNDeserializer$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1180
+                                          },
+                                          "LexerActionExecutor.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3790
+                                          },
+                                          "BasicBlockStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 507
+                                          },
+                                          "ATN.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5347
+                                          },
+                                          "ATNConfigSet$AbstractConfigHashSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2641
+                                          },
+                                          "LexerATNConfig.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4549
+                                          },
+                                          "ATNDeserializer$UnicodeDeserializingMode.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1487
+                                          },
+                                          "ATNConfigSet$ConfigHashSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 923
+                                          },
+                                          "LexerMoreAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1741
+                                          },
+                                          "ATNDeserializationOptions.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1789
+                                          },
+                                          "ArrayPredictionContext.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3060
+                                          },
+                                          "OrderedATNConfigSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 822
+                                          },
+                                          "LoopEndState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 562
+                                          },
+                                          "ATNDeserializer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 23882
+                                          },
+                                          "RangeTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1647
+                                          },
+                                          "LexerChannelAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2053
+                                          },
+                                          "ATNConfigSet$ConfigEqualityComparator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2084
+                                          },
+                                          "LookaheadEventInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1000
+                                          },
+                                          "LexerIndexedCustomAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1935
+                                          },
+                                          "PlusLoopbackState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 497
+                                          },
+                                          "StarBlockStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 504
+                                          },
+                                          "Transition$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1635
+                                          },
+                                          "LexerModeAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2019
+                                          },
+                                          "PredictionContextCache.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1536
+                                          },
+                                          "SingletonPredictionContext.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2706
+                                          },
+                                          "PredictionMode$AltAndContextConfigEqualityComparator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2301
+                                          },
+                                          "Transition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2199
+                                          },
+                                          "StarLoopbackState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 958
+                                          },
+                                          "EpsilonTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1258
+                                          },
+                                          "ATNState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5071
+                                          },
+                                          "OrderedATNConfigSet$LexerConfigHashSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 973
+                                          },
+                                          "RuleStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 602
+                                          },
+                                          "SemanticContext$Operator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 636
+                                          },
+                                          "ParseInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3455
+                                          },
+                                          "SemanticContext$OR.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5301
+                                          },
+                                          "SemanticContext$PrecedencePredicate.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3133
+                                          },
+                                          "WildcardTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 939
+                                          },
+                                          "TokensStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 494
+                                          },
+                                          "PlusBlockStartState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 598
+                                          },
+                                          "DecisionState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 466
+                                          },
+                                          "NotSetTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1289
+                                          },
+                                          "SemanticContext.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4297
+                                          },
+                                          "LexerAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 356
+                                          },
+                                          "ErrorInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 790
+                                          },
+                                          "LexerATNSimulator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 18898
+                                          },
+                                          "PredictionContext.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 18968
+                                          },
+                                          "LL1Analyzer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 6967
+                                          },
+                                          "AtomTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1382
+                                          },
+                                          "LexerPushModeAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2051
+                                          },
+                                          "SemanticContext$Predicate.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2476
+                                          },
+                                          "ParserATNSimulator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 39547
+                                          },
+                                          "ATNSimulator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4794
+                                          },
+                                          "LexerActionType.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1521
+                                          },
+                                          "BasicState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 470
+                                          },
+                                          "ATNDeserializer$UnicodeDeserializer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 353
+                                          },
+                                          "LexerSkipAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1741
+                                          },
+                                          "AmbiguityInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1020
+                                          },
+                                          "PredictionContext$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1231
+                                          },
+                                          "PredicateTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1808
+                                          },
+                                          "RuleTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1538
+                                          },
+                                          "ATNDeserializer$2.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1174
+                                          },
+                                          "PredictionMode.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 7612
+                                          },
+                                          "DecisionEventInfo.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 927
+                                          },
+                                          "ATNConfig.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5524
+                                          },
+                                          "PrecedencePredicateTransition.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1732
+                                          },
+                                          "LexerTypeAction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2029
+                                          },
+                                          "StarLoopEntryState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 629
+                                          }
+                                        }
+                                      },
+                                      "InterpreterRuleContext.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 916
+                                      },
+                                      "misc": {
+                                        "type": "directory",
+                                        "children": {
+                                          "MurmurHash.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1642
+                                          },
+                                          "IntegerList.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5904
+                                          },
+                                          "MultiMap.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1992
+                                          },
+                                          "Array2DHashSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 11527
+                                          },
+                                          "EqualityComparator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 368
+                                          },
+                                          "Pair.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1914
+                                          },
+                                          "Utils.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 6947
+                                          },
+                                          "IntegerStack.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1066
+                                          },
+                                          "FlexibleHashMap.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 9234
+                                          },
+                                          "Predicate.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 267
+                                          },
+                                          "Array2DHashSet$SetIterator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1710
+                                          },
+                                          "ParseCancellationException.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 926
+                                          },
+                                          "ObjectEqualityComparator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1087
+                                          },
+                                          "AbstractEqualityComparator.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 741
+                                          },
+                                          "IntervalSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 14893
+                                          },
+                                          "FlexibleHashMap$Entry.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1176
+                                          },
+                                          "Interval.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3487
+                                          },
+                                          "IntSet.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 635
+                                          },
+                                          "DoubleKeyMap.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2560
+                                          }
+                                        }
+                                      },
+                                      "CodePointCharStream$CodePoint8BitCharStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2684
+                                      },
+                                      "WritableToken.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 370
+                                      },
+                                      "dfa": {
+                                        "type": "directory",
+                                        "children": {
+                                          "LexerDFASerializer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1211
+                                          },
+                                          "DFAState$PredPrediction.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1082
+                                          },
+                                          "DFA$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1296
+                                          },
+                                          "DFA.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 5133
+                                          },
+                                          "DFAState.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3307
+                                          },
+                                          "DFASerializer.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3707
+                                          }
+                                        }
+                                      },
+                                      "ANTLRErrorStrategy.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 769
+                                      },
+                                      "NoViableAltException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2179
+                                      },
+                                      "Parser.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 23808
+                                      },
+                                      "TokenSource.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 752
+                                      },
+                                      "BufferedTokenStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 10110
+                                      },
+                                      "CommonTokenFactory.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3351
+                                      },
+                                      "CodePointCharStream$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 987
+                                      },
+                                      "ConsoleErrorListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1739
+                                      },
+                                      "ANTLRErrorListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1201
+                                      },
+                                      "RuleContext.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7009
+                                      },
+                                      "Recognizer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1045
+                                      },
+                                      "RecognitionException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3789
+                                      },
+                                      "BaseErrorListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2562
+                                      },
+                                      "Lexer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 11053
+                                      },
+                                      "CodePointCharStream$CodePoint32BitCharStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2558
+                                      },
+                                      "IntStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 447
+                                      },
+                                      "ListTokenSource.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4578
+                                      },
+                                      "ProxyErrorListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3670
+                                      },
+                                      "CodePointCharStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4475
+                                      },
+                                      "Parser$TrimToSizeListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1599
+                                      },
+                                      "CodePointBuffer$Builder.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7051
+                                      },
+                                      "DefaultErrorStrategy.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 13241
+                                      },
+                                      "ParserRuleContext.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9813
+                                      },
+                                      "Vocabulary.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 277
+                                      },
+                                      "CodePointBuffer$Type.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1355
+                                      },
+                                      "InputMismatchException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1460
+                                      },
+                                      "CommonToken.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6223
+                                      },
+                                      "Recognizer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9219
+                                      },
+                                      "CharStreams.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8490
+                                      },
+                                      "CharStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 306
+                                      },
+                                      "ANTLRInputStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4598
+                                      },
+                                      "ParserInterpreter.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 16286
+                                      },
+                                      "FailedPredicateException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3470
+                                      },
+                                      "CodePointBuffer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4395
+                                      },
+                                      "Parser$TraceListener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2651
+                                      },
+                                      "LexerNoViableAltException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2614
+                                      },
+                                      "CodePointBuffer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 910
+                                      },
+                                      "RuntimeMetaData.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1980
+                                      },
+                                      "VocabularyImpl.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2687
+                                      },
+                                      "CodePointCharStream$CodePoint16BitCharStream.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2570
+                                      },
+                                      "Token.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 785
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "nei": {
+                "type": "directory",
+                "children": {
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "blocks.asm": {
+                        "type": "file",
+                        "extension": ".asm",
+                        "size": 13024
+                      }
+                    }
+                  },
+                  "cfg": {
+                    "type": "directory",
+                    "children": {
+                      "collapsibleitems.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 992
+                      },
+                      "defaultbookmarkcontainers.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 469
+                      },
+                      "enableautofocus.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 351
+                      },
+                      "guicraftablesblacklist.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 596
+                      },
+                      "guidfilters.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 2094
+                      },
+                      "heighthackhandlers.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 749
+                      },
+                      "hiddenhandlers.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 185
+                      },
+                      "hiddenitems.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 258
+                      },
+                      "informationpages.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 1297
+                      },
+                      "recipeidblacklist.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 193
+                      },
+                      "serialhandlers.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 525
+                      }
+                    }
+                  },
+                  "csv": {
+                    "type": "directory",
+                    "children": {
+                      "catalysts.csv": {
+                        "type": "file",
+                        "extension": ".csv",
+                        "size": 136565
+                      },
+                      "handlers.csv": {
+                        "type": "file",
+                        "extension": ".csv",
+                        "size": 82022
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7934
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 10264
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 30305
+                      },
+                      "et_EE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7622
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8164
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 9278
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7923
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8096
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7963
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 31238
+                      },
+                      "sk_SK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7825
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7325
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 13336
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7449
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "catalyst_tab.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 1213
+                      },
+                      "dash.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 566
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "inv.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3926
+                          },
+                          "potion.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3990
+                          },
+                          "recipebg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3680
+                          }
+                        }
+                      },
+                      "nei_sprites.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 33780
+                      },
+                      "nei_tabbed_sprites.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4662
+                      },
+                      "slot.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 103
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dependencies.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 261
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 559
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 856
+          }
+        }
+      }
+    }
+  }
+}

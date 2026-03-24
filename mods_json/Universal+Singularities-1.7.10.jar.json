@@ -1,0 +1,137 @@
+{
+  "mod_name": "Universal+Singularities-1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Universal+Singularities-1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Universal+Singularities-1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 19984,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "wealthyturtle": {
+            "type": "directory",
+            "children": {
+              "uiesingularities": {
+                "type": "directory",
+                "children": {
+                  "NEI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 578
+                  },
+                  "Reference.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 718
+                  },
+                  "UniversalSingularity.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 867
+                  },
+                  "UniversalSingularityItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2639
+                  },
+                  "UniversalSingularityMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1905
+                  },
+                  "UniversalSingularityWrapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1069
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1786
+                      },
+                      "CommonProxy$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 255
+                      },
+                      "CommonProxy$CoalSingularityFuelHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1738
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12970
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 404
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "uiesingularities": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6548
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8205
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 67
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2066
+          }
+        }
+      }
+    }
+  }
+}

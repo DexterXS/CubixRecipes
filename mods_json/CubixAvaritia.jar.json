@@ -1,0 +1,957 @@
+{
+  "mod_name": "CubixAvaritia.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixAvaritia.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixAvaritia.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 574062,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixavaritia": {
+                    "type": "directory",
+                    "children": {
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "IAnimatedObj.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 268
+                          },
+                          "IObjAnimatedRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 166
+                          }
+                        }
+                      },
+                      "capa": {
+                        "type": "directory",
+                        "children": {
+                          "AVPlayerProperties.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5330
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "KeyBindings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3546
+                          }
+                        }
+                      },
+                      "controller": {
+                        "type": "directory",
+                        "children": {
+                          "misc": {
+                            "type": "directory",
+                            "children": {
+                              "AVBlockSwapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4204
+                              }
+                            }
+                          },
+                          "BlockSwapperController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2386
+                          },
+                          "ToolController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21600
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CubixAvaritia.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5647
+                          },
+                          "AVInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4108
+                          },
+                          "AVTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3733
+                          },
+                          "AVConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18959
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderEntityInfinityFishHook.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9556
+                              }
+                            }
+                          },
+                          "EntityInfinityFishHook.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 25285
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "AVClientEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10443
+                          },
+                          "AVServerEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7918
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "AVInfinityArmor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23017
+                              }
+                            }
+                          },
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "AVInfinityFishRod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9317
+                              },
+                              "AVInfinityAxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15729
+                              },
+                              "AVInfinityPickaxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18416
+                              },
+                              "AVInfinityShield.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10424
+                              },
+                              "AVInfinityHoe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13461
+                              },
+                              "AVInfinityShovel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16949
+                              }
+                            }
+                          },
+                          "weapon": {
+                            "type": "directory",
+                            "children": {
+                              "arrow": {
+                                "type": "directory",
+                                "children": {
+                                  "AVInfinityBowSubArrow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2466
+                                  },
+                                  "AVInfinityBowMainArrow.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 22222
+                                  }
+                                }
+                              },
+                              "misc": {
+                                "type": "directory",
+                                "children": {
+                                  "DamageSourceInfinityShield.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4673
+                                  },
+                                  "DamageSourceInfinity.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4324
+                                  }
+                                }
+                              },
+                              "AVInfinityBow.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10062
+                              },
+                              "AVInfinitySword.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13618
+                              },
+                              "AVInfinityScythe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12423
+                              }
+                            }
+                          },
+                          "AVItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2362
+                          },
+                          "AVItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6060
+                          }
+                        }
+                      },
+                      "module": {
+                        "type": "directory",
+                        "children": {
+                          "ic2": {
+                            "type": "directory",
+                            "children": {
+                              "IC2ScytheModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 901
+                              },
+                              "IC2SwordModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 807
+                              }
+                            }
+                          },
+                          "mana": {
+                            "type": "directory",
+                            "children": {
+                              "BotSwordModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 824
+                              },
+                              "BotScytheModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 816
+                              }
+                            }
+                          },
+                          "rf": {
+                            "type": "directory",
+                            "children": {
+                              "RFScytheModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 903
+                              },
+                              "RFSwordModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 809
+                              }
+                            }
+                          },
+                          "IDamageModule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "messages": {
+                            "type": "directory",
+                            "children": {
+                              "MessageToggleNightVision.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1466
+                              }
+                            }
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6535
+                          },
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1559
+                          },
+                          "AVNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10658
+                          },
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1596
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "AVServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7545
+                          },
+                          "AVClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5019
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "impl": {
+                                "type": "directory",
+                                "children": {
+                                  "AvaritiaArmorModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3883
+                                  }
+                                }
+                              },
+                              "ArmorModelCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1265
+                              },
+                              "BaseArmorModelRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3947
+                              },
+                              "IScaledArmor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 171
+                              },
+                              "BaseArmorModelHolder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2663
+                              },
+                              "ArmorRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3428
+                              }
+                            }
+                          },
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "AVAnimatedToolRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4001
+                              }
+                            }
+                          },
+                          "IModelRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 407
+                          },
+                          "StaticModelRenderers$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1011
+                          },
+                          "RenderUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2260
+                          },
+                          "StaticModelRenderers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5507
+                          }
+                        }
+                      },
+                      "utility": {
+                        "type": "directory",
+                        "children": {
+                          "AVUtilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3973
+                          },
+                          "AVTeleportUtils$TeleportLocation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5956
+                          },
+                          "AVRarity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4794
+                          },
+                          "AVNBTManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1032
+                          },
+                          "AVTeleportUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 943
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixavaritia": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1022
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1018
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "wing.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 41221
+                          },
+                          "helmet.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 28578
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "sword.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 37258
+                          },
+                          "pickaxe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 26418
+                          },
+                          "fishingrod.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 31243
+                          },
+                          "scythe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 26167
+                          },
+                          "hoe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 24828
+                          },
+                          "shovel.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 18828
+                          },
+                          "bow.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 49070
+                          },
+                          "axe.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 27539
+                          },
+                          "shield.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 46636
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "helmet6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4089
+                              },
+                              "helmet5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4103
+                              },
+                              "wing6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5642
+                              },
+                              "wing5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5682
+                              },
+                              "wing4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5612
+                              },
+                              "wing2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5688
+                              },
+                              "wing3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5649
+                              },
+                              "wing1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5621
+                              },
+                              "helmet1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4090
+                              },
+                              "helmet4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4123
+                              },
+                              "helmet2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4077
+                              },
+                              "helmet3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4129
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "shovel4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3937
+                              },
+                              "shield2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6210
+                              },
+                              "bow2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3514
+                              },
+                              "hoe1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4644
+                              },
+                              "scythe2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4610
+                              },
+                              "axe5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3668
+                              },
+                              "pickaxe1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3541
+                              },
+                              "hoe3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4699
+                              },
+                              "sword2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5224
+                              },
+                              "shovel3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3944
+                              },
+                              "bow1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3546
+                              },
+                              "scythe1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4643
+                              },
+                              "shovel2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3878
+                              },
+                              "shield1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6312
+                              },
+                              "axe6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3602
+                              },
+                              "fishingrod2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4319
+                              },
+                              "axe4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3639
+                              },
+                              "hoe4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4691
+                              },
+                              "shield4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6157
+                              },
+                              "shovel6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3948
+                              },
+                              "pickaxe3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3612
+                              },
+                              "fishingrod3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4313
+                              },
+                              "shield3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6166
+                              },
+                              "hoe5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4730
+                              },
+                              "axe3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3644
+                              },
+                              "shovel5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3977
+                              },
+                              "sword1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5089
+                              },
+                              "pickaxe2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3512
+                              },
+                              "fishingrod4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4295
+                              },
+                              "hoe6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4643
+                              },
+                              "fishingrod5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4284
+                              },
+                              "axe1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3605
+                              },
+                              "pickaxe5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3604
+                              },
+                              "sword6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5095
+                              },
+                              "scythe6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4647
+                              },
+                              "fishingrod6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4290
+                              },
+                              "pickaxe4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3604
+                              },
+                              "shield5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6168
+                              },
+                              "bow5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3611
+                              },
+                              "shield6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6299
+                              },
+                              "bow6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3545
+                              },
+                              "axe2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3572
+                              },
+                              "scythe5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4736
+                              },
+                              "sword3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5255
+                              },
+                              "bow4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3617
+                              },
+                              "shovel1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3952
+                              },
+                              "scythe4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4697
+                              },
+                              "fishingrod1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4329
+                              },
+                              "bow3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3518
+                              },
+                              "sword4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5243
+                              },
+                              "pickaxe6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3539
+                              },
+                              "hoe2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4620
+                              },
+                              "scythe3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4702
+                              },
+                              "sword5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5244
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3639
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 20035
+          }
+        }
+      }
+    }
+  }
+}

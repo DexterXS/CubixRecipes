@@ -1,0 +1,1202 @@
+{
+  "mod_name": "CubixIndustries-1.0-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixIndustries-1.0-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixIndustries-1.0-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 361543,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixindustries": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "module_fortune_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3054
+                          },
+                          "empty": {
+                            "type": "directory",
+                            "children": {
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3000
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2878
+                              },
+                              "8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3363
+                              },
+                              "9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3131
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2917
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3152
+                              },
+                              "8.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 134
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3003
+                              },
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2923
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3073
+                              }
+                            }
+                          },
+                          "module_pick.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2992
+                          },
+                          "module_speed_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3103
+                          },
+                          "module_fortune_6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2994
+                          },
+                          "module_capacity_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2994
+                          },
+                          "module_capacity_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3007
+                          },
+                          "module_fortune_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3123
+                          },
+                          "module_exhaustion.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3054
+                          },
+                          "module_fortune_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3025
+                          },
+                          "module_speed_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3142
+                          },
+                          "module_speed_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3111
+                          },
+                          "module_fortune_5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3044
+                          },
+                          "module_speed_5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3120
+                          },
+                          "module_capacity_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3013
+                          },
+                          "module_fortune_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3049
+                          },
+                          "module_speed_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3231
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_miner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 36392
+                          },
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "engineer_nei.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7340
+                              }
+                            }
+                          },
+                          "gui_repair.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 16505
+                          },
+                          "gui_engineer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 13581
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2373
+                              }
+                            }
+                          },
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2652
+                              }
+                            }
+                          },
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2082
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2082
+                              }
+                            }
+                          },
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2373
+                              }
+                            }
+                          },
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2652
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "empty.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1599
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "animations": {
+                    "type": "directory",
+                    "children": {
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 44624
+                              }
+                            }
+                          },
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 38218
+                              }
+                            }
+                          },
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 68417
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 68417
+                              }
+                            }
+                          },
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 38218
+                              }
+                            }
+                          },
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.animation.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 44624
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1950
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2729
+                      }
+                    }
+                  },
+                  "geo": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 9608
+                              }
+                            }
+                          },
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 15820
+                              }
+                            }
+                          },
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 10887
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "miner.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 9608
+                              }
+                            }
+                          },
+                          "repairer": {
+                            "type": "directory",
+                            "children": {
+                              "repairer.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 15820
+                              }
+                            }
+                          },
+                          "engineer": {
+                            "type": "directory",
+                            "children": {
+                              "engineer.geo.json": {
+                                "type": "file",
+                                "extension": ".json",
+                                "size": 10887
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 75
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "vizzi": {
+                "type": "directory",
+                "children": {
+                  "cubixindustries": {
+                    "type": "directory",
+                    "children": {
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "InventoryMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3696
+                          },
+                          "ContainerRepairMan.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5551
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotPickaxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 952
+                              },
+                              "SlotInputRepair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1693
+                              },
+                              "SlotInputMiner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1123
+                              },
+                              "SlotOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 666
+                              },
+                              "SlotFake.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 875
+                              },
+                              "SlotUpgrade.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 845
+                              },
+                              "SlotInput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 503
+                              }
+                            }
+                          },
+                          "ContainerBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1436
+                          },
+                          "InventoryTileEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4570
+                          },
+                          "ContainerEngineer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5749
+                          },
+                          "InventoryEngineer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2245
+                          },
+                          "InventoryRepair.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2236
+                          },
+                          "ContainerMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6396
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "RenderMinerMan$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 902
+                              },
+                              "RenderRepair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2340
+                              },
+                              "RenderMinerMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2331
+                              },
+                              "RenderRepair$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 896
+                              },
+                              "RenderEngineer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 902
+                              },
+                              "RenderEngineer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2343
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "RenderItemPickaxe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2769
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "tweaker": {
+                        "type": "directory",
+                        "children": {
+                          "RepairManRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3240
+                          },
+                          "RepairMT.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1433
+                          },
+                          "EngineerMT$ActionMTAdd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1478
+                          },
+                          "EngineerRecipes$EngineerRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2562
+                          },
+                          "EngineerRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6503
+                          },
+                          "RepairMT$ActionMTAdd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1673
+                          },
+                          "EngineerMT.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2868
+                          },
+                          "RecipesManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1054
+                          },
+                          "RepairManRecipes$RepairRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1341
+                          },
+                          "api": {
+                            "type": "directory",
+                            "children": {
+                              "IActionAdd.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1024
+                              },
+                              "TweakerHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3240
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiRepairMan$ButtonStart.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6858
+                          },
+                          "GuiMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6847
+                          },
+                          "GuiEngineer$ButtonStart.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6847
+                          },
+                          "GuiRepairMan.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2850
+                          },
+                          "GuiEngineer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4073
+                          }
+                        }
+                      },
+                      "ConfigBlocks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1247
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "tile": {
+                            "type": "directory",
+                            "children": {
+                              "RecipeEnginerProccess.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3939
+                              },
+                              "TileMiner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9726
+                              },
+                              "TileRepairMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9879
+                              },
+                              "TileEngineer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11392
+                              }
+                            }
+                          },
+                          "BlockEngineer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5069
+                          },
+                          "BlockRepairMan.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5079
+                          },
+                          "BlockMachineBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2047
+                          },
+                          "BlockMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5039
+                          }
+                        }
+                      },
+                      "integration": {
+                        "type": "directory",
+                        "children": {
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "NEIIntegration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 651
+                              },
+                              "engineer": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiEngineerCraftingHandler$CachedCompression.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3824
+                                  },
+                                  "GuiEngineerCraftingHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7330
+                                  }
+                                }
+                              },
+                              "IGuiRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1316
+                              },
+                              "NEIConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2750
+                              },
+                              "Rectangle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1744
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "packet": {
+                        "type": "directory",
+                        "children": {
+                          "PacketSyncConfigProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 554
+                          },
+                          "PacketStartRecipeRepairMan.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1595
+                          },
+                          "PacketSyncVariable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4157
+                          },
+                          "PacketSyncConfigProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 872
+                          },
+                          "PacketSyncVariableSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1964
+                          },
+                          "PacketStartRecipeRepairManProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 574
+                          },
+                          "PacketStartRecipeRepairManSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2059
+                          },
+                          "PacketStartRecipeEngineer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1590
+                          },
+                          "PacketStartRecipeEngineerProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 908
+                          },
+                          "PacketStartRecipeEngineerSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1270
+                          },
+                          "PacketSyncConfigSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 6220
+                          },
+                          "PacketStartRecipeEngineerProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 572
+                          },
+                          "PacketStartRecipeRepairManProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 912
+                          },
+                          "PacketSyncConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1854
+                          },
+                          "PacketSyncVariableSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3307
+                          },
+                          "PacketSyncConfigSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8220
+                          },
+                          "PacketSyncVariableProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 880
+                          },
+                          "PacketStartRecipeRepairManSerializer.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 1295
+                          },
+                          "PacketStartRecipeEngineerSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2047
+                          },
+                          "PacketSyncVariableProvider.java": {
+                            "type": "file",
+                            "extension": ".java",
+                            "size": 558
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "ModelRepairMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 696
+                              },
+                              "ModelEngineer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 693
+                              },
+                              "ModelMinerMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 687
+                              }
+                            }
+                          },
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "ModelRepairMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 707
+                              },
+                              "ModelMinerMan.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 694
+                              },
+                              "ModelEngineer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 703
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "tabVPCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 608
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemUpgradeCapacity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1883
+                          },
+                          "GeoItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2921
+                          },
+                          "ItemUpgradeRab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1200
+                          },
+                          "ItemUpgradeFortune.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1972
+                          },
+                          "ItemCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1348
+                          },
+                          "ItemModuleResourse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2014
+                          },
+                          "ItemModuleUpgrade.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1607
+                          },
+                          "ItemUpgradeSpeed.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1912
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "StackUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1831
+                          },
+                          "UniversalSerializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8349
+                          },
+                          "SyncReflectionUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4170
+                          }
+                        }
+                      },
+                      "ConfigBlocks$MinerBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4981
+                      },
+                      "interfaces": {
+                        "type": "directory",
+                        "children": {
+                          "ISyncVariable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 143
+                          },
+                          "SyncClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 408
+                          }
+                        }
+                      },
+                      "ManagerRender.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2094
+                      },
+                      "ConfigBlocks$TimeObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1867
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1306
+                          }
+                        }
+                      },
+                      "ManagerItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3512
+                      },
+                      "creativetabs": {
+                        "type": "directory",
+                        "children": {
+                          "TabVPOther.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 890
+                          }
+                        }
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2882
+                      },
+                      "Main.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2192
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1171
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "services": {
+                "type": "directory",
+                "children": {
+                  "hohserg.elegant.networking.impl.IPacketProvider": {
+                    "type": "file",
+                    "extension": ".ipacketprovider",
+                    "size": 249
+                  },
+                  "hohserg.elegant.networking.impl.ISerializerBase": {
+                    "type": "file",
+                    "extension": ".iserializerbase",
+                    "size": 257
+                  }
+                }
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              },
+              "mod_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 59
+              }
+            }
+          },
+          "tmp_generated": {
+            "type": "directory",
+            "children": {
+              "timeOffsetBetweenInitAndProcess.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 3
+              },
+              "cachedModid.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 15
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2566
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 16074
+          }
+        }
+      }
+    }
+  }
+}

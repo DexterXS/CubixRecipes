@@ -1,0 +1,502 @@
+{
+  "mod_name": "LegendaryTooltips-1.0.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\LegendaryTooltips-1.0.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "LegendaryTooltips-1.0.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 162724,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 205
+              },
+              "legendary_tooltip_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 94
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "anthonyhilyard": {
+                "type": "directory",
+                "children": {
+                  "legendarytooltips": {
+                    "type": "directory",
+                    "children": {
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "ASMCoreMod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1150
+                          },
+                          "hook": {
+                            "type": "directory",
+                            "children": {
+                              "HookHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4918
+                              }
+                            }
+                          },
+                          "hooklib": {
+                            "type": "directory",
+                            "children": {
+                              "asm": {
+                                "type": "directory",
+                                "children": {
+                                  "AsmHook$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 935
+                                  },
+                                  "AsmHook$Builder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 15699
+                                  },
+                                  "AsmHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 18941
+                                  },
+                                  "At.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 681
+                                  },
+                                  "ClassMetadataReader$CheckSuperClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1148
+                                  },
+                                  "ClassMetadataReader$FindMethodClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1480
+                                  },
+                                  "ClassMetadataReader$MethodReference.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1335
+                                  },
+                                  "ClassMetadataReader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6624
+                                  },
+                                  "Hook$LocalVariable.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 458
+                                  },
+                                  "Hook$ReturnValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 440
+                                  },
+                                  "Hook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1961
+                                  },
+                                  "HookClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6091
+                                  },
+                                  "HookContainerParser$HookAnnotationVisitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1925
+                                  },
+                                  "HookContainerParser$HookAnnotationVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2215
+                                  },
+                                  "HookContainerParser$HookClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1972
+                                  },
+                                  "HookContainerParser$HookMethodVisitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1695
+                                  },
+                                  "HookContainerParser$HookMethodVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2796
+                                  },
+                                  "HookContainerParser.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12006
+                                  },
+                                  "HookInjectorClassVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3683
+                                  },
+                                  "HookInjectorFactory$ByAnchor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1708
+                                  },
+                                  "HookInjectorFactory$LineNumber.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1688
+                                  },
+                                  "HookInjectorFactory$MethodEnter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1720
+                                  },
+                                  "HookInjectorFactory$MethodExit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1764
+                                  },
+                                  "HookInjectorFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1226
+                                  },
+                                  "HookInjectorMethodVisitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 949
+                                  },
+                                  "HookInjectorMethodVisitor$ByAnchor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3795
+                                  },
+                                  "HookInjectorMethodVisitor$LineNumber.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1594
+                                  },
+                                  "HookInjectorMethodVisitor$MethodEnter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1178
+                                  },
+                                  "HookInjectorMethodVisitor$MethodExit.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1236
+                                  },
+                                  "HookInjectorMethodVisitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2623
+                                  },
+                                  "HookLogger$SystemOutLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1414
+                                  },
+                                  "HookLogger$VanillaLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1336
+                                  },
+                                  "HookLogger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 523
+                                  },
+                                  "HookPriority.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1364
+                                  },
+                                  "InjectionPoint.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1279
+                                  },
+                                  "ReadClassHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1745
+                                  },
+                                  "ReturnCondition.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1503
+                                  },
+                                  "ReturnValue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1401
+                                  },
+                                  "SafeClassWriter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1559
+                                  },
+                                  "Shift.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1349
+                                  },
+                                  "TypeHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2637
+                                  },
+                                  "VariableIdHelper$1$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1986
+                                  },
+                                  "VariableIdHelper$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1548
+                                  },
+                                  "VariableIdHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2649
+                                  }
+                                }
+                              },
+                              "minecraft": {
+                                "type": "directory",
+                                "children": {
+                                  "DeobfuscationMetadataReader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6048
+                                  },
+                                  "HookLibPlugin.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2329
+                                  },
+                                  "HookLoader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3443
+                                  },
+                                  "MinecraftClassTransformer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2476
+                                  },
+                                  "MinecraftClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6239
+                                  },
+                                  "PrimaryClassTransformer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1966
+                                  },
+                                  "PrimaryClassTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4807
+                                  },
+                                  "SecondaryTransformerHook.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1181
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "RenderHandlerEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6486
+                          },
+                          "RenderTooltipEvent$Color.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2668
+                          },
+                          "RenderTooltipEvent$Post.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1842
+                          },
+                          "RenderTooltipEvent$PostBackground.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1834
+                          },
+                          "RenderTooltipEvent$PostText.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1816
+                          },
+                          "RenderTooltipEvent$Pre.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2759
+                          },
+                          "RenderTooltipEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2814
+                          }
+                        }
+                      },
+                      "LegendaryTooltips.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2580
+                      },
+                      "LegendaryTooltipsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12850
+                      },
+                      "Reference.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 740
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "TooltipDecor$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 721
+                          },
+                          "TooltipDecor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7786
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "GuiUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9271
+                          },
+                          "ItemColor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3223
+                          },
+                          "Selectors$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 840
+                          },
+                          "Selectors$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2516
+                          },
+                          "Selectors.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7426
+                          },
+                          "TextColor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1542
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "legendarytooltips": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "tooltip_borders.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 212
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "icon.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 6718
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 467
+          },
+          "methods.bin": {
+            "type": "file",
+            "extension": ".bin",
+            "size": 91954
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 54
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11093
+          }
+        }
+      }
+    }
+  }
+}

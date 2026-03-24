@@ -1,0 +1,1247 @@
+{
+  "mod_name": "CubixRadio.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixRadio.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixRadio.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 4982621,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixradio": {
+                    "type": "directory",
+                    "children": {
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "message": {
+                            "type": "directory",
+                            "children": {
+                              "CRMessageStopPlay.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1585
+                              },
+                              "CRMessageConnectSpeaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1838
+                              },
+                              "CRMessageSetRadioVolume.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1804
+                              },
+                              "CRMessagePlayURL.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2018
+                              },
+                              "CRMessageUpdateState.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2246
+                              }
+                            }
+                          },
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1364
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3662
+                          },
+                          "CRNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7072
+                          },
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1364
+                          }
+                        }
+                      },
+                      "vizzi": {
+                        "type": "directory",
+                        "children": {
+                          "data": {
+                            "type": "directory",
+                            "children": {
+                              "RadioObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2477
+                              },
+                              "Country.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2187
+                              },
+                              "ConfigClientCountry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1692
+                              },
+                              "Genre.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 818
+                              },
+                              "CountryResponse.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1031
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiButtonSlider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4231
+                              },
+                              "GuiButtonCountry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2782
+                              },
+                              "Rectangle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 742
+                              },
+                              "GuiButtonCategories.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2310
+                              },
+                              "GuiTextFieldPrefix$ComponentText.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 774
+                              },
+                              "GuiButtonRadio.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5670
+                              },
+                              "GuiModuleCountry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11274
+                              },
+                              "GuiCore.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 26077
+                              },
+                              "GuiTextFieldPrefix.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5291
+                              },
+                              "GuiModuleRadio.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5728
+                              },
+                              "GuiScroll.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3571
+                              }
+                            }
+                          },
+                          "ClientEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1733
+                          },
+                          "ConfigFavority.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2857
+                          },
+                          "HttpUtils$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 620
+                          },
+                          "HttpUtils$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 611
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13673
+                          },
+                          "HttpUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6708
+                          }
+                        }
+                      },
+                      "radio": {
+                        "type": "directory",
+                        "children": {
+                          "CRPublicRadioHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2928
+                          },
+                          "thread": {
+                            "type": "directory",
+                            "children": {
+                              "ParsingHeaderData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5438
+                              }
+                            }
+                          },
+                          "RadioSpeaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 623
+                          },
+                          "TrackData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 501
+                          },
+                          "RadioPosition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 561
+                          },
+                          "M3UParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1818
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "CRBlockModelRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2970
+                          }
+                        }
+                      },
+                      "ResourceVariables.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3486
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "CRRadioGUI$CategoryHolder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 958
+                              },
+                              "component": {
+                                "type": "directory",
+                                "children": {
+                                  "CRGuiSlider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4038
+                                  },
+                                  "CRGuiTextField.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 949
+                                  }
+                                }
+                              },
+                              "CRGuiHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1560
+                              },
+                              "CRRadioGUI$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 892
+                              },
+                              "CRRadioGUI.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 24430
+                              },
+                              "button": {
+                                "type": "directory",
+                                "children": {
+                                  "CRGuiButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4714
+                                  },
+                                  "IButtonAction.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 202
+                                  }
+                                }
+                              },
+                              "CRRadioContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1287
+                              },
+                              "CRRadioGUI$SceneType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1300
+                              },
+                              "CRRadioGUI$ButtonCategory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4080
+                              }
+                            }
+                          },
+                          "phantom": {
+                            "type": "directory",
+                            "children": {
+                              "CRBlockPhantom$TilePhantom.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2211
+                              },
+                              "CRBlockPhantom.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4326
+                              }
+                            }
+                          },
+                          "CRBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2503
+                          },
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "CRTileEntitySpeaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 641
+                              },
+                              "CRTileEntityRadio.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10711
+                              }
+                            }
+                          },
+                          "itemblock": {
+                            "type": "directory",
+                            "children": {
+                              "CRItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 836
+                              }
+                            }
+                          },
+                          "radio": {
+                            "type": "directory",
+                            "children": {
+                              "CRBlockRadio.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4573
+                              },
+                              "CRBlockSpeaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4253
+                              }
+                            }
+                          },
+                          "tesr": {
+                            "type": "directory",
+                            "children": {
+                              "CRBlockTESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11720
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "stream": {
+                        "type": "directory",
+                        "children": {
+                          "MinecraftPlayBackEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1294
+                          },
+                          "MinecraftPlayBackListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 646
+                          },
+                          "MinecraftPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6008
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CRClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5324
+                          },
+                          "CRServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2507
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "CRServerEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 803
+                          },
+                          "CRClientEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2031
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CRConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4808
+                          },
+                          "CRCreativeTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1050
+                          },
+                          "CRInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 619
+                          },
+                          "CubixRadio.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4138
+                          },
+                          "CRConfig$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 878
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "CRItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 880
+                          },
+                          "remote": {
+                            "type": "directory",
+                            "children": {
+                              "CRItemRemoteControl.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5662
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "player": {
+                        "type": "directory",
+                        "children": {
+                          "MinecraftMusicPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3010
+                          }
+                        }
+                      },
+                      "Utilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6060
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixradio": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "EDIFIER(R).png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 548318
+                              },
+                              "JBL.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 392183
+                              },
+                              "radio1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 399361
+                              },
+                              "JBLD.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 709696
+                              },
+                              "PIONEER.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 497078
+                              },
+                              "LG__.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 604832
+                              },
+                              "EDIFIER(L).png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 548318
+                              },
+                              "EDIFIER(M).png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 548318
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "player": {
+                            "type": "directory",
+                            "children": {
+                              "next.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 716
+                              },
+                              "volume.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 235
+                              },
+                              "pause.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 366
+                              },
+                              "copy.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 305
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2850
+                              },
+                              "google.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 836
+                              },
+                              "play.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 731
+                              }
+                            }
+                          },
+                          "main": {
+                            "type": "directory",
+                            "children": {
+                              "EuropaPlus.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1011
+                              },
+                              "input.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 987
+                              },
+                              "url.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2341
+                              },
+                              "back.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1022
+                              },
+                              "text_popular.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2647
+                              },
+                              "RECORD.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12680
+                              },
+                              "kissfm.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 28623
+                              },
+                              "RadioRecord.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1214
+                              },
+                              "europa.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 30095
+                              },
+                              "play.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3017
+                              },
+                              "KISS.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1350
+                              }
+                            }
+                          },
+                          "selected.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2056
+                          },
+                          "vizzi": {
+                            "type": "directory",
+                            "children": {
+                              "logo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 45548
+                              },
+                              "radio_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 829
+                              },
+                              "left_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 331
+                              },
+                              "background.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9395
+                              },
+                              "radio_active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 837
+                              },
+                              "genre_active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 697
+                              },
+                              "favorite_add_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 478
+                              },
+                              "element_country_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 444
+                              },
+                              "right_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 319
+                              },
+                              "favorite_delete_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 457
+                              },
+                              "genre_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 402
+                              },
+                              "backfind.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1587
+                              },
+                              "favorite_delete_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 364
+                              },
+                              "custom_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 511
+                              },
+                              "genre_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 396
+                              },
+                              "findcountry.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 787
+                              },
+                              "slider_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 278
+                              },
+                              "custom_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 533
+                              },
+                              "slider_button.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 169
+                              },
+                              "left_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 350
+                              },
+                              "stop_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 503
+                              },
+                              "play_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 533
+                              },
+                              "stop_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 506
+                              },
+                              "favorite_add_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 483
+                              },
+                              "radio_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 840
+                              },
+                              "mute_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 367
+                              },
+                              "favorite_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 578
+                              },
+                              "play_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 535
+                              },
+                              "favorite_normal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 470
+                              },
+                              "mute_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 332
+                              },
+                              "right_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 337
+                              },
+                              "backnew.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10959
+                              },
+                              "element_country_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 450
+                              }
+                            }
+                          },
+                          "record": {
+                            "type": "directory",
+                            "children": {
+                              "bighits.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11785
+                              },
+                              "deep.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7162
+                              },
+                              "piratestation.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6689
+                              },
+                              "edm.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6942
+                              },
+                              "megamix.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6485
+                              },
+                              "record.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6171
+                              },
+                              "russianhits.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8620
+                              },
+                              "gold.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8947
+                              },
+                              "liquid.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13685
+                              },
+                              "fuko.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4417
+                              },
+                              "basshouse.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9157
+                              },
+                              "dubstep.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7808
+                              },
+                              "househits.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7007
+                              },
+                              "drumnbass.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12150
+                              },
+                              "chillout.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3907
+                              },
+                              "trancemission.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8036
+                              },
+                              "hits90.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6464
+                              }
+                            }
+                          },
+                          "kiss": {
+                            "type": "directory",
+                            "children": {
+                              "kiss_deep.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10089
+                              },
+                              "kiss_ukrainian.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10802
+                              },
+                              "kiss_trendz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10316
+                              },
+                              "kiss_black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 12539
+                              },
+                              "kissfm.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10722
+                              },
+                              "kiss_digital.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10144
+                              }
+                            }
+                          },
+                          "europa": {
+                            "type": "directory",
+                            "children": {
+                              "svezhak.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9873
+                              },
+                              "top40.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7372
+                              },
+                              "europa.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9008
+                              },
+                              "light.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 10272
+                              },
+                              "new.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7401
+                              },
+                              "party.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7361
+                              },
+                              "acustic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4268
+                              },
+                              "residance.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6645
+                              }
+                            }
+                          },
+                          "ramka.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1369
+                          },
+                          "bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 49965
+                          },
+                          "logo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9689
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "crremotecontrol.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 255
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 87
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "LG__.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 24630
+                          },
+                          "EDIFIER(R).obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 78838
+                          },
+                          "JBL.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 142088
+                          },
+                          "EDIFIER(M).obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 90415
+                          },
+                          "radio1.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 113597
+                          },
+                          "EDIFIER(L).obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 60056
+                          },
+                          "PIONEER.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 145300
+                          },
+                          "JBLD.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 54175
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "proximanova-regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 130636
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 672
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 674
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 366
+          },
+          "tmp_generated": {
+            "type": "directory",
+            "children": {
+              "cachedModid.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 10
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4615
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11258
+          }
+        }
+      }
+    }
+  }
+}

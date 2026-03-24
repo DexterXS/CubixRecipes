@@ -1,0 +1,667 @@
+{
+  "mod_name": "RedstoneArsenal-[1.7.10]1.1.2-92.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\RedstoneArsenal-[1.7.10]1.1.2-92.jar",
+  "mod_type": "jar",
+  "tree": {
+    "RedstoneArsenal-[1.7.10]1.1.2-92.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 320472,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 125
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "redstonearsenal": {
+                "type": "directory",
+                "children": {
+                  "RedstoneArsenal.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4429
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "BlockStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6622
+                      },
+                      "ItemBlockStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1348
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "RAProps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1534
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiConfigRA.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      },
+                      "GuiConfigRAFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1167
+                      },
+                      "RACreativeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1414
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "RAItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13973
+                      },
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "ItemArmorRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6127
+                          }
+                        }
+                      },
+                      "tool": {
+                        "type": "directory",
+                        "children": {
+                          "ItemAxeRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2636
+                          },
+                          "ItemBowRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10711
+                          },
+                          "ItemFishingRodRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8441
+                          },
+                          "ItemHammerRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3677
+                          },
+                          "ItemPickaxeRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3430
+                          },
+                          "ItemShovelRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6256
+                          },
+                          "ItemSickleRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5963
+                          },
+                          "ItemSwordRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10983
+                          },
+                          "ItemToolRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9551
+                          },
+                          "ItemWrenchBattleRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8292
+                          },
+                          "ItemWrenchRF.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16235
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ic2": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "tile": {
+                    "type": "directory",
+                    "children": {
+                      "IWrenchable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 456
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "redstonearsenal": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "FluxBow_1_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxFishingRod_Cast_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7407
+                              },
+                              "FluxWrench_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3114
+                              },
+                              "FluxBattleWrench.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3212
+                              },
+                              "FluxBow_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3005
+                              },
+                              "FluxFishingRod_Cast_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxShovel_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxSickle.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3240
+                              },
+                              "FluxWrench.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3107
+                              },
+                              "FluxAxe_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxSickle_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxPickaxe_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxFishingRod_Cast.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3052
+                              },
+                              "FluxSword_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3488
+                              },
+                              "FluxShovel_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5722
+                              },
+                              "FluxShovel_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3091
+                              },
+                              "FluxBow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2991
+                              },
+                              "FluxBow_0_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxFishingRod_Uncast.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3075
+                              },
+                              "FluxBattleWrench_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7483
+                              },
+                              "FluxBattleWrench_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3227
+                              },
+                              "FluxPickaxe_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3178
+                              },
+                              "FluxFishingRod_Uncast_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxSword_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7774
+                              },
+                              "FluxSickle_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3237
+                              },
+                              "FluxBattleWrench_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxBow_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3016
+                              },
+                              "FluxAxe.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3112
+                              },
+                              "FluxSickle_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7862
+                              },
+                              "FluxBow_2_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5110
+                              },
+                              "FluxBow_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3030
+                              },
+                              "FluxPickaxe_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6487
+                              },
+                              "FluxShovel.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3072
+                              },
+                              "FluxBow_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3009
+                              },
+                              "FluxFishingRod_Uncast_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7141
+                              },
+                              "FluxBow_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5376
+                              },
+                              "FluxFishingRod_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3097
+                              },
+                              "FluxAxe_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6107
+                              },
+                              "FluxSword_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxBow_1_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5261
+                              },
+                              "FluxBow_2_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "FluxPickaxe.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3167
+                              },
+                              "FluxBow_0_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5253
+                              },
+                              "FluxSword.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3463
+                              },
+                              "FluxAxe_Drained.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3128
+                              },
+                              "FluxBow_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              }
+                            }
+                          },
+                          "armor": {
+                            "type": "directory",
+                            "children": {
+                              "ArmorFluxChestplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3215
+                              },
+                              "ArmorFluxHelmet.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3065
+                              },
+                              "ArmorFluxLegs.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3061
+                              },
+                              "ArmorFluxBoots.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3065
+                              }
+                            }
+                          },
+                          "material": {
+                            "type": "directory",
+                            "children": {
+                              "PlateFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3223
+                              },
+                              "GemCrystalFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "IngotElectrumFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7028
+                              },
+                              "GemCrystalFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5949
+                              },
+                              "NuggetElectrumFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "IngotElectrumFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "DustElectrumFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9031
+                              },
+                              "RodObsidianFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2936
+                              },
+                              "DustElectrumFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "RodObsidian.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2930
+                              },
+                              "NuggetElectrumFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5065
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "Block_ElectrumFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4316
+                              },
+                              "Block_CrystalFlux.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4571
+                              },
+                              "Block_ElectrumFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Block_CrystalFlux.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "Flux_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3573
+                          },
+                          "Flux_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4602
+                          }
+                        }
+                      },
+                      "logo.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 16020
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1736
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1457
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1404
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1769
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2583
+                      },
+                      "sk_SK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1912
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1837
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1934
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1739
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1965
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1863
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "vers.prop": {
+            "type": "file",
+            "extension": ".prop",
+            "size": 17
+          },
+          "CoFH_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 3107
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 596
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4389
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3473
+          }
+        }
+      }
+    }
+  }
+}

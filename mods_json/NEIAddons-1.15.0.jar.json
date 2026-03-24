@@ -1,0 +1,527 @@
+{
+  "mod_name": "NEIAddons-1.15.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\NEIAddons-1.15.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "NEIAddons-1.15.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 147620,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 72
+              },
+              "neiaddons_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 341
+              }
+            }
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "bdew": {
+                "type": "directory",
+                "children": {
+                  "neiaddons": {
+                    "type": "directory",
+                    "children": {
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "NEIAddon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 341
+                          },
+                          "SubPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 237
+                          }
+                        }
+                      },
+                      "appeng": {
+                        "type": "directory",
+                        "children": {
+                          "AddonAppeng.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4118
+                          },
+                          "AppEngGuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4986
+                          },
+                          "AppEngHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 359
+                          },
+                          "SetFakeSlotCommandHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2186
+                          },
+                          "SlotHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 979
+                          }
+                        }
+                      },
+                      "BaseAddon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4669
+                      },
+                      "botany": {
+                        "type": "directory",
+                        "children": {
+                          "AddonBotany.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3289
+                          },
+                          "flowers": {
+                            "type": "directory",
+                            "children": {
+                              "FlowerBreedingHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 669
+                              },
+                              "FlowerHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2526
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "AddonCraftingTables.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3868
+                          },
+                          "AddonCraftingTablesClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1241
+                          }
+                        }
+                      },
+                      "developer": {
+                        "type": "directory",
+                        "children": {
+                          "AddonDeveloper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1909
+                          },
+                          "DeveloperGuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3946
+                          },
+                          "DeveloperHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 582
+                          }
+                        }
+                      },
+                      "exnihilo": {
+                        "type": "directory",
+                        "children": {
+                          "AddonExnihilo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2139
+                          },
+                          "waila": {
+                            "type": "directory",
+                            "children": {
+                              "BarrelHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3987
+                              },
+                              "BeeTrapHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2956
+                              },
+                              "CrucibleHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4204
+                              }
+                            }
+                          },
+                          "WailaHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1951
+                          }
+                        }
+                      },
+                      "forestry": {
+                        "type": "directory",
+                        "children": {
+                          "AddonForestry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4766
+                          },
+                          "BaseBreedingRecipeHandler$CachedBreedingRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4485
+                          },
+                          "BaseBreedingRecipeHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7286
+                          },
+                          "BaseProduceRecipeHandler$CachedProduceRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5128
+                          },
+                          "BaseProduceRecipeHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6803
+                          },
+                          "bees": {
+                            "type": "directory",
+                            "children": {
+                              "BeeBreedingHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 649
+                              },
+                              "BeeHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7860
+                              },
+                              "BeeProduceHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1146
+                              }
+                            }
+                          },
+                          "butterflies": {
+                            "type": "directory",
+                            "children": {
+                              "ButterflyBreedingHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 711
+                              },
+                              "ButterflyHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2871
+                              }
+                            }
+                          },
+                          "GeneticsUtils$RecipePosition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1364
+                          },
+                          "GeneticsUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7715
+                          },
+                          "MutationDumper$$anonfun$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1599
+                          },
+                          "MutationDumper$$anonfun$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1044
+                          },
+                          "MutationDumper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5941
+                          },
+                          "trees": {
+                            "type": "directory",
+                            "children": {
+                              "TreeBreedingHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 661
+                              },
+                              "TreeHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4487
+                              },
+                              "TreeProduceHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1162
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "NEIAddons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6350
+                      },
+                      "NEIAddonsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1347
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "ClientHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3521
+                          },
+                          "NBTMessageCodec.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3849
+                          },
+                          "NetChannel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4041
+                          },
+                          "PacketHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1523
+                          },
+                          "ServerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5658
+                          }
+                        }
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "CustomOverlayHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6805
+                          },
+                          "ItemStackWithTip.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 864
+                          },
+                          "LabeledPositionedStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1856
+                          },
+                          "ModItemFilter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1433
+                          },
+                          "PositionedStackWithTip.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 754
+                          },
+                          "SetRecipeCommandHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3039
+                          },
+                          "TypedField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2166
+                          },
+                          "TypedMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2450
+                          }
+                        }
+                      },
+                      "Utils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5956
+                      },
+                      "Tags.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 375
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "neiaddons": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1046
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1040
+                      },
+                      "fr_CA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1086
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1086
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 779
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 970
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1031
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "breeding.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 660
+                          },
+                          "breeding.psd": {
+                            "type": "file",
+                            "extension": ".psd",
+                            "size": 62550
+                          },
+                          "exnihilo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1149
+                          },
+                          "exnihilo.psd": {
+                            "type": "file",
+                            "extension": ".psd",
+                            "size": 84616
+                          },
+                          "isolator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 593
+                          },
+                          "isolator.psd": {
+                            "type": "file",
+                            "extension": ".psd",
+                            "size": 59984
+                          },
+                          "products.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 640
+                          },
+                          "products.psd": {
+                            "type": "file",
+                            "extension": ".psd",
+                            "size": 70866
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "invalid.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1559
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 3418
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 503
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 9142
+          }
+        }
+      }
+    }
+  }
+}

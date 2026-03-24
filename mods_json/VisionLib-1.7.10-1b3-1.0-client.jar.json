@@ -1,0 +1,237 @@
+{
+  "mod_name": "VisionLib-1.7.10-1b3-1.0-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\VisionLib-1.7.10-1b3-1.0-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "VisionLib-1.7.10-1b3-1.0-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 26795,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "cbx": {
+                "type": "directory",
+                "children": {
+                  "scrs": {
+                    "type": "directory",
+                    "children": {
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1308
+                          },
+                          "PacketDispatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6789
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3561
+                          },
+                          "SendRequestPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2371
+                          },
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1308
+                          },
+                          "LinkResPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2326
+                          }
+                        }
+                      },
+                      "tasks": {
+                        "type": "directory",
+                        "children": {
+                          "Task.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2866
+                          },
+                          "TaskCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 441
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1652
+                          },
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2543
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "PublicTokenData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 789
+                          },
+                          "PublicTokenFetcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 546
+                          }
+                        }
+                      },
+                      "SCRSCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2523
+                      },
+                      "scr": {
+                        "type": "directory",
+                        "children": {
+                          "ScrUploader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7117
+                          },
+                          "ScrManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3390
+                          }
+                        }
+                      },
+                      "events": {
+                        "type": "directory",
+                        "children": {
+                          "ServerEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 523
+                          }
+                        }
+                      },
+                      "SCRS.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2040
+                      },
+                      "SCRSConfiguration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1372
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1977
+          }
+        }
+      }
+    }
+  }
+}
