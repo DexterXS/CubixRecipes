@@ -1,0 +1,1732 @@
+{
+  "mod_name": "ProjectRed-Base.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ProjectRed-Base.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ProjectRed-Base.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 950924,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 132
+              }
+            }
+          },
+          "Changelog": {
+            "type": "file",
+            "extension": "",
+            "size": 8954
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 29438
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 41238
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "bpgui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1248
+                          },
+                          "chipcontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 20239
+                          },
+                          "chipupgradecontainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21108
+                          },
+                          "furnace.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3887
+                          },
+                          "guicraftingpipe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4980
+                          },
+                          "guifimporter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19360
+                          },
+                          "guiinterfacepipe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5128
+                          },
+                          "guiplacer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19135
+                          },
+                          "rcontr.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4149
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "backpacks": {
+                            "type": "directory",
+                            "children": {
+                              "0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6098
+                              },
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5973
+                              },
+                              "10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6055
+                              },
+                              "11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6036
+                              },
+                              "12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5909
+                              },
+                              "13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5905
+                              },
+                              "14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5911
+                              },
+                              "15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5759
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5985
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6019
+                              },
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5976
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6032
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6013
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5925
+                              },
+                              "8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5927
+                              },
+                              "9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6043
+                              }
+                            }
+                          },
+                          "chips": {
+                            "type": "directory",
+                            "children": {
+                              "base.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2925
+                              },
+                              "broadcaster.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2909
+                              },
+                              "crafting.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2952
+                              },
+                              "extractor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2938
+                              },
+                              "overflow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2926
+                              },
+                              "responder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2919
+                              },
+                              "responder_dyn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2939
+                              },
+                              "stockkeeper.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2917
+                              },
+                              "terminator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2909
+                              }
+                            }
+                          },
+                          "cpu.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9867
+                          },
+                          "cpu.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 44
+                          },
+                          "datacard0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3015
+                          },
+                          "datacard1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2996
+                          },
+                          "debugger.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5378
+                          },
+                          "drawplate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6391
+                          },
+                          "gemarmor": {
+                            "type": "directory",
+                            "children": {
+                              "peridot_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 16202
+                              },
+                              "peridot_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15213
+                              },
+                              "peridotboots.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14637
+                              },
+                              "peridotchestplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14665
+                              },
+                              "peridothelmet.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14630
+                              },
+                              "peridotleggings.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14625
+                              },
+                              "ruby_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 16277
+                              },
+                              "ruby_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15211
+                              },
+                              "rubyboots.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14629
+                              },
+                              "rubychestplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14653
+                              },
+                              "rubyhelmet.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14624
+                              },
+                              "rubyleggings.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14618
+                              },
+                              "sapphire_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 16303
+                              },
+                              "sapphire_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15163
+                              },
+                              "sapphireboots.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14637
+                              },
+                              "sapphirechestplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14664
+                              },
+                              "sapphirehelmet.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14630
+                              },
+                              "sapphireleggings.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14625
+                              }
+                            }
+                          },
+                          "gemtools": {
+                            "type": "directory",
+                            "children": {
+                              "axeperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2954
+                              },
+                              "axeruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2945
+                              },
+                              "axesapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2953
+                              },
+                              "hoeperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2930
+                              },
+                              "hoeruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2927
+                              },
+                              "hoesapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2927
+                              },
+                              "pickaxeperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2952
+                              },
+                              "pickaxeruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2931
+                              },
+                              "pickaxesapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2946
+                              },
+                              "shovelperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2928
+                              },
+                              "shovelruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2923
+                              },
+                              "shovelsapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2923
+                              },
+                              "sicklediamond.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3055
+                              },
+                              "sicklegold.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3015
+                              },
+                              "sickleiron.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2996
+                              },
+                              "sickleperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3003
+                              },
+                              "sickleruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3007
+                              },
+                              "sicklesapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3011
+                              },
+                              "sicklestone.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2971
+                              },
+                              "sicklewood.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2994
+                              },
+                              "swordperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2910
+                              },
+                              "swordruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2910
+                              },
+                              "swordsapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2910
+                              }
+                            }
+                          },
+                          "lilyseed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15597
+                          },
+                          "particles": {
+                            "type": "directory",
+                            "children": {
+                              "box.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3082
+                              },
+                              "ember.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 465
+                              },
+                              "flutter1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4096
+                              },
+                              "flutter2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3928
+                              },
+                              "flutter3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3532
+                              },
+                              "flutter4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3946
+                              },
+                              "smoke.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4693
+                              },
+                              "sparkle1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 25294
+                              },
+                              "sparkle2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3658
+                              }
+                            }
+                          },
+                          "parts": {
+                            "type": "directory",
+                            "children": {
+                              "gemperidot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3503
+                              },
+                              "gemruby.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3521
+                              },
+                              "gemsapphire.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3522
+                              },
+                              "illumar0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3132
+                              },
+                              "illumar1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3172
+                              },
+                              "illumar10.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3211
+                              },
+                              "illumar11.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3182
+                              },
+                              "illumar12.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3192
+                              },
+                              "illumar13.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3221
+                              },
+                              "illumar14.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3188
+                              },
+                              "illumar15.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3158
+                              },
+                              "illumar2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3178
+                              },
+                              "illumar3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3212
+                              },
+                              "illumar4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3227
+                              },
+                              "illumar5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3191
+                              },
+                              "illumar6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3203
+                              },
+                              "illumar7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3133
+                              },
+                              "illumar8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3145
+                              },
+                              "illumar9.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3184
+                              },
+                              "nullchip.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2948
+                              },
+                              "nullupgrd.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3433
+                              },
+                              "partanode.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3491
+                              },
+                              "partboule.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3336
+                              },
+                              "partbundledplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3472
+                              },
+                              "partcathode.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3564
+                              },
+                              "partcloth.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3198
+                              },
+                              "partconductiveplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3547
+                              },
+                              "partcoppercoil.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3269
+                              },
+                              "partenergizedsilicon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3491
+                              },
+                              "partenergizedsiliconchip.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3564
+                              },
+                              "partglowsiliconcomp.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3700
+                              },
+                              "partgoldcoil.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3236
+                              },
+                              "partinfusedsilicon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3634
+                              },
+                              "partironcoil.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3218
+                              },
+                              "partmotor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3209
+                              },
+                              "partplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3606
+                              },
+                              "partplatformedplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3609
+                              },
+                              "partpointer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3554
+                              },
+                              "partredingot.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3095
+                              },
+                              "partredironcomp.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3876
+                              },
+                              "partredsiliconcomp.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3761
+                              },
+                              "partsail.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3710
+                              },
+                              "partsandcoalcomp.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3734
+                              },
+                              "partsilicon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3437
+                              },
+                              "partsiliconchip.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3534
+                              },
+                              "partwiredplate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3476
+                              },
+                              "upgrd_lx.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3437
+                              },
+                              "upgrd_ly.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3443
+                              },
+                              "upgrd_lz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3444
+                              },
+                              "upgrd_rx.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3438
+                              },
+                              "upgrd_ry.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3447
+                              },
+                              "upgrd_rz.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3452
+                              }
+                            }
+                          },
+                          "routerutil.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4797
+                          },
+                          "screwdriver.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3944
+                          },
+                          "vawt.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2996
+                          },
+                          "woolgin.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4109
+                          }
+                        }
+                      },
+                      "obj": {
+                        "type": "directory",
+                        "children": {
+                          "mc_temp.blend": {
+                            "type": "file",
+                            "extension": ".blend",
+                            "size": 572320
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 818
+          },
+          "dependancies.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 480
+          },
+          "mrtjp": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "ProjectRedCore$$anon$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 998
+                  },
+                  "ProjectRedCore$.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4156
+                  },
+                  "ProjectRedCore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4106
+                  },
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "IBundledEmitter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 167
+                      },
+                      "IBundledTile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 205
+                      },
+                      "IBundledTileInteraction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 346
+                      },
+                      "IConnectable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 321
+                      },
+                      "IMaskedBundledTile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 214
+                      },
+                      "IScrewdriver.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 229
+                      },
+                      "ISpecialLinkState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 294
+                      },
+                      "ITransmissionAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 498
+                      },
+                      "ITransportationAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 219
+                      },
+                      "ProjectRedAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 465
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "Configurator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7023
+                      },
+                      "CoreCPH$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1206
+                      },
+                      "CoreCPH.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1257
+                      },
+                      "CorePH.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1038
+                      },
+                      "CoreProxy$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 414
+                      },
+                      "CoreProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 955
+                      },
+                      "CoreProxy_client.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2306
+                      },
+                      "CoreProxy_server.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2734
+                      },
+                      "CoreRecipes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7172
+                      },
+                      "CoreSPH$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1095
+                      },
+                      "CoreSPH.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1293
+                      },
+                      "GuiConfigFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2462
+                      },
+                      "IPowerConnectable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 796
+                      },
+                      "IProxy$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1461
+                      },
+                      "IProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 659
+                      },
+                      "ItemCraftingDamage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1932
+                      },
+                      "ItemDataCard$$anonfun$addInformation$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2554
+                      },
+                      "ItemDataCard$$anonfun$registerIcons$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1897
+                      },
+                      "ItemDataCard$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2197
+                      },
+                      "ItemDataCard.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6557
+                      },
+                      "ItemDrawPlate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1625
+                      },
+                      "ItemPart$$anonfun$getSubItems$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1533
+                      },
+                      "ItemPart$$anonfun$registerIcons$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1483
+                      },
+                      "ItemPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4150
+                      },
+                      "ItemScrewdriver.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3551
+                      },
+                      "ItemWireDebugger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3443
+                      },
+                      "NEIProjectRedConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1417
+                      },
+                      "PRLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1180
+                      },
+                      "PRUpdateChecker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6031
+                      },
+                      "PartDefs$$anonfun$initOreDict$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1455
+                      },
+                      "PartDefs$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8798
+                      },
+                      "PartDefs$PartVal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1620
+                      },
+                      "PartDefs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8494
+                      },
+                      "PowerConductor$$anonfun$idsFrom$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1870
+                      },
+                      "PowerConductor$$anonfun$load$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1708
+                      },
+                      "PowerConductor$$anonfun$save$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1709
+                      },
+                      "PowerConductor$$anonfun$update$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1488
+                      },
+                      "PowerConductor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9350
+                      },
+                      "ProjectRedConfigGUI$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1007
+                      },
+                      "ProjectRedConfigGUI$PRDummyCategoryElement.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1541
+                      },
+                      "ProjectRedConfigGUI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2267
+                      },
+                      "RenderHalo$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6816
+                      },
+                      "RenderHalo$LightCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2956
+                      },
+                      "RenderHalo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2598
+                      },
+                      "ShapelessOreNBTRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2515
+                      },
+                      "TAcquisitionsCommons$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1610
+                      },
+                      "TAcquisitionsCommons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 999
+                      },
+                      "TCenterAcquisitions$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1771
+                      },
+                      "TCenterAcquisitions.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 926
+                      },
+                      "TCenterConnectable$$anonfun$notifyExternals$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1386
+                      },
+                      "TCenterConnectable$$anonfun$updateExternalConns$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1492
+                      },
+                      "TCenterConnectable$$anonfun$updateInternalConns$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1461
+                      },
+                      "TCenterConnectable$$anonfun$updateOpenConns$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1445
+                      },
+                      "TCenterConnectable$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4816
+                      },
+                      "TCenterConnectable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2590
+                      },
+                      "TCenterOrient$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 466
+                      },
+                      "TCenterOrient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 566
+                      },
+                      "TConnectableCommons$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 918
+                      },
+                      "TConnectableCommons.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1830
+                      },
+                      "TConnectableInstTile$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3415
+                      },
+                      "TConnectableInstTile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2024
+                      },
+                      "TFaceAcquisitions$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3082
+                      },
+                      "TFaceAcquisitions.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1379
+                      },
+                      "TFaceConnectable$$anonfun$notifyExternals$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1468
+                      },
+                      "TFaceConnectable$$anonfun$updateExternalConns$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1628
+                      },
+                      "TFaceConnectable$$anonfun$updateExternalConns$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1336
+                      },
+                      "TFaceConnectable$$anonfun$updateInternalConns$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1450
+                      },
+                      "TFaceConnectable$$anonfun$updateOpenConns$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1434
+                      },
+                      "TFaceConnectable$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7544
+                      },
+                      "TFaceConnectable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3213
+                      },
+                      "TFaceOrient$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 632
+                      },
+                      "TFaceOrient$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2566
+                      },
+                      "TFaceOrient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1735
+                      },
+                      "TPowerFlow$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2067
+                      },
+                      "TPowerFlow.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1520
+                      },
+                      "TSwitchPacket$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1554
+                      },
+                      "TSwitchPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 860
+                      },
+                      "TTileAcquisitions$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3497
+                      },
+                      "TTileAcquisitions.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1448
+                      },
+                      "TTileConnectable$$anonfun$updateExternals$1$$anonfun$apply$mcVI$sp$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1739
+                      },
+                      "TTileConnectable$$anonfun$updateExternals$1$$anonfun$apply$mcVI$sp$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1747
+                      },
+                      "TTileConnectable$$anonfun$updateExternals$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2288
+                      },
+                      "TTileConnectable$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5931
+                      },
+                      "TTileConnectable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2303
+                      },
+                      "libmc": {
+                        "type": "directory",
+                        "children": {
+                          "PRLib$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3849
+                          },
+                          "PRLib.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2173
+                          },
+                          "PRResources$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2315
+                          },
+                          "PRResources.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1966
+                          },
+                          "fx": {
+                            "type": "directory",
+                            "children": {
+                              "CoreParticle$$anonfun$iterate$1$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1780
+                              },
+                              "CoreParticle$$anonfun$onUpdate$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1309
+                              },
+                              "CoreParticle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13277
+                              },
+                              "LogicComparator$.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3675
+                              },
+                              "LogicComparator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2110
+                              },
+                              "ParticleIconRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2698
+                              },
+                              "ParticleLogic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2228
+                              },
+                              "ParticleLogicApproachEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2821
+                              },
+                              "ParticleLogicApproachPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3012
+                              },
+                              "ParticleLogicArcToEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3446
+                              },
+                              "ParticleLogicArcToPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3282
+                              },
+                              "ParticleLogicBuff.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1548
+                              },
+                              "ParticleLogicColorShift.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3563
+                              },
+                              "ParticleLogicFade.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1519
+                              },
+                              "ParticleLogicFleeEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2681
+                              },
+                              "ParticleLogicIconShift.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3196
+                              },
+                              "ParticleLogicOrbitEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3700
+                              },
+                              "ParticleLogicOrbitPoint.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4809
+                              },
+                              "ParticleLogicScale.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1526
+                              },
+                              "ParticleLogicStatic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1377
+                              },
+                              "ParticleLogicTrail$IParticleBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 337
+                              },
+                              "ParticleLogicTrail.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2153
+                              },
+                              "ParticleManagement.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6188
+                              }
+                            }
+                          },
+                          "recipe": {
+                            "type": "directory",
+                            "children": {
+                              "BuildResult.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 860
+                              },
+                              "BuilderRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1087
+                              },
+                              "Input.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 745
+                              },
+                              "ItemIn.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4645
+                              },
+                              "ItemOut.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3016
+                              },
+                              "MicroIn$.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1099
+                              },
+                              "MicroIn.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5049
+                              },
+                              "OreIn$.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 900
+                              },
+                              "OreIn.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3513
+                              },
+                              "Output.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 607
+                              },
+                              "PRShapedRecipeHandler$$anonfun$loadCraftingRecipes$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2520
+                              },
+                              "PRShapedRecipeHandler$$anonfun$loadUsageRecipes$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2929
+                              },
+                              "PRShapedRecipeHandler$CachedShapedRecipe$$anonfun$1$$anonfun$apply$mcVI$sp$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3681
+                              },
+                              "PRShapedRecipeHandler$CachedShapedRecipe$$anonfun$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2850
+                              },
+                              "PRShapedRecipeHandler$CachedShapedRecipe$$anonfun$computeVisuals$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1517
+                              },
+                              "PRShapedRecipeHandler$CachedShapedRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4093
+                              },
+                              "PRShapedRecipeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4023
+                              },
+                              "PRShapelessRecipeHandler$$anonfun$loadCraftingRecipes$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2511
+                              },
+                              "PRShapelessRecipeHandler$$anonfun$loadUsageRecipes$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2746
+                              },
+                              "PRShapelessRecipeHandler$CachedShapelessRecipe$$anonfun$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3258
+                              },
+                              "PRShapelessRecipeHandler$CachedShapelessRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4206
+                              },
+                              "PRShapelessRecipeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3017
+                              },
+                              "RecipeBuilder$$anonfun$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1218
+                              },
+                              "RecipeBuilder$$anonfun$compute$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1687
+                              },
+                              "RecipeBuilder$$anonfun$compute$2$$anonfun$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1757
+                              },
+                              "RecipeBuilder$$anonfun$compute$2$$anonfun$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1761
+                              },
+                              "RecipeBuilder$$anonfun$compute$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3147
+                              },
+                              "RecipeBuilder$class.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4320
+                              },
+                              "RecipeBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4634
+                              },
+                              "RecipeLib$.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1530
+                              },
+                              "RecipeLib.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1039
+                              },
+                              "ShapedBuilderRecipe$$anonfun$matches$1$$anonfun$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1222
+                              },
+                              "ShapedBuilderRecipe$$anonfun$matches$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2848
+                              },
+                              "ShapedBuilderRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3402
+                              },
+                              "ShapedRecipeBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7738
+                              },
+                              "ShapelessBuilderRecipe$$anonfun$matches$1$$anonfun$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1720
+                              },
+                              "ShapelessBuilderRecipe$$anonfun$matches$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3393
+                              },
+                              "ShapelessBuilderRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3706
+                              },
+                              "ShapelessRecipeBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7769
+                              },
+                              "TRecipeObject$class.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 801
+                              },
+                              "TRecipeObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 965
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7022
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 70049
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1227 @@
+{
+  "mod_name": "GlibysVC.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\GlibysVC.jar",
+  "mod_type": "jar",
+  "tree": {
+    "GlibysVC.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 404907,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              },
+              "services": {
+                "type": "directory",
+                "children": {
+                  "javax.sound.sampled.spi.AudioFileReader": {
+                    "type": "file",
+                    "extension": ".audiofilereader",
+                    "size": 91
+                  },
+                  "javax.sound.sampled.spi.AudioFileWriter": {
+                    "type": "file",
+                    "extension": ".audiofilewriter",
+                    "size": 91
+                  },
+                  "javax.sound.sampled.spi.FormatConversionProvider": {
+                    "type": "file",
+                    "extension": ".formatconversionprovider",
+                    "size": 98
+                  }
+                }
+              }
+            }
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "gliby": {
+                "type": "directory",
+                "children": {
+                  "gman": {
+                    "type": "directory",
+                    "children": {
+                      "GMan.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2286
+                      },
+                      "JINIFile$JINIReadException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 461
+                      },
+                      "JINIFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7754
+                      },
+                      "ModInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2225
+                      }
+                    }
+                  },
+                  "voicechat": {
+                    "type": "directory",
+                    "children": {
+                      "VoiceChat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5372
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "Configuration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6963
+                          },
+                          "Settings$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3224
+                          },
+                          "Settings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8165
+                          },
+                          "UpdatedSoundManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2340
+                          },
+                          "VoiceChatClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7997
+                          },
+                          "debug": {
+                            "type": "directory",
+                            "children": {
+                              "Statistics.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1333
+                              }
+                            }
+                          },
+                          "device": {
+                            "type": "directory",
+                            "children": {
+                              "Device.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1562
+                              },
+                              "DeviceHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3878
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "EnumUIPlacement.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1423
+                              },
+                              "GuiBoostSlider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2064
+                              },
+                              "GuiCustomButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2698
+                              },
+                              "GuiDropDownMenu.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4182
+                              },
+                              "GuiInGameHandlerVoiceChat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9070
+                              },
+                              "GuiPlaceableInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1362
+                              },
+                              "GuiScreenDonate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6379
+                              },
+                              "GuiScreenLocalMute$List.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2869
+                              },
+                              "GuiScreenLocalMute.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6434
+                              },
+                              "GuiUIPlacement.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9285
+                              },
+                              "GuiUIPlacementSpeak.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2178
+                              },
+                              "GuiUIPlacementVoicePlate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3596
+                              },
+                              "UIPosition.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 655
+                              },
+                              "ValueFormat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2531
+                              },
+                              "options": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiScreenOptionsUI.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4200
+                                  },
+                                  "GuiScreenOptionsWizard.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11936
+                                  },
+                                  "GuiScreenVoiceChatOptions.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11974
+                                  },
+                                  "GuiScreenVoiceChatOptionsAdvanced.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7015
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "keybindings": {
+                            "type": "directory",
+                            "children": {
+                              "EnumBinding.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1277
+                              },
+                              "KeyEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 942
+                              },
+                              "KeyGuiOptionsEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1699
+                              },
+                              "KeyManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4300
+                              },
+                              "KeySpeakEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2785
+                              },
+                              "KeyTickHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1542
+                              }
+                            }
+                          },
+                          "networking": {
+                            "type": "directory",
+                            "children": {
+                              "ClientNetwork$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 766
+                              },
+                              "ClientNetwork$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 973
+                              },
+                              "ClientNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7190
+                              },
+                              "game": {
+                                "type": "directory",
+                                "children": {
+                                  "ClientDisconnectHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1585
+                                  },
+                                  "ClientEventHandler$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3232
+                                  },
+                                  "ClientEventHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1418
+                                  }
+                                }
+                              },
+                              "voiceclients": {
+                                "type": "directory",
+                                "children": {
+                                  "MinecraftVoiceClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2878
+                                  },
+                                  "UDPVoiceClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6801
+                                  },
+                                  "UDPVoiceClientHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3135
+                                  },
+                                  "VoiceAuthenticatedClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1311
+                                  },
+                                  "VoiceClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1004
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderPlayerVoiceIcon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5492
+                              }
+                            }
+                          },
+                          "sound": {
+                            "type": "directory",
+                            "children": {
+                              "ClientStream$PlayableStreamComparator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1141
+                              },
+                              "ClientStream.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2189
+                              },
+                              "ClientStreamManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12589
+                              },
+                              "Datalet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 471
+                              },
+                              "JitterBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1762
+                              },
+                              "MicrophoneTester.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4380
+                              },
+                              "MovingAverage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1700
+                              },
+                              "Recorder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5248
+                              },
+                              "SoundPreProcessor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4138
+                              },
+                              "SoundSystemWrapper$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 769
+                              },
+                              "SoundSystemWrapper$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 764
+                              },
+                              "SoundSystemWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4363
+                              },
+                              "thread": {
+                                "type": "directory",
+                                "children": {
+                                  "ThreadSoundQueue.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1680
+                                  },
+                                  "ThreadUpdateStream.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3695
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "textures": {
+                            "type": "directory",
+                            "children": {
+                              "IndependentGUITexture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2219
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "MathUtility.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 485
+                          },
+                          "ModPackSettings$GVCModPackInstructions.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1584
+                          },
+                          "ModPackSettings$UIContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1064
+                          },
+                          "ModPackSettings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1309
+                          },
+                          "PlayerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2628
+                          },
+                          "ServerConfiguration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5640
+                          },
+                          "ServerSettings$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 884
+                          },
+                          "ServerSettings$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2033
+                          },
+                          "ServerSettings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3775
+                          },
+                          "VoiceChatServer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1543
+                          },
+                          "VoiceChatServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8878
+                          },
+                          "api": {
+                            "type": "directory",
+                            "children": {
+                              "VoiceChatAPI.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1345
+                              },
+                              "events": {
+                                "type": "directory",
+                                "children": {
+                                  "ServerStreamEvent$StreamCreated.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1481
+                                  },
+                                  "ServerStreamEvent$StreamDestroyed.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1207
+                                  },
+                                  "ServerStreamEvent$StreamFeed.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1466
+                                  },
+                                  "ServerStreamEvent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1622
+                                  }
+                                }
+                              },
+                              "examples": {
+                                "type": "directory",
+                                "children": {
+                                  "ExampleStreamHandlerAroundPosition.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3549
+                                  },
+                                  "ExampleStreamHandlerOnlyOP.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3540
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "commands": {
+                            "type": "directory",
+                            "children": {
+                              "CommandChatMode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5186
+                              },
+                              "CommandVoiceMute.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3773
+                              }
+                            }
+                          },
+                          "networking": {
+                            "type": "directory",
+                            "children": {
+                              "MinecraftPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 405
+                              },
+                              "ServerDatalet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 687
+                              },
+                              "ServerNetwork$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 943
+                              },
+                              "ServerNetwork.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4833
+                              },
+                              "ServerStream.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 998
+                              },
+                              "ServerStreamHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3465
+                              },
+                              "ServerStreamManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10875
+                              },
+                              "ThreadDataQueue.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1903
+                              },
+                              "ThreadDataUpdateStream.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1809
+                              },
+                              "entityhandler": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2724
+                                  }
+                                }
+                              },
+                              "packets": {
+                                "type": "directory",
+                                "children": {
+                                  "MinecraftClientEntityDataPacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2955
+                                  },
+                                  "MinecraftClientEntityPositionPacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2833
+                                  },
+                                  "MinecraftClientVoiceAuthenticatedServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3433
+                                  },
+                                  "MinecraftClientVoiceEndPacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2489
+                                  },
+                                  "MinecraftClientVoicePacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2984
+                                  },
+                                  "MinecraftClientVoiceServerPacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2908
+                                  },
+                                  "MinecraftServerVoiceEndPacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2432
+                                  },
+                                  "MinecraftServerVoicePacket.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2874
+                                  }
+                                }
+                              },
+                              "voiceservers": {
+                                "type": "directory",
+                                "children": {
+                                  "EnumVoiceNetworkType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1442
+                                  },
+                                  "MinecraftVoiceServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3396
+                                  },
+                                  "ServerConnectionHandler$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4758
+                                  },
+                                  "ServerConnectionHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4469
+                                  },
+                                  "VoiceAuthenticatedServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 673
+                                  },
+                                  "VoiceServer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1636
+                                  },
+                                  "udp": {
+                                    "type": "directory",
+                                    "children": {
+                                      "UDPByteUtilities.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1122
+                                      },
+                                      "UDPClient.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1358
+                                      },
+                                      "UDPClientAuthenticationPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1234
+                                      },
+                                      "UDPClientVoiceEnd.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 677
+                                      },
+                                      "UDPClientVoicePacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1053
+                                      },
+                                      "UDPPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 445
+                                      },
+                                      "UdpServer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1430
+                                      },
+                                      "UdpServer$2.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1246
+                                      },
+                                      "UdpServer$3.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 951
+                                      },
+                                      "UdpServer$Event.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2160
+                                      },
+                                      "UdpServer$Listener.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 501
+                                      },
+                                      "UdpServer$State.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1445
+                                      },
+                                      "UdpServer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 12286
+                                      },
+                                      "UDPServerAuthenticationCompletePacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 737
+                                      },
+                                      "UDPServerChunkVoicePacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1274
+                                      },
+                                      "UDPServerEntityDataPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1199
+                                      },
+                                      "UDPServerEntityPositionPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1069
+                                      },
+                                      "UDPServerVoiceEndPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 839
+                                      },
+                                      "UDPServerVoicePacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1166
+                                      },
+                                      "UDPVoiceServer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1789
+                                      },
+                                      "UDPVoiceServer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 7268
+                                      },
+                                      "UDPVoiceServerHandler$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2124
+                                      },
+                                      "UDPVoiceServerHandler.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6430
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ovr": {
+            "type": "directory",
+            "children": {
+              "paulscode": {
+                "type": "directory",
+                "children": {
+                  "sound": {
+                    "type": "directory",
+                    "children": {
+                      "libraries": {
+                        "type": "directory",
+                        "children": {
+                          "ChannelLWJGLOpenAL.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8141
+                          },
+                          "LibraryLWJGLOpenAL$Exception.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1021
+                          },
+                          "LibraryLWJGLOpenAL.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15482
+                          },
+                          "SourceLWJGLOpenAL.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11162
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "gvclogo.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 10769
+          },
+          "JSpeexDec.class": {
+            "type": "file",
+            "extension": ".class",
+            "size": 9031
+          },
+          "JSpeexEnc.class": {
+            "type": "file",
+            "extension": ".class",
+            "size": 8196
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 516
+          },
+          "modpack.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 252
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "gvc": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2797
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2906
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2899
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3608
+                      },
+                      "lv_LV.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2756
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2714
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3648
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gvctextures.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27877
+                          },
+                          "wizard_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 33383
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "xiph": {
+                "type": "directory",
+                "children": {
+                  "speex": {
+                    "type": "directory",
+                    "children": {
+                      "AudioFileWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2451
+                      },
+                      "Bits.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1137
+                      },
+                      "CbSearch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 246
+                      },
+                      "Codebook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 58480
+                      },
+                      "Decoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 405
+                      },
+                      "Encoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 710
+                      },
+                      "Filters.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2740
+                      },
+                      "HighLspQuant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 975
+                      },
+                      "Inband.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 776
+                      },
+                      "LbrLspQuant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1058
+                      },
+                      "Lpc.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 487
+                      },
+                      "Lsp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1395
+                      },
+                      "LspQuant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 876
+                      },
+                      "Ltp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1069
+                      },
+                      "Ltp3Tap.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2829
+                      },
+                      "LtpForcedPitch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 427
+                      },
+                      "Misc.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 489
+                      },
+                      "NbCodec.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3857
+                      },
+                      "NbDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7489
+                      },
+                      "NbEncoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10025
+                      },
+                      "NbLspQuant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1236
+                      },
+                      "NoiseSearch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 546
+                      },
+                      "OggCrc.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 385
+                      },
+                      "OggSpeexWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2390
+                      },
+                      "PcmWaveWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3377
+                      },
+                      "RawWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 725
+                      },
+                      "SbCodec.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1947
+                      },
+                      "SbDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4803
+                      },
+                      "SbEncoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9018
+                      },
+                      "SpeexDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2037
+                      },
+                      "SpeexEncoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2489
+                      },
+                      "SplitShapeSearch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2931
+                      },
+                      "Stereo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1376
+                      },
+                      "SubMode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 725
+                      },
+                      "Vbr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3490
+                      },
+                      "VQ.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 846
+                      },
+                      "spi": {
+                        "type": "directory",
+                        "children": {
+                          "FilteredAudioInputStream.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2478
+                          },
+                          "Pcm2SpeexAudioInputStream.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6074
+                          },
+                          "Speex2PcmAudioInputStream.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4831
+                          },
+                          "SpeexAudioFileReader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4414
+                          },
+                          "SpeexAudioFileWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1979
+                          },
+                          "SpeexEncoding.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2209
+                          },
+                          "SpeexFileFormatType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 440
+                          },
+                          "SpeexFormatConvertionProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4064
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 199
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 18502
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1242 @@
+{
+  "mod_name": "Fluxed-Core-MC1710-1.0.9.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Fluxed-Core-MC1710-1.0.9.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Fluxed-Core-MC1710-1.0.9.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 227482,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 73
+              },
+              "fluxedcore_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 1635
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "CoFHAPIProps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 365
+                  },
+                  "energy": {
+                    "type": "directory",
+                    "children": {
+                      "EnergyStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2824
+                      },
+                      "IEnergyConnection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 211
+                      },
+                      "IEnergyContainerItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 314
+                      },
+                      "IEnergyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 414
+                      },
+                      "IEnergyProvider.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 355
+                      },
+                      "IEnergyReceiver.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 355
+                      },
+                      "IEnergyStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 242
+                      },
+                      "ItemEnergyContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2478
+                      },
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 279
+                      },
+                      "TileEnergyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1815
+                      }
+                    }
+                  },
+                  "fluid": {
+                    "type": "directory",
+                    "children": {
+                      "ITankContainerBucketable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 280
+                      },
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 277
+                      }
+                    }
+                  },
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 265
+                  }
+                }
+              }
+            }
+          },
+          "fluxedCore": {
+            "type": "directory",
+            "children": {
+              "buffs": {
+                "type": "directory",
+                "children": {
+                  "Buff.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1932
+                  },
+                  "BuffEffect.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3081
+                  },
+                  "BuffHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4246
+                  },
+                  "BuffHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5960
+                  }
+                }
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiButtonItemStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1935
+                      },
+                      "GuiObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2310
+                      },
+                      "objects": {
+                        "type": "directory",
+                        "children": {
+                          "GuiObjectItemButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2606
+                          }
+                        }
+                      },
+                      "slots": {
+                        "type": "directory",
+                        "children": {
+                          "SlotWhitelist.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 971
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "config": {
+                "type": "directory",
+                "children": {
+                  "ConfigHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1966
+                  }
+                }
+              },
+              "entity": {
+                "type": "directory",
+                "children": {
+                  "EntityData.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2067
+                  }
+                }
+              },
+              "FluxedCore.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2011
+              },
+              "handlers": {
+                "type": "directory",
+                "children": {
+                  "ClientEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2009
+                  },
+                  "EventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4530
+                  },
+                  "GuiEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 18283
+                  },
+                  "Page.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1202
+                  }
+                }
+              },
+              "items": {
+                "type": "directory",
+                "children": {
+                  "FBItems.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3487
+                  },
+                  "ItemEnergyAxe.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7656
+                  },
+                  "ItemEnergyPickaxe.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6992
+                  },
+                  "ItemEnergyShovel.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6988
+                  },
+                  "ItemEnergyTool.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7832
+                  }
+                }
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "messages": {
+                    "type": "directory",
+                    "children": {
+                      "MessageBiome.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2321
+                      },
+                      "MessageBuffSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2617
+                      },
+                      "MessageBuffUpdate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2624
+                      },
+                      "MessageDataSync.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2888
+                      },
+                      "MessageSyncBuffs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3353
+                      }
+                    }
+                  },
+                  "PacketHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1398
+                  }
+                }
+              },
+              "proxy": {
+                "type": "directory",
+                "children": {
+                  "ClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1619
+                  },
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 522
+                  },
+                  "IProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 412
+                  },
+                  "ServerProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1143
+                  }
+                }
+              },
+              "reference": {
+                "type": "directory",
+                "children": {
+                  "Reference.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1142
+                  }
+                }
+              },
+              "tileEntities": {
+                "type": "directory",
+                "children": {
+                  "TileEntityInventory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3771
+                  }
+                }
+              },
+              "util": {
+                "type": "directory",
+                "children": {
+                  "CompressionHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2849
+                  },
+                  "CoordinatePair.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1472
+                  },
+                  "EntityUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4890
+                  },
+                  "FileUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3513
+                  },
+                  "GeneralUtils$ArrayUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 610
+                  },
+                  "GeneralUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2359
+                  },
+                  "NBTHelper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5915
+                  },
+                  "RenderUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5411
+                  },
+                  "ResourceInformation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 944
+                  },
+                  "ResourcePackAssembler$CustomFile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1004
+                  },
+                  "ResourcePackAssembler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6651
+                  },
+                  "StringUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2779
+                  },
+                  "TimeTracker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 824
+                  }
+                }
+              }
+            }
+          },
+          "vazkii": {
+            "type": "directory",
+            "children": {
+              "botania": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "boss": {
+                        "type": "directory",
+                        "children": {
+                          "IBotaniaBoss.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 614
+                          },
+                          "IBotaniaBossWithShader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 473
+                          }
+                        }
+                      },
+                      "BotaniaAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20547
+                      },
+                      "brew": {
+                        "type": "directory",
+                        "children": {
+                          "Brew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2227
+                          },
+                          "IBrewContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 341
+                          },
+                          "IBrewItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 206
+                          }
+                        }
+                      },
+                      "corporea": {
+                        "type": "directory",
+                        "children": {
+                          "CorporeaHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13067
+                          },
+                          "CorporeaRequestEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1336
+                          },
+                          "ICorporeaAutoCompleteController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 340
+                          },
+                          "ICorporeaInterceptor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 597
+                          },
+                          "ICorporeaRequestor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 242
+                          },
+                          "ICorporeaSpark.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 963
+                          }
+                        }
+                      },
+                      "internal": {
+                        "type": "directory",
+                        "children": {
+                          "DummyManaNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1344
+                          },
+                          "DummyMethodHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8838
+                          },
+                          "DummyPage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 759
+                          },
+                          "DummySubTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 341
+                          },
+                          "IGuiLexiconEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 531
+                          },
+                          "IInternalMethodHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4079
+                          },
+                          "IManaBurst.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 954
+                          },
+                          "IManaNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 545
+                          },
+                          "ShaderCallback.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 345
+                          },
+                          "VanillaPacketDispatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2101
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "IAncientWillContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 271
+                          },
+                          "IBaubleRender$Helper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1293
+                          },
+                          "IBaubleRender$RenderType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1191
+                          },
+                          "IBaubleRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 598
+                          },
+                          "IBlockProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 453
+                          },
+                          "IBurstViewerBauble.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 141
+                          },
+                          "ICosmeticAttachable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 326
+                          },
+                          "ICosmeticBauble.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 180
+                          },
+                          "IDyablePool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 178
+                          },
+                          "IExoflameHeatable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 246
+                          },
+                          "IExtendedPlayerController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 240
+                          },
+                          "IExtendedWireframeCoordinateListProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 392
+                          },
+                          "IFlowerlessBiome.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 201
+                          },
+                          "IFlowerlessWorld.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 196
+                          },
+                          "IGrassHornExcempt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 195
+                          },
+                          "IManaDissolvable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 271
+                          },
+                          "IManaProficiencyArmor$Helper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1153
+                          },
+                          "IManaProficiencyArmor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 356
+                          },
+                          "IPetalApothecary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 188
+                          },
+                          "IPhantomInkable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 256
+                          },
+                          "IPixieSpawner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 192
+                          },
+                          "IRelic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 414
+                          },
+                          "ISequentialBreaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 319
+                          },
+                          "ISortableTool$ToolType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1221
+                          },
+                          "ISortableTool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 398
+                          },
+                          "IWireframeCoordinateListProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 578
+                          },
+                          "TinyPotatoRenderEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1327
+                          }
+                        }
+                      },
+                      "lexicon": {
+                        "type": "directory",
+                        "children": {
+                          "IAddonEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 175
+                          },
+                          "ILexicon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 336
+                          },
+                          "ILexiconable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 299
+                          },
+                          "IRecipeKeyProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 214
+                          },
+                          "ITwoNamedPage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 251
+                          },
+                          "KnowledgeType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 859
+                          },
+                          "LexiconCategory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1961
+                          },
+                          "LexiconEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3901
+                          },
+                          "LexiconPage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1983
+                          },
+                          "LexiconRecipeMappings$EntryData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 648
+                          },
+                          "LexiconRecipeMappings.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2794
+                          },
+                          "multiblock": {
+                            "type": "directory",
+                            "children": {
+                              "component": {
+                                "type": "directory",
+                                "children": {
+                                  "ColorSwitchingComponent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1573
+                                  },
+                                  "FlowerComponent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1188
+                                  },
+                                  "MultiblockComponent.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3595
+                                  }
+                                }
+                              },
+                              "IMultiblockRenderHook.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 797
+                              },
+                              "Multiblock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6219
+                              },
+                              "MultiblockSet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1584
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "mana": {
+                        "type": "directory",
+                        "children": {
+                          "BurstProperties.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 652
+                          },
+                          "IClientManaHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 186
+                          },
+                          "ICreativeManaProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 204
+                          },
+                          "IIdentifiable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 176
+                          },
+                          "IKeyLocked.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 193
+                          },
+                          "ILaputaImmobile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 189
+                          },
+                          "ILens.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 658
+                          },
+                          "ILensEffect.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 558
+                          },
+                          "IManaBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 156
+                          },
+                          "IManaCollector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 320
+                          },
+                          "IManaCollisionGhost.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 167
+                          },
+                          "IManaDiscountArmor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 242
+                          },
+                          "IManaItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 575
+                          },
+                          "IManaPool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 202
+                          },
+                          "IManaReceiver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 260
+                          },
+                          "IManaSpreader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 434
+                          },
+                          "IManaTrigger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 232
+                          },
+                          "IManaUsingItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 188
+                          },
+                          "IPingable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 249
+                          },
+                          "IPoolOverlayProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 224
+                          },
+                          "IThrottledPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 170
+                          },
+                          "ITinyPlanetExcempt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 198
+                          },
+                          "ManaItemHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5813
+                          },
+                          "ManaNetworkEvent$Action.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1184
+                          },
+                          "ManaNetworkEvent$ManaBlockType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1237
+                          },
+                          "ManaNetworkEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2198
+                          },
+                          "spark": {
+                            "type": "directory",
+                            "children": {
+                              "ISparkAttachable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 478
+                              },
+                              "ISparkEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 530
+                              },
+                              "SparkHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1546
+                              }
+                            }
+                          },
+                          "TileSignature.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 499
+                          }
+                        }
+                      },
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 267
+                      },
+                      "recipe": {
+                        "type": "directory",
+                        "children": {
+                          "ElvenPortalUpdateEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1450
+                          },
+                          "IElvenItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 185
+                          },
+                          "IFlowerComponent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 291
+                          },
+                          "RecipeBrew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4043
+                          },
+                          "RecipeElvenTrade.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3405
+                          },
+                          "RecipeManaInfusion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2265
+                          },
+                          "RecipeMiniFlower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1357
+                          },
+                          "RecipePetals.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3257
+                          },
+                          "RecipePureDaisy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3571
+                          },
+                          "RecipeRuneAltar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 678
+                          }
+                        }
+                      },
+                      "subtile": {
+                        "type": "directory",
+                        "children": {
+                          "ISpecialFlower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 136
+                          },
+                          "ISubTileContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 255
+                          },
+                          "RadiusDescriptor$Circle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 770
+                          },
+                          "RadiusDescriptor$Rectangle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 793
+                          },
+                          "RadiusDescriptor$Square.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 968
+                          },
+                          "RadiusDescriptor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1101
+                          },
+                          "signature": {
+                            "type": "directory",
+                            "children": {
+                              "BasicSignature.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1963
+                              },
+                              "SubTileSignature.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1272
+                              }
+                            }
+                          },
+                          "SubTileEntity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5862
+                          },
+                          "SubTileFunctional.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7757
+                          },
+                          "SubTileGenerating.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11230
+                          }
+                        }
+                      },
+                      "wand": {
+                        "type": "directory",
+                        "children": {
+                          "ICoordBoundItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 362
+                          },
+                          "ITileBound.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 322
+                          },
+                          "IWandable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 255
+                          },
+                          "IWandBindable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 292
+                          },
+                          "IWandHUD.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 252
+                          },
+                          "IWireframeAABBProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 245
+                          }
+                        }
+                      },
+                      "wiki": {
+                        "type": "directory",
+                        "children": {
+                          "IWikiProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 288
+                          },
+                          "SimpleWikiProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2603
+                          },
+                          "WikiHooks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2102
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "fluxedcore": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "buffs": {
+                        "type": "directory",
+                        "children": {
+                          "buffs.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3496
+                          },
+                          "Test.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2854
+                          },
+                          "Thumbs.db": {
+                            "type": "file",
+                            "extension": ".db",
+                            "size": 4096
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "tooltip.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5491
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "energyAxeOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2926
+                          },
+                          "energyPickaxeOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2933
+                          },
+                          "energyShovelOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2928
+                          },
+                          "energySwordOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3057
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 326
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 343
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 21255
+          }
+        }
+      }
+    }
+  }
+}

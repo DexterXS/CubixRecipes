@@ -1,0 +1,502 @@
+{
+  "mod_name": "xModWeCUI.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\xModWeCUI.jar",
+  "mod_type": "jar",
+  "tree": {
+    "xModWeCUI.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 96504,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "github": {
+                "type": "directory",
+                "children": {
+                  "hexosse": {
+                    "type": "directory",
+                    "children": {
+                      "wecuife": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2495
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 890
+                          },
+                          "a.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2309
+                          },
+                          "CUIGuiFactory$a.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2809
+                          },
+                          "CUIGuiFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1497
+                          },
+                          "WorldEditCuiFe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1860
+                          },
+                          "a": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2490
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3277
+                              }
+                            }
+                          },
+                          "b": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6692
+                              }
+                            }
+                          },
+                          "c": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2579
+                              }
+                            }
+                          },
+                          "d": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3710
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2983
+                              }
+                            }
+                          },
+                          "e": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1525
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5919
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8374
+                              }
+                            }
+                          },
+                          "f": {
+                            "type": "directory",
+                            "children": {
+                              "a$a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1170
+                              },
+                              "a$b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1174
+                              },
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4030
+                              },
+                              "b$a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 492
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 560
+                              }
+                            }
+                          },
+                          "g": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2204
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1444
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3155
+                              },
+                              "d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3049
+                              }
+                            }
+                          },
+                          "h": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1047
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1175
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1234
+                              },
+                              "d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1282
+                              },
+                              "e.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1295
+                              },
+                              "f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 925
+                              },
+                              "g.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1319
+                              },
+                              "h.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 652
+                              }
+                            }
+                          },
+                          "i": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 504
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 706
+                              }
+                            }
+                          },
+                          "j": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2471
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1975
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1916
+                              }
+                            }
+                          },
+                          "k": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2904
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4149
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1078
+                              }
+                            }
+                          },
+                          "l": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1848
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2264
+                              }
+                            }
+                          },
+                          "m": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1231
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2039
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2303
+                              },
+                              "d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1680
+                              },
+                              "e.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2485
+                              },
+                              "f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2976
+                              },
+                              "g.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2266
+                              }
+                            }
+                          },
+                          "n": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2316
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2481
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2212
+                              },
+                              "d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2620
+                              },
+                              "e.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1522
+                              },
+                              "f.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2197
+                              },
+                              "g.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2140
+                              },
+                              "h.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2525
+                              },
+                              "i.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3631
+                              }
+                            }
+                          },
+                          "o": {
+                            "type": "directory",
+                            "children": {
+                              "a.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1434
+                              },
+                              "b.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2084
+                              },
+                              "c.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6242
+                              },
+                              "d.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2172
+                              },
+                              "e.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7886
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 620
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "worldeditcuife": {
+                "type": "directory",
+                "children": {
+                  "img": {
+                    "type": "directory",
+                    "children": {
+                      "wecui_header_white.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 13935
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1005
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 921
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1005
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 994
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 165
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5323
+          }
+        }
+      }
+    }
+  }
+}

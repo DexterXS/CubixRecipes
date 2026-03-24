@@ -1,0 +1,442 @@
+{
+  "mod_name": "jl1.0.1.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\jl1.0.1.jar",
+  "mod_type": "jar",
+  "tree": {
+    "jl1.0.1.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 107654,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 128
+              }
+            }
+          },
+          "javazoom": {
+            "type": "directory",
+            "children": {
+              "jl": {
+                "type": "directory",
+                "children": {
+                  "converter": {
+                    "type": "directory",
+                    "children": {
+                      "Converter$PrintWriterProgressListener.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2429
+                      },
+                      "Converter$ProgressListener.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 551
+                      },
+                      "Converter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3242
+                      },
+                      "RiffFile$RiffChunkHeader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 417
+                      },
+                      "RiffFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3887
+                      },
+                      "WaveFile$WaveFileSample.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 386
+                      },
+                      "WaveFile$WaveFormat_Chunk.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1207
+                      },
+                      "WaveFile$WaveFormat_ChunkData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 725
+                      },
+                      "WaveFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2475
+                      },
+                      "WaveFileObuffer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 999
+                      },
+                      "jlc$jlcArgs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2166
+                      },
+                      "jlc.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1680
+                      }
+                    }
+                  },
+                  "decoder": {
+                    "type": "directory",
+                    "children": {
+                      "BitReserve.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 997
+                      },
+                      "Bitstream.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4774
+                      },
+                      "BitstreamErrors.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 412
+                      },
+                      "BitstreamException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 755
+                      },
+                      "Control.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 240
+                      },
+                      "Crc16.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 436
+                      },
+                      "Decoder$Params.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1277
+                      },
+                      "Decoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3559
+                      },
+                      "DecoderErrors.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 276
+                      },
+                      "DecoderException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 749
+                      },
+                      "Equalizer$EQFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 279
+                      },
+                      "Equalizer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1440
+                      },
+                      "FrameDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 177
+                      },
+                      "Header.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9779
+                      },
+                      "InputStreamSource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 719
+                      },
+                      "JavaLayerError.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 148
+                      },
+                      "JavaLayerErrors.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 183
+                      },
+                      "JavaLayerException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 670
+                      },
+                      "JavaLayerHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 159
+                      },
+                      "JavaLayerUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2601
+                      },
+                      "LayerIDecoder$Subband.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1444
+                      },
+                      "LayerIDecoder$SubbandLayer1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1960
+                      },
+                      "LayerIDecoder$SubbandLayer1IntensityStereo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1394
+                      },
+                      "LayerIDecoder$SubbandLayer1Stereo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1770
+                      },
+                      "LayerIDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2810
+                      },
+                      "LayerIIDecoder$SubbandLayer2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23694
+                      },
+                      "LayerIIDecoder$SubbandLayer2IntensityStereo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2158
+                      },
+                      "LayerIIDecoder$SubbandLayer2Stereo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2540
+                      },
+                      "LayerIIDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1307
+                      },
+                      "LayerIIIDecoder$III_side_info_t.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 526
+                      },
+                      "LayerIIIDecoder$SBI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 348
+                      },
+                      "LayerIIIDecoder$Sftable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 511
+                      },
+                      "LayerIIIDecoder$gr_info_s.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 810
+                      },
+                      "LayerIIIDecoder$temporaire.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 468
+                      },
+                      "LayerIIIDecoder$temporaire2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 325
+                      },
+                      "LayerIIIDecoder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 25308
+                      },
+                      "Manager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 299
+                      },
+                      "Obuffer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 532
+                      },
+                      "OutputChannels.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1329
+                      },
+                      "SampleBuffer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 960
+                      },
+                      "Source.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 324
+                      },
+                      "SynthesisFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15350
+                      },
+                      "au2lin.ser": {
+                        "type": "file",
+                        "extension": ".ser",
+                        "size": 539
+                      },
+                      "huffcodetab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 49460
+                      },
+                      "l3reorder.ser": {
+                        "type": "file",
+                        "extension": ".ser",
+                        "size": 13925
+                      },
+                      "lin2au.ser": {
+                        "type": "file",
+                        "extension": ".ser",
+                        "size": 16411
+                      },
+                      "sfd.ser": {
+                        "type": "file",
+                        "extension": ".ser",
+                        "size": 2075
+                      }
+                    }
+                  },
+                  "player": {
+                    "type": "directory",
+                    "children": {
+                      "advanced": {
+                        "type": "directory",
+                        "children": {
+                          "AdvancedPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3196
+                          },
+                          "PlaybackEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 815
+                          },
+                          "PlaybackListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 299
+                          },
+                          "jlap$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 869
+                          },
+                          "jlap$InfoListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1142
+                          },
+                          "jlap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2056
+                          }
+                        }
+                      },
+                      "AudioDevice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 324
+                      },
+                      "AudioDeviceBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1015
+                      },
+                      "AudioDeviceFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 783
+                      },
+                      "FactoryRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2069
+                      },
+                      "JavaSoundAudioDevice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3178
+                      },
+                      "JavaSoundAudioDeviceFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1557
+                      },
+                      "NullAudioDevice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 215
+                      },
+                      "Player.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2222
+                      },
+                      "PlayerApplet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2670
+                      },
+                      "jlp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2751
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

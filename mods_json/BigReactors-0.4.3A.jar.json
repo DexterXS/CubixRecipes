@@ -1,0 +1,2602 @@
+{
+  "mod_name": "BigReactors-0.4.3A.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BigReactors-0.4.3A.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BigReactors-0.4.3A.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 778430,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "erogenousbeef": {
+            "type": "directory",
+            "children": {
+              "bigreactors": {
+                "type": "directory",
+                "children": {
+                  "world": {
+                    "type": "directory",
+                    "children": {
+                      "BRWorldGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2446
+                      },
+                      "BRSimpleOreGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3214
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "BRRenderTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1156
+                      },
+                      "BeefIconManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2305
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5035
+                      },
+                      "CommonBlockIconManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 943
+                      },
+                      "renderer": {
+                        "type": "directory",
+                        "children": {
+                          "RotorSpecialRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6022
+                          },
+                          "SimpleRendererFuelRod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7458
+                          },
+                          "RotorSimpleRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12601
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "BeefGuiBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6517
+                          },
+                          "GuiTurbineController$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1093
+                          },
+                          "GuiReactorRedstonePort$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1701
+                          },
+                          "GuiReactorControlRod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7884
+                          },
+                          "GuiReactorRedstonePort.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15886
+                          },
+                          "GuiCyaniteReprocessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3405
+                          },
+                          "BeefGuiDeviceBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3861
+                          },
+                          "GuiReactorStatus$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1127
+                          },
+                          "GuiReactorStatus.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13446
+                          },
+                          "GuiReactorRedNetPort.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13957
+                          },
+                          "GuiReactorAccessPort.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5342
+                          },
+                          "GuiTurbineController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14332
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "net": {
+                    "type": "directory",
+                    "children": {
+                      "CommonPacketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4994
+                      },
+                      "message": {
+                        "type": "directory",
+                        "children": {
+                          "MachineCommandActivateMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2034
+                          },
+                          "DeviceUpdateRotationMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2185
+                          },
+                          "DeviceChangeExposureMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1591
+                          },
+                          "ReactorRedNetPortChangeMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2186
+                          },
+                          "ReactorRedstonePortChangeMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2770
+                          },
+                          "DeviceUpdateMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1949
+                          },
+                          "ControlRodUpdateMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1298
+                          },
+                          "DeviceUpdateExposureMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1971
+                          },
+                          "ControlRodChangeNameMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1988
+                          },
+                          "DeviceUpdateRotationMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1545
+                          },
+                          "ReactorRedstonePortChangeMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2266
+                          },
+                          "ControlRodChangeInsertionMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1330
+                          },
+                          "ControlRodUpdateMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1933
+                          },
+                          "DeviceChangeExposureMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2674
+                          },
+                          "ReactorRedNetPortChangeMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2687
+                          },
+                          "DeviceUpdateMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          },
+                          "ControlRodChangeNameMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1428
+                          },
+                          "ReactorAccessPortChangeDirectionMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2643
+                          },
+                          "MachineCommandActivateMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2462
+                          },
+                          "ReactorAccessPortChangeDirectionMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1709
+                          },
+                          "ControlRodChangeInsertionMessage$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2414
+                          },
+                          "DeviceUpdateExposureMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1685
+                          },
+                          "base": {
+                            "type": "directory",
+                            "children": {
+                              "TurbineMessageClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1318
+                              },
+                              "TurbineMessageServer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1318
+                              },
+                              "WorldMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2879
+                              },
+                              "TurbineMessageServer$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3491
+                              },
+                              "TileMessageServer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1137
+                              },
+                              "TileMessageClient$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2886
+                              },
+                              "WorldMessageClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 653
+                              },
+                              "WorldMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1116
+                              },
+                              "ReactorMessageServer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1318
+                              },
+                              "TileMessageServer$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2886
+                              },
+                              "WorldMessageClient$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1553
+                              },
+                              "ReactorMessageClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1318
+                              },
+                              "ReactorMessageServer$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3501
+                              },
+                              "TurbineMessageClient$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3491
+                              },
+                              "WorldMessageServer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 649
+                              },
+                              "WorldMessageServer$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1507
+                              },
+                              "ReactorMessageClient$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3501
+                              },
+                              "TileMessageClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1137
+                              }
+                            }
+                          },
+                          "multiblock": {
+                            "type": "directory",
+                            "children": {
+                              "TurbineChangeMaxIntakeMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1343
+                              },
+                              "TurbineUpdateMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1993
+                              },
+                              "ReactorUpdateWasteEjectionMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2458
+                              },
+                              "ReactorCommandEjectMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2118
+                              },
+                              "TurbineChangeMaxIntakeMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2019
+                              },
+                              "ReactorCommandEjectToPortMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2064
+                              },
+                              "TurbineChangeInductorMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1345
+                              },
+                              "ReactorChangeWasteEjectionMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1746
+                              },
+                              "TurbineChangeVentMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1672
+                              },
+                              "ReactorUpdateMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1993
+                              },
+                              "ReactorChangeWasteEjectionMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2372
+                              },
+                              "ReactorCommandEjectMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1425
+                              },
+                              "TurbineUpdateMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1324
+                              },
+                              "ReactorCommandEjectToPortMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2373
+                              },
+                              "ReactorUpdateMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1310
+                              },
+                              "TurbineChangeVentMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2264
+                              },
+                              "ReactorUpdateWasteEjectionMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1776
+                              },
+                              "TurbineChangeInductorMessage$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2016
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "helpers": {
+                        "type": "directory",
+                        "children": {
+                          "RedNetChange.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2835
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "utils": {
+                    "type": "directory",
+                    "children": {
+                      "StaticUtils$Strings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2300
+                      },
+                      "StaticUtils$ExtraMath.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1131
+                      },
+                      "StaticUtils$Fluids.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3282
+                      },
+                      "StaticUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1600
+                      },
+                      "StaticUtils$Mob.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1088
+                      },
+                      "FloatAverager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1198
+                      },
+                      "StaticUtils$Inventory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3995
+                      },
+                      "AdjacentInventoryHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4141
+                      },
+                      "StaticUtils$WorldGen.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 887
+                      },
+                      "StaticUtils$TE.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1431
+                      },
+                      "SidedInventoryHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1355
+                      },
+                      "InventoryHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2645
+                      },
+                      "StaticUtils$Energy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 778
+                      },
+                      "intermod": {
+                        "type": "directory",
+                        "children": {
+                          "ModHelperComputerCraft.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1122
+                          },
+                          "ModHelperMekanism.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3689
+                          },
+                          "IMCHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 923
+                          },
+                          "IMCHelper$MFR.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1217
+                          },
+                          "IMCHelper$AE2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1313
+                          },
+                          "ModHelperBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 887
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6862
+                      },
+                      "BigReactorsTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3647
+                      },
+                      "BRLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5660
+                      },
+                      "BREventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2577
+                      },
+                      "BRConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1209
+                      },
+                      "BigReactors.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 36165
+                      },
+                      "BRLog.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1493
+                      },
+                      "CreativeTabBR.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 746
+                      },
+                      "multiblock": {
+                        "type": "directory",
+                        "children": {
+                          "MultiblockReactor$WasteEjectionSetting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1442
+                          },
+                          "MultiblockReactor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 33969
+                          },
+                          "MultiblockTurbine$VentStatus.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1430
+                          },
+                          "MultiblockTurbine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 32792
+                          },
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "TileEntityTurbineRotorPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1411
+                              },
+                              "TileEntityTurbineComputerPort$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2762
+                              },
+                              "TileEntityReactorCoolantPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6976
+                              },
+                              "TileEntityReactorGlass.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1642
+                              },
+                              "TileEntityTurbineRotorBearing.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4858
+                              },
+                              "TileEntityReactorRedstonePort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11746
+                              },
+                              "TileEntityReactorFuelRod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7459
+                              },
+                              "TileEntityTurbineComputerPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9067
+                              },
+                              "TileEntityReactorComputerPort$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3154
+                              },
+                              "TileEntityReactorControlRod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6483
+                              },
+                              "TileEntityReactorRedNetPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13602
+                              },
+                              "TileEntityTurbinePartGlass.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1524
+                              },
+                              "TileEntityReactorPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4011
+                              },
+                              "TileEntityTurbinePartBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4097
+                              },
+                              "TileEntityTurbinePowerTap.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4341
+                              },
+                              "TileEntityTurbineFluidPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7221
+                              },
+                              "TileEntityTurbineComputerPort$ComputerMethod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3065
+                              },
+                              "TileEntityTurbineRotorBearing$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1227
+                              },
+                              "TileEntityReactorRedstonePort$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1818
+                              },
+                              "TileEntityReactorRedNetPort$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1664
+                              },
+                              "TileEntityReactorComputerPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11221
+                              },
+                              "TileEntityReactorPartBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4778
+                              },
+                              "TileEntityReactorComputerPort$ComputerMethod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3503
+                              },
+                              "TileEntityTurbinePartStandard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3251
+                              },
+                              "TileEntityTurbineFluidPort$FluidFlow.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1502
+                              },
+                              "TileEntityReactorAccessPort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12804
+                              },
+                              "TileEntityReactorRedNetPort$CircuitType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2456
+                              },
+                              "TileEntityReactorPowerTap.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4225
+                              },
+                              "creative": {
+                                "type": "directory",
+                                "children": {
+                                  "TileEntityTurbineCreativeSteamGenerator.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1374
+                                  },
+                                  "TileEntityReactorCreativeCoolantPort.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1884
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "block": {
+                            "type": "directory",
+                            "children": {
+                              "BlockReactorRedstonePort.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8905
+                              },
+                              "BlockMultiblockGlass.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7696
+                              },
+                              "BlockTurbinePart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18406
+                              },
+                              "BlockReactorPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 22645
+                              },
+                              "BlockMBCreativePart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7243
+                              },
+                              "BlockReactorPart$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1421
+                              },
+                              "BlockTurbineRotorPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5160
+                              },
+                              "BlockFuelRod.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3064
+                              }
+                            }
+                          },
+                          "interfaces": {
+                            "type": "directory",
+                            "children": {
+                              "IActivateable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 288
+                              },
+                              "ITickableMultiblockPart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 221
+                              },
+                              "IConditionalUpdater.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 203
+                              },
+                              "INeighborUpdatableEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 356
+                              },
+                              "IMultiblockGuiHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 427
+                              }
+                            }
+                          },
+                          "helpers": {
+                            "type": "directory",
+                            "children": {
+                              "FluidHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8835
+                              },
+                              "CoolantContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5630
+                              },
+                              "RotorInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 658
+                              },
+                              "FuelContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5662
+                              },
+                              "ReactantContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8280
+                              },
+                              "FloatUpdateTracker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1447
+                              },
+                              "RadiationHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9214
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "ItemBeefDebugTool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5096
+                          },
+                          "ItemBRBucket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2546
+                          },
+                          "ItemIngot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3142
+                          },
+                          "ItemBlockBigReactors.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1370
+                          },
+                          "ItemBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2386
+                          }
+                        }
+                      },
+                      "tileentity": {
+                        "type": "directory",
+                        "children": {
+                          "TileEntityCyaniteReprocessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6205
+                          },
+                          "base": {
+                            "type": "directory",
+                            "children": {
+                              "TileEntityBeefBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8794
+                              },
+                              "TileEntityPoweredInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4075
+                              },
+                              "TileEntityInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7772
+                              },
+                              "TileEntityPoweredInventoryFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7287
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "BlockBRMetal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4432
+                          },
+                          "BlockBRGenericFluid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2422
+                          },
+                          "BlockBRDevice.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10905
+                          },
+                          "BlockBROre.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2061
+                          }
+                        }
+                      },
+                      "interfaces": {
+                        "type": "directory",
+                        "children": {
+                          "IWrenchable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 215
+                          },
+                          "IBeefReconfigurableSides.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 278
+                          },
+                          "IMultipleFluidHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 236
+                          },
+                          "IReactorFuelInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 260
+                          },
+                          "IBeefDebuggableTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 209
+                          }
+                        }
+                      },
+                      "data": {
+                        "type": "directory",
+                        "children": {
+                          "ReactantStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3167
+                          },
+                          "RadiationData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 994
+                          },
+                          "StandardReactants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 865
+                          },
+                          "ReactorSolidMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1763
+                          },
+                          "RadiationPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 389
+                          },
+                          "ReactorFuel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1989
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "BigReactorsGUIHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1992
+                      },
+                      "IBeefListBoxEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 235
+                      },
+                      "BeefGuiIconManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2694
+                      },
+                      "BeefGuiControlBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3172
+                      },
+                      "IBeefGuiEntity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 451
+                      },
+                      "IBeefGuiControl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 287
+                      },
+                      "IBeefTooltipControl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 250
+                      },
+                      "slot": {
+                        "type": "directory",
+                        "children": {
+                          "SlotRemoveOnly.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 678
+                          },
+                          "SlotRestrictedOreTypes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1808
+                          },
+                          "SlotReactorInput.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 940
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerSlotless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1153
+                          },
+                          "ISlotlessUpdater.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 336
+                          },
+                          "ContainerReactorController.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1598
+                          },
+                          "ContainerReactorAccessPort.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4493
+                          },
+                          "ContainerBasic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 559
+                          },
+                          "ContainerCyaniteReprocessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4727
+                          }
+                        }
+                      },
+                      "controls": {
+                        "type": "directory",
+                        "children": {
+                          "BeefGuiPowerBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1967
+                          },
+                          "GuiSelectableButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2925
+                          },
+                          "BeefGuiInsertionProgressBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3800
+                          },
+                          "BeefGuiVerticalProgressBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3802
+                          },
+                          "BeefGuiTextureProgressBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2656
+                          },
+                          "BeefGuiIcon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2471
+                          },
+                          "GuiIconButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2988
+                          },
+                          "BeefGuiProgressArrow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1940
+                          },
+                          "BeefGuiIconProgressBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2144
+                          },
+                          "BeefGuiListBox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3628
+                          },
+                          "BeefGuiRpmBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2389
+                          },
+                          "BeefGuiFluidBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3083
+                          },
+                          "BeefGuiLabel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3525
+                          },
+                          "BeefGuiHeatBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1874
+                          },
+                          "BeefGuiRedNetChannelSelector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2994
+                          },
+                          "BeefGuiFuelMixBar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4965
+                          },
+                          "grab": {
+                            "type": "directory",
+                            "children": {
+                              "BeefGuiGrabSource.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2942
+                              },
+                              "IBeefGuiGrabbable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 249
+                              },
+                              "BeefGuiGrabTarget.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2932
+                              },
+                              "RedNetConfigGrabTarget.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2876
+                              },
+                              "RedNetConfigGrabbable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1684
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "IReactorFuel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 457
+                      },
+                      "IRadiationModerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 291
+                      },
+                      "IHeatEntity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 743
+                      },
+                      "IReactorSolid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 459
+                      },
+                      "registry": {
+                        "type": "directory",
+                        "children": {
+                          "ReactorInterior.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2212
+                          },
+                          "Reactants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10435
+                          },
+                          "ReactorConversions.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1848
+                          },
+                          "TurbineCoil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1774
+                          }
+                        }
+                      },
+                      "imc": {
+                        "type": "directory",
+                        "children": {
+                          "MessageRouter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2959
+                          }
+                        }
+                      },
+                      "data": {
+                        "type": "directory",
+                        "children": {
+                          "SourceProductMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1816
+                          },
+                          "ReactantData$ReactantType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1275
+                          },
+                          "FluidToReactantMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1953
+                          },
+                          "CoilPartData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 520
+                          },
+                          "ReactantData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1836
+                          },
+                          "OreDictToReactantMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 995
+                          },
+                          "ReactorInteriorData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 665
+                          },
+                          "ReactorReaction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1054
+                          },
+                          "ReactantToFluidMapping.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1953
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "core": {
+                "type": "directory",
+                "children": {
+                  "multiblock": {
+                    "type": "directory",
+                    "children": {
+                      "BlockMultiblockBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      },
+                      "MultiblockValidationException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 438
+                      },
+                      "MultiblockRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3615
+                      },
+                      "MultiblockServerTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1181
+                      },
+                      "MultiblockClientTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1313
+                      },
+                      "MultiblockWorldRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9480
+                      },
+                      "MultiblockControllerBase$AssemblyState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1396
+                      },
+                      "IMultiblockPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1684
+                      },
+                      "MultiblockEventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1694
+                      },
+                      "MultiblockTileEntityBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9386
+                      },
+                      "MultiblockControllerBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17031
+                      },
+                      "rectangular": {
+                        "type": "directory",
+                        "children": {
+                          "RectangularMultiblockTileEntityBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3175
+                          },
+                          "RectangularMultiblockControllerBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4479
+                          },
+                          "PartPosition$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1094
+                          },
+                          "PartPosition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2038
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "CoordTriplet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3705
+                      },
+                      "BeefCoreLog.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 502
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "bigreactors": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "tile.multiblockGlass.turbine.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 413
+                          },
+                          "tile.multiblockGlass.turbine.14.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 284
+                          },
+                          "fluid.steam.still.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 426
+                          },
+                          "tile.blockTurbinePart.housing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 773
+                          },
+                          "tile.blockTurbinePart.housing.edge.3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 722
+                          },
+                          "tile.multiblockGlass.turbine.4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 453
+                          },
+                          "tile.fluid.yellorium.flowing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10723
+                          },
+                          "tile.blockReactorPart.controller.off.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1569
+                          },
+                          "tile.brMetal.blockCyanite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 848
+                          },
+                          "tile.blockReactorPart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1420
+                          },
+                          "tile.blockReactorPart.accessPort.outlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1797
+                          },
+                          "tile.multiblockGlass.reactor.9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 484
+                          },
+                          "tile.blockTurbinePart.housing.edge.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 716
+                          },
+                          "tile.multiblockGlass.reactor.7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 340
+                          },
+                          "tile.brMetal.blockGraphite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 334
+                          },
+                          "tile.blockBRDevice.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1420
+                          },
+                          "fluid.steam.flowing.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 43
+                          },
+                          "tile.blockTurbineRotorPart.rotor.connector.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 720
+                          },
+                          "tile.fluid.yellorium.still.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.multiblockGlass.turbine.3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 341
+                          },
+                          "tile.multiblockGlass.reactor.3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 487
+                          },
+                          "tile.blockTurbinePart.controller.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2137
+                          },
+                          "tile.multiblockGlass.turbine.15.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 216
+                          },
+                          "tile.blockTurbineRotorPart.blade.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 673
+                          },
+                          "tile.multiblockGlass.turbine.5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 370
+                          },
+                          "fluid.fuelColumn.flowing.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.blockReactorPart.casing.eastwest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1417
+                          },
+                          "tile.blockTurbinePart.controller.idle.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2229
+                          },
+                          "tile.multiblockGlass.reactor.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 567
+                          },
+                          "fuelRod.side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 520
+                          },
+                          "tile.blockTurbinePart.fluidPort.outlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2235
+                          },
+                          "tile.multiblockGlass.reactor.14.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 337
+                          },
+                          "tile.fluid.cyanite.flowing.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.brMetal.blockBlutonium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 821
+                          },
+                          "tile.blockReactorRedstonePort.lit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1474
+                          },
+                          "tile.blockReactorPart.computerPort.default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1641
+                          },
+                          "tile.multiblockGlass.turbine.2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 417
+                          },
+                          "tile.multiblockGlass.turbine.7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 284
+                          },
+                          "tile.fluid.cyanite.still.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.blockTurbinePart.housing.corner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 821
+                          },
+                          "tile.blockRadiothermalGen.Off.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1709
+                          },
+                          "tile.blockMBCreativePart.reactor.coolantPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1709
+                          },
+                          "fuelRod.end.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 629
+                          },
+                          "tile.blockReactorPart.casing.corner.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1471
+                          },
+                          "tile.multiblockGlass.reactor.5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 452
+                          },
+                          "tile.blockTurbineRotorPart.rotor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 673
+                          },
+                          "tile.blockReactorPart.casing.vertical.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1477
+                          },
+                          "tile.multiblockGlass.transparent.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 199
+                          },
+                          "fluid.fuelColumn.flowing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10707
+                          },
+                          "tile.blockReactorPart.casing.default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1420
+                          },
+                          "tile.blockReactorPart.powerTap.connected.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1789
+                          },
+                          "tile.blockBRDevice.cyaniteReprocessor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1721
+                          },
+                          "tile.blockTurbinePart.housing.face.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 478
+                          },
+                          "oreYellorite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 653
+                          },
+                          "tile.multiblockGlass.reactor.13.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 356
+                          },
+                          "tile.multiblockGlass.turbine.6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 374
+                          },
+                          "tile.multiblockGlass.turbine.8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 480
+                          },
+                          "tile.blockReactorPart.coolantPort.outlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1764
+                          },
+                          "tile.blockTurbinePart.powerTap.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2282
+                          },
+                          "tile.fluid.cyanite.flowing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10888
+                          },
+                          "fluid.fuelColumn.still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9661
+                          },
+                          "tile.blockMBCreativePart.reactor.coolantPort.outlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1786
+                          },
+                          "tile.blockBRDevice.heatGenerator.active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2103
+                          },
+                          "tile.multiblockGlass.turbine.11.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 302
+                          },
+                          "tile.blockReactorPart.powerTap.disconnected.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1778
+                          },
+                          "tile.multiblockGlass.reactor.0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 617
+                          },
+                          "tile.blockTurbinePart.fluidPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2263
+                          },
+                          "tile.blockTurbinePart.computerPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2173
+                          },
+                          "tile.multiblockGlass.reactor.11.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 383
+                          },
+                          "fluid.steam.flowing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7327
+                          },
+                          "tile.multiblockGlass.turbine.13.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 294
+                          },
+                          "tile.blockRadiothermalGen.On.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1700
+                          },
+                          "tile.multiblockGlass.reactor.4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 522
+                          },
+                          "tile.blockReactorPart.redNetPort.default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1858
+                          },
+                          "tile.fluid.cyanite.still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10690
+                          },
+                          "tile.blockTurbinePart.powerTap.connected.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2293
+                          },
+                          "tile.multiblockGlass.reactor.15.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 261
+                          },
+                          "tile.multiblockGlass.reactor.10.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 454
+                          },
+                          "tile.blockReactorPart.controlRod.top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1713
+                          },
+                          "tile.blockReactorPart.accessPort.inlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1799
+                          },
+                          "tile.multiblockGlass.reactor.6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 431
+                          },
+                          "tile.blockReactorPart.controller.idle.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1743
+                          },
+                          "tile.multiblockGlass.reactor.12.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 419
+                          },
+                          "tile.blockMBCreativePart.turbine.fluidPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2149
+                          },
+                          "tile.fluid.yellorium.still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10677
+                          },
+                          "tile.blockMBCreativePart.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1553
+                          },
+                          "tile.blockBRDevice.heatGenerator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1721
+                          },
+                          "tile.multiblockGlass.reactor.2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 544
+                          },
+                          "tile.blockReactorPart.coolantPort.inlet.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1714
+                          },
+                          "tile.brMetal.blockYellorium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 771
+                          },
+                          "tile.blockReactorPart.casing.face.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1183
+                          },
+                          "tile.multiblockGlass.turbine.9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 391
+                          },
+                          "tile.blockReactorPart.controller.active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1823
+                          },
+                          "fluid.fuelColumn.still.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.fluid.yellorium.flowing.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 61
+                          },
+                          "tile.blockTurbinePart.controller.active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2334
+                          },
+                          "tile.blockTurbinePart.housing.edge.2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 721
+                          },
+                          "tile.multiblockGlass.turbine.12.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 375
+                          },
+                          "tile.brMetal.blockLudicrite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 558
+                          },
+                          "tile.blockBRDevice.cyaniteReprocessor.active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2103
+                          },
+                          "fluid.steam.still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6282
+                          },
+                          "tile.blockReactorRedstonePort.unlit.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1523
+                          },
+                          "tile.blockTurbinePart.housing.edge.0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 709
+                          },
+                          "tile.multiblockGlass.turbine.0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 476
+                          },
+                          "tile.blockTurbinePart.bearing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2589
+                          },
+                          "tile.blockReactorPart.casing.northsouth.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1477
+                          },
+                          "tile.multiblockGlass.turbine.10.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 394
+                          },
+                          "tile.multiblockGlass.reactor.8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 531
+                          },
+                          "guiIcons": {
+                            "type": "directory",
+                            "children": {
+                              "wasteEject.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 328
+                              },
+                              "fuelEject.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 329
+                              },
+                              "ventOverflowOn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 374
+                              },
+                              "downArrow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 259
+                              },
+                              "hotFluidOut.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3264
+                              },
+                              "outletOff.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 515
+                              },
+                              "wasteManual_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 489
+                              },
+                              "rpm.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 303
+                              },
+                              "flowRate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 263
+                              },
+                              "outletOn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 518
+                              },
+                              "ventOverflowOff.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 376
+                              },
+                              "hotFluidIn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3265
+                              },
+                              "temperature.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "controlRod.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 731
+                              },
+                              "coil.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 278
+                              },
+                              "ventNoneOff.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 382
+                              },
+                              "Off_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 341
+                              },
+                              "On_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 261
+                              },
+                              "On_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 263
+                              },
+                              "energyStored.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 479
+                              },
+                              "upArrow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 257
+                              },
+                              "ventNoneOn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 377
+                              },
+                              "rotorEfficiency.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 277
+                              },
+                              "wasteEject_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 354
+                              },
+                              "ventAllOff.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 378
+                              },
+                              "coolantTemperature.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 702
+                              },
+                              "coolantIn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3280
+                              },
+                              "inletOn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 505
+                              },
+                              "coolantOut.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3276
+                              },
+                              "Off_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 343
+                              },
+                              "wasteManual_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 493
+                              },
+                              "energyOutput.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 253
+                              },
+                              "reactivity.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 500
+                              },
+                              "wasteEject_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 355
+                              },
+                              "inletOff.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 505
+                              },
+                              "fuelUsageRate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 475
+                              },
+                              "ventAllOn.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 374
+                              }
+                            }
+                          },
+                          "common": {
+                            "type": "directory",
+                            "children": {
+                              "fluidWhite.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1637
+                              },
+                              "fluidBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1678
+                              },
+                              "itemRed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1667
+                              },
+                              "default.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1420
+                              },
+                              "open.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1634
+                              },
+                              "itemGreen.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1669
+                              }
+                            }
+                          },
+                          "redNet": {
+                            "type": "directory",
+                            "children": {
+                              "outputEnergyAmount.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 476
+                              },
+                              "outputFuelAmount.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 806
+                              },
+                              "inputSetControlRod.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 731
+                              },
+                              "outputWasteAmount.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 819
+                              },
+                              "inputEjectWaste.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 345
+                              },
+                              "outputCasingTemperature.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 532
+                              },
+                              "inputActive.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 764
+                              },
+                              "outputFuelTemperature.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 336
+                              },
+                              "outputFuelMix.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 838
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ingotYellorium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1371
+                          },
+                          "beefDebugTool.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 428
+                          },
+                          "ingotBlutonium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 415
+                          },
+                          "dustLudicrite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1032
+                          },
+                          "item.bucket.yellorium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 434
+                          },
+                          "ingotGraphite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 882
+                          },
+                          "ingotLudicrite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1073
+                          },
+                          "dustBlutonium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 588
+                          },
+                          "dustCyanite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 563
+                          },
+                          "ingotCyanite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 414
+                          },
+                          "item.bucket.cyanite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 441
+                          },
+                          "dustGraphite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 545
+                          },
+                          "dustYellorium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 575
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "whiteSquare.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 223
+                          },
+                          "RedstonePort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1715
+                          },
+                          "ReactorController.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2574
+                          },
+                          "BasicBackground.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1713
+                          },
+                          "CyaniteReprocessor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2322
+                          },
+                          "VerticalProgressBar.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 242
+                          },
+                          "TurbineController.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1713
+                          },
+                          "ReactorAccessPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3422
+                          },
+                          "RedNetPort.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1606
+                          },
+                          "controls": {
+                            "type": "directory",
+                            "children": {
+                              "lightbox.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 210
+                              },
+                              "HeatBar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2055
+                              },
+                              "FuelMixBar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 701
+                              },
+                              "ControlRod.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2453
+                              },
+                              "FluidTank.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1321
+                              },
+                              "Energy.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 447
+                              },
+                              "RpmBar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 803
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "sv_SE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2311
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2584
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2339
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3475
+                      },
+                      "es_SP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2622
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2521
+                      },
+                      "fr_CA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2678
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2349
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2406
+                      },
+                      "da_DK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2456
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2392
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2631
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2739
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 11458
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 43688
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1162 @@
+{
+  "mod_name": "threetenbp-1.3.6.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\threetenbp-1.3.6.jar",
+  "mod_type": "jar",
+  "tree": {
+    "threetenbp-1.3.6.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 516593,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 1698
+              },
+              "services": {
+                "type": "directory",
+                "children": {
+                  "org.threeten.bp.zone.ZoneRulesProvider": {
+                    "type": "file",
+                    "extension": ".zonerulesprovider",
+                    "size": 44
+                  }
+                }
+              },
+              "LICENSE.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 1646
+              },
+              "maven": {
+                "type": "directory",
+                "children": {
+                  "org.threeten": {
+                    "type": "directory",
+                    "children": {
+                      "threetenbp": {
+                        "type": "directory",
+                        "children": {
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 28354
+                          },
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 119
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "threeten": {
+                "type": "directory",
+                "children": {
+                  "bp": {
+                    "type": "directory",
+                    "children": {
+                      "chrono": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 342
+                          },
+                          "ChronoDateImpl$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1092
+                          },
+                          "ChronoDateImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5312
+                          },
+                          "ChronoLocalDate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1071
+                          },
+                          "ChronoLocalDate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9182
+                          },
+                          "ChronoLocalDateTime$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1639
+                          },
+                          "ChronoLocalDateTime.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9797
+                          },
+                          "ChronoLocalDateTimeImpl$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1119
+                          },
+                          "ChronoLocalDateTimeImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12983
+                          },
+                          "Chronology$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 960
+                          },
+                          "Chronology$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1842
+                          },
+                          "Chronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15651
+                          },
+                          "ChronoPeriod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2367
+                          },
+                          "ChronoPeriodImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5707
+                          },
+                          "ChronoZonedDateTime$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1523
+                          },
+                          "ChronoZonedDateTime$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 838
+                          },
+                          "ChronoZonedDateTime.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11686
+                          },
+                          "ChronoZonedDateTimeImpl$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 850
+                          },
+                          "ChronoZonedDateTimeImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12702
+                          },
+                          "Era.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 333
+                          },
+                          "HijrahChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13491
+                          },
+                          "HijrahDate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1469
+                          },
+                          "HijrahDate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 30588
+                          },
+                          "HijrahEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5966
+                          },
+                          "IsoChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12544
+                          },
+                          "IsoEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5186
+                          },
+                          "JapaneseChronology$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2177
+                          },
+                          "JapaneseChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17779
+                          },
+                          "JapaneseDate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1166
+                          },
+                          "JapaneseDate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15170
+                          },
+                          "JapaneseEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6218
+                          },
+                          "MinguoChronology$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 881
+                          },
+                          "MinguoChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13581
+                          },
+                          "MinguoDate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1116
+                          },
+                          "MinguoDate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11873
+                          },
+                          "MinguoEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5887
+                          },
+                          "Ser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3977
+                          },
+                          "ThaiBuddhistChronology$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 899
+                          },
+                          "ThaiBuddhistChronology.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14526
+                          },
+                          "ThaiBuddhistDate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1134
+                          },
+                          "ThaiBuddhistDate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12002
+                          },
+                          "ThaiBuddhistEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5916
+                          }
+                        }
+                      },
+                      "format": {
+                        "type": "directory",
+                        "children": {
+                          "ChronologyText.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 149
+                          },
+                          "DateTimeBuilder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17612
+                          },
+                          "DateTimeFormatStyleProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 891
+                          },
+                          "DateTimeFormatter$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1135
+                          },
+                          "DateTimeFormatter$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1168
+                          },
+                          "DateTimeFormatter$ClassicFormat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4428
+                          },
+                          "DateTimeFormatter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 19785
+                          },
+                          "DateTimeFormatterBuilder$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1382
+                          },
+                          "DateTimeFormatterBuilder$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2054
+                          },
+                          "DateTimeFormatterBuilder$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1054
+                          },
+                          "DateTimeFormatterBuilder$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 945
+                          },
+                          "DateTimeFormatterBuilder$CharLiteralPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1811
+                          },
+                          "DateTimeFormatterBuilder$ChronoPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3497
+                          },
+                          "DateTimeFormatterBuilder$CompositePrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3739
+                          },
+                          "DateTimeFormatterBuilder$DateTimePrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 466
+                          },
+                          "DateTimeFormatterBuilder$DefaultingParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1567
+                          },
+                          "DateTimeFormatterBuilder$FractionPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6134
+                          },
+                          "DateTimeFormatterBuilder$InstantPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6880
+                          },
+                          "DateTimeFormatterBuilder$LocalizedOffsetPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3966
+                          },
+                          "DateTimeFormatterBuilder$LocalizedPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3217
+                          },
+                          "DateTimeFormatterBuilder$NumberPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7755
+                          },
+                          "DateTimeFormatterBuilder$OffsetIdPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5187
+                          },
+                          "DateTimeFormatterBuilder$PadPrinterParserDecorator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3117
+                          },
+                          "DateTimeFormatterBuilder$ReducedPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5843
+                          },
+                          "DateTimeFormatterBuilder$SettingsParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2746
+                          },
+                          "DateTimeFormatterBuilder$StringLiteralPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2002
+                          },
+                          "DateTimeFormatterBuilder$TextPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4443
+                          },
+                          "DateTimeFormatterBuilder$WeekFieldsPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4141
+                          },
+                          "DateTimeFormatterBuilder$ZoneIdPrinterParser$SubstringTree.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3000
+                          },
+                          "DateTimeFormatterBuilder$ZoneIdPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7964
+                          },
+                          "DateTimeFormatterBuilder$ZoneTextPrinterParser$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1231
+                          },
+                          "DateTimeFormatterBuilder$ZoneTextPrinterParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5222
+                          },
+                          "DateTimeFormatterBuilder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 24330
+                          },
+                          "DateTimeParseContext$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 254
+                          },
+                          "DateTimeParseContext$Parsed.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4160
+                          },
+                          "DateTimeParseContext.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7860
+                          },
+                          "DateTimeParseException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1194
+                          },
+                          "DateTimePrintContext$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2687
+                          },
+                          "DateTimePrintContext.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6417
+                          },
+                          "DateTimeTextProvider$ProviderSingleton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1029
+                          },
+                          "DateTimeTextProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1926
+                          },
+                          "DecimalStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4682
+                          },
+                          "FormatStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1123
+                          },
+                          "ResolverStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1089
+                          },
+                          "SignStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1459
+                          },
+                          "SimpleDateTimeFormatStyleProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3378
+                          },
+                          "SimpleDateTimeTextProvider$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1377
+                          },
+                          "SimpleDateTimeTextProvider$LocaleStore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3529
+                          },
+                          "SimpleDateTimeTextProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8734
+                          },
+                          "TextStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1604
+                          }
+                        }
+                      },
+                      "jdk8": {
+                        "type": "directory",
+                        "children": {
+                          "DefaultInterfaceEra.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3855
+                          },
+                          "DefaultInterfaceTemporal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1492
+                          },
+                          "DefaultInterfaceTemporalAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2393
+                          },
+                          "Jdk8Methods.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4038
+                          }
+                        }
+                      },
+                      "temporal": {
+                        "type": "directory",
+                        "children": {
+                          "ChronoField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8471
+                          },
+                          "ChronoUnit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4650
+                          },
+                          "IsoFields$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 839
+                          },
+                          "IsoFields$Field$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5718
+                          },
+                          "IsoFields$Field$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3020
+                          },
+                          "IsoFields$Field$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5637
+                          },
+                          "IsoFields$Field$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3620
+                          },
+                          "IsoFields$Field.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5803
+                          },
+                          "IsoFields$Unit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4172
+                          },
+                          "IsoFields.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1158
+                          },
+                          "JulianFields$Field.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6085
+                          },
+                          "JulianFields.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 700
+                          },
+                          "Temporal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 729
+                          },
+                          "TemporalAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 602
+                          },
+                          "TemporalAdjuster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 234
+                          },
+                          "TemporalAdjusters$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 249
+                          },
+                          "TemporalAdjusters$DayOfWeekInMonth.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2304
+                          },
+                          "TemporalAdjusters$Impl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2466
+                          },
+                          "TemporalAdjusters$RelativeDayOfWeek.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2102
+                          },
+                          "TemporalAdjusters.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2305
+                          },
+                          "TemporalAmount.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 429
+                          },
+                          "TemporalField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1186
+                          },
+                          "TemporalQueries$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1109
+                          },
+                          "TemporalQueries$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1142
+                          },
+                          "TemporalQueries$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1154
+                          },
+                          "TemporalQueries$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1296
+                          },
+                          "TemporalQueries$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1392
+                          },
+                          "TemporalQueries$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1383
+                          },
+                          "TemporalQueries$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1386
+                          },
+                          "TemporalQueries.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2609
+                          },
+                          "TemporalQuery.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 340
+                          },
+                          "TemporalUnit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 628
+                          },
+                          "UnsupportedTemporalTypeException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 690
+                          },
+                          "ValueRange.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3964
+                          },
+                          "WeekFields$ComputedDayOfField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13558
+                          },
+                          "WeekFields.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4921
+                          }
+                        }
+                      },
+                      "zone": {
+                        "type": "directory",
+                        "children": {
+                          "Ser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4085
+                          },
+                          "StandardZoneRules.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14431
+                          },
+                          "TzdbZoneRulesCompiler$LeapSecondRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 632
+                          },
+                          "TzdbZoneRulesCompiler$TZDBMonthDayTime.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1751
+                          },
+                          "TzdbZoneRulesCompiler$TZDBRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1714
+                          },
+                          "TzdbZoneRulesCompiler$TZDBZone.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4667
+                          },
+                          "TzdbZoneRulesCompiler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 29968
+                          },
+                          "TzdbZoneRulesProvider$Version.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2823
+                          },
+                          "TzdbZoneRulesProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8311
+                          },
+                          "ZoneOffsetTransition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6040
+                          },
+                          "ZoneOffsetTransitionRule$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 952
+                          },
+                          "ZoneOffsetTransitionRule$TimeDefinition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2176
+                          },
+                          "ZoneOffsetTransitionRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9239
+                          },
+                          "ZoneRules$Fixed.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3607
+                          },
+                          "ZoneRules.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2966
+                          },
+                          "ZoneRulesBuilder$TZRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6460
+                          },
+                          "ZoneRulesBuilder$TZWindow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6788
+                          },
+                          "ZoneRulesBuilder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9568
+                          },
+                          "ZoneRulesException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 640
+                          },
+                          "ZoneRulesInitializer$DoNothingZoneRulesInitializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 554
+                          },
+                          "ZoneRulesInitializer$ServiceLoaderZoneRulesInitializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1613
+                          },
+                          "ZoneRulesInitializer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1826
+                          },
+                          "ZoneRulesProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3760
+                          }
+                        }
+                      },
+                      "Clock$FixedClock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1877
+                      },
+                      "Clock$OffsetClock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2172
+                      },
+                      "Clock$SystemClock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1773
+                      },
+                      "Clock$TickClock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2356
+                      },
+                      "Clock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3057
+                      },
+                      "DateTimeException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 620
+                      },
+                      "DateTimeUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5579
+                      },
+                      "DayOfWeek$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 919
+                      },
+                      "DayOfWeek.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6674
+                      },
+                      "Duration$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 884
+                      },
+                      "Duration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 17188
+                      },
+                      "Instant$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 907
+                      },
+                      "Instant$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1599
+                      },
+                      "Instant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15737
+                      },
+                      "LocalDate$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 919
+                      },
+                      "LocalDate$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2198
+                      },
+                      "LocalDate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 24497
+                      },
+                      "LocalDateTime$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 943
+                      },
+                      "LocalDateTime$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1075
+                      },
+                      "LocalDateTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23567
+                      },
+                      "LocalTime$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 919
+                      },
+                      "LocalTime$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2265
+                      },
+                      "LocalTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20410
+                      },
+                      "Month$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 895
+                      },
+                      "Month$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1257
+                      },
+                      "Month.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8436
+                      },
+                      "MonthDay$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 913
+                      },
+                      "MonthDay$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 787
+                      },
+                      "MonthDay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10989
+                      },
+                      "OffsetDateTime$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 949
+                      },
+                      "OffsetDateTime$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1131
+                      },
+                      "OffsetDateTime$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 809
+                      },
+                      "OffsetDateTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 21849
+                      },
+                      "OffsetTime$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 925
+                      },
+                      "OffsetTime$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1066
+                      },
+                      "OffsetTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16898
+                      },
+                      "Period.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10732
+                      },
+                      "Ser.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4335
+                      },
+                      "TZDB.dat": {
+                        "type": "file",
+                        "extension": ".dat",
+                        "size": 100361
+                      },
+                      "Year$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 889
+                      },
+                      "Year$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1327
+                      },
+                      "Year.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14315
+                      },
+                      "YearMonth$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 919
+                      },
+                      "YearMonth$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1530
+                      },
+                      "YearMonth.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16258
+                      },
+                      "ZonedDateTime$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 943
+                      },
+                      "ZonedDateTime$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 806
+                      },
+                      "ZonedDateTime.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23917
+                      },
+                      "ZoneId$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 901
+                      },
+                      "ZoneId$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1779
+                      },
+                      "ZoneId.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7957
+                      },
+                      "ZoneOffset$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 925
+                      },
+                      "ZoneOffset.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11667
+                      },
+                      "ZoneRegion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4261
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

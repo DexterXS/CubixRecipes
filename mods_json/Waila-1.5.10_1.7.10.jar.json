@@ -1,0 +1,1452 @@
+{
+  "mod_name": "Waila-1.5.10_1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Waila-1.5.10_1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Waila-1.5.10_1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 549807,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "au": {
+            "type": "directory",
+            "children": {
+              "com": {
+                "type": "directory",
+                "children": {
+                  "bytecode": {
+                    "type": "directory",
+                    "children": {
+                      "opencsv": {
+                        "type": "directory",
+                        "children": {
+                          "CSVWriter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4958
+                          },
+                          "CSVReader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3578
+                          },
+                          "ResultSetHelperService.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5606
+                          },
+                          "ResultSetHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 317
+                          },
+                          "CSVParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5170
+                          },
+                          "bean": {
+                            "type": "directory",
+                            "children": {
+                              "ColumnPositionMappingStrategy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1534
+                              },
+                              "HeaderColumnNameTranslateMappingStrategy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2000
+                              },
+                              "CsvToBean.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5615
+                              },
+                              "HeaderColumnNameMappingStrategy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4173
+                              },
+                              "MappingStrategy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 575
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcp": {
+            "type": "directory",
+            "children": {
+              "mobius": {
+                "type": "directory",
+                "children": {
+                  "waila": {
+                    "type": "directory",
+                    "children": {
+                      "Waila.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6748
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "WailaExceptionHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2188
+                          },
+                          "AccessHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6530
+                          },
+                          "Constants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2666
+                          },
+                          "NBTUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4148
+                          },
+                          "ModIdentification.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3817
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "IWailaConfigHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 476
+                          },
+                          "IWailaDataAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 904
+                          },
+                          "IWailaCommonAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 962
+                          },
+                          "IWailaFMPDecorator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 280
+                          },
+                          "SpecialChars.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3840
+                          },
+                          "IWailaFMPAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 687
+                          },
+                          "IWailaTooltipRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 332
+                          },
+                          "IWailaFMPProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 579
+                          },
+                          "IWailaEntityProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 929
+                          },
+                          "IWailaBlockDecorator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 285
+                          },
+                          "IWailaEntityAccessor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 617
+                          },
+                          "IWailaSummaryProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 515
+                          },
+                          "IWailaRegistrar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1303
+                          },
+                          "IWailaDataProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 930
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 266
+                          },
+                          "ITaggedList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 977
+                          },
+                          "IWailaBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 795
+                          },
+                          "impl": {
+                            "type": "directory",
+                            "children": {
+                              "ConfigHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8076
+                              },
+                              "DataAccessorCommon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7191
+                              },
+                              "ConfigModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1115
+                              },
+                              "TipList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6017
+                              },
+                              "MetaDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11312
+                              },
+                              "DataAccessorFMP.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3906
+                              },
+                              "ModuleRegistrar.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19025
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "overlay": {
+                        "type": "directory",
+                        "children": {
+                          "Tooltip.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7793
+                          },
+                          "WailaTickHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6825
+                          },
+                          "OverlayConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1101
+                          },
+                          "Tooltip$Renderable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3016
+                          },
+                          "IconUI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2735
+                          },
+                          "OverlayRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4570
+                          },
+                          "RayTracing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8683
+                          },
+                          "DecoratorRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4158
+                          },
+                          "RayTracing$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1117
+                          },
+                          "DisplayUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8744
+                          },
+                          "tooltiprenderers": {
+                            "type": "directory",
+                            "children": {
+                              "TTRenderStack.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1992
+                              },
+                              "TTRenderString.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1410
+                              },
+                              "TTRenderHealth.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2065
+                              },
+                              "TTRenderTrueTyper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1731
+                              },
+                              "TTRenderIcon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1523
+                              },
+                              "TTRenderProgressBar.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1855
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "handlers": {
+                        "type": "directory",
+                        "children": {
+                          "HUDHandlerBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4345
+                          },
+                          "VanillaTooltipHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1426
+                          },
+                          "HUDHandlerEntities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4805
+                          },
+                          "DecoratorFMP.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4315
+                          },
+                          "HUDHandlerFMP.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6840
+                          },
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "OreDictFilter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1202
+                              },
+                              "HandlerEnchants.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6426
+                              },
+                              "NEIHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4623
+                              },
+                              "ModNameFilter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1026
+                              },
+                              "ModNameFilter$Filter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1099
+                              },
+                              "OreDictFilter$Filter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1344
+                              },
+                              "TooltipHandlerWaila.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2360
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "addons": {
+                        "type": "directory",
+                        "children": {
+                          "exu": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerDrum.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3769
+                              },
+                              "ExtraUtilitiesModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2097
+                              }
+                            }
+                          },
+                          "railcraft": {
+                            "type": "directory",
+                            "children": {
+                              "RailcraftModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2573
+                              },
+                              "HUDHandlerTank.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5101
+                              }
+                            }
+                          },
+                          "stevescarts": {
+                            "type": "directory",
+                            "children": {
+                              "HUDMinecartModular.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5461
+                              },
+                              "HUDLiquidManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6136
+                              },
+                              "HUDCartAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2295
+                              },
+                              "StevesCartsModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 970
+                              },
+                              "HUDCargoManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6827
+                              }
+                            }
+                          },
+                          "secretrooms": {
+                            "type": "directory",
+                            "children": {
+                              "SecretRoomsModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 597
+                              },
+                              "HUDTileEntityCamo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2461
+                              }
+                            }
+                          },
+                          "etb": {
+                            "type": "directory",
+                            "children": {
+                              "ETBModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3021
+                              },
+                              "HUDHandlerSocket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5584
+                              }
+                            }
+                          },
+                          "openblocks": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerTank.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4571
+                              },
+                              "OpenBlocksModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2116
+                              }
+                            }
+                          },
+                          "enderio": {
+                            "type": "directory",
+                            "children": {
+                              "EnderIOModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3195
+                              },
+                              "HUDHandlerCapacitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4989
+                              },
+                              "HUDHandlerTesseract.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3984
+                              }
+                            }
+                          },
+                          "thermalexpansion": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerEnergyCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3617
+                              },
+                              "HUDHandlerCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6356
+                              },
+                              "HUDHandlerISecureTile.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4014
+                              },
+                              "ThermalExpansionModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6440
+                              },
+                              "HUDHandlerTank.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5632
+                              },
+                              "HUDHandlerIBlockInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3618
+                              },
+                              "HUDHandlerTesseract.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4912
+                              },
+                              "HUDHandlerIEnergyHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5001
+                              }
+                            }
+                          },
+                          "gravestone": {
+                            "type": "directory",
+                            "children": {
+                              "GravestoneModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1906
+                              },
+                              "HUDHandlerGravestone.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2531
+                              }
+                            }
+                          },
+                          "enderstorage": {
+                            "type": "directory",
+                            "children": {
+                              "EnderStorageModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3240
+                              },
+                              "HUDHandlerStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4778
+                              }
+                            }
+                          },
+                          "ic2": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerTEGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6234
+                              },
+                              "IC2Module.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3903
+                              }
+                            }
+                          },
+                          "twilightforest": {
+                            "type": "directory",
+                            "children": {
+                              "TwilightForestModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2131
+                              },
+                              "TwilightForestGenericOverride.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2417
+                              }
+                            }
+                          },
+                          "agriculture": {
+                            "type": "directory",
+                            "children": {
+                              "AgricultureModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1884
+                              },
+                              "HUDHandlerCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2934
+                              }
+                            }
+                          },
+                          "statues": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerStatues.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4091
+                              },
+                              "StatuesModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2243
+                              }
+                            }
+                          },
+                          "projectred": {
+                            "type": "directory",
+                            "children": {
+                              "HUDDecoratorRsGateLogic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7611
+                              },
+                              "HUDDecoratorRsGateLogic$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1110
+                              },
+                              "HUDFMPGateLogic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3594
+                              },
+                              "ProjectRedModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2017
+                              }
+                            }
+                          },
+                          "magicalcrops": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerMagicalCrops.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3093
+                              },
+                              "MagicalCropsModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1876
+                              }
+                            }
+                          },
+                          "vanillamc": {
+                            "type": "directory",
+                            "children": {
+                              "HUDDecoratorVanilla.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2776
+                              },
+                              "HUDHandlerVanilla.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9867
+                              },
+                              "HUDHandlerFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4269
+                              }
+                            }
+                          },
+                          "thaumcraft": {
+                            "type": "directory",
+                            "children": {
+                              "ThaumcraftModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3428
+                              },
+                              "HUDHandlerIAspectContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6742
+                              }
+                            }
+                          },
+                          "buildcraft": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerBCTanks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5160
+                              },
+                              "BCModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2206
+                              }
+                            }
+                          },
+                          "carpenters": {
+                            "type": "directory",
+                            "children": {
+                              "CarpentersModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 591
+                              },
+                              "HUDCarpentersBlocksTE.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2308
+                              }
+                            }
+                          },
+                          "harvestcraft": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerPamCrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3219
+                              },
+                              "HarvestcraftModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1911
+                              }
+                            }
+                          },
+                          "thermaldynamics": {
+                            "type": "directory",
+                            "children": {
+                              "HUDHandlerDuct.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4109
+                              },
+                              "ThermalDynamicsModule.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1960
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "commands": {
+                        "type": "directory",
+                        "children": {
+                          "CommandDumpHandlers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4474
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "screens": {
+                            "type": "directory",
+                            "children": {
+                              "ScreenBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2838
+                              },
+                              "config": {
+                                "type": "directory",
+                                "children": {
+                                  "ScreenModuleChoice.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3128
+                                  },
+                                  "ScreenHUDConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 994
+                                  },
+                                  "ScreenWailaConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3723
+                                  },
+                                  "ScreenConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2679
+                                  },
+                                  "ScreenModuleConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3819
+                                  },
+                                  "ScreenHUDConfig$EventCanvas.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10560
+                                  }
+                                }
+                              },
+                              "info": {
+                                "type": "directory",
+                                "children": {
+                                  "ScreenEnchants.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4545
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "truetyper": {
+                            "type": "directory",
+                            "children": {
+                              "Test.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 678
+                              },
+                              "TrueTypeFont.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11845
+                              },
+                              "TrueTypeFont$FloatObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 954
+                              },
+                              "FontHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3822
+                              },
+                              "FontLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2348
+                              },
+                              "Formatter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1498
+                              },
+                              "TrueTypeFont$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 246
+                              }
+                            }
+                          },
+                          "widgets": {
+                            "type": "directory",
+                            "children": {
+                              "LayoutCropping.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2578
+                              },
+                              "ViewportScrollable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4509
+                              },
+                              "LayoutCanvas$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1204
+                              },
+                              "WidgetBase$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 898
+                              },
+                              "PictureSwitch.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1922
+                              },
+                              "WidgetGeometry$PointDouble.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1123
+                              },
+                              "WidgetGeometry$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 876
+                              },
+                              "WidgetBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10478
+                              },
+                              "LayoutBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1078
+                              },
+                              "PictureDisplay.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1452
+                              },
+                              "ViewTable$Cell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2583
+                              },
+                              "ViewTable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4480
+                              },
+                              "ItemStackDisplay.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1745
+                              },
+                              "ViewportScrollable$Escalator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3074
+                              },
+                              "WidgetGeometry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4490
+                              },
+                              "LayoutCanvas.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3630
+                              },
+                              "LayoutMargin.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1933
+                              },
+                              "LabelFixedFont.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2862
+                              },
+                              "ViewTable$Row.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4250
+                              },
+                              "ViewTable$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 865
+                              },
+                              "buttons": {
+                                "type": "directory",
+                                "children": {
+                                  "ButtonBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3626
+                                  },
+                                  "ButtonInteger.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2566
+                                  },
+                                  "ButtonContainer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2759
+                                  },
+                                  "ButtonLabel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1764
+                                  },
+                                  "ButtonIntegerConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2158
+                                  },
+                                  "ButtonBooleanConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3085
+                                  },
+                                  "ButtonBoolean.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2280
+                                  },
+                                  "ButtonBooleanConfigRemote.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2899
+                                  },
+                                  "ButtonScreenChange.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2264
+                                  },
+                                  "ButtonContainerLabel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3083
+                                  }
+                                }
+                              },
+                              "movable": {
+                                "type": "directory",
+                                "children": {
+                                  "PictureMovableRC.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2875
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "interfaces": {
+                            "type": "directory",
+                            "children": {
+                              "Signal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1162
+                              },
+                              "IWidget.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1831
+                              },
+                              "CType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1136
+                              },
+                              "WAlign.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1178
+                              },
+                              "RenderPriority.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1145
+                              }
+                            }
+                          },
+                          "testing": {
+                            "type": "directory",
+                            "children": {
+                              "ScreenTest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2268
+                              },
+                              "ScreenTest2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1936
+                              }
+                            }
+                          },
+                          "events": {
+                            "type": "directory",
+                            "children": {
+                              "MouseEvent$EventType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1475
+                              },
+                              "MouseEvent.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3427
+                              }
+                            }
+                          },
+                          "helpers": {
+                            "type": "directory",
+                            "children": {
+                              "UIHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6215
+                              },
+                              "UIException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 390
+                              },
+                              "ReverseIterator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1539
+                              },
+                              "ReverseIterator$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1277
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "cbcore": {
+                        "type": "directory",
+                        "children": {
+                          "Layout.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1036
+                          },
+                          "LangUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5045
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "KeyEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3645
+                          },
+                          "ProxyClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3076
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "Message0x00ServerPing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4746
+                          },
+                          "Message0x04EntNBTData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2572
+                          },
+                          "WailaPacketHandler$WailaCodec.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2212
+                          },
+                          "Message0x03EntRequest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6928
+                          },
+                          "NetworkHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1551
+                          },
+                          "WailaPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6901
+                          },
+                          "IWailaMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 444
+                          },
+                          "Message0x02TENBTData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2567
+                          },
+                          "Message0x01TERequest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8860
+                          }
+                        }
+                      },
+                      "server": {
+                        "type": "directory",
+                        "children": {
+                          "ProxyServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4778
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "wailacore": {
+                    "type": "directory",
+                    "children": {
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "CoreTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 573
+                          },
+                          "CoreAccessTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 428
+                          },
+                          "CoreContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1335
+                          },
+                          "CoreDescription.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2012
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 339
+          },
+          "LICENSE.txt": {
+            "type": "file",
+            "extension": ".txt",
+            "size": 16389
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "waila": {
+                "type": "directory",
+                "children": {
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "Minecraftia.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 18236
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4845
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6848
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4391
+                      },
+                      "ru_RU.lang.orig": {
+                        "type": "file",
+                        "extension": ".orig",
+                        "size": 5748
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4819
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4571
+                      },
+                      "et_EE": {
+                        "type": "file",
+                        "extension": "",
+                        "size": 4739
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4253
+                      },
+                      "et_EE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4748
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3527
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "sprites.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 606
+                      },
+                      "config_template.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 5133
+                      },
+                      "test.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 83465
+                      },
+                      "test_solar.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 83555
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 353
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 15489
+          }
+        }
+      }
+    }
+  }
+}

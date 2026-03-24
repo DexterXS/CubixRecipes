@@ -1,0 +1,327 @@
+{
+  "mod_name": "LunatriusCore-1.7.10-1.1.2.21-universal.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\LunatriusCore-1.7.10-1.1.2.21-universal.jar",
+  "mod_type": "jar",
+  "tree": {
+    "LunatriusCore-1.7.10-1.1.2.21-universal.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 55951,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 4727
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "github": {
+                "type": "directory",
+                "children": {
+                  "lunatrius": {
+                    "type": "directory",
+                    "children": {
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "LunatriusCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2843
+                          },
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "gui": {
+                                "type": "directory",
+                                "children": {
+                                  "FontRendererHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1084
+                                  },
+                                  "GuiFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1499
+                                  },
+                                  "GuiModConfig.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2354
+                                  },
+                                  "GuiNumericField.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4740
+                                  },
+                                  "GuiScreenBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3201
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "entity": {
+                            "type": "directory",
+                            "children": {
+                              "EntityHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2742
+                              }
+                            }
+                          },
+                          "handler": {
+                            "type": "directory",
+                            "children": {
+                              "ConfigurationHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4764
+                              },
+                              "DelayedGuiDisplayTicker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1651
+                              },
+                              "GuiHandler$GuiModConfigList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2304
+                              },
+                              "GuiHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1212
+                              }
+                            }
+                          },
+                          "proxy": {
+                            "type": "directory",
+                            "children": {
+                              "ClientProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1035
+                              },
+                              "CommonProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 348
+                              },
+                              "ServerProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 424
+                              }
+                            }
+                          },
+                          "reference": {
+                            "type": "directory",
+                            "children": {
+                              "Names$Config$Category.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 628
+                              },
+                              "Names$Config.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1541
+                              },
+                              "Names.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 410
+                              },
+                              "Reference.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1032
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "FileUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2003
+                              },
+                              "vector": {
+                                "type": "directory",
+                                "children": {
+                                  "Vector2d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5122
+                                  },
+                                  "Vector2f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5183
+                                  },
+                                  "Vector2i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4914
+                                  },
+                                  "Vector3d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5260
+                                  },
+                                  "Vector3f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5309
+                                  },
+                                  "Vector3i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5074
+                                  },
+                                  "Vector4d.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5834
+                                  },
+                                  "Vector4f.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5881
+                                  },
+                                  "Vector4i.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5630
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "version": {
+                            "type": "directory",
+                            "children": {
+                              "VersionChecker$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5210
+                              },
+                              "VersionChecker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4714
+                              },
+                              "VersionTicker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4938
+                              }
+                            }
+                          },
+                          "world": {
+                            "type": "directory",
+                            "children": {
+                              "chunk": {
+                                "type": "directory",
+                                "children": {
+                                  "ChunkHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 762
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 578
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 80
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "core": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 102
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 733
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 492
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 115
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 424
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 103
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3963
+          }
+        }
+      }
+    }
+  }
+}

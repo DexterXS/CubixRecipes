@@ -1,0 +1,437 @@
+{
+  "mod_name": "NetherOres-[1.7.10]2.3.1-22.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\NetherOres-[1.7.10]2.3.1-22.jar",
+  "mod_type": "jar",
+  "tree": {
+    "NetherOres-[1.7.10]2.3.1-22.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 81856,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 125
+              }
+            }
+          },
+          "powercrystals": {
+            "type": "directory",
+            "children": {
+              "netherores": {
+                "type": "directory",
+                "children": {
+                  "NetherOresCore$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1315
+                  },
+                  "NetherOresCore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 16961
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "EntityArmedOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3876
+                      },
+                      "EntityHellfish.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4058
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "NOCreativeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1064
+                      }
+                    }
+                  },
+                  "net": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 728
+                      },
+                      "ServerProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2591
+                      }
+                    }
+                  },
+                  "ores": {
+                    "type": "directory",
+                    "children": {
+                      "BlockNetherOres.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6836
+                      },
+                      "BlockNetherOverrideOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11200
+                      },
+                      "INetherOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 131
+                      },
+                      "ItemBlockNetherOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1885
+                      },
+                      "Ores.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12921
+                      }
+                    }
+                  },
+                  "render": {
+                    "type": "directory",
+                    "children": {
+                      "RenderHellfish.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 656
+                      },
+                      "RendererArmedOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 861
+                      }
+                    }
+                  },
+                  "world": {
+                    "type": "directory",
+                    "children": {
+                      "BlockHellfish.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2690
+                      },
+                      "NetherOresWorldGenHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2686
+                      },
+                      "WorldGenNetherOres.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2131
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "netherores": {
+                "type": "directory",
+                "children": {
+                  "language": {
+                    "type": "directory",
+                    "children": {
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2105
+                      },
+                      "es_MX.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1349
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1349
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1792
+                      },
+                      "sv_SE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1109
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2297
+                      },
+                      "es_AR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1349
+                      },
+                      "es_UY.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1349
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1826
+                      },
+                      "es_VE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1349
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2882
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1954
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "Adamantium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 727
+                          },
+                          "Emerald.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 785
+                          },
+                          "Lapis.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 900
+                          },
+                          "Silver.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 783
+                          },
+                          "Titanium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 763
+                          },
+                          "Iron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 775
+                          },
+                          "Peridot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 775
+                          },
+                          "Mithril.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 727
+                          },
+                          "Copper.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 863
+                          },
+                          "Tennantite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 720
+                          },
+                          "Salt.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 788
+                          },
+                          "Sapphire.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 774
+                          },
+                          "Uranium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 756
+                          },
+                          "Lead.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 850
+                          },
+                          "Tungsten.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 876
+                          },
+                          "Ruby.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 775
+                          },
+                          "Sulfur.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 887
+                          },
+                          "Redstone.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 760
+                          },
+                          "Gold.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 756
+                          },
+                          "Nikolite.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 812
+                          },
+                          "Iridium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 835
+                          },
+                          "Amber.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 738
+                          },
+                          "Osmium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 844
+                          },
+                          "Diamond.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 756
+                          },
+                          "Nickel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 848
+                          },
+                          "Coal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 756
+                          },
+                          "Steel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 800
+                          },
+                          "Saltpeter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 784
+                          },
+                          "Magnesium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 783
+                          },
+                          "Rutile.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 726
+                          },
+                          "Platinum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 863
+                          },
+                          "Tin.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 799
+                          },
+                          "tile.netherores.hellfish.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 727
+                          }
+                        }
+                      },
+                      "mob": {
+                        "type": "directory",
+                        "children": {
+                          "hellfish.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 798
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "vers.prop": {
+            "type": "file",
+            "extension": ".prop",
+            "size": 17
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 574
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1686
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5681
+          }
+        }
+      }
+    }
+  }
+}

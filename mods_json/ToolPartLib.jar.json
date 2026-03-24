@@ -1,0 +1,72 @@
+{
+  "mod_name": "ToolPartLib.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ToolPartLib.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ToolPartLib.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 3961,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "miningtool": {
+                    "type": "directory",
+                    "children": {
+                      "IMiningEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 260
+                      },
+                      "MiningHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2751
+                      },
+                      "MiningToolMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1819
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1138
+          }
+        }
+      }
+    }
+  }
+}

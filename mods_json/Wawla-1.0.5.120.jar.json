@@ -1,0 +1,242 @@
+{
+  "mod_name": "Wawla-1.0.5.120.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Wawla-1.0.5.120.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Wawla-1.0.5.120.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 73528,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "darkhax": {
+                "type": "directory",
+                "children": {
+                  "wawla": {
+                    "type": "directory",
+                    "children": {
+                      "Wawla.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2690
+                      },
+                      "addons": {
+                        "type": "directory",
+                        "children": {
+                          "developer": {
+                            "type": "directory",
+                            "children": {
+                              "AddonDeveloperEntities.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3879
+                              },
+                              "AddonDeveloperTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4185
+                              }
+                            }
+                          },
+                          "generic": {
+                            "type": "directory",
+                            "children": {
+                              "AddonGenericEntities.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5813
+                              },
+                              "AddonGenericTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8475
+                              },
+                              "AddonGenericTooltips.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3674
+                              }
+                            }
+                          },
+                          "jewelrycraft": {
+                            "type": "directory",
+                            "children": {
+                              "AddonJewelrycraftTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6571
+                              }
+                            }
+                          },
+                          "morph": {
+                            "type": "directory",
+                            "children": {
+                              "AddonMorphEntities.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3880
+                              }
+                            }
+                          },
+                          "pixelmon": {
+                            "type": "directory",
+                            "children": {
+                              "AddonPixelmonEntities.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7118
+                              },
+                              "AddonPixelmonTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6244
+                              }
+                            }
+                          },
+                          "thaumcraft": {
+                            "type": "directory",
+                            "children": {
+                              "AddonThaumcraftTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8903
+                              }
+                            }
+                          },
+                          "tinkersconstruct": {
+                            "type": "directory",
+                            "children": {
+                              "AddonTinkersTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8563
+                              }
+                            }
+                          },
+                          "vanillamc": {
+                            "type": "directory",
+                            "children": {
+                              "AddonVanillaEntities.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6273
+                              },
+                              "AddonVanillaTiles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6606
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ProxyClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1200
+                          },
+                          "ProxyCommon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 505
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "Constants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 863
+                          },
+                          "Utilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8779
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 538
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "wawla": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 32116
+                      },
+                      "es_MX.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 19530
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 41502
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8050
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 87
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2355
+          }
+        }
+      }
+    }
+  }
+}

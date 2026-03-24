@@ -1,0 +1,1967 @@
+{
+  "mod_name": "ThermalDynamics-[1.7.10]1.2.1-172.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ThermalDynamics-[1.7.10]1.2.1-172.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ThermalDynamics-[1.7.10]1.2.1-172.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 640432,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 150
+              },
+              "tdynamics_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 470
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "thermaldynamics": {
+                "type": "directory",
+                "children": {
+                  "ThermalDynamics.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10627
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "Attachment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6716
+                      },
+                      "AttachmentRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1573
+                      },
+                      "BlockTDBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7357
+                      },
+                      "SubTileMultiBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3793
+                      },
+                      "TileTDBase$ConnectionTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1669
+                      },
+                      "TileTDBase$NeighborTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1636
+                      },
+                      "TileTDBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 33563
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "Proxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 956
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3440
+                      },
+                      "TDProps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 750
+                      },
+                      "TickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4107
+                      },
+                      "TickHandlerClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2560
+                      },
+                      "WorldGridList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2547
+                      }
+                    }
+                  },
+                  "debughelper": {
+                    "type": "directory",
+                    "children": {
+                      "CommandServerDebug.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 862
+                      },
+                      "CommandThermalDebug.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8711
+                      },
+                      "DebugHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6318
+                      },
+                      "DebugTickHandler$DebugEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2007
+                      },
+                      "DebugTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7231
+                      },
+                      "ErrorHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 755
+                      },
+                      "NoComodSet$NoComodIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1096
+                      },
+                      "NoComodSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1429
+                      },
+                      "PacketDebug.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1306
+                      },
+                      "PacketMultiTileInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4301
+                      }
+                    }
+                  },
+                  "duct": {
+                    "type": "directory",
+                    "children": {
+                      "BlockDuct$ConnectionTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1480
+                      },
+                      "BlockDuct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15149
+                      },
+                      "Duct$Type.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1202
+                      },
+                      "Duct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3909
+                      },
+                      "DuctFactory$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 527
+                      },
+                      "DuctFactory$10.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 529
+                      },
+                      "DuctFactory$11.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 534
+                      },
+                      "DuctFactory$12.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 534
+                      },
+                      "DuctFactory$13.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 543
+                      },
+                      "DuctFactory$14.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 543
+                      },
+                      "DuctFactory$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 526
+                      },
+                      "DuctFactory$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 531
+                      },
+                      "DuctFactory$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 530
+                      },
+                      "DuctFactory$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 530
+                      },
+                      "DuctFactory$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 535
+                      },
+                      "DuctFactory$7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 528
+                      },
+                      "DuctFactory$8.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 535
+                      },
+                      "DuctFactory$9.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 532
+                      },
+                      "DuctFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1911
+                      },
+                      "DuctItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2333
+                      },
+                      "DuctTransport.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 706
+                      },
+                      "GridStructural.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 500
+                      },
+                      "ItemBlockDuct$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 966
+                      },
+                      "ItemBlockDuct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6152
+                      },
+                      "SecurityHandler$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 948
+                      },
+                      "SecurityHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2435
+                      },
+                      "TDDucts$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1012
+                      },
+                      "TDDucts.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8305
+                      },
+                      "TileStructuralDuct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1228
+                      },
+                      "attachments": {
+                        "type": "directory",
+                        "children": {
+                          "ConnectionBase$NETWORK_ID.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 502
+                          },
+                          "ConnectionBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10877
+                          },
+                          "IStuffable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 240
+                          },
+                          "cover": {
+                            "type": "directory",
+                            "children": {
+                              "Cover.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8990
+                              },
+                              "CoverBlockAccess$Result.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1379
+                              },
+                              "CoverBlockAccess.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4519
+                              },
+                              "CoverHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4005
+                              },
+                              "CoverHoleRender$ITransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 363
+                              },
+                              "CoverHoleRender$Quad.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3981
+                              },
+                              "CoverHoleRender$TransformSquare.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1350
+                              },
+                              "CoverHoleRender$TriTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1785
+                              },
+                              "CoverHoleRender$Vertex8.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2140
+                              },
+                              "CoverHoleRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3659
+                              },
+                              "CoverRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6481
+                              }
+                            }
+                          },
+                          "filter": {
+                            "type": "directory",
+                            "children": {
+                              "FilterBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3503
+                              },
+                              "FilterFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1433
+                              },
+                              "FilterItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1606
+                              },
+                              "FilterLogic$CustomFilterFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 694
+                              },
+                              "FilterLogic$CustomFilterItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 690
+                              },
+                              "FilterLogic$Perm.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2208
+                              },
+                              "FilterLogic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13483
+                              },
+                              "FilterLogicBase$Perm.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2146
+                              },
+                              "FilterLogicBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5686
+                              },
+                              "FilterLogicFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 413
+                              },
+                              "FilterLogicItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 534
+                              },
+                              "IFilterAttachment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 337
+                              },
+                              "IFilterConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 412
+                              },
+                              "IFilterFluid$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 466
+                              },
+                              "IFilterFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 514
+                              },
+                              "IFilterItems$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 595
+                              },
+                              "IFilterItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 573
+                              },
+                              "IItemConfigurable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 426
+                              }
+                            }
+                          },
+                          "relay": {
+                            "type": "directory",
+                            "children": {
+                              "Relay.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11719
+                              }
+                            }
+                          },
+                          "retriever": {
+                            "type": "directory",
+                            "children": {
+                              "RetrieverFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6382
+                              },
+                              "RetrieverItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11210
+                              }
+                            }
+                          },
+                          "servo": {
+                            "type": "directory",
+                            "children": {
+                              "ServoBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5588
+                              },
+                              "ServoFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3167
+                              },
+                              "ServoItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12058
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "energy": {
+                        "type": "directory",
+                        "children": {
+                          "EnergyGrid$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 733
+                          },
+                          "EnergyGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4073
+                          },
+                          "EnergyGridSuper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1997
+                          },
+                          "TileEnergyDuct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4644
+                          },
+                          "TileEnergyDuctSuper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2118
+                          },
+                          "subgrid": {
+                            "type": "directory",
+                            "children": {
+                              "EnergySubGrid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2207
+                              },
+                              "EnergySubGridDistribute.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 845
+                              },
+                              "EnergySubGridEnder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1680
+                              },
+                              "SubTileEnergy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2006
+                              },
+                              "SubTileEnergyEnder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1144
+                              },
+                              "SubTileEnergyRedstone.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1558
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "Camera.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2252
+                          },
+                          "EntityTransport.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14500
+                          },
+                          "ModelWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2213
+                          },
+                          "RenderPlayerAlt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13704
+                          },
+                          "RenderPlayerRiding.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5147
+                          },
+                          "RenderTransport.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4227
+                          },
+                          "SoundWoosh.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1416
+                          },
+                          "TileTransportDuct$OutputData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2728
+                          },
+                          "TileTransportDuct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11998
+                          },
+                          "TileTransportDuctBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1646
+                          },
+                          "TileTransportDuctBaseRoute.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5097
+                          },
+                          "TileTransportDuctCrossover.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7935
+                          },
+                          "TileTransportDuctLongRange.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4968
+                          },
+                          "TransportGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 716
+                          },
+                          "TransportHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4688
+                          }
+                        }
+                      },
+                      "fluid": {
+                        "type": "directory",
+                        "children": {
+                          "FluidGrid$FluidRenderType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 561
+                          },
+                          "FluidGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9022
+                          },
+                          "FluidGridSuper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2440
+                          },
+                          "FluidTankGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2261
+                          },
+                          "PacketFluid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2840
+                          },
+                          "TileFluidDuct$TileFluidPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 676
+                          },
+                          "TileFluidDuct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10569
+                          },
+                          "TileFluidDuctFlux.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4714
+                          },
+                          "TileFluidDuctFragile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7728
+                          },
+                          "TileFluidDuctPowered.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3344
+                          },
+                          "TileFluidDuctSuper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2248
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "ItemGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3611
+                          },
+                          "SimulatedInv$SimulatedInvSided.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1256
+                          },
+                          "SimulatedInv.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2879
+                          },
+                          "StackMap$ItemEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2301
+                          },
+                          "StackMap$IteratorItemstack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1674
+                          },
+                          "StackMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1175
+                          },
+                          "TileItemDuct$CacheType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1181
+                          },
+                          "TileItemDuct$RouteInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 567
+                          },
+                          "TileItemDuct$TileInfoPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 756
+                          },
+                          "TileItemDuct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 23372
+                          },
+                          "TileItemDuctEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6556
+                          },
+                          "TileItemDuctFlux.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4148
+                          },
+                          "TileItemDuctPowered.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3108
+                          },
+                          "TravelingItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10532
+                          }
+                        }
+                      },
+                      "light": {
+                        "type": "directory",
+                        "children": {
+                          "DuctLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2188
+                          },
+                          "LightGrid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4061
+                          },
+                          "PacketLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2562
+                          },
+                          "TileLightDuct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3702
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiConfigTD.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1353
+                      },
+                      "GuiConfigTDFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1167
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1784
+                      },
+                      "TDCreativeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2729
+                      },
+                      "TDCreativeTabCovers.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1872
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "DirectoryEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2380
+                          },
+                          "GuiDuctConnection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9257
+                          },
+                          "GuiRelay$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1616
+                          },
+                          "GuiRelay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4522
+                          },
+                          "GuiTransport$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1233
+                          },
+                          "GuiTransport.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5973
+                          },
+                          "GuiTransportConfig$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1157
+                          },
+                          "GuiTransportConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2323
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerAttachmentBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1589
+                          },
+                          "ContainerDuctConnection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3365
+                          },
+                          "ContainerRelay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2034
+                          },
+                          "ContainerTDBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3237
+                          },
+                          "ContainerTransport$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1085
+                          },
+                          "ContainerTransport.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3664
+                          },
+                          "ContainerTransportConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2372
+                          }
+                        }
+                      },
+                      "element": {
+                        "type": "directory",
+                        "children": {
+                          "ElementDirectoryButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2917
+                          }
+                        }
+                      },
+                      "slot": {
+                        "type": "directory",
+                        "children": {
+                          "SlotFilter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1725
+                          },
+                          "SlotFilterFluid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 893
+                          },
+                          "SlotIcon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1683
+                          },
+                          "SlotNull.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1651
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "ItemAttachment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5245
+                      },
+                      "ItemCover$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 875
+                      },
+                      "ItemCover.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5565
+                      },
+                      "ItemFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5343
+                      },
+                      "ItemRelay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1376
+                      },
+                      "ItemRetriever.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6746
+                      },
+                      "ItemServo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6597
+                      },
+                      "TDItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1106
+                      }
+                    }
+                  },
+                  "multiblock": {
+                    "type": "directory",
+                    "children": {
+                      "IMultiBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 870
+                      },
+                      "IMultiBlockRoute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1072
+                      },
+                      "MultiBlockFormer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2197
+                      },
+                      "MultiBlockGrid$RedstoneControl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 664
+                      },
+                      "MultiBlockGrid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6990
+                      },
+                      "MultiBlockGridTracking.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2798
+                      },
+                      "MultiBlockGridWithRoutes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2876
+                      },
+                      "Route.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3826
+                      },
+                      "RouteCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4335
+                      },
+                      "Tracker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1437
+                      },
+                      "listtypes": {
+                        "type": "directory",
+                        "children": {
+                          "ListWrapper$RRobinIter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1325
+                          },
+                          "ListWrapper$ShuffleIter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1190
+                          },
+                          "ListWrapper$SortType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1299
+                          },
+                          "ListWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2195
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "plugins": {
+                    "type": "directory",
+                    "children": {
+                      "TDPlugins$Plugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2063
+                      },
+                      "TDPlugins.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2076
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "NEIThermalDynamicsConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1849
+                          },
+                          "RecipeHandlerCover$CachedCoverRecipeAll.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2148
+                          },
+                          "RecipeHandlerCover$CachedCoverRecipeSimple.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1311
+                          },
+                          "RecipeHandlerCover.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3084
+                          }
+                        }
+                      },
+                      "thaumcraft": {
+                        "type": "directory",
+                        "children": {
+                          "ThaumcraftPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4838
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "render": {
+                    "type": "directory",
+                    "children": {
+                      "ModelHelper$Face.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3091
+                      },
+                      "ModelHelper$OctagonalTubeGen.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8393
+                      },
+                      "ModelHelper$SideTubeGen.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5844
+                      },
+                      "ModelHelper$StandardTubes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4443
+                      },
+                      "ModelHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7185
+                      },
+                      "RenderDuct.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16443
+                      },
+                      "RenderDuctFluids.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1502
+                      },
+                      "RenderDuctItems$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 491
+                      },
+                      "RenderDuctItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7112
+                      },
+                      "RenderDuctItemsEnder$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1322
+                      },
+                      "RenderDuctItemsEnder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4321
+                      },
+                      "RenderTest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1099
+                      },
+                      "TextureOverlay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3941
+                      },
+                      "TextureTransparent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4056
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "RenderItemCover$SingleBlockAccess.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2052
+                          },
+                          "RenderItemCover.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4597
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "Utils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1920
+                      },
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "RecipeCover.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2095
+                          },
+                          "TDCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11634
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "powercrystals": {
+            "type": "directory",
+            "children": {
+              "minefactoryreloaded": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "IDeepStorageUnit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 349
+                      },
+                      "rednet": {
+                        "type": "directory",
+                        "children": {
+                          "connectivity": {
+                            "type": "directory",
+                            "children": {
+                              "IRedNetConnection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 363
+                              },
+                              "RedNetConnectionType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3492
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "thermaldynamics": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "duct": {
+                            "type": "directory",
+                            "children": {
+                              "base": {
+                                "type": "directory",
+                                "children": {
+                                  "trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 283
+                                  },
+                                  "platinum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 405
+                                  },
+                                  "tin.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 411
+                                  },
+                                  "electrum_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 424
+                                  },
+                                  "invar.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 350
+                                  },
+                                  "invar_large.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 346
+                                  },
+                                  "copper.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 447
+                                  },
+                                  "electrum_band.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2875
+                                  },
+                                  "support_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 207
+                                  },
+                                  "platinum_large.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 423
+                                  },
+                                  "tin_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 421
+                                  },
+                                  "lead_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 420
+                                  },
+                                  "invar_band.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1243
+                                  },
+                                  "lead.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 375
+                                  },
+                                  "lumium.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 402
+                                  },
+                                  "vacuum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 236
+                                  },
+                                  "dense.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 230
+                                  },
+                                  "tin_2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 481
+                                  },
+                                  "bronze_large.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 429
+                                  },
+                                  "copper_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 449
+                                  },
+                                  "invar_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 436
+                                  },
+                                  "enderium.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 385
+                                  },
+                                  "metalRedstone.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 707
+                                  },
+                                  "copper_band.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1241
+                                  },
+                                  "greenGlass.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 715
+                                  },
+                                  "support.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 331
+                                  },
+                                  "enderium_band.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1243
+                                  },
+                                  "enderium_trans.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 423
+                                  },
+                                  "electrum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 379
+                                  },
+                                  "tin_1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 479
+                                  },
+                                  "fluxElectrum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 493
+                                  }
+                                }
+                              },
+                              "attachment": {
+                                "type": "directory",
+                                "children": {
+                                  "servo": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ServoBase00.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 489
+                                      },
+                                      "ServoBase41.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 537
+                                      },
+                                      "ServoBase10.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 495
+                                      },
+                                      "ServoBase30.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 508
+                                      },
+                                      "ServoBase21.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 555
+                                      },
+                                      "ServoBase40.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 497
+                                      },
+                                      "ServoBase01.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 526
+                                      },
+                                      "ServoBase11.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 536
+                                      },
+                                      "ServoBase31.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 554
+                                      },
+                                      "ServoBase20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 508
+                                      }
+                                    }
+                                  },
+                                  "filter": {
+                                    "type": "directory",
+                                    "children": {
+                                      "Filter30.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 495
+                                      },
+                                      "Filter40.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 489
+                                      },
+                                      "Filter00.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 483
+                                      },
+                                      "Filter10.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 490
+                                      },
+                                      "Filter20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 497
+                                      }
+                                    }
+                                  },
+                                  "retriever": {
+                                    "type": "directory",
+                                    "children": {
+                                      "RetrieverBase40.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 502
+                                      },
+                                      "RetrieverBase01.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 552
+                                      },
+                                      "RetrieverBase10.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 492
+                                      },
+                                      "RetrieverBase20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 511
+                                      },
+                                      "RetrieverBase31.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 562
+                                      },
+                                      "RetrieverBase41.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 552
+                                      },
+                                      "RetrieverBase21.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 570
+                                      },
+                                      "RetrieverBase11.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 563
+                                      },
+                                      "RetrieverBase30.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 507
+                                      },
+                                      "RetrieverBase00.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 542
+                                      }
+                                    }
+                                  },
+                                  "signallers": {
+                                    "type": "directory",
+                                    "children": {
+                                      "Signaller.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 566
+                                      }
+                                    }
+                                  },
+                                  "cover": {
+                                    "type": "directory",
+                                    "children": {
+                                      "support.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 417
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "connection": {
+                                "type": "directory",
+                                "children": {
+                                  "tin.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1335
+                                  },
+                                  "lead.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3139
+                                  },
+                                  "enderium.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 426
+                                  },
+                                  "electrum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3106
+                                  },
+                                  "copper.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3065
+                                  },
+                                  "lumium.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1350
+                                  },
+                                  "invar.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3131
+                                  },
+                                  "fluxElectrum.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1356
+                                  }
+                                }
+                              },
+                              "sideDucts.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 302
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "cover_test.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 216
+                          },
+                          "servo3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 443
+                          },
+                          "relay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 393
+                          },
+                          "retriever3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 470
+                          },
+                          "retriever1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 410
+                          },
+                          "filter1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 421
+                          },
+                          "servo1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 393
+                          },
+                          "retriever0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 376
+                          },
+                          "filter4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 423
+                          },
+                          "servo2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 411
+                          },
+                          "servo4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 408
+                          },
+                          "filter2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 429
+                          },
+                          "retriever4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 423
+                          },
+                          "servo0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 340
+                          },
+                          "filter0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 357
+                          },
+                          "retriever2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 439
+                          },
+                          "filter3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 460
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "Transport.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4868
+                          },
+                          "Relay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4373
+                          },
+                          "Connection.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 14905
+                          },
+                          "TransportConfig.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2421
+                          }
+                        }
+                      },
+                      "logo.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 23653
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6081
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5495
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8608
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8307
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8596
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6160
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8182
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5895
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8412
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5842
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6760
+                      },
+                      "en_GB.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 196
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 13013
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 192
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "woosh.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 74137
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "CoFH_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 3107
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 627
+          },
+          "vers.prop": {
+            "type": "file",
+            "extension": ".prop",
+            "size": 18
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5671
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 28378
+          }
+        }
+      }
+    }
+  }
+}

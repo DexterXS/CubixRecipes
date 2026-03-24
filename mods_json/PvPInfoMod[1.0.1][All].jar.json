@@ -1,0 +1,117 @@
+{
+  "mod_name": "PvPInfoMod[1.0.1][All].jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\PvPInfoMod[1.0.1][All].jar",
+  "mod_type": "jar",
+  "tree": {
+    "PvPInfoMod[1.0.1][All].jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 17432,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "pvpinfo": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractMessage$AbstractClientMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1287
+                      },
+                      "AbstractMessage$AbstractServerMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1287
+                      },
+                      "AbstractMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3552
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1707
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1212
+                      },
+                      "PacketDispatcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6688
+                      },
+                      "PvPContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 565
+                      },
+                      "PvPInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1587
+                      },
+                      "PvPInfoOverlay.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4581
+                      },
+                      "PvPPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2465
+                      },
+                      "ServerEventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5684
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1768
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,642 @@
+{
+  "mod_name": "InventoryTweaks-1.59.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\InventoryTweaks-1.59.jar",
+  "mod_type": "jar",
+  "tree": {
+    "InventoryTweaks-1.59.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 228640,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 128
+              }
+            }
+          },
+          "invtweaks": {
+            "type": "directory",
+            "children": {
+              "InvTweaksConfigSortingRule.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6012
+              },
+              "InvTweaksShortcutType.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1858
+              },
+              "InvTweaksContainerSectionManager.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4396
+              },
+              "InvTweaksItemTree.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 10700
+              },
+              "InvTweaksHandlerSorting.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 20405
+              },
+              "InvTweaksConfigSortingRuleType.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1530
+              },
+              "InvTweaksGuiSettingsButton.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3457
+              },
+              "forge": {
+                "type": "directory",
+                "children": {
+                  "ClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8735
+                  },
+                  "ForgeClientTick.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1623
+                  },
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5025
+                  },
+                  "ModGuiFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1447
+                  },
+                  "InvTweaksMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2956
+                  },
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "FMLPlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1874
+                      },
+                      "ITAccessTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 460
+                      },
+                      "ContainerTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14076
+                      },
+                      "compatibility": {
+                        "type": "directory",
+                        "children": {
+                          "MethodInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 895
+                          },
+                          "ContainerInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2452
+                          },
+                          "CompatibilityConfigLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3049
+                          }
+                        }
+                      },
+                      "ASMHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5417
+                      }
+                    }
+                  }
+                }
+              },
+              "InvTweaksConfigInventoryRuleset.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7134
+              },
+              "InvTweaksGuiSettingsAbstract.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4475
+              },
+              "InvTweaksHandlerShortcuts$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1737
+              },
+              "InvTweaksHandlerAutoRefill$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3595
+              },
+              "InvTweaksConst.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2957
+              },
+              "InvTweaksGuiIconButton.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2291
+              },
+              "InvTweaksGuiModNotWorking.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2059
+              },
+              "InvTweaksItemTreeCategory.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4265
+              },
+              "ShortcutSpecification$Action.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1129
+              },
+              "InvTweaksGuiSortingButton.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3058
+              },
+              "InvTweaksItemTreeItem.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1724
+              },
+              "InvTweaksItemTree$OreDictInfo.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 767
+              },
+              "InvTweaksGuiTooltipButton.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4494
+              },
+              "InvTweaksConfigProperties.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1326
+              },
+              "api": {
+                "type": "directory",
+                "children": {
+                  "InvTweaksAPI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 497
+                  },
+                  "container": {
+                    "type": "directory",
+                    "children": {
+                      "ChestContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 735
+                      },
+                      "ChestContainer$IsLargeCallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 514
+                      },
+                      "InventoryContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 473
+                      },
+                      "IgnoreContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 405
+                      },
+                      "ContainerSection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1809
+                      },
+                      "ContainerSectionCallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 425
+                      },
+                      "ChestContainer$RowSizeCallback.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 514
+                      }
+                    }
+                  },
+                  "IItemTreeCategory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 689
+                  },
+                  "IItemTree.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1658
+                  },
+                  "SortingMethod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1156
+                  },
+                  "IItemTreeItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 345
+                  },
+                  "IItemTreeListener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 214
+                  }
+                }
+              },
+              "InvTweaksHandlerShortcuts$ShortcutConfig.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1469
+              },
+              "InvTweaksConfig.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 14983
+              },
+              "ShortcutSpecification.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1670
+              },
+              "InvTweaks$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 733
+              },
+              "InvTweaksObfuscation.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 11546
+              },
+              "InvTweaksGuiSettingsAdvanced.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6066
+              },
+              "InvTweaksContainerManager.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 11093
+              },
+              "InvTweaksItemTreeLoader.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5511
+              },
+              "TickScheduledTask.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 689
+              },
+              "InvTweaks.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 27777
+              },
+              "InvTweaksShortcutMapping.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2662
+              },
+              "containers": {
+                "type": "directory",
+                "children": {
+                  "VanillaSlotMaps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2740
+                  },
+                  "CompatibilitySlotMaps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1742
+                  }
+                }
+              },
+              "ShortcutSpecification$Target.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1243
+              },
+              "InvTweaksConfigManager.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7565
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "packets": {
+                    "type": "directory",
+                    "children": {
+                      "ITPacketClick.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1140
+                      },
+                      "ITPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 195
+                      },
+                      "ITPacketLogin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 767
+                      },
+                      "ITPacketSortComplete.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 605
+                      }
+                    }
+                  },
+                  "handlers": {
+                    "type": "directory",
+                    "children": {
+                      "LoginMessageHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1445
+                      },
+                      "ClickMessageHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2384
+                      },
+                      "SortingCompleteMessageHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2230
+                      }
+                    }
+                  },
+                  "ITMessageToMessageCodec.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1866
+                  }
+                }
+              },
+              "InvTweaksHandlerAutoRefill.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6820
+              },
+              "InvTweaksGuiShortcutsHelp.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5815
+              },
+              "ShortcutSpecification$Scope.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1244
+              },
+              "TickScheduledTask$TaskComparator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1024
+              },
+              "InvTweaksGuiSettings.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7240
+              },
+              "InvTweaksHandlerShortcuts.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 14801
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "inventorytweaks": {
+                "type": "directory",
+                "children": {
+                  "ItemTree.xml": {
+                    "type": "file",
+                    "extension": ".xml",
+                    "size": 43373
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "pt_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5583
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5108
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5532
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4872
+                      },
+                      "et_EE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 315
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5376
+                      },
+                      "pl_PL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5584
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4192
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5562
+                      },
+                      "lt_LT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5639
+                      },
+                      "_README.txt": {
+                        "type": "file",
+                        "extension": ".txt",
+                        "size": 476
+                      },
+                      "uk_UA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7483
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4281
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7655
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 6446
+                      },
+                      "da_DK.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4533
+                      },
+                      "no_NO.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5337
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4805
+                      },
+                      "sv_SE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5551
+                      },
+                      "hu_HU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5887
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5462
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5656
+                      },
+                      "fr_CA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5612
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5550
+                      },
+                      "sl_SI.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1
+                      }
+                    }
+                  },
+                  "DefaultConfig.dat": {
+                    "type": "file",
+                    "extension": ".dat",
+                    "size": 1352
+                  }
+                }
+              }
+            }
+          },
+          "invtweaks.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 18591
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 612
+          },
+          "version.properties": {
+            "type": "file",
+            "extension": ".properties",
+            "size": 54
+          },
+          "invtweaks_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 864
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 100
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 841
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 10261
+          }
+        }
+      }
+    }
+  }
+}

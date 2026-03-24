@@ -1,0 +1,127 @@
+{
+  "mod_name": "AnimationAPI.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\AnimationAPI.jar",
+  "mod_type": "jar",
+  "tree": {
+    "AnimationAPI.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 15900,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "thehippomaster": {
+            "type": "directory",
+            "children": {
+              "AnimationAPI": {
+                "type": "directory",
+                "children": {
+                  "AIAnimation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1623
+                  },
+                  "AnimationAPI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3455
+                  },
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 571
+                  },
+                  "IAnimatedEntity.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 236
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "Animator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5202
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1395
+                      },
+                      "ModelJoint.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2852
+                      },
+                      "ModelObjRenderer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3435
+                      },
+                      "Transform.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1297
+                      }
+                    }
+                  },
+                  "packet": {
+                    "type": "directory",
+                    "children": {
+                      "PacketAnim$Handler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2159
+                      },
+                      "PacketAnim.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1364
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 416
+          },
+          "readme.txt": {
+            "type": "file",
+            "extension": ".txt",
+            "size": 415
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2743
+          }
+        }
+      }
+    }
+  }
+}

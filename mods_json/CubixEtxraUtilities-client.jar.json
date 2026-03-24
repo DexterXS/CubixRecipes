@@ -1,0 +1,432 @@
+{
+  "mod_name": "CubixEtxraUtilities-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixEtxraUtilities-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixEtxraUtilities-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 136841,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "cubix_etxra_utilities": {
+                    "type": "directory",
+                    "children": {
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "InventoryKraft.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13583
+                          },
+                          "InventoryKraft$CraftResult.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6808
+                          },
+                          "TileAutoQED.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14175
+                          },
+                          "TileAdvancedEnderPillar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8662
+                          },
+                          "TileUltimateEnderPillar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 555
+                          },
+                          "TileAutoQED$CustomEnergy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1753
+                          },
+                          "InventoryKraft$CraftMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6038
+                          },
+                          "TileHybridEnderPillar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 549
+                          }
+                        }
+                      },
+                      "CubixEtxraUtilitiesConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4267
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "DynamicContainerAutoQED.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5494
+                          },
+                          "DynamicContainerAutoQED$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1492
+                          },
+                          "DynamicContainerAutoQED$WidgetEFText.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5854
+                          },
+                          "DynamicContainerAutoQED$WidgetFake.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1363
+                          },
+                          "DynamicContainerAutoQED$Arrow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1108
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "PacketAdvancedAngelRingNotifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4073
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemBlockAutoQED.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5529
+                          },
+                          "ItemAdvancedAngelRing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11277
+                          },
+                          "ItemAdvancedAngelRing$EventHandlerRing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5618
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientDataManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 538
+                          }
+                        }
+                      },
+                      "CubixEtxraUtilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6107
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 396
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6927
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "BlockEnderPillar.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12965
+                          },
+                          "BlockAutoQED.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18383
+                          }
+                        }
+                      },
+                      "CubixEtxraUtilities$GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2785
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1807
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2725
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubix_etxra_utilities": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "hybrid": {
+                            "type": "directory",
+                            "children": {
+                              "enderConstructor_pillar_top_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3108
+                              },
+                              "enderConstructor_pillar_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3039
+                              },
+                              "enderConstructor_pillar_bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3110
+                              },
+                              "enderConstructor_pillar_top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3096
+                              },
+                              "enderConstructor_pillar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3042
+                              }
+                            }
+                          },
+                          "advanced": {
+                            "type": "directory",
+                            "children": {
+                              "enderConstructor_pillar_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3049
+                              },
+                              "enderConstructor_pillar_bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3128
+                              },
+                              "enderConstructor_pillar_top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3104
+                              },
+                              "enderConstructor_pillar_top_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3091
+                              },
+                              "enderConstructor_pillar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3041
+                              }
+                            }
+                          },
+                          "qed": {
+                            "type": "directory",
+                            "children": {
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2385
+                              },
+                              "bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2259
+                              },
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2420
+                              },
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2410
+                              },
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2427
+                              }
+                            }
+                          },
+                          "ultimate": {
+                            "type": "directory",
+                            "children": {
+                              "enderConstructor_pillar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3042
+                              },
+                              "enderConstructor_pillar_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3033
+                              },
+                              "enderConstructor_pillar_top_enabled.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3099
+                              },
+                              "enderConstructor_pillar_top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3099
+                              },
+                              "enderConstructor_pillar_bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3115
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2251
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1962
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 324
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1571
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4992
+          }
+        }
+      }
+    }
+  }
+}

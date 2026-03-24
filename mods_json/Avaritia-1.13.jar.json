@@ -1,0 +1,2172 @@
+{
+  "mod_name": "Avaritia-1.13.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Avaritia-1.13.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Avaritia-1.13.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 2123554,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "fox": {
+            "type": "directory",
+            "children": {
+              "spiteful": {
+                "type": "directory",
+                "children": {
+                  "avaritia": {
+                    "type": "directory",
+                    "children": {
+                      "Avaritia$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 904
+                      },
+                      "Avaritia.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3771
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3152
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 528
+                      },
+                      "Config.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5718
+                      },
+                      "DamageSourceInfinitySword.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1890
+                      },
+                      "FieldHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1912
+                      },
+                      "LudicrousEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15318
+                      },
+                      "LudicrousText.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2178
+                      },
+                      "Lumberjack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1226
+                      },
+                      "PotionHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1704
+                      },
+                      "achievements": {
+                        "type": "directory",
+                        "children": {
+                          "Achievements.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3124
+                          },
+                          "AchievementTrigger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3093
+                          },
+                          "LudicrousAchievement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1957
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockAutoDireCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5385
+                          },
+                          "BlockCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6523
+                          },
+                          "BlockCrystalMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1883
+                          },
+                          "BlockDireCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5352
+                          },
+                          "BlockDoubleCraft.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1903
+                          },
+                          "BlockNeutronCollector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6482
+                          },
+                          "BlockResource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3564
+                          },
+                          "BlockTripleCraft.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1908
+                          },
+                          "ItemBlockResource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1130
+                          },
+                          "ItemBlockWithMetadataUnderp.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1105
+                          },
+                          "LudicrousBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2117
+                          }
+                        }
+                      },
+                      "compat": {
+                        "type": "directory",
+                        "children": {
+                          "Belmont.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 686
+                          },
+                          "Compat$ItemNotFoundException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 839
+                          },
+                          "Compat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12232
+                          },
+                          "CompatClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1744
+                          },
+                          "bloodmagic": {
+                            "type": "directory",
+                            "children": {
+                              "Bloody.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2433
+                              },
+                              "ItemOrbArmok.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4064
+                              }
+                            }
+                          },
+                          "botania": {
+                            "type": "directory",
+                            "children": {
+                              "BlockInfinitato.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5626
+                              },
+                              "ItemInfinitatoCostume.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2039
+                              },
+                              "LudicrousLexicon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1124
+                              },
+                              "ModelInfinitato.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1002
+                              },
+                              "PageLudicrousRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5753
+                              },
+                              "RenderInfinitato.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1939
+                              },
+                              "RenderTileInfinitato.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6914
+                              },
+                              "Signature.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1598
+                              },
+                              "SubTileCheaty.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1403
+                              },
+                              "SubTileChicken.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1403
+                              },
+                              "TileInfinitato.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3876
+                              },
+                              "Tsundere.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6634
+                              },
+                              "alfheim": {
+                                "type": "directory",
+                                "children": {
+                                  "Alfheim.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1983
+                                  },
+                                  "AlfheimBlocks.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 802
+                                  },
+                                  "AlfheimEvents.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6905
+                                  },
+                                  "AlfheimNoise.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6322
+                                  },
+                                  "ApocalypseCloudRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 839
+                                  },
+                                  "ApocalypseSkyRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3352
+                                  },
+                                  "BasicTeleporter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1168
+                                  },
+                                  "BlockDeadrock.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3532
+                                  },
+                                  "ChunkProviderAlfheim.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5880
+                                  },
+                                  "ComponentCityParts$CityPart.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3042
+                                  },
+                                  "ComponentCityParts$CityRuin.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4254
+                                  },
+                                  "ComponentCityParts.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 789
+                                  },
+                                  "MapGenAlfheimRavines.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1914
+                                  },
+                                  "MapGenCity$Start.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4299
+                                  },
+                                  "MapGenCity.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1187
+                                  },
+                                  "Ruin$BlockArray.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2071
+                                  },
+                                  "Ruin$BlockMeta.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 998
+                                  },
+                                  "Ruin$BlockRuinPalette$BlockPaletteInfo.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1139
+                                  },
+                                  "Ruin$BlockRuinPalette.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2199
+                                  },
+                                  "Ruin$Coord.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 573
+                                  },
+                                  "Ruin.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8994
+                                  },
+                                  "TeleportHelper.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4685
+                                  },
+                                  "WorldProviderAlfheim.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3180
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "forestry": {
+                            "type": "directory",
+                            "children": {
+                              "Allele.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2545
+                              },
+                              "AlleleFloat.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 649
+                              },
+                              "AlleleInteger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 657
+                              },
+                              "BeeBranch.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4090
+                              },
+                              "ExpensiveMutation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5401
+                              },
+                              "Genomes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2701
+                              },
+                              "GreedyBeeSpecies.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16629
+                              },
+                              "ItemBeesource.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4171
+                              },
+                              "ItemComb.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3581
+                              },
+                              "Ranger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3310
+                              }
+                            }
+                          },
+                          "minetweaker": {
+                            "type": "directory",
+                            "children": {
+                              "Compressor$Add.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1732
+                              },
+                              "Compressor$Remove.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2150
+                              },
+                              "Compressor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3762
+                              },
+                              "ExtremeCrafting$Add.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1825
+                              },
+                              "ExtremeCrafting$AddCatalyst.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2133
+                              },
+                              "ExtremeCrafting$Remove.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2260
+                              },
+                              "ExtremeCrafting$RemoveCatalyst.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1748
+                              },
+                              "ExtremeCrafting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4248
+                              },
+                              "Tweak.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 695
+                              }
+                            }
+                          },
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "CompressionHandler$CachedCompression.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2380
+                              },
+                              "CompressionHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5176
+                              },
+                              "ExtremeShapedRecipeHandler$CachedExtremeRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3276
+                              },
+                              "ExtremeShapedRecipeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6105
+                              },
+                              "ExtremeShapelessRecipeHandler$CachedExtremeShapelessRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3363
+                              },
+                              "ExtremeShapelessRecipeHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6391
+                              },
+                              "NotEnough.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1268
+                              }
+                            }
+                          },
+                          "tails": {
+                            "type": "directory",
+                            "children": {
+                              "InfiniteFoxes$FakeTailEntity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 944
+                              },
+                              "InfiniteFoxes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4585
+                              }
+                            }
+                          },
+                          "thaumcraft": {
+                            "type": "directory",
+                            "children": {
+                              "CheatyWandUpdate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1464
+                              },
+                              "ItemAkashicRecord.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4183
+                              },
+                              "ItemBigPearl.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1441
+                              },
+                              "Lucrum.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8413
+                              },
+                              "LudicrousResearchItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1865
+                              }
+                            }
+                          },
+                          "ticon": {
+                            "type": "directory",
+                            "children": {
+                              "InfinityIcons.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6848
+                              },
+                              "NeutroniumIcons.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2466
+                              },
+                              "TConTextureResourcePackBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8347
+                              },
+                              "Tonkers$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1266
+                              },
+                              "Tonkers.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8587
+                              },
+                              "TonkersClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1096
+                              },
+                              "TonkersEvents.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7619
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "CompressOreRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1906
+                          },
+                          "CompressorManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2594
+                          },
+                          "CompressorRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1602
+                          },
+                          "ExtremeCraftingManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7203
+                          },
+                          "ExtremeShapedOreRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7882
+                          },
+                          "ExtremeShapedRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2636
+                          },
+                          "ExtremeShapelessRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2409
+                          },
+                          "Gregorizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1682
+                          },
+                          "Grinder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10810
+                          },
+                          "Mincer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1224
+                          },
+                          "Mincer$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1105
+                          },
+                          "Mincer$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1224
+                          },
+                          "Mincer$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1219
+                          },
+                          "Mincer$FoodInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 834
+                          },
+                          "Mincer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8988
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "EntityCollationItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7213
+                          },
+                          "EntityEndestPearl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2581
+                          },
+                          "EntityGapingVoid$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1012
+                          },
+                          "EntityGapingVoid$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1108
+                          },
+                          "EntityGapingVoid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7387
+                          },
+                          "EntityHeavenArrow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4632
+                          },
+                          "EntityHeavenSubArrow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1591
+                          },
+                          "EntityImmortalItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5078
+                          },
+                          "LudicrousEntities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 989
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerAutoExtremeCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4442
+                          },
+                          "ContainerCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2987
+                          },
+                          "ContainerCustomWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1238
+                          },
+                          "ContainerExtremeCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4753
+                          },
+                          "ContainerNeutron.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2736
+                          },
+                          "GooeyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2860
+                          },
+                          "GUIAutoExtremeCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2293
+                          },
+                          "GUICompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3024
+                          },
+                          "GUIExtremeCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2017
+                          },
+                          "GUINeutron.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2517
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemArmorInfinity$abilityHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5573
+                          },
+                          "ItemArmorInfinity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10945
+                          },
+                          "ItemEndestPearl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3224
+                          },
+                          "ItemFracturedOre$NameStack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3462
+                          },
+                          "ItemFracturedOre.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7610
+                          },
+                          "ItemMatterCluster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12272
+                          },
+                          "ItemMorvInABox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2687
+                          },
+                          "ItemResource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6085
+                          },
+                          "ItemSingularity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5321
+                          },
+                          "ItemStackWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1336
+                          },
+                          "LudicrousItems.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4906
+                          },
+                          "tools": {
+                            "type": "directory",
+                            "children": {
+                              "ItemAxeInfinity$BlockSwapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4552
+                              },
+                              "ItemAxeInfinity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9348
+                              },
+                              "ItemBowInfinity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7920
+                              },
+                              "ItemPickaxeInfinity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9412
+                              },
+                              "ItemShovelInfinity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7623
+                              },
+                              "ItemSwordInfinity.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7471
+                              },
+                              "ItemSwordSkulls.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2118
+                              },
+                              "ToolHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11279
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "CosmicBowRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2785
+                          },
+                          "CosmicItemRenderer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1001
+                          },
+                          "CosmicItemRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7410
+                          },
+                          "CosmicRenderShenanigans$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1923
+                          },
+                          "CosmicRenderShenanigans.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3405
+                          },
+                          "FancyHaloRenderer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 887
+                          },
+                          "FancyHaloRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5177
+                          },
+                          "FracturedOreRenderer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1007
+                          },
+                          "FracturedOreRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8327
+                          },
+                          "ICosmicRenderItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 531
+                          },
+                          "IHaloRenderItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 599
+                          },
+                          "LudicrousRenderEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4737
+                          },
+                          "ModelArmorInfinity$Overlay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4745
+                          },
+                          "ModelArmorInfinity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12955
+                          },
+                          "ModelRendererWing.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 931
+                          },
+                          "RainbowHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1070
+                          },
+                          "RenderGapingVoid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4736
+                          },
+                          "RenderHeavenArrow.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3366
+                          },
+                          "ShaderCallback.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 347
+                          },
+                          "ShaderHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5568
+                          }
+                        }
+                      },
+                      "tile": {
+                        "type": "directory",
+                        "children": {
+                          "TileEntityAutoDireCrafting$ExtremeCraftingMatrix$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1004
+                          },
+                          "TileEntityAutoDireCrafting$ExtremeCraftingMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1833
+                          },
+                          "TileEntityAutoDireCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5142
+                          },
+                          "TileEntityCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6949
+                          },
+                          "TileEntityDireCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4583
+                          },
+                          "TileEntityNeutron.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4228
+                          },
+                          "TileLudicrous.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1652
+                          },
+                          "VanillaPacketDispatcher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2099
+                          },
+                          "inventory": {
+                            "type": "directory",
+                            "children": {
+                              "InventoryDireCrafting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2061
+                              },
+                              "InventoryDireCraftResult.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1342
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "vazkii": {
+            "type": "directory",
+            "children": {
+              "botania": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 267
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "IManaProficiencyArmor$Helper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1153
+                          },
+                          "IManaProficiencyArmor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 356
+                          }
+                        }
+                      },
+                      "mana": {
+                        "type": "directory",
+                        "children": {
+                          "IManaDiscountArmor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 242
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 366
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "avaritia": {
+                "type": "directory",
+                "children": {
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 69
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 10668
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 10212
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 14140
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 9914
+                      }
+                    }
+                  },
+                  "model": {
+                    "type": "directory",
+                    "children": {
+                      "hemisphere.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 13500
+                      },
+                      "sun.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 29201
+                      }
+                    }
+                  },
+                  "shader": {
+                    "type": "directory",
+                    "children": {
+                      "cosmic.frag": {
+                        "type": "file",
+                        "extension": ".frag",
+                        "size": 5154
+                      },
+                      "cosmic.vert": {
+                        "type": "file",
+                        "extension": ".vert",
+                        "size": 6187
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "gapingVoid.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 127262
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "asgardandelion.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 332
+                          },
+                          "block_crystal_matrix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6932
+                          },
+                          "block_crystal_matrix.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "block_gaia.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2813
+                          },
+                          "block_gaia.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "block_gaia_clean.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 610
+                          },
+                          "block_infinity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6320
+                          },
+                          "block_infinity.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "block_neutronium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3205
+                          },
+                          "collector_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 647
+                          },
+                          "collector_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "collector_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 526
+                          },
+                          "collector_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 518
+                          },
+                          "compressor_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 862
+                          },
+                          "compressor_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 137
+                          },
+                          "compressor_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 526
+                          },
+                          "compressor_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 597
+                          },
+                          "crystal_matrix_clean.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 291
+                          },
+                          "deadrock0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3413
+                          },
+                          "deadrock1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3468
+                          },
+                          "deadrock2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3509
+                          },
+                          "deadrock3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3536
+                          },
+                          "deadrock4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3518
+                          },
+                          "determined.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 951
+                          },
+                          "dire_autocrafting_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5204
+                          },
+                          "dire_autocrafting_side.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 324
+                          },
+                          "dire_autocrafting_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3838
+                          },
+                          "dire_autocrafting_top.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "dire_crafting_clean.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 328
+                          },
+                          "dire_crafting_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6350
+                          },
+                          "dire_crafting_side.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 324
+                          },
+                          "dire_crafting_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3633
+                          },
+                          "dire_crafting_top.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "double_craft.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 417
+                          },
+                          "infinitato.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7892
+                          },
+                          "soarleander.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3134
+                          },
+                          "triple_craft.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 343
+                          }
+                        }
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "heavenarrow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3131
+                          },
+                          "void.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2791
+                          },
+                          "voidhalo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6331
+                          },
+                          "voidhalo.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 47
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "compressor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2194
+                          },
+                          "dire_autocrafting_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7539
+                          },
+                          "dire_crafting_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2249
+                          },
+                          "extreme_nei.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 37259
+                          },
+                          "lexiconCraftingOverlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4654
+                          },
+                          "neutron_collector_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1851
+                          },
+                          "avaritia_bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1087380
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "akashic_record.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 319
+                          },
+                          "big_pearl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3044
+                          },
+                          "big_pearl.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 23
+                          },
+                          "cosmic0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2914
+                          },
+                          "cosmic0.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 147
+                          },
+                          "cosmic1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2839
+                          },
+                          "cosmic1.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 235
+                          },
+                          "cosmic2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3459
+                          },
+                          "cosmic2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 268
+                          },
+                          "cosmic3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2857
+                          },
+                          "cosmic3.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 292
+                          },
+                          "cosmic4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2875
+                          },
+                          "cosmic4.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 148
+                          },
+                          "cosmic5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2875
+                          },
+                          "cosmic5.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 241
+                          },
+                          "cosmic6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4491
+                          },
+                          "cosmic6.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "cosmic7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3009
+                          },
+                          "cosmic7.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "cosmic8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2963
+                          },
+                          "cosmic8.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 356
+                          },
+                          "cosmic9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3510
+                          },
+                          "cosmic9.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "costume_armstrong.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 265
+                          },
+                          "costume_egbert.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 327
+                          },
+                          "costume_francis.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 586
+                          },
+                          "costume_moon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3006
+                          },
+                          "endestpearl.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3985
+                          },
+                          "endestpearl.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 232
+                          },
+                          "fracturedore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3084
+                          },
+                          "halo.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3450
+                          },
+                          "halo128.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6784
+                          },
+                          "halo128.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 47
+                          },
+                          "halonoise.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 31598
+                          },
+                          "halonoise.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "infinity_armor_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3030
+                          },
+                          "infinity_armor_0_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2835
+                          },
+                          "infinity_armor_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3575
+                          },
+                          "infinity_armor_1.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_armor_1_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3101
+                          },
+                          "infinity_armor_1_mask.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_armor_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3526
+                          },
+                          "infinity_armor_2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_armor_2_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3005
+                          },
+                          "infinity_armor_2_mask.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_armor_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3017
+                          },
+                          "infinity_armor_3_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2843
+                          },
+                          "infinity_armor_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2993
+                          },
+                          "infinity_armor_mask2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2855
+                          },
+                          "infinity_armor_wingmask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8929
+                          },
+                          "infinity_armor_wingmask.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "infinity_axe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 427
+                          },
+                          "infinity_bow_pulling_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3813
+                          },
+                          "infinity_bow_pulling_0.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_pulling_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4016
+                          },
+                          "infinity_bow_pulling_1.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_pulling_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3839
+                          },
+                          "infinity_bow_pulling_2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_pulling_mask_0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2990
+                          },
+                          "infinity_bow_pulling_mask_0.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_pulling_mask_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3035
+                          },
+                          "infinity_bow_pulling_mask_1.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_pulling_mask_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3001
+                          },
+                          "infinity_bow_pulling_mask_2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_standby.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3939
+                          },
+                          "infinity_bow_standby.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_bow_standby_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2857
+                          },
+                          "infinity_bow_standby_mask.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_destroyer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 282
+                          },
+                          "infinity_hammer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5000
+                          },
+                          "infinity_hammer.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_pickaxe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4294
+                          },
+                          "infinity_pickaxe.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_shovel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4078
+                          },
+                          "infinity_shovel.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_sword.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4233
+                          },
+                          "infinity_sword.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_sword_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4381
+                          },
+                          "infinity_sword_mask.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "infinity_sword_pommel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3116
+                          },
+                          "infinity_sword_pommel.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "mattercluster.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2975
+                          },
+                          "mattercluster_full.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3235
+                          },
+                          "mattercluster_full_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3077
+                          },
+                          "mattercluster_mask.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3017
+                          },
+                          "meatballs.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4517
+                          },
+                          "meatballs.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 324
+                          },
+                          "morvinabox.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3371
+                          },
+                          "morvinabox2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2871
+                          },
+                          "orb_armok.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 645
+                          },
+                          "orb_armok.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "orb_armok_clean.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 411
+                          },
+                          "resource_crystal_matrix_ingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3327
+                          },
+                          "resource_diamond_lattice.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 315
+                          },
+                          "resource_dust.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1296
+                          },
+                          "resource_infinity_catalyst.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9014
+                          },
+                          "resource_infinity_catalyst.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "resource_infinity_drop.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1291
+                          },
+                          "resource_infinity_ingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7719
+                          },
+                          "resource_infinity_ingot.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 409
+                          },
+                          "resource_neutronium_gear.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 822
+                          },
+                          "resource_neutronium_ingot.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 805
+                          },
+                          "resource_neutronium_ingot.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "resource_neutronium_ingot_clean.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 313
+                          },
+                          "resource_neutron_nugget.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 287
+                          },
+                          "resource_neutron_pile.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 241
+                          },
+                          "resource_record_fragment.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3095
+                          },
+                          "resource_starfuel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 401
+                          },
+                          "singularity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3874
+                          },
+                          "singularity.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "singularity2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3264
+                          },
+                          "singularity2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "skull_sword.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3837
+                          },
+                          "skull_sword.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 169
+                          },
+                          "starfuel.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 401
+                          },
+                          "stew.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8200
+                          },
+                          "stew.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "stew_overlay.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2930
+                          },
+                          "ticoninfinity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22394
+                          },
+                          "ticoninfinitymeta.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "unknown.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2966
+                          },
+                          "resource_infinity_catalyst_static.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 768
+                          }
+                        }
+                      },
+                      "misc": {
+                        "type": "directory",
+                        "children": {
+                          "ascension.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1047
+                          },
+                          "terminus.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1998
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "infinity_armor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5618
+                          },
+                          "infinity_armor_eyes.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2909
+                          },
+                          "infinity_armor_old.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1359
+                          },
+                          "infinity_armor_wing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4442
+                          },
+                          "infinity_armor_wingglow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3392
+                          },
+                          "infinity_pants.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 748
+                          },
+                          "sun.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 17809
+                          },
+                          "wand_cap_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1526
+                          },
+                          "wand_rod_neutronium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1578
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 8666
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 42656
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "mod_name": "FpsReducer-mc1.7.10-1.10.3.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\FpsReducer-mc1.7.10-1.10.3.jar",
+  "mod_type": "jar",
+  "tree": {
+    "FpsReducer-mc1.7.10-1.10.3.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 44687,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bre": {
+            "type": "directory",
+            "children": {
+              "fpsreducer": {
+                "type": "directory",
+                "children": {
+                  "Command$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 763
+                  },
+                  "Command$SubCmd.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1432
+                  },
+                  "Command.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4175
+                  },
+                  "ConfigChangedEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 998
+                  },
+                  "KeyBindEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1921
+                  },
+                  "mod_FpsReducer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1700
+                  },
+                  "OverlayEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3815
+                  },
+                  "Reference.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 402
+                  },
+                  "WakeupEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5644
+                  },
+                  "WorldLoadEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3291
+                  },
+                  "compat": {
+                    "type": "directory",
+                    "children": {
+                      "GlStateManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 645
+                      }
+                    }
+                  },
+                  "config": {
+                    "type": "directory",
+                    "children": {
+                      "CommonConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5406
+                      },
+                      "GlobalConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4897
+                      },
+                      "OldConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4320
+                      },
+                      "PlayerConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2438
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "ConfigGuiFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1466
+                      },
+                      "GuiConfigScreen$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1477
+                      },
+                      "GuiConfigScreen$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1288
+                      },
+                      "GuiConfigScreen$GuiPart.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1848
+                      },
+                      "GuiConfigScreen.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8723
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1013
+                      },
+                      "GuiSliderEx.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2426
+                      }
+                    }
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5994
+                      },
+                      "CommonProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 878
+                      }
+                    }
+                  },
+                  "utils": {
+                    "type": "directory",
+                    "children": {
+                      "Logger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3146
+                      },
+                      "ModLib.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 598
+                      },
+                      "Reflection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1220
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 377
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "fpsreducer": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1061
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1158
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 982
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 81
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3646
+          }
+        }
+      }
+    }
+  }
+}

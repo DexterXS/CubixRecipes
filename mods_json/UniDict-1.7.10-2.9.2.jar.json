@@ -1,0 +1,422 @@
+{
+  "mod_name": "UniDict-1.7.10-2.9.2.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\UniDict-1.7.10-2.9.2.jar",
+  "mod_type": "jar",
+  "tree": {
+    "UniDict-1.7.10-2.9.2.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 153397,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "wanion": {
+            "type": "directory",
+            "children": {
+              "unidict": {
+                "type": "directory",
+                "children": {
+                  "Config.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10977
+                  },
+                  "LoadStage.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2038
+                  },
+                  "MetaItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7526
+                  },
+                  "UniDict$IDependence.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 195
+                  },
+                  "UniDict$Module.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 455
+                  },
+                  "UniDict.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7008
+                  },
+                  "UniOreDictionary.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8264
+                  },
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "UniDictAPI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3493
+                      },
+                      "helper": {
+                        "type": "directory",
+                        "children": {
+                          "ForestryUniHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4336
+                          },
+                          "FoundryUniHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1777
+                          },
+                          "FurnaceUniHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3177
+                          },
+                          "IEUniHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1571
+                          },
+                          "TConUniHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1644
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "Dependencies$DependenceWatcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1351
+                      },
+                      "Dependencies.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3498
+                      },
+                      "FixedSizeList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2835
+                      },
+                      "Instantiator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 466
+                      },
+                      "Reference.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 619
+                      },
+                      "SpecificKindItemStackComparator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2981
+                      },
+                      "Util$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1803
+                      },
+                      "Util.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2722
+                      }
+                    }
+                  },
+                  "helper": {
+                    "type": "directory",
+                    "children": {
+                      "NEIHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 499
+                      },
+                      "RecipeHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5885
+                      },
+                      "ResourceHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2254
+                      }
+                    }
+                  },
+                  "integration": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractIntegrationThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 709
+                      },
+                      "AbyssalCraftIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2330
+                      },
+                      "AE2Integration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3649
+                      },
+                      "ChestIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3454
+                      },
+                      "CraftingIntegration$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 259
+                      },
+                      "CraftingIntegration$RecipeComparator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1933
+                      },
+                      "CraftingIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10544
+                      },
+                      "ElectricalAgeIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2406
+                      },
+                      "EnderIOIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6462
+                      },
+                      "ForestryIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6347
+                      },
+                      "FoundryIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5078
+                      },
+                      "FSPIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3293
+                      },
+                      "FurnaceIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4138
+                      },
+                      "HydraulicraftIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5409
+                      },
+                      "IC2Integration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2894
+                      },
+                      "IEIntegration$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 241
+                      },
+                      "IEIntegration$UniCrusherRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1324
+                      },
+                      "IEIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8306
+                      },
+                      "IntegrationModule.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3344
+                      },
+                      "MagneticraftIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5375
+                      },
+                      "MekanismIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9032
+                      },
+                      "NuclearCraftIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3666
+                      },
+                      "RailcraftIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3399
+                      },
+                      "TEIntegration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7489
+                      }
+                    }
+                  },
+                  "module": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractModule$Manager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4587
+                      },
+                      "AbstractModule.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3735
+                      },
+                      "AbstractModuleThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 785
+                      },
+                      "ModuleHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3319
+                      },
+                      "SpecifiedLoadStage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 456
+                      }
+                    }
+                  },
+                  "recipe": {
+                    "type": "directory",
+                    "children": {
+                      "ForgeRecipeResearcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7440
+                      },
+                      "IC2RecipeResearcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8028
+                      },
+                      "IRecipeResearcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1375
+                      },
+                      "VanillaRecipeResearcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6741
+                      }
+                    }
+                  },
+                  "resource": {
+                    "type": "directory",
+                    "children": {
+                      "Resource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9990
+                      },
+                      "ResourceHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8482
+                      },
+                      "UniAttributes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 681
+                      },
+                      "UniResourceContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5778
+                      },
+                      "UniResourceHandler$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1789
+                      },
+                      "UniResourceHandler$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1819
+                      },
+                      "UniResourceHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13994
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 407
+          },
+          "UniDictLogo.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 27712
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 10943
+          }
+        }
+      }
+    }
+  }
+}

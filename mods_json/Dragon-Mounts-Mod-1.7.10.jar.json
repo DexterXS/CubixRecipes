@@ -1,0 +1,797 @@
+{
+  "mod_name": "Dragon-Mounts-Mod-1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\Dragon-Mounts-Mod-1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "Dragon-Mounts-Mod-1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 453648,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "info": {
+            "type": "directory",
+            "children": {
+              "ata4": {
+                "type": "directory",
+                "children": {
+                  "minecraft": {
+                    "type": "directory",
+                    "children": {
+                      "dragon": {
+                        "type": "directory",
+                        "children": {
+                          "DragonMounts.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2235
+                          },
+                          "DragonMountsConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2263
+                          },
+                          "client": {
+                            "type": "directory",
+                            "children": {
+                              "ClientProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2021
+                              },
+                              "gui": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiDragonDebug.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16597
+                                  },
+                                  "GuiTextPrinter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2618
+                                  }
+                                }
+                              },
+                              "handler": {
+                                "type": "directory",
+                                "children": {
+                                  "DragonControl.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2224
+                                  },
+                                  "DragonEntityWatcher.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3431
+                                  },
+                                  "DragonSplash.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3810
+                                  }
+                                }
+                              },
+                              "model": {
+                                "type": "directory",
+                                "children": {
+                                  "DragonModel.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13731
+                                  },
+                                  "ModelPart.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4448
+                                  },
+                                  "ModelPartProxy.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2849
+                                  },
+                                  "anim": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CircularBuffer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1135
+                                      },
+                                      "DragonAnimator.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 15163
+                                      },
+                                      "TickFloat.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1853
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "DragonRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8227
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "server": {
+                            "type": "directory",
+                            "children": {
+                              "ServerProxy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4368
+                              },
+                              "cmd": {
+                                "type": "directory",
+                                "children": {
+                                  "CommandDragon$BreedModifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1279
+                                  },
+                                  "CommandDragon$EntityModifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 351
+                                  },
+                                  "CommandDragon$LifeStageModifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1574
+                                  },
+                                  "CommandDragon$TameModifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1226
+                                  },
+                                  "CommandDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7012
+                                  }
+                                }
+                              },
+                              "entity": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityFlyingTameable.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 11032
+                                  },
+                                  "EntityTameableDragon.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 26361
+                                  },
+                                  "ai": {
+                                    "type": "directory",
+                                    "children": {
+                                      "DragonBodyHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1758
+                                      },
+                                      "DragonFlightNode.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9333
+                                      },
+                                      "DragonFlightWaypoint.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3635
+                                      },
+                                      "EntityAICatchOwner.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1282
+                                      },
+                                      "EntityAIRide.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1375
+                                      },
+                                      "air": {
+                                        "type": "directory",
+                                        "children": {
+                                          "EntityAICatchOwnerAir.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1549
+                                          },
+                                          "EntityAILand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1575
+                                          },
+                                          "EntityAIRideAir.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2450
+                                          }
+                                        }
+                                      },
+                                      "ground": {
+                                        "type": "directory",
+                                        "children": {
+                                          "EntityAICatchOwnerGround.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 825
+                                          },
+                                          "EntityAIDragonMate.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 4015
+                                          },
+                                          "EntityAIFollowOwner.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3625
+                                          },
+                                          "EntityAIHunt.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 970
+                                          },
+                                          "EntityAIPanicChild.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 878
+                                          },
+                                          "EntityAIRideGround.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2518
+                                          },
+                                          "EntityAIWatchIdle.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 550
+                                          },
+                                          "EntityAIWatchLiving.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2978
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "breeds": {
+                                    "type": "directory",
+                                    "children": {
+                                      "DragonBreed.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3726
+                                      },
+                                      "DragonBreedAir.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2805
+                                      },
+                                      "DragonBreedEnd.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1054
+                                      },
+                                      "DragonBreedFire.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1844
+                                      },
+                                      "DragonBreedForest.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2821
+                                      },
+                                      "DragonBreedGhost.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3505
+                                      },
+                                      "DragonBreedIce.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2708
+                                      },
+                                      "DragonBreedNether.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1903
+                                      },
+                                      "DragonBreedWater.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1173
+                                      }
+                                    }
+                                  },
+                                  "helper": {
+                                    "type": "directory",
+                                    "children": {
+                                      "DragonBreedHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 8925
+                                      },
+                                      "DragonBreedRegistry.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2533
+                                      },
+                                      "DragonDebug.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2303
+                                      },
+                                      "DragonEntityHacks.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1532
+                                      },
+                                      "DragonHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1400
+                                      },
+                                      "DragonLifeStage.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2101
+                                      },
+                                      "DragonLifeStageHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6908
+                                      },
+                                      "DragonParticleHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2519
+                                      },
+                                      "DragonReproductionHelper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6754
+                                      },
+                                      "DragonSizeModifier.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1088
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "handler": {
+                                "type": "directory",
+                                "children": {
+                                  "DragonEggBlockHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3379
+                                  }
+                                }
+                              },
+                              "network": {
+                                "type": "directory",
+                                "children": {
+                                  "DragonControlChannelHandler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6455
+                                  },
+                                  "DragonControlMessage.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1651
+                                  }
+                                }
+                              },
+                              "util": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemUtils.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2450
+                                  },
+                                  "PrivateFields.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1081
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "util": {
+                            "type": "directory",
+                            "children": {
+                              "BasicModConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1555
+                              },
+                              "math": {
+                                "type": "directory",
+                                "children": {
+                                  "MathX.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3270
+                                  },
+                                  "Spline.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3662
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 450
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "dragonmounts": {
+                "type": "directory",
+                "children": {
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 495
+                  },
+                  "splashes.txt": {
+                    "type": "file",
+                    "extension": ".txt",
+                    "size": 146
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 954
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 888
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1229
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "entities": {
+                        "type": "directory",
+                        "children": {
+                          "dragon": {
+                            "type": "directory",
+                            "children": {
+                              "dragon_egg.obj": {
+                                "type": "file",
+                                "extension": ".obj",
+                                "size": 5186
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "mob": {
+                        "type": "directory",
+                        "children": {
+                          "enderdragon": {
+                            "type": "directory",
+                            "children": {
+                              "breathe1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 13553
+                              },
+                              "breathe2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 12300
+                              },
+                              "death.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 28884
+                              },
+                              "step1.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 5364
+                              },
+                              "step2.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 5422
+                              },
+                              "step3.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 5182
+                              },
+                              "step4.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 5313
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "entities": {
+                        "type": "directory",
+                        "children": {
+                          "dragon": {
+                            "type": "directory",
+                            "children": {
+                              "dissolve.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 35086
+                              },
+                              "dragon_egg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 193
+                              },
+                              "aether": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 8312
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1927
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2644
+                                  }
+                                }
+                              },
+                              "ender": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 11049
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1941
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1950
+                                  }
+                                }
+                              },
+                              "fire": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 30451
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1462
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2959
+                                  }
+                                }
+                              },
+                              "forest": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 24539
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5895
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1950
+                                  }
+                                }
+                              },
+                              "ice": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 7982
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5824
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1950
+                                  }
+                                }
+                              },
+                              "nether": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 20517
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5665
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1665
+                                  }
+                                }
+                              },
+                              "sylphid": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 16348
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3583
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1950
+                                  }
+                                }
+                              },
+                              "undead": {
+                                "type": "directory",
+                                "children": {
+                                  "body.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 13863
+                                  },
+                                  "glow.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 8103
+                                  },
+                                  "saddle.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2600
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "dm_banner_s.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 18918
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1958
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7378
+          }
+        }
+      }
+    }
+  }
+}

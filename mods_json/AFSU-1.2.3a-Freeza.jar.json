@@ -1,0 +1,332 @@
+{
+  "mod_name": "AFSU-1.2.3a-Freeza.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\AFSU-1.2.3a-Freeza.jar",
+  "mod_type": "jar",
+  "tree": {
+    "AFSU-1.2.3a-Freeza.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 62395,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "xbony2": {
+            "type": "directory",
+            "children": {
+              "afsu": {
+                "type": "directory",
+                "children": {
+                  "AFSUMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3227
+                  },
+                  "ConfigHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4383
+                  },
+                  "blocks": {
+                    "type": "directory",
+                    "children": {
+                      "AFSUBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11168
+                      },
+                      "ItemBlockAFSU.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1824
+                      }
+                    }
+                  },
+                  "container": {
+                    "type": "directory",
+                    "children": {
+                      "ContainerAFSU.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2117
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiAFSU.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5634
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1575
+                      }
+                    }
+                  },
+                  "items": {
+                    "type": "directory",
+                    "children": {
+                      "AFB.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2663
+                      }
+                    }
+                  },
+                  "tileentity": {
+                    "type": "directory",
+                    "children": {
+                      "TileEntityAFSU.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 558
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "afsu": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_IC.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 104
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 38
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 46
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "AFSU_input_black.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 552
+                          },
+                          "AFSU_input_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 640
+                          },
+                          "AFSU_input_chloe1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1316
+                          },
+                          "AFSU_input_chloe2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1483
+                          },
+                          "AFSU_input_chloe3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1441
+                          },
+                          "AFSU_input_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 789
+                          },
+                          "AFSU_input_freezy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 821
+                          },
+                          "AFSU_input_old.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 771
+                          },
+                          "AFSU_input_yellow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 826
+                          },
+                          "AFSU_output_black.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 715
+                          },
+                          "AFSU_output_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 694
+                          },
+                          "AFSU_output_chloe1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1461
+                          },
+                          "AFSU_output_chloe2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1555
+                          },
+                          "AFSU_output_chloe3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1473
+                          },
+                          "AFSU_output_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1483
+                          },
+                          "AFSU_output_freezy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 606
+                          },
+                          "AFSU_output_old.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 851
+                          },
+                          "AFSU_output_yellow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 819
+                          },
+                          "AFSU_top_black.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 770
+                          },
+                          "AFSU_top_blue.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1107
+                          },
+                          "AFSU_top_chloe1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1896
+                          },
+                          "AFSU_top_chloe2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1917
+                          },
+                          "AFSU_top_chloe3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1899
+                          },
+                          "AFSU_top_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1258
+                          },
+                          "AFSU_top_freezy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1165
+                          },
+                          "AFSU_top_old.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1108
+                          },
+                          "AFSU_top_yellow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1258
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_afsu.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1952
+                          },
+                          "guiafsuold.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2138
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "alcempty_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 573
+                          },
+                          "alcfull_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 556
+                          },
+                          "alcpartly_default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 567
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1385
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2708
+          }
+        }
+      }
+    }
+  }
+}

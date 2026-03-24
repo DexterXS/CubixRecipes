@@ -1,0 +1,62 @@
+{
+  "mod_name": "BuildAPI.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BuildAPI.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BuildAPI.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 10433,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "inject": {
+            "type": "directory",
+            "children": {
+              "ClassTransformer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3720
+              },
+              "Tweaker.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1559
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 75
+              }
+            }
+          },
+          "bqr.class": {
+            "type": "file",
+            "extension": ".class",
+            "size": 10083
+          },
+          "bqs.class": {
+            "type": "file",
+            "extension": ".class",
+            "size": 2474
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

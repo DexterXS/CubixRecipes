@@ -1,0 +1,732 @@
+{
+  "mod_name": "EIO-Energistics-Cubix-1.0-all.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\EIO-Energistics-Cubix-1.0-all.jar",
+  "mod_type": "jar",
+  "tree": {
+    "EIO-Energistics-Cubix-1.0-all.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 242611,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "eio": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockEIO.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1469
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiAlloySmelter$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1230
+                              },
+                              "GuiAlloySmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2586
+                              },
+                              "GuiCrusher$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1210
+                              },
+                              "GuiCrusher.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2545
+                              },
+                              "GuiEIO.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1550
+                              },
+                              "GuiSliceAndSplicer$Companion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1242
+                              },
+                              "GuiSliceAndSplicer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2611
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "EIOTESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6650
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2522
+                          },
+                          "ContainerCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2535
+                          },
+                          "ContainerEIO.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6920
+                          },
+                          "ContainerSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2761
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotInvValid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1688
+                              },
+                              "SlotInvValidNoPattern.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1944
+                              },
+                              "SlotOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1536
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "EnderIOEnergistics$creativeTab$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "EnderIOEnergistics.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4231
+                      },
+                      "EnderIOEnergisticsConfig$Crusher$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2165
+                      },
+                      "EnderIOEnergisticsConfig$Crusher$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2153
+                      },
+                      "EnderIOEnergisticsConfig$Crusher$Hybrid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2147
+                      },
+                      "EnderIOEnergisticsConfig$Crusher$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2161
+                      },
+                      "EnderIOEnergisticsConfig$Crusher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1248
+                      },
+                      "EnderIOEnergisticsConfig$SliceAndSplicer$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1905
+                      },
+                      "EnderIOEnergisticsConfig$SliceAndSplicer$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1901
+                      },
+                      "EnderIOEnergisticsConfig$SliceAndSplicer$Hybrid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1895
+                      },
+                      "EnderIOEnergisticsConfig$SliceAndSplicer$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1901
+                      },
+                      "EnderIOEnergisticsConfig$SliceAndSplicer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1304
+                      },
+                      "EnderIOEnergisticsConfig$Smelter$Absolute.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1873
+                      },
+                      "EnderIOEnergisticsConfig$Smelter$Advanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1869
+                      },
+                      "EnderIOEnergisticsConfig$Smelter$Hybrid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1863
+                      },
+                      "EnderIOEnergisticsConfig$Smelter$Ultimate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1869
+                      },
+                      "EnderIOEnergisticsConfig$Smelter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1248
+                      },
+                      "EnderIOEnergisticsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2076
+                      },
+                      "ext": {
+                        "type": "directory",
+                        "children": {
+                          "PlatformHelperKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3531
+                          },
+                          "RecipeHelper$isPatternDetailsValidForAlloySmelter$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2534
+                          },
+                          "RecipeHelper$isPatternDetailsValidForCrusher$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2312
+                          },
+                          "RecipeHelper$isPatternDetailsValidForSliceAndSplicer$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2543
+                          },
+                          "RecipeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13322
+                          },
+                          "RegistryUtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1634
+                          },
+                          "UtilsKt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2746
+                          }
+                        }
+                      },
+                      "integration": {
+                        "type": "directory",
+                        "children": {
+                          "NEIIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1889
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "EnderIOItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2910
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy$init$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2425
+                          },
+                          "ClientProxy$init$10.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2441
+                          },
+                          "ClientProxy$init$11.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2445
+                          },
+                          "ClientProxy$init$12.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2445
+                          },
+                          "ClientProxy$init$13.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2417
+                          },
+                          "ClientProxy$init$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2421
+                          },
+                          "ClientProxy$init$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2425
+                          },
+                          "ClientProxy$init$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2425
+                          },
+                          "ClientProxy$init$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2436
+                          },
+                          "ClientProxy$init$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2432
+                          },
+                          "ClientProxy$init$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2436
+                          },
+                          "ClientProxy$init$8.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2436
+                          },
+                          "ClientProxy$init$9.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2443
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3609
+                          },
+                          "CommonProxy$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5728
+                          },
+                          "CommonProxy$preInit$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1481
+                          },
+                          "CommonProxy$preInit$10.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1489
+                          },
+                          "CommonProxy$preInit$11.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1491
+                          },
+                          "CommonProxy$preInit$12.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1491
+                          },
+                          "CommonProxy$preInit$13.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1478
+                          },
+                          "CommonProxy$preInit$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1479
+                          },
+                          "CommonProxy$preInit$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1481
+                          },
+                          "CommonProxy$preInit$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1481
+                          },
+                          "CommonProxy$preInit$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1484
+                          },
+                          "CommonProxy$preInit$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$8.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1486
+                          },
+                          "CommonProxy$preInit$9.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1489
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8293
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileAbsoluteAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          },
+                          "TileAbsoluteCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1441
+                          },
+                          "TileAbsoluteSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          },
+                          "TileAdvancedAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          },
+                          "TileAdvancedCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1441
+                          },
+                          "TileAdvancedSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          },
+                          "TileAlloySmelter$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1138
+                          },
+                          "TileAlloySmelter$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1997
+                          },
+                          "TileAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5523
+                          },
+                          "TileCrusher$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 920
+                          },
+                          "TileCrusher$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1998
+                          },
+                          "TileCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6614
+                          },
+                          "TileEIO.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14375
+                          },
+                          "TileHybridAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1417
+                          },
+                          "TileHybridCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1431
+                          },
+                          "TileHybridSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1448
+                          },
+                          "TileRFProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3115
+                          },
+                          "TileSliceAndSplicer$Companion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1150
+                          },
+                          "TileSliceAndSplicer$patternInventory$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2021
+                          },
+                          "TileSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5672
+                          },
+                          "TileUltimateAlloySmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          },
+                          "TileUltimateCrusher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1441
+                          },
+                          "TileUltimateSliceAndSplicer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "eio_energistics": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1116
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "alloy_smelter.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28954
+                      },
+                      "crusher.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 50756
+                      },
+                      "rf_provider.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 16924
+                      },
+                      "slice_and_splicer.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 43581
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "absolute_alloy_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5970
+                          },
+                          "absolute_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3016
+                          },
+                          "absolute_slice_and_splicer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3204
+                          },
+                          "advanced_alloy_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3831
+                          },
+                          "advanced_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2796
+                          },
+                          "advanced_slice_and_splicer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3046
+                          },
+                          "hybrid_alloy_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3965
+                          },
+                          "hybrid_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2776
+                          },
+                          "hybrid_slice_and_splicer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3031
+                          },
+                          "rf_provider.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1332
+                          },
+                          "ultimate_alloy_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3904
+                          },
+                          "ultimate_crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2829
+                          },
+                          "ultimate_slice_and_splicer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3024
+                          }
+                        }
+                      },
+                      "guis": {
+                        "type": "directory",
+                        "children": {
+                          "alloy_smelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8461
+                          },
+                          "crusher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8771
+                          },
+                          "slice_and_splicer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7681
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1078
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 83938
+          }
+        }
+      }
+    }
+  }
+}

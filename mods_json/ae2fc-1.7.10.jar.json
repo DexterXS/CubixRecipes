@@ -1,0 +1,3222 @@
+{
+  "mod_name": "ae2fc-1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ae2fc-1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ae2fc-1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1137746,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 163
+              },
+              "ae2fc_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 642
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "glodblock": {
+                "type": "directory",
+                "children": {
+                  "github": {
+                    "type": "directory",
+                    "children": {
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "FluidCraftAPI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1908
+                          },
+                          "IFluidCraftAPI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 573
+                          },
+                          "ISide.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 186
+                          },
+                          "registries": {
+                            "type": "directory",
+                            "children": {
+                              "ILevelTerminalRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1242
+                              },
+                              "ILevelViewable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1265
+                              },
+                              "ILevelViewableAdapter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 323
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1861
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "base": {
+                                "type": "directory",
+                                "children": {
+                                  "FCBaseMEGui.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5317
+                                  },
+                                  "FCGuiAmount.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5794
+                                  },
+                                  "FCGuiEncodeTerminal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9710
+                                  },
+                                  "FCGuiMonitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 26058
+                                  }
+                                }
+                              },
+                              "container": {
+                                "type": "directory",
+                                "children": {
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "FCBaseContainer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2531
+                                      },
+                                      "FCContainerEncodeTerminal$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 805
+                                      },
+                                      "FCContainerEncodeTerminal.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 21989
+                                      },
+                                      "FCContainerFluidConfigurable.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 5854
+                                      },
+                                      "FCContainerMonitor.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 9516
+                                      }
+                                    }
+                                  },
+                                  "ContainerCraftingWireless.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4915
+                                  },
+                                  "ContainerDualInterface.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1597
+                                  },
+                                  "ContainerEssentiaMonitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7520
+                                  },
+                                  "ContainerFluidAutoFiller$FakeSlot.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1526
+                                  },
+                                  "ContainerFluidAutoFiller.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2605
+                                  },
+                                  "ContainerFluidCraftConfirm.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4715
+                                  },
+                                  "ContainerFluidInterface.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4246
+                                  },
+                                  "ContainerFluidIO.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2340
+                                  },
+                                  "ContainerFluidLevelEmitter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4608
+                                  },
+                                  "ContainerFluidMonitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17439
+                                  },
+                                  "ContainerFluidOptimizePatterns.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3386
+                                  },
+                                  "ContainerFluidPacketDecoder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1494
+                                  },
+                                  "ContainerFluidPatternEncoder$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 857
+                                  },
+                                  "ContainerFluidPatternEncoder.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8745
+                                  },
+                                  "ContainerFluidPatternExWireless.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 880
+                                  },
+                                  "ContainerFluidPatternTerminal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6333
+                                  },
+                                  "ContainerFluidPatternTerminalEx$ProcessingSlotFake.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1275
+                                  },
+                                  "ContainerFluidPatternTerminalEx.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4519
+                                  },
+                                  "ContainerFluidPatternWireless.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 872
+                                  },
+                                  "ContainerFluidPortableCell.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 955
+                                  },
+                                  "ContainerFluidStorageBus.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7481
+                                  },
+                                  "ContainerIngredientBuffer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3641
+                                  },
+                                  "ContainerInterfaceWireless.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1777
+                                  },
+                                  "ContainerItemMonitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7613
+                                  },
+                                  "ContainerLargeIngredientBuffer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1309
+                                  },
+                                  "ContainerLevelMaintainer$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 845
+                                  },
+                                  "ContainerLevelMaintainer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6573
+                                  },
+                                  "ContainerLevelTerminal$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 887
+                                  },
+                                  "ContainerLevelTerminal$InvTracker.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4695
+                                  },
+                                  "ContainerLevelTerminal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 15975
+                                  },
+                                  "ContainerLevelWireless.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 844
+                                  },
+                                  "ContainerOCPatternEditor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1661
+                                  },
+                                  "ContainerPatternValueAmount.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1795
+                                  },
+                                  "ContainerRenamer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 651
+                                  }
+                                }
+                              },
+                              "FCGuiLineField.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1224
+                              },
+                              "FCGuiTextField$TooltipProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1400
+                              },
+                              "FCGuiTextField.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4273
+                              },
+                              "GuiCraftingStatus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4807
+                              },
+                              "GuiDualInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9408
+                              },
+                              "GuiEssentiaTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6166
+                              },
+                              "GuiFCImgButton$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 254
+                              },
+                              "GuiFCImgButton$ButtonAppearance.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 820
+                              },
+                              "GuiFCImgButton$EnumPair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1040
+                              },
+                              "GuiFCImgButton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9125
+                              },
+                              "GuiFCPriority.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4839
+                              },
+                              "GuiFluidAutoFiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2474
+                              },
+                              "GuiFluidCraftAmount.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6649
+                              },
+                              "GuiFluidCraftConfirm.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2149
+                              },
+                              "GuiFluidCraftingWireless.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4075
+                              },
+                              "GuiFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7715
+                              },
+                              "GuiFluidIO.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3641
+                              },
+                              "GuiFluidLevelEmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8444
+                              },
+                              "GuiFluidMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4458
+                              },
+                              "GuiFluidOptimizePatterns.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2570
+                              },
+                              "GuiFluidPacketDecoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2337
+                              },
+                              "GuiFluidPatternEncoder$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2182
+                              },
+                              "GuiFluidPatternEncoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7593
+                              },
+                              "GuiFluidPatternExWireless.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1106
+                              },
+                              "GuiFluidPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5721
+                              },
+                              "GuiFluidPatternTerminalEx.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7901
+                              },
+                              "GuiFluidPatternWireless.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1098
+                              },
+                              "GuiFluidPortableCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1595
+                              },
+                              "GuiFluidStorageBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5249
+                              },
+                              "GuiFluidTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6842
+                              },
+                              "GuiIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5363
+                              },
+                              "GuiInterfaceWireless$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1312
+                              },
+                              "GuiInterfaceWireless$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1312
+                              },
+                              "GuiInterfaceWireless$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1312
+                              },
+                              "GuiInterfaceWireless$InterfaceWirelessEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9516
+                              },
+                              "GuiInterfaceWireless$InterfaceWirelessList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6430
+                              },
+                              "GuiInterfaceWireless$InterfaceWirelessSection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7201
+                              },
+                              "GuiInterfaceWireless.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 32351
+                              },
+                              "GuiItemMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3930
+                              },
+                              "GuiLargeIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5480
+                              },
+                              "GuiLevelMaintainer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1003
+                              },
+                              "GuiLevelMaintainer$Component.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8783
+                              },
+                              "GuiLevelMaintainer$Widget.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2808
+                              },
+                              "GuiLevelMaintainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21227
+                              },
+                              "GuiLevelTerminal$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1244
+                              },
+                              "GuiLevelTerminal$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1244
+                              },
+                              "GuiLevelTerminal$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1042
+                              },
+                              "GuiLevelTerminal$LevelTerminalEntry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10752
+                              },
+                              "GuiLevelTerminal$LevelTerminalList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6240
+                              },
+                              "GuiLevelTerminal$LevelTerminalSection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5653
+                              },
+                              "GuiLevelTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 32136
+                              },
+                              "GuiLevelWireless.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1505
+                              },
+                              "GuiOCPatternEditor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2324
+                              },
+                              "GuiPatternValueAmount.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5179
+                              },
+                              "GuiRenamer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6609
+                              },
+                              "ITankDump.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 186
+                              }
+                            }
+                          },
+                          "me": {
+                            "type": "directory",
+                            "children": {
+                              "EssentiaRepo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5779
+                              },
+                              "FluidRepo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9415
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "ItemDropRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6235
+                              },
+                              "ItemPacketRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4086
+                              },
+                              "RenderBlockFluidBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3641
+                              },
+                              "RenderBlockFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2662
+                              },
+                              "RenderBlockLevelMaintainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2488
+                              },
+                              "RenderBlockWalrus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2004
+                              }
+                            }
+                          },
+                          "textures": {
+                            "type": "directory",
+                            "children": {
+                              "FCPartsTexture.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4738
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "block": {
+                            "type": "directory",
+                            "children": {
+                              "BaseBlockContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1236
+                              },
+                              "BlockFluidAutoFiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4755
+                              },
+                              "BlockFluidBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5028
+                              },
+                              "BlockFluidDiscretizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2819
+                              },
+                              "BlockFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4621
+                              },
+                              "BlockFluidPacketDecoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4187
+                              },
+                              "BlockFluidPatternEncoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2985
+                              },
+                              "BlockIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2995
+                              },
+                              "BlockLargeIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3037
+                              },
+                              "BlockLevelMaintainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5127
+                              },
+                              "BlockOCPatternEditor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3040
+                              },
+                              "FCBaseBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3404
+                              }
+                            }
+                          },
+                          "Config.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3140
+                          },
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "BaseItemBlockContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1138
+                              },
+                              "FCBaseItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 989
+                              },
+                              "FCBaseItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1330
+                              },
+                              "FCBaseItemCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12521
+                              },
+                              "ItemBaseInfinityStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4917
+                              },
+                              "ItemBaseWirelessTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7407
+                              },
+                              "ItemBasicFluidStorageCell$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1137
+                              },
+                              "ItemBasicFluidStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7135
+                              },
+                              "ItemBasicFluidStoragePart.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3960
+                              },
+                              "ItemCreativeFluidStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3544
+                              },
+                              "ItemEnergyCard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2439
+                              },
+                              "ItemFluidConversionMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3158
+                              },
+                              "ItemFluidDrop.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7923
+                              },
+                              "ItemFluidEncodedPattern.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2096
+                              },
+                              "ItemFluidExportBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3256
+                              },
+                              "ItemFluidExtremeStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3016
+                              },
+                              "ItemFluidImportBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3256
+                              },
+                              "ItemFluidLevelEmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3222
+                              },
+                              "ItemFluidPacket.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7817
+                              },
+                              "ItemFluidStorageHousing.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3743
+                              },
+                              "ItemFluidStorageMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3137
+                              },
+                              "ItemInfinityWaterStorageCell$InfinityConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 832
+                              },
+                              "ItemInfinityWaterStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3154
+                              },
+                              "ItemMultiFluidStorageCell$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1137
+                              },
+                              "ItemMultiFluidStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7195
+                              },
+                              "ItemPartFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3171
+                              },
+                              "ItemPartFluidP2PInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3587
+                              },
+                              "ItemPartFluidPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3214
+                              },
+                              "ItemPartFluidPatternTerminalEx.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3229
+                              },
+                              "ItemPartFluidStorageBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3179
+                              },
+                              "ItemPartFluidTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3800
+                              },
+                              "ItemPartLevelTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3800
+                              },
+                              "ItemPortableFluidCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10456
+                              },
+                              "ItemQuantumBridgeCard.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2491
+                              },
+                              "ItemWirelessFluidTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3778
+                              },
+                              "ItemWirelessInterfaceTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3810
+                              },
+                              "ItemWirelessLevelTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3778
+                              },
+                              "ItemWirelessPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3806
+                              },
+                              "ItemWirelessUltraTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13208
+                              }
+                            }
+                          },
+                          "parts": {
+                            "type": "directory",
+                            "children": {
+                              "base": {
+                                "type": "directory",
+                                "children": {
+                                  "FCFluidEncodeTerminal.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6509
+                                  },
+                                  "FCPart.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16293
+                                  },
+                                  "FCPartMonitor$1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 963
+                                  },
+                                  "FCPartMonitor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 16638
+                                  },
+                                  "FCSharedFluidBus.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6994
+                                  }
+                                }
+                              },
+                              "PartFluidConversionMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7939
+                              },
+                              "PartFluidExportBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13729
+                              },
+                              "PartFluidImportBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9417
+                              },
+                              "PartFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11830
+                              },
+                              "PartFluidLevelEmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21569
+                              },
+                              "PartFluidP2PInterface$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2547
+                              },
+                              "PartFluidP2PInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 20859
+                              },
+                              "PartFluidPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6383
+                              },
+                              "PartFluidPatternTerminalEx.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6141
+                              },
+                              "PartFluidStorageBus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 22991
+                              },
+                              "PartFluidStorageMonitor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1322
+                              },
+                              "PartFluidTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1603
+                              },
+                              "PartLevelTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3125
+                              }
+                            }
+                          },
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "CellType$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1042
+                              },
+                              "CellType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3874
+                              },
+                              "CreativeFluidCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3868
+                              },
+                              "FluidCellHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4056
+                              },
+                              "FluidCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12546
+                              },
+                              "FluidCellInventoryHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6054
+                              },
+                              "IFluidCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 992
+                              },
+                              "IFluidCellInventoryHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 491
+                              },
+                              "IStorageFluidCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 593
+                              }
+                            }
+                          },
+                          "tabs": {
+                            "type": "directory",
+                            "children": {
+                              "FluidCraftingTabs.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 958
+                              }
+                            }
+                          },
+                          "tile": {
+                            "type": "directory",
+                            "children": {
+                              "TileFluidAutoFiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15695
+                              },
+                              "TileFluidBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9041
+                              },
+                              "TileFluidDiscretizer$FluidDiscretizingInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8621
+                              },
+                              "TileFluidDiscretizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5498
+                              },
+                              "TileFluidInterface$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1953
+                              },
+                              "TileFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9513
+                              },
+                              "TileFluidPacketDecoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9027
+                              },
+                              "TileFluidPatternEncoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3646
+                              },
+                              "TileIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5402
+                              },
+                              "TileLargeIngredientBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1324
+                              },
+                              "TileLevelMaintainer$InventoryRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10199
+                              },
+                              "TileLevelMaintainer$State.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1486
+                              },
+                              "TileLevelMaintainer$TLMTags.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1812
+                              },
+                              "TileLevelMaintainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19272
+                              },
+                              "TileOCPatternEditor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1761
+                              },
+                              "TileWalrus.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 416
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "coremod": {
+                        "type": "directory",
+                        "children": {
+                          "FCClassTransformer$ClassMapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1223
+                          },
+                          "FCClassTransformer$Transform.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 286
+                          },
+                          "FCClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3443
+                          },
+                          "FluidCraftCore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2001
+                          },
+                          "hooker": {
+                            "type": "directory",
+                            "children": {
+                              "CoreModHooks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8659
+                              },
+                              "CoreModHooksClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 485
+                              }
+                            }
+                          },
+                          "registries": {
+                            "type": "directory",
+                            "children": {
+                              "adapters": {
+                                "type": "directory",
+                                "children": {
+                                  "PartFluidLevelEmitterAdapter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3225
+                                  },
+                                  "PartLevelEmitterAdapter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5168
+                                  }
+                                }
+                              },
+                              "LevelTerminalRegistry$Singleton.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 775
+                              },
+                              "LevelTerminalRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4103
+                              }
+                            }
+                          },
+                          "transform": {
+                            "type": "directory",
+                            "children": {
+                              "CraftingCpuTransformer$TransformCraftingCPUCluster.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1534
+                              },
+                              "CraftingCpuTransformer$TransformExecuteCrafting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2715
+                              },
+                              "CraftingCpuTransformer$TransformStoreItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1285
+                              },
+                              "CraftingCpuTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1250
+                              },
+                              "CraftingGridCacheTransformer$ReplaceGetCellArray.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1276
+                              },
+                              "CraftingGridCacheTransformer$TransformCraftingGridCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1381
+                              },
+                              "CraftingGridCacheTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1151
+                              },
+                              "CraftingTreeNodeTransformer$TransformCraftingTreeNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1354
+                              },
+                              "CraftingTreeNodeTransformer$TransformRequest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2257
+                              },
+                              "CraftingTreeNodeTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1138
+                              },
+                              "DualityInterfaceTransformer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 307
+                              },
+                              "DualityInterfaceTransformer$TransformDualityInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1778
+                              },
+                              "DualityInterfaceTransformer$TransformInvAdaptorCalls.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1732
+                              },
+                              "DualityInterfaceTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1236
+                              },
+                              "ExternalStorageRegistryTransformer$TransformExternalStorageRegistry.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1419
+                              },
+                              "ExternalStorageRegistryTransformer$TransformGetHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2091
+                              },
+                              "ExternalStorageRegistryTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1273
+                              },
+                              "GuiCraftingTransformer$TransformFluidIcon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1279
+                              },
+                              "GuiCraftingTransformer$TransformGuiCrafting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1367
+                              },
+                              "GuiCraftingTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1107
+                              },
+                              "NEITransformer$TransformNEI.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1431
+                              },
+                              "NEITransformer$TransformShowTooltip.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1149
+                              },
+                              "NEITransformer$TransformStackUnderMouse.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1132
+                              },
+                              "NEITransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1174
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "crossmod": {
+                        "type": "directory",
+                        "children": {
+                          "opencomputers": {
+                            "type": "directory",
+                            "children": {
+                              "DriverDualFluidInterface$Environment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4504
+                              },
+                              "DriverDualFluidInterface$Provider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1496
+                              },
+                              "DriverDualFluidInterface.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2430
+                              },
+                              "DriverLevelMaintainer$Environment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7671
+                              },
+                              "DriverLevelMaintainer$Provider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1318
+                              },
+                              "DriverLevelMaintainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1396
+                              },
+                              "DriverOCPatternEditor$Environment.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9470
+                              },
+                              "DriverOCPatternEditor$Provider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1311
+                              },
+                              "DriverOCPatternEditor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1396
+                              },
+                              "OCDriverInit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1164
+                              }
+                            }
+                          },
+                          "thaumcraft": {
+                            "type": "directory",
+                            "children": {
+                              "AspectRender.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2006
+                              },
+                              "AspectUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8640
+                              }
+                            }
+                          },
+                          "waila": {
+                            "type": "directory",
+                            "children": {
+                              "FCTooltipHandlerWaila.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3755
+                              },
+                              "part": {
+                                "type": "directory",
+                                "children": {
+                                  "FluidInvWailaDataProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2961
+                                  },
+                                  "FluidMonitorWailaDataProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3178
+                                  },
+                                  "SpeedWailaDataProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2281
+                                  }
+                                }
+                              },
+                              "PartWailaDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6198
+                              },
+                              "tile": {
+                                "type": "directory",
+                                "children": {
+                                  "FluidInvWailaDataProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5005
+                                  },
+                                  "LevelMaintainerWailaDataProvider.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3223
+                                  }
+                                }
+                              },
+                              "TileWailaDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3258
+                              },
+                              "Tooltip.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3024
+                              },
+                              "WailaInit.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1406
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "FluidCraft.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5624
+                      },
+                      "inventory": {
+                        "type": "directory",
+                        "children": {
+                          "AEFluidInventory$FluidTankPropertiesWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2694
+                          },
+                          "AEFluidInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9415
+                          },
+                          "AeItemStackHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2926
+                          },
+                          "AeStackInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 675
+                          },
+                          "AeStackInventoryImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4613
+                          },
+                          "CraftingGridCacheFluidInventoryProxyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4180
+                          },
+                          "external": {
+                            "type": "directory",
+                            "children": {
+                              "AEFluidInterfaceHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2211
+                              },
+                              "AEFluidTankHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1667
+                              }
+                            }
+                          },
+                          "FluidConvertingInventoryAdaptor$SlotIterator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2276
+                          },
+                          "FluidConvertingInventoryAdaptor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17451
+                          },
+                          "FluidConvertingInventoryCrafting.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1607
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "ButtonMouseHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2944
+                              },
+                              "GuiType$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1756
+                              },
+                              "GuiType$10.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1888
+                              },
+                              "GuiType$11.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1890
+                              },
+                              "GuiType$12.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1930
+                              },
+                              "GuiType$13.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1763
+                              },
+                              "GuiType$14.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1769
+                              },
+                              "GuiType$15.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1770
+                              },
+                              "GuiType$16.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1898
+                              },
+                              "GuiType$17.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1893
+                              },
+                              "GuiType$18.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1889
+                              },
+                              "GuiType$19.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1898
+                              },
+                              "GuiType$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1880
+                              },
+                              "GuiType$20.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              },
+                              "GuiType$21.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1892
+                              },
+                              "GuiType$22.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1884
+                              },
+                              "GuiType$23.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1895
+                              },
+                              "GuiType$24.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1772
+                              },
+                              "GuiType$25.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1776
+                              },
+                              "GuiType$26.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1914
+                              },
+                              "GuiType$27.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1831
+                              },
+                              "GuiType$28.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1871
+                              },
+                              "GuiType$29.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1839
+                              },
+                              "GuiType$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1902
+                              },
+                              "GuiType$30.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1879
+                              },
+                              "GuiType$31.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1762
+                              },
+                              "GuiType$32.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1906
+                              },
+                              "GuiType$33.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1780
+                              },
+                              "GuiType$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1880
+                              },
+                              "GuiType$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1880
+                              },
+                              "GuiType$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1750
+                              },
+                              "GuiType$7.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1818
+                              },
+                              "GuiType$8.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1727
+                              },
+                              "GuiType$9.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1882
+                              },
+                              "GuiType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7572
+                              },
+                              "IGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 512
+                              },
+                              "ItemGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3630
+                              },
+                              "MouseRegionManager$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 700
+                              },
+                              "MouseRegionManager$Region.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1310
+                              },
+                              "MouseRegionManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3273
+                              },
+                              "PartGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1586
+                              },
+                              "PartOrItemGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4126
+                              },
+                              "TankMouseHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2682
+                              },
+                              "TileGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3224
+                              },
+                              "TileOrPartGuiFactory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1625
+                              }
+                            }
+                          },
+                          "IAEFluidInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 313
+                          },
+                          "IAEFluidTank.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 349
+                          },
+                          "IDualHost.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 475
+                          },
+                          "InventoryHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3459
+                          },
+                          "IPatternConsumer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 252
+                          },
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "IClickableInTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 481
+                              },
+                              "IFluidPortableCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 358
+                              },
+                              "IItemInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 293
+                              },
+                              "IItemPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 791
+                              },
+                              "IItemTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 416
+                              },
+                              "IWirelessCraftTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 279
+                              },
+                              "IWirelessPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 290
+                              },
+                              "IWirelessTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1060
+                              },
+                              "PortableFluidCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4694
+                              },
+                              "WirelessCraftingTerminalInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7666
+                              },
+                              "WirelessFluidTerminalInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7079
+                              },
+                              "WirelessInterfaceTerminalInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7334
+                              },
+                              "WirelessLevelTerminalInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7318
+                              },
+                              "WirelessPatternTerminalExInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15368
+                              },
+                              "WirelessPatternTerminalInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14814
+                              }
+                            }
+                          },
+                          "ItemBiggerAppEngInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2062
+                          },
+                          "MEMonitorIFluidHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10801
+                          },
+                          "slot": {
+                            "type": "directory",
+                            "children": {
+                              "FCSlotRestrictedInput$Filter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 594
+                              },
+                              "FCSlotRestrictedInput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4069
+                              },
+                              "ISlotFluid.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 389
+                              },
+                              "OptionalFluidSlotFakeTypeOnly.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2128
+                              },
+                              "SlotFluidConvertingFake.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3055
+                              },
+                              "SlotSingleItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3239
+                              }
+                            }
+                          },
+                          "WirelessFluidPatternTerminalPatterns.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2347
+                          }
+                        }
+                      },
+                      "loader": {
+                        "type": "directory",
+                        "children": {
+                          "CalculatorV2PluginLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2021
+                          },
+                          "ChannelLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5098
+                          },
+                          "filter": {
+                            "type": "directory",
+                            "children": {
+                              "FluidFilter$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 703
+                              },
+                              "FluidFilter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1326
+                              }
+                            }
+                          },
+                          "IRegister.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 248
+                          },
+                          "ItemAndBlockHolder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11507
+                          },
+                          "KeybindLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3026
+                          },
+                          "ListenerLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 486
+                          },
+                          "recipe": {
+                            "type": "directory",
+                            "children": {
+                              "WirelessTerminalEnergyRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3090
+                              },
+                              "WirelessTerminalQuantumBridgeRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3053
+                              }
+                            }
+                          },
+                          "RecipeLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 19361
+                          },
+                          "RenderLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 552
+                          }
+                        }
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "AE2FC_NEIGuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1328
+                          },
+                          "FCStackStringifyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1530
+                          },
+                          "FluidCraftingTransferHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4716
+                          },
+                          "FluidPatternTerminalRecipeTransferHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3148
+                          },
+                          "NEIItemFilter$Filter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2947
+                          },
+                          "NEIItemFilter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1043
+                          },
+                          "NEIUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3896
+                          },
+                          "NEI_FC_Config.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2823
+                          },
+                          "object": {
+                            "type": "directory",
+                            "children": {
+                              "IllegalOrderStackID.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 643
+                              },
+                              "IRecipeExtractor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1182
+                              },
+                              "IRecipeExtractorLegacy.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 259
+                              },
+                              "OrderStack.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6917
+                              }
+                            }
+                          },
+                          "recipes": {
+                            "type": "directory",
+                            "children": {
+                              "DefaultExtractorLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5515
+                              },
+                              "extractor": {
+                                "type": "directory",
+                                "children": {
+                                  "AvaritiaRecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1676
+                                  },
+                                  "EnderIORecipeExtractor$ReflectEIO.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2395
+                                  },
+                                  "EnderIORecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3978
+                                  },
+                                  "ExtractorUtil.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3926
+                                  },
+                                  "ForestryRecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3894
+                                  },
+                                  "GregTech5RecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3662
+                                  },
+                                  "GregTech6RecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3586
+                                  },
+                                  "GTPPRecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 431
+                                  },
+                                  "IndustrialCraftRecipeExtractor$ReflectIC2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3474
+                                  },
+                                  "IndustrialCraftRecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4629
+                                  },
+                                  "VanillaRecipeExtractor.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1952
+                                  }
+                                }
+                              },
+                              "FluidRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7076
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "CPacketCraftRequest$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6536
+                          },
+                          "CPacketCraftRequest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2025
+                          },
+                          "CPacketDumpTank$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1992
+                          },
+                          "CPacketDumpTank.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1095
+                          },
+                          "CPacketEncodePattern$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1973
+                          },
+                          "CPacketEncodePattern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 723
+                          },
+                          "CPacketFluidPatternTermBtns$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4775
+                          },
+                          "CPacketFluidPatternTermBtns.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2304
+                          },
+                          "CPacketFluidUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2407
+                          },
+                          "CPacketFluidUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2414
+                          },
+                          "CPacketInventoryAction$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6875
+                          },
+                          "CPacketInventoryAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2970
+                          },
+                          "CPacketLevelMaintainer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1006
+                          },
+                          "CPacketLevelMaintainer$Action.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1498
+                          },
+                          "CPacketLevelMaintainer$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4289
+                          },
+                          "CPacketLevelMaintainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2880
+                          },
+                          "CPacketLevelTerminalCommands$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1099
+                          },
+                          "CPacketLevelTerminalCommands$Action.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1603
+                          },
+                          "CPacketLevelTerminalCommands$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4814
+                          },
+                          "CPacketLevelTerminalCommands.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3511
+                          },
+                          "CPacketPatternValueSet$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5650
+                          },
+                          "CPacketPatternValueSet.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1741
+                          },
+                          "CPacketRenamer$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 855
+                          },
+                          "CPacketRenamer$Action.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1327
+                          },
+                          "CPacketRenamer$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7341
+                          },
+                          "CPacketRenamer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3585
+                          },
+                          "CPacketSwitchGuis$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4033
+                          },
+                          "CPacketSwitchGuis.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1884
+                          },
+                          "CPacketTransferRecipe$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6726
+                          },
+                          "CPacketTransferRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4316
+                          },
+                          "CPacketValueConfig$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2084
+                          },
+                          "CPacketValueConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1263
+                          },
+                          "SPacketFluidUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3945
+                          },
+                          "SPacketFluidUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3018
+                          },
+                          "SPacketLevelTerminalUpdate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1004
+                          },
+                          "SPacketLevelTerminalUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2111
+                          },
+                          "SPacketLevelTerminalUpdate$PacketAdd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6846
+                          },
+                          "SPacketLevelTerminalUpdate$PacketEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 879
+                          },
+                          "SPacketLevelTerminalUpdate$PacketOverwrite.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6043
+                          },
+                          "SPacketLevelTerminalUpdate$PacketRemove.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1681
+                          },
+                          "SPacketLevelTerminalUpdate$PacketRename.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2030
+                          },
+                          "SPacketLevelTerminalUpdate$PacketType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1502
+                          },
+                          "SPacketLevelTerminalUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7512
+                          },
+                          "SPacketMEFluidInvUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2126
+                          },
+                          "SPacketMEFluidInvUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3594
+                          },
+                          "SPacketMEItemInvUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2233
+                          },
+                          "SPacketMEItemInvUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3579
+                          },
+                          "SPacketMEUpdateBuffer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8323
+                          },
+                          "SPacketSetItemAmount$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1863
+                          },
+                          "SPacketSetItemAmount.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1117
+                          },
+                          "SPacketStringUpdate$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1797
+                          },
+                          "SPacketStringUpdate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1832
+                          },
+                          "SPacketSwitchBack$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1658
+                          },
+                          "SPacketSwitchBack.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 711
+                          },
+                          "wrapper": {
+                            "type": "directory",
+                            "children": {
+                              "FCIndexedCodec.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2414
+                              },
+                              "FCNetworkWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9173
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1588
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5242
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "Ae2Reflect.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10324
+                          },
+                          "Ae2ReflectClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3627
+                          },
+                          "BlockPos.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2564
+                          },
+                          "DualityFluidInterface$InterfaceInventory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 828
+                          },
+                          "DualityFluidInterface.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16473
+                          },
+                          "FCGuiColors.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2572
+                          },
+                          "FluidPatternDetails.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8137
+                          },
+                          "FluidSorters$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2039
+                          },
+                          "FluidSorters$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1534
+                          },
+                          "FluidSorters.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3599
+                          },
+                          "ModAndClassUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4176
+                          },
+                          "NameConst.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10018
+                          },
+                          "ObjectArrayIterator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2668
+                          },
+                          "RenderUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4052
+                          },
+                          "SetBackedMachineSet.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2158
+                          },
+                          "Util$DimensionalCoordSide.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2546
+                          },
+                          "Util$FluidUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8520
+                          },
+                          "Util$GuiHelper$GuiType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1300
+                          },
+                          "Util$GuiHelper$InvType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1316
+                          },
+                          "Util$GuiHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2205
+                          },
+                          "Util.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18519
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "ae2fc": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 11774
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 18539
+                      },
+                      "uk_UA.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 17370
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 9872
+                      }
+                    }
+                  },
+                  "logo.png": {
+                    "type": "file",
+                    "extension": ".png",
+                    "size": 11939
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "walrus.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 233424
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "certus_quartz_tank": {
+                            "type": "directory",
+                            "children": {
+                              "bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 297
+                              },
+                              "cube.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 230
+                              },
+                              "map.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 710
+                              },
+                              "side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 177
+                              },
+                              "side_bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 204
+                              },
+                              "side_mid.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 182
+                              },
+                              "side_top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 189
+                              },
+                              "top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 329
+                              }
+                            }
+                          },
+                          "fluid_auto_filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 995
+                          },
+                          "fluid_buffer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 376
+                          },
+                          "fluid_discretizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2004
+                          },
+                          "fluid_export_face.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 274
+                          },
+                          "fluid_import_face.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 279
+                          },
+                          "fluid_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1910
+                          },
+                          "fluid_interface_a.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1910
+                          },
+                          "fluid_interface_arrow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 194
+                          },
+                          "fluid_level_emitter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 236
+                          },
+                          "fluid_packet_decoder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2450
+                          },
+                          "fluid_pattern_encoder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1919
+                          },
+                          "fluid_pattern_encoderBottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2028
+                          },
+                          "fluid_pattern_encoderSide.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2159
+                          },
+                          "fluid_storage_bus.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 334
+                          },
+                          "fluid_terminal_bright.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 265
+                          },
+                          "fluid_terminal_dark.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 203
+                          },
+                          "fluid_terminal_medium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 288
+                          },
+                          "ingredient_buffer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6180
+                          },
+                          "large_ingredient_buffer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 383
+                          },
+                          "level_maintainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 202
+                          },
+                          "level_maintainerFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1276
+                          },
+                          "level_maintainer_active.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1343
+                          },
+                          "level_terminal_bright.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 144
+                          },
+                          "level_terminal_dark.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1427
+                          },
+                          "level_terminal_medium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 157
+                          },
+                          "oc_pattern_editor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 320
+                          },
+                          "pattern_terminal_bright.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1488
+                          },
+                          "pattern_terminal_dark.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1427
+                          },
+                          "pattern_terminal_medium.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1506
+                          },
+                          "terminal_broad.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 259
+                          },
+                          "walrus.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1556
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "crafting.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4048
+                          },
+                          "fluid_auto_filler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1237
+                          },
+                          "fluid_packet_decoder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5240
+                          },
+                          "fluid_pattern_encoder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7072
+                          },
+                          "ingredient_buffer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1614
+                          },
+                          "interface_fluid.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1987
+                          },
+                          "large_ingredient_buffer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1382
+                          },
+                          "level_maintainer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4044
+                          },
+                          "level_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3465
+                          },
+                          "oc_pattern_editor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1118
+                          },
+                          "pattern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2336
+                          },
+                          "pattern2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2325
+                          },
+                          "pattern3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 849
+                          },
+                          "pattern4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 924
+                          },
+                          "renamer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 634
+                          },
+                          "states0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1873
+                          },
+                          "states1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2024
+                          },
+                          "states2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 807
+                          },
+                          "terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2935
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "creative_fluid_storage.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 366
+                          },
+                          "energy_card.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 419
+                          },
+                          "fluid_drop.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1482
+                          },
+                          "fluid_encoded_pattern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 801
+                          },
+                          "fluid_part.0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 205
+                          },
+                          "fluid_part.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 220
+                          },
+                          "fluid_part.2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 232
+                          },
+                          "fluid_part.3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 302
+                          },
+                          "fluid_part.4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 382
+                          },
+                          "fluid_part.5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 523
+                          },
+                          "fluid_part.6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 536
+                          },
+                          "fluid_part.7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 497
+                          },
+                          "fluid_storage.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 345
+                          },
+                          "fluid_storage.1024.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 342
+                          },
+                          "fluid_storage.16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 376
+                          },
+                          "fluid_storage.16384.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 480
+                          },
+                          "fluid_storage.256.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 336
+                          },
+                          "fluid_storage.4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 360
+                          },
+                          "fluid_storage.4096.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 359
+                          },
+                          "fluid_storage.64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 344
+                          },
+                          "fluid_storage.infinity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 636
+                          },
+                          "fluid_storage.quantum.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 605
+                          },
+                          "fluid_storage.singularity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 641
+                          },
+                          "fluid_storage.Universe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5206
+                          },
+                          "fluid_storage.Universe.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 31
+                          },
+                          "fluid_storage_housing.0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 337
+                          },
+                          "fluid_storage_housing.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 358
+                          },
+                          "fluid_storage_housing.2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 348
+                          },
+                          "fluid_storage_housing.3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 344
+                          },
+                          "multi_fluid_storage.1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1192
+                          },
+                          "multi_fluid_storage.1024.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1199
+                          },
+                          "multi_fluid_storage.16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1194
+                          },
+                          "multi_fluid_storage.16384.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 448
+                          },
+                          "multi_fluid_storage.256.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1191
+                          },
+                          "multi_fluid_storage.4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1190
+                          },
+                          "multi_fluid_storage.4096.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 361
+                          },
+                          "multi_fluid_storage.64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1212
+                          },
+                          "portable_fluid_cell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 485
+                          },
+                          "quantum_bridge_card.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 487
+                          },
+                          "wireless_fluid_pattern_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15831
+                          },
+                          "wireless_fluid_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 355
+                          },
+                          "wireless_interface_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1157
+                          },
+                          "wireless_level_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 474
+                          },
+                          "wireless_ultra_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 292
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 390
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4641
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 83592
+          }
+        }
+      }
+    }
+  }
+}

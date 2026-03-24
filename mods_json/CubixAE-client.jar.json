@@ -1,0 +1,2732 @@
+{
+  "mod_name": "CubixAE-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixAE-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixAE-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1063435,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "cubix_ae": {
+                    "type": "directory",
+                    "children": {
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotInvRestrict.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1813
+                              },
+                              "SlotCraftingTermExtended.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14378
+                              },
+                              "SlotGettable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1315
+                              },
+                              "SlotRestricted.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2349
+                              },
+                              "SlotTileRestricted.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1110
+                              }
+                            }
+                          },
+                          "ContainerAdvancedCharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5533
+                          },
+                          "ContainerBigCraftingTerminal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12980
+                          },
+                          "ContainerAdvancedCharger$SlotUpgrades.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1872
+                          },
+                          "ContainerBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11547
+                          },
+                          "ContainerAdvancedBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5879
+                          },
+                          "ContainerAdvancedMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4977
+                          },
+                          "ContainerAdvDrive.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3712
+                          },
+                          "ContainerBigPatternTerminal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 31172
+                          },
+                          "ContainerAutoCraftTable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3023
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileUltimateBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2767
+                          },
+                          "TileChangedMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 25588
+                          },
+                          "TileAdvancedAECharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 909
+                          },
+                          "TileAdvancedAEInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 846
+                          },
+                          "TileExtremeCraftingTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2884
+                          },
+                          "TileAdvancedAEGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 906
+                          },
+                          "TileAESuperCraft.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16734
+                          },
+                          "TileAdvancedBigMolecularAssembler$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2971
+                          },
+                          "TileAdvancedBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12777
+                          },
+                          "TileHybridEnergyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 828
+                          },
+                          "TileAEGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3257
+                          },
+                          "TileAdvDrive$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1135
+                          },
+                          "TileAbsoluteAEInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 834
+                          },
+                          "TileAdvancedCharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14014
+                          },
+                          "TileAbsoluteMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2861
+                          },
+                          "TileSidedNetworkTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6449
+                          },
+                          "TileHybridMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2784
+                          },
+                          "TileAdvancedEnergyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 818
+                          },
+                          "TileAdvDrive.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18162
+                          },
+                          "TileHybridBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2827
+                          },
+                          "TileAdvancedMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2832
+                          },
+                          "TileExtremeCraftingStorageTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2701
+                          },
+                          "TileUltimateAEGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 914
+                          },
+                          "TileAbsoluteAEGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 890
+                          },
+                          "TileAutoNeutronCompressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3785
+                          },
+                          "TileAbsoluteAECharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 900
+                          },
+                          "TileUltimateMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2800
+                          },
+                          "TileAbsoluteBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2764
+                          },
+                          "TileAECharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2257
+                          },
+                          "TileAEInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4961
+                          },
+                          "TileUltimateAEInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 854
+                          },
+                          "TileBigMolecularAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 22553
+                          },
+                          "TileAutoCraftTable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9105
+                          },
+                          "TileUltimateEnergyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 832
+                          },
+                          "TileUltimateAECharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 900
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "Tile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 406
+                          },
+                          "ISyncDataReceiver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 215
+                          },
+                          "INeiRecipeSetListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 213
+                          },
+                          "IEssentiaCellHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 568
+                          }
+                        }
+                      },
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "api": {
+                            "type": "directory",
+                            "children": {
+                              "SpecialMethodNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11082
+                              },
+                              "ComputeFramesClassWriter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10438
+                              },
+                              "InterfaceAdderBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11252
+                              },
+                              "FieldSetterBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7055
+                              },
+                              "SpecialClassNode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11840
+                              },
+                              "ASMClassTransformer$TransformResult.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4793
+                              },
+                              "MethodDescription.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8240
+                              },
+                              "MethodInvokerBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7919
+                              },
+                              "ASMClassTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1326
+                              },
+                              "FieldGetterBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6373
+                              },
+                              "impl": {
+                                "type": "directory",
+                                "children": {
+                                  "AddInterfaceTransformer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2945
+                                  }
+                                }
+                              },
+                              "PairKV.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3062
+                              },
+                              "ASMUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13943
+                              },
+                              "SpecialInsnList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 34289
+                              }
+                            }
+                          },
+                          "ASMCoreMod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4766
+                          },
+                          "transformers": {
+                            "type": "directory",
+                            "children": {
+                              "PacketPatternSlotTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 570
+                              },
+                              "PacketBufferTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7687
+                              },
+                              "TileEssentiaCellWorkbenchTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9647
+                              },
+                              "GuiRecipeTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7310
+                              },
+                              "ExtremeShapedRecipeHandler_CachedExtremeRecipeTransformer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5556
+                              }
+                            }
+                          },
+                          "AE2Hooks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8784
+                          },
+                          "ClassTransformerImpl.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11815
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockAdvDrive.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4591
+                          },
+                          "BlockModelBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8160
+                          },
+                          "BlockExtremeCraftingUnit.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6720
+                          },
+                          "BlockCubixAE.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10628
+                          },
+                          "BlockAdvancedEnergyCell$AdvancedCellType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6674
+                          },
+                          "BlockAutoCraftTable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6518
+                          },
+                          "BlockAdvancedEnergyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3172
+                          },
+                          "BlockExtremeCraftingStorage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7602
+                          }
+                        }
+                      },
+                      "integration": {
+                        "type": "directory",
+                        "children": {
+                          "the": {
+                            "type": "directory",
+                            "children": {
+                              "items": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemAdvEssentiaCell.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17589
+                                  },
+                                  "HandlerAdvItemEssentiaCell.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 27534
+                                  },
+                                  "ItemTEStorageComponents.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6736
+                                  },
+                                  "EnumTEssentiaStorageTypes.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6568
+                                  }
+                                }
+                              },
+                              "ThEIntegration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1823
+                              }
+                            }
+                          },
+                          "ae2fc": {
+                            "type": "directory",
+                            "children": {
+                              "item": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemAdvancedFluidMaterial.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3155
+                                  },
+                                  "ItemAdvancedFluidCell.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7750
+                                  }
+                                }
+                              },
+                              "AE2FCIntegration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5368
+                              }
+                            }
+                          },
+                          "waila": {
+                            "type": "directory",
+                            "children": {
+                              "TMChannelWailaDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8828
+                              },
+                              "TMPartWailaDataProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9091
+                              },
+                              "WailaIntegration.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5021
+                              }
+                            }
+                          },
+                          "Integration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 528
+                          },
+                          "IntegrationLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9889
+                          },
+                          "IIntegration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 757
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "CAItemMultiParts.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 22082
+                          },
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "ItemAdvancedStorageCell$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1173
+                              },
+                              "ItemAdvancedStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 18940
+                              },
+                              "ItemCreativeLavaCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4745
+                              },
+                              "ItemCreativeCobblestoneCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4769
+                              },
+                              "ItemCreativeWaterCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4772
+                              },
+                              "AdvancedMaterialType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4898
+                              },
+                              "ItemAdvancedMaterial.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6810
+                              }
+                            }
+                          },
+                          "ItemBigEmptyPattern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2778
+                          },
+                          "CAItemMultiParts$RegisteredComparator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2468
+                          },
+                          "CAItemMultiParts$EnumPartsWithVariant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5863
+                          },
+                          "CANameResolver.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6219
+                          },
+                          "CAItemMultiParts$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 264
+                          },
+                          "FakeCraftingItem.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5522
+                          },
+                          "ItemBigPattern.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12171
+                          },
+                          "CAItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2873
+                          },
+                          "ItemBlockEnergyCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9488
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiBigCraftingTerminal$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1505
+                              },
+                              "GuiAdvDrive.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5804
+                              },
+                              "button": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiImgButtonEncode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 5648
+                                  },
+                                  "INumberChangeListener.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 197
+                                  },
+                                  "AutoCraftStateButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3301
+                                  },
+                                  "GuiATabButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4707
+                                  },
+                                  "GuiAdvancedNumberBox.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1826
+                                  }
+                                }
+                              },
+                              "GuiBigCraftingTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23643
+                              },
+                              "RenderUtil.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1427
+                              },
+                              "GuiAdvancedMolecularAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4323
+                              },
+                              "GuiBigPatternTerminal$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1482
+                              },
+                              "GuiAdvancedBigMolecularAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4027
+                              },
+                              "GuiBigMolecularAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6447
+                              },
+                              "GuiAutoCraftTable.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13452
+                              },
+                              "GuiAdvancedCharger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4637
+                              },
+                              "GuiBigPatternTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 26821
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderAdvDrive$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1293
+                              },
+                              "CubixAETESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8703
+                              },
+                              "ItemBigPatternRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4419
+                              },
+                              "RenderAdvDrive.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19495
+                              }
+                            }
+                          },
+                          "TextureUpdater.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2108
+                          },
+                          "CubixAEBusTextures.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 41161
+                          }
+                        }
+                      },
+                      "parts": {
+                        "type": "directory",
+                        "children": {
+                          "EnumParts$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1524
+                          },
+                          "PartUltraDenseCable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15619
+                          },
+                          "EnumParts$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1510
+                          },
+                          "PartImprovedSmartCable$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1487
+                          },
+                          "EnumParts$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1480
+                          },
+                          "PartUltraDenseCable$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1388
+                          },
+                          "PartBigCraftingTerminal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9273
+                          },
+                          "PartInfinityDenseCable$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1262
+                          },
+                          "TMBaseCablePart$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2724
+                          },
+                          "PartSimpleCable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1991
+                          },
+                          "PartImprovedSmartCable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14831
+                          },
+                          "TMBaseCablePart.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 46226
+                          },
+                          "EnumParts.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10764
+                          },
+                          "base": {
+                            "type": "directory",
+                            "children": {
+                              "AbstractTPartTerminal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 14230
+                              }
+                            }
+                          },
+                          "EnumParts$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1490
+                          },
+                          "PartInfinityDenseCable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15914
+                          },
+                          "PartBigPatternTerminal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15136
+                          }
+                        }
+                      },
+                      "me": {
+                        "type": "directory",
+                        "children": {
+                          "storage": {
+                            "type": "directory",
+                            "children": {
+                              "CustomCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 25444
+                              },
+                              "CustomMEPassThrough.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1270
+                              },
+                              "CustomStorageCellHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4866
+                              },
+                              "CustomMEInventoryHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8455
+                              },
+                              "ICustomStorageCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 638
+                              },
+                              "CustomCellInventoryHandler$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 976
+                              },
+                              "CreativeCobblestoneCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7022
+                              },
+                              "CustomCellInventoryHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8198
+                              },
+                              "CreativeFluidCellInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5278
+                              },
+                              "CreativeCellHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5469
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "CubixAE$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1464
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "NetworkClientHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2580
+                          },
+                          "ExtremeRecipePacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2009
+                          },
+                          "CAPacketValueConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9903
+                          },
+                          "CADefaultPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7892
+                          },
+                          "NetworkServerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2389
+                          },
+                          "CAPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7445
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9245
+                          }
+                        }
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "CubixAENEI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5141
+                          },
+                          "BigPatternOverlayHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5997
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12553
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 22812
+                          },
+                          "RecipeHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6691
+                          },
+                          "GuiBridgeProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 892
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "PlayerCooldownManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1813
+                          },
+                          "SpecialCraftingDetails.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9354
+                          },
+                          "PlatformHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1656
+                          },
+                          "BaseCancelableItemList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9147
+                          },
+                          "RecipeUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1836
+                          },
+                          "CooldownManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5222
+                          }
+                        }
+                      },
+                      "CubixAE$GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6562
+                      },
+                      "CubixAEConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11052
+                      },
+                      "CubixAE.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6008
+                      },
+                      "helpers": {
+                        "type": "directory",
+                        "children": {
+                          "CACraftingTracker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15664
+                          },
+                          "BigPatternHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17727
+                          },
+                          "BigPatternHelper$TestStatus.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4234
+                          },
+                          "BigPatternHelper$TestLookup.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2611
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2753
+                      },
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1787
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubix_ae": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "parts": {
+                            "type": "directory",
+                            "children": {
+                              "MEInfinityDense_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MESmart_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "METSmart_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "MESmart_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MECovered_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MEUltraDense_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MEUltraDense_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MESmart_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 237
+                              },
+                              "MECovered_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 271
+                              },
+                              "MECable_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MESmart_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MECovered_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "METSmart_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "METCovered_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "part_avaritia_pattern_terminal_dark.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2106
+                              },
+                              "part_avaritia_pattern_terminal_bright.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1930
+                              },
+                              "MECovered_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MECable.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 259
+                              },
+                              "MEUltraDense_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METCovered_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "METSmart_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 244
+                              },
+                              "METCovered_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MEUltraDense_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METSmart_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MECable_Grey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "MESmart_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "METSmart_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "METSmart_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "MEInfinityDense_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MECable_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "METSmart_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "MEInfinityDense.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MECable_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "METSmart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 236
+                              },
+                              "MECable_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "METSmart_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "MECovered_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MEUltraDense_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "PartAdvInterfaceFront.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5497
+                              },
+                              "METCovered_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "METCovered_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "MESmart_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MEUltraDense_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MESmart_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 239
+                              },
+                              "METSmart_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MECable_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "MESmart_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MECable_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 254
+                              },
+                              "part_avaritia_craft_terminal_colored.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 402
+                              },
+                              "MECovered_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MEInfinityDense_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MEInfinityDense_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MESmart_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "background.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3139
+                              },
+                              "METSmart_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MEInfinityDense_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MESmart_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MEUltraDense_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 217
+                              },
+                              "MECovered_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "METSmart_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 250
+                              },
+                              "MECable_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 269
+                              },
+                              "MEInfinityDense_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MEUltraDense_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "part_avaritia_craft_terminal_bright.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 408
+                              },
+                              "METCovered_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 271
+                              },
+                              "MECable_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 267
+                              },
+                              "MECable_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "MECable_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "MESmart_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 237
+                              },
+                              "MEInfinityDense_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METCovered_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MEInfinityDense_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MECovered_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MEInfinityDense_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METCovered_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 270
+                              },
+                              "MEUltraDense_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "part_avaritia_pattern_terminal_colored.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1934
+                              },
+                              "block_mac_lights.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 193
+                              },
+                              "METCovered_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 276
+                              },
+                              "METSmart_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 238
+                              },
+                              "MECovered_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "MECovered_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "METCovered_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MECable_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 263
+                              },
+                              "METSmart_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MEInfinityDense_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "METSmart_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "METCovered_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "PartHybridInterfaceFront.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5495
+                              },
+                              "METCovered_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MEInfinityDense_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METCovered_White.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "MEInfinityDense_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "PartUltimateInterfaceFront.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5527
+                              },
+                              "MECovered_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "MECable_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 254
+                              },
+                              "MEUltraDense_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "METCovered_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MEInfinityDense_Cyan.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MECovered_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "MESmart_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MEUltraDense_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MEUltraDense_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MECable_LightBlue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 254
+                              },
+                              "MEInfinityDense_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MECovered_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 265
+                              },
+                              "METSmart_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MECovered_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 270
+                              },
+                              "MESmart_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 233
+                              },
+                              "MECable_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 260
+                              },
+                              "part_avaritia_craft_terminal_dark.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 417
+                              },
+                              "MECovered_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 276
+                              },
+                              "MEUltraDense_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 227
+                              },
+                              "MESmart_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 237
+                              },
+                              "METCovered_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 283
+                              },
+                              "MEUltraDense_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MESmart.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 230
+                              },
+                              "MESmart_Gray.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 237
+                              },
+                              "MEUltraDense_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "MECovered_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "METSmart_Lime.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 243
+                              },
+                              "MEInfinityDense_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              },
+                              "MEUltraDense.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 226
+                              },
+                              "block_mac_lights.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2954
+                              },
+                              "MESmart_Brown.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 237
+                              },
+                              "METCovered_LightGrey.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 282
+                              },
+                              "MECable_Pink.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 254
+                              },
+                              "MEInfinityDense_Black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 227
+                              },
+                              "MEUltraDense_Magenta.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 221
+                              }
+                            }
+                          },
+                          "ultimate_energy_cell": {
+                            "type": "directory",
+                            "children": {
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 406
+                              },
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 401
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 400
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 396
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 401
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 400
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 406
+                              },
+                              "0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 400
+                              }
+                            }
+                          },
+                          "advanced_energy_cell": {
+                            "type": "directory",
+                            "children": {
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 401
+                              },
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 404
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 404
+                              },
+                              "0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 403
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 406
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 402
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 399
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 404
+                              }
+                            }
+                          },
+                          "compressorSide.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 193
+                          },
+                          "extreme_crafting_acc": {
+                            "type": "directory",
+                            "children": {
+                              "32768.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3688
+                              },
+                              "16384.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3619
+                              },
+                              "65536.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3643
+                              },
+                              "8192.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3705
+                              },
+                              "build": {
+                                "type": "directory",
+                                "children": {
+                                  "8192.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3512
+                                  },
+                                  "65536.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3541
+                                  },
+                                  "32768.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3526
+                                  },
+                                  "16384.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3570
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "compressorFront.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 193
+                          },
+                          "hybrid_energy_cell": {
+                            "type": "directory",
+                            "children": {
+                              "0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 401
+                              },
+                              "7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 400
+                              },
+                              "3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 406
+                              },
+                              "4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 405
+                              },
+                              "2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 406
+                              },
+                              "5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 402
+                              },
+                              "1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 407
+                              },
+                              "6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 398
+                              }
+                            }
+                          },
+                          "hybrid_interface_alternate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3938
+                          },
+                          "extreme_crafting_storage": {
+                            "type": "directory",
+                            "children": {
+                              "build": {
+                                "type": "directory",
+                                "children": {
+                                  "1048576K.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1517
+                                  },
+                                  "262144K.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1532
+                                  },
+                                  "65536K.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1537
+                                  }
+                                }
+                              },
+                              "262144K.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1953
+                              },
+                              "65536K.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1951
+                              },
+                              "1048576K.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2152
+                              }
+                            }
+                          },
+                          "models": {
+                            "type": "directory",
+                            "children": {
+                              "ultimate_big_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2753
+                              },
+                              "absolute_ae2_charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2660
+                              },
+                              "tm_hybrid_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2434
+                              },
+                              "ae2_inscriber.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2989
+                              },
+                              "ultimate_ae2_charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2584
+                              },
+                              "advanced_charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2135
+                              },
+                              "advanced_big_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2746
+                              },
+                              "absolute_ae2_grower.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2787
+                              },
+                              "big_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2742
+                              },
+                              "ultimate_ae2_grower.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2778
+                              },
+                              "tm_ultimate_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2462
+                              },
+                              "ae2_grower.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2760
+                              },
+                              "ultimate_ae2_inscriber.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2982
+                              },
+                              "auto_neutron_compressor.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2196
+                              },
+                              "tm_advanced_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2360
+                              },
+                              "hybrid_big_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2757
+                              },
+                              "advanced_ae2_charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2627
+                              },
+                              "advanced_ae2_inscriber.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2924
+                              },
+                              "absolute_ae2_inscriber.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2980
+                              },
+                              "absolute_big_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2726
+                              },
+                              "tm_absolute_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2357
+                              },
+                              "advanced_ae2_grower.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2764
+                              },
+                              "ae2_charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2634
+                              },
+                              "tm_changed_molecular_assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2454
+                              }
+                            }
+                          },
+                          "ultimate_interface_alternate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3953
+                          },
+                          "part_big_crafting_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "ultimate_interface_alternate_arrow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4236
+                          },
+                          "hybrid_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3962
+                          },
+                          "part_big_pattern_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "avaritia_auto_craft.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 217
+                          },
+                          "craft_table": {
+                            "type": "directory",
+                            "children": {
+                              "side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4188
+                              },
+                              "side.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 215
+                              },
+                              "bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3606
+                              },
+                              "top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3591
+                              }
+                            }
+                          },
+                          "compressor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1925
+                          },
+                          "advanced_interface_alternate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3958
+                          },
+                          "compressorSide.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4961
+                          },
+                          "part_advanced_interface_terminal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "part_ultimate_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "BlockDriveFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2044
+                          },
+                          "part_hybrid_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "hybrid_interface_alternate_arrow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4241
+                          },
+                          "compressorFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4190
+                          },
+                          "advanced_interface_alternate_arrow.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4228
+                          },
+                          "part_adv_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 244
+                          },
+                          "BlockDrive.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 398
+                          },
+                          "BlockDriveSide.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 438
+                          },
+                          "ultimate_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3963
+                          },
+                          "avaritia_auto_craft.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 986
+                          },
+                          "advanced_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3980
+                          },
+                          "BlockDriveBottom.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 398
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_t_molecular_assembler_18.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5729
+                          },
+                          "pattern_terminal_gui_doing.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10210
+                          },
+                          "gui_t_molecular_assembler_9.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5581
+                          },
+                          "adv_drive.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5833
+                          },
+                          "pattern_terminal_gui_crafting.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10160
+                          },
+                          "advanced_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19352
+                          },
+                          "gui_t_molecular_assembler_27.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5803
+                          },
+                          "advanced_big_assembler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6044
+                          },
+                          "hybrid_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19549
+                          },
+                          "auto_craft_table.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5399
+                          },
+                          "ultimate_interface.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19550
+                          },
+                          "gui_t_molecular_assembler_36.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5840
+                          },
+                          "avaritia_molecular_crafter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6809
+                          },
+                          "gui_t_molecular_assembler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5101
+                          },
+                          "advanced_charger.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11875
+                          },
+                          "craft_terminal_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9524
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "essentia.cell.16384k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5108
+                          },
+                          "ess_storage.component.1024k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4983
+                          },
+                          "ess_storage.component.65536k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5039
+                          },
+                          "essentia.cell.4096k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4993
+                          },
+                          "big_empty_pattern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 363
+                          },
+                          "lava_cell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1938
+                          },
+                          "advanced_material.Cell256M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3505
+                          },
+                          "essentia.cell.1024k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5014
+                          },
+                          "essentia.cell.256k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5053
+                          },
+                          "advanced_fluid_cell.Cell16M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3845
+                          },
+                          "ess_storage.component.262144k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4897
+                          },
+                          "advanced_fluid_cell.Cell64M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3839
+                          },
+                          "essentia.cell.65536k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5116
+                          },
+                          "ess_storage.component.1048576k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4980
+                          },
+                          "water_cell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1921
+                          },
+                          "advanced_cell.Cell64M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3690
+                          },
+                          "advanced_material.Cell64M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3649
+                          },
+                          "advanced_fluid_material.Cell1G.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3671
+                          },
+                          "ess_storage.component.256k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4861
+                          },
+                          "essentia.cell.1048576k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5144
+                          },
+                          "advanced_fluid_cell.Cell1G.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3854
+                          },
+                          "advanced_fluid_material.Cell16M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3910
+                          },
+                          "advanced_fluid_material.Cell64M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3577
+                          },
+                          "advanced_material.Cell1G.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3709
+                          },
+                          "ess_storage.component.16384k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5043
+                          },
+                          "essentia.cell.262144k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5128
+                          },
+                          "ess_storage.component.4096k.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5046
+                          },
+                          "advanced_fluid_cell.Cell256M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3824
+                          },
+                          "advanced_cell.Cell256M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3675
+                          },
+                          "advanced_fluid_material.Cell256M.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3489
+                          },
+                          "big_pattern.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 381
+                          },
+                          "cobblestone_cell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1927
+                          },
+                          "advanced_cell.Cell1G.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3686
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8207
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 8207
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "auto_neutron_compressor.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 23822
+                      },
+                      "big_molecular_assembler.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 66795
+                      },
+                      "advanced_charger.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 39119
+                      },
+                      "ae_charger.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28441
+                      },
+                      "ae_grower.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 39507
+                      },
+                      "ae_inscriber.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 28048
+                      },
+                      "tm_molecular_assembler.obj": {
+                        "type": "file",
+                        "extension": ".obj",
+                        "size": 56045
+                      }
+                    }
+                  }
+                }
+              },
+              "appliedenergistics2": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "PartAdvInterfaceFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4513
+                          },
+                          "PartUltimateInterfaceFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4529
+                          },
+                          "PartHybridInterfaceFront.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4493
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 342
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 160
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 14932
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 38205
+          }
+        }
+      }
+    }
+  }
+}

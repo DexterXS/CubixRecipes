@@ -1,0 +1,2017 @@
+{
+  "mod_name": "CubixForestryAdditions-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixForestryAdditions-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixForestryAdditions-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 953853,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "net": {
+            "type": "directory",
+            "children": {
+              "cubixforestryadditions": {
+                "type": "directory",
+                "children": {
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "ItemTreeModifierGreenhouse$GreenhouseTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1442
+                          },
+                          "ItemTreeModifierGreenhouse$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 300
+                          },
+                          "ItemProductionBeeModifierInstantAdaptation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 332
+                          },
+                          "ItemBeeModifierBiomeAdaptation$BiomeAdaptationBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1815
+                          },
+                          "ItemBeeModifierLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6267
+                          },
+                          "ItemBeeModifierLight$LightBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1632
+                          },
+                          "ItemBeeModifierShelter$ShelterBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1535
+                          },
+                          "ItemBeeModifierMythicalFlower$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 306
+                          },
+                          "ItemBeeModifierLifeCycleDecrease.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6450
+                          },
+                          "ItemBeeModifierSieve.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6319
+                          },
+                          "ItemBlockExtended.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2683
+                          },
+                          "ItemBeeModifierLight$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 288
+                          },
+                          "ItemProductionBeeModifierDoubleProduction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6649
+                          },
+                          "ItemBeeModifierHumidity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6314
+                          },
+                          "ItemTreeModifierFertility$FertilityTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1302
+                          },
+                          "ItemBeeModifierSpecialCondition$SpecialConditionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1663
+                          },
+                          "ItemBeeModifierHumidity$HumidityBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1701
+                          },
+                          "ItemTreeModifierGreenhouse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5502
+                          },
+                          "ItemBeeModifierProduction$ProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1625
+                          },
+                          "ItemBeeModifierHumidity$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 294
+                          },
+                          "ItemBeeModifierDoubleProduction$DoubleProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1991
+                          },
+                          "ItemBeeModifierLifeCycleIncrease$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 312
+                          },
+                          "ItemBeeModifierBeeSieve$BeeSieveBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1560
+                          },
+                          "ItemBeeModifierCold$ColdBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1660
+                          },
+                          "ItemBeeModifierMutation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6314
+                          },
+                          "ItemBeeModifierBoost$BoostBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1632
+                          },
+                          "ItemSynthesizedGeneCube.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9539
+                          },
+                          "ItemBeeModifierDoubleProduction$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 310
+                          },
+                          "ItemBeeModifierHeat$HeatBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1666
+                          },
+                          "ItemTreeModifierFertility$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 298
+                          },
+                          "ItemBeeModifierBeeSieve$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 294
+                          },
+                          "ItemBeeModifierBiomeAdaptation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6408
+                          },
+                          "ItemBeeModifierDoubleProduction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6508
+                          },
+                          "ItemBeeModifierHeat$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 286
+                          },
+                          "ItemTreeModifierSpeed.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5918
+                          },
+                          "ItemProductionBeeModifierBiomeAdaptation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 328
+                          },
+                          "ItemTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1094
+                          },
+                          "ItemBeeModifierMutation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 294
+                          },
+                          "ItemBeeModifierLifeCycleIncrease$LifeCycleIncreaseBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1723
+                          },
+                          "ItemBeeModifierBiomeAdaptation$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 308
+                          },
+                          "ItemBeeModifierBoost$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 288
+                          },
+                          "ItemTreeModifierDoubleProduction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6041
+                          },
+                          "ItemBeeModifierMutation$MutationBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1811
+                          },
+                          "ItemBeeModifierSieve$SieveBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3068
+                          },
+                          "ItemProductionBeeModifierDoubleProduction$DoubleProductionProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1932
+                          },
+                          "ItemBeeModifierCold$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 286
+                          },
+                          "ItemBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1061
+                          },
+                          "ItemBeeModifierLife$LifeBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1533
+                          },
+                          "ItemBeeModifierPollination.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6386
+                          },
+                          "ItemBeeModifierPollination$PollinationBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1594
+                          },
+                          "ItemProductionBeeModifierProduction$ProductionProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1714
+                          },
+                          "ItemBeeModifierMythicalFlower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6418
+                          },
+                          "ItemBeeModifierHeat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5431
+                          },
+                          "ItemTreeModifierDoubleProduction$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 312
+                          },
+                          "ItemBeeModifierPollination$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 300
+                          },
+                          "ItemTreeModifierDoubleProduction$DoubleProductionTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1538
+                          },
+                          "ItemTreeModifierSpeed$SpeedTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1254
+                          },
+                          "ItemProductionBeeModifierDoubleProduction$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 330
+                          },
+                          "ItemBeeModifierShelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6363
+                          },
+                          "ItemBeeModifierBoost.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6317
+                          },
+                          "ItemBeeModifierSieve$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 288
+                          },
+                          "ItemProductionBeeModifierInstantAdaptation$InstantAdaptationProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1821
+                          },
+                          "ItemProductionBeeModifierBiomeAdaptation$BiomeAdaptationProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1776
+                          },
+                          "ItemProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1178
+                          },
+                          "ItemBeeModifierLifeCycleIncrease.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6535
+                          },
+                          "ItemBeeModifierLife.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6326
+                          },
+                          "ItemBeeModifierProduction$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 298
+                          },
+                          "ItemBeeModifierDrought$DroughtBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1700
+                          },
+                          "ItemProductionBeeModifierSpeed$SpeedProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1787
+                          },
+                          "ItemBeeModifierMythicalFlower$MythicalFlowerBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1650
+                          },
+                          "ItemBeeModifierLifeCycleDecrease$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 312
+                          },
+                          "ItemTreeModifierSpeed$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 290
+                          },
+                          "ItemBeeModifierDrought.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5463
+                          },
+                          "ItemBeeModifierCold.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6290
+                          },
+                          "ItemBeeModifierSpecialCondition.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6423
+                          },
+                          "ItemBeeModifierLifeCycleDecrease$LifeCycleDecreaseBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1740
+                          },
+                          "ItemBeeModifierSpecialCondition$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 310
+                          },
+                          "ItemBeeModifierShelter$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 292
+                          },
+                          "ItemProductionBeeModifierSpeed.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6092
+                          },
+                          "ItemProductionBeeModifierProduction$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 318
+                          },
+                          "ItemBeeModifierBeeSieve.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6352
+                          },
+                          "ItemProductionBeeModifierBiomeAdaptation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6649
+                          },
+                          "ItemBeeModifierLife$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 286
+                          },
+                          "ItemProductionBeeModifierSpeed$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 308
+                          },
+                          "ItemFragmentedGeneCube.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9281
+                          },
+                          "ItemProductionBeeModifierInstantAdaptation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6261
+                          },
+                          "Items.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7200
+                          },
+                          "ItemBeeModifierDrought$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 292
+                          },
+                          "ItemBeeModifierProduction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6371
+                          },
+                          "ItemProductionBeeModifierProduction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6663
+                          },
+                          "ItemTreeModifierFertility.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5899
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "BlockGardenStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5807
+                          },
+                          "BlockIndustrialCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4106
+                          },
+                          "Blocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2366
+                          },
+                          "BlockExtendedForestry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7258
+                          },
+                          "BlockMultiApiaryMiddle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3238
+                          },
+                          "BlockBioMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3072
+                          },
+                          "BlockExtendedFactoryTesrType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6681
+                          },
+                          "BlockExtendedFactoryTESR.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3815
+                          },
+                          "BlockMultiApiarySmall.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2807
+                          },
+                          "BlockProductionMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5789
+                          },
+                          "BlockMultiApiaryBig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3674
+                          },
+                          "BlockMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4293
+                          },
+                          "BlockIndustrialCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3086
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "packet": {
+                            "type": "directory",
+                            "children": {
+                              "SPacketWindowItems$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3611
+                              },
+                              "SPacketSyncGardenStationCustomItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5354
+                              },
+                              "CPacketSelectMode$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 803
+                              },
+                              "CPacketSelectCell.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2130
+                              },
+                              "CPacketClickWindow.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3357
+                              },
+                              "SPacketSetSlot$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5806
+                              },
+                              "CPacketSynthesize.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 818
+                              },
+                              "SPacketWindowItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2256
+                              },
+                              "CPacketSetCurrentScroll.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1514
+                              },
+                              "SPacketSyncGardenStationCustomItems$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3452
+                              },
+                              "SPacketSyncConfig.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1564
+                              },
+                              "CPacketSetCurrentScroll$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 810
+                              },
+                              "CPacketSynthesize$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 786
+                              },
+                              "SPacketSetCellContents$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3188
+                              },
+                              "SPacketSetCellContents.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3066
+                              },
+                              "SPacketSyncConfig$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2091
+                              },
+                              "CPacketSelectMode.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2336
+                              },
+                              "SPacketSetSlot.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1808
+                              },
+                              "CPacketSelectCell$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 786
+                              },
+                              "CPacketClickWindow$Handler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3015
+                              }
+                            }
+                          },
+                          "Network.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4954
+                          }
+                        }
+                      },
+                      "inventory": {
+                        "type": "directory",
+                        "children": {
+                          "InventoryExtendedCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3761
+                          },
+                          "InventoryIndustrialCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3684
+                          },
+                          "InventoryExtendedSqueezer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7108
+                          },
+                          "ContainerExtendedCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4594
+                          },
+                          "ContainerBioMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1878
+                          },
+                          "slot": {
+                            "type": "directory",
+                            "children": {
+                              "SlotAutoStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3826
+                              },
+                              "SlotStorage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3098
+                              }
+                            }
+                          },
+                          "InventoryIndustrialCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3590
+                          },
+                          "InventoryExtendedFermenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4684
+                          },
+                          "ContainerIndustrialCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4726
+                          },
+                          "InventoryBioMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4597
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "MultiApiaryInventoryUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4397
+                              }
+                            }
+                          },
+                          "InventoryExtendedBottler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4510
+                          },
+                          "InventoryMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20459
+                          },
+                          "ContainerExtendedCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2216
+                          },
+                          "InventoryGardenStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13817
+                          },
+                          "ContainerExtendedFermenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3135
+                          },
+                          "ContainerMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4957
+                          },
+                          "InventoryExtendedStill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4332
+                          },
+                          "ContainerExtendedBottler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1727
+                          },
+                          "ContainerIndustrialCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2487
+                          },
+                          "ContainerExtendedStill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1646
+                          },
+                          "ContainerExtendedSqueezer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2406
+                          },
+                          "ContainerExtendedForestry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8169
+                          },
+                          "ContainerProductionMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15250
+                          },
+                          "InventoryExtendedCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4682
+                          },
+                          "ContainerGardenStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2792
+                          },
+                          "InventoryProductionMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9179
+                          }
+                        }
+                      },
+                      "Config.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18688
+                      },
+                      "GardenStationCustomItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1560
+                      },
+                      "tileentity": {
+                        "type": "directory",
+                        "children": {
+                          "TileEntityExtendedFermenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20796
+                          },
+                          "TileEntityMultiApiaryBig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 667
+                          },
+                          "TileEntityMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21768
+                          },
+                          "TileEntityGardenStation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12381
+                          },
+                          "TileEntityExtendedCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15500
+                          },
+                          "TileEntityExtendedCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16176
+                          },
+                          "TileEntityIndustrialCarpenter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20696
+                          },
+                          "TileEntityExtendedBottler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14262
+                          },
+                          "TileEntityMultiApiaryMiddle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 676
+                          },
+                          "TileEntityIndustrialCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14090
+                          },
+                          "TileEntityProductionMultiApiary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 25579
+                          },
+                          "TileEntityExtendedPowered.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10087
+                          },
+                          "TileEntityExtendedStill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14610
+                          },
+                          "TileEntityExtendedSqueezer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17683
+                          },
+                          "TileEntityBioMatrix.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20084
+                          },
+                          "TileEntityMultiApiarySmall.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 669
+                          }
+                        }
+                      },
+                      "multiapiary": {
+                        "type": "directory",
+                        "children": {
+                          "BeekeepingLogic$QueenCanWorkCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2467
+                          },
+                          "BeekeepingMode$BeekeepingModeBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1628
+                          },
+                          "FlowerRegistry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 32886
+                          },
+                          "Bee.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 46643
+                          },
+                          "BeeHelper$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1174
+                          },
+                          "BeeHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 27819
+                          },
+                          "HasFlowersCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11799
+                          },
+                          "DefaultBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3753
+                          },
+                          "BeeHousingModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11197
+                          },
+                          "Flower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7354
+                          },
+                          "BeekeepingLogic$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 292
+                          },
+                          "BeekeepingMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11370
+                          },
+                          "BeeMutation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9811
+                          },
+                          "BeekeepingLogic$PollenHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3728
+                          },
+                          "BeeHousingListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2646
+                          },
+                          "BeekeepingLogic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 30704
+                          }
+                        }
+                      },
+                      "gardenstation": {
+                        "type": "directory",
+                        "children": {
+                          "GardenStationModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3132
+                          },
+                          "DefaultTreeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 945
+                          }
+                        }
+                      },
+                      "productionmultiapiary": {
+                        "type": "directory",
+                        "children": {
+                          "DefaultProductionBeeModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          },
+                          "ProductionBeeHousingModifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3980
+                          }
+                        }
+                      },
+                      "GardenStationCustomItems$ProduceData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1994
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "ItemStackUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3279
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "CubixForestryAddition.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10611
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "renderer": {
+                        "type": "directory",
+                        "children": {
+                          "item": {
+                            "type": "directory",
+                            "children": {
+                              "ItemGardenStationRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2864
+                              },
+                              "ItemGardenStationRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1160
+                              },
+                              "ItemExtendedFactoryRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4050
+                              },
+                              "ItemIndustrialCarpenterRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1169
+                              },
+                              "ItemMultiApiaryRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1292
+                              },
+                              "ItemBioMatrixRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2888
+                              },
+                              "ItemIndustrialCentrifugeRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2891
+                              },
+                              "ItemExtendedFactoryRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1170
+                              },
+                              "ItemMultiApiaryRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4894
+                              },
+                              "ItemIndustrialCentrifugeRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1166
+                              },
+                              "ItemBioMatrixRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1201
+                              },
+                              "ItemIndustrialCarpenterRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2899
+                              },
+                              "ItemProductionMultiApiaryRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1233
+                              },
+                              "ItemProductionMultiApiaryRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2903
+                              }
+                            }
+                          },
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "TileEntityExtendedSqueezerRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1121
+                              },
+                              "TileEntityIndustrialCarpenterRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5716
+                              },
+                              "TileEntityProductionMultiApiaryRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5194
+                              },
+                              "TileEntityExtendedStillRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6198
+                              },
+                              "TileEntityExtendedCentrifugeRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5216
+                              },
+                              "TileEntityBioMatrixRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5203
+                              },
+                              "TileEntityIndustrialCentrifugeRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1196
+                              },
+                              "TileEntityExtendedBottlerRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6173
+                              },
+                              "TileEntityGardenStationRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5703
+                              },
+                              "TileEntityExtendedSqueezerRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6246
+                              },
+                              "TileEntityExtendedFermenterRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6261
+                              },
+                              "TileEntityExtendedFermenterRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1198
+                              },
+                              "TileEntityExtendedCarpenterRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6169
+                              },
+                              "TileEntityExtendedBottlerRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1173
+                              },
+                              "TileEntityIndustrialCentrifugeRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6208
+                              },
+                              "package-info.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 310
+                              },
+                              "TileEntityExtendedCentrifugeRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1147
+                              },
+                              "TileEntityProductionMultiApiaryRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1065
+                              },
+                              "TileEntityExtendedStillRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1252
+                              },
+                              "TileEntityMultiApiaryRenderer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9069
+                              },
+                              "TileEntityExtendedCarpenterRenderer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1162
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 299
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16565
+                          },
+                          "GuiListExtended.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6499
+                          },
+                          "inventory": {
+                            "type": "directory",
+                            "children": {
+                              "GuiExtendedBottler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5409
+                              },
+                              "GuiExtendedCarpenter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4455
+                              },
+                              "GuiGardenStation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5851
+                              },
+                              "biomatrix": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiBioMatrix.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6664
+                                  },
+                                  "GuiButtonSynthesize.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3409
+                                  }
+                                }
+                              },
+                              "GuiProductionMultiApiary.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16011
+                              },
+                              "GuiExtendedFermenter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4930
+                              },
+                              "industrialcarpenter": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiIndustrialCarpenterTankWidget.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1094
+                                  },
+                                  "GuiIndustrialCarpenter.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4670
+                                  }
+                                }
+                              },
+                              "GuiIndustrialCentrifuge.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4749
+                              },
+                              "GuiExtendedLedgerManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9049
+                              },
+                              "GuiExtendedSqueezer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4322
+                              },
+                              "GuiExtendedCentrifuge.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4860
+                              },
+                              "GuiExtendedStill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5804
+                              },
+                              "GuiMultiApiary.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16920
+                              }
+                            }
+                          },
+                          "GuiButtonCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5313
+                          },
+                          "GuiCellList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3245
+                          },
+                          "GuiCellList$CellGroupEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4773
+                          },
+                          "GuiButtonChangeMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4044
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 294
+                          },
+                          "GuiListExtended$IGuiListEntry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 558
+                          }
+                        }
+                      },
+                      "recipes": {
+                        "type": "directory",
+                        "children": {
+                          "nei": {
+                            "type": "directory",
+                            "children": {
+                              "NEIHandlerExtendedSqueezer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1053
+                              },
+                              "NEIHandlerExtendedStill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1018
+                              },
+                              "NEIHandlerExtendedBottler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1036
+                              },
+                              "NEIHandlerExtendedCentrifuge.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "NEIHandlerExtendedCarpenter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1019
+                              },
+                              "NEIHandlerExtendedFermenter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1008
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7405
+                      }
+                    }
+                  },
+                  "server": {
+                    "type": "directory",
+                    "children": {
+                      "ServerProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2222
+                      }
+                    }
+                  },
+                  "CubixForestryAddition$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 994
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2820
+                      },
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1791
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixforestryadditions": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "bio_matrix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1497
+                          },
+                          "extended_still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4163
+                          },
+                          "industrial_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2943
+                          },
+                          "industrial_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2502
+                          },
+                          "multi_apiary_middle.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6842
+                          },
+                          "extended_squeezer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2984
+                          },
+                          "extended_fermenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2428
+                          },
+                          "extended_bottler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3834
+                          },
+                          "garden_station.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4781
+                          },
+                          "multi_apiary_small.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8515
+                          },
+                          "production_multi_apiary.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2782
+                          },
+                          "extended_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3665
+                          },
+                          "extended_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4680
+                          },
+                          "multi_apiary_big.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8468
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "production_bee_modifier_production.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 536
+                          },
+                          "bee_modifier_humidity.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 349
+                          },
+                          "bee_modifier_special_condition.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 330
+                          },
+                          "tree_modifier_speed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1220
+                          },
+                          "synthesized_gene_cube.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 476
+                          },
+                          "bee_modifier_life_cycle_decrease.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 332
+                          },
+                          "bee_modifier_mutation.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 230
+                          },
+                          "bee_modifier_boost.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1227
+                          },
+                          "production_bee_modifier_biome_adaptation.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 604
+                          },
+                          "bee_modifier_biome_adaptation.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 277
+                          },
+                          "bee_modifier_bee_sieve.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1866
+                          },
+                          "tree_modifier_greenhouse.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1968
+                          },
+                          "tree_modifier_fertility.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1243
+                          },
+                          "bee_modifier_life.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 254
+                          },
+                          "bee_modifier_life_cycle_increase.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 328
+                          },
+                          "bee_modifier_light.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 306
+                          },
+                          "production_bee_modifier_instant_adaptation.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 594
+                          },
+                          "bee_modifier_mythical_flower.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 251
+                          },
+                          "bee_modifier_shelter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 247
+                          },
+                          "bee_modifier_drought.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 353
+                          },
+                          "bee_modifier_pollination.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 243
+                          },
+                          "tree_modifier_double_production.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1273
+                          },
+                          "bee_modifier_sieve.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 186
+                          },
+                          "bee_modifier_cold.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 325
+                          },
+                          "bee_modifier_production.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 228
+                          },
+                          "fragmented_gene_cube.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 507
+                          },
+                          "production_bee_modifier_speed.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 476
+                          },
+                          "bee_modifier_heat.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 392
+                          },
+                          "bee_modifier_double_production.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 237
+                          },
+                          "production_bee_modifier_double_production.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 485
+                          }
+                        }
+                      },
+                      "obj": {
+                        "type": "directory",
+                        "children": {
+                          "industrial_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2943
+                          },
+                          "extended_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4680
+                          },
+                          "extended_fermenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2428
+                          },
+                          "extended_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3665
+                          },
+                          "multi_apiary_middle.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8659
+                          },
+                          "extended_still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4163
+                          },
+                          "garden_station.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4781
+                          },
+                          "multi_apiary_small.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8647
+                          },
+                          "multi_apiary_big.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8637
+                          },
+                          "bio_matrix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1497
+                          },
+                          "extended_bottler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3834
+                          },
+                          "production_multi_apiary.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2782
+                          },
+                          "extended_squeezer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2984
+                          },
+                          "industrial_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2502
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "bio_matrix.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12024
+                          },
+                          "extended_fermenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8812
+                          },
+                          "industrial_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 10986
+                          },
+                          "extended_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7711
+                          },
+                          "extended_squeezer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8149
+                          },
+                          "extended_bottler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8949
+                          },
+                          "industrial_carpenter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9437
+                          },
+                          "multi_apiary.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25461
+                          },
+                          "extended_centrifuge.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7205
+                          },
+                          "extended_still.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7354
+                          },
+                          "production_multi_apiary.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11641
+                          },
+                          "garden_station.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 43648
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "obj": {
+                        "type": "directory",
+                        "children": {
+                          "industrial_carpenter.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 12470
+                          },
+                          "extended_fermenter.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 43787
+                          },
+                          "extended_squeezer.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 32650
+                          },
+                          "multi_apiary.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 47060
+                          },
+                          "production_multi_apiary.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 14784
+                          },
+                          "extended_centrifuge.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 32040
+                          },
+                          "industrial_centrifuge.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 15776
+                          },
+                          "extended_bottler.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 34490
+                          },
+                          "bio_matrix.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 20401
+                          },
+                          "extended_still.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 43789
+                          },
+                          "extended_carpenter.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 16662
+                          },
+                          "garden_station.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 22388
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 11153
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 7425
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 85
+              },
+              "cubixforestryadditions_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 719
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 278
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5198
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 34437
+          }
+        }
+      }
+    }
+  }
+}

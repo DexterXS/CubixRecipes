@@ -1,0 +1,277 @@
+{
+  "mod_name": "jbs-lib.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\jbs-lib.jar",
+  "mod_type": "jar",
+  "tree": {
+    "jbs-lib.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 535870,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "mac": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "MacData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2195
+                          },
+                          "ModulesTypes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4509
+                          },
+                          "AccountData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1809
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "CalendarUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6239
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiScreenMac.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1596
+                              },
+                              "GuiWarning.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11565
+                              },
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "RoundPoint.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4702
+                                  },
+                                  "Scrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7979
+                                  }
+                                }
+                              },
+                              "GuiMac.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 46774
+                              }
+                            }
+                          },
+                          "ClientData$loadTexture.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1622
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 138
+                          },
+                          "ClientData$loadTexture$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4642
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6856
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7981
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4766
+                          },
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 664
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16865
+                          }
+                        }
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3270
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4782
+                      },
+                      "Mac.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3216
+                      },
+                      "Mac$CheckingThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 25010
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3375
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "mac": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "mac": {
+                            "type": "directory",
+                            "children": {
+                              "yellowButton_passive.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 502
+                              },
+                              "yellowButton_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 14774
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7557
+                              },
+                              "bgWarning.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 77505
+                              },
+                              "avatar.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1204
+                              },
+                              "icon_Profile.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 739
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "fractal.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 171248
+                      },
+                      "proxima.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 132104
+                      },
+                      "bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 351544
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 289
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 164
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 281
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2562
+          }
+        }
+      }
+    }
+  }
+}

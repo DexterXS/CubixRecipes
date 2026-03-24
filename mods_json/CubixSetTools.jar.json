@@ -1,0 +1,437 @@
+{
+  "mod_name": "CubixSetTools.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixSetTools.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixSetTools.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1773133,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixsettools": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemImagerHammer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3874
+                                  },
+                                  "IItemTools.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 226
+                                  },
+                                  "ToolItem.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10307
+                                  },
+                                  "ItemReaverHammer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3973
+                                  }
+                                }
+                              },
+                              "SetToolsItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 652
+                              }
+                            }
+                          },
+                          "grid": {
+                            "type": "directory",
+                            "children": {
+                              "Vector3m.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3812
+                              },
+                              "Vector3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13501
+                              },
+                              "GridUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4499
+                              },
+                              "PointCube.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2033
+                              },
+                              "Vector2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 12611
+                              }
+                            }
+                          },
+                          "CommonToolsUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6828
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "BlockStackData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 865
+                              }
+                            }
+                          },
+                          "ToolsType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4855
+                          }
+                        }
+                      },
+                      "SetTools.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4219
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderImagerHammer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8044
+                              },
+                              "RenderReaverHammer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1184
+                              },
+                              "RenderImagerHammer$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1190
+                              },
+                              "RenderReaverHammer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6426
+                              }
+                            }
+                          },
+                          "grid": {
+                            "type": "directory",
+                            "children": {
+                              "render": {
+                                "type": "directory",
+                                "children": {
+                                  "Render3DBox.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2388
+                                  },
+                                  "Render3DGrid.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4452
+                                  }
+                                }
+                              },
+                              "GridHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10300
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "utils": {
+                                "type": "directory",
+                                "children": {
+                                  "GuiScreenSetTools.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3890
+                                  }
+                                }
+                              },
+                              "scroll": {
+                                "type": "directory",
+                                "children": {
+                                  "Scrolling.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12790
+                                  }
+                                }
+                              },
+                              "GuiWhiteListBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 16636
+                              }
+                            }
+                          },
+                          "WaveFrontWrapper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 27965
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 148
+                          },
+                          "KeyHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5218
+                          },
+                          "font": {
+                            "type": "directory",
+                            "children": {
+                              "SetToolsFont.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4238
+                              }
+                            }
+                          },
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4508
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16302
+                          },
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5786
+                          },
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 674
+                          },
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3868
+                          }
+                        }
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7023
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2747
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4867
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixsettools": {
+                "type": "directory",
+                "children": {
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "myriad_regular.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 116116
+                      },
+                      "fractal.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 171248
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "hammers": {
+                            "type": "directory",
+                            "children": {
+                              "reaverHammer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 166034
+                              },
+                              "imagerHammer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 258150
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "whiteList": {
+                            "type": "directory",
+                            "children": {
+                              "box_passive.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 676
+                              },
+                              "bg.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 9952
+                              },
+                              "box_hover.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 785
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "reaverHammerIcon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15283
+                          },
+                          "imagerHammerIcon.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 15642
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "hammers": {
+                        "type": "directory",
+                        "children": {
+                          "reaverHammer.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 757287
+                          },
+                          "imagerHammer.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 735087
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 124
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 82
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 291
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 579
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 6689
+          }
+        }
+      }
+    }
+  }
+}

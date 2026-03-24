@@ -1,0 +1,4107 @@
+{
+  "mod_name": "CraftTweaker-3.3.1.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CraftTweaker-3.3.1.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CraftTweaker-3.3.1.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 1023146,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "minetweaker": {
+            "type": "directory",
+            "children": {
+              "MineTweakerImplementationAPI$2.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2414
+              },
+              "annotations": {
+                "type": "directory",
+                "children": {
+                  "ModOnly.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 508
+                  },
+                  "OnRegister.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 397
+                  },
+                  "BracketHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 462
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$15.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 864
+              },
+              "IBracketHandler.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 422
+              },
+              "MineTweakerImplementationAPI$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 852
+              },
+              "MineTweakerImplementationAPI$18.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1827
+              },
+              "MineTweakerImplementationAPI$5.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1967
+              },
+              "MineTweakerImplementationAPI$ListenBlockInfo.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2315
+              },
+              "MineTweakerImplementationAPI$MineTweakerCommand.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1293
+              },
+              "MineTweakerImplementationAPI$ItemComparator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1329
+              },
+              "mc1710": {
+                "type": "directory",
+                "children": {
+                  "MineTweakerConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1676
+                  },
+                  "MineTweakerRegistry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5846
+                  },
+                  "ForgeEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7152
+                  },
+                  "formatting": {
+                    "type": "directory",
+                    "children": {
+                      "IMCFormattedString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 295
+                      },
+                      "MCFormatter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3394
+                      },
+                      "FormattedMarkupString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1743
+                      },
+                      "FormattedStringJoin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2250
+                      },
+                      "FormattedString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1194
+                      }
+                    }
+                  },
+                  "vanilla": {
+                    "type": "directory",
+                    "children": {
+                      "MCLootRegistry$RemoveLootAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3258
+                      },
+                      "MCVanilla.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 869
+                      },
+                      "MCSeedRegistry$AddSeedAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1993
+                      },
+                      "MCLootRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4245
+                      },
+                      "MCSeedRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2508
+                      },
+                      "MCSeedRegistry$RemoveSeedAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2600
+                      },
+                      "MCLootRegistry$AddLootAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2495
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "MCItemDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2844
+                      },
+                      "MCItemStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14259
+                      }
+                    }
+                  },
+                  "data": {
+                    "type": "directory",
+                    "children": {
+                      "NBTConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8301
+                      },
+                      "NBTUpdater.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2466
+                      }
+                    }
+                  },
+                  "MCPlatformFunctions.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1908
+                  },
+                  "oredict": {
+                    "type": "directory",
+                    "children": {
+                      "MCOreDictEntry$ActionRemoveItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1904
+                      },
+                      "MCOreDictEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8532
+                      },
+                      "MCOreDictEntry$ActionAddItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1925
+                      },
+                      "MCOreDict.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1337
+                      },
+                      "MCOreDictEntry$ActionMirror.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2066
+                      },
+                      "MCOreDictEntry$ActionAddAll.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2269
+                      }
+                    }
+                  },
+                  "GuiCannotRemodify.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1778
+                  },
+                  "server": {
+                    "type": "directory",
+                    "children": {
+                      "MCServer$AddCommandAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2110
+                      },
+                      "MCServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4484
+                      },
+                      "MCServer$MCCommand.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3164
+                      },
+                      "ServerPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3987
+                      }
+                    }
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "MCEntityDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2602
+                      }
+                    }
+                  },
+                  "brackets": {
+                    "type": "directory",
+                    "children": {
+                      "OreBracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3984
+                      },
+                      "LiquidBracketHandler$LiquidReferenceSymbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2104
+                      },
+                      "ItemBracketHandler$ItemReferenceSymbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2046
+                      },
+                      "OreBracketHandler$OreReferenceSymbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2329
+                      },
+                      "LiquidBracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4016
+                      },
+                      "ItemBracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5196
+                      }
+                    }
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "MCItemBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2467
+                      },
+                      "MCSpecificBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2628
+                      },
+                      "MCBlockDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1011
+                      },
+                      "MCWorldBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3264
+                      }
+                    }
+                  },
+                  "liquid": {
+                    "type": "directory",
+                    "children": {
+                      "MCLiquidDefinition$AddContainerAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2391
+                      },
+                      "MCLiquidDefinition$ActionSetDensity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1779
+                      },
+                      "MCLiquidDefinition$ActionSetTemperature.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1803
+                      },
+                      "MCLiquidDefinition$ActionSetLuminosity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1797
+                      },
+                      "MCLiquidDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5018
+                      },
+                      "MCLiquidDefinition$ActionSetGaseous.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1772
+                      },
+                      "MCLiquidDefinition$ActionSetViscosity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1791
+                      },
+                      "MCLiquidStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6104
+                      }
+                    }
+                  },
+                  "player": {
+                    "type": "directory",
+                    "children": {
+                      "RconPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3387
+                      },
+                      "MCPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5652
+                      },
+                      "CommandBlockPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3537
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "MineTweakerLoadScriptsHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1785
+                      },
+                      "MineTweakerOpenBrowserPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1558
+                      },
+                      "MineTweakerLoadScriptsPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1108
+                      },
+                      "MineTweakerCopyClipboardHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2083
+                      },
+                      "MineTweakerCopyClipboardPacket.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1454
+                      },
+                      "MineTweakerOpenBrowserHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1919
+                      }
+                    }
+                  },
+                  "chat": {
+                    "type": "directory",
+                    "children": {
+                      "MCChatMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1155
+                      }
+                    }
+                  },
+                  "recipes": {
+                    "type": "directory",
+                    "children": {
+                      "ShapedRecipeAdvanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1867
+                      },
+                      "MCRecipeManager$ActionAddShapedRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1224
+                      },
+                      "ShapelessRecipeBasic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1870
+                      },
+                      "MCRecipeManager$ActionRemoveShapelessRecipes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4898
+                      },
+                      "MCRecipeManager$ContainerVirtual.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1090
+                      },
+                      "MCRecipeManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15523
+                      },
+                      "MCRecipeManager$ActionBaseRemoveRecipes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1720
+                      },
+                      "MCRecipeManager$HandleLateAdditionsAndRemovals.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1136
+                      },
+                      "ShapelessRecipeOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1760
+                      },
+                      "MCRecipeManager$FindRecipeToRemoveTask.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2325
+                      },
+                      "ShapedRecipeBasic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1981
+                      },
+                      "MCRecipeManager$ActionRemoveShapedRecipes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5228
+                      },
+                      "MCRecipeManager$ActionBaseAddRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3512
+                      },
+                      "ShapedRecipeOre.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1796
+                      },
+                      "MCRecipeManager$ActionRemoveRecipesNoIngredients.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5540
+                      },
+                      "MCRecipeManager$ActionAddShapelessRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1206
+                      },
+                      "ShapelessRecipeAdvanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1854
+                      },
+                      "MCCraftingInventory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5950
+                      },
+                      "RecipeConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7146
+                      },
+                      "MCRecipeManager$ActionBatchRemoveRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3791
+                      },
+                      "MCRecipeManager$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 247
+                      }
+                    }
+                  },
+                  "game": {
+                    "type": "directory",
+                    "children": {
+                      "MCGame$SetTranslation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1968
+                      },
+                      "MCGame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6991
+                      }
+                    }
+                  },
+                  "actions": {
+                    "type": "directory",
+                    "children": {
+                      "SetStackSizeAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1709
+                      },
+                      "SetStackmaxDamageAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1720
+                      },
+                      "SetTranslationAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2359
+                      },
+                      "SetBlockHardnessAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2818
+                      }
+                    }
+                  },
+                  "furnace": {
+                    "type": "directory",
+                    "children": {
+                      "MCFurnaceManager$AddRecipeAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2180
+                      },
+                      "FuelTweaker$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 235
+                      },
+                      "MCFurnaceManager$SetFuelAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1675
+                      },
+                      "FuelTweaker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4407
+                      },
+                      "FuelTweaker$OverridingFuelHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2488
+                      },
+                      "MCFurnaceManager$RemoveAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2404
+                      },
+                      "MCFurnaceManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4989
+                      },
+                      "SetFuelPattern.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 690
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "MineTweakerHacks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10048
+                      },
+                      "ThreadSafeBitSet$ThreadSafeBitSetSegments.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2106
+                      },
+                      "ThreadSafeBitSet$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 244
+                      },
+                      "MineTweakerObfuscation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1176
+                      },
+                      "ThreadSafeBitSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8779
+                      },
+                      "MineTweakerPlatformUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2166
+                      }
+                    }
+                  },
+                  "FMLEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5500
+                  },
+                  "MineTweakerMod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10141
+                  },
+                  "mods": {
+                    "type": "directory",
+                    "children": {
+                      "MCLoadedMods.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1753
+                      },
+                      "MCLoadedMods$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1348
+                      },
+                      "MCMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1006
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "MCClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1015
+                      }
+                    }
+                  },
+                  "world": {
+                    "type": "directory",
+                    "children": {
+                      "MCBiome.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 658
+                      },
+                      "MCDimension.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1142
+                      }
+                    }
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$13.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2474
+              },
+              "MineTweakerImplementationAPI$7.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1107
+              },
+              "MineTweakerImplementationAPI$9.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2349
+              },
+              "MineTweakerImplementationAPI$14.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 857
+              },
+              "MineTweakerImplementationAPI$19.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2287
+              },
+              "MineTweakerImplementationAPI$17.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1601
+              },
+              "MineTweakerImplementationAPI$8.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1870
+              },
+              "MineTweakerImplementationAPI$ListenPlayerLoggedOut.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1425
+              },
+              "MineTweakerAPI.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 10188
+              },
+              "MineTweakerImplementationAPI$20.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 816
+              },
+              "MineTweakerImplementationAPI$4.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1981
+              },
+              "IRecipeRemover.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 178
+              },
+              "MineTweakerImplementation.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 324
+              },
+              "api": {
+                "type": "directory",
+                "children": {
+                  "compat": {
+                    "type": "directory",
+                    "children": {
+                      "DummyJEIRecipeRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2022
+                      },
+                      "IJEIRecipeRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 694
+                      }
+                    }
+                  },
+                  "logger": {
+                    "type": "directory",
+                    "children": {
+                      "FileLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3262
+                      },
+                      "MTLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3722
+                      }
+                    }
+                  },
+                  "formatting": {
+                    "type": "directory",
+                    "children": {
+                      "IFormatter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1003
+                      },
+                      "IFormattedText.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 543
+                      }
+                    }
+                  },
+                  "resource": {
+                    "type": "directory",
+                    "children": {
+                      "IResourceManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 241
+                      },
+                      "IResourceFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 380
+                      }
+                    }
+                  },
+                  "vanilla": {
+                    "type": "directory",
+                    "children": {
+                      "LootEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1748
+                      },
+                      "ISeedRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 645
+                      },
+                      "IVanilla.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 460
+                      },
+                      "ILootRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 916
+                      },
+                      "ILootFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      },
+                      "IVillagerRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 566
+                      }
+                    }
+                  },
+                  "event": {
+                    "type": "directory",
+                    "children": {
+                      "PlayerInteractEntityEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1299
+                      },
+                      "PlayerLoggedInEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 762
+                      },
+                      "IEventHandle.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 366
+                      },
+                      "PlayerOpenContainerEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1319
+                      },
+                      "PlayerBonemealEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2291
+                      },
+                      "PlayerPickupEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1486
+                      },
+                      "PlayerPickupXpEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1431
+                      },
+                      "PlayerAttackEntityEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1291
+                      },
+                      "PlayerChangedDimensionEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1198
+                      },
+                      "PlayerUseHoeEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2523
+                      },
+                      "MTEventManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15949
+                      },
+                      "PlayerRespawnEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 758
+                      },
+                      "PlayerUseItemStartEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1290
+                      },
+                      "PlayerCraftedEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1284
+                      },
+                      "PlayerSmeltedEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 899
+                      },
+                      "IEventManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3030
+                      },
+                      "PlayerInteractEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2513
+                      },
+                      "PlayerFillBucketEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2471
+                      },
+                      "PlayerUseItemTickEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1437
+                      },
+                      "PlayerLoggedOutEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 766
+                      },
+                      "PlayerSleepInBedEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1162
+                      },
+                      "PlayerPickupItemEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1009
+                      },
+                      "PlayerDeathDropsEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1555
+                      }
+                    }
+                  },
+                  "minecraft": {
+                    "type": "directory",
+                    "children": {
+                      "MineTweakerMC.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11162
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "IItemCondition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 320
+                      },
+                      "IItemStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2473
+                      },
+                      "IngredientTransform.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4377
+                      },
+                      "IngredientUnknown.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2887
+                      },
+                      "IngredientCondition$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 834
+                      },
+                      "IngredientCondition$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 949
+                      },
+                      "IItemDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 775
+                      },
+                      "IngredientAny.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3464
+                      },
+                      "IngredientOr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5468
+                      },
+                      "IItemTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 451
+                      },
+                      "IngredientItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4970
+                      },
+                      "IngredientCondition$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 884
+                      },
+                      "IngredientCondition$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1090
+                      },
+                      "IIngredient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1822
+                      },
+                      "IngredientCondition$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 894
+                      },
+                      "IngredientCondition$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 895
+                      },
+                      "IngredientCondition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2194
+                      },
+                      "WeightedItemStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2367
+                      },
+                      "IngredientStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4130
+                      },
+                      "IngredientAnyAdvanced.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4521
+                      }
+                    }
+                  },
+                  "container": {
+                    "type": "directory",
+                    "children": {
+                      "IContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 684
+                      }
+                    }
+                  },
+                  "data": {
+                    "type": "directory",
+                    "children": {
+                      "DataDouble.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4565
+                      },
+                      "DataByte.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4681
+                      },
+                      "DataFloat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4701
+                      },
+                      "DataByteArray.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6180
+                      },
+                      "DataMap.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8398
+                      },
+                      "DataLong.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4687
+                      },
+                      "DataIntArray.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6190
+                      },
+                      "DataString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5528
+                      },
+                      "DataShort.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4689
+                      },
+                      "IData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2498
+                      },
+                      "DataInt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4459
+                      },
+                      "DataList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7387
+                      },
+                      "DataBool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4750
+                      },
+                      "IllegalDataException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 401
+                      },
+                      "IDataConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1100
+                      }
+                    }
+                  },
+                  "oredict": {
+                    "type": "directory",
+                    "children": {
+                      "IOreDict.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 590
+                      },
+                      "IngredientOreDict.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4353
+                      },
+                      "IOreDictEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1093
+                      }
+                    }
+                  },
+                  "damage": {
+                    "type": "directory",
+                    "children": {
+                      "IDamageSource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 130
+                      }
+                    }
+                  },
+                  "server": {
+                    "type": "directory",
+                    "children": {
+                      "IServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1297
+                      },
+                      "ICommandValidator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 335
+                      },
+                      "CommandValidators.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1512
+                      },
+                      "ICommandFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 348
+                      },
+                      "ICommandTabCompletion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 397
+                      },
+                      "AbstractServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1634
+                      }
+                    }
+                  },
+                  "trade": {
+                    "type": "directory",
+                    "children": {
+                      "ITradeManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 308
+                      }
+                    }
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "IEntityDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1091
+                      },
+                      "IEntityItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 327
+                      },
+                      "IEntity.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 711
+                      },
+                      "IEntityXp.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 381
+                      }
+                    }
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "IBlockPattern.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 874
+                      },
+                      "IBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 557
+                      },
+                      "BlockPatternOr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2317
+                      },
+                      "IBlockDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 435
+                      }
+                    }
+                  },
+                  "liquid": {
+                    "type": "directory",
+                    "children": {
+                      "ILiquidStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1342
+                      },
+                      "ILiquidDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1541
+                      },
+                      "WeightedLiquidStack.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2409
+                      }
+                    }
+                  },
+                  "player": {
+                    "type": "directory",
+                    "children": {
+                      "IPlayer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1470
+                      }
+                    }
+                  },
+                  "tooltip": {
+                    "type": "directory",
+                    "children": {
+                      "IngredientTooltips.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2095
+                      },
+                      "IngredientTooltips$AddTooltipAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2617
+                      }
+                    }
+                  },
+                  "chat": {
+                    "type": "directory",
+                    "children": {
+                      "IChatMessage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 515
+                      }
+                    }
+                  },
+                  "recipes": {
+                    "type": "directory",
+                    "children": {
+                      "ICraftingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 641
+                      },
+                      "BrewingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 940
+                      },
+                      "FurnaceRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 939
+                      },
+                      "UnknownRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1484
+                      },
+                      "CraftingInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1037
+                      },
+                      "ShapedRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8289
+                      },
+                      "ShapelessRecipe$RecipeMatching.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 622
+                      },
+                      "IBrewingManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 801
+                      },
+                      "IRecipeManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2554
+                      },
+                      "IBrewingRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 318
+                      },
+                      "IMTRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 189
+                      },
+                      "ICraftingInventory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 912
+                      },
+                      "IFurnaceRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 182
+                      },
+                      "IFurnaceManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 974
+                      },
+                      "IRecipeFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 613
+                      },
+                      "IRecipeAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 394
+                      },
+                      "ShapelessRecipe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5148
+                      },
+                      "ICraftingInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 588
+                      }
+                    }
+                  },
+                  "game": {
+                    "type": "directory",
+                    "children": {
+                      "IGame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1462
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "Position3f.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 874
+                      },
+                      "IngredientMap$IngredientMapEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1220
+                      },
+                      "IngredientMap.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5641
+                      }
+                    }
+                  },
+                  "mods": {
+                    "type": "directory",
+                    "children": {
+                      "ILoadedMods.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 721
+                      },
+                      "IMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 399
+                      }
+                    }
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "IClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 446
+                      }
+                    }
+                  },
+                  "world": {
+                    "type": "directory",
+                    "children": {
+                      "IBlockGroup.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 510
+                      },
+                      "IBiome.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 156
+                      },
+                      "IDimension.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      }
+                    }
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$BlockComparator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1342
+              },
+              "MineTweakerImplementationAPI$AddMineTweakerCommandAction.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1957
+              },
+              "MineTweakerImplementationAPI$12.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1917
+              },
+              "runtime": {
+                "type": "directory",
+                "children": {
+                  "GlobalRegistry$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 230
+                  },
+                  "GlobalRegistry$MyErrorLogger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2098
+                  },
+                  "providers": {
+                    "type": "directory",
+                    "children": {
+                      "ScriptProviderMemory$MemoryFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1059
+                      },
+                      "ScriptProviderMemory$ScriptIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2390
+                      },
+                      "ScriptProviderMemory$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 268
+                      },
+                      "ScriptProviderDirectory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2382
+                      },
+                      "ScriptProviderCustom.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2448
+                      },
+                      "ScriptIteratorZip.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2365
+                      },
+                      "ScriptProviderMemory$MemoryModule.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1459
+                      },
+                      "ScriptProviderCustom$CustomScript.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1072
+                      },
+                      "ScriptProviderDirectory$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1360
+                      },
+                      "ScriptProviderCustom$CustomScriptIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2442
+                      },
+                      "ScriptIteratorSingle.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1103
+                      },
+                      "ScriptIteratorDirectory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2398
+                      },
+                      "ScriptProviderCustom$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 268
+                      },
+                      "ScriptProviderMemory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4959
+                      },
+                      "ScriptProviderMemory$ProviderIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2328
+                      },
+                      "ScriptProviderCascade.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1080
+                      },
+                      "ScriptProviderCascade$MyScripterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2365
+                      }
+                    }
+                  },
+                  "GlobalRegistry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9051
+                  },
+                  "GlobalFunctions.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 643
+                  },
+                  "IScriptIterator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 305
+                  },
+                  "ILogger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 406
+                  },
+                  "IScriptProvider.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 261
+                  },
+                  "MTTweaker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7906
+                  },
+                  "ITweaker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 675
+                  },
+                  "GlobalRegistry$MyCompileEnvironment.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2689
+                  },
+                  "GlobalRegistry$MyGlobalEnvironment.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5158
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$ReloadEvent.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 448
+              },
+              "ClassRegistry.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 550
+              },
+              "expand": {
+                "type": "directory",
+                "children": {
+                  "ExpandLong.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 626
+                  },
+                  "ExpandInt.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 621
+                  },
+                  "ExpandAnyDict.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 916
+                  },
+                  "ExpandAnyArray.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 805
+                  },
+                  "ExpandByte.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 626
+                  },
+                  "ExpandFloat.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 631
+                  },
+                  "ExpandDouble.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 636
+                  },
+                  "ExpandShort.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 630
+                  },
+                  "ExpandItemStack.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 796
+                  },
+                  "ExpandString.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3544
+                  },
+                  "ExpandBool.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 626
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$6.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4043
+              },
+              "IUndoableAction.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 297
+              },
+              "MineTweakerImplementationAPI$ListenPlayerLoggedIn.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1642
+              },
+              "IPlatformFunctions.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 316
+              },
+              "OneWayAction.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 572
+              },
+              "MineTweakerImplementationAPI$10.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1620
+              },
+              "util": {
+                "type": "directory",
+                "children": {
+                  "StringUtil.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1092
+                  },
+                  "EventList$EventNode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2088
+                  },
+                  "CloseablePriorityList$CloseableEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2003
+                  },
+                  "ArrayUtil.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1849
+                  },
+                  "FileUtil.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 834
+                  },
+                  "EventList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2800
+                  },
+                  "CloseablePriorityList$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 245
+                  },
+                  "CloseablePriorityList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2241
+                  },
+                  "IEventHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 245
+                  },
+                  "CloseablePriorityList$MyIterator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2191
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$LiquidComparator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1357
+              },
+              "mods": {
+                "type": "directory",
+                "children": {
+                  "nei": {
+                    "type": "directory",
+                    "children": {
+                      "NEI$NEIHideItemAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1395
+                      },
+                      "NEI$NEIOverrideNameAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1204
+                      },
+                      "NEI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1706
+                      },
+                      "NEI$NEIAddEntryAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1398
+                      }
+                    }
+                  },
+                  "ic2": {
+                    "type": "directory",
+                    "children": {
+                      "machines": {
+                        "type": "directory",
+                        "children": {
+                          "FluidHeatGenerator$AddFluidAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1923
+                          },
+                          "Compressor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2993
+                          },
+                          "BlastFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2881
+                          },
+                          "FluidHeatGenerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1622
+                          },
+                          "SemiFluidGenerator$AddFluidAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1949
+                          },
+                          "MatterAmplifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1525
+                          },
+                          "Extractor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2850
+                          },
+                          "ScrapBox$AddDropAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2055
+                          },
+                          "Canner$AddBottleLiquidAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2205
+                          },
+                          "Recycler$AddBlacklistAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1865
+                          },
+                          "Canner$AddEnrichLiquidAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2623
+                          },
+                          "Canner$AddBottleIngredientAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2548
+                          },
+                          "BlockCutter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2875
+                          },
+                          "Recycler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1437
+                          },
+                          "Macerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2850
+                          },
+                          "ThermalCentrifuge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3114
+                          },
+                          "Canner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2477
+                          },
+                          "ScrapBox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 920
+                          },
+                          "MetalFormer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3105
+                          },
+                          "Canner$AddEnrichIngredientAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2555
+                          },
+                          "SemiFluidGenerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1632
+                          },
+                          "OreWasher.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2420
+                          }
+                        }
+                      },
+                      "IC2BracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3377
+                      },
+                      "crops": {
+                        "type": "directory",
+                        "children": {
+                          "CropsConfig$AddBiomeNutrientBonusAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1530
+                          },
+                          "Crop.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2060
+                          },
+                          "SyntheticCrop.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5470
+                          },
+                          "CropsConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4654
+                          },
+                          "CropsConfig$AddBiomeHumidityBonusAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1529
+                          },
+                          "CropsConfig$RegisterCropCardAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1177
+                          },
+                          "GrowthRequirements.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2334
+                          },
+                          "CropsConfig$RegisterBaseSeedAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1692
+                          }
+                        }
+                      },
+                      "IC2ExplosionWhitelist$RemoveAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1514
+                      },
+                      "IC2BracketHandler$ItemReferenceSymbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1997
+                      },
+                      "IC2RecipeInput.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2247
+                      },
+                      "expand": {
+                        "type": "directory",
+                        "children": {
+                          "IngredientExpansion$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1224
+                          },
+                          "ItemExpansion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3614
+                          },
+                          "IngredientExpansion$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 962
+                          },
+                          "IngredientExpansion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1537
+                          },
+                          "IngredientExpansion$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 961
+                          }
+                        }
+                      },
+                      "IC2ExplosionWhitelist$AddAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1505
+                      },
+                      "IC2ExplosionWhitelist.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2210
+                      },
+                      "MachineAddRecipeAction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3365
+                      }
+                    }
+                  }
+                }
+              },
+              "MineTweakerImplementationAPI$EntityComparator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1355
+              },
+              "MineTweakerImplementationAPI$3.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1998
+              },
+              "MineTweakerImplementationAPI$16.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 857
+              },
+              "MineTweakerImplementationAPI.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 12918
+              },
+              "MineTweakerImplementationAPI$11.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1835
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 392
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "minetweaker": {
+                "type": "directory",
+                "children": {
+                  "logo.png": {
+                    "type": "file",
+                    "extension": ".png",
+                    "size": 21583
+                  }
+                }
+              }
+            }
+          },
+          "stanhebben": {
+            "type": "directory",
+            "children": {
+              "zenscript": {
+                "type": "directory",
+                "children": {
+                  "ZenTokener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7547
+                  },
+                  "value": {
+                    "type": "directory",
+                    "children": {
+                      "IntRange.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 942
+                      },
+                      "builtin": {
+                        "type": "directory",
+                        "children": {
+                          "expansion": {
+                            "type": "directory",
+                            "children": {
+                              "IByteExpansion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 228
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "IAny.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1931
+                      }
+                    }
+                  },
+                  "ZenModule$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 217
+                  },
+                  "impl": {
+                    "type": "directory",
+                    "children": {
+                      "GenericErrorLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1944
+                      },
+                      "BracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 464
+                      },
+                      "GenericRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11959
+                      },
+                      "IBracketHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 782
+                      },
+                      "GenericLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1258
+                      },
+                      "GenericFunctions.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 563
+                      },
+                      "GenericCompileEnvironment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2239
+                      },
+                      "GenericGlobalEnvironment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5326
+                      }
+                    }
+                  },
+                  "parser": {
+                    "type": "directory",
+                    "children": {
+                      "NFA$Partial.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3195
+                      },
+                      "TokenStream$CountingReader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1246
+                      },
+                      "DFA$DFAState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1349
+                      },
+                      "HashMapII$KeyIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1084
+                      },
+                      "NFA$NodeSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2690
+                      },
+                      "DFA.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5975
+                      },
+                      "ArrayListI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1138
+                      },
+                      "NFA$NFAState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6106
+                      },
+                      "HashMapI$KeyIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1232
+                      },
+                      "CharStream.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1767
+                      },
+                      "HashMapI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3053
+                      },
+                      "TokenStream.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6564
+                      },
+                      "IteratorI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 172
+                      },
+                      "HashSetI$KeyIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1077
+                      },
+                      "ParseException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1869
+                      },
+                      "NFA$NFAState$Transition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1061
+                      },
+                      "TokenException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1075
+                      },
+                      "HashSetI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2433
+                      },
+                      "expression": {
+                        "type": "directory",
+                        "children": {
+                          "ParsedExpressionCall.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2698
+                          },
+                          "ParsedExpressionUnary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1977
+                          },
+                          "ParsedExpressionArray.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3801
+                          },
+                          "ParsedExpression.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17388
+                          },
+                          "ParsedExpressionAssign.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1826
+                          },
+                          "ParsedExpressionAndAnd.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1677
+                          },
+                          "ParsedExpressionMember.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1524
+                          },
+                          "ParsedExpressionCast.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1679
+                          },
+                          "ParsedExpressionMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3903
+                          },
+                          "ParsedExpressionOpAssign.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2423
+                          },
+                          "ParsedExpressionConditional.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1966
+                          },
+                          "ParsedExpressionFunction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5751
+                          },
+                          "ParsedExpressionIndex.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2142
+                          },
+                          "ParsedExpressionInstanceOf.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1734
+                          },
+                          "ParsedExpressionVariable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2689
+                          },
+                          "ParsedExpressionInvalid.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1381
+                          },
+                          "ParsedExpressionNull.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1003
+                          },
+                          "ParsedExpressionIndexSet.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2347
+                          },
+                          "ParsedExpressionOrOr.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2902
+                          },
+                          "ParsedExpressionValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1356
+                          },
+                          "ParsedExpressionBinary.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2168
+                          },
+                          "ParsedExpressionBool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1107
+                          },
+                          "ParsedExpressionCompare.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2165
+                          }
+                        }
+                      },
+                      "HashMapII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2841
+                      },
+                      "NFA.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10196
+                      },
+                      "Token.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1250
+                      },
+                      "CompiledDFA.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3280
+                      }
+                    }
+                  },
+                  "ZenModule.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 18110
+                  },
+                  "ZenModule$MyClassLoader.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2082
+                  },
+                  "annotations": {
+                    "type": "directory",
+                    "children": {
+                      "ZenMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      },
+                      "ZenOperator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 468
+                      },
+                      "ZenMemberSetter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 416
+                      },
+                      "OperatorType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1929
+                      },
+                      "ZenMethodStatic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 479
+                      },
+                      "ZenCaster.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 404
+                      },
+                      "ZenProperty.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 522
+                      },
+                      "ZenMemberGetter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 416
+                      },
+                      "IterableMap.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 451
+                      },
+                      "Optional.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 786
+                      },
+                      "NotNull.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 403
+                      },
+                      "IterableSimple.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 443
+                      },
+                      "ZenGetter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      },
+                      "ZenConstructor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 419
+                      },
+                      "CompareType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1251
+                      },
+                      "ZenExpansion.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 453
+                      },
+                      "ZenClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 477
+                      },
+                      "IterableList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 439
+                      },
+                      "ReturnsSelf.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 408
+                      },
+                      "ZenSetter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      }
+                    }
+                  },
+                  "IZenRegistry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2715
+                  },
+                  "dump": {
+                    "type": "directory",
+                    "children": {
+                      "types": {
+                        "type": "directory",
+                        "children": {
+                          "DumpDummy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1101
+                          },
+                          "DumpClassBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1907
+                          },
+                          "DumpZenTypeNative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6619
+                          },
+                          "DumpZenType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 885
+                          },
+                          "DumpIJavaMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2088
+                          }
+                        }
+                      },
+                      "IDumpable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 511
+                      },
+                      "DumpUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 707
+                      },
+                      "TreeNodeIter$ProcessStages.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1300
+                      },
+                      "TreeNode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3079
+                      },
+                      "IDumpConvertable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 467
+                      },
+                      "TreeNodeIter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2311
+                      },
+                      "GSONDumpableSerializer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1292
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "AnyClassWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11652
+                      },
+                      "Pair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1492
+                      },
+                      "IAnyDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1114
+                      },
+                      "MappingIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1184
+                      },
+                      "StringUtil.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7415
+                      },
+                      "ZenTypeUtil.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4341
+                      },
+                      "MethodOutput.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 25442
+                      },
+                      "MethodCompiler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 199
+                      },
+                      "ArrayUtil.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4434
+                      },
+                      "ZenPosition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1547
+                      }
+                    }
+                  },
+                  "compiler": {
+                    "type": "directory",
+                    "children": {
+                      "ClassNameGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1148
+                      },
+                      "EnvironmentGlobal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5431
+                      },
+                      "ZenClassWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 368
+                      },
+                      "EnvironmentClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4482
+                      },
+                      "EnvironmentScope.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4893
+                      },
+                      "EnvironmentScript.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4552
+                      },
+                      "IEnvironmentClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 263
+                      },
+                      "TypeRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5727
+                      },
+                      "EnvironmentMethodLambda.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4335
+                      },
+                      "IEnvironmentGlobal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1030
+                      },
+                      "IEnvironmentMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 334
+                      },
+                      "ITypeRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 219
+                      },
+                      "EnvironmentMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5424
+                      }
+                    }
+                  },
+                  "ZenParsedFile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8583
+                  },
+                  "definitions": {
+                    "type": "directory",
+                    "children": {
+                      "zenclasses": {
+                        "type": "directory",
+                        "children": {
+                          "ParsedClassConstructor$ExpressionCallConstructor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2594
+                          },
+                          "ParsedZenClassMethod$ZenClassMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4893
+                          },
+                          "ParsedZenClassField$ZenClassFieldMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3980
+                          },
+                          "ParsedZenClassMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7062
+                          },
+                          "ParsedZenClassField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5093
+                          },
+                          "ParsedClassConstructor.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10040
+                          },
+                          "ParsedZenClassField$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 293
+                          },
+                          "ParsedZenClass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14380
+                          },
+                          "ParsedZenClass$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1207
+                          }
+                        }
+                      },
+                      "ParsedFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5401
+                      },
+                      "ParsedGlobalValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3148
+                      },
+                      "ParsedFunctionArgument.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 772
+                      },
+                      "Import.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1344
+                      }
+                    }
+                  },
+                  "IZenCompileEnvironment.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 822
+                  },
+                  "statements": {
+                    "type": "directory",
+                    "children": {
+                      "StatementBreak.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1320
+                      },
+                      "StatementExpression.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2111
+                      },
+                      "StatementForeach.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5116
+                      },
+                      "StatementIf.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3697
+                      },
+                      "StatementReturn.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2423
+                      },
+                      "Statement.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6284
+                      },
+                      "StatementVar.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2855
+                      },
+                      "StatementContinue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1330
+                      },
+                      "StatementBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2273
+                      },
+                      "StatementNull.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 660
+                      },
+                      "StatementWhileDo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2993
+                      }
+                    }
+                  },
+                  "expression": {
+                    "type": "directory",
+                    "children": {
+                      "ExpressionArrayList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2517
+                      },
+                      "ExpressionOrOr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1739
+                      },
+                      "ExpressionNothing.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 905
+                      },
+                      "ExpressionInstanceOf.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1663
+                      },
+                      "Expression.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7773
+                      },
+                      "ExpressionJavaMethodStatic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2594
+                      },
+                      "ExpressionMapSize.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1563
+                      },
+                      "ExpressionStringContains.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1710
+                      },
+                      "ExpressionArithmeticBinary.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4533
+                      },
+                      "ExpressionLocalGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1483
+                      },
+                      "ExpressionAndAnd.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1979
+                      },
+                      "ExpressionMap.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4465
+                      },
+                      "ExpressionFunctionCall.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2029
+                      },
+                      "ExpressionStringConcat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2518
+                      },
+                      "ExpressionCallVirtual.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2692
+                      },
+                      "ExpressionArithmeticBinary$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1071
+                      },
+                      "ExpressionArrayListGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3160
+                      },
+                      "partial": {
+                        "type": "directory",
+                        "children": {
+                          "PartialType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3411
+                          },
+                          "PartialGlobalValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3468
+                          },
+                          "IPartialExpression.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1159
+                          },
+                          "PartialStaticGetter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3845
+                          },
+                          "PartialPackage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3734
+                          },
+                          "PartialStaticMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4311
+                          },
+                          "PartialZSClass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4162
+                          },
+                          "PartialLocal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3876
+                          },
+                          "PartialStaticGenerated.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4722
+                          },
+                          "ExpressionJavaStaticField.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1724
+                          },
+                          "PartialScriptReference.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4483
+                          },
+                          "PartialJavaClass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3197
+                          }
+                        }
+                      },
+                      "ExpressionInvalid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2560
+                      },
+                      "ExpressionAs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1346
+                      },
+                      "ExpressionArrayLength.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1368
+                      },
+                      "ExpressionCallStatic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2347
+                      },
+                      "ExpressionArrayContains.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2632
+                      },
+                      "ExpressionJavaLambda.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9190
+                      },
+                      "ExpressionArithmeticCompare.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4019
+                      },
+                      "ExpressionStringMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6909
+                      },
+                      "ExpressionThis.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1203
+                      },
+                      "ExpressionNull.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2341
+                      },
+                      "ExpressionMapEntrySet$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 924
+                      },
+                      "ExpressionArithmeticUnary.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2898
+                      },
+                      "ExpressionCompareGeneric$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 966
+                      },
+                      "ExpressionMapContains.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2131
+                      },
+                      "ExpressionConditional.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2049
+                      },
+                      "ExpressionMapIndexGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2316
+                      },
+                      "ExpressionStringIndex.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1781
+                      },
+                      "ExpressionArrayGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2239
+                      },
+                      "ExpressionMapIndexSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2354
+                      },
+                      "ExpressionString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1303
+                      },
+                      "ExpressionMapEntrySet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3624
+                      },
+                      "ExpressionArrayListAdd.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1946
+                      },
+                      "ExpressionLocalSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1714
+                      },
+                      "ExpressionCompareGeneric.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2402
+                      },
+                      "ExpressionJavaMethodCurled.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2722
+                      },
+                      "ExpressionJavaLambdaSimpleGeneric.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7389
+                      },
+                      "ExpressionGlobalGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2005
+                      },
+                      "ExpressionArrayListRemove.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2172
+                      },
+                      "ExpressionInt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3838
+                      },
+                      "ExpressionArgument.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1347
+                      },
+                      "ExpressionFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9935
+                      },
+                      "ExpressionEntryGet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2087
+                      },
+                      "ExpressionMapEntrySet$SetType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1338
+                      },
+                      "ExpressionFloat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2432
+                      },
+                      "ExpressionArrayAdd.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2610
+                      },
+                      "ExpressionArray.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4240
+                      },
+                      "ExpressionArraySet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1652
+                      },
+                      "ExpressionIntegerRange.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1764
+                      },
+                      "ExpressionGlobalSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2215
+                      },
+                      "ExpressionArrayListSet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1907
+                      },
+                      "ExpressionBool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2842
+                      },
+                      "ExpressionArithmeticCompare$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 975
+                      }
+                    }
+                  },
+                  "TypeExpansion.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 16190
+                  },
+                  "TypeExpansion$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1391
+                  },
+                  "ZenRuntimeException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 398
+                  },
+                  "type": {
+                    "type": "directory",
+                    "children": {
+                      "casting": {
+                        "type": "directory",
+                        "children": {
+                          "CastingRuleVirtualMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1326
+                          },
+                          "CastingRuleF2L.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "CastingRuleDelegateList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1688
+                          },
+                          "CastingRuleI2D.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "CastingRuleNullableVirtualMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1842
+                          },
+                          "CastingRuleListArray.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3499
+                          },
+                          "CastingRuleAny.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1429
+                          },
+                          "CastingRuleI2B.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1247
+                          },
+                          "CastingRuleDelegateMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1308
+                          },
+                          "CastingRuleAnyAs.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1579
+                          },
+                          "CastingRuleD2I.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "CastingRuleNullableStaticMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2159
+                          },
+                          "CastingRuleDelegateStaticMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1263
+                          },
+                          "CastingRuleI2F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1249
+                          },
+                          "ICastingRuleDelegate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 274
+                          },
+                          "CastingAnyString.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1388
+                          },
+                          "CastingRuleNone.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 995
+                          },
+                          "CastingAnyBool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1454
+                          },
+                          "CastingRuleF2D.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1255
+                          },
+                          "CastingAnyDouble.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1465
+                          },
+                          "CastingRuleI2L.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1247
+                          },
+                          "CastingAnyInt.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1448
+                          },
+                          "CastingRuleL2D.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1253
+                          },
+                          "CastingRuleArrayArray.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2844
+                          },
+                          "CastingRuleL2I.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1247
+                          },
+                          "CastingRuleMatchedFunction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1400
+                          },
+                          "CastingRuleF2I.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1249
+                          },
+                          "CastingRuleMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1381
+                          },
+                          "CastingAnySubtype.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1424
+                          },
+                          "BaseCastingRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1081
+                          },
+                          "CastingRuleArrayList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3209
+                          },
+                          "CastingAnyLong.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1451
+                          },
+                          "CastingNotNull.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1557
+                          },
+                          "CastingRuleDelegateArray.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1697
+                          },
+                          "CastingAnyFloat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          },
+                          "ICastingRule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 303
+                          },
+                          "CastingRuleL2F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "CastingAnyShort.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1458
+                          },
+                          "CastingRuleListList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1282
+                          },
+                          "CastingRuleD2L.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1253
+                          },
+                          "CastingRuleStaticMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1671
+                          },
+                          "CastingRuleD2F.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1255
+                          },
+                          "CastingAnyByte.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1451
+                          },
+                          "CastingRuleI2S.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1249
+                          }
+                        }
+                      },
+                      "ZenTypeByte.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10896
+                      },
+                      "expand": {
+                        "type": "directory",
+                        "children": {
+                          "ZenExpandCaster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2677
+                          },
+                          "ZenExpandMember.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3653
+                          },
+                          "ZenExpandMember$StaticGetValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6073
+                          },
+                          "ZenExpandMember$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 259
+                          },
+                          "ZenExpandMember$InstanceGetValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5121
+                          },
+                          "ZenExpandMember$StaticSymbol.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1478
+                          }
+                        }
+                      },
+                      "ZenTypeAny.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12575
+                      },
+                      "ZenTypeZenClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6513
+                      },
+                      "ZenTypeDouble.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10854
+                      },
+                      "natives": {
+                        "type": "directory",
+                        "children": {
+                          "ZenNativeMember$StaticGetValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5864
+                          },
+                          "JavaMethodGenerated.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4716
+                          },
+                          "ZenNativeMember$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 261
+                          },
+                          "ZenNativeMember.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3670
+                          },
+                          "ZenNativeMember$StaticSymbol.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1490
+                          },
+                          "ZenFieldMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3490
+                          },
+                          "JavaMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15603
+                          },
+                          "IJavaMethod.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 718
+                          },
+                          "ZenNativeCaster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3793
+                          },
+                          "ZenNativeOperator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1629
+                          },
+                          "ZenNativeMember$InstanceGetValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5329
+                          }
+                        }
+                      },
+                      "ZenTypeByteObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8624
+                      },
+                      "ZenTypeDoubleObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8695
+                      },
+                      "ZenTypeEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8080
+                      },
+                      "ZenTypeAny$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1500
+                      },
+                      "ZenTypeNull.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6431
+                      },
+                      "ZenTypeLong$AnyDefinitionLong.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10525
+                      },
+                      "ZenTypeVoid.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5783
+                      },
+                      "ZenTypeNative.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 32478
+                      },
+                      "ZenTypeNative$AnyNativeDefinition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9264
+                      },
+                      "ZenTypeNative$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1449
+                      },
+                      "ZenTypeBool$AnyDefinitionBool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9956
+                      },
+                      "ZenTypeNative$ZenNativeConstructor$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3993
+                      },
+                      "ZenTypeString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13064
+                      },
+                      "ZenTypeString$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 239
+                      },
+                      "ZenTypeShort.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10794
+                      },
+                      "ZenTypeAssociative.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11551
+                      },
+                      "ZenTypeLongObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8682
+                      },
+                      "ZenTypeLong.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10820
+                      },
+                      "ZenTypeBoolObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7476
+                      },
+                      "ZenTypeDouble$AnyDefinitionDouble.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10504
+                      },
+                      "ZenTypeFunctionCallable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4896
+                      },
+                      "ZenTypeShort$AnyDefinitionShort.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10350
+                      },
+                      "ZenTypeArrayBasic$IndexValueIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2215
+                      },
+                      "IZenIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 396
+                      },
+                      "ZenTypeFloat$AnyDefinitionFloat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10232
+                      },
+                      "ZenTypeInt$AnyDefinitionInt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10310
+                      },
+                      "ZenTypeInt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10955
+                      },
+                      "ZenTypeString$AnyDefinitionString.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10097
+                      },
+                      "ZenTypeIntObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8680
+                      },
+                      "ZenTypeFloat.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10769
+                      },
+                      "ZenTypeBool.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10283
+                      },
+                      "iterator": {
+                        "type": "directory",
+                        "children": {
+                          "IteratorList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2498
+                          },
+                          "IteratorMapKeys.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2596
+                          },
+                          "IteratorWhileDo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2690
+                          },
+                          "IteratorIterable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2317
+                          },
+                          "IteratorMap.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2862
+                          }
+                        }
+                      },
+                      "ZenTypeBool$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 791
+                      },
+                      "ZenTypeNative$ZenNativeConstructor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2910
+                      },
+                      "ZenTypeArrayBasic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7972
+                      },
+                      "ZenTypeArrayBasic$ValueIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2285
+                      },
+                      "ZenTypeShortObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8673
+                      },
+                      "ZenTypeFunction.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10884
+                      },
+                      "ZenType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20963
+                      },
+                      "ZenTypeIntRange.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8217
+                      },
+                      "ZenTypeByte$AnyDefinitionByte.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10312
+                      },
+                      "ZenTypeArrayList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8261
+                      },
+                      "ZenTypeIntRange$IntRangeIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2351
+                      },
+                      "ZenTypeArrayList$ExpressionListLength.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1808
+                      },
+                      "ZenTypeArray$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 805
+                      },
+                      "ZenTypeArray.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8593
+                      },
+                      "ZenTypeFloatObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8688
+                      }
+                    }
+                  },
+                  "IZenLogger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 248
+                  },
+                  "symbols": {
+                    "type": "directory",
+                    "children": {
+                      "SymbolPackage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4182
+                      },
+                      "SymbolCaptured.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1915
+                      },
+                      "SymbolJavaStaticField.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1477
+                      },
+                      "SymbolJavaClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1122
+                      },
+                      "SymbolLocal.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1119
+                      },
+                      "SymbolZenStaticMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1390
+                      },
+                      "SymbolArgument.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 944
+                      },
+                      "SymbolCaptured$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2523
+                      },
+                      "SymbolGlobalValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3822
+                      },
+                      "SymbolScriptReference.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1994
+                      },
+                      "SymbolJavaStaticMethod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1225
+                      },
+                      "SymbolType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1474
+                      },
+                      "IZenSymbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 769
+                      },
+                      "SymbolJavaStaticGetter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 963
+                      }
+                    }
+                  },
+                  "IZenErrorLogger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 283
+                  },
+                  "ZenMain.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 288
+                  }
+                }
+              }
+            }
+          },
+          "LICENSE": {
+            "type": "file",
+            "extension": "",
+            "size": 1069
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 23
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 131477
+          }
+        }
+      }
+    }
+  }
+}

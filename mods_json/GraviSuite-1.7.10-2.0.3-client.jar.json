@@ -1,0 +1,697 @@
+{
+  "mod_name": "GraviSuite-1.7.10-2.0.3-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\GraviSuite-1.7.10-2.0.3-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "GraviSuite-1.7.10-2.0.3-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 417362,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "eloraam": {
+                "type": "directory",
+                "children": {
+                  "redpower": {
+                    "type": "directory",
+                    "children": {
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "IRotatable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 225
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 432
+          },
+          "buildcraft": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "tools": {
+                    "type": "directory",
+                    "children": {
+                      "IToolWrench.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 267
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "gravisuite": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3067
+                      },
+                      "fr_FR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3316
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4324
+                      },
+                      "tr_TR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3153
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3059
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "JetpackFire.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 5948
+                      },
+                      "JetpackLoop.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 43367
+                      },
+                      "toolChange.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 19900
+                      },
+                      "Treetap.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 6172
+                      },
+                      "wrench.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 12629
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 267
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "armor": {
+                        "type": "directory",
+                        "children": {
+                          "armor_advanced_jetpack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 561
+                          },
+                          "armor_advanced_lappack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 548
+                          },
+                          "armor_advNanoChestPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 991
+                          },
+                          "armor_graviChestPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3738
+                          },
+                          "armor_ultimate_lappack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 521
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "block_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1317
+                          }
+                        }
+                      },
+                      "gravi_items.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 7796
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "relocator_add.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2067
+                          },
+                          "relocator_display.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2793
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "itemAdvancedChainsaw.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1242
+                          },
+                          "itemAdvancedDDrill.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1337
+                          },
+                          "itemAdvancedJetPack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1356
+                          },
+                          "itemAdvancedLappack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1104
+                          },
+                          "itemAdvancedNanoChestPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1141
+                          },
+                          "itemCoolingCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1250
+                          },
+                          "itemEngineBoost.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1253
+                          },
+                          "itemGraviChestPlate.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1241
+                          },
+                          "itemGraviEngine.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1310
+                          },
+                          "itemGraviToolHoe.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1348
+                          },
+                          "itemGraviToolScrewdriver.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1366
+                          },
+                          "itemGraviToolTreeTap.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1275
+                          },
+                          "itemGraviToolWrench.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1282
+                          },
+                          "itemMagnetron.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1263
+                          },
+                          "itemRelocator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2926
+                          },
+                          "itemSuperconductor.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1160
+                          },
+                          "itemSuperconductorCover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1013
+                          },
+                          "itemUltimateLappack.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1095
+                          },
+                          "itemVajra.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1420
+                          },
+                          "itemVajraCore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1383
+                          },
+                          "plazma_launcher.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 402
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "particles.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 63585
+                          },
+                          "plazma.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 60472
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "gravisuite": {
+            "type": "directory",
+            "children": {
+              "audio": {
+                "type": "directory",
+                "children": {
+                  "AudioManager.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1579
+                  },
+                  "AudioManagerClient$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2139
+                  },
+                  "AudioManagerClient$WeakObject.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 947
+                  },
+                  "AudioManagerClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12045
+                  },
+                  "AudioPosition.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1741
+                  },
+                  "AudioSource.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7241
+                  },
+                  "PositionSpec.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1046
+                  },
+                  "SoundsList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 981
+                  }
+                }
+              },
+              "blockCoord.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 320
+              },
+              "BlockRelocatorPortal.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3522
+              },
+              "client": {
+                "type": "directory",
+                "children": {
+                  "BlockRelocatorPortalRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1627
+                  },
+                  "ClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4230
+                  },
+                  "ClientTickHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8434
+                  },
+                  "GuiRelocatorAdd$ContainerRelocatorAdd$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2268
+                  },
+                  "GuiRelocatorAdd$ContainerRelocatorAdd.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1034
+                  },
+                  "GuiRelocatorAdd.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5134
+                  },
+                  "GuiRelocatorDisplay$ContainerRelocatorDisplay$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2320
+                  },
+                  "GuiRelocatorDisplay$ContainerRelocatorDisplay.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1078
+                  },
+                  "GuiRelocatorDisplay$SelectedItem.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 515
+                  },
+                  "GuiRelocatorDisplay.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9530
+                  },
+                  "RenderPlasmaBall.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6600
+                  },
+                  "TileRelocatorPortalRenderer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6482
+                  }
+                }
+              },
+              "EntityPlasmaBall.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7683
+              },
+              "GraviSuite.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 15961
+              },
+              "GuiHandler.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1009
+              },
+              "Helpers.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 12437
+              },
+              "IArmorTickListener.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 223
+              },
+              "IItemTickListener.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 221
+              },
+              "InternalName.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 973
+              },
+              "ItemAdvancedJetPack.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 13332
+              },
+              "ItemAdvancedLappack.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 9807
+              },
+              "ItemAdvancedNanoChestPlate.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5240
+              },
+              "ItemAdvChainsaw.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 13908
+              },
+              "ItemAdvDDrill.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 17080
+              },
+              "ItemGraviChestPlate.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 12254
+              },
+              "ItemGraviTool.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 24269
+              },
+              "ItemRelocator$TeleportPoint.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 545
+              },
+              "ItemRelocator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 16609
+              },
+              "ItemRelocatorPortal.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 831
+              },
+              "ItemSimpleItems.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3114
+              },
+              "ItemSonicLauncher.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3324
+              },
+              "ItemUltimateLappack.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2313
+              },
+              "ItemVajra.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 12747
+              },
+              "ITickListener.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 241
+              },
+              "keyboard": {
+                "type": "directory",
+                "children": {
+                  "Keyboard.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4123
+                  },
+                  "KeyboardClient.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7496
+                  },
+                  "KeyHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1286
+                  }
+                }
+              },
+              "network": {
+                "type": "directory",
+                "children": {
+                  "IPacket.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 923
+                  },
+                  "PacketHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4593
+                  },
+                  "PacketKeyboardUpdate.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1966
+                  },
+                  "PacketKeyPress.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1953
+                  },
+                  "PacketManagePoints.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4018
+                  },
+                  "PacketsName.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 421
+                  }
+                }
+              },
+              "redpower": {
+                "type": "directory",
+                "children": {
+                  "coreLib.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2780
+                  },
+                  "WorldCoord$WCComparator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1082
+                  },
+                  "WorldCoord.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3487
+                  }
+                }
+              },
+              "ServerProxy.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3104
+              },
+              "ServerTickHandler.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2936
+              },
+              "StackUtils.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 771
+              },
+              "TickHandler.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2394
+              },
+              "TileEntityRelocatorPortal$EntityInfo.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 517
+              },
+              "TileEntityRelocatorPortal.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 8242
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1841
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 15108
+          }
+        }
+      }
+    }
+  }
+}

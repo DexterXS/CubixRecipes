@@ -1,0 +1,132 @@
+{
+  "mod_name": "CubixButtons[1.7.10]-1.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixButtons[1.7.10]-1.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixButtons[1.7.10]-1.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 12599,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixbuttons": {
+                    "type": "directory",
+                    "children": {
+                      "button": {
+                        "type": "directory",
+                        "children": {
+                          "IButtonAction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 194
+                          },
+                          "UtilButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2089
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CubixButtons.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 845
+                          },
+                          "Info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 373
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "ButtonsEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5572
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixbuttons": {
+                "type": "directory",
+                "children": {
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "button": {
+                        "type": "directory",
+                        "children": {
+                          "button_battlepas.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2401
+                          },
+                          "button_core.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2189
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 88
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1036
+          }
+        }
+      }
+    }
+  }
+}

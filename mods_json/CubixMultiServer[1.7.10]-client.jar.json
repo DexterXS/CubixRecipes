@@ -1,0 +1,307 @@
+{
+  "mod_name": "CubixMultiServer[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixMultiServer[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixMultiServer[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 147494,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "multiserver": {
+                    "type": "directory",
+                    "children": {
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "font": {
+                            "type": "directory",
+                            "children": {
+                              "MultiFontType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4435
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 146
+                          },
+                          "connector": {
+                            "type": "directory",
+                            "children": {
+                              "ClientConnectorManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11669
+                              }
+                            }
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "entity": {
+                                "type": "directory",
+                                "children": {
+                                  "RenderPlayerFake.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 22616
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ClientEvents.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 31690
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "entities": {
+                            "type": "directory",
+                            "children": {
+                              "playerFake": {
+                                "type": "directory",
+                                "children": {
+                                  "EntityPlayerFake.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17842
+                                  }
+                                }
+                              },
+                              "EntityManager.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7621
+                              }
+                            }
+                          },
+                          "mixins": {
+                            "type": "directory",
+                            "children": {
+                              "client": {
+                                "type": "directory",
+                                "children": {
+                                  "MixinNetHandlerLoginClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2232
+                                  },
+                                  "package-info.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 150
+                                  },
+                                  "MixinNetHandlerPlayClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2333
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "network": {
+                                "type": "directory",
+                                "children": {
+                                  "NetHandlerUtilities.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3631
+                                  }
+                                }
+                              },
+                              "cluster": {
+                                "type": "directory",
+                                "children": {
+                                  "ClusterData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 12261
+                                  }
+                                }
+                              },
+                              "concurrent": {
+                                "type": "directory",
+                                "children": {
+                                  "ConcurrentManager.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 9723
+                                  }
+                                }
+                              },
+                              "region": {
+                                "type": "directory",
+                                "children": {
+                                  "ServerRegion.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 17549
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10774
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3833
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8055
+                          },
+                          "packet": {
+                            "type": "directory",
+                            "children": {
+                              "server": {
+                                "type": "directory",
+                                "children": {
+                                  "SMessageSyncClusterDataWithClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8243
+                                  },
+                                  "SMessageSyncClusterDataWithClient$Handler.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 10244
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9845
+                      },
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6981
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "multiserver": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 46
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 53
+                      }
+                    }
+                  },
+                  "font": {
+                    "type": "directory",
+                    "children": {
+                      "deja_vu_sans_bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 90884
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mixins.multiserver.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 325
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "multiserver_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 278
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 365
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 243
+          },
+          "mixins.multiserver.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 34
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 96
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4347
+          }
+        }
+      }
+    }
+  }
+}

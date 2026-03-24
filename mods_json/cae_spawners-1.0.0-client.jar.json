@@ -1,0 +1,877 @@
+{
+  "mod_name": "cae_spawners-1.0.0-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\cae_spawners-1.0.0-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "cae_spawners-1.0.0-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 182102,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "net": {
+            "type": "directory",
+            "children": {
+              "im51111n355": {
+                "type": "directory",
+                "children": {
+                  "cubixaespawners": {
+                    "type": "directory",
+                    "children": {
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiVirtualSpawner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2509
+                              },
+                              "GuiKiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2153
+                              },
+                              "GuiResourceGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2591
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerVirtualSpawner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2702
+                          },
+                          "ContainerVirtualSpawner$SoulSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1828
+                          },
+                          "ContainerKiller$UpgradeSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2564
+                          },
+                          "ContainerKiller.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2227
+                          },
+                          "ContainerResourceGenerator$SoulSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1882
+                          },
+                          "ContainerResourceGenerator$UpgradeSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2684
+                          },
+                          "ContainerResourceGenerator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2773
+                          },
+                          "ContainerVirtualSpawner$UpgradeSlot.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2640
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "ItemCuffsOfGalore.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4679
+                          },
+                          "magic": {
+                            "type": "directory",
+                            "children": {
+                              "EnchantmentShackles.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1565
+                              }
+                            }
+                          },
+                          "ItemModuleData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7168
+                          },
+                          "ItemSoulCrystal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2935
+                          },
+                          "ItemModuleData$Token.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2844
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "base": {
+                            "type": "directory",
+                            "children": {
+                              "IdentifiedItem.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 910
+                              },
+                              "SidedAETileBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3956
+                              },
+                              "BlockBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2119
+                              }
+                            }
+                          },
+                          "MainLoopActiveAnim.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3784
+                          },
+                          "Pair.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 708
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "resourcegenerator": {
+                            "type": "directory",
+                            "children": {
+                              "ResourceGeneratorApi$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1500
+                              },
+                              "ResourceGeneratorApi.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2947
+                              },
+                              "ItemBlockResourceGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1537
+                              },
+                              "TileResourceGenerator$T1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 982
+                              },
+                              "TileResourceGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7008
+                              },
+                              "ResourceGeneratorApi$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1703
+                              },
+                              "BlockResourceGenerator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2323
+                              },
+                              "TileResourceGenerator$T2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 982
+                              },
+                              "TileResourceGenerator$T3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 982
+                              },
+                              "TileResourceGenerator$T0.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 982
+                              },
+                              "ResourceGeneratorCuffsData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 978
+                              }
+                            }
+                          },
+                          "killer": {
+                            "type": "directory",
+                            "children": {
+                              "TileKiller$T0.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 896
+                              },
+                              "TileKiller$T3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 896
+                              },
+                              "ItemBlockKiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3293
+                              },
+                              "TileKiller$T1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 896
+                              },
+                              "TileKiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6499
+                              },
+                              "BlockKiller.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2278
+                              },
+                              "TileKiller$T2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 896
+                              }
+                            }
+                          },
+                          "spawner": {
+                            "type": "directory",
+                            "children": {
+                              "TileVirtualSpawner$T2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 920
+                              },
+                              "SpawnerCrystalData.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 909
+                              },
+                              "TileVirtualSpawner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6973
+                              },
+                              "BlockVirtualSpawner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2268
+                              },
+                              "TileVirtualSpawner$T1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 920
+                              },
+                              "TileVirtualSpawner$T3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 920
+                              },
+                              "TileVirtualSpawner$T0.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 920
+                              },
+                              "ItemBlockSpawner.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1487
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "CubixAESpawnersGameplayConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15800
+                          },
+                          "CubixAESpawnersEarlyConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1276
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2276
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1085
+                          }
+                        }
+                      },
+                      "CubixAESpawnersContent$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1183
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "CubixAESpawnersNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1291
+                          },
+                          "handler": {
+                            "type": "directory",
+                            "children": {
+                              "S2CConfigurationSyncHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1689
+                              }
+                            }
+                          },
+                          "msg": {
+                            "type": "directory",
+                            "children": {
+                              "S2CConfigurationSyncMessage.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1769
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "CubixAESpawnersConstants.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 444
+                      },
+                      "CubixAESpawnersMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1709
+                      },
+                      "CubixAESpawnersContent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13377
+                      },
+                      "CubixAESpawnersClientContent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5570
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixaespawners": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "particle": {
+                            "type": "directory",
+                            "children": {
+                              "killer_t1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1837
+                              },
+                              "spawner_t3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1857
+                              },
+                              "resource_generator_t1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1870
+                              },
+                              "spawner_t1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1732
+                              },
+                              "killer_t0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1866
+                              },
+                              "killer_t2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1855
+                              },
+                              "resource_generator_t3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1864
+                              },
+                              "spawner_t2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1815
+                              },
+                              "resource_generator_t2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1866
+                              },
+                              "spawner_t0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1716
+                              },
+                              "killer_t3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1906
+                              },
+                              "resource_generator_t0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1806
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "killer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3383
+                          },
+                          "resource_generator.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2187
+                          },
+                          "resource_generator_elements.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1142
+                          },
+                          "spawner_elements.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1619
+                          },
+                          "spawner_gui.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2118
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "module": {
+                            "type": "directory",
+                            "children": {
+                              "looting": {
+                                "type": "directory",
+                                "children": {
+                                  "t2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2037
+                                  },
+                                  "t0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1997
+                                  },
+                                  "t1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1980
+                                  },
+                                  "t3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2057
+                                  }
+                                }
+                              },
+                              "capacity": {
+                                "type": "directory",
+                                "children": {
+                                  "t3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2050
+                                  },
+                                  "t1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2226
+                                  },
+                                  "t2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2044
+                                  },
+                                  "t0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2184
+                                  }
+                                }
+                              },
+                              "luck": {
+                                "type": "directory",
+                                "children": {
+                                  "t0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 234
+                                  },
+                                  "t2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 357
+                                  },
+                                  "t1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 315
+                                  },
+                                  "t3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 416
+                                  }
+                                }
+                              },
+                              "speed": {
+                                "type": "directory",
+                                "children": {
+                                  "t1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2064
+                                  },
+                                  "t3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2066
+                                  },
+                                  "t0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1986
+                                  },
+                                  "t2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2051
+                                  }
+                                }
+                              },
+                              "damage": {
+                                "type": "directory",
+                                "children": {
+                                  "t1.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2045
+                                  },
+                                  "t3.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2158
+                                  },
+                                  "t0.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1970
+                                  },
+                                  "t2.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2154
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "soul_crystal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 416
+                          },
+                          "cuffs_of_galore.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 428
+                          }
+                        }
+                      },
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "spawner_t1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2279
+                          },
+                          "resource_generator_t3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1998
+                          },
+                          "spawner_t3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3064
+                          },
+                          "killer_t2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2650
+                          },
+                          "resource_generator_t1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1788
+                          },
+                          "resource_generator_t2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1952
+                          },
+                          "spawner_t2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2775
+                          },
+                          "killer_t0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2856
+                          },
+                          "killer_t1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2538
+                          },
+                          "spawner_t0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2124
+                          },
+                          "resource_generator_t0.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1636
+                          },
+                          "killer_t3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2755
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "geo": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "resource_generator.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 12064
+                          },
+                          "spawner.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 11410
+                          },
+                          "killer.geo.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 17571
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "animations": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "resource_generator.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 1269
+                          },
+                          "spawner.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 336
+                          },
+                          "killer.animation.json": {
+                            "type": "file",
+                            "extension": ".json",
+                            "size": 5028
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3401
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 4787
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 3078
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 10509
+          }
+        }
+      }
+    }
+  }
+}

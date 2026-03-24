@@ -1,0 +1,2707 @@
+{
+  "mod_name": "CubixCore[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCore[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCore[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 3887298,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixcore": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "currency": {
+                        "type": "directory",
+                        "children": {
+                          "donate_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1938
+                          },
+                          "vault_16x16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 405
+                          },
+                          "bonus_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 983
+                          },
+                          "bonus_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1989
+                          },
+                          "donate_16x16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 425
+                          },
+                          "bonus_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 500
+                          },
+                          "donate_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1067
+                          },
+                          "vault_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1886
+                          },
+                          "donate_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 468
+                          },
+                          "bonus_16x16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 422
+                          },
+                          "vault_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 451
+                          },
+                          "vault_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1043
+                          }
+                        }
+                      },
+                      "ui": {
+                        "type": "directory",
+                        "children": {
+                          "inside_menu": {
+                            "type": "directory",
+                            "children": {
+                              "page": {
+                                "type": "directory",
+                                "children": {
+                                  "customization": {
+                                    "type": "directory",
+                                    "children": {
+                                      "item": {
+                                        "type": "directory",
+                                        "children": {
+                                          "background": {
+                                            "type": "directory",
+                                            "children": {
+                                              "mythical_293x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 43042
+                                              },
+                                              "mythical_207x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 33156
+                                              },
+                                              "permanent_293x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 26194
+                                              },
+                                              "permanent_207x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 20750
+                                              },
+                                              "seasonal_207x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 22701
+                                              },
+                                              "seasonal_293x236.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 28943
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "page": {
+                                        "type": "directory",
+                                        "children": {
+                                          "player_list": {
+                                            "type": "directory",
+                                            "children": {
+                                              "icon_avatar_24x24.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 530
+                                              },
+                                              "icon_background_24x24.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 579
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "icon_shop_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 472
+                                      },
+                                      "category_cape.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 60769
+                                      },
+                                      "category_player_list.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 52551
+                                      },
+                                      "category_skin.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 59165
+                                      },
+                                      "icon_wardrobe_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 524
+                                      }
+                                    }
+                                  },
+                                  "game_case": {
+                                    "type": "directory",
+                                    "children": {
+                                      "chest_roof_110x81.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 16963
+                                      },
+                                      "background": {
+                                        "type": "directory",
+                                        "children": {
+                                          "legendary_330x229.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 31413
+                                          },
+                                          "legendary_610x293.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 67395
+                                          },
+                                          "epic_610x293.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 66796
+                                          },
+                                          "epic_330x229.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 30749
+                                          },
+                                          "rare_330x229.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 31501
+                                          },
+                                          "rare_610x293.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 69520
+                                          },
+                                          "uncommon_330x229.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 31232
+                                          },
+                                          "common_330x229.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 31303
+                                          },
+                                          "uncommon_610x293.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 67527
+                                          },
+                                          "common_610x293.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 68157
+                                          }
+                                        }
+                                      },
+                                      "rarity": {
+                                        "type": "directory",
+                                        "children": {
+                                          "icon_epic_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 726
+                                          },
+                                          "icon_rare_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 968
+                                          },
+                                          "icon_uncommon_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 1046
+                                          },
+                                          "icon_legendary_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 788
+                                          },
+                                          "icon_epic_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 931
+                                          },
+                                          "icon_common_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 1028
+                                          },
+                                          "icon_common_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 749
+                                          },
+                                          "icon_uncommon_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 738
+                                          },
+                                          "icon_rare_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 766
+                                          },
+                                          "icon_legendary_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 750
+                                          }
+                                        }
+                                      },
+                                      "chest_empty_159x143.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 39417
+                                      },
+                                      "icon_plus_21x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 247
+                                      },
+                                      "rolling_line.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 5653
+                                      },
+                                      "chest_roof_152x111.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 28697
+                                      },
+                                      "card": {
+                                        "type": "directory",
+                                        "children": {
+                                          "background_uncommon_206x146.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 15697
+                                          },
+                                          "background_legendary_206x146.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 16156
+                                          },
+                                          "background_common_206x146.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 15803
+                                          },
+                                          "background_epic_206x146.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 15421
+                                          },
+                                          "background_rare_206x146.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 15965
+                                          }
+                                        }
+                                      },
+                                      "icon_purchase_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 470
+                                      },
+                                      "icon_open_25x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 734
+                                      },
+                                      "chest_empty_220x198.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 65515
+                                      },
+                                      "icon_reward_137x137.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 11916
+                                      },
+                                      "icon_minus_20x3.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 164
+                                      }
+                                    }
+                                  },
+                                  "daily_reward": {
+                                    "type": "directory",
+                                    "children": {
+                                      "effect_received.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 45575
+                                      },
+                                      "effect_received1.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 45421
+                                      },
+                                      "effect_not_received.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 61608
+                                      },
+                                      "effect_not_received1.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 61264
+                                      },
+                                      "effect_available.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 37634
+                                      },
+                                      "effect_available1.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 37431
+                                      }
+                                    }
+                                  },
+                                  "game_market": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_general_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 655
+                                      },
+                                      "icon_edit_17x16.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 412
+                                      },
+                                      "icon_remove_17x16.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 406
+                                      },
+                                      "icon_add_60x60.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 926
+                                      },
+                                      "icon_my_products_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 371
+                                      },
+                                      "icon_storage_17x17.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 465
+                                      },
+                                      "icon_lock_60x60.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 3530
+                                      }
+                                    }
+                                  },
+                                  "prohibit": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_rules_32x32.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 948
+                                      },
+                                      "bg.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 102595
+                                      },
+                                      "icon_items_32x32.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 639
+                                      }
+                                    }
+                                  },
+                                  "game_warp": {
+                                    "type": "directory",
+                                    "children": {
+                                      "list": {
+                                        "type": "directory",
+                                        "children": {
+                                          "icon_server_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 493
+                                          },
+                                          "icon_owner_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 603
+                                          },
+                                          "icon_like_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 482
+                                          },
+                                          "icon_shop_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 593
+                                          },
+                                          "icon_warp_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 566
+                                          },
+                                          "icon_event_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 496
+                                          },
+                                          "icon_other_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 514
+                                          },
+                                          "icon_visits_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 695
+                                          },
+                                          "icon_comments_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 461
+                                          }
+                                        }
+                                      },
+                                      "icon_like_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 362
+                                      },
+                                      "sub": {
+                                        "type": "directory",
+                                        "children": {
+                                          "icon_other_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 492
+                                          },
+                                          "icon_public_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 631
+                                          },
+                                          "bg_common.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 333705
+                                          },
+                                          "icon_shop_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 689
+                                          },
+                                          "icon_warp_142x142.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 12028
+                                          },
+                                          "icon_event_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 567
+                                          },
+                                          "toggle": {
+                                            "type": "directory",
+                                            "children": {
+                                              "icon_private.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 487
+                                              },
+                                              "icon_public.png": {
+                                                "type": "file",
+                                                "extension": ".png",
+                                                "size": 579
+                                              }
+                                            }
+                                          },
+                                          "icon_private_20x20.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 613
+                                          },
+                                          "bg_title.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 357072
+                                          },
+                                          "icon_warp_32x32.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 971
+                                          },
+                                          "icon_server_24x24.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 523
+                                          }
+                                        }
+                                      },
+                                      "icon_private_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 435
+                                      },
+                                      "icon_edit_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 466
+                                      },
+                                      "type": {
+                                        "type": "directory",
+                                        "children": {
+                                          "icon_server.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 528
+                                          },
+                                          "icon_shop.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 700
+                                          },
+                                          "icon_all.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 592
+                                          },
+                                          "icon_event.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 569
+                                          },
+                                          "icon_other.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 466
+                                          }
+                                        }
+                                      },
+                                      "icon_public_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 439
+                                      },
+                                      "icon_add.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 530
+                                      },
+                                      "icon_remove_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 464
+                                      },
+                                      "icon_remove.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 743
+                                      }
+                                    }
+                                  },
+                                  "tutorial": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_play_32x32.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 637
+                                      },
+                                      "icon_favorite_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 457
+                                      }
+                                    }
+                                  },
+                                  "game_kit": {
+                                    "type": "directory",
+                                    "children": {
+                                      "privilege_card": {
+                                        "type": "directory",
+                                        "children": {
+                                          "deluxe.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 28617
+                                          },
+                                          "default.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 19492
+                                          },
+                                          "bmoder.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 32929
+                                          },
+                                          "premium.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 25854
+                                          },
+                                          "agent.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 31300
+                                          },
+                                          "vip.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 22753
+                                          },
+                                          "shpion.png": {
+                                            "type": "file",
+                                            "extension": ".png",
+                                            "size": 25145
+                                          }
+                                        }
+                                      },
+                                      "icon_cooldown.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 552
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "dashboard": {
+                                "type": "directory",
+                                "children": {
+                                  "game_kit_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 7456
+                                  },
+                                  "game_case_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1759
+                                  },
+                                  "tutorial_244_244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3979
+                                  },
+                                  "profile_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1728
+                                  },
+                                  "news_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 582
+                                  },
+                                  "privilege_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1133
+                                  },
+                                  "game_market_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1964
+                                  },
+                                  "daily_reward_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4349
+                                  },
+                                  "daily_reward_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 761
+                                  },
+                                  "jobs_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1896
+                                  },
+                                  "privilege_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 574
+                                  },
+                                  "game_shop_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3729
+                                  },
+                                  "tutorial_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 769
+                                  },
+                                  "game_kit_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1191
+                                  },
+                                  "game_pass_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 823
+                                  },
+                                  "game_market_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 5533
+                                  },
+                                  "daily_reward_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1685
+                                  },
+                                  "game_warp_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 10457
+                                  },
+                                  "jobs_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 875
+                                  },
+                                  "game_case_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 900
+                                  },
+                                  "game_warp_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 3407
+                                  },
+                                  "customization_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 832
+                                  },
+                                  "game_warp_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1382
+                                  },
+                                  "tutorial_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1518
+                                  },
+                                  "game_kit_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 2600
+                                  },
+                                  "game_case_244x244.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 4810
+                                  },
+                                  "game_shop_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 624
+                                  },
+                                  "customization_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1741
+                                  },
+                                  "game_market_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 841
+                                  },
+                                  "prohibit_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1324
+                                  },
+                                  "support_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1944
+                                  },
+                                  "icon_link_all_news.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 409
+                                  },
+                                  "profile_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 770
+                                  },
+                                  "prohibit_32x32.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 669
+                                  },
+                                  "game_shop_80x80.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 1315
+                                  },
+                                  "icon_link_news.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 467
+                                  }
+                                }
+                              },
+                              "icon": {
+                                "type": "directory",
+                                "children": {
+                                  "icon_loupe_24x24.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 515
+                                  },
+                                  "icon_back_16x14.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 266
+                                  },
+                                  "icon_time_20x20.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 567
+                                  },
+                                  "icon_close_16x16.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 252
+                                  },
+                                  "icon_shop_cart_24x24.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 472
+                                  },
+                                  "icon_balance_20x20.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 485
+                                  }
+                                }
+                              },
+                              "dialog": {
+                                "type": "directory",
+                                "children": {
+                                  "media_player": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_pause_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 313
+                                      },
+                                      "icon_close_16x16.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 252
+                                      },
+                                      "icon_resize_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 711
+                                      },
+                                      "icon_volume_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 624
+                                      },
+                                      "icon_play_24x24.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 419
+                                      }
+                                    }
+                                  },
+                                  "payment": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_promo_code_64x64.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 1283
+                                      },
+                                      "icon_payment_64x64.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 1082
+                                      }
+                                    }
+                                  },
+                                  "edit_game_market": {
+                                    "type": "directory",
+                                    "children": {
+                                      "stack_background.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 54857
+                                      },
+                                      "icon_fqa.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 367
+                                      }
+                                    }
+                                  },
+                                  "exchanger": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_star_active.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 521
+                                      },
+                                      "icon_star_passive.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 512
+                                      },
+                                      "background.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 59543
+                                      }
+                                    }
+                                  },
+                                  "purchase_customization_item": {
+                                    "type": "directory",
+                                    "children": {
+                                      "background.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 41362
+                                      },
+                                      "item_background.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 69364
+                                      }
+                                    }
+                                  },
+                                  "replacement_of_privilege": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_header.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 464
+                                      },
+                                      "icon_cooldown.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 371
+                                      },
+                                      "bg.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 62412
+                                      }
+                                    }
+                                  },
+                                  "purchase_game_market": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_storage.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 587
+                                      },
+                                      "icon_market.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 656
+                                      }
+                                    }
+                                  },
+                                  "promo_code": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_promo_code_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 476
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "element": {
+                                "type": "directory",
+                                "children": {
+                                  "check_box": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_check_20x20.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 344
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "notification": {
+                                "type": "directory",
+                                "children": {
+                                  "toast": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_warning.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 219
+                                      },
+                                      "icon_info.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 221
+                                      },
+                                      "icon_error.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 318
+                                      },
+                                      "icon_success.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 286
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "header": {
+                                "type": "directory",
+                                "children": {
+                                  "currency": {
+                                    "type": "directory",
+                                    "children": {
+                                      "icon_plus.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 270
+                                      }
+                                    }
+                                  },
+                                  "profile": {
+                                    "type": "directory",
+                                    "children": {
+                                      "star.png": {
+                                        "type": "file",
+                                        "extension": ".png",
+                                        "size": 387
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "game_market_controller": {
+                            "type": "directory",
+                            "children": {
+                              "background.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4083
+                              },
+                              "thumb.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 115
+                              }
+                            }
+                          },
+                          "service": {
+                            "type": "directory",
+                            "children": {
+                              "player_list": {
+                                "type": "directory",
+                                "children": {
+                                  "icon_place_three.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 418
+                                  },
+                                  "background.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 266526
+                                  },
+                                  "icon_mobile.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 340
+                                  },
+                                  "icon_place_two.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 396
+                                  },
+                                  "icon_verify.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 615
+                                  },
+                                  "icon_place_one.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 415
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "privilege": {
+                        "type": "directory",
+                        "children": {
+                          "icon_default_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1494
+                          },
+                          "icon_agent_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1258
+                          },
+                          "icon_shpion_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 20160
+                          },
+                          "icon_deluxe_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1580
+                          },
+                          "icon_deluxe_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7405
+                          },
+                          "icon_premium_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 22368
+                          },
+                          "icon_vip_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1648
+                          },
+                          "icon_shpion_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1361
+                          },
+                          "icon_bmoder_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 27136
+                          },
+                          "icon_bmoder_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1416
+                          },
+                          "icon_deluxe_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 21177
+                          },
+                          "icon_agent_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 25284
+                          },
+                          "icon_agent_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1677
+                          },
+                          "icon_vip_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1274
+                          },
+                          "icon_vip_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7032
+                          },
+                          "icon_default_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1167
+                          },
+                          "icon_bmoder_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8936
+                          },
+                          "icon_premium_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7593
+                          },
+                          "icon_default_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5535
+                          },
+                          "icon_premium_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1613
+                          },
+                          "icon_bmoder_24x24.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1872
+                          },
+                          "icon_premium_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1246
+                          },
+                          "icon_shpion_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1055
+                          },
+                          "icon_default_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 14130
+                          },
+                          "icon_deluxe_20x20.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1208
+                          },
+                          "icon_agent_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7986
+                          },
+                          "icon_vip_138x138.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 19085
+                          },
+                          "icon_shpion_64x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 6408
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "market": {
+                            "type": "directory",
+                            "children": {
+                              "out.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2524
+                              },
+                              "side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2453
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "overlay": {
+                        "type": "directory",
+                        "children": {
+                          "fade": {
+                            "type": "directory",
+                            "children": {
+                              "black.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 103
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "opened_case.ogg": {
+                        "type": "file",
+                        "extension": ".ogg",
+                        "size": 63176
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 68
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 48
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 134
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixcore": {
+                    "type": "directory",
+                    "children": {
+                      "iiiIiiiiiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 27323
+                      },
+                      "iIiiiiIiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1121
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "service": {
+                            "type": "directory",
+                            "children": {
+                              "privilege": {
+                                "type": "directory",
+                                "children": {
+                                  "PrivilegeType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4735
+                                  }
+                                }
+                              },
+                              "currency": {
+                                "type": "directory",
+                                "children": {
+                                  "response": {
+                                    "type": "directory",
+                                    "children": {
+                                      "CurrencyResponseType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1921
+                                      },
+                                      "CurrencyResponse.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2032
+                                      }
+                                    }
+                                  },
+                                  "CurrencyType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2754
+                                  },
+                                  "api": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ICurrency.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1871
+                                      }
+                                    }
+                                  },
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "BaseCurrency.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2657
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "user": {
+                                "type": "directory",
+                                "children": {
+                                  "UserProfile.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1797
+                                  }
+                                }
+                              },
+                              "inside_menu": {
+                                "type": "directory",
+                                "children": {
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "InsideMenuPageType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2177
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "game_market": {
+                                "type": "directory",
+                                "children": {
+                                  "container": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ContainerGameMarketController.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4569
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "iiIIIiIiIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3772
+                      },
+                      "IiIIIiIiIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16308
+                      },
+                      "iIIiIIIiIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4199
+                      },
+                      "IIiiiiIiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 29456
+                      },
+                      "iIiiIIiiIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1313
+                      },
+                      "IIIIiiIIIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 457
+                      },
+                      "iIiIiiIIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 441
+                      },
+                      "IiIiiIiiiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 978
+                      },
+                      "IiIiiIIIIiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1216
+                      },
+                      "iiiIiiIiiiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4249
+                      },
+                      "iiIiiIiiiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 511
+                      },
+                      "iIIIIIIIIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1266
+                      },
+                      "IIIiIIIiIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1417
+                      },
+                      "iIiiIIiiIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5242
+                      },
+                      "IIIiiiiiIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1313
+                      },
+                      "iiiiiiiiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2014
+                      },
+                      "iiIiIIIIiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3276
+                      },
+                      "iiiiIiIiiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3185
+                      },
+                      "iIIIiiIIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 327
+                      },
+                      "IiiIIiIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2424
+                      },
+                      "iIIIIiiIIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 771
+                      },
+                      "IIiIiiIIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14834
+                      },
+                      "iIiIIiIiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5936
+                      },
+                      "IiIIiiiIiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3113
+                      },
+                      "IiiiiIiIIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 770
+                      },
+                      "iiiIiIIIiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10452
+                      },
+                      "IiIiIiIiiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2568
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "service": {
+                            "type": "directory",
+                            "children": {
+                              "user": {
+                                "type": "directory",
+                                "children": {
+                                  "ClientUserProfileService.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6077
+                                  },
+                                  "base": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ClientUserProfile.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2732
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "game_market": {
+                                "type": "directory",
+                                "children": {
+                                  "container": {
+                                    "type": "directory",
+                                    "children": {
+                                      "GuiGameMarketController.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 11629
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "player_list": {
+                                "type": "directory",
+                                "children": {
+                                  "rating": {
+                                    "type": "directory",
+                                    "children": {
+                                      "api": {
+                                        "type": "directory",
+                                        "children": {
+                                          "IPlayerListRatingEntry.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 257
+                                          },
+                                          "IPlayerListRatingProvider.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 570
+                                          }
+                                        }
+                                      },
+                                      "PlayerListRatingType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1684
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "currency": {
+                                "type": "directory",
+                                "children": {
+                                  "ClientCurrencyService.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3539
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "iiiIiiIiiIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1067
+                      },
+                      "IiiIIIiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3542
+                      },
+                      "iiIiiIiIIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3592
+                      },
+                      "IIiIIiIiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2678
+                      },
+                      "iiIiIiIIIiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3733
+                      },
+                      "IiIIIIiIiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 860
+                      },
+                      "IIiIIiIiiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 917
+                      },
+                      "iiiiIiIiiIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3701
+                      },
+                      "IiIiiIiIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1229
+                      },
+                      "iiiIIiIIiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9741
+                      },
+                      "IiiIiiIiiIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1004
+                      },
+                      "iIiIiIiiiiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1922
+                      },
+                      "iiiIiiiIIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1816
+                      },
+                      "iiIIIIiIiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1111
+                      },
+                      "IIiiiiIiIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16573
+                      },
+                      "iIiiIIIiIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 829
+                      },
+                      "iIiiiIiIiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 982
+                      },
+                      "IIiIIIIIIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1883
+                      },
+                      "iiIiiIIiiiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15745
+                      },
+                      "IiiiiIIiiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 460
+                      },
+                      "iiiIIiIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6297
+                      },
+                      "iIiIIiIiiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6039
+                      },
+                      "iiIIIIiIiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1447
+                      },
+                      "iIIiiiiiIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14237
+                      },
+                      "IiIIiIIIiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3549
+                      },
+                      "IiiiIiIIIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 793
+                      },
+                      "iiiIiiiIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 966
+                      },
+                      "iIiiiiIiIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20386
+                      },
+                      "iIIiiIiIiiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1703
+                      },
+                      "iIiIiIiiIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1378
+                      },
+                      "IIiiiIiIiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 490
+                      },
+                      "IiIiIIIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1117
+                      },
+                      "IiiIiIIIiIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3474
+                      },
+                      "IIiIiiIIIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5807
+                      },
+                      "iiIIiIIIiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2335
+                      },
+                      "IIIIIiiiiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8430
+                      },
+                      "IiiIIiiiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1260
+                      },
+                      "iiIiIiIIIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1573
+                      },
+                      "iiiIiiiIIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1240
+                      },
+                      "iiIiiIIiiiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4882
+                      },
+                      "iIIIIIiIiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1805
+                      },
+                      "iiiiiIIiiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8491
+                      },
+                      "iiIIIiIiIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2353
+                      },
+                      "IIiiiiIIiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1970
+                      },
+                      "iiiIIiiiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2184
+                      },
+                      "IIiiiiIIiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1723
+                      },
+                      "IIiIIIiIiIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4319
+                      },
+                      "iIiiIIIiIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3543
+                      },
+                      "IIiiIIiiIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 575
+                      },
+                      "iIiIIIIIIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 776
+                      },
+                      "iiiIiiIiiiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1920
+                      },
+                      "IiiiIiIIIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1413
+                      },
+                      "iiIIIiIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6919
+                      },
+                      "iIIIIiiIIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 564
+                      },
+                      "IIiiIIiiIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3232
+                      },
+                      "IiIiiIiIIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3306
+                      },
+                      "iiIiIIIIiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10998
+                      },
+                      "IiiIiiiIIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 603
+                      },
+                      "iiIiiIIiiIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1274
+                      },
+                      "IiiiiIIiiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4213
+                      },
+                      "IIiIiIiiIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1889
+                      },
+                      "IiIiiIIIIiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4170
+                      },
+                      "IIiIiiIiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 824
+                      },
+                      "iiiIiiIiiIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1697
+                      },
+                      "IiIIIiIiIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 929
+                      },
+                      "iiiiIIiiIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      },
+                      "IIIIIiiIIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18391
+                      },
+                      "iIIiIiIIIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18293
+                      },
+                      "iIIiIiIIIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 20564
+                      },
+                      "IiiiiiiiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2809
+                      },
+                      "IIIiIIIiiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5928
+                      },
+                      "iIiiIIIiIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3491
+                      },
+                      "IiIiiIiIIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2963
+                      },
+                      "IiiIIiIIiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3411
+                      },
+                      "iiIIiIIIiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1657
+                      },
+                      "iIIiiiIiIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1384
+                      },
+                      "IIiiIIIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3099
+                      },
+                      "IiiiiiiiIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1007
+                      },
+                      "iiiiIiiIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 450
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 441
+                      },
+                      "IiIiIIIIiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 485
+                      },
+                      "IiIIIIiIiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 26014
+                      },
+                      "IIiIIiiIIiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2431
+                      },
+                      "IiiIiiiIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3992
+                      },
+                      "iIIiiIiIIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2926
+                      },
+                      "iiIiiIiIIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8013
+                      },
+                      "IiiiiIiiiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7151
+                      },
+                      "IiiiiIiIIiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1118
+                      },
+                      "iIIIIiiiiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16503
+                      },
+                      "IiiiiIiiiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15925
+                      },
+                      "IiiiIiiIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13769
+                      },
+                      "iIiiiiIIiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2548
+                      },
+                      "iIiiIiiIiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 25016
+                      },
+                      "IIiIiiIIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2029
+                      },
+                      "IiiIIiiiiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1867
+                      },
+                      "IiIIiIIiIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 935
+                      },
+                      "iIiiiIiIiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 23094
+                      },
+                      "iiiIiiiIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1423
+                      },
+                      "IIiiIiiIiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1086
+                      },
+                      "iIiiIiiIiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1985
+                      },
+                      "iIIIIiIiiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3289
+                      },
+                      "IiIIiiiIiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6544
+                      },
+                      "IIiiiIiIiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 24487
+                      },
+                      "iIiiiiIIiIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2461
+                      },
+                      "iIIiiiIiIiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3218
+                      },
+                      "IiiIiiiiiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4404
+                      },
+                      "iIIiIiiIiiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3167
+                      },
+                      "iIIiiIiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7046
+                      },
+                      "IiiIiiiIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3144
+                      },
+                      "iIIIIiiiiIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18067
+                      },
+                      "iIiIIIIIIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12250
+                      },
+                      "IIiiIiiIiiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8038
+                      },
+                      "iiiiiIIiiiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 881
+                      },
+                      "IIiIIIIIIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 387
+                      },
+                      "iiIiiIiiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1050
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "CoreNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8426
+                          }
+                        }
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2056
+                      },
+                      "IIIIIiiIIiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18553
+                      },
+                      "IIIiiiiiIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2029
+                      },
+                      "iIiIiiiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2705
+                      },
+                      "IIIiIIIiIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2404
+                      },
+                      "IiiIiIIIiIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3992
+                      },
+                      "IIIiIIIiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2616
+                      },
+                      "IiIIiIIIiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3086
+                      },
+                      "iiiiIiiIIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4695
+                      },
+                      "IIIiiIiIiiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1182
+                      },
+                      "IIiIiIiiIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1218
+                      },
+                      "iiIiiiiiIiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2894
+                      },
+                      "iIiiIIIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2381
+                      },
+                      "iiIiiIiIIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1345
+                      },
+                      "IIIiiIiIiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1259
+                      },
+                      "IIIiIiiIiIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1211
+                      },
+                      "iiIIIiIiIIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4086
+                      },
+                      "IiiiIiiIIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22425
+                      },
+                      "IiIiiIIiiiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 900
+                      },
+                      "iIIIiiIIIIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3596
+                      },
+                      "IiIIiIIiIiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1658
+                      },
+                      "IIIIiiIIIIIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2334
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2219
+                          },
+                          "Proxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 840
+                          }
+                        }
+                      },
+                      "iiIiIIiiiiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12234
+                      },
+                      "IIIIIiiiiIIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3349
+                      },
+                      "iIIIIiIiiiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3203
+                      },
+                      "IiIiIiIiiIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1990
+                      },
+                      "IIiIIiiIIiIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4486
+                      },
+                      "iiIiiIiIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 942
+                      },
+                      "iiIIIiiiiiIII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1371
+                      },
+                      "iIiIiiIIIIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12948
+                      },
+                      "IiiIIIiIiiIIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1374
+                      },
+                      "IIIiIiIIIIiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1073
+                      },
+                      "IIIiIiIIIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3112
+                      },
+                      "IIiIiiIiiIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1550
+                      },
+                      "IiiIiiiiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2201
+                      },
+                      "iIiIiiIiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1070
+                      },
+                      "IiiIIiIiIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 27733
+                      },
+                      "iiiIiiIIIiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1263
+                      },
+                      "IIiIiiIIIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8417
+                      },
+                      "iIIiIiiIiiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1075
+                      },
+                      "IiIIIiIiIiiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3853
+                      },
+                      "iIIIIIiiIiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1009
+                      },
+                      "iIIIIIIIIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2266
+                      },
+                      "IiiIiiiIIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1052
+                      },
+                      "iIIiIiiIiIIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1560
+                      },
+                      "iIIiIiiIiIIii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1535
+                      },
+                      "iIIiiiiiIIiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14962
+                      },
+                      "IiIIIiIiIiiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13045
+                      },
+                      "IiIiiIiiiIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14051
+                      },
+                      "IIiIiiiIIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13404
+                      },
+                      "iIiIiiiIIIiII.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 908
+                      },
+                      "iIiIiiiIIIiIi.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 22191
+                      },
+                      "IiiIIiIiIiiiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7691
+                      },
+                      "iiIiiiiiIiiii.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1119
+                      },
+                      "iiIiIIiiiiIiI.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12774
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "persistence.xml": {
+                "type": "file",
+                "extension": ".xml",
+                "size": 186
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 69
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 260
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 15565
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12746
+          }
+        }
+      }
+    }
+  }
+}

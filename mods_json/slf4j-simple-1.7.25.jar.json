@@ -1,0 +1,127 @@
+{
+  "mod_name": "slf4j-simple-1.7.25.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\slf4j-simple-1.7.25.jar",
+  "mod_type": "jar",
+  "tree": {
+    "slf4j-simple-1.7.25.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 15944,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 733
+              },
+              "maven": {
+                "type": "directory",
+                "children": {
+                  "org.slf4j": {
+                    "type": "directory",
+                    "children": {
+                      "slf4j-simple": {
+                        "type": "directory",
+                        "children": {
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 1015
+                          },
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 112
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "slf4j": {
+                "type": "directory",
+                "children": {
+                  "impl": {
+                    "type": "directory",
+                    "children": {
+                      "OutputChoice$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 981
+                      },
+                      "OutputChoice$OutputChoiceType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1325
+                      },
+                      "OutputChoice.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1330
+                      },
+                      "SimpleLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10124
+                      },
+                      "SimpleLoggerConfiguration$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1288
+                      },
+                      "SimpleLoggerConfiguration.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5789
+                      },
+                      "SimpleLoggerFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1289
+                      },
+                      "StaticLoggerBinder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1069
+                      },
+                      "StaticMarkerBinder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 935
+                      },
+                      "StaticMDCBinder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 790
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

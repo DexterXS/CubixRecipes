@@ -1,0 +1,661 @@
+{
+  "mod_name": "DamageIndicatorsMod.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\DamageIndicatorsMod.jar",
+  "mod_type": "jar",
+  "tree": {
+    "DamageIndicatorsMod.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 643861,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "damageindicatorsmod": {
+                "type": "directory",
+                "children": {
+                  "cape": {
+                    "type": "directory",
+                    "children": {
+                      "donatorcape.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 4492
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 750
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "checkbox.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 422
+                      }
+                    }
+                  }
+                }
+              },
+              "defaultskins": {
+                "type": "directory",
+                "children": {
+                  "default": {
+                    "type": "directory",
+                    "children": {
+                      "background.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3989
+                      },
+                      "centerPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 221
+                      },
+                      "damage.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 243
+                      },
+                      "DIFrameSkin.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 10441
+                      },
+                      "DITypeIcons.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 26156
+                      },
+                      "health.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 5154
+                      },
+                      "leftPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 612
+                      },
+                      "NamePlate.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "rightPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 631
+                      },
+                      "skin.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 2057
+                      }
+                    }
+                  },
+                  "minimal": {
+                    "type": "directory",
+                    "children": {
+                      "background.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "centerPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "damage.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 243
+                      },
+                      "DIFrameSkin.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 9399
+                      },
+                      "DITypeIcons.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 26156
+                      },
+                      "health.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 5154
+                      },
+                      "leftPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "NamePlate.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "rightPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 169
+                      },
+                      "skin.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 2057
+                      }
+                    }
+                  },
+                  "wowlike": {
+                    "type": "directory",
+                    "children": {
+                      "background.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 3423
+                      },
+                      "centerPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 227
+                      },
+                      "damage.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 513
+                      },
+                      "DIFrameSkin.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 36041
+                      },
+                      "DITypeIcons.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 26156
+                      },
+                      "health.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 825
+                      },
+                      "leftPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 590
+                      },
+                      "NamePlate.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 2130
+                      },
+                      "rightPotions.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 617
+                      },
+                      "skin.cfg": {
+                        "type": "file",
+                        "extension": ".cfg",
+                        "size": 2076
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "example": {
+                "type": "directory",
+                "children": {
+                  "examplemod": {
+                    "type": "directory",
+                    "children": {}
+                  }
+                }
+              },
+              "voidswrath": {
+                "type": "directory",
+                "children": {
+                  "modinstaller": {
+                    "type": "directory",
+                    "children": {
+                      "Installer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5734
+                      },
+                      "InstallerListener.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3345
+                      },
+                      "Main$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 790
+                      },
+                      "Main.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5702
+                      },
+                      "ProgressbarUpdater.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1167
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "DirectoryFileFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 524
+                      },
+                      "OS.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1092
+                      },
+                      "OSInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2822
+                      },
+                      "Utilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2711
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "DamageIndicatorsMod": {
+            "type": "directory",
+            "children": {
+              "client": {
+                "type": "directory",
+                "children": {
+                  "DIClientProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2723
+                  }
+                }
+              },
+              "configuration": {
+                "type": "directory",
+                "children": {
+                  "DIConfig.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12727
+                  }
+                }
+              },
+              "core": {
+                "type": "directory",
+                "children": {
+                  "DIEventBus.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12300
+                  },
+                  "DIPermissionsHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2770
+                  },
+                  "DIPotionEffectsHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2594
+                  },
+                  "DITicker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15508
+                  },
+                  "EntityConfigurationEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12806
+                  },
+                  "PacketHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 314
+                  },
+                  "TextTransfer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2097
+                  },
+                  "Tools.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5578
+                  }
+                }
+              },
+              "DIMod.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4259
+              },
+              "gui": {
+                "type": "directory",
+                "children": {
+                  "AdvancedGui.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 18152
+                  },
+                  "DIGuiTools$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1153
+                  },
+                  "DIGuiTools.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 18763
+                  },
+                  "GuiCheckBox.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3378
+                  },
+                  "GuiEntityList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4274
+                  },
+                  "GuiToolTip.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10215
+                  },
+                  "RepositionGui.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13549
+                  },
+                  "SkinGui.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4416
+                  },
+                  "SkinSlot.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9711
+                  }
+                }
+              },
+              "rendering": {
+                "type": "directory",
+                "children": {
+                  "DIWordParticles.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6558
+                  }
+                }
+              },
+              "server": {
+                "type": "directory",
+                "children": {
+                  "CommandDI.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2769
+                  },
+                  "DIProxy$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3949
+                  },
+                  "DIProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 971
+                  }
+                }
+              },
+              "util": {
+                "type": "directory",
+                "children": {
+                  "EntityConfigurationEntryComparator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1611
+                  }
+                }
+              }
+            }
+          },
+          "DITextures": {
+            "type": "directory",
+            "children": {
+              "AbstractSkin$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1169
+              },
+              "AbstractSkin.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 10854
+              },
+              "DynamicTextureIcon.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1493
+              },
+              "EnumSkinPart.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5894
+              },
+              "FileSkinRegistration.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5185
+              },
+              "JarSkinRegistration.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7198
+              },
+              "Ordering.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1297
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 491
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 108
+              },
+              "maven": {
+                "type": "directory",
+                "children": {
+                  "com.googlecode.json-simple": {
+                    "type": "directory",
+                    "children": {
+                      "json-simple": {
+                        "type": "directory",
+                        "children": {
+                          "pom.properties": {
+                            "type": "file",
+                            "extension": ".properties",
+                            "size": 151
+                          },
+                          "pom.xml": {
+                            "type": "file",
+                            "extension": ".xml",
+                            "size": 2104
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "json": {
+                "type": "directory",
+                "children": {
+                  "simple": {
+                    "type": "directory",
+                    "children": {
+                      "ItemList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3939
+                      },
+                      "JSONArray.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2077
+                      },
+                      "JSONAware.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 161
+                      },
+                      "JSONObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3076
+                      },
+                      "JSONStreamAware.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 223
+                      },
+                      "JSONValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3964
+                      },
+                      "parser": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerFactory.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 239
+                          },
+                          "ContentHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 573
+                          },
+                          "JSONParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8831
+                          },
+                          "ParseException.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2213
+                          },
+                          "Yylex.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12470
+                          },
+                          "Yytoken.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1427
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "resources": {
+            "type": "directory",
+            "children": {
+              "icon.png": {
+                "type": "file",
+                "extension": ".png",
+                "size": 8863
+              },
+              "mod.zip": {
+                "type": "file",
+                "extension": ".zip",
+                "size": 273558
+              },
+              "modimage.png": {
+                "type": "file",
+                "extension": ".png",
+                "size": 39887
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1172
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5511
+          }
+        }
+      }
+    }
+  }
+}

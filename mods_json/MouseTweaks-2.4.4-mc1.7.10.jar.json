@@ -1,0 +1,162 @@
+{
+  "mod_name": "MouseTweaks-2.4.4-mc1.7.10.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\MouseTweaks-2.4.4-mc1.7.10.jar",
+  "mod_type": "jar",
+  "tree": {
+    "MouseTweaks-2.4.4-mc1.7.10.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 53791,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 268
+              },
+              "INDEX.LIST": {
+                "type": "file",
+                "extension": ".list",
+                "size": 187
+              }
+            }
+          },
+          "yalter": {
+            "type": "directory",
+            "children": {
+              "mousetweaks": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "IMTModGuiContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 692
+                      }
+                    }
+                  },
+                  "loaders": {
+                    "type": "directory",
+                    "children": {
+                      "LiteModMouseTweaks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1850
+                      },
+                      "MouseTweaksForge.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1692
+                      }
+                    }
+                  },
+                  "Config.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2966
+                  },
+                  "Constants$EntryPoint.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1187
+                  },
+                  "Constants.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1632
+                  },
+                  "DeobfuscationLayer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7536
+                  },
+                  "Logger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 703
+                  },
+                  "Main$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 853
+                  },
+                  "Main$OnTickMethod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1148
+                  },
+                  "Main.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15427
+                  },
+                  "ModCompatibility.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7128
+                  },
+                  "ProfilerCustom.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1324
+                  },
+                  "Reflection$Obfuscation.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1181
+                  },
+                  "Reflection.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10053
+                  },
+                  "ReflectionCache.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3832
+                  }
+                }
+              }
+            }
+          },
+          "litemod.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 246
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 531
+          },
+          "mousetweaks_logo.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 21036
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1191
+          }
+        }
+      }
+    }
+  }
+}

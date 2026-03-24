@@ -1,0 +1,147 @@
+{
+  "mod_name": "jfxswt.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\jfxswt.jar",
+  "mod_type": "jar",
+  "tree": {
+    "jfxswt.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 34524,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 125
+              },
+              "INDEX.LIST": {
+                "type": "file",
+                "extension": ".list",
+                "size": 72
+              }
+            }
+          },
+          "javafx": {
+            "type": "directory",
+            "children": {
+              "embed": {
+                "type": "directory",
+                "children": {
+                  "swt": {
+                    "type": "directory",
+                    "children": {
+                      "CustomTransfer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1921
+                      },
+                      "CustomTransferBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1200
+                      },
+                      "FXCanvas$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 927
+                      },
+                      "FXCanvas$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 907
+                      },
+                      "FXCanvas$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 787
+                      },
+                      "FXCanvas$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 691
+                      },
+                      "FXCanvas$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 731
+                      },
+                      "FXCanvas$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 726
+                      },
+                      "FXCanvas$7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 712
+                      },
+                      "FXCanvas$HostContainer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2267
+                      },
+                      "FXCanvas$HostContainer$2$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1820
+                      },
+                      "FXCanvas$HostContainer$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4155
+                      },
+                      "FXCanvas$HostContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12245
+                      },
+                      "FXCanvas.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18895
+                      },
+                      "SWTCursors$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1618
+                      },
+                      "SWTCursors.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1351
+                      },
+                      "SWTEvents.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4397
+                      },
+                      "SWTFXUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8925
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,412 @@
+{
+  "mod_name": "BrandonsCore-1.0.0.12.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BrandonsCore-1.0.0.12.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BrandonsCore-1.0.0.12.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 93976,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 145
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 396
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "brandonscore": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "Widgets.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8916
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "api": {
+                "type": "directory",
+                "children": {
+                  "CoFHAPIProps.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 364
+                  },
+                  "package-info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 264
+                  },
+                  "energy": {
+                    "type": "directory",
+                    "children": {
+                      "EnergyStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2824
+                      },
+                      "IEnergyConnection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 211
+                      },
+                      "IEnergyContainerItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 314
+                      },
+                      "IEnergyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 414
+                      },
+                      "IEnergyProvider.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 355
+                      },
+                      "IEnergyReceiver.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 355
+                      },
+                      "IEnergyStorage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 242
+                      },
+                      "ItemEnergyContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2478
+                      },
+                      "package-info.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 278
+                      },
+                      "TileEnergyHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1815
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "brandon3055": {
+                "type": "directory",
+                "children": {
+                  "brandonscore": {
+                    "type": "directory",
+                    "children": {
+                      "BrandonsCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2338
+                      },
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "ClassTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 596
+                          },
+                          "LoadingPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1918
+                          },
+                          "MethodHolder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 327
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1630
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "guicomponents": {
+                                "type": "directory",
+                                "children": {
+                                  "ComponentBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7560
+                                  },
+                                  "ComponentButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4750
+                                  },
+                                  "ComponentCollection.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 6629
+                                  },
+                                  "ComponentItemRenderer.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2275
+                                  },
+                                  "ComponentScrollingBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 965
+                                  },
+                                  "ComponentSlotBackground.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2617
+                                  },
+                                  "ComponentTextField.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3060
+                                  },
+                                  "ComponentTextureButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3558
+                                  },
+                                  "ComponentTexturedRect.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2310
+                                  },
+                                  "GUIBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4473
+                                  },
+                                  "GUIScrollingBase.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2862
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "utills": {
+                            "type": "directory",
+                            "children": {
+                              "ClientUtills.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1304
+                              },
+                              "GuiHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4396
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1894
+                          },
+                          "handlers": {
+                            "type": "directory",
+                            "children": {
+                              "FileHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 802
+                              },
+                              "IProcess.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 195
+                              },
+                              "ProcessHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3031
+                              },
+                              "ZipHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2156
+                              }
+                            }
+                          },
+                          "lib": {
+                            "type": "directory",
+                            "children": {
+                              "References.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 677
+                              }
+                            }
+                          },
+                          "utills": {
+                            "type": "directory",
+                            "children": {
+                              "DataUtills$IntPair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 557
+                              },
+                              "DataUtills$XYZTri.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 979
+                              },
+                              "DataUtills$XZPair.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1103
+                              },
+                              "DataUtills.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8727
+                              },
+                              "InfoHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4856
+                              },
+                              "InventoryUtils$GenericInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5547
+                              },
+                              "InventoryUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 17083
+                              },
+                              "ItemNBTHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5163
+                              },
+                              "LogHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1577
+                              },
+                              "SimplexNoise.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 11594
+                              },
+                              "Teleporter$TeleportLocation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4999
+                              },
+                              "Teleporter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7682
+                              },
+                              "Utills$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 697
+                              },
+                              "Utills$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 700
+                              },
+                              "Utills.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6154
+                              }
+                            }
+                          },
+                          "world": {
+                            "type": "directory",
+                            "children": {
+                              "BlockCollection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 354
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 41
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5397
+          }
+        }
+      }
+    }
+  }
+}

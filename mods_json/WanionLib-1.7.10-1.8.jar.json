@@ -1,0 +1,222 @@
+{
+  "mod_name": "WanionLib-1.7.10-1.8.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\WanionLib-1.7.10-1.8.jar",
+  "mod_type": "jar",
+  "tree": {
+    "WanionLib-1.7.10-1.8.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 61142,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "wanion": {
+            "type": "directory",
+            "children": {
+              "lib": {
+                "type": "directory",
+                "children": {
+                  "Reference.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 490
+                  },
+                  "WanionLib$IDependency.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 193
+                  },
+                  "WanionLib.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2883
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientTickHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2383
+                      },
+                      "animation": {
+                        "type": "directory",
+                        "children": {
+                          "Animation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1064
+                          },
+                          "ComplexAnimation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1042
+                          },
+                          "ComplexHalfAnimation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 885
+                          },
+                          "SimpleAnimation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 856
+                          },
+                          "SimpleHalfAnimation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 852
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "common": {
+                    "type": "directory",
+                    "children": {
+                      "Dependencies$DependenceWatcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1323
+                      },
+                      "Dependencies.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3458
+                      },
+                      "FixedSizeList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2823
+                      },
+                      "Instantiator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 503
+                      },
+                      "IRemovable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 171
+                      },
+                      "MetaItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5138
+                      },
+                      "MineTweakerHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2261
+                      },
+                      "Util.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2330
+                      }
+                    }
+                  },
+                  "module": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractModule$Manager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4542
+                      },
+                      "AbstractModule.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3693
+                      },
+                      "AbstractModuleThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 777
+                      },
+                      "LoadStage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2062
+                      },
+                      "ModuleHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3292
+                      },
+                      "SpecifiedLoadStage.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 496
+                      }
+                    }
+                  },
+                  "recipe": {
+                    "type": "directory",
+                    "children": {
+                      "RecipeHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3726
+                      },
+                      "advanced": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractRecipeRegistry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4037
+                          },
+                          "IAdvancedRecipe.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 478
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 385
+          },
+          "WanionLib.png": {
+            "type": "file",
+            "extension": ".png",
+            "size": 28743
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5009
+          }
+        }
+      }
+    }
+  }
+}

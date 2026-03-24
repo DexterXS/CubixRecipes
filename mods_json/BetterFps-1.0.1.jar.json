@@ -1,0 +1,237 @@
+{
+  "mod_name": "BetterFps-1.0.1.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\BetterFps-1.0.1.jar",
+  "mod_type": "jar",
+  "tree": {
+    "BetterFps-1.0.1.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 63051,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "me": {
+            "type": "directory",
+            "children": {
+              "guichaguri": {
+                "type": "directory",
+                "children": {
+                  "betterfps": {
+                    "type": "directory",
+                    "children": {
+                      "BetterFps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1715
+                      },
+                      "BetterFpsHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3615
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "GuiBetterFpsConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3502
+                          },
+                          "GuiCycleButton.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2090
+                          },
+                          "GuiRestartDialog.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2506
+                          }
+                        }
+                      },
+                      "installer": {
+                        "type": "directory",
+                        "children": {
+                          "AlgorithmTester$VanillaMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 918
+                          },
+                          "AlgorithmTester.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8145
+                          },
+                          "BetterFpsInstaller$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 991
+                          },
+                          "BetterFpsInstaller.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5531
+                          },
+                          "InstanceInstaller.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7034
+                          },
+                          "json": {
+                            "type": "directory",
+                            "children": {
+                              "JSONArray.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 13553
+                              },
+                              "JSONException.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 814
+                              },
+                              "JSONObject$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 256
+                              },
+                              "JSONObject$Null.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1061
+                              },
+                              "JSONObject.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 23856
+                              },
+                              "JSONString.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 186
+                              },
+                              "JSONTokener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6054
+                              }
+                            }
+                          },
+                          "VersionSelector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4725
+                          }
+                        }
+                      },
+                      "math": {
+                        "type": "directory",
+                        "children": {
+                          "JavaMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 513
+                          },
+                          "LibGDXMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1146
+                          },
+                          "RandomMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 517
+                          },
+                          "RivensFullMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1064
+                          },
+                          "RivensHalfMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1258
+                          },
+                          "RivensMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1249
+                          },
+                          "TaylorMath.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1041
+                          }
+                        }
+                      },
+                      "transformers": {
+                        "type": "directory",
+                        "children": {
+                          "EventTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4595
+                          },
+                          "MathTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7028
+                          }
+                        }
+                      },
+                      "tweaker": {
+                        "type": "directory",
+                        "children": {
+                          "BetterFpsTweaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2893
+                          },
+                          "Naming$ObfuscationName.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1522
+                          },
+                          "Naming.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1225
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 192
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 366
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

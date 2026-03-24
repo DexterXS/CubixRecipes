@@ -1,0 +1,427 @@
+{
+  "mod_name": "miningworld.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\miningworld.jar",
+  "mod_type": "jar",
+  "tree": {
+    "miningworld.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 88809,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "aroma1997": {
+            "type": "directory",
+            "children": {
+              "world": {
+                "type": "directory",
+                "children": {
+                  "CommonProxy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 290
+                  },
+                  "Config.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2820
+                  },
+                  "CraftingBook.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1881
+                  },
+                  "CreativeTabDW.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 722
+                  },
+                  "DimensionalWorld.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 9749
+                  },
+                  "DimensionalWorldBlocks.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1765
+                  },
+                  "DimensionalWorldItems.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 619
+                  },
+                  "DimensionChanger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6263
+                  },
+                  "EventListener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1847
+                  },
+                  "MiningPortal$ASize.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4266
+                  },
+                  "MiningPortal.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5448
+                  },
+                  "PortalIgniter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3488
+                  },
+                  "Reference.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1222
+                  },
+                  "StickyOre.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1864
+                  },
+                  "TeleporterMining.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6942
+                  },
+                  "client": {
+                    "type": "directory",
+                    "children": {
+                      "ClientProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 315
+                      }
+                    }
+                  },
+                  "dimension": {
+                    "type": "directory",
+                    "children": {
+                      "BiomeGenMining.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3190
+                      },
+                      "ChunkProviderMining.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1173
+                      },
+                      "WorldProviderMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2607
+                      }
+                    }
+                  },
+                  "miner": {
+                    "type": "directory",
+                    "children": {
+                      "BlockMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5820
+                      },
+                      "ContainerMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4511
+                      },
+                      "ItemBlockMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1724
+                      },
+                      "MinerItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1350
+                      },
+                      "Miners.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6016
+                      },
+                      "MinerState.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1124
+                      },
+                      "SlotEnchanted.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 920
+                      },
+                      "SlotFurnace.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 815
+                      },
+                      "TileEntityMinerBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3826
+                      },
+                      "TileEntityMinerChunkloader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 597
+                      },
+                      "TileEntityMinerCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18357
+                      },
+                      "TileEntityMinerEnchant.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3013
+                      },
+                      "TileEntityMinerFiller.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 670
+                      },
+                      "TileEntityMinerGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5043
+                      },
+                      "TileEntityMinerHasInventory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3438
+                      },
+                      "TileEntityMinerInterface.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5955
+                      },
+                      "TileEntityMinerMiner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 931
+                      },
+                      "TileEntityMinerRF.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2611
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "BlockMinerPart.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1853
+                          },
+                          "IMinerEnchantProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 326
+                          },
+                          "IMinerTile.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 313
+                          },
+                          "MinerConstants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 490
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "reference.properties": {
+                    "type": "file",
+                    "extension": ".properties",
+                    "size": 15
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 558
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 102
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "aroma1997sdimension": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5609
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "miningPortal.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 597
+                          },
+                          "portalFrame.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 628
+                          },
+                          "stickyOre.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 734
+                          },
+                          "miner": {
+                            "type": "directory",
+                            "children": {
+                              "enchant.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 549
+                              },
+                              "enchant.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 617
+                              },
+                              "filler.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 530
+                              },
+                              "filler.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 530
+                              },
+                              "generator.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 641
+                              },
+                              "generator.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 685
+                              },
+                              "interface.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 489
+                              },
+                              "interface.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 459
+                              },
+                              "miner.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 569
+                              },
+                              "miner.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 548
+                              },
+                              "minerCore.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 490
+                              },
+                              "minerCore.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 481
+                              },
+                              "rf.activated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 508
+                              },
+                              "rf.unactivated.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 498
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "dimensionChanger.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 549
+                          },
+                          "portalIgniter.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 396
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1219
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 6518
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "mod_name": "ProjectRed-Compat.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ProjectRed-Compat.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ProjectRed-Compat.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 84496,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "compat": {
+                            "type": "directory",
+                            "children": {
+                              "liquid_redmetal.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8876
+                              },
+                              "liquid_redmetal.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 21
+                              },
+                              "liquid_redmetal_flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8914
+                              },
+                              "liquid_redmetal_flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 44
+                              },
+                              "liquid_redstone.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8022
+                              },
+                              "liquid_redstone.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "liquid_redstone_flow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7941
+                              },
+                              "liquid_redstone_flow.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 44
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 466
+          },
+          "mrtjp": {
+            "type": "directory",
+            "children": {
+              "projectred": {
+                "type": "directory",
+                "children": {
+                  "ProjectRedCompatibility$.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1620
+                  },
+                  "ProjectRedCompatibility.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1744
+                  },
+                  "compatibility": {
+                    "type": "directory",
+                    "children": {
+                      "CompatibilityProxy$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 468
+                      },
+                      "CompatibilityProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 925
+                      },
+                      "CompatibilityProxy_client.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 662
+                      },
+                      "CompatibilityProxy_server.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1629
+                      },
+                      "IPRPlugin$class.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 941
+                      },
+                      "IPRPlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 796
+                      },
+                      "Services$$anonfun$doInit$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1137
+                      },
+                      "Services$$anonfun$doPostInit$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1153
+                      },
+                      "Services$$anonfun$doPreInit$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1149
+                      },
+                      "Services$$anonfun$servicesLoad$1$$anonfun$apply$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1355
+                      },
+                      "Services$$anonfun$servicesLoad$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2250
+                      },
+                      "Services$.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3186
+                      },
+                      "Services.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1771
+                      },
+                      "computercraft": {
+                        "type": "directory",
+                        "children": {
+                          "CCPRBundledRedstoneProvider$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2116
+                          },
+                          "CCPRBundledRedstoneProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1946
+                          },
+                          "PRCCBundledTileInteraction$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2252
+                          },
+                          "PRCCBundledTileInteraction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2355
+                          },
+                          "PluginCC_BundledCable$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1827
+                          },
+                          "PluginCC_BundledCable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1303
+                          }
+                        }
+                      },
+                      "cptcoloredlights": {
+                        "type": "directory",
+                        "children": {
+                          "PluginColoredLights$$anonfun$preInit$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1986
+                          },
+                          "PluginColoredLights$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2143
+                          },
+                          "PluginColoredLights.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1634
+                          }
+                        }
+                      },
+                      "tconstruct": {
+                        "type": "directory",
+                        "children": {
+                          "LiquidFiniteSubstance.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2909
+                          },
+                          "PluginTConstruct$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7841
+                          },
+                          "PluginTConstruct.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4478
+                          }
+                        }
+                      },
+                      "thermalexpansion": {
+                        "type": "directory",
+                        "children": {
+                          "PluginThermalExpansion$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2202
+                          },
+                          "PluginThermalExpansion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1322
+                          }
+                        }
+                      },
+                      "treecapitator": {
+                        "type": "directory",
+                        "children": {
+                          "AfterWorldCheck$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1948
+                          },
+                          "AfterWorldCheck.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 736
+                          },
+                          "PluginTreecapitator$.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1615
+                          },
+                          "PluginTreecapitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1291
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 485
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 14720
+          }
+        }
+      }
+    }
+  }
+}

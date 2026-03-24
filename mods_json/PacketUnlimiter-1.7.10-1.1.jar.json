@@ -1,0 +1,82 @@
+{
+  "mod_name": "PacketUnlimiter-1.7.10-1.1.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\PacketUnlimiter-1.7.10-1.1.jar",
+  "mod_type": "jar",
+  "tree": {
+    "PacketUnlimiter-1.7.10-1.1.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 8066,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 137
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "gamerforea": {
+                "type": "directory",
+                "children": {
+                  "packetunlimiter": {
+                    "type": "directory",
+                    "children": {
+                      "asm": {
+                        "type": "directory",
+                        "children": {
+                          "ASMHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1789
+                          },
+                          "ASMTransformer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3221
+                          },
+                          "PacketBufferPatch.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2496
+                          }
+                        }
+                      },
+                      "CoreMod.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3080
+                      },
+                      "ModContainer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1584
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          }
+        }
+      }
+    }
+  }
+}

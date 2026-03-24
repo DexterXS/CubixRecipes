@@ -1,0 +1,147 @@
+{
+  "mod_name": "OPFrame.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\OPFrame.jar",
+  "mod_type": "jar",
+  "tree": {
+    "OPFrame.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 30554,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "opframe": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 38
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "creativemd": {
+                "type": "directory",
+                "children": {
+                  "opf": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "BlockPicFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11426
+                          },
+                          "TileEntityPicFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7637
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "DownloadThread.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3916
+                          },
+                          "OPFrameClient$PrefabImage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1559
+                          },
+                          "OPFrameClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6909
+                          },
+                          "PicBlockRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2769
+                          },
+                          "PicItemRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4113
+                          },
+                          "PicTileRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3627
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "SubContainerPic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1892
+                          },
+                          "SubGuiPic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6389
+                          }
+                        }
+                      },
+                      "OPFrame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3380
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 96
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 26
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4871
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,802 @@
+{
+  "mod_name": "AE2_Stuff-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\AE2_Stuff-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "AE2_Stuff-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 240167,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "ae2stuff": {
+                    "type": "directory",
+                    "children": {
+                      "AE2Stuff$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 894
+                      },
+                      "utils": {
+                        "type": "directory",
+                        "children": {
+                          "VisualizerData$VLinkFlag.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2997
+                          },
+                          "VisualizerData$VNodeFlag.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3489
+                          },
+                          "SecurityUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3193
+                          },
+                          "VisualizerData$VisualisationData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6274
+                          },
+                          "VisualizerData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 765
+                          },
+                          "VisualiserPlayerTracker$Entry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 931
+                          },
+                          "VisualizerData$VNode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2952
+                          },
+                          "VisualizerMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4276
+                          },
+                          "ConnectionUtil.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7752
+                          },
+                          "VisualizerData$VLink.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3279
+                          },
+                          "VisualiserPlayerTracker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4460
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "MsgVisualisationMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6349
+                          },
+                          "SetSubstitutePatternButtonPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1841
+                          },
+                          "NetworkClientHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2615
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9279
+                          },
+                          "EncoderRecipePacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2871
+                          },
+                          "AE2StuffPackets.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8179
+                          },
+                          "EncodePatternButtonPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1475
+                          },
+                          "NetworkServerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2454
+                          },
+                          "MsgVisualisationData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1680
+                          },
+                          "AE2StuffDefaultPacket.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7831
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerEncoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14852
+                          },
+                          "ContainerCrystalGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5339
+                          },
+                          "slots": {
+                            "type": "directory",
+                            "children": {
+                              "SlotFakeCraftingResult.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1208
+                              },
+                              "SlotFakeEncodedPattern.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1202
+                              },
+                              "SlotRestricted.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1106
+                              },
+                              "SlotFakeCrafting.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2139
+                              }
+                            }
+                          },
+                          "ContainerAdvancedInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10839
+                          },
+                          "ContainerCrystalGrower$SlotUpgrades.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1855
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GuiEncoder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5847
+                              },
+                              "GuiAdvancedInscriber.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8383
+                              },
+                              "ButtonLocked.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6555
+                              },
+                              "GuiCrystalGrower.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3380
+                              }
+                            }
+                          },
+                          "MouseEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4626
+                          },
+                          "VisualiserOverlayRender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13616
+                          },
+                          "ClientEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4206
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7520
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1568
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockCrystalGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6745
+                          },
+                          "BlockInfinityWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5222
+                          },
+                          "BlockEncoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9895
+                          },
+                          "BlockAdvancedInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7615
+                          },
+                          "BlockAdvancedWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4219
+                          },
+                          "BlockUltimateWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5299
+                          },
+                          "BlockWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7544
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileCrystalGrower.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14602
+                          },
+                          "TileAdvancedWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 615
+                          },
+                          "TileUltimateWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 659
+                          },
+                          "TileWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9765
+                          },
+                          "TileEncoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9100
+                          },
+                          "TileInscriber.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 20910
+                          },
+                          "TileInfinityWireless.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 629
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "ItemWirelessStaff.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11058
+                          },
+                          "ItemVisualiser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17850
+                          },
+                          "AE2SJEItemBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2860
+                          }
+                        }
+                      },
+                      "Ae2StuffConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5124
+                      },
+                      "AE2StuffGuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3242
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "EncoderRecipeOverlay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5864
+                          },
+                          "NeiAe2Stuff.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3032
+                          }
+                        }
+                      },
+                      "me": {
+                        "type": "directory",
+                        "children": {
+                          "cache": {
+                            "type": "directory",
+                            "children": {
+                              "CountGridCache.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5655
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "AE2Stuff.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5472
+                      },
+                      "AE2StuffLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2318
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1804
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 155
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 262
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3779
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "ae2stuff": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "grower": {
+                            "type": "directory",
+                            "children": {
+                              "main_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 905
+                              },
+                              "main_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2923
+                              },
+                              "main_on.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 191
+                              }
+                            }
+                          },
+                          "ult_wireless": {
+                            "type": "directory",
+                            "children": {
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 279
+                              },
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 339
+                              },
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 275
+                              },
+                              "top_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6911
+                              },
+                              "side_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6873
+                              },
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 306
+                              }
+                            }
+                          },
+                          "encoder": {
+                            "type": "directory",
+                            "children": {
+                              "top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 743
+                              },
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 743
+                              },
+                              "side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 157
+                              },
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 505
+                              }
+                            }
+                          },
+                          "inf_wireless": {
+                            "type": "directory",
+                            "children": {
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 275
+                              },
+                              "side_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6873
+                              },
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1821
+                              },
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1700
+                              },
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1917
+                              },
+                              "top_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6911
+                              }
+                            }
+                          },
+                          "adv_wireless": {
+                            "type": "directory",
+                            "children": {
+                              "top_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6911
+                              },
+                              "side_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6873
+                              },
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 273
+                              },
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 320
+                              },
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 339
+                              },
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 275
+                              }
+                            }
+                          },
+                          "wireless": {
+                            "type": "directory",
+                            "children": {
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 840
+                              },
+                              "top_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 627
+                              },
+                              "side_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6873
+                              },
+                              "top_dis.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6911
+                              },
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 844
+                              },
+                              "top_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 607
+                              }
+                            }
+                          },
+                          "inscriber": {
+                            "type": "directory",
+                            "children": {
+                              "side_on.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 791
+                              },
+                              "top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 157
+                              },
+                              "side_on.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 241
+                              },
+                              "side_off.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 298
+                              }
+                            }
+                          },
+                          "icons": {
+                            "type": "directory",
+                            "children": {
+                              "lock": {
+                                "type": "directory",
+                                "children": {
+                                  "off.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 209
+                                  },
+                                  "on.png": {
+                                    "type": "file",
+                                    "extension": ".png",
+                                    "size": 171
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "grower.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1019
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "visualizer.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 279
+                          },
+                          "wireless_staff.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 411
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "inscriber.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2048
+                          },
+                          "encoder.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1226
+                          },
+                          "grower.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5439
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2784
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 2119
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 160
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 304
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 2042
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 9927
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "mod_name": "CubixCrops-0.9.2-release-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCrops-0.9.2-release-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCrops-0.9.2-release-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 21937,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubix_crops": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "booster_block_x32.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2953
+                          },
+                          "booster_block_x64.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2942
+                          },
+                          "booster_block_x32.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 57
+                          },
+                          "booster_block_x8.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 57
+                          },
+                          "booster_block_x8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2690
+                          },
+                          "booster_block_x64.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 57
+                          },
+                          "booster_block_x16.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 57
+                          },
+                          "booster_block_x16.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2939
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 616
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 616
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          }
+                        }
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ua": {
+            "type": "directory",
+            "children": {
+              "serstarstory": {
+                "type": "directory",
+                "children": {
+                  "cubix_crops": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "BlockAdvancedCropBooster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3147
+                          },
+                          "ItemBlockAdvancedCropBooster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2909
+                          }
+                        }
+                      },
+                      "tiles": {
+                        "type": "directory",
+                        "children": {
+                          "TileAdvancedCropBuster.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1216
+                          }
+                        }
+                      },
+                      "CubixCropsConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1051
+                      },
+                      "CubixCrops.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1738
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 315
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 483
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1034
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,402 @@
+{
+  "mod_name": "CubixInfinityEnderChest-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixInfinityEnderChest-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixInfinityEnderChest-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 522666,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "cubixinfinityenderchest": {
+                    "type": "directory",
+                    "children": {
+                      "ProxyCommon.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3275
+                      },
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "block": {
+                            "type": "directory",
+                            "children": {
+                              "InfinityBlocks.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2652
+                              },
+                              "chest": {
+                                "type": "directory",
+                                "children": {
+                                  "BlockInfinityChest.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 8365
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "tile": {
+                            "type": "directory",
+                            "children": {
+                              "TileEntityInfinityEnderChest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6597
+                              },
+                              "TileHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2398
+                              }
+                            }
+                          },
+                          "utils": {
+                            "type": "directory",
+                            "children": {
+                              "IInfinityEnderChest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3137
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerInfinityEnderChest$SlotInventory.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 950
+                              },
+                              "ContainerInfinityEnderChest$SlotTypes.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3740
+                              },
+                              "ContainerInfinityEnderChest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 24853
+                              }
+                            }
+                          },
+                          "InfinityEnderChestHolder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4056
+                          },
+                          "InfinityEnderChestPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8307
+                          },
+                          "OfflineInventoryInfinityEnderChest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2020
+                          },
+                          "GuiHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3243
+                          },
+                          "items": {
+                            "type": "directory",
+                            "children": {
+                              "improvement": {
+                                "type": "directory",
+                                "children": {
+                                  "ItemImprovementInfinityChest.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7053
+                                  }
+                                }
+                              },
+                              "InfinityItems.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2774
+                              }
+                            }
+                          },
+                          "InventoryInfinityEnderChest.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11555
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "ClientData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5615
+                          },
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderItemTileEntityInfinityEnderChest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3913
+                              },
+                              "RenderTileEntityInfinityEnderChest.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6436
+                              },
+                              "RenderItemTileEntityInfinityEnderChest$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1419
+                              }
+                            }
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "container": {
+                                "type": "directory",
+                                "children": {
+                                  "utils": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ItemStackDrawUtils.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6387
+                                      }
+                                    }
+                                  },
+                                  "GuiContainerInfinityEnderChest.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 13994
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "package-info.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 158
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "PacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4362
+                          },
+                          "NetworkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14650
+                          },
+                          "IPacketHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 684
+                          },
+                          "ByteUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6015
+                          }
+                        }
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2733
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6658
+                      },
+                      "Core$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 808
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2355
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixinfinityenderchest": {
+                "type": "directory",
+                "children": {
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "chest": {
+                        "type": "directory",
+                        "children": {
+                          "infinity_chest.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 53504
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "bg_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 52758
+                          },
+                          "bg_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 79317
+                          },
+                          "bg_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 67994
+                          },
+                          "bg_5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 136840
+                          },
+                          "bg_1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 40974
+                          }
+                        }
+                      },
+                      "chest": {
+                        "type": "directory",
+                        "children": {
+                          "infinity_chest.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3681
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "improvementInfinityChest_3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1164
+                          },
+                          "improvementInfinityChest_5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1152
+                          },
+                          "improvementInfinityChest_2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1142
+                          },
+                          "improvementInfinityChest_4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1160
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 442
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 659
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "cubixinfinitychest_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 596
+              },
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 103
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 309
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 711
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5897
+          }
+        }
+      }
+    }
+  }
+}

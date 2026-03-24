@@ -1,0 +1,397 @@
+{
+  "mod_name": "CubixTransmitters-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixTransmitters-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixTransmitters-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 101188,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              }
+            }
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "decentstudio": {
+                "type": "directory",
+                "children": {
+                  "cubixtransmitters": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "tile": {
+                            "type": "directory",
+                            "children": {
+                              "TileBlockTransmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 21567
+                              }
+                            }
+                          },
+                          "BlockTransmitter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13279
+                          }
+                        }
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "render": {
+                            "type": "directory",
+                            "children": {
+                              "RenderTransmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9346
+                              },
+                              "RenderTransmitter$RenderItemBlockTransmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4319
+                              },
+                              "RenderTransmitterConnection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8792
+                              },
+                              "RenderTransmitter$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1137
+                              },
+                              "RenderTransmitter$RenderBlockTransmitter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3785
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "compat": {
+                        "type": "directory",
+                        "children": {
+                          "waila": {
+                            "type": "directory",
+                            "children": {
+                              "WailaProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8638
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "dto": {
+                            "type": "directory",
+                            "children": {
+                              "TransmitterSettings.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1378
+                              },
+                              "BlockedTilesSettings.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1191
+                              },
+                              "ConnectionSettings.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 951
+                              },
+                              "ConnectionSettings$ConnectionSettingsBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1287
+                              },
+                              "BlockedTilesSettings$BlockedTilesSettingsBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1588
+                              },
+                              "TransmitterSettings$TransmitterSettingsBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1571
+                              }
+                            }
+                          },
+                          "SettingsConfig$SettingsConfigBuilder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2597
+                          },
+                          "SettingsConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2810
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "EventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1307
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "ItemConnector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4562
+                          },
+                          "ItemBlockTransmitter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5688
+                          }
+                        }
+                      },
+                      "manager": {
+                        "type": "directory",
+                        "children": {
+                          "ConnectorManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16982
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "C0PacketSyncConfig$Handler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1734
+                          },
+                          "C0PacketSyncConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1391
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7597
+                          },
+                          "CommonProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1207
+                          }
+                        }
+                      },
+                      "util": {
+                        "type": "directory",
+                        "children": {
+                          "Registry.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4734
+                          },
+                          "ConnectorMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4662
+                          },
+                          "TransmitterType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4196
+                          },
+                          "TransmitterMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3030
+                          },
+                          "BlockPos.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6111
+                          },
+                          "Connection.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3075
+                          },
+                          "Constants.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4143
+                          },
+                          "Registry$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 878
+                          }
+                        }
+                      },
+                      "CubixTransmitters.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13994
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixtransmitters": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 3810
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5415
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "transmitter.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 5198
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "transmitter_insertion_hybrid.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 537
+                          },
+                          "transmitter_extraction_advanced.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 544
+                          },
+                          "transmitter_extraction_perfect.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 562
+                          },
+                          "transmitter_extraction_hybrid.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 567
+                          },
+                          "transmitter_extraction_basic.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 512
+                          },
+                          "transmitter_insertion_advanced.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 565
+                          },
+                          "transmitter_insertion_basic.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 534
+                          },
+                          "transmitter_insertion_perfect.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 556
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "connector.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4536
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 470
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 718
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4658
+          }
+        }
+      }
+    }
+  }
+}

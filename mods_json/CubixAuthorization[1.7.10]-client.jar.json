@@ -1,0 +1,112 @@
+{
+  "mod_name": "CubixAuthorization[1.7.10]-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixAuthorization[1.7.10]-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixAuthorization[1.7.10]-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 6425,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "ru": {
+            "type": "directory",
+            "children": {
+              "bestfoxy": {
+                "type": "directory",
+                "children": {
+                  "authorization": {
+                    "type": "directory",
+                    "children": {
+                      "common": {
+                        "type": "directory",
+                        "children": {
+                          "mixins": {
+                            "type": "directory",
+                            "children": {
+                              "client": {
+                                "type": "directory",
+                                "children": {
+                                  "package-info.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 152
+                                  },
+                                  "MixinPacketLoginStartClient.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2075
+                                  },
+                                  "MixinMain.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1537
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "References.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 609
+                      },
+                      "Core.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1484
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mixins.authorization.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 384
+          },
+          "mixins.authorization.refmap.json": {
+            "type": "file",
+            "extension": ".json",
+            "size": 520
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 265
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 297
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 1861
+          }
+        }
+      }
+    }
+  }
+}

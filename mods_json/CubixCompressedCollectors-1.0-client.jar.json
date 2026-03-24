@@ -1,0 +1,692 @@
+{
+  "mod_name": "CubixCompressedCollectors-1.0-client.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixCompressedCollectors-1.0-client.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixCompressedCollectors-1.0-client.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 151898,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixcollectors": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "sub": {
+                                "type": "directory",
+                                "children": {
+                                  "TileCollector5.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector8.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector2.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector10.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 755
+                                  },
+                                  "TileCollector3.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector4.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector9.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector6.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector11.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 779
+                                  },
+                                  "TileCollector7.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 750
+                                  },
+                                  "TileCollector1.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 751
+                                  }
+                                }
+                              },
+                              "CollectorType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2180
+                              },
+                              "TileCollector.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5391
+                              }
+                            }
+                          },
+                          "NeutroniumBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3427
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "GUICollector.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1876
+                              },
+                              "CollectorGUIHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1721
+                              }
+                            }
+                          },
+                          "container": {
+                            "type": "directory",
+                            "children": {
+                              "CollectorContainer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1938
+                              },
+                              "CollectorContainer$SlotOutput.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 823
+                              }
+                            }
+                          },
+                          "itemblock": {
+                            "type": "directory",
+                            "children": {
+                              "NautroniumItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2155
+                              },
+                              "CollectorItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1277
+                              }
+                            }
+                          },
+                          "CollectorBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4666
+                          },
+                          "CollectorTileBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8021
+                          }
+                        }
+                      },
+                      "api": {
+                        "type": "directory",
+                        "children": {
+                          "IRarityBlock.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 191
+                          },
+                          "Direction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4489
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CollectorConfiguration.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3019
+                          },
+                          "CollectorInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 676
+                          },
+                          "CollectorTab.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2116
+                          },
+                          "CubixCollectors.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2824
+                          }
+                        }
+                      },
+                      "utility": {
+                        "type": "directory",
+                        "children": {
+                          "Utilities.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5042
+                          },
+                          "ItemStackUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5591
+                          },
+                          "ItemStackUtils$AdjacentInv.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 714
+                          },
+                          "CollectorRarity.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1148
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "ServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3731
+                          },
+                          "ClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1805
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixcollectors": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "compressedNeutroniumX5.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4749
+                          },
+                          "neutorniumCollectorX1_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2044
+                          },
+                          "compressedNeutroniumX6.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "neutorniumCollectorX11_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2040
+                          },
+                          "compressedNeutroniumX7.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5268
+                          },
+                          "neutorniumCollectorX7_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2052
+                          },
+                          "neutorniumCollectorX5_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2120
+                          },
+                          "compressedNeutroniumX3.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "neutorniumCollectorX9_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "compressedNeutroniumX3.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5033
+                          },
+                          "neutorniumCollectorX2_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2059
+                          },
+                          "neutorniumCollectorX4_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2103
+                          },
+                          "neutorniumCollectorX2_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX6_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2128
+                          },
+                          "neutorniumCollectorX8_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2063
+                          },
+                          "neutorniumCollectorX7_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX8_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2095
+                          },
+                          "compressedNeutroniumX1.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5083
+                          },
+                          "neutorniumCollectorX10_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2070
+                          },
+                          "neutorniumCollectorX7_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2109
+                          },
+                          "compressedNeutroniumX2.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "neutorniumCollectorX1_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2098
+                          },
+                          "neutorniumCollectorX11_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "compressedNeutroniumX8.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5027
+                          },
+                          "neutorniumCollectorX5_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2114
+                          },
+                          "neutorniumCollectorX5_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2065
+                          },
+                          "neutorniumCollectorX1_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2111
+                          },
+                          "neutorniumCollectorX4_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2116
+                          },
+                          "neutorniumCollectorX6_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX9_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2096
+                          },
+                          "neutorniumCollectorX11_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2105
+                          },
+                          "neutorniumCollectorX3_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "compressedNeutroniumX1.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "compressedNeutroniumX6.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5263
+                          },
+                          "neutorniumCollectorX2_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2118
+                          },
+                          "neutorniumCollectorX10_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2110
+                          },
+                          "neutorniumCollectorX4_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2065
+                          },
+                          "neutorniumCollectorX1_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX2_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2104
+                          },
+                          "neutorniumCollectorX10_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2103
+                          },
+                          "neutorniumCollectorX6_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2082
+                          },
+                          "compressedNeutroniumX4.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "compressedNeutroniumX4.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4775
+                          },
+                          "neutorniumCollectorX3_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2046
+                          },
+                          "compressedNeutroniumX5.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "neutorniumCollectorX9_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2124
+                          },
+                          "neutorniumCollectorX5_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX11_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2118
+                          },
+                          "neutorniumCollectorX9_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2065
+                          },
+                          "compressedNeutroniumX8.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "compressedNeutroniumX2.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5261
+                          },
+                          "neutorniumCollectorX4_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX3_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2103
+                          },
+                          "neutorniumCollectorX3_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2128
+                          },
+                          "compressedNeutroniumX7.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 344
+                          },
+                          "neutorniumCollectorX8_front.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2140
+                          },
+                          "neutorniumCollectorX7_top.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2105
+                          },
+                          "neutorniumCollectorX8_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX10_front.png.mcmeta": {
+                            "type": "file",
+                            "extension": ".mcmeta",
+                            "size": 49
+                          },
+                          "neutorniumCollectorX6_side.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2054
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "gui_collectors.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12645
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1489
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 1489
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 47
+              },
+              "CubixCompressedCollectors.kotlin_module": {
+                "type": "file",
+                "extension": ".kotlin_module",
+                "size": 24
+              }
+            }
+          },
+          "pack.mcmeta": {
+            "type": "file",
+            "extension": ".mcmeta",
+            "size": 90
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 390
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 4014
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 5587
+          }
+        }
+      }
+    }
+  }
+}

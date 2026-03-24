@@ -1,0 +1,4377 @@
+{
+  "mod_name": "ThermalExpansion-[1.7.10]4.1.5-248.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\ThermalExpansion-[1.7.10]4.1.5-248.jar",
+  "mod_type": "jar",
+  "tree": {
+    "ThermalExpansion-[1.7.10]4.1.5-248.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 2625058,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 125
+              }
+            }
+          },
+          "cofh": {
+            "type": "directory",
+            "children": {
+              "thermalexpansion": {
+                "type": "directory",
+                "children": {
+                  "ThermalExpansion$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 541
+                  },
+                  "ThermalExpansion$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 732
+                  },
+                  "ThermalExpansion$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 725
+                  },
+                  "ThermalExpansion$4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 778
+                  },
+                  "ThermalExpansion.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 15934
+                  },
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "CraftingHandlers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 847
+                          },
+                          "IChargerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 293
+                          },
+                          "ICrucibleHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 303
+                          },
+                          "IFurnaceHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 293
+                          },
+                          "IInsolatorHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 388
+                          },
+                          "IPulverizerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 330
+                          },
+                          "ISawmillHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 324
+                          },
+                          "ISmelterHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 384
+                          },
+                          "ITransposerHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 591
+                          },
+                          "recipes": {
+                            "type": "directory",
+                            "children": {
+                              "IChargerRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 252
+                              },
+                              "ICrucibleRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 297
+                              },
+                              "IFurnaceRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 281
+                              },
+                              "IInsolatorRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 362
+                              },
+                              "IPulverizerRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 329
+                              },
+                              "ISawmillRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 323
+                              },
+                              "ISmelterRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 358
+                              },
+                              "ITransposerRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 340
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "fuels": {
+                        "type": "directory",
+                        "children": {
+                          "FuelHandlers.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 598
+                          },
+                          "ICompressionHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 284
+                          },
+                          "IEnervationHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 261
+                          },
+                          "IMagmaticHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 233
+                          },
+                          "IReactantHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 353
+                          },
+                          "ISteamHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 251
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "block": {
+                    "type": "directory",
+                    "children": {
+                      "BlockTEBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6709
+                      },
+                      "TEBlocks.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4727
+                      },
+                      "TileAugmentable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9059
+                      },
+                      "TileInventory$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 946
+                      },
+                      "TileInventory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11066
+                      },
+                      "TilePowered.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3105
+                      },
+                      "TileRSControl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4779
+                      },
+                      "TileReconfigurable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4321
+                      },
+                      "TileTEBase$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 847
+                      },
+                      "TileTEBase$EnergyConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1597
+                      },
+                      "TileTEBase$SideConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 546
+                      },
+                      "TileTEBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5534
+                      },
+                      "cache": {
+                        "type": "directory",
+                        "children": {
+                          "BlockCache$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1266
+                          },
+                          "BlockCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12660
+                          },
+                          "ItemBlockCache$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 920
+                          },
+                          "ItemBlockCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3308
+                          },
+                          "TileCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10769
+                          }
+                        }
+                      },
+                      "cell": {
+                        "type": "directory",
+                        "children": {
+                          "BlockCell$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "BlockCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11577
+                          },
+                          "ItemBlockCell$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 905
+                          },
+                          "ItemBlockCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5301
+                          },
+                          "TileCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11731
+                          },
+                          "TileCellCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3097
+                          }
+                        }
+                      },
+                      "device": {
+                        "type": "directory",
+                        "children": {
+                          "BlockDevice$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1074
+                          },
+                          "BlockDevice$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1443
+                          },
+                          "BlockDevice.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12077
+                          },
+                          "ItemBlockDevice.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3279
+                          },
+                          "TileActivator$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 553
+                          },
+                          "TileActivator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16461
+                          },
+                          "TileBreaker.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7906
+                          },
+                          "TileBuffer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5896
+                          },
+                          "TileChunkLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3045
+                          },
+                          "TileCollector.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8872
+                          },
+                          "TileDeviceBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4068
+                          },
+                          "TileExtender.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8186
+                          },
+                          "TileLexicon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 296
+                          },
+                          "TileNullifier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6195
+                          },
+                          "TilePump.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6288
+                          },
+                          "TileWorkbenchFalse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3144
+                          }
+                        }
+                      },
+                      "dynamo": {
+                        "type": "directory",
+                        "children": {
+                          "BlockDynamo$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 969
+                          },
+                          "BlockDynamo$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1284
+                          },
+                          "BlockDynamo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10628
+                          },
+                          "ItemBlockDynamo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3141
+                          },
+                          "TileDynamoBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16362
+                          },
+                          "TileDynamoCompression.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7257
+                          },
+                          "TileDynamoEnervation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5387
+                          },
+                          "TileDynamoMagmatic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6131
+                          },
+                          "TileDynamoReactant.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8678
+                          },
+                          "TileDynamoSteam.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10128
+                          }
+                        }
+                      },
+                      "ender": {
+                        "type": "directory",
+                        "children": {
+                          "BlockEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8850
+                          },
+                          "ItemBlockEnder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3784
+                          },
+                          "TileTesseract$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 871
+                          },
+                          "TileTesseract$PacketInfoID.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1195
+                          },
+                          "TileTesseract$TransferMode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1280
+                          },
+                          "TileTesseract.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 21503
+                          }
+                        }
+                      },
+                      "light": {
+                        "type": "directory",
+                        "children": {
+                          "BlockLight$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 940
+                          },
+                          "BlockLight$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1313
+                          },
+                          "BlockLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12440
+                          },
+                          "ItemBlockLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3384
+                          },
+                          "TileLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7075
+                          },
+                          "TileLightFalse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1350
+                          }
+                        }
+                      },
+                      "machine": {
+                        "type": "directory",
+                        "children": {
+                          "BlockMachine$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1339
+                          },
+                          "BlockMachine$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1676
+                          },
+                          "BlockMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16130
+                          },
+                          "ItemBlockMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4654
+                          },
+                          "TileAccumulator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10232
+                          },
+                          "TileAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11900
+                          },
+                          "TileCharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9529
+                          },
+                          "TileCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11169
+                          },
+                          "TileExtruder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13527
+                          },
+                          "TileFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6812
+                          },
+                          "TileInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12673
+                          },
+                          "TileMachineBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13721
+                          },
+                          "TilePrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10314
+                          },
+                          "TilePulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7432
+                          },
+                          "TileSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7697
+                          },
+                          "TileSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9708
+                          },
+                          "TileTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 17804
+                          }
+                        }
+                      },
+                      "plate": {
+                        "type": "directory",
+                        "children": {
+                          "BlockPlate$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1050
+                          },
+                          "BlockPlate$PlateMaterial.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 543
+                          },
+                          "BlockPlate$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1553
+                          },
+                          "BlockPlate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11787
+                          },
+                          "ItemBlockPlate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2454
+                          },
+                          "TilePlateBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7568
+                          },
+                          "TilePlateCharge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5688
+                          },
+                          "TilePlateExcursion.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8799
+                          },
+                          "TilePlateExcursionClient$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2678
+                          },
+                          "TilePlateExcursionClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2665
+                          },
+                          "TilePlateImpulse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5342
+                          },
+                          "TilePlatePoweredBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3266
+                          },
+                          "TilePlateSignal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6892
+                          },
+                          "TilePlateTeleporter$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 939
+                          },
+                          "TilePlateTeleporter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 18379
+                          },
+                          "TilePlateTranslocate.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6843
+                          }
+                        }
+                      },
+                      "simple": {
+                        "type": "directory",
+                        "children": {
+                          "BlockAirBarrier.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 501
+                          },
+                          "BlockAirBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2195
+                          },
+                          "BlockAirForce.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4447
+                          },
+                          "BlockAirLight$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 836
+                          },
+                          "BlockAirLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1655
+                          },
+                          "BlockAirSignal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2730
+                          },
+                          "BlockFrame$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1229
+                          },
+                          "BlockFrame$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1797
+                          },
+                          "BlockFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13261
+                          },
+                          "BlockGlass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5878
+                          },
+                          "BlockRockwool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3796
+                          },
+                          "ItemBlockFrame$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1069
+                          },
+                          "ItemBlockFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1500
+                          },
+                          "ItemBlockGlass.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 949
+                          },
+                          "ItemBlockRockwool.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1724
+                          }
+                        }
+                      },
+                      "sponge": {
+                        "type": "directory",
+                        "children": {
+                          "BlockSponge$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 866
+                          },
+                          "BlockSponge$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1177
+                          },
+                          "BlockSponge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7299
+                          },
+                          "ItemBlockSponge$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 835
+                          },
+                          "ItemBlockSponge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5143
+                          },
+                          "TileSponge.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6012
+                          },
+                          "TileSpongeCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1970
+                          },
+                          "TileSpongeMagmatic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2693
+                          }
+                        }
+                      },
+                      "strongbox": {
+                        "type": "directory",
+                        "children": {
+                          "BlockStrongbox$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1326
+                          },
+                          "BlockStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7655
+                          },
+                          "ItemBlockStrongbox$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 980
+                          },
+                          "ItemBlockStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3885
+                          },
+                          "TileStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7705
+                          },
+                          "TileStrongboxCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1337
+                          }
+                        }
+                      },
+                      "tank": {
+                        "type": "directory",
+                        "children": {
+                          "BlockTank$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1251
+                          },
+                          "BlockTank.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9639
+                          },
+                          "ItemBlockTank$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 905
+                          },
+                          "ItemBlockTank.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5842
+                          },
+                          "TileTank.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9576
+                          },
+                          "TileTankCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2499
+                          }
+                        }
+                      },
+                      "workbench": {
+                        "type": "directory",
+                        "children": {
+                          "BlockWorkbench$Types.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1326
+                          },
+                          "BlockWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9078
+                          },
+                          "ItemBlockWorkbench$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 930
+                          },
+                          "ItemBlockWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2590
+                          },
+                          "TileWorkbench$PacketInfoID.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1367
+                          },
+                          "TileWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 12398
+                          },
+                          "TileWorkbenchCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2998
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "core": {
+                    "type": "directory",
+                    "children": {
+                      "Proxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1856
+                      },
+                      "ProxyClient.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3705
+                      },
+                      "TEAchievements.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4447
+                      },
+                      "TEProps$PacketID.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1101
+                      },
+                      "TEProps.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2620
+                      },
+                      "TeleportChannelRegistry$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1209
+                      },
+                      "TeleportChannelRegistry$Packet.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3516
+                      },
+                      "TeleportChannelRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2769
+                      }
+                    }
+                  },
+                  "entity": {
+                    "type": "directory",
+                    "children": {
+                      "projectile": {
+                        "type": "directory",
+                        "children": {
+                          "EntityFlorb.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7340
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "gui": {
+                    "type": "directory",
+                    "children": {
+                      "GuiConfigTE.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2169
+                      },
+                      "GuiConfigTEFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1169
+                      },
+                      "GuiHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1852
+                      },
+                      "TECreativeTab.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1289
+                      },
+                      "TECreativeTabFlorbs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1876
+                      },
+                      "client": {
+                        "type": "directory",
+                        "children": {
+                          "GuiAugmentableBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4177
+                          },
+                          "GuiCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3305
+                          },
+                          "GuiCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7105
+                          },
+                          "GuiLight$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1188
+                          },
+                          "GuiLight$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1265
+                          },
+                          "GuiLight$3.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1265
+                          },
+                          "GuiLight$4.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1265
+                          },
+                          "GuiLight$5.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2537
+                          },
+                          "GuiLight$6.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2537
+                          },
+                          "GuiLight$7.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2537
+                          },
+                          "GuiLight.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7884
+                          },
+                          "GuiSatchel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3084
+                          },
+                          "GuiStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3322
+                          },
+                          "GuiWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7795
+                          },
+                          "device": {
+                            "type": "directory",
+                            "children": {
+                              "GuiActivator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5343
+                              },
+                              "GuiBreaker.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1147
+                              },
+                              "GuiBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4767
+                              },
+                              "GuiCollector.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1153
+                              },
+                              "GuiLexicon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1773
+                              },
+                              "GuiNullifier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1165
+                              }
+                            }
+                          },
+                          "dynamo": {
+                            "type": "directory",
+                            "children": {
+                              "GuiDynamoBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4080
+                              },
+                              "GuiDynamoCompression.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1753
+                              },
+                              "GuiDynamoEnervation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2376
+                              },
+                              "GuiDynamoMagmatic.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1712
+                              },
+                              "GuiDynamoReactant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2809
+                              },
+                              "GuiDynamoSteam.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2606
+                              }
+                            }
+                          },
+                          "ender": {
+                            "type": "directory",
+                            "children": {
+                              "GuiTesseract$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1122
+                              },
+                              "GuiTesseract$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 888
+                              },
+                              "GuiTesseract$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1470
+                              },
+                              "GuiTesseract$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1448
+                              },
+                              "GuiTesseract$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2267
+                              },
+                              "GuiTesseract$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 822
+                              },
+                              "GuiTesseract.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8969
+                              }
+                            }
+                          },
+                          "machine": {
+                            "type": "directory",
+                            "children": {
+                              "GuiAccumulator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2187
+                              },
+                              "GuiAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3644
+                              },
+                              "GuiCharger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2668
+                              },
+                              "GuiCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3693
+                              },
+                              "GuiExtruder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5365
+                              },
+                              "GuiFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2867
+                              },
+                              "GuiInsolator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5276
+                              },
+                              "GuiPrecipitator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5329
+                              },
+                              "GuiPulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3323
+                              },
+                              "GuiSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3306
+                              },
+                              "GuiSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4905
+                              },
+                              "GuiTransposer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6486
+                              }
+                            }
+                          },
+                          "plate": {
+                            "type": "directory",
+                            "children": {
+                              "GuiPlateCharge.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4280
+                              },
+                              "GuiPlateExcursion.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5475
+                              },
+                              "GuiPlateImpulse.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6851
+                              },
+                              "GuiPlateSignal.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7416
+                              },
+                              "GuiPlateTeleport$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1588
+                              },
+                              "GuiPlateTeleport$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1463
+                              },
+                              "GuiPlateTeleport$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1690
+                              },
+                              "GuiPlateTeleport$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1246
+                              },
+                              "GuiPlateTeleport$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2195
+                              },
+                              "GuiPlateTeleport$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 845
+                              },
+                              "GuiPlateTeleport.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8518
+                              },
+                              "GuiPlateTranslocate.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6205
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "container": {
+                        "type": "directory",
+                        "children": {
+                          "ContainerSatchel.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5226
+                          },
+                          "ContainerStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4203
+                          },
+                          "ContainerTEBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3962
+                          },
+                          "ContainerWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7959
+                          },
+                          "ISchematicContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 342
+                          },
+                          "device": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerActivator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1261
+                              },
+                              "ContainerBuffer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 915
+                              },
+                              "ContainerLexicon.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1668
+                              },
+                              "ContainerNullifier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 726
+                              }
+                            }
+                          },
+                          "dynamo": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerDynamoEnervation.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1023
+                              },
+                              "ContainerDynamoReactant.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1018
+                              },
+                              "ContainerDynamoSteam.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1003
+                              }
+                            }
+                          },
+                          "machine": {
+                            "type": "directory",
+                            "children": {
+                              "ContainerAssembler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4468
+                              },
+                              "ContainerCharger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1335
+                              },
+                              "ContainerCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1130
+                              },
+                              "ContainerExtruder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 945
+                              },
+                              "ContainerFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1513
+                              },
+                              "ContainerInsolator$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 989
+                              },
+                              "ContainerInsolator$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1007
+                              },
+                              "ContainerInsolator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1436
+                              },
+                              "ContainerPrecipitator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1063
+                              },
+                              "ContainerPulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1259
+                              },
+                              "ContainerSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1244
+                              },
+                              "ContainerSmelter$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 967
+                              },
+                              "ContainerSmelter$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 985
+                              },
+                              "ContainerSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1448
+                              },
+                              "ContainerTransposer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1333
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "element": {
+                        "type": "directory",
+                        "children": {
+                          "ElementSlotOverlay.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2412
+                          },
+                          "ElementSlotOverlayAssembler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2114
+                          },
+                          "ListBoxElementEnderText.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1430
+                          },
+                          "TabConfigCell.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4137
+                          },
+                          "TabConfigTesseract.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5847
+                          },
+                          "TabSchematic.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4482
+                          }
+                        }
+                      },
+                      "slot": {
+                        "type": "directory",
+                        "children": {
+                          "SlotCraftingOutputWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4611
+                          },
+                          "SlotFalseCopyValidated.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 630
+                          },
+                          "SlotSatchelCreative.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1105
+                          },
+                          "SlotSpecificItemWorkbench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 720
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "item": {
+                    "type": "directory",
+                    "children": {
+                      "ItemAugment$AugmentEntry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 819
+                      },
+                      "ItemAugment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7320
+                      },
+                      "ItemCapacitor$Types.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1291
+                      },
+                      "ItemCapacitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8768
+                      },
+                      "ItemDiagram$Types.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1124
+                      },
+                      "ItemDiagram.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4360
+                      },
+                      "ItemFlorb.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5899
+                      },
+                      "ItemSatchel$Types.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1225
+                      },
+                      "ItemSatchel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8320
+                      },
+                      "TEAugments.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8045
+                      },
+                      "TEEquipment.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2920
+                      },
+                      "TEFlorbs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4099
+                      },
+                      "TEItems.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 13420
+                      },
+                      "tool": {
+                        "type": "directory",
+                        "children": {
+                          "ItemChiller.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3689
+                          },
+                          "ItemEnergyContainerBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3491
+                          },
+                          "ItemIgniter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3783
+                          },
+                          "ItemMiner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4273
+                          },
+                          "ItemMultimeter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4355
+                          },
+                          "ItemPump.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9426
+                          },
+                          "ItemToolBase.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5179
+                          },
+                          "ItemTransfuser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5608
+                          },
+                          "ItemWrench.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5596
+                          },
+                          "ItemWrenchBattle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5327
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "network": {
+                    "type": "directory",
+                    "children": {
+                      "PacketTEBase$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1057
+                      },
+                      "PacketTEBase$PacketTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1382
+                      },
+                      "PacketTEBase.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4945
+                      }
+                    }
+                  },
+                  "plugins": {
+                    "type": "directory",
+                    "children": {
+                      "TEPlugins$Plugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1937
+                      },
+                      "TEPlugins.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2313
+                      },
+                      "ee3": {
+                        "type": "directory",
+                        "children": {
+                          "EE3Plugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6676
+                          }
+                        }
+                      },
+                      "eio": {
+                        "type": "directory",
+                        "children": {
+                          "EIOPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2374
+                          }
+                        }
+                      },
+                      "forestry": {
+                        "type": "directory",
+                        "children": {
+                          "ForestryPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5236
+                          }
+                        }
+                      },
+                      "mfr": {
+                        "type": "directory",
+                        "children": {
+                          "MFRPlugin$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1477
+                          },
+                          "MFRPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1068
+                          }
+                        }
+                      },
+                      "nei": {
+                        "type": "directory",
+                        "children": {
+                          "NEIRecipeOverlayHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2918
+                          },
+                          "NEIThermalExpansionConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3224
+                          },
+                          "handlers": {
+                            "type": "directory",
+                            "children": {
+                              "NEIRecipeWrapper$RecipeType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1307
+                              },
+                              "NEIRecipeWrapper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2501
+                              },
+                              "RecipeHandlerBase$NEIRecipeBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3681
+                              },
+                              "RecipeHandlerBase.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 7127
+                              },
+                              "RecipeHandlerCharger$NEIRecipeCharger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1362
+                              },
+                              "RecipeHandlerCharger.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3723
+                              },
+                              "RecipeHandlerCraftingMachine$CachedMachineRecipe.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3213
+                              },
+                              "RecipeHandlerCraftingMachine.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5436
+                              },
+                              "RecipeHandlerCraftingSecure.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3995
+                              },
+                              "RecipeHandlerCraftingUpgrade.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4000
+                              },
+                              "RecipeHandlerCrucible$NEIRecipeCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1447
+                              },
+                              "RecipeHandlerCrucible.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5658
+                              },
+                              "RecipeHandlerFurnace$NEIRecipeFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1362
+                              },
+                              "RecipeHandlerFurnace.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4215
+                              },
+                              "RecipeHandlerInsolator$NEIRecipeInsolator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1985
+                              },
+                              "RecipeHandlerInsolator.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5384
+                              },
+                              "RecipeHandlerPulverizer$NEIRecipePulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2028
+                              },
+                              "RecipeHandlerPulverizer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4092
+                              },
+                              "RecipeHandlerSawmill$NEIRecipeSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1980
+                              },
+                              "RecipeHandlerSawmill.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4031
+                              },
+                              "RecipeHandlerSmelter$NEIRecipeSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1684
+                              },
+                              "RecipeHandlerSmelter.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4116
+                              },
+                              "RecipeHandlerTransposer$NEIRecipeTransposer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1710
+                              },
+                              "RecipeHandlerTransposer.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 6444
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "thaumcraft": {
+                        "type": "directory",
+                        "children": {
+                          "ThaumcraftPlugin.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4657
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "render": {
+                    "type": "directory",
+                    "children": {
+                      "RenderCache.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4096
+                      },
+                      "RenderCell.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7955
+                      },
+                      "RenderDynamo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6038
+                      },
+                      "RenderFrame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6372
+                      },
+                      "RenderLight$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 916
+                      },
+                      "RenderLight.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8703
+                      },
+                      "RenderMachine.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2187
+                      },
+                      "RenderPlate.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5163
+                      },
+                      "RenderSchematic.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2488
+                      },
+                      "RenderSponge.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2423
+                      },
+                      "RenderStrongbox.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4998
+                      },
+                      "RenderTank.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8590
+                      },
+                      "RenderTesseract.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7331
+                      },
+                      "RenderTesseractStarfield.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5867
+                      },
+                      "entity": {
+                        "type": "directory",
+                        "children": {
+                          "RenderEntityBlorb.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3171
+                          },
+                          "RenderEntityFlorb.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3265
+                          }
+                        }
+                      },
+                      "item": {
+                        "type": "directory",
+                        "children": {
+                          "RenderItemFlorb.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3160
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "ModelStrongbox.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1521
+                          }
+                        }
+                      },
+                      "particle": {
+                        "type": "directory",
+                        "children": {
+                          "ParticlePortal.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4284
+                          }
+                        }
+                      },
+                      "transformation": {
+                        "type": "directory",
+                        "children": {
+                          "TorchTransformation.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2299
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "APIWarden$ChargerHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 679
+                      },
+                      "APIWarden$CompressionHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 745
+                      },
+                      "APIWarden$CrucibleHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 691
+                      },
+                      "APIWarden$EnervationHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 564
+                      },
+                      "APIWarden$FurnaceHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 679
+                      },
+                      "APIWarden$InsolatorHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 785
+                      },
+                      "APIWarden$MagmaticHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 610
+                      },
+                      "APIWarden$PulverizerHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 726
+                      },
+                      "APIWarden$ReactantHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 794
+                      },
+                      "APIWarden$SawmillHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 714
+                      },
+                      "APIWarden$SmelterHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 777
+                      },
+                      "APIWarden$SteamHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 549
+                      },
+                      "APIWarden$TransposerHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1088
+                      },
+                      "APIWarden.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2221
+                      },
+                      "FMLEventHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1619
+                      },
+                      "FuelManager.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4762
+                      },
+                      "IMCHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9324
+                      },
+                      "TickHandlerClientConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1503
+                      },
+                      "Utils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5593
+                      },
+                      "crafting": {
+                        "type": "directory",
+                        "children": {
+                          "ChargerManager$RecipeCharger.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 905
+                          },
+                          "ChargerManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4277
+                          },
+                          "CrucibleManager$RecipeCrucible.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1062
+                          },
+                          "CrucibleManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6504
+                          },
+                          "ExtruderManager$RecipeExtruder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1148
+                          },
+                          "ExtruderManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1496
+                          },
+                          "FurnaceManager$ComparableItemStackFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2004
+                          },
+                          "FurnaceManager$RecipeFurnace.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1211
+                          },
+                          "FurnaceManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8880
+                          },
+                          "InsolatorManager$ComparableItemStackInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2126
+                          },
+                          "InsolatorManager$RecipeInsolator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1775
+                          },
+                          "InsolatorManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9869
+                          },
+                          "PrecipitatorManager$RecipePrecipitator.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 904
+                          },
+                          "PrecipitatorManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2315
+                          },
+                          "PulverizerManager$ComparableItemStackPulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2304
+                          },
+                          "PulverizerManager$RecipePulverizer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1360
+                          },
+                          "PulverizerManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16746
+                          },
+                          "RecipeMachine.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1991
+                          },
+                          "RecipeMachineUpgrade.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1937
+                          },
+                          "RecipeStyle.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2230
+                          },
+                          "SawmillManager$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 493
+                          },
+                          "SawmillManager$ComparableItemStackSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2251
+                          },
+                          "SawmillManager$RecipeSawmill.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1342
+                          },
+                          "SawmillManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9253
+                          },
+                          "SmelterManager$ComparableItemStackSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2333
+                          },
+                          "SmelterManager$RecipeSmelter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1524
+                          },
+                          "SmelterManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16899
+                          },
+                          "TECraftingHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6148
+                          },
+                          "TECraftingParser$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 909
+                          },
+                          "TECraftingParser.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15176
+                          },
+                          "TransposerManager$ComparableItemStackTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2307
+                          },
+                          "TransposerManager$RecipeTransposer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1332
+                          },
+                          "TransposerManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 10080
+                          }
+                        }
+                      },
+                      "helpers": {
+                        "type": "directory",
+                        "children": {
+                          "PatternHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 239
+                          },
+                          "ReconfigurableHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3275
+                          },
+                          "RedprintHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1942
+                          },
+                          "SchematicHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8621
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "powercrystals": {
+            "type": "directory",
+            "children": {
+              "minefactoryreloaded": {
+                "type": "directory",
+                "children": {
+                  "api": {
+                    "type": "directory",
+                    "children": {
+                      "FactoryRegistry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1478
+                      },
+                      "FertilizerType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1156
+                      },
+                      "IDeepStorageUnit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 349
+                      },
+                      "IFactoryFertilizer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 380
+                      },
+                      "ValuedItem.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1281
+                      },
+                      "rednet": {
+                        "type": "directory",
+                        "children": {
+                          "IRedNetOutputNode.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 462
+                          },
+                          "connectivity": {
+                            "type": "directory",
+                            "children": {
+                              "IRedNetConnection.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 363
+                              },
+                              "RedNetConnectionType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3492
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "thermalexpansion": {
+                "type": "directory",
+                "children": {
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "dynamo": {
+                            "type": "directory",
+                            "children": {
+                              "DynamoCompression.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3746
+                              },
+                              "DynamoEnervation.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3954
+                              },
+                              "DynamoSteam.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1279
+                              },
+                              "DynamoMagmatic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3739
+                              },
+                              "DynamoReactant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4060
+                              }
+                            }
+                          },
+                          "elements": {
+                            "type": "directory",
+                            "children": {
+                              "SlotsAssemblerCB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4501
+                              },
+                              "Slot_Grid_Schematic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2965
+                              },
+                              "Slider_Light.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2820
+                              },
+                              "SlotsAssembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3656
+                              },
+                              "SlotsCB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8004
+                              },
+                              "Slot_Output_Schematic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2868
+                              },
+                              "Slots.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2053
+                              }
+                            }
+                          },
+                          "workbench": {
+                            "type": "directory",
+                            "children": {
+                              "Workbench2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8138
+                              },
+                              "Workbench1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8032
+                              },
+                              "Workbench4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8157
+                              },
+                              "Workbench3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8137
+                              }
+                            }
+                          },
+                          "ender": {
+                            "type": "directory",
+                            "children": {
+                              "TesseractBound.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3961
+                              },
+                              "Tesseract.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 15138
+                              }
+                            }
+                          },
+                          "Cache.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4597
+                          },
+                          "machine": {
+                            "type": "directory",
+                            "children": {
+                              "Charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4283
+                              },
+                              "Furnace.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1301
+                              },
+                              "Precipitator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1366
+                              },
+                              "Accumulator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1099
+                              },
+                              "Extruder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1330
+                              },
+                              "Insolator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7022
+                              },
+                              "Transposer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 5419
+                              },
+                              "Pulverizer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1291
+                              },
+                              "Sawmill.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1302
+                              },
+                              "Smelter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6632
+                              },
+                              "Assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4425
+                              },
+                              "Crucible.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 1280
+                              }
+                            }
+                          },
+                          "plate": {
+                            "type": "directory",
+                            "children": {
+                              "Plate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8864
+                              },
+                              "Teleport.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13445
+                              }
+                            }
+                          },
+                          "device": {
+                            "type": "directory",
+                            "children": {
+                              "Lexicon.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3921
+                              },
+                              "Buffer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 8096
+                              },
+                              "Nullifier.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3890
+                              },
+                              "Activator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 13910
+                              },
+                              "Breaker.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3846
+                              }
+                            }
+                          },
+                          "NEIHandler.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7690
+                          },
+                          "Light.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 8171
+                          },
+                          "Cell.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 5063
+                          }
+                        }
+                      },
+                      "items": {
+                        "type": "directory",
+                        "children": {
+                          "satchel": {
+                            "type": "directory",
+                            "children": {
+                              "LatchFriends.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2833
+                              },
+                              "LatchPublic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2833
+                              },
+                              "SatchelBasic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3477
+                              },
+                              "LatchPrivate.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2833
+                              },
+                              "SatchelCreative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3458
+                              },
+                              "SatchelResonant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3387
+                              },
+                              "SatchelReinforced.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3431
+                              },
+                              "SatchelHardened.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3396
+                              }
+                            }
+                          },
+                          "augment": {
+                            "type": "directory",
+                            "children": {
+                              "DynamoEfficiency1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3331
+                              },
+                              "MachineSecondary1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3261
+                              },
+                              "DynamoOutput0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3309
+                              },
+                              "MachineFurnaceFood.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3318
+                              },
+                              "DynamoEfficiency0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3342
+                              },
+                              "MachineNull.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20607
+                              },
+                              "MachineExtruderBoost0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3272
+                              },
+                              "MachineSecondary0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3281
+                              },
+                              "MachineSpeed2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3269
+                              },
+                              "DynamoOutput1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3322
+                              },
+                              "DynamoCoilDuct.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18195
+                              },
+                              "MachineExtruderBoost1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3267
+                              },
+                              "MachineSpeed1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3273
+                              },
+                              "GeneralAutoInput.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3277
+                              },
+                              "GeneralReconfigSides.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3258
+                              },
+                              "DynamoOutput2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3306
+                              },
+                              "DynamoThrottle.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3357
+                              },
+                              "MachineExtruderBoost2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3273
+                              },
+                              "DynamoEfficiency2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3332
+                              },
+                              "GeneralRedstoneControl.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3238
+                              },
+                              "MachineSpeed0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3270
+                              },
+                              "MachineSecondary2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3278
+                              },
+                              "GeneralAutoOutput.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3314
+                              }
+                            }
+                          },
+                          "florb": {
+                            "type": "directory",
+                            "children": {
+                              "Florb.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3107
+                              },
+                              "FlorbMask.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 291
+                              },
+                              "FlorbMagmatic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3224
+                              },
+                              "FlorbOutline.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 122
+                              }
+                            }
+                          },
+                          "material": {
+                            "type": "directory",
+                            "children": {
+                              "Fertilizer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3107
+                              },
+                              "FertilizerRich.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3086
+                              },
+                              "SlagRich.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 483
+                              },
+                              "DustWood.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 415
+                              },
+                              "DustWoodCompressed.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 366
+                              },
+                              "PneumaticServo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 476
+                              },
+                              "PowerCoilElectrum.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3308
+                              },
+                              "PulpWood.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 536
+                              },
+                              "PowerCoilGold.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 768
+                              },
+                              "Slag.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 465
+                              },
+                              "PowerCoilSilver.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 773
+                              },
+                              "Lock.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3131
+                              }
+                            }
+                          },
+                          "icons": {
+                            "type": "directory",
+                            "children": {
+                              "Icon_SendOnly.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3100
+                              },
+                              "Icon_Config_Tesseract.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3108
+                              },
+                              "Icon_SlotSchematic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 565
+                              },
+                              "Icon_SendRecv.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3121
+                              },
+                              "Icon_Blocked.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3087
+                              },
+                              "Icon_RecvOnly.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3093
+                              }
+                            }
+                          },
+                          "tool": {
+                            "type": "directory",
+                            "children": {
+                              "Pump_Input.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20692
+                              },
+                              "Chiller.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2956
+                              },
+                              "Pump_Output.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20729
+                              },
+                              "Debugger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3067
+                              },
+                              "Transfuser_Input.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20831
+                              },
+                              "BattleWrench.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3192
+                              },
+                              "Transfuser_Output.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 20829
+                              },
+                              "Wrench.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3091
+                              },
+                              "Multimeter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 392
+                              },
+                              "Igniter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3036
+                              }
+                            }
+                          },
+                          "capacitor": {
+                            "type": "directory",
+                            "children": {
+                              "CapacitorReinforced.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3087
+                              },
+                              "CapacitorPotato.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3170
+                              },
+                              "CapacitorHardened.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3088
+                              },
+                              "CapacitorCreative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3094
+                              },
+                              "CapacitorBasic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3087
+                              },
+                              "CapacitorResonant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3092
+                              }
+                            }
+                          },
+                          "triggers": {
+                            "type": "directory",
+                            "children": {
+                              "Trigger_Energy_Contains.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2981
+                              },
+                              "Trigger_Tesseract_NoInputs.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3094
+                              },
+                              "Trigger_Tesseract_HasOutputs.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3115
+                              },
+                              "Trigger_Energy_Empty.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2915
+                              },
+                              "Trigger_Tesseract_HasInputs.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3100
+                              },
+                              "Trigger_Energy_Full.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2977
+                              },
+                              "Trigger_Tesseract_NoOutputs.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3089
+                              },
+                              "Trigger_Energy_Space.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3004
+                              }
+                            }
+                          },
+                          "diagram": {
+                            "type": "directory",
+                            "children": {
+                              "Redprint.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3289
+                              },
+                              "Schematic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 615
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "cache": {
+                            "type": "directory",
+                            "children": {
+                              "Cache_Hardened_Face.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3181
+                              },
+                              "Cache_Creative_Face.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3276
+                              },
+                              "Cache_Basic_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3266
+                              },
+                              "Cache_Meter_5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2867
+                              },
+                              "Cache_Resonant_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3222
+                              },
+                              "Cache_Basic_Face.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3270
+                              },
+                              "Cache_Resonant_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3129
+                              },
+                              "Cache_Meter_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2869
+                              },
+                              "Cache_Resonant_Face.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3249
+                              },
+                              "Cache_Creative_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3299
+                              },
+                              "Cache_Reinforced_Face.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3269
+                              },
+                              "Cache_Meter_6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2867
+                              },
+                              "Cache_Meter_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2873
+                              },
+                              "Cache_Reinforced_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3239
+                              },
+                              "Cache_Basic_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3190
+                              },
+                              "Cache_Meter_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2868
+                              },
+                              "Cache_Creative_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3248
+                              },
+                              "Cache_Resonant_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3227
+                              },
+                              "Cache_Meter_7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2864
+                              },
+                              "Cache_Meter_4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2870
+                              },
+                              "Cache_Hardened_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3167
+                              },
+                              "Cache_Basic_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3222
+                              },
+                              "Cache_Meter_8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2867
+                              },
+                              "Cache_Creative_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3204
+                              },
+                              "Cache_Reinforced_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3188
+                              },
+                              "Cache_Meter_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2871
+                              },
+                              "Cache_Reinforced_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3252
+                              },
+                              "Cache_Hardened_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3137
+                              },
+                              "Cache_Hardened_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3157
+                              }
+                            }
+                          },
+                          "tank": {
+                            "type": "directory",
+                            "children": {
+                              "Tank_Reinforced_Side_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Basic_Side_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Basic_Side_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Basic_Top_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Resonant_Side_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Basic_Top_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3188
+                              },
+                              "Tank_Creative_Side_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Hardened_Bottom_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Creative_Bottom_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3174
+                              },
+                              "Tank_Basic_Bottom_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3188
+                              },
+                              "Tank_Resonant_Side_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Resonant_Top_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Hardened_Top_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Reinforced_Top_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Hardened_Side_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 307
+                              },
+                              "Tank_Hardened_Bottom_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Basic_Bottom_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Reinforced_Top_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Reinforced_Bottom_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Creative_Top_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3172
+                              },
+                              "Tank_Resonant_Bottom_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Reinforced_Side_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Hardened_Side_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 307
+                              },
+                              "Tank_Creative_Side_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Resonant_Top_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Resonant_Bottom_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Creative_Top_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3175
+                              },
+                              "Tank_Hardened_Top_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Tank_Creative_Bottom_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3177
+                              },
+                              "Tank_Reinforced_Bottom_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3179
+                              }
+                            }
+                          },
+                          "cell": {
+                            "type": "directory",
+                            "children": {
+                              "Cell_Reinforced_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3230
+                              },
+                              "Cell_Meter_8.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2919
+                              },
+                              "Cell_Basic_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Basic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Meter_1.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2893
+                              },
+                              "Cell_Meter_4.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2932
+                              },
+                              "Cell_Resonant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Meter_Creative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2918
+                              },
+                              "Cell_Creative_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Meter_2.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2914
+                              },
+                              "Cell_Meter_3.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2915
+                              },
+                              "Cell_Meter_7.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2951
+                              },
+                              "Cell_Config_Orange_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Center_Solid.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 609
+                              },
+                              "Cell_Resonant_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Reinforced.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3340
+                              },
+                              "Cell_Creative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Meter_6.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2972
+                              },
+                              "Cell_Config_Blue_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Hardened_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3189
+                              },
+                              "Cell_Meter_0.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2864
+                              },
+                              "Cell_Hardened.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3328
+                              },
+                              "Cell_Meter_5.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2957
+                              },
+                              "Cell_Config_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              },
+                              "Cell_Config_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3829
+                              }
+                            }
+                          },
+                          "config": {
+                            "type": "directory",
+                            "children": {
+                              "Config_Blue_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2871
+                              },
+                              "Config_Green.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3030
+                              },
+                              "Config_Yellow.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3035
+                              },
+                              "Config_Orange.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3037
+                              },
+                              "Config_Green_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3186
+                              },
+                              "Config_Open.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2972
+                              },
+                              "Config_Red_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3091
+                              },
+                              "Config_Purple_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2926
+                              },
+                              "Config_Orange_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3084
+                              },
+                              "Config_None.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2808
+                              },
+                              "Config_Blue.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3030
+                              },
+                              "Config_Red.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3025
+                              },
+                              "Config_Purple.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3037
+                              },
+                              "Config_Yellow_CB.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3107
+                              }
+                            }
+                          },
+                          "tesseract": {
+                            "type": "directory",
+                            "children": {
+                              "Tesseract.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3099
+                              },
+                              "Tesseract_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2862
+                              },
+                              "Tesseract_Inner_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Sky_Ender.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3970
+                              },
+                              "Tesseract_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 7645
+                              },
+                              "Tesseract_Inner_Active.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 6927
+                              },
+                              "Sky_Ender.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 366
+                              },
+                              "Tesseract_Active.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              }
+                            }
+                          },
+                          "machine": {
+                            "type": "directory",
+                            "children": {
+                              "Machine_Active_Furnace.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3313
+                              },
+                              "Machine_Active_Assembler.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 101
+                              },
+                              "Machine_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3197
+                              },
+                              "Machine_Active_Accumulator.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Machine_Face_Extruder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3306
+                              },
+                              "Machine_Active_Charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3421
+                              },
+                              "Machine_Active_Charger.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 137
+                              },
+                              "Machine_Active_Insolator.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Machine_Face_Furnace.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3298
+                              },
+                              "Machine_Active_Assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4247
+                              },
+                              "Machine_Frame_Inner.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3078
+                              },
+                              "Machine_Active_Accumulator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3523
+                              },
+                              "Machine_Frame_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3295
+                              },
+                              "Machine_Frame_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3187
+                              },
+                              "Machine_Face_Assembler.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3374
+                              },
+                              "Machine_Face_Sawmill.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18394
+                              },
+                              "Machine_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3252
+                              },
+                              "Machine_Face_Smelter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3280
+                              },
+                              "Machine_Face_Charger.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3236
+                              },
+                              "Machine_Active_Crucible.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3302
+                              },
+                              "Machine_Active_Pulverizer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3462
+                              },
+                              "Machine_Active_Sawmill.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Machine_Active_Extruder.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4397
+                              },
+                              "Machine_Face_Precipitator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3169
+                              },
+                              "Machine_Active_Precipitator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3181
+                              },
+                              "Machine_Active_Extruder.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Machine_Face_Transposer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3429
+                              },
+                              "Machine_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3195
+                              },
+                              "Machine_Face_Crucible.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3321
+                              },
+                              "Machine_Active_Sawmill.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 4485
+                              },
+                              "Machine_Face_Accumulator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3338
+                              },
+                              "Machine_Face_Insolator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3268
+                              },
+                              "Machine_Active_Insolator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3898
+                              },
+                              "Machine_Active_Smelter.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3286
+                              },
+                              "Machine_Frame_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3186
+                              },
+                              "Machine_Active_Transposer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3225
+                              },
+                              "Machine_Face_Pulverizer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3378
+                              }
+                            }
+                          },
+                          "dynamo": {
+                            "type": "directory",
+                            "children": {
+                              "Dynamo_Reactant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3896
+                              },
+                              "Dynamo_Compression.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3912
+                              },
+                              "Dynamo_Enervation.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3954
+                              },
+                              "Dynamo_Coil_Redstone.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3242
+                              },
+                              "Dynamo_Magmatic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3907
+                              },
+                              "Dynamo_Steam.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3921
+                              }
+                            }
+                          },
+                          "glass": {
+                            "type": "directory",
+                            "children": {
+                              "Glass_Hardened_Lumium.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3036
+                              },
+                              "Glass_Hardened.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3004
+                              }
+                            }
+                          },
+                          "workbench": {
+                            "type": "directory",
+                            "children": {
+                              "Workbench_Hardened_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18264
+                              },
+                              "Workbench_Reinforced_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18385
+                              },
+                              "Workbench_Hardened_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18227
+                              },
+                              "Workbench_Basic_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3401
+                              },
+                              "Workbench_Resonant_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18222
+                              },
+                              "Workbench_Hardened_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18388
+                              },
+                              "Workbench_Basic_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3509
+                              },
+                              "Workbench_Reinforced_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18155
+                              },
+                              "Workbench_Resonant_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18248
+                              },
+                              "Workbench_Resonant_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18386
+                              },
+                              "Workbench_Basic_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3277
+                              },
+                              "Workbench_Reinforced_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18484
+                              },
+                              "Workbench_Creative_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18217
+                              },
+                              "Workbench_Creative_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18425
+                              },
+                              "Workbench_Creative_Top.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18257
+                              }
+                            }
+                          },
+                          "light": {
+                            "type": "directory",
+                            "children": {
+                              "Lamp_Effect.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2866
+                              },
+                              "Illuminator_Effect.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 426
+                              },
+                              "Illuminator_Frame.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3313
+                              },
+                              "Lamp_Halo.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 2809
+                              },
+                              "Illuminator_Effect.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 11871
+                              }
+                            }
+                          },
+                          "plate": {
+                            "type": "directory",
+                            "children": {
+                              "Plate_Top_East.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3266
+                              },
+                              "Plate_Top_North.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3250
+                              },
+                              "Plate_Top_South.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3258
+                              },
+                              "Plate_Top_Down.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3192
+                              },
+                              "Plate_Bottom.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3164
+                              },
+                              "Plate_Top_West.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3263
+                              },
+                              "Plate_Top_Up.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3184
+                              },
+                              "Plate_Top_Circle.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3191
+                              }
+                            }
+                          },
+                          "device": {
+                            "type": "directory",
+                            "children": {
+                              "Device_Active_Breaker.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3308
+                              },
+                              "Device_Face_Breaker.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3091
+                              },
+                              "Device_Face_Collector.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3037
+                              },
+                              "Device_Side.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3048
+                              },
+                              "Device_Face_Nullifier.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3240
+                              },
+                              "Device_Face_Activator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3093
+                              },
+                              "Device_Active_Buffer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3399
+                              },
+                              "Device_Active_Activator.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Device_Active_Activator.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3300
+                              },
+                              "Device_Face_Buffer.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3292
+                              },
+                              "Device_Active_Collector.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Device_Active_Collector.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 18963
+                              },
+                              "Device_Active_Buffer.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Device_Active_Breaker.png.mcmeta": {
+                                "type": "file",
+                                "extension": ".mcmeta",
+                                "size": 43
+                              },
+                              "Device_Active_Nullifier.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3071
+                              }
+                            }
+                          },
+                          "strongbox": {
+                            "type": "directory",
+                            "children": {
+                              "Strongbox_Hardened.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19237
+                              },
+                              "Strongbox_Basic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19237
+                              },
+                              "Strongbox_Creative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19237
+                              },
+                              "Strongbox_Reinforced.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19237
+                              },
+                              "Strongbox_Resonant.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 19237
+                              }
+                            }
+                          },
+                          "sponge": {
+                            "type": "directory",
+                            "children": {
+                              "Sponge_Magmatic_Soaked.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3237
+                              },
+                              "Sponge_Basic_Soaked.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3279
+                              },
+                              "Sponge_Magmatic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3387
+                              },
+                              "Sponge_Basic.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3404
+                              },
+                              "Sponge_Creative.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 3394
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "logo.png": {
+                        "type": "file",
+                        "extension": ".png",
+                        "size": 22210
+                      }
+                    }
+                  },
+                  "sounds.json": {
+                    "type": "file",
+                    "extension": ".json",
+                    "size": 1473
+                  },
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_GB.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 552
+                      },
+                      "ko_KR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 32955
+                      },
+                      "pt_BR.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 28593
+                      },
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 31339
+                      },
+                      "de_DE.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 32519
+                      },
+                      "cs_CZ.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 30420
+                      },
+                      "nl_NL.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 26782
+                      },
+                      "it_IT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 30407
+                      },
+                      "zh_TW.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 28342
+                      },
+                      "es_ES.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 33757
+                      },
+                      "ja_JP.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 35581
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 51141
+                      },
+                      "en_PT.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 5224
+                      },
+                      "zh_CN.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 29705
+                      }
+                    }
+                  },
+                  "sounds": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "machine": {
+                            "type": "directory",
+                            "children": {
+                              "pulverizer.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 69137
+                              },
+                              "accumulator.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 70499
+                              },
+                              "transposer.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 66409
+                              },
+                              "sawmill.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 86214
+                              },
+                              "smelter.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 75577
+                              },
+                              "crucible.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 57008
+                              },
+                              "furnace.ogg": {
+                                "type": "file",
+                                "extension": ".ogg",
+                                "size": 79540
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "CoFH_at.cfg": {
+            "type": "file",
+            "extension": ".cfg",
+            "size": 3107
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 622
+          },
+          "vers.prop": {
+            "type": "file",
+            "extension": ".prop",
+            "size": 18
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 20932
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 42785
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,4742 @@
+{
+  "mod_name": ".LibrariesCore-1.0.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\.LibrariesCore-1.0.jar",
+  "mod_type": "jar",
+  "tree": {
+    ".LibrariesCore-1.0.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 3260491,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 70
+              },
+              "example_at.cfg": {
+                "type": "file",
+                "extension": ".cfg",
+                "size": 315
+              }
+            }
+          },
+          "ru": {
+            "type": "directory",
+            "children": {
+              "hooklib": {
+                "type": "directory",
+                "children": {
+                  "asm": {
+                    "type": "directory",
+                    "children": {
+                      "AsmHook$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 707
+                      },
+                      "AsmHook$Builder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11592
+                      },
+                      "AsmHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 14673
+                      },
+                      "ClassMetadataReader$CheckSuperClassVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 958
+                      },
+                      "ClassMetadataReader$FindMethodClassVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1639
+                      },
+                      "ClassMetadataReader$MethodReference.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1221
+                      },
+                      "ClassMetadataReader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6453
+                      },
+                      "Hook$LocalVariable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 382
+                      },
+                      "Hook$ReturnValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 364
+                      },
+                      "Hook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1437
+                      },
+                      "HookClassTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5179
+                      },
+                      "HookContainerParser$HookAnnotationVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1424
+                      },
+                      "HookContainerParser$HookClassVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1668
+                      },
+                      "HookContainerParser$HookMethodVisitor$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1391
+                      },
+                      "HookContainerParser$HookMethodVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2340
+                      },
+                      "HookContainerParser.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9891
+                      },
+                      "HookInjectorClassVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3075
+                      },
+                      "HookInjectorFactory$LineNumber.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1232
+                      },
+                      "HookInjectorFactory$MethodEnter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1264
+                      },
+                      "HookInjectorFactory$MethodExit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1308
+                      },
+                      "HookInjectorFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 816
+                      },
+                      "HookInjectorMethodVisitor$LineNumber.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1252
+                      },
+                      "HookInjectorMethodVisitor$MethodEnter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 912
+                      },
+                      "HookInjectorMethodVisitor$MethodExit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 970
+                      },
+                      "HookInjectorMethodVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1961
+                      },
+                      "HookLogger$SystemOutLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1300
+                      },
+                      "HookLogger$VanillaLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1222
+                      },
+                      "HookLogger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 409
+                      },
+                      "HookPriority.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1136
+                      },
+                      "ReadClassHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1669
+                      },
+                      "ReturnCondition.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1275
+                      },
+                      "ReturnValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1173
+                      },
+                      "SafeClassWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1369
+                      },
+                      "TypeHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2561
+                      },
+                      "VariableIdHelper$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1796
+                      },
+                      "VariableIdHelper$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1358
+                      },
+                      "VariableIdHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2851
+                      }
+                    }
+                  },
+                  "minecraft": {
+                    "type": "directory",
+                    "children": {
+                      "DeobfuscationMetadataReader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4693
+                      },
+                      "HookLibPlugin.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2225
+                      },
+                      "HookLoader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2695
+                      },
+                      "MinecraftClassTransformer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1906
+                      },
+                      "MinecraftClassTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5519
+                      },
+                      "PrimaryClassTransformer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1472
+                      },
+                      "PrimaryClassTransformer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4199
+                      },
+                      "SecondaryTransformerHook.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1230
+                      }
+                    }
+                  }
+                }
+              },
+              "vizzi": {
+                "type": "directory",
+                "children": {
+                  "Utils": {
+                    "type": "directory",
+                    "children": {
+                      "ClientEvent.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2542
+                      },
+                      "command": {
+                        "type": "directory",
+                        "children": {
+                          "CommandConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 837
+                          }
+                        }
+                      },
+                      "CommonUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3128
+                      },
+                      "CompletableFutureBuilder$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 250
+                      },
+                      "CompletableFutureBuilder$Settings.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1053
+                      },
+                      "CompletableFutureBuilder$SyncQueueHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1476
+                      },
+                      "CompletableFutureBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11099
+                      },
+                      "config": {
+                        "type": "directory",
+                        "children": {
+                          "ConfigComment.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 469
+                          },
+                          "Configurable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 520
+                          },
+                          "Flex.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 14258
+                          },
+                          "IConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 117
+                          },
+                          "IConfigGson$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1147
+                          },
+                          "IConfigGson$2.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 728
+                          },
+                          "IConfigGson.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 13068
+                          },
+                          "IConfigJson.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4545
+                          },
+                          "json": {
+                            "type": "directory",
+                            "children": {
+                              "IJsonParser.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 274
+                              },
+                              "JsonConfigBuilder.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4521
+                              },
+                              "JsonConfigModel.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 653
+                              },
+                              "JsonConfigParser.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3456
+                              }
+                            }
+                          },
+                          "ThrConsumer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 294
+                          },
+                          "ThrFunction.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 332
+                          }
+                        }
+                      },
+                      "CustomFont": {
+                        "type": "directory",
+                        "children": {
+                          "CustomFontRenderer$FontElement.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1051
+                          },
+                          "CustomFontRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 16876
+                          },
+                          "EnumStringRenderType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1291
+                          },
+                          "FontAPI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1918
+                          },
+                          "FontContainer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2544
+                          },
+                          "StringWidthCache$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1281
+                          },
+                          "StringWidthCache.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2520
+                          },
+                          "TextRenderUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3592
+                          }
+                        }
+                      },
+                      "databases": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractDatabaseAdapter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 535
+                          },
+                          "AbstractProviderDB.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 923
+                          },
+                          "BiHolder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 921
+                          },
+                          "DatabaseAdaptedBy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 551
+                          },
+                          "DatabaseManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9813
+                          },
+                          "DatabaseValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 415
+                          },
+                          "DataInform.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 166
+                          },
+                          "IConverter.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 360
+                          },
+                          "IDatabaseEventListener.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 327
+                          },
+                          "mariadb": {
+                            "type": "directory",
+                            "children": {
+                              "ConfigDBType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1551
+                              },
+                              "ConfigMariaID.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 888
+                              },
+                              "ConfigMariaList.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2287
+                              },
+                              "ConfigReplicatorType.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1579
+                              },
+                              "MariaDBProvider.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3704
+                              }
+                            }
+                          },
+                          "ReplicationEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 530
+                          }
+                        }
+                      },
+                      "EntityUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10974
+                      },
+                      "eventhandler": {
+                        "type": "directory",
+                        "children": {
+                          "EventLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5007
+                          },
+                          "EventResize.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 877
+                          },
+                          "RegistryEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 614
+                          }
+                        }
+                      },
+                      "EventLoadResource.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 731
+                      },
+                      "FutureUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 980
+                      },
+                      "GifDecoder": {
+                        "type": "directory",
+                        "children": {
+                          "Gif.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3461
+                          },
+                          "GifDecoder$GifFrame.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 588
+                          },
+                          "GifDecoder.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 11123
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractGuiScreenAdvanced.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3874
+                          },
+                          "drawmodule": {
+                            "type": "directory",
+                            "children": {
+                              "AnimationHelper.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1975
+                              },
+                              "GuiDrawUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 10513
+                              },
+                              "GuiUtils.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 15358
+                              },
+                              "RenderItemNew$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1374
+                              },
+                              "RenderItemNew$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1333
+                              },
+                              "RenderItemNew$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1383
+                              },
+                              "RenderItemNew$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1333
+                              },
+                              "RenderItemNew.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 19079
+                              },
+                              "ScaleGui.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2699
+                              }
+                            }
+                          },
+                          "GuiButtonAdvanced$IPressable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 293
+                          },
+                          "GuiButtonAdvanced.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 9844
+                          },
+                          "GuiButtonAdvancedImage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2252
+                          },
+                          "GuiButtonNew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3391
+                          },
+                          "GuiExtended.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8132
+                          },
+                          "GuiModule.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3295
+                          },
+                          "GuiScrollingList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 15550
+                          },
+                          "GuiSmallScreen.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3650
+                          },
+                          "GuiTextFieldV.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 5469
+                          }
+                        }
+                      },
+                      "GuiScreenUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2321
+                      },
+                      "InventoryUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3522
+                      },
+                      "ItemStackFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2521
+                      },
+                      "ItemStackModel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2409
+                      },
+                      "JsonToNBTTagCompoundConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5213
+                      },
+                      "JsonUtils$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3600
+                      },
+                      "JsonUtils$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5757
+                      },
+                      "JsonUtils$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1122
+                      },
+                      "JsonUtils$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2737
+                      },
+                      "JsonUtils$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 825
+                      },
+                      "JsonUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5358
+                      },
+                      "LibrariesConfig.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1046
+                      },
+                      "LibrariesCore.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8692
+                      },
+                      "Logger.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3929
+                      },
+                      "math": {
+                        "type": "directory",
+                        "children": {
+                          "MathRotateHelper.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1977
+                          },
+                          "MathUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2074
+                          },
+                          "QuaternionUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4240
+                          }
+                        }
+                      },
+                      "model": {
+                        "type": "directory",
+                        "children": {
+                          "ModelWrapperDisplayList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4229
+                          }
+                        }
+                      },
+                      "Models": {
+                        "type": "directory",
+                        "children": {
+                          "ModelWrapperDisplayList.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4231
+                          }
+                        }
+                      },
+                      "MouseUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 626
+                      },
+                      "NBTTagCompoundToJsonConverter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4425
+                      },
+                      "NBTUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 723
+                      },
+                      "obf": {
+                        "type": "directory",
+                        "children": {
+                          "IgnoreObf.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 335
+                          }
+                        }
+                      },
+                      "permission": {
+                        "type": "directory",
+                        "children": {
+                          "LuxinfineProvider.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1992
+                          }
+                        }
+                      },
+                      "player": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractExtendedPlayer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1754
+                          },
+                          "ExtendedManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3864
+                          },
+                          "RegistryExtended.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 405
+                          }
+                        }
+                      },
+                      "PlayerUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2454
+                      },
+                      "RandomUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1588
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "IReloadableRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 164
+                          },
+                          "ReloadableRendererManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1518
+                          }
+                        }
+                      },
+                      "resouces": {
+                        "type": "directory",
+                        "children": {
+                          "CoreAPI$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2026
+                          },
+                          "CoreAPI.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4424
+                          },
+                          "crypt": {
+                            "type": "directory",
+                            "children": {
+                              "FakeDecryptor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 599
+                              },
+                              "IDecryptor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 260
+                              },
+                              "MainDecryptor$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 247
+                              },
+                              "MainDecryptor$ClassLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 944
+                              },
+                              "MainDecryptor.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4742
+                              },
+                              "Test.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 719
+                              }
+                            }
+                          },
+                          "DynamicTextureNew.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1791
+                          },
+                          "DynamicUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4476
+                          },
+                          "IResourceLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 260
+                          },
+                          "MinecraftResourcesLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2827
+                          },
+                          "PNGTextureLoader$ImageSimpleData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1444
+                          },
+                          "PNGTextureLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4722
+                          },
+                          "PreLoadableResource.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 463
+                          },
+                          "PreLoadableResourceManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6387
+                          },
+                          "PreLoadableResourceScanner.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1250
+                          },
+                          "PreLoadableTextureWrapFormat.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 480
+                          },
+                          "ResourceType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 4977
+                          },
+                          "SimpleTextureData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 699
+                          },
+                          "Texture.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2518
+                          },
+                          "TextureLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 8515
+                          },
+                          "ThrowableRunnable.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 506
+                          },
+                          "ZipResourceLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2076
+                          }
+                        }
+                      },
+                      "SyncResultHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3000
+                      },
+                      "toast": {
+                        "type": "directory",
+                        "children": {
+                          "AdvancedToast$Icon.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1816
+                          },
+                          "AdvancedToast$Type.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1414
+                          },
+                          "AdvancedToast.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 6642
+                          },
+                          "ClientEvent.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1741
+                          },
+                          "GuiToast$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 214
+                          },
+                          "GuiToast$ToastInstance.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2724
+                          },
+                          "GuiToast.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3868
+                          },
+                          "IToast$Visibility.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1110
+                          },
+                          "IToast.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 958
+                          }
+                        }
+                      },
+                      "Utils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3959
+                      },
+                      "WorldUtils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5612
+                      }
+                    }
+                  }
+                }
+              },
+              "justagod": {
+                "type": "directory",
+                "children": {
+                  "cutter": {
+                    "type": "directory",
+                    "children": {
+                      "GradleSide.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 983
+                      },
+                      "GradleSideOnly.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 220
+                      },
+                      "invoke": {
+                        "type": "directory",
+                        "children": {
+                          "Invoke.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1619
+                          },
+                          "InvokeClient.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeClientValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          },
+                          "InvokeServer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 151
+                          },
+                          "InvokeServerValue.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 257
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tmp_generated": {
+            "type": "directory",
+            "children": {
+              "cachedModid.txt": {
+                "type": "file",
+                "extension": ".txt",
+                "size": 13
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "librariescore": {
+                "type": "directory",
+                "children": {
+                  "fonts": {
+                    "type": "directory",
+                    "children": {
+                      "2_Bold.ttf": {
+                        "type": "file",
+                        "extension": ".ttf",
+                        "size": 96364
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "default.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1723927
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "github": {
+                "type": "directory",
+                "children": {
+                  "shyiko": {
+                    "type": "directory",
+                    "children": {
+                      "mysql": {
+                        "type": "directory",
+                        "children": {
+                          "binlog": {
+                            "type": "directory",
+                            "children": {
+                              "BinaryLogClient$1$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1209
+                              },
+                              "BinaryLogClient$1.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1034
+                              },
+                              "BinaryLogClient$2.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2566
+                              },
+                              "BinaryLogClient$3.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1405
+                              },
+                              "BinaryLogClient$4.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1428
+                              },
+                              "BinaryLogClient$5.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3430
+                              },
+                              "BinaryLogClient$6.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1045
+                              },
+                              "BinaryLogClient$7.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1392
+                              },
+                              "BinaryLogClient$8.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 821
+                              },
+                              "BinaryLogClient$AbstractLifecycleListener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1185
+                              },
+                              "BinaryLogClient$EventListener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 323
+                              },
+                              "BinaryLogClient$LifecycleListener.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 508
+                              },
+                              "BinaryLogClient.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 38963
+                              },
+                              "BinaryLogFileReader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2591
+                              },
+                              "GtidSet$Interval.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2521
+                              },
+                              "GtidSet$UUIDSet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 4948
+                              },
+                              "GtidSet.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 5511
+                              },
+                              "event": {
+                                "type": "directory",
+                                "children": {
+                                  "ByteArrayEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1035
+                                  },
+                                  "DeleteRowsEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2424
+                                  },
+                                  "Event.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1504
+                                  },
+                                  "EventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 164
+                                  },
+                                  "EventHeader.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 345
+                                  },
+                                  "EventHeaderV4.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2783
+                                  },
+                                  "EventType.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3847
+                                  },
+                                  "FormatDescriptionEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2393
+                                  },
+                                  "GtidEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1318
+                                  },
+                                  "IntVarEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1288
+                                  },
+                                  "PreviousGtidSetEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 873
+                                  },
+                                  "QueryEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2060
+                                  },
+                                  "RotateEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1357
+                                  },
+                                  "RowsQueryEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1022
+                                  },
+                                  "TableMapEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3301
+                                  },
+                                  "TableMapEventMetadata$DefaultCharset.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1873
+                                  },
+                                  "TableMapEventMetadata.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 7716
+                                  },
+                                  "UpdateRowsEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3178
+                                  },
+                                  "WriteRowsEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2420
+                                  },
+                                  "XAPrepareEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 2502
+                                  },
+                                  "XidEventData.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 997
+                                  },
+                                  "deserialization": {
+                                    "type": "directory",
+                                    "children": {
+                                      "AbstractRowsEventDataDeserializer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2052
+                                      },
+                                      "AbstractRowsEventDataDeserializer$UnixTime.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2370
+                                      },
+                                      "AbstractRowsEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 14779
+                                      },
+                                      "ByteArrayEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1508
+                                      },
+                                      "ChecksumType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1579
+                                      },
+                                      "ColumnType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3738
+                                      },
+                                      "DeleteRowsEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3354
+                                      },
+                                      "EventDataDeserializationException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1102
+                                      },
+                                      "EventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 521
+                                      },
+                                      "EventDeserializer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 845
+                                      },
+                                      "EventDeserializer$CompatibilityMode.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1852
+                                      },
+                                      "EventDeserializer$EventDataWrapper$Deserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1869
+                                      },
+                                      "EventDeserializer$EventDataWrapper.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1910
+                                      },
+                                      "EventDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 14729
+                                      },
+                                      "EventHeaderDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 529
+                                      },
+                                      "EventHeaderV4Deserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2493
+                                      },
+                                      "FormatDescriptionEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2661
+                                      },
+                                      "GtidEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2523
+                                      },
+                                      "IntVarEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1527
+                                      },
+                                      "MissingTableMapEventException.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 485
+                                      },
+                                      "NullEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 800
+                                      },
+                                      "PreviousGtidSetDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3148
+                                      },
+                                      "QueryEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1852
+                                      },
+                                      "RotateEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1614
+                                      },
+                                      "RowsQueryEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1588
+                                      },
+                                      "TableMapEventDataDeserializer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1749
+                                      },
+                                      "TableMapEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4329
+                                      },
+                                      "TableMapEventMetadataDeserializer$1.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1687
+                                      },
+                                      "TableMapEventMetadataDeserializer$MetadataFieldType.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3185
+                                      },
+                                      "TableMapEventMetadataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 6442
+                                      },
+                                      "UpdateRowsEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3995
+                                      },
+                                      "WriteRowsEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 3357
+                                      },
+                                      "XAPrepareEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1841
+                                      },
+                                      "XidEventDataDeserializer.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1437
+                                      },
+                                      "json": {
+                                        "type": "directory",
+                                        "children": {
+                                          "JsonBinary$1.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2276
+                                          },
+                                          "JsonBinary$ValueEntry.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1205
+                                          },
+                                          "JsonBinary.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 15414
+                                          },
+                                          "JsonFormatter.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 724
+                                          },
+                                          "JsonStringFormatter.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 6840
+                                          },
+                                          "ValueType.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2790
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "io": {
+                                "type": "directory",
+                                "children": {
+                                  "BufferedSocketInputStream.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1522
+                                  },
+                                  "ByteArrayInputStream.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4894
+                                  },
+                                  "ByteArrayOutputStream.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1809
+                                  }
+                                }
+                              },
+                              "jmx": {
+                                "type": "directory",
+                                "children": {
+                                  "BinaryLogClientMXBean.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 506
+                                  },
+                                  "BinaryLogClientStatistics.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 4779
+                                  },
+                                  "BinaryLogClientStatisticsMXBean.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 457
+                                  }
+                                }
+                              },
+                              "network": {
+                                "type": "directory",
+                                "children": {
+                                  "AuthenticationException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 656
+                                  },
+                                  "ClientCapabilities.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1170
+                                  },
+                                  "DefaultSSLSocketFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1964
+                                  },
+                                  "ErrorCode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 43844
+                                  },
+                                  "IdentityVerificationException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 464
+                                  },
+                                  "SSLMode.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1268
+                                  },
+                                  "SSLSocketFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 275
+                                  },
+                                  "ServerException.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 739
+                                  },
+                                  "SocketFactory.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 244
+                                  },
+                                  "TLSHostnameVerifier.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 1408
+                                  },
+                                  "protocol": {
+                                    "type": "directory",
+                                    "children": {
+                                      "ErrorPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1285
+                                      },
+                                      "GreetingPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 2169
+                                      },
+                                      "Packet.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 195
+                                      },
+                                      "PacketChannel.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 4434
+                                      },
+                                      "ResultSetRowPacket.class": {
+                                        "type": "file",
+                                        "extension": ".class",
+                                        "size": 1517
+                                      },
+                                      "command": {
+                                        "type": "directory",
+                                        "children": {
+                                          "AuthenticateCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2917
+                                          },
+                                          "AuthenticateNativePasswordCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 974
+                                          },
+                                          "Command.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 290
+                                          },
+                                          "CommandType.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 2914
+                                          },
+                                          "DumpBinaryLogCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1346
+                                          },
+                                          "DumpBinaryLogGtidCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 3616
+                                          },
+                                          "PingCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 974
+                                          },
+                                          "QueryCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1106
+                                          },
+                                          "SSLRequestCommand.class": {
+                                            "type": "file",
+                                            "extension": ".class",
+                                            "size": 1243
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ibxm": {
+            "type": "directory",
+            "children": {
+              "Channel.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 13987
+              },
+              "Envelope.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2614
+              },
+              "FastTracker2.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7566
+              },
+              "IBXM.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6423
+              },
+              "Instrument.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2263
+              },
+              "LogTable.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3396
+              },
+              "Module.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3268
+              },
+              "OpenALMODPlayer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5053
+              },
+              "Pattern.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1131
+              },
+              "ProTracker.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5953
+              },
+              "Sample.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6170
+              },
+              "ScreamTracker3.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 9516
+              }
+            }
+          },
+          "javassist": {
+            "type": "directory",
+            "children": {
+              "ByteArrayClassPath$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 222
+              },
+              "ByteArrayClassPath$BytecodeURLConnection.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1023
+              },
+              "ByteArrayClassPath$BytecodeURLStreamHandler.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1108
+              },
+              "ByteArrayClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1829
+              },
+              "CannotCompileException.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2333
+              },
+              "ClassClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1501
+              },
+              "ClassMap.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2508
+              },
+              "ClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 285
+              },
+              "ClassPathList.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 460
+              },
+              "ClassPool.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 14475
+              },
+              "ClassPoolTail.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5404
+              },
+              "CodeConverter$ArrayAccessReplacementMethodNames.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 610
+              },
+              "CodeConverter$DefaultArrayAccessReplacementMethodNames.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2097
+              },
+              "CodeConverter.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7088
+              },
+              "CtArray.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2807
+              },
+              "CtBehavior.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 24834
+              },
+              "CtClass$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1390
+              },
+              "CtClass$DelayedFileOutputStream.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1391
+              },
+              "CtClass.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 18134
+              },
+              "CtClassType.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 45064
+              },
+              "CtConstructor.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 8250
+              },
+              "CtField$ArrayInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1911
+              },
+              "CtField$CodeInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1427
+              },
+              "CtField$CodeInitializer0.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3022
+              },
+              "CtField$DoubleInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2122
+              },
+              "CtField$FloatInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2118
+              },
+              "CtField$Initializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5203
+              },
+              "CtField$IntInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2068
+              },
+              "CtField$LongInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2112
+              },
+              "CtField$MethodInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2739
+              },
+              "CtField$MultiArrayInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1908
+              },
+              "CtField$NewInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2922
+              },
+              "CtField$ParamInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2008
+              },
+              "CtField$PtreeInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1146
+              },
+              "CtField$StringInitializer.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2013
+              },
+              "CtField.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 10499
+              },
+              "CtMember$Cache.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3596
+              },
+              "CtMember.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2867
+              },
+              "CtMethod$ConstParameter.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1655
+              },
+              "CtMethod$IntConstParameter.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1013
+              },
+              "CtMethod$LongConstParameter.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1016
+              },
+              "CtMethod$StringConstParameter.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1087
+              },
+              "CtMethod.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 6069
+              },
+              "CtNewClass.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3629
+              },
+              "CtNewConstructor.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 4145
+              },
+              "CtNewMethod.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 8293
+              },
+              "CtNewWrappedConstructor.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3773
+              },
+              "CtNewWrappedMethod.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7619
+              },
+              "CtPrimitiveType.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1593
+              },
+              "DirClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1767
+              },
+              "FieldInitLink.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 632
+              },
+              "JarClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3222
+              },
+              "JarDirClassPath$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 915
+              },
+              "JarDirClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1519
+              },
+              "Loader$Simple.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1008
+              },
+              "Loader.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 7537
+              },
+              "LoaderClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1734
+              },
+              "Modifier.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 2816
+              },
+              "NotFoundException.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 786
+              },
+              "SerialVersionUID$1.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 986
+              },
+              "SerialVersionUID$2.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1126
+              },
+              "SerialVersionUID$3.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 1197
+              },
+              "SerialVersionUID.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 5410
+              },
+              "Translator.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 324
+              },
+              "URLClassPath.class": {
+                "type": "file",
+                "extension": ".class",
+                "size": 3399
+              },
+              "bytecode": {
+                "type": "directory",
+                "children": {
+                  "AccessFlag.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1873
+                  },
+                  "AnnotationDefaultAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3484
+                  },
+                  "AnnotationsAttribute$Copier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4247
+                  },
+                  "AnnotationsAttribute$Parser.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5326
+                  },
+                  "AnnotationsAttribute$Renamer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2148
+                  },
+                  "AnnotationsAttribute$Walker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2992
+                  },
+                  "AnnotationsAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6278
+                  },
+                  "AttributeInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8761
+                  },
+                  "BadBytecode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1390
+                  },
+                  "BootstrapMethodsAttribute$BootstrapMethod.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 605
+                  },
+                  "BootstrapMethodsAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3121
+                  },
+                  "ByteArray.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1103
+                  },
+                  "ByteStream.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4550
+                  },
+                  "ByteVector.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1951
+                  },
+                  "Bytecode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 17704
+                  },
+                  "ClassFile.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 16287
+                  },
+                  "ClassFilePrinter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6123
+                  },
+                  "ClassFileWriter$AttributeWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 352
+                  },
+                  "ClassFileWriter$ConstPoolWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3811
+                  },
+                  "ClassFileWriter$FieldWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2120
+                  },
+                  "ClassFileWriter$MethodWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5084
+                  },
+                  "ClassFileWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3593
+                  },
+                  "ClassInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4204
+                  },
+                  "CodeAnalyzer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5704
+                  },
+                  "CodeAttribute$LdcEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1064
+                  },
+                  "CodeAttribute$RuntimeCopyException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 568
+                  },
+                  "CodeAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 11791
+                  },
+                  "CodeIterator$AlignmentException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 493
+                  },
+                  "CodeIterator$Branch.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1301
+                  },
+                  "CodeIterator$Branch16.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1424
+                  },
+                  "CodeIterator$Gap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 421
+                  },
+                  "CodeIterator$If16.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1087
+                  },
+                  "CodeIterator$Jump16.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 951
+                  },
+                  "CodeIterator$Jump32.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 994
+                  },
+                  "CodeIterator$LdcW.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 997
+                  },
+                  "CodeIterator$Lookup.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1222
+                  },
+                  "CodeIterator$Pointers.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2319
+                  },
+                  "CodeIterator$Switcher.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2376
+                  },
+                  "CodeIterator$Table.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1260
+                  },
+                  "CodeIterator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 19308
+                  },
+                  "ConstInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2229
+                  },
+                  "ConstInfoPadding.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1370
+                  },
+                  "ConstPool.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 19842
+                  },
+                  "ConstantAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1735
+                  },
+                  "DeprecatedAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1280
+                  },
+                  "Descriptor$Iterator.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1526
+                  },
+                  "Descriptor$PrettyPrinter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1505
+                  },
+                  "Descriptor.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10462
+                  },
+                  "DoubleInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2178
+                  },
+                  "DuplicateMemberException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 475
+                  },
+                  "DynamicInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2374
+                  },
+                  "EnclosingMethodAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2938
+                  },
+                  "ExceptionTable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5031
+                  },
+                  "ExceptionTableEntry.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 554
+                  },
+                  "ExceptionsAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3980
+                  },
+                  "FieldInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5467
+                  },
+                  "FieldrefInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1069
+                  },
+                  "FloatInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2130
+                  },
+                  "InnerClassesAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5171
+                  },
+                  "InstructionPrinter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8008
+                  },
+                  "IntegerInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2065
+                  },
+                  "InterfaceMethodrefInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1103
+                  },
+                  "InvokeDynamicInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2406
+                  },
+                  "LineNumberAttribute$Pc.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 441
+                  },
+                  "LineNumberAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3242
+                  },
+                  "LocalVariableAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6142
+                  },
+                  "LocalVariableTypeAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1928
+                  },
+                  "LongInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2082
+                  },
+                  "LongVector.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1544
+                  },
+                  "MemberrefInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2675
+                  },
+                  "MethodHandleInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2418
+                  },
+                  "MethodInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 10693
+                  },
+                  "MethodParametersAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2438
+                  },
+                  "MethodTypeInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3770
+                  },
+                  "MethodrefInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1073
+                  },
+                  "Mnemonic.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4115
+                  },
+                  "ModuleInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2404
+                  },
+                  "NameAndTypeInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4009
+                  },
+                  "NestHostAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1762
+                  },
+                  "NestMembersAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2104
+                  },
+                  "Opcode.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7700
+                  },
+                  "PackageInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2422
+                  },
+                  "ParameterAnnotationsAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5488
+                  },
+                  "SignatureAttribute$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 240
+                  },
+                  "SignatureAttribute$ArrayType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1610
+                  },
+                  "SignatureAttribute$BaseType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1459
+                  },
+                  "SignatureAttribute$ClassSignature.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2826
+                  },
+                  "SignatureAttribute$ClassType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3643
+                  },
+                  "SignatureAttribute$Cursor.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1085
+                  },
+                  "SignatureAttribute$MethodSignature.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3256
+                  },
+                  "SignatureAttribute$NestedClassType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1498
+                  },
+                  "SignatureAttribute$ObjectType.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 717
+                  },
+                  "SignatureAttribute$Type.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1065
+                  },
+                  "SignatureAttribute$TypeArgument.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2489
+                  },
+                  "SignatureAttribute$TypeParameter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3008
+                  },
+                  "SignatureAttribute$TypeVariable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1267
+                  },
+                  "SignatureAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12584
+                  },
+                  "SourceFileAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1762
+                  },
+                  "StackMap$Copier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2376
+                  },
+                  "StackMap$InsertLocal.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1443
+                  },
+                  "StackMap$NewRemover.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1712
+                  },
+                  "StackMap$Printer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1332
+                  },
+                  "StackMap$Shifter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1129
+                  },
+                  "StackMap$SimpleCopy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1718
+                  },
+                  "StackMap$SwitchShifter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 968
+                  },
+                  "StackMap$Walker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2003
+                  },
+                  "StackMap$Writer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1179
+                  },
+                  "StackMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3691
+                  },
+                  "StackMapTable$Copier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1532
+                  },
+                  "StackMapTable$InsertLocal.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1342
+                  },
+                  "StackMapTable$NewRemover.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1418
+                  },
+                  "StackMapTable$OffsetShifter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 974
+                  },
+                  "StackMapTable$Printer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3236
+                  },
+                  "StackMapTable$RuntimeCopyException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 568
+                  },
+                  "StackMapTable$Shifter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3075
+                  },
+                  "StackMapTable$SimpleCopy.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1918
+                  },
+                  "StackMapTable$SwitchShifter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1936
+                  },
+                  "StackMapTable$Walker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3961
+                  },
+                  "StackMapTable$Writer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2544
+                  },
+                  "StackMapTable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4563
+                  },
+                  "StringInfo.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2148
+                  },
+                  "SyntheticAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1276
+                  },
+                  "TypeAnnotationsAttribute$Copier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2237
+                  },
+                  "TypeAnnotationsAttribute$Renamer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1496
+                  },
+                  "TypeAnnotationsAttribute$SubCopier.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3515
+                  },
+                  "TypeAnnotationsAttribute$SubWalker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4134
+                  },
+                  "TypeAnnotationsAttribute$TAWalker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1161
+                  },
+                  "TypeAnnotationsAttribute.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3476
+                  },
+                  "Utf8Info.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2209
+                  },
+                  "analysis": {
+                    "type": "directory",
+                    "children": {
+                      "Analyzer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "Analyzer$ExceptionInfo.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1464
+                      },
+                      "Analyzer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 12016
+                      },
+                      "ControlFlow$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1206
+                      },
+                      "ControlFlow$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1531
+                      },
+                      "ControlFlow$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1535
+                      },
+                      "ControlFlow$Access.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1069
+                      },
+                      "ControlFlow$Block.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2891
+                      },
+                      "ControlFlow$Catcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1617
+                      },
+                      "ControlFlow$Node.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4505
+                      },
+                      "ControlFlow.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5143
+                      },
+                      "Executor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 18552
+                      },
+                      "Frame.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4474
+                      },
+                      "FramePrinter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4890
+                      },
+                      "IntQueue$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 228
+                      },
+                      "IntQueue$Entry.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1241
+                      },
+                      "IntQueue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1458
+                      },
+                      "MultiArrayType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3315
+                      },
+                      "MultiType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6789
+                      },
+                      "Subroutine.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1773
+                      },
+                      "SubroutineScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4217
+                      },
+                      "Type.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11850
+                      },
+                      "Util.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1163
+                      }
+                    }
+                  },
+                  "annotation": {
+                    "type": "directory",
+                    "children": {
+                      "Annotation$Pair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 490
+                      },
+                      "Annotation.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8564
+                      },
+                      "AnnotationImpl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8066
+                      },
+                      "AnnotationMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2847
+                      },
+                      "AnnotationsWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4063
+                      },
+                      "ArrayMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4076
+                      },
+                      "BooleanMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2640
+                      },
+                      "ByteMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2505
+                      },
+                      "CharMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2478
+                      },
+                      "ClassMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4139
+                      },
+                      "DoubleMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2523
+                      },
+                      "EnumMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3515
+                      },
+                      "FloatMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2514
+                      },
+                      "IntegerMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2525
+                      },
+                      "LongMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2505
+                      },
+                      "MemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2373
+                      },
+                      "MemberValueVisitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1279
+                      },
+                      "NoSuchClassError.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 713
+                      },
+                      "ShortMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2512
+                      },
+                      "StringMemberValue.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2637
+                      },
+                      "TypeAnnotationsWriter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2680
+                      }
+                    }
+                  },
+                  "stackmap": {
+                    "type": "directory",
+                    "children": {
+                      "BasicBlock$Catch.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 699
+                      },
+                      "BasicBlock$JsrBytecode.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 537
+                      },
+                      "BasicBlock$Maker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9734
+                      },
+                      "BasicBlock$Mark.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1468
+                      },
+                      "BasicBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2703
+                      },
+                      "MapMaker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 15062
+                      },
+                      "Tracer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 16720
+                      },
+                      "TypeData$AbsTypeVar.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1060
+                      },
+                      "TypeData$ArrayElement.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4247
+                      },
+                      "TypeData$ArrayType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4026
+                      },
+                      "TypeData$BasicType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3092
+                      },
+                      "TypeData$ClassName.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3401
+                      },
+                      "TypeData$NullType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 949
+                      },
+                      "TypeData$TypeVar.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8554
+                      },
+                      "TypeData$UninitData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2652
+                      },
+                      "TypeData$UninitThis.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1332
+                      },
+                      "TypeData$UninitTypeVar.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3377
+                      },
+                      "TypeData.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5883
+                      },
+                      "TypeTag.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 775
+                      },
+                      "TypedBlock$Maker.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 783
+                      },
+                      "TypedBlock.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6115
+                      }
+                    }
+                  }
+                }
+              },
+              "compiler": {
+                "type": "directory",
+                "children": {
+                  "AccessorMaker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7723
+                  },
+                  "CodeGen$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 966
+                  },
+                  "CodeGen$ReturnHook.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 676
+                  },
+                  "CodeGen.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 39039
+                  },
+                  "CompileError.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1553
+                  },
+                  "Javac$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2193
+                  },
+                  "Javac$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2119
+                  },
+                  "Javac$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1933
+                  },
+                  "Javac$CtFieldWithInit.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 914
+                  },
+                  "Javac.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 12924
+                  },
+                  "JvstCodeGen.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 16145
+                  },
+                  "JvstTypeChecker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7472
+                  },
+                  "KeywordTable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1031
+                  },
+                  "Lex.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8626
+                  },
+                  "MemberCodeGen$JsrHook.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2081
+                  },
+                  "MemberCodeGen$JsrHook2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1380
+                  },
+                  "MemberCodeGen.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 25908
+                  },
+                  "MemberResolver$Method.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 884
+                  },
+                  "MemberResolver.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 13681
+                  },
+                  "NoFieldException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1001
+                  },
+                  "Parser.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 24993
+                  },
+                  "ProceedHandler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 410
+                  },
+                  "SymbolTable.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1367
+                  },
+                  "SyntaxError.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 766
+                  },
+                  "Token.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 423
+                  },
+                  "TokenId.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3407
+                  },
+                  "TypeChecker.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 24373
+                  },
+                  "ast": {
+                    "type": "directory",
+                    "children": {
+                      "ASTList.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3744
+                      },
+                      "ASTree.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1534
+                      },
+                      "ArrayInit.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 891
+                      },
+                      "AssignExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1213
+                      },
+                      "BinExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1188
+                      },
+                      "CallExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1701
+                      },
+                      "CastExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2177
+                      },
+                      "CondExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1731
+                      },
+                      "Declarator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3980
+                      },
+                      "DoubleConst.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2440
+                      },
+                      "Expr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2812
+                      },
+                      "FieldDecl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1373
+                      },
+                      "InstanceOfExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1440
+                      },
+                      "IntConst.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2953
+                      },
+                      "Keyword.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1100
+                      },
+                      "Member.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1004
+                      },
+                      "MethodDecl.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2060
+                      },
+                      "NewExpr.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2787
+                      },
+                      "Pair.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1794
+                      },
+                      "Stmnt.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2259
+                      },
+                      "StringL.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1083
+                      },
+                      "Symbol.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 945
+                      },
+                      "Variable.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1397
+                      },
+                      "Visitor.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3967
+                      }
+                    }
+                  }
+                }
+              },
+              "convert": {
+                "type": "directory",
+                "children": {
+                  "TransformAccessArrayField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7105
+                  },
+                  "TransformAfter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1309
+                  },
+                  "TransformBefore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4127
+                  },
+                  "TransformCall.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4111
+                  },
+                  "TransformCallToStatic.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1779
+                  },
+                  "TransformFieldAccess.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2502
+                  },
+                  "TransformNew.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3121
+                  },
+                  "TransformNewClass.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2274
+                  },
+                  "TransformReadField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3449
+                  },
+                  "TransformWriteField.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2609
+                  },
+                  "Transformer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1568
+                  }
+                }
+              },
+              "expr": {
+                "type": "directory",
+                "children": {
+                  "Cast$ProceedForCast.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1790
+                  },
+                  "Cast.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4116
+                  },
+                  "ConstructorCall.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1354
+                  },
+                  "Expr.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8483
+                  },
+                  "ExprEditor$LoopContext.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 795
+                  },
+                  "ExprEditor$NewOp.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 597
+                  },
+                  "ExprEditor.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6605
+                  },
+                  "FieldAccess$ProceedForRead.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2035
+                  },
+                  "FieldAccess$ProceedForWrite.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2325
+                  },
+                  "FieldAccess.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5818
+                  },
+                  "Handler.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4343
+                  },
+                  "Instanceof$ProceedForInstanceof.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1806
+                  },
+                  "Instanceof.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4190
+                  },
+                  "MethodCall.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6657
+                  },
+                  "NewArray$ProceedForArray.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2047
+                  },
+                  "NewArray.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6449
+                  },
+                  "NewExpr$ProceedForNew.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1918
+                  },
+                  "NewExpr.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5417
+                  }
+                }
+              },
+              "runtime": {
+                "type": "directory",
+                "children": {
+                  "Cflow$Depth.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 612
+                  },
+                  "Cflow.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 936
+                  },
+                  "Desc$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 698
+                  },
+                  "Desc.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4563
+                  },
+                  "DotClass.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 626
+                  },
+                  "Inner.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 276
+                  }
+                }
+              },
+              "scopedpool": {
+                "type": "directory",
+                "children": {
+                  "ScopedClassPool.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6190
+                  },
+                  "ScopedClassPoolFactory.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 418
+                  },
+                  "ScopedClassPoolFactoryImpl.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1114
+                  },
+                  "ScopedClassPoolRepository.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 842
+                  },
+                  "ScopedClassPoolRepositoryImpl.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5051
+                  },
+                  "SoftValueHashMap$SoftValueRef.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1625
+                  },
+                  "SoftValueHashMap.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5706
+                  }
+                }
+              },
+              "tools": {
+                "type": "directory",
+                "children": {
+                  "Callback.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2094
+                  },
+                  "Dump.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1452
+                  },
+                  "framedump.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1327
+                  },
+                  "reflect": {
+                    "type": "directory",
+                    "children": {
+                      "CannotCreateException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 783
+                      },
+                      "CannotInvokeException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1598
+                      },
+                      "CannotReflectException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 479
+                      },
+                      "ClassMetaobject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 8113
+                      },
+                      "CompiledClass.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 391
+                      },
+                      "Compiler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3391
+                      },
+                      "Loader.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1292
+                      },
+                      "Metalevel.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 322
+                      },
+                      "Metaobject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4665
+                      },
+                      "Reflection.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9817
+                      },
+                      "Sample.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1747
+                      }
+                    }
+                  },
+                  "rmi": {
+                    "type": "directory",
+                    "children": {
+                      "AppletServer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6768
+                      },
+                      "ExportedObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 416
+                      },
+                      "ObjectImporter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6416
+                      },
+                      "ObjectNotFoundException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 865
+                      },
+                      "Proxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 140
+                      },
+                      "RemoteException.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 791
+                      },
+                      "RemoteRef.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 641
+                      },
+                      "Sample.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 894
+                      },
+                      "StubGenerator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7663
+                      }
+                    }
+                  },
+                  "web": {
+                    "type": "directory",
+                    "children": {
+                      "BadHttpRequest.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 686
+                      },
+                      "ServiceThread.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 737
+                      },
+                      "Viewer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4738
+                      },
+                      "Webserver.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9091
+                      }
+                    }
+                  }
+                }
+              },
+              "util": {
+                "type": "directory",
+                "children": {
+                  "HotSwapAgent.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6343
+                  },
+                  "HotSwapper$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1704
+                  },
+                  "HotSwapper.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 6707
+                  },
+                  "Trigger.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 345
+                  },
+                  "proxy": {
+                    "type": "directory",
+                    "children": {
+                      "DefineClassHelper$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 241
+                      },
+                      "DefineClassHelper$Helper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1019
+                      },
+                      "DefineClassHelper$Java11.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1570
+                      },
+                      "DefineClassHelper$Java7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3009
+                      },
+                      "DefineClassHelper$Java9$ReferencedUnsafe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2790
+                      },
+                      "DefineClassHelper$Java9.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4704
+                      },
+                      "DefineClassHelper$JavaOther.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3152
+                      },
+                      "DefineClassHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4592
+                      },
+                      "DefinePackageHelper$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 247
+                      },
+                      "DefinePackageHelper$Helper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 932
+                      },
+                      "DefinePackageHelper$Java7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2712
+                      },
+                      "DefinePackageHelper$Java9.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1415
+                      },
+                      "DefinePackageHelper$JavaOther.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2898
+                      },
+                      "DefinePackageHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1776
+                      },
+                      "FactoryHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6402
+                      },
+                      "MethodFilter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 178
+                      },
+                      "MethodHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 305
+                      },
+                      "Proxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 175
+                      },
+                      "ProxyFactory$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 735
+                      },
+                      "ProxyFactory$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1034
+                      },
+                      "ProxyFactory$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1317
+                      },
+                      "ProxyFactory$ClassLoaderProvider.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 315
+                      },
+                      "ProxyFactory$Find2MethodsArgs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 750
+                      },
+                      "ProxyFactory$ProxyDetails.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 904
+                      },
+                      "ProxyFactory$UniqueName.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 275
+                      },
+                      "ProxyFactory.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 37542
+                      },
+                      "ProxyObject.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 283
+                      },
+                      "ProxyObjectInputStream.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2395
+                      },
+                      "ProxyObjectOutputStream.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1845
+                      },
+                      "RuntimeSupport$DefaultMethodHandler.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1053
+                      },
+                      "RuntimeSupport.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 7301
+                      },
+                      "SecurityActions$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 937
+                      },
+                      "SecurityActions$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1008
+                      },
+                      "SecurityActions$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1852
+                      },
+                      "SecurityActions$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1267
+                      },
+                      "SecurityActions$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1229
+                      },
+                      "SecurityActions$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 976
+                      },
+                      "SecurityActions$7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1132
+                      },
+                      "SecurityActions$8.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2040
+                      },
+                      "SecurityActions$TheUnsafe.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2624
+                      },
+                      "SecurityActions.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6325
+                      },
+                      "SerializedProxy$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1399
+                      },
+                      "SerializedProxy.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4251
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "org": {
+            "type": "directory",
+            "children": {
+              "json": {
+                "type": "directory",
+                "children": {
+                  "CDL.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4259
+                  },
+                  "Cookie.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 3756
+                  },
+                  "CookieList.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2007
+                  },
+                  "HTTP.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 2703
+                  },
+                  "HTTPTokener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1055
+                  },
+                  "JSONArray.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 22820
+                  },
+                  "JSONException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 772
+                  },
+                  "JSONML.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 8202
+                  },
+                  "JSONMLParserConfiguration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1632
+                  },
+                  "JSONObject$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 196
+                  },
+                  "JSONObject$Null.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 956
+                  },
+                  "JSONObject.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 39324
+                  },
+                  "JSONPointer$Builder.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1229
+                  },
+                  "JSONPointer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5175
+                  },
+                  "JSONPointerException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 611
+                  },
+                  "JSONPropertyIgnore.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 438
+                  },
+                  "JSONPropertyName.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 465
+                  },
+                  "JSONString.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 156
+                  },
+                  "JSONStringer.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 616
+                  },
+                  "JSONTokener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 7639
+                  },
+                  "JSONWriter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5938
+                  },
+                  "ParserConfiguration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1648
+                  },
+                  "Property.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1921
+                  },
+                  "XML$1$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1375
+                  },
+                  "XML$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 807
+                  },
+                  "XML.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 14300
+                  },
+                  "XMLParserConfiguration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 4698
+                  },
+                  "XMLTokener.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5201
+                  },
+                  "XMLXsiTypeConverter.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 284
+                  }
+                }
+              },
+              "reflections": {
+                "type": "directory",
+                "children": {
+                  "Configuration.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 789
+                  },
+                  "ReflectionUtils$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1215
+                  },
+                  "ReflectionUtils$10.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1119
+                  },
+                  "ReflectionUtils$11$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1316
+                  },
+                  "ReflectionUtils$11.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1472
+                  },
+                  "ReflectionUtils$12$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1286
+                  },
+                  "ReflectionUtils$12.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1449
+                  },
+                  "ReflectionUtils$13.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1142
+                  },
+                  "ReflectionUtils$14.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1208
+                  },
+                  "ReflectionUtils$15.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1158
+                  },
+                  "ReflectionUtils$16.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1224
+                  },
+                  "ReflectionUtils$17.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1114
+                  },
+                  "ReflectionUtils$18.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1141
+                  },
+                  "ReflectionUtils$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1247
+                  },
+                  "ReflectionUtils$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1292
+                  },
+                  "ReflectionUtils$4.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1222
+                  },
+                  "ReflectionUtils$5.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1409
+                  },
+                  "ReflectionUtils$6.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1566
+                  },
+                  "ReflectionUtils$7.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1483
+                  },
+                  "ReflectionUtils$8.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1238
+                  },
+                  "ReflectionUtils$9.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1443
+                  },
+                  "ReflectionUtils.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 18746
+                  },
+                  "Reflections$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1207
+                  },
+                  "Reflections$2.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1317
+                  },
+                  "Reflections$3.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1203
+                  },
+                  "Reflections.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 22677
+                  },
+                  "ReflectionsException.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 678
+                  },
+                  "Store$1.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1068
+                  },
+                  "Store$IterableChain.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 1710
+                  },
+                  "Store.class": {
+                    "type": "file",
+                    "extension": ".class",
+                    "size": 5019
+                  },
+                  "adapters": {
+                    "type": "directory",
+                    "children": {
+                      "JavaReflectionAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9361
+                      },
+                      "JavassistAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11098
+                      },
+                      "MetadataAdapter.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1702
+                      }
+                    }
+                  },
+                  "scanners": {
+                    "type": "directory",
+                    "children": {
+                      "AbstractScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3932
+                      },
+                      "FieldAnnotationsScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1804
+                      },
+                      "MemberUsageScanner$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3230
+                      },
+                      "MemberUsageScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4283
+                      },
+                      "MethodAnnotationsScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1396
+                      },
+                      "MethodParameterNamesScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2529
+                      },
+                      "MethodParameterScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2035
+                      },
+                      "ResourcesScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1286
+                      },
+                      "Scanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1031
+                      },
+                      "SubTypesScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1839
+                      },
+                      "TypeAnnotationsScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1464
+                      },
+                      "TypeElementsScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3097
+                      },
+                      "TypesScanner.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1406
+                      }
+                    }
+                  },
+                  "serializers": {
+                    "type": "directory",
+                    "children": {
+                      "JavaCodeSerializer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1126
+                      },
+                      "JavaCodeSerializer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 11412
+                      },
+                      "JsonSerializer$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1209
+                      },
+                      "JsonSerializer$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2797
+                      },
+                      "JsonSerializer$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1548
+                      },
+                      "JsonSerializer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2420
+                      },
+                      "Serializer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 351
+                      },
+                      "XmlSerializer.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5502
+                      }
+                    }
+                  },
+                  "util": {
+                    "type": "directory",
+                    "children": {
+                      "ClasspathHelper.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9719
+                      },
+                      "ConfigurationBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 10310
+                      },
+                      "FilterBuilder$Exclude.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1213
+                      },
+                      "FilterBuilder$Include.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1205
+                      },
+                      "FilterBuilder$Matcher.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1031
+                      },
+                      "FilterBuilder.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 5696
+                      },
+                      "Utils.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 9049
+                      }
+                    }
+                  },
+                  "vfs": {
+                    "type": "directory",
+                    "children": {
+                      "CommonsVfs2UrlType$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 242
+                      },
+                      "CommonsVfs2UrlType$Dir$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1299
+                      },
+                      "CommonsVfs2UrlType$Dir$FileAbstractIterator.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 3462
+                      },
+                      "CommonsVfs2UrlType$Dir.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1740
+                      },
+                      "CommonsVfs2UrlType$File.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1706
+                      },
+                      "CommonsVfs2UrlType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2250
+                      },
+                      "JarInputDir$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2351
+                      },
+                      "JarInputDir$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1019
+                      },
+                      "JarInputDir.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1355
+                      },
+                      "JarInputFile$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1141
+                      },
+                      "JarInputFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1745
+                      },
+                      "SystemDir$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1717
+                      },
+                      "SystemDir$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1003
+                      },
+                      "SystemDir.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2332
+                      },
+                      "SystemFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1632
+                      },
+                      "UrlTypeVFS$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 939
+                      },
+                      "UrlTypeVFS.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 4591
+                      },
+                      "Vfs$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1548
+                      },
+                      "Vfs$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1048
+                      },
+                      "Vfs$DefaultUrlTypes$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1358
+                      },
+                      "Vfs$DefaultUrlTypes$2.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1626
+                      },
+                      "Vfs$DefaultUrlTypes$3.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1350
+                      },
+                      "Vfs$DefaultUrlTypes$4.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2431
+                      },
+                      "Vfs$DefaultUrlTypes$5.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1169
+                      },
+                      "Vfs$DefaultUrlTypes$6.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1621
+                      },
+                      "Vfs$DefaultUrlTypes$7.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1147
+                      },
+                      "Vfs$DefaultUrlTypes.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2155
+                      },
+                      "Vfs$Dir.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 410
+                      },
+                      "Vfs$File.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 346
+                      },
+                      "Vfs$UrlType.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 396
+                      },
+                      "Vfs.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 6819
+                      },
+                      "ZipDir$1$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1659
+                      },
+                      "ZipDir$1.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 979
+                      },
+                      "ZipDir.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1425
+                      },
+                      "ZipFile.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 1679
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 72
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 64089
+          }
+        }
+      }
+    }
+  }
+}

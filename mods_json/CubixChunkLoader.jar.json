@@ -1,0 +1,542 @@
+{
+  "mod_name": "CubixChunkLoader.jar",
+  "mod_path": "C:\\Users\\rootu\\launcher\\updates\\HiTech\\mods\\CubixChunkLoader.jar",
+  "mod_type": "jar",
+  "tree": {
+    "CubixChunkLoader.jar": {
+      "type": "file",
+      "extension": ".jar",
+      "size": 608657,
+      "jar_contents": {
+        "type": "jar",
+        "children": {
+          "META-INF": {
+            "type": "directory",
+            "children": {
+              "MANIFEST.MF": {
+                "type": "file",
+                "extension": ".mf",
+                "size": 67
+              }
+            }
+          },
+          "assets": {
+            "type": "directory",
+            "children": {
+              "cubixcl": {
+                "type": "directory",
+                "children": {
+                  "lang": {
+                    "type": "directory",
+                    "children": {
+                      "en_US.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 150
+                      },
+                      "ru_RU.lang": {
+                        "type": "file",
+                        "extension": ".lang",
+                        "size": 150
+                      }
+                    }
+                  },
+                  "models": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "cubixchunkloader.mtl": {
+                            "type": "file",
+                            "extension": ".mtl",
+                            "size": 76
+                          },
+                          "cubixchunkloader.obj": {
+                            "type": "file",
+                            "extension": ".obj",
+                            "size": 225837
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "textures": {
+                    "type": "directory",
+                    "children": {
+                      "blocks": {
+                        "type": "directory",
+                        "children": {
+                          "cladminchunkloader.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 297
+                          },
+                          "clchunkloader.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 291
+                          }
+                        }
+                      },
+                      "gui": {
+                        "type": "directory",
+                        "children": {
+                          "bg.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 435858
+                          },
+                          "buy.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9753
+                          },
+                          "buy_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9536
+                          },
+                          "cont.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4678
+                          },
+                          "cont_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 4683
+                          },
+                          "cubixMoney.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 2076
+                          },
+                          "gui_chunkloader.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 1788
+                          },
+                          "off.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 7956
+                          },
+                          "on.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 9252
+                          },
+                          "plusMinus.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 631
+                          },
+                          "stop.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 12102
+                          },
+                          "stop_hover.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 11258
+                          },
+                          "text-off.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3576
+                          },
+                          "text-on.png": {
+                            "type": "file",
+                            "extension": ".png",
+                            "size": 3504
+                          }
+                        }
+                      },
+                      "models": {
+                        "type": "directory",
+                        "children": {
+                          "blocks": {
+                            "type": "directory",
+                            "children": {
+                              "cubixachunkloader.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 558
+                              },
+                              "cubixchunkloader.png": {
+                                "type": "file",
+                                "extension": ".png",
+                                "size": 514
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "com": {
+            "type": "directory",
+            "children": {
+              "eifel": {
+                "type": "directory",
+                "children": {
+                  "cubixcl": {
+                    "type": "directory",
+                    "children": {
+                      "block": {
+                        "type": "directory",
+                        "children": {
+                          "CLBlockAdminChunkLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3884
+                          },
+                          "CLBlockChunkLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3859
+                          },
+                          "CLBlocks.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1635
+                          },
+                          "gui": {
+                            "type": "directory",
+                            "children": {
+                              "button": {
+                                "type": "directory",
+                                "children": {
+                                  "CLGuiButton.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 3860
+                                  },
+                                  "IButtonAction.class": {
+                                    "type": "file",
+                                    "extension": ".class",
+                                    "size": 199
+                                  }
+                                }
+                              },
+                              "CLContainerAdminChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 983
+                              },
+                              "CLContainerChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 953
+                              },
+                              "CLGuiAdminChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8412
+                              },
+                              "CLGuiChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 9985
+                              },
+                              "CLGuiHandler.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2033
+                              }
+                            }
+                          },
+                          "itemblock": {
+                            "type": "directory",
+                            "children": {
+                              "CLAdminChunkLoaderItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1861
+                              },
+                              "CLChunkLoaderItemBlock.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1758
+                              }
+                            }
+                          },
+                          "tesr": {
+                            "type": "directory",
+                            "children": {
+                              "CLBlockTESR.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 3372
+                              }
+                            }
+                          },
+                          "tileentity": {
+                            "type": "directory",
+                            "children": {
+                              "CLTileAdminChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2643
+                              },
+                              "CLTileChunkLoader$CLLoaderInfo.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1093
+                              },
+                              "CLTileChunkLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 8612
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "chunkmanager": {
+                        "type": "directory",
+                        "children": {
+                          "CLChunkManager.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1015
+                          }
+                        }
+                      },
+                      "core": {
+                        "type": "directory",
+                        "children": {
+                          "CLCommand$CommandResultData.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 630
+                          },
+                          "CLCommand.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2390
+                          },
+                          "CLConfig.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1524
+                          },
+                          "CLInfo.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 610
+                          },
+                          "CubixChunkLoader.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2219
+                          }
+                        }
+                      },
+                      "eco": {
+                        "type": "directory",
+                        "children": {
+                          "VaultUtils.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 976
+                          }
+                        }
+                      },
+                      "event": {
+                        "type": "directory",
+                        "children": {
+                          "CLServerEventHandler.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1324
+                          }
+                        }
+                      },
+                      "network": {
+                        "type": "directory",
+                        "children": {
+                          "AbstractMessage$AbstractClientMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1343
+                          },
+                          "AbstractMessage$AbstractServerMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1343
+                          },
+                          "AbstractMessage.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3638
+                          },
+                          "CLNetwork.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 7245
+                          },
+                          "message": {
+                            "type": "directory",
+                            "children": {
+                              "CLMessageChangeAdminRadius.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1504
+                              },
+                              "CLMessageChangeRadius.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1484
+                              },
+                              "CLMessageChangeTimeMultiplier.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1516
+                              },
+                              "CLMessageSpawnParticle.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 2185
+                              },
+                              "CLMessageStartAdminLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1224
+                              },
+                              "CLMessageStartLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1204
+                              },
+                              "CLMessageStopAdminLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1220
+                              },
+                              "CLMessageStopLoader.class": {
+                                "type": "file",
+                                "extension": ".class",
+                                "size": 1200
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "proxy": {
+                        "type": "directory",
+                        "children": {
+                          "CLClientProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 3222
+                          },
+                          "CLServerProxy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2725
+                          }
+                        }
+                      },
+                      "recipe": {
+                        "type": "directory",
+                        "children": {
+                          "CLRecipes.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1046
+                          }
+                        }
+                      },
+                      "render": {
+                        "type": "directory",
+                        "children": {
+                          "CLBlockModelRenderer.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2747
+                          }
+                        }
+                      },
+                      "Utilities.class": {
+                        "type": "file",
+                        "extension": ".class",
+                        "size": 2749
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "mcmod.info": {
+            "type": "file",
+            "extension": ".info",
+            "size": 337
+          },
+          "net": {
+            "type": "directory",
+            "children": {
+              "milkbowl": {
+                "type": "directory",
+                "children": {
+                  "vault": {
+                    "type": "directory",
+                    "children": {
+                      "economy": {
+                        "type": "directory",
+                        "children": {
+                          "Economy.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 2277
+                          },
+                          "EconomyResponse$1.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 785
+                          },
+                          "EconomyResponse$ResponseType.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1468
+                          },
+                          "EconomyResponse.class": {
+                            "type": "file",
+                            "extension": ".class",
+                            "size": 1111
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bf_transformers.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 12
+          },
+          "bf_transformers_assets.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 782
+          },
+          "bf_transformers_discoverer.dat": {
+            "type": "file",
+            "extension": ".dat",
+            "size": 7007
+          }
+        }
+      }
+    }
+  }
+}
