@@ -452,6 +452,7 @@ export default function App() {
     }
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
+  const outputIsBlockLike = useMemo(() => /(^|[:_./-])block([:_./-]|$)/i.test(outputRaw), [outputRaw]);
 
   function getCellRaw(target: CraftEditorTarget): string {
     if (target.kind === 'output') {
@@ -995,7 +996,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
                 <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
-                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} /> : <span>?</span>}
+                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} block3d={outputIsBlockLike && !recipe.output_resolution.animated} /> : <span>?</span>}
                 </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>

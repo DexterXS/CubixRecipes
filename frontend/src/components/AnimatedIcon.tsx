@@ -5,9 +5,10 @@ interface Props {
   alt: string;
   animated?: boolean;
   frameTime?: number;
+  block3d?: boolean;
 }
 
-export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: Props) {
+export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, block3d = false }: Props) {
   const [frameCount, setFrameCount] = useState(1);
 
   useEffect(() => {
@@ -31,6 +32,16 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: 
   }, [frameCount, frameTime]);
 
   if (!animated || frameCount <= 1) {
+    if (block3d) {
+      const style = { ['--icon-url' as string]: `url(${iconUrl})` };
+      return (
+        <span className="icon-3d" style={style} role="img" aria-label={alt}>
+          <span className="icon-3d-face icon-3d-face-top" />
+          <span className="icon-3d-face icon-3d-face-front" />
+          <span className="icon-3d-face icon-3d-face-side" />
+        </span>
+      );
+    }
     return <img src={iconUrl} alt={alt} />;
   }
 

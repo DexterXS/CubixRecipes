@@ -23,6 +23,7 @@ class ItemResolver:
             self._contenttweaker_exact,
             self._textures_exact,
             self._textures_meta_suffix,
+            self._avaritia_resource_block_meta,
             self._grouped_files,
             self._model_texture,
             self._block_texture,
@@ -88,6 +89,25 @@ class ItemResolver:
         checked_sources.extend([c['source_type'] for c in variants])
         trace.append({'strategy': 'grouped_files', 'variants': len(variants)})
         return self._make_result(item_ref, variants[:1], 0.75, 'grouped_files', trace)
+
+    def _avaritia_resource_block_meta(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        if item_ref.modid != 'avaritia' or item_ref.name != 'resource_block' or item_ref.meta_value is None:
+            trace.append({'strategy': 'avaritia_resource_block_meta', 'checked': 0})
+            return None
+        aliases = [
+            f'avaritia:resource_block_{item_ref.meta_value}',
+            f'avaritia:blocks/resource_block_{item_ref.meta_value}',
+            f'avaritia:block/resource_block_{item_ref.meta_value}',
+        ]
+        checked_keys.extend(aliases)
+        for alias in aliases:
+            candidates = self.asset_index.icons.get(alias, [])
+            if candidates:
+                checked_sources.extend([c['source_type'] for c in candidates])
+                trace.append({'strategy': 'avaritia_resource_block_meta', 'matched': alias})
+                return self._make_result(item_ref, candidates[:1], 0.86, 'avaritia_resource_block_meta', trace)
+        trace.append({'strategy': 'avaritia_resource_block_meta', 'matched': None})
+        return None
 
     def _model_texture(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         model = self.asset_index.models.get(key)

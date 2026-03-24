@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Added a dedicated resolver fallback for `<Avaritia:Resource_Block:meta>` so meta variants like `<Avaritia:Resource_Block:1>` can resolve via `blocks/resource_block_<meta>.png` aliases when present.
+- Added optional pseudo-3D block icon rendering in frontend (isometric CSS transform + shaded faces) for block-like ids to improve visual depth over flat sprites.
 - Simplified recipe grid cells for icon-first editing: removed redundant in-cell text labels, expanded icon to nearly full cell area, and added compact per-cell `copy/paste/clear` symbol actions under each icon.
 - Refactored backend icon indexing into modular per-mod parser registry (`backend/app/indexer/mod_parsers`) and fixed texture-key extraction so mods using `textures/item` (singular) and nested texture paths resolve correctly to `/api/icons/...`.
 - Hardened frontend `itempanel.csv` ingestion so replacing the file no longer breaks localization/icon UX: loader now auto-detects delimiter (`,`/`;`/tab), handles quoted CSV cells, and uses UTF-8-first decoding with CP1251 fallback for Russian datasets.

@@ -100,6 +100,11 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .output-icon-button { cursor: pointer; }
 .animated-icon { width: 68px; height: 68px; display: block; background-repeat: no-repeat; background-size: 100% calc(var(--frame-count, 1) * 100%); image-rendering: pixelated; animation-name: icon-frames; animation-timing-function: steps(var(--frame-count, 1)); animation-iteration-count: infinite; }
 @keyframes icon-frames { from { background-position-y: 0%; } to { background-position-y: 100%; } }
+.icon-3d { width: 70%; height: 70%; display: inline-block; position: relative; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(45deg); }
+.icon-3d-face { position: absolute; inset: 0; background-image: var(--icon-url); background-size: cover; image-rendering: pixelated; border: 1px solid rgba(15, 23, 42, .35); }
+.icon-3d-face-front { transform: translateZ(8px); filter: brightness(1.02); }
+.icon-3d-face-top { transform: rotateX(90deg) translateZ(8px); transform-origin: top; filter: brightness(1.2); }
+.icon-3d-face-side { transform: rotateY(90deg) translateZ(8px); transform-origin: right; filter: brightness(.72); }
 .output-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
 .badge { padding: 5px 9px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); }
 .badge-success { background: rgba(34,197,94,.12); color: #bbf7d0; }
@@ -118,7 +123,7 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .grid-cell input { min-width: 0; padding: 8px 10px; }
 .grid-cell.is-view input { pointer-events: none; opacity: .84; }
 .cell-icon-slot { width: 100%; height: 100%; border-radius: 12px; border: 1px dashed #475569; display: grid; place-items: center; font-size: 18px; background: #0b1220; padding: 0; cursor: pointer; }
-.cell-icon-slot img, .cell-icon-slot .animated-icon { width: 84%; height: 84%; }
+.cell-icon-slot img, .cell-icon-slot .animated-icon, .cell-icon-slot .icon-3d { width: 84%; height: 84%; }
 .cell-mini-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
 .cell-mini-button { height: 22px; min-height: 22px; padding: 0; border-radius: 8px; font-size: 12px; line-height: 1; border: 1px solid #334155; background: #0b1528; color: #cbd5e1; cursor: pointer; }
 .cell-mini-button:hover { border-color: #60a5fa; color: #dbeafe; }

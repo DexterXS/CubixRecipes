@@ -30,6 +30,7 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, onCe
             const iconUrl = cell?.resolution?.icon_url ?? null;
             const resolverTitle = cell?.resolution?.display_name?.trim();
             const localizedTitle = value ? resolveCellTitle(value) : '';
+            const isBlockLike = /(^|[:_./-])block([:_./-]|$)/i.test(value);
             const title = value
               ? (localizedTitle && localizedTitle !== value
                 ? localizedTitle
@@ -44,7 +45,7 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, onCe
               >
                 <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                   {displayMode === 'icons' && iconUrl
-                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} />
+                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} block3d={isBlockLike && !cell.resolution?.animated} />
                     : <span aria-hidden="true">{displayMode === 'icons' ? '?' : '□'}</span>}
                 </button>
                 <div className="cell-mini-actions">

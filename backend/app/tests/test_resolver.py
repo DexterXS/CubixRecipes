@@ -86,3 +86,21 @@ def test_scan_registers_nested_texture_aliases_from_mod_parser(tmp_path):
     item = RecipeParser().parse_item_ref('<contenttweaker:bot_photonium>')
     result = resolver.resolve(item)
     assert result.icon_asset_id is not None
+
+
+def test_avaritia_resource_block_meta_alias_strategy():
+    index = AssetIndex()
+    index.register_icon(
+        'avaritia:blocks/resource_block_1',
+        {
+            'asset_id': 'jar:avaritia_resource_block_meta_1',
+            'path': 'assets/avaritia/textures/blocks/resource_block_1.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource_Block:1>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'avaritia_resource_block_meta'
+    assert result.icon_asset_id == 'jar:avaritia_resource_block_meta_1'
