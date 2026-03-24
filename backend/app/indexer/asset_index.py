@@ -217,7 +217,7 @@ class AssetIndex:
                 report['registered_keys'].append(key)
                 source_report['registered_keys'].append(key)
                 recognized = True
-            if rel_path.endswith('.png.mcmeta'):
+            if rel_path.endswith('.png.mcmeta') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
                 target = rel_path[:-7]
                 namespace, item_name = self._extract_texture_key(target)
                 key = f'{namespace}:{item_name}'

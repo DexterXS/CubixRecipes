@@ -12,6 +12,8 @@
 - Frontend now suppresses repeated `/api/debug/log` retries and skips background UI-preference autosaves while the backend is offline, so connection-refused states no longer masquerade as unrelated save errors.
 - Replaced placeholder icon proxy with real binary streaming: `/api/icons/{icon_asset_id}` now reads PNG data from indexed files/jar entries and returns actual images.
 - Resolver/source parsing now correctly handles asset ids for Windows-like paths via a robust `source|relative_path` format while preserving backward compatibility.
+- Fixed icon URLs for Windows/jar-based sources by URL-encoding `icon_asset_id` in resolver responses and decoding it in icon proxy routes, so textures with `:\` and separators now load correctly in browser requests.
+- Fixed noisy asset scan parse errors by only parsing `.png.mcmeta` animation metadata for texture paths under `/textures/items/` and `/textures/blocks/`.
 
 ### Added
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.

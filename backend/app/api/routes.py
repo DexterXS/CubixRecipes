@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
+from urllib.parse import unquote
 from zipfile import ZipFile
 
 from fastapi import APIRouter, FastAPI, HTTPException, Response
@@ -379,6 +380,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/icons/{icon_asset_id:path}')
     def icon_proxy(icon_asset_id: str):
+        icon_asset_id = unquote(icon_asset_id)
         candidate = asset_index.icon_assets.get(icon_asset_id)
         if candidate is None:
             parsed = asset_index.parse_asset_id(icon_asset_id)

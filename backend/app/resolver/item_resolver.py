@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from urllib.parse import quote
 from typing import Any, Optional
 
 from app.domain.models import ItemRef, ResolutionResult
@@ -151,7 +152,9 @@ class ItemResolver:
         if not candidates:
             return None
         candidate = candidates[0]
-        return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get('display_name') or item_ref.raw, icon_asset_id=candidate['asset_id'], icon_url=f"/api/icons/{candidate['asset_id']}", animated=candidate.get('animated', False), animation_meta=candidate.get('animation_meta'), confidence=confidence, strategy=strategy, trace=list(trace))
+        icon_asset_id = candidate['asset_id']
+        icon_url = f"/api/icons/{quote(icon_asset_id, safe='')}"
+        return ResolutionResult(item_raw=item_ref.raw, display_name=candidate.get('display_name') or item_ref.raw, icon_asset_id=icon_asset_id, icon_url=icon_url, animated=candidate.get('animated', False), animation_meta=candidate.get('animation_meta'), confidence=confidence, strategy=strategy, trace=list(trace))
 
     def _extract_source_from_asset_id(self, icon_asset_id: Optional[str]) -> Optional[str]:
         if not icon_asset_id:

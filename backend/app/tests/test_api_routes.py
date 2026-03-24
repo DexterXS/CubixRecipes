@@ -266,10 +266,12 @@ def test_icon_proxy_streams_binary_from_indexed_archive(tmp_path: Path):
         )()
     )
     resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<examplemod:seed>', 'settings': {}})())
-    response = icon_route(resolved['icon_asset_id'])
+    encoded_asset_id = resolved['icon_url'].split('/api/icons/', 1)[1]
+    response = icon_route(encoded_asset_id)
 
     assert response.media_type == 'image/png'
     assert response.body == b'png-binary'
+    assert '%' in resolved['icon_url']
 
 
 def test_asset_scan_registers_icons_from_mods_json_tree(tmp_path: Path):
