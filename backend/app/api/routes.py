@@ -4,9 +4,10 @@ import json
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
+from zipfile import ZipFile
 
 from fastapi import APIRouter, FastAPI, HTTPException, Response
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import PlainTextResponse
 
 from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
 from app.config.project_config import ProjectConfigService
@@ -378,8 +379,38 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/icons/{icon_asset_id:path}')
     def icon_proxy(icon_asset_id: str):
-        log_service.log('BACKEND', 'DEBUG', 'ICON', 'Icon proxy placeholder hit', {'icon_asset_id': icon_asset_id}, verbose_only=True)
-        return JSONResponse({'icon_asset_id': icon_asset_id, 'note': 'MVP placeholder: static icon proxy not implemented in tests'})
+        candidate = asset_index.icon_assets.get(icon_asset_id)
+        if candidate is None:
+            parsed = asset_index.parse_asset_id(icon_asset_id)
+            if parsed is not None:
+                source, rel_path = parsed
+                for entries in asset_index.icons.values():
+                    found = next((entry for entry in entries if entry.get('source_type') == source and entry.get('path') == rel_path), None)
+                    if found is not None:
+                        candidate = found
+                        break
+        if candidate is None:
+            raise HTTPException(status_code=404, detail='Icon asset not found')
+
+        locator = candidate.get('locator') or {}
+        content: Optional[bytes] = None
+        try:
+            if locator.get('kind') == 'file':
+                file_path = Path(str(locator.get('file_path', '')))
+                if file_path.is_file():
+                    content = file_path.read_bytes()
+            elif locator.get('kind') == 'archive_entry':
+                archive_path = Path(str(locator.get('archive_path', '')))
+                entry_path = str(locator.get('entry_path', ''))
+                if archive_path.is_file() and entry_path:
+                    with ZipFile(archive_path) as archive:
+                        content = archive.read(entry_path)
+        except Exception as exc:
+            log_service.log('BACKEND', 'ERROR', 'ICON', 'Icon binary read failed', {'icon_asset_id': icon_asset_id, 'error': str(exc), 'error_type': exc.__class__.__name__})
+            raise HTTPException(status_code=500, detail='Icon binary read failed') from exc
+        if content is None:
+            raise HTTPException(status_code=404, detail='Icon binary is unavailable for this asset')
+        return Response(content=content, media_type='image/png')
 
     app = FastAPI(title='CubixRecipes API')
 

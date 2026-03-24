@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from zipfile import ZipFile
 
 
@@ -10,6 +10,7 @@ class AssetIndex:
     def __init__(self, log_service: Any = None) -> None:
         self.log_service = log_service
         self.icons: dict[str, list[dict]] = {}
+        self.icon_assets: dict[str, dict[str, Any]] = {}
         self.models: dict[str, dict] = {}
         self.lang: dict[str, dict[str, str]] = {}
         self.scan_status: dict[str, dict] = {}
@@ -24,6 +25,7 @@ class AssetIndex:
 
     def reset(self) -> None:
         self.icons.clear()
+        self.icon_assets.clear()
         self.models.clear()
         self.lang.clear()
         self.scan_status.clear()
@@ -38,6 +40,9 @@ class AssetIndex:
 
     def register_icon(self, key: str, candidate: dict) -> None:
         self.icons.setdefault(key, []).append(candidate)
+        asset_id = candidate.get('asset_id')
+        if asset_id:
+            self.icon_assets[asset_id] = candidate
 
     def register_model(self, key: str, payload: dict) -> None:
         self.models[key] = payload
@@ -132,7 +137,14 @@ class AssetIndex:
             for name in archive.namelist():
                 if name.endswith('/'):
                     continue
-                self._consume_virtual(name, archive.read(name), source=str(archive_path), source_report=source_report, report=report)
+                self._consume_virtual(
+                    name,
+                    archive.read(name),
+                    source=str(archive_path),
+                    source_report=source_report,
+                    report=report,
+                    locator={'kind': 'archive_entry', 'archive_path': str(archive_path), 'entry_path': name},
+                )
 
     def _consume_file(self, file_path: Path, rel_path: str, source: str, source_report: dict[str, Any], report: dict[str, Any]) -> None:
         try:
@@ -144,12 +156,30 @@ class AssetIndex:
             if self.log_service is not None:
                 self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to read asset file', issue)
             return
-        self._consume_virtual(rel_path, data, source=source, source_report=source_report, report=report)
+        self._consume_virtual(
+            rel_path,
+            data,
+            source=source,
+            source_report=source_report,
+            report=report,
+            locator={'kind': 'file', 'file_path': str(file_path)},
+        )
 
-    def _consume_virtual(self, rel_path: str, data: bytes, source: str, source_report: dict[str, Any], report: dict[str, Any]) -> None:
+    def _consume_virtual(
+        self,
+        rel_path: str,
+        data: bytes,
+        source: str,
+        source_report: dict[str, Any],
+        report: dict[str, Any],
+        locator: Optional[dict[str, Any]] = None,
+    ) -> None:
         source_report['indexed_files'] += 1
         try:
             recognized = False
+            if rel_path.endswith('.jar.tree.json') or rel_path.endswith('.jar.json') or rel_path.endswith('.json'):
+                if self._scan_mod_manifest(rel_path, data, source, source_report, report):
+                    recognized = True
             if '/lang/' in rel_path and (rel_path.endswith('.json') or rel_path.endswith('.lang')):
                 locale = Path(rel_path).stem
                 mapping = self._parse_lang(rel_path, data)
@@ -170,7 +200,16 @@ class AssetIndex:
             if rel_path.endswith('.png') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
                 namespace, item_name = self._extract_texture_key(rel_path)
                 key = f'{namespace}:{item_name}'
-                self.register_icon(key, {'asset_id': f'{source}:{rel_path}', 'path': rel_path, 'source_type': source, 'animated': False})
+                self.register_icon(
+                    key,
+                    {
+                        'asset_id': self._build_asset_id(source, rel_path),
+                        'path': rel_path,
+                        'source_type': source,
+                        'animated': False,
+                        'locator': locator,
+                    },
+                )
                 if self.log_service is not None:
                     self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_key': key, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
                 counter_key = 'textures_items' if '/textures/items/' in rel_path else 'textures_blocks'
@@ -182,7 +221,8 @@ class AssetIndex:
                 target = rel_path[:-7]
                 namespace, item_name = self._extract_texture_key(target)
                 key = f'{namespace}:{item_name}'
-                self.register_icon(key, {'asset_id': f'{source}:{target}', 'path': target, 'source_type': source, 'animated': True})
+                animation_meta = self._parse_animation_mcmeta(data)
+                self._mark_icon_animated(key, source, target, locator, animation_meta)
                 report['registered_keys'].append(key)
                 source_report['registered_keys'].append(key)
                 recognized = True
@@ -218,6 +258,138 @@ class AssetIndex:
             key, value = line.split('=', 1)
             result[key.strip()] = value.strip()
         return result
+
+    def _parse_animation_mcmeta(self, data: bytes) -> dict[str, Any]:
+        try:
+            payload = json.loads(data.decode('utf-8'))
+        except Exception:
+            return {}
+        animation = payload.get('animation', {}) if isinstance(payload, dict) else {}
+        if not isinstance(animation, dict):
+            return {}
+        frames = animation.get('frames')
+        normalized_frames = frames if isinstance(frames, list) else None
+        frametime = animation.get('frametime')
+        return {
+            'frametime': frametime if isinstance(frametime, int) and frametime > 0 else 1,
+            'frames': normalized_frames,
+            'interpolate': bool(animation.get('interpolate', False)),
+        }
+
+    def _build_asset_id(self, source: str, rel_path: str) -> str:
+        return f'{source}|{rel_path}'
+
+    def parse_asset_id(self, icon_asset_id: str) -> Optional[tuple[str, str]]:
+        if '|' in icon_asset_id:
+            source, rel_path = icon_asset_id.split('|', 1)
+            return source, rel_path
+        if ':' in icon_asset_id:
+            source, rel_path = icon_asset_id.split(':', 1)
+            return source, rel_path
+        return None
+
+    def _mark_icon_animated(
+        self,
+        key: str,
+        source: str,
+        target_path: str,
+        locator: Optional[dict[str, Any]],
+        animation_meta: Optional[dict[str, Any]] = None,
+    ) -> None:
+        candidates = self.icons.get(key, [])
+        for candidate in candidates:
+            if candidate.get('path') == target_path and candidate.get('source_type') == source:
+                candidate['animated'] = True
+                if animation_meta:
+                    candidate['animation_meta'] = animation_meta
+                return
+        self.register_icon(
+            key,
+            {
+                'asset_id': self._build_asset_id(source, target_path),
+                'path': target_path,
+                'source_type': source,
+                'animated': True,
+                'locator': locator,
+                'animation_meta': animation_meta or {},
+            },
+        )
+
+    def _scan_mod_manifest(
+        self,
+        rel_path: str,
+        data: bytes,
+        source: str,
+        source_report: dict[str, Any],
+        report: dict[str, Any],
+    ) -> bool:
+        if '/lang/' in rel_path or '/models/' in rel_path:
+            return False
+        try:
+            payload = json.loads(data.decode('utf-8'))
+        except Exception:
+            return False
+        if not isinstance(payload, dict) or 'tree' not in payload or 'mod_path' not in payload:
+            return False
+        mod_path = str(payload.get('mod_path') or '')
+        tree = payload.get('tree')
+        if not mod_path or not isinstance(tree, dict):
+            return False
+        textures, mcmeta = self._collect_manifest_textures(tree)
+        for texture_rel_path in textures:
+            if '/textures/' not in texture_rel_path:
+                continue
+            try:
+                namespace, item_name = self._extract_texture_key(texture_rel_path)
+            except Exception:
+                continue
+            key = f'{namespace}:{item_name}'
+            texture_locator = {'kind': 'archive_entry', 'archive_path': mod_path, 'entry_path': texture_rel_path}
+            self.register_icon(
+                key,
+                {
+                    'asset_id': self._build_asset_id(mod_path, texture_rel_path),
+                    'path': texture_rel_path,
+                    'source_type': mod_path,
+                    'animated': f'{texture_rel_path}.mcmeta' in mcmeta,
+                    'locator': texture_locator,
+                },
+            )
+            report['registered_keys'].append(key)
+            source_report['registered_keys'].append(key)
+            counter_key = 'textures_items' if '/textures/items/' in texture_rel_path else 'textures_blocks'
+            report['counters'][counter_key] += 1
+        return bool(textures)
+
+    def _collect_manifest_textures(self, tree: dict[str, Any]) -> tuple[set[str], set[str]]:
+        textures: set[str] = set()
+        mcmeta: set[str] = set()
+
+        def walk_children(children: Any, prefix: str = '') -> None:
+            if not isinstance(children, dict):
+                return
+            for name, node in children.items():
+                rel_name = f'{prefix}/{name}' if prefix else str(name)
+                if not isinstance(node, dict):
+                    continue
+                node_type = str(node.get('type') or '')
+                if node_type == 'directory':
+                    walk_children(node.get('children'), rel_name)
+                    continue
+                if node_type == 'file':
+                    normalized = rel_name.replace('\\', '/')
+                    if normalized.endswith('.png') and '/textures/' in normalized:
+                        textures.add(normalized)
+                    if normalized.endswith('.png.mcmeta') and '/textures/' in normalized:
+                        mcmeta.add(normalized)
+                    jar_contents = node.get('jar_contents')
+                    if isinstance(jar_contents, dict):
+                        walk_children(jar_contents.get('children'), '')
+                    continue
+                walk_children(node.get('children'), rel_name)
+
+        walk_children(tree)
+        return textures, mcmeta
 
     def _build_missing_icons(self) -> list[dict[str, Any]]:
         missing = []

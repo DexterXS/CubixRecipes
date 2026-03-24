@@ -13,6 +13,7 @@ export interface ResolutionView {
   icon_asset_id?: string | null;
   icon_url?: string | null;
   animated?: boolean;
+  animation_meta?: { frametime?: number; frames?: Array<number | { index?: number; time?: number }>; interpolate?: boolean } | null;
   confidence?: number;
   strategy?: string;
 }

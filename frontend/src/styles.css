@@ -97,6 +97,8 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .output-details { display: grid; gap: 10px; min-width: 0; }
 .output-icon-slot { width: 112px; max-width: 100%; aspect-ratio: 1 / 1; border-radius: 20px; border: 1px dashed #475569; display: grid; place-items: center; background: linear-gradient(180deg, #172033, #0f172a); font-size: 32px; }
 .output-icon-slot img { width: 68px; height: 68px; object-fit: contain; }
+.animated-icon { width: 68px; height: 68px; display: block; background-repeat: no-repeat; background-size: 100% calc(var(--frame-count, 1) * 100%); image-rendering: pixelated; animation-name: icon-frames; animation-timing-function: steps(var(--frame-count, 1)); animation-iteration-count: infinite; }
+@keyframes icon-frames { from { background-position-y: 0%; } to { background-position-y: 100%; } }
 .output-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
 .badge { padding: 5px 9px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); }
 .badge-success { background: rgba(34,197,94,.12); color: #bbf7d0; }
