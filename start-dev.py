@@ -454,6 +454,18 @@ class ProcessControllerApp:
         self._status_snapshot: Optional[tuple[bool, bool]] = None
         self._backend_api_healthy = False
         self._backend_wait_started_at: Optional[float] = None
+        self._bg = "#000000"
+        self._panel_bg = "#0b0b0b"
+        self._text = "#f3f4f6"
+        self._muted = "#9ca3af"
+        self._accent = "#2563eb"
+        self._btn_bg = "#111111"
+        self._btn_fg = "#f3f4f6"
+        self.root.configure(bg=self._bg)
+        try:
+            self.root.tk_setPalette(background=self._bg, foreground=self._text, activeBackground=self._btn_bg, activeForeground=self._text)
+        except Exception:
+            pass
 
         self._ui_job_queue: queue.Queue[tuple[str, Any]] = queue.Queue()
         self._unified_log_in_flight = False
@@ -474,30 +486,30 @@ class ProcessControllerApp:
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _create_widgets(self) -> None:
-        title = tk.Label(self.root, text="Управление CubixRecipes", font=("Arial", 14, "bold"))
+        title = tk.Label(self.root, text="Управление CubixRecipes", font=("Arial", 14, "bold"), bg=self._bg, fg=self._text)
         title.pack(pady=10)
 
-        self.backend_status = tk.Label(self.root, text="Backend: неизвестно", font=("Arial", 11))
+        self.backend_status = tk.Label(self.root, text="Backend: неизвестно", font=("Arial", 11), bg=self._bg, fg=self._text)
         self.backend_status.pack(pady=5)
-        backend_frame = tk.Frame(self.root)
+        backend_frame = tk.Frame(self.root, bg=self._bg)
         backend_frame.pack(pady=5)
-        tk.Button(backend_frame, text="Start Backend", width=15, command=self.start_backend).pack(side=tk.LEFT, padx=5)
-        tk.Button(backend_frame, text="Stop Backend", width=15, command=self.stop_backend).pack(side=tk.LEFT, padx=5)
-        tk.Button(backend_frame, text="Restart Backend", width=15, command=self.restart_backend).pack(side=tk.LEFT, padx=5)
+        tk.Button(backend_frame, text="Start Backend", width=15, command=self.start_backend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(backend_frame, text="Stop Backend", width=15, command=self.stop_backend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(backend_frame, text="Restart Backend", width=15, command=self.restart_backend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
 
-        self.frontend_status = tk.Label(self.root, text="Frontend: неизвестно", font=("Arial", 11))
+        self.frontend_status = tk.Label(self.root, text="Frontend: неизвестно", font=("Arial", 11), bg=self._bg, fg=self._text)
         self.frontend_status.pack(pady=10)
-        frontend_frame = tk.Frame(self.root)
+        frontend_frame = tk.Frame(self.root, bg=self._bg)
         frontend_frame.pack(pady=5)
-        tk.Button(frontend_frame, text="Start Frontend", width=15, command=self.start_frontend).pack(side=tk.LEFT, padx=5)
-        tk.Button(frontend_frame, text="Stop Frontend", width=15, command=self.stop_frontend).pack(side=tk.LEFT, padx=5)
-        tk.Button(frontend_frame, text="Restart Frontend", width=15, command=self.restart_frontend).pack(side=tk.LEFT, padx=5)
+        tk.Button(frontend_frame, text="Start Frontend", width=15, command=self.start_frontend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(frontend_frame, text="Stop Frontend", width=15, command=self.stop_frontend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(frontend_frame, text="Restart Frontend", width=15, command=self.restart_frontend, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
 
-        global_frame = tk.Frame(self.root)
+        global_frame = tk.Frame(self.root, bg=self._bg)
         global_frame.pack(pady=20)
-        tk.Button(global_frame, text="Start All", width=15, command=self.start_all).pack(side=tk.LEFT, padx=5)
-        tk.Button(global_frame, text="Stop All", width=15, command=self.stop_all).pack(side=tk.LEFT, padx=5)
-        tk.Button(global_frame, text="Restart All", width=15, command=self.restart_all).pack(side=tk.LEFT, padx=5)
+        tk.Button(global_frame, text="Start All", width=15, command=self.start_all, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(global_frame, text="Stop All", width=15, command=self.stop_all, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
+        tk.Button(global_frame, text="Restart All", width=15, command=self.restart_all, bg=self._btn_bg, fg=self._btn_fg, activebackground=self._accent, activeforeground=self._text).pack(side=tk.LEFT, padx=5)
 
         hint = tk.Label(
             self.root,
@@ -508,6 +520,8 @@ class ProcessControllerApp:
             font=("Arial", 9),
             wraplength=860,
             justify=tk.CENTER,
+            bg=self._bg,
+            fg=self._muted,
         )
         hint.pack(pady=(0, 10))
 
@@ -536,7 +550,7 @@ class ProcessControllerApp:
     def _create_settings_tab(self) -> None:
         settings_frame = ttk.Frame(self.notebook)
         self.notebook.add(settings_frame, text="Settings")
-        tk.Label(settings_frame, text="Project Paths", font=("Arial", 11, "bold")).pack(anchor="w", padx=10, pady=(10, 4))
+        tk.Label(settings_frame, text="Project Paths", font=("Arial", 11, "bold"), bg=self._panel_bg, fg=self._text).pack(anchor="w", padx=10, pady=(10, 4))
         tk.Label(
             settings_frame,
             text=(
@@ -545,6 +559,8 @@ class ProcessControllerApp:
             ),
             wraplength=860,
             justify=tk.LEFT,
+            bg=self._panel_bg,
+            fg=self._muted,
         ).pack(anchor="w", padx=10, pady=(0, 10))
 
         form = ttk.Frame(settings_frame)
@@ -566,7 +582,7 @@ class ProcessControllerApp:
         ttk.Checkbutton(actions, text="Verbose debug logging", variable=self.verbose_debug_var).pack(side=tk.LEFT, padx=(12, 0))
         ttk.Button(actions, text="Reload Settings", command=self.reload_settings).pack(side=tk.LEFT)
 
-        self.settings_summary = tk.Label(settings_frame, text="", justify=tk.LEFT, anchor="w")
+        self.settings_summary = tk.Label(settings_frame, text="", justify=tk.LEFT, anchor="w", bg=self._panel_bg, fg=self._text)
         self.settings_summary.pack(fill=tk.X, padx=10, pady=(0, 10))
 
     def _add_path_row(self, parent: ttk.Frame, row: int, key: str, label: str, directory: bool, save_file: bool = False) -> None:

@@ -76,6 +76,14 @@ def test_parse_meta_exact():
     assert item.meta_value == 2
 
 
+def test_parse_item_ref_normalizes_key_to_lowercase_for_lookup():
+    parser = RecipeParser()
+    item = parser.parse_item_ref('<Avaritia:Resource_Block:1>')
+    assert item.modid == 'avaritia'
+    assert item.name == 'resource_block'
+    assert item.base_key == 'avaritia:resource_block'
+
+
 def test_parse_meta_wildcard():
     parser = RecipeParser()
     item = parser.parse_item_ref('<minecraft:planks:*>')

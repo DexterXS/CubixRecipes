@@ -39,13 +39,14 @@ class AssetIndex:
         }
 
     def register_icon(self, key: str, candidate: dict) -> None:
-        self.icons.setdefault(key, []).append(candidate)
+        normalized_key = key.lower()
+        self.icons.setdefault(normalized_key, []).append(candidate)
         asset_id = candidate.get('asset_id')
         if asset_id:
             self.icon_assets[asset_id] = candidate
 
     def register_model(self, key: str, payload: dict) -> None:
-        self.models[key] = payload
+        self.models[key.lower()] = payload
 
     def register_lang(self, locale: str, mapping: dict[str, str]) -> None:
         self.lang.setdefault(locale, {}).update(mapping)
@@ -238,13 +239,13 @@ class AssetIndex:
                 self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to parse asset file', issue)
 
     def _extract_namespace_name(self, rel_path: str, folder: str, suffix: str) -> tuple[str, str]:
-        namespace = rel_path.split('/')[1]
-        name = rel_path.split(f'/{folder}/', 1)[1][:-len(suffix)]
+        namespace = rel_path.split('/')[1].lower()
+        name = rel_path.split(f'/{folder}/', 1)[1][:-len(suffix)].lower()
         return namespace, name
 
     def _extract_texture_key(self, rel_path: str) -> tuple[str, str]:
-        namespace = rel_path.split('/')[1]
-        name = rel_path.split('/textures/', 1)[1].split('/', 1)[1][:-4]
+        namespace = rel_path.split('/')[1].lower()
+        name = rel_path.split('/textures/', 1)[1].split('/', 1)[1][:-4].lower()
         return namespace, name
 
     def _parse_lang(self, rel_path: str, data: bytes) -> dict[str, str]:

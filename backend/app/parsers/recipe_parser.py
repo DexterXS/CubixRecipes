@@ -38,6 +38,8 @@ class RecipeParser:
         if not match:
             raise ValueError(f'Invalid item reference: {raw}')
         modid, name, meta = match.groups()
+        modid = modid.lower()
+        name = name.lower()
         if meta is None:
             return ItemRef(raw=raw.strip(), modid=modid, name=name)
         if meta == '*':
