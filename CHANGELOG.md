@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Resolver now includes a normalized-name fallback for same-mod assets (e.g. `easolartype9` ↔ `ea_solar_type9`) to reduce placeholder icons for mods that use alternate underscore/casing naming styles.
+- Frontend default icon animation is now disabled on startup; animated textures can still be enabled manually in Settings.
 - Avaritia `Resource_Block:1` fallback now prioritizes infinity-like block textures before crystal-matrix variants, so infinity-block recipes no longer render as crystal blocks when both textures exist.
 - Frontend `itempanel.csv` lookup is now meta-aware (`item_id + meta`) so tooltip/title localization no longer mixes Avaritia meta variants (e.g. resource meta 6 vs meta 1 names).
 - Tightened Avaritia `Resource` meta fallback to only consider `avaritia:resource*` keys (excluding unrelated entries like `infinity_armor_*`) and prefer ingot-like item textures.

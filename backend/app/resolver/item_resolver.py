@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from urllib.parse import quote
 from typing import Any, Optional
 
@@ -27,6 +28,7 @@ class ItemResolver:
             self._avaritia_resource_block_meta,
             self._avaritia_resource_block_named_fallback,
             self._grouped_files,
+            self._normalized_name_fallback,
             self._model_texture,
             self._block_texture,
             self._lang_lookup,
@@ -91,6 +93,50 @@ class ItemResolver:
         checked_sources.extend([c['source_type'] for c in variants])
         trace.append({'strategy': 'grouped_files', 'variants': len(variants)})
         return self._make_result(item_ref, variants[:1], 0.75, 'grouped_files', trace)
+
+    def _normalized_name_fallback(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        normalized_target = re.sub(r'[^a-z0-9]', '', item_ref.name.lower())
+        if not normalized_target:
+            trace.append({'strategy': 'normalized_name_fallback', 'checked': 0})
+            return None
+        target_digits = ''.join(ch for ch in item_ref.name if ch.isdigit())
+        ranked: list[tuple[float, str, dict]] = []
+        for icon_key, values in self.asset_index.icons.items():
+            if ':' not in icon_key:
+                continue
+            namespace, icon_name = icon_key.split(':', 1)
+            if namespace != item_ref.modid:
+                continue
+            normalized_icon_name = re.sub(r'[^a-z0-9]', '', icon_name.lower())
+            if not normalized_icon_name:
+                continue
+            icon_digits = ''.join(ch for ch in icon_name if ch.isdigit())
+            score = 0.0
+            if target_digits and icon_digits and target_digits == icon_digits:
+                score += 2.0
+            if normalized_target in normalized_icon_name or normalized_icon_name in normalized_target:
+                score += 1.0
+            shared_prefix = 0
+            for left, right in zip(normalized_target, normalized_icon_name):
+                if left != right:
+                    break
+                shared_prefix += 1
+            score += shared_prefix / max(len(normalized_target), 1)
+            if score < 1.2:
+                continue
+            for candidate in values:
+                ranked.append((score, icon_key, candidate))
+        if not ranked:
+            trace.append({'strategy': 'normalized_name_fallback', 'matched': None})
+            return None
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        best_key = ranked[0][1]
+        best_candidates = [item[2] for item in ranked if item[1] == best_key]
+        checked_keys.append(best_key)
+        preferred = self._prefer_inventory_candidates(best_candidates)
+        checked_sources.extend([c['source_type'] for c in preferred[:1]])
+        trace.append({'strategy': 'normalized_name_fallback', 'matched': best_key, 'score': ranked[0][0]})
+        return self._make_result(item_ref, preferred[:1], 0.72, 'normalized_name_fallback', trace)
 
     def _avaritia_resource_meta_named_fallback(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         if item_ref.modid != 'avaritia' or item_ref.name != 'resource' or item_ref.meta_value is None:

@@ -196,3 +196,21 @@ def test_avaritia_resource_meta_named_fallback_uses_infinity_for_meta_6():
     result = resolver.resolve(item)
     assert result.strategy == 'avaritia_resource_meta_named_fallback'
     assert result.icon_asset_id == 'jar:avaritia_infinity_ingot'
+
+
+def test_normalized_name_fallback_matches_underscore_variant_in_same_mod():
+    index = AssetIndex()
+    index.register_icon(
+        'energyadditions:ea_solar_type9',
+        {
+            'asset_id': 'jar:ea_solar_type9',
+            'path': 'assets/energyadditions/textures/items/ea_solar_type9.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<energyadditions:easolartype9>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'normalized_name_fallback'
+    assert result.icon_asset_id == 'jar:ea_solar_type9'

@@ -231,7 +231,7 @@ export default function App() {
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map(), byKeyMeta: new Map() });
-  const [animateIcons, setAnimateIcons] = useState(true);
+  const [animateIcons, setAnimateIcons] = useState(false);
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
