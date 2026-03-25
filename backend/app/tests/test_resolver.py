@@ -133,3 +133,30 @@ def test_avaritia_resource_block_named_fallback_uses_crystal_matrix_for_meta_1()
     result = resolver.resolve(item)
     assert result.strategy == 'avaritia_resource_block_named_fallback'
     assert result.icon_asset_id == 'jar:avaritia_crystal_block'
+
+
+def test_avaritia_resource_meta_named_fallback_uses_infinity_for_meta_6():
+    index = AssetIndex()
+    index.register_icon(
+        'avaritia:resource_crystal_matrix_ingot',
+        {
+            'asset_id': 'jar:avaritia_crystal_ingot',
+            'path': 'assets/avaritia/textures/items/resource_crystal_matrix_ingot.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    index.register_icon(
+        'avaritia:resource_infinity',
+        {
+            'asset_id': 'jar:avaritia_infinity_ingot',
+            'path': 'assets/avaritia/textures/items/resource_infinity.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource:6>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'avaritia_resource_meta_named_fallback'
+    assert result.icon_asset_id == 'jar:avaritia_infinity_ingot'
