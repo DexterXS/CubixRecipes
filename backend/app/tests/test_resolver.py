@@ -135,6 +135,33 @@ def test_avaritia_resource_block_named_fallback_uses_crystal_matrix_for_meta_1()
     assert result.icon_asset_id == 'jar:avaritia_crystal_block'
 
 
+def test_avaritia_resource_block_named_fallback_prefers_infinity_for_meta_1():
+    index = AssetIndex()
+    index.register_icon(
+        'avaritia:block_crystal_matrix',
+        {
+            'asset_id': 'jar:avaritia_crystal_block',
+            'path': 'assets/avaritia/textures/blocks/block_crystal_matrix.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    index.register_icon(
+        'avaritia:block_infinity',
+        {
+            'asset_id': 'jar:avaritia_infinity_block',
+            'path': 'assets/avaritia/textures/blocks/block_infinity.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource_Block:1>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'avaritia_resource_block_named_fallback'
+    assert result.icon_asset_id == 'jar:avaritia_infinity_block'
+
+
 def test_avaritia_resource_meta_named_fallback_uses_infinity_for_meta_6():
     index = AssetIndex()
     index.register_icon(

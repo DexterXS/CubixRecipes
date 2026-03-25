@@ -157,7 +157,7 @@ class ItemResolver:
             return None
         meta_tokens = {
             0: ['neutronium', 'neutron'],
-            1: ['crystal_matrix', 'crystal', 'matrix'],
+            1: ['infinity', 'crystal_matrix', 'crystal', 'matrix'],
         }
         tokens = meta_tokens.get(item_ref.meta_value, [])
         matched_candidates = []
@@ -171,12 +171,14 @@ class ItemResolver:
             if tokens and not any(token in lowered_key for token in tokens):
                 continue
             matched_keys.append(icon_key)
-            matched_candidates.extend(values)
+            token_score = next((index for index, token in enumerate(tokens) if token in lowered_key), len(tokens))
+            matched_candidates.extend([(token_score, candidate) for candidate in values])
         if not matched_candidates:
             trace.append({'strategy': 'avaritia_resource_block_named_fallback', 'matched': None})
             return None
         checked_keys.extend(matched_keys[:12])
-        preferred = self._prefer_inventory_candidates(matched_candidates)
+        ranked_candidates = [candidate for _, candidate in sorted(matched_candidates, key=lambda pair: pair[0])]
+        preferred = self._prefer_inventory_candidates(ranked_candidates)
         checked_sources.extend([c['source_type'] for c in preferred[:1]])
         trace.append({'strategy': 'avaritia_resource_block_named_fallback', 'matched': preferred[0].get('path')})
         return self._make_result(item_ref, preferred[:1], 0.7, 'avaritia_resource_block_named_fallback', trace)
