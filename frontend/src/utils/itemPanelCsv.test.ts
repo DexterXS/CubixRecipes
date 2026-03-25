@@ -11,6 +11,7 @@ describe('parseItemPanelCsvText', () => {
 
     const result = parseItemPanelCsvText(csv);
     expect(result.byKey.get('minecraft:stone')).toBe('Камень');
+    expect(result.byKeyMeta.get('minecraft:stone#0')).toBe('Камень');
     expect(result.byKey.has('minecraft:stick')).toBe(false);
   });
 
@@ -23,6 +24,7 @@ describe('parseItemPanelCsvText', () => {
 
     const result = parseItemPanelCsvText(csv);
     expect(result.byKey.get('mod:item')).toBe('Линия, с запятой');
+    expect(result.byKeyMeta.get('mod:item#0')).toBe('Линия, с запятой');
     expect(result.byKey.has('mod:item2')).toBe(false);
   });
 });

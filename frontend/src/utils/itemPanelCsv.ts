@@ -1,5 +1,6 @@
 export type ItemPanelTranslations = {
   byKey: Map<string, string>;
+  byKeyMeta: Map<string, string>;
 };
 
 const SUPPORTED_DELIMITERS = [',', ';', '\t'] as const;
@@ -61,12 +62,13 @@ function splitCsvLine(line: string, delimiter: string): string[] {
 export function parseItemPanelCsvText(text: string): ItemPanelTranslations {
   const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
   if (lines.length === 0) {
-    return { byKey: new Map() };
+    return { byKey: new Map(), byKeyMeta: new Map() };
   }
 
   const delimiter = detectDelimiter(lines[0]);
   const dataLines = lines.slice(1);
   const byKey = new Map<string, string>();
+  const byKeyMeta = new Map<string, string>();
 
   dataLines.forEach((line) => {
     const parts = splitCsvLine(line, delimiter);
@@ -75,14 +77,18 @@ export function parseItemPanelCsvText(text: string): ItemPanelTranslations {
     }
 
     const key = normalizeValue(parts[0]).toLowerCase();
+    const meta = normalizeValue(parts[2]);
     const display = normalizeValue(parts[4]);
     if (!key || !display || display === '-' || display === '- ') {
       return;
     }
+    if (meta && meta !== '*') {
+      byKeyMeta.set(`${key}#${meta}`, display);
+    }
     byKey.set(key, display);
   });
 
-  return { byKey };
+  return { byKey, byKeyMeta };
 }
 
 export function parseItemPanelCsvBuffer(bytes: ArrayBuffer): ItemPanelTranslations {

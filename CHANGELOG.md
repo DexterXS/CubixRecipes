@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Frontend `itempanel.csv` lookup is now meta-aware (`item_id + meta`) so tooltip/title localization no longer mixes Avaritia meta variants (e.g. resource meta 6 vs meta 1 names).
+- Tightened Avaritia `Resource` meta fallback to only consider `avaritia:resource*` keys (excluding unrelated entries like `infinity_armor_*`) and prefer ingot-like item textures.
 - Fixed Avaritia `Resource` meta resolution fallback so `<Avaritia:Resource:6>` now prefers infinity-ingot-like textures instead of drifting to unrelated grouped variants (e.g. crystal-matrix meta 1).
 - Added an additional Avaritia `Resource_Block` fallback strategy that maps meta variants by semantic key tokens (e.g. `meta=1` → crystal-matrix-like block textures) when direct numeric keys are absent.
 - Resolver now prefers `textures/items` icon candidates over `textures/blocks` when both exist for the same key, so inventory-style item textures are chosen first.

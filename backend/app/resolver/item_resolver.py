@@ -111,6 +111,8 @@ class ItemResolver:
             if not icon_key.startswith('avaritia:'):
                 continue
             lowered_key = icon_key.lower()
+            if not lowered_key.startswith('avaritia:resource') or lowered_key.startswith('avaritia:resource_block'):
+                continue
             if not any(token in lowered_key for token in tokens):
                 continue
             matched_keys.append(icon_key)
@@ -120,6 +122,12 @@ class ItemResolver:
             return None
         checked_keys.extend(matched_keys[:12])
         preferred = self._prefer_inventory_candidates(matched_candidates)
+        preferred.sort(
+            key=lambda candidate: (
+                0 if 'ingot' in str(candidate.get('path') or '').lower() else 1,
+                0 if str(candidate.get('path') or '').lower().find('/textures/items/') >= 0 else 1,
+            )
+        )
         checked_sources.extend([c['source_type'] for c in preferred[:1]])
         trace.append({'strategy': 'avaritia_resource_meta_named_fallback', 'matched': preferred[0].get('path')})
         return self._make_result(item_ref, preferred[:1], 0.83, 'avaritia_resource_meta_named_fallback', trace)

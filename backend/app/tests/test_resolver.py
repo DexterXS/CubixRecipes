@@ -155,6 +155,15 @@ def test_avaritia_resource_meta_named_fallback_uses_infinity_for_meta_6():
             'animated': False,
         },
     )
+    index.register_icon(
+        'avaritia:infinity_armor_0',
+        {
+            'asset_id': 'jar:avaritia_infinity_armor',
+            'path': 'assets/avaritia/textures/items/infinity_armor_0.png',
+            'source_type': 'jar',
+            'animated': False,
+        },
+    )
     resolver = ItemResolver(index)
     item = RecipeParser().parse_item_ref('<Avaritia:Resource:6>')
     result = resolver.resolve(item)

@@ -89,10 +89,11 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
 }
 
-function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean } | null {
+function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; metaValue?: string } | null {
   const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
   if (!match) return null;
-  return { key: match[1].toLowerCase(), wildcardMeta: (match[2] ?? '').toLowerCase() === '*' };
+  const metaRaw = (match[2] ?? '').toLowerCase();
+  return { key: match[1].toLowerCase(), wildcardMeta: metaRaw === '*', metaValue: metaRaw && metaRaw !== '*' ? metaRaw : undefined };
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -229,7 +230,7 @@ export default function App() {
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
-  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map() });
+  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map(), byKeyMeta: new Map() });
   const [animateIcons, setAnimateIcons] = useState(true);
 
   const persistTimerRef = useRef<number | null>(null);
@@ -322,9 +323,9 @@ export default function App() {
           return;
         }
         const bytes = await response.arrayBuffer();
-        const { byKey } = parseItemPanelCsvBuffer(bytes);
+        const { byKey, byKeyMeta } = parseItemPanelCsvBuffer(bytes);
         if (!cancelled) {
-          setItemPanelTranslations({ byKey });
+          setItemPanelTranslations({ byKey, byKeyMeta });
         }
       } catch {
         // optional source
@@ -436,7 +437,9 @@ export default function App() {
     if (!parsed) {
       return raw;
     }
-    const display = itemPanelTranslations.byKey.get(parsed.key);
+    const display = parsed.metaValue
+      ? (itemPanelTranslations.byKeyMeta.get(`${parsed.key}#${parsed.metaValue}`) ?? itemPanelTranslations.byKey.get(parsed.key))
+      : itemPanelTranslations.byKey.get(parsed.key);
     if (!display) {
       return raw;
     }
