@@ -41,6 +41,16 @@ def test_lang_lookup_strategy():
     assert result.display_name == 'Предмет'
 
 
+def test_manual_override_takes_priority_over_indexed_icon():
+    index = AssetIndex()
+    index.register_icon('mod:item', {'asset_id': 'jar:icon1', 'path': 'assets/mod/textures/items/item.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:item>')
+    result = resolver.resolve(item, {'manual_overrides': {'<mod:item>': {'display_name': 'Override', 'icon_asset_id': 'custom:override', 'icon_url': '/api/icons/custom'}}})
+    assert result.strategy == 'manual_override'
+    assert result.icon_asset_id == 'custom:override'
+
+
 def test_invalid_model_texture_reference_does_not_crash_resolution():
     index = AssetIndex()
     index.register_model('mod:item', {'textures': {'layer0': '#missing'}})

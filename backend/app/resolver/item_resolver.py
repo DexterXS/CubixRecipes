@@ -20,6 +20,7 @@ class ItemResolver:
         checked_keys = [key]
         checked_sources: list[str] = list(dict.fromkeys(self.asset_index.last_scan_report.get('indexed_paths', [])))
         strategies = [
+            self._manual_override,
             self._contenttweaker_exact,
             self._textures_exact,
             self._textures_meta_suffix,
@@ -27,7 +28,6 @@ class ItemResolver:
             self._model_texture,
             self._block_texture,
             self._lang_lookup,
-            self._manual_override,
         ]
         for strategy in strategies:
             result = strategy(item_ref, key, settings, trace, checked_keys, checked_sources)

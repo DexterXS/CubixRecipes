@@ -1,7 +1,9 @@
 import json
-from zipfile import ZipFile
 from pathlib import Path
+from zipfile import ZipFile
 
+import pytest
+from fastapi import HTTPException
 from app.api.routes import create_app
 
 
@@ -70,6 +72,28 @@ def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):
     saved_text = (tmp_path / 'trimmed.zs').read_text(encoding='utf-8').strip()
     assert '[[<minecraft:planks>, <minecraft:planks>], [<minecraft:planks>, <minecraft:planks>]]' in saved_text
 
+
+def test_save_as_rejects_target_path_outside_allowed_roots(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
+    outside_path = tmp_path.parent / 'outside-save.zs'
+    with pytest.raises(HTTPException) as exc:
+        save_as(
+            type(
+                'Request',
+                (),
+                {
+                    'recipe_uid': 'new-recipe',
+                    'recipe_type': 'ct_shaped',
+                    'output_raw': '<minecraft:chest>',
+                    'matrix': [[None, '<minecraft:planks>']],
+                    'name': None,
+                    'target_path': str(outside_path),
+                },
+            )()
+        )
+    assert exc.value.status_code == 400
+
 def test_update_existing_recipe_persists_changes(tmp_path: Path):
     recipe_file = tmp_path / 'recipes.zs'
     recipe_file.write_text('recipes.addShaped(<minecraft:torch>, [[<minecraft:coal>]]);\n', encoding='utf-8')
@@ -97,6 +121,29 @@ def test_update_existing_recipe_persists_changes(tmp_path: Path):
     assert response['updatedRecipe']['output']['raw'] == '<minecraft:torch>'
     assert response['updatedRecipe']['matrix'][0][0]['raw'] == '<minecraft:redstone>'
     assert '<minecraft:redstone>' in recipe_file.read_text(encoding='utf-8')
+
+
+def test_update_recipe_returns_404_when_recipe_uid_is_missing(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    update_route = next(
+        route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/{recipe_uid}' and 'PUT' in getattr(route, 'methods', set())
+    )
+
+    with pytest.raises(HTTPException) as exc:
+        update_route(
+            'missing-id',
+            type(
+                'UpdateRequest',
+                (),
+                {
+                    'recipe_type': 'ct_shaped',
+                    'output_raw': '<minecraft:torch>',
+                    'matrix': [['<minecraft:redstone>']],
+                    'name': None,
+                },
+            )(),
+        )
+    assert exc.value.status_code == 404
 
 
 def test_project_settings_are_persisted_and_reload_storage(tmp_path: Path):
@@ -235,6 +282,14 @@ def test_asset_scan_reads_nested_jars_from_mods_dir_and_resolver_reports_sources
     assert any(source['nested_archives'] for source in assets_payload['sources'])
     assert resolved['icon_asset_id'] is not None
     assert any(entry['item_raw'] == '<examplemod:seed>' and entry['checked_sources'] for entry in resolver_payload['entries'])
+
+
+def test_index_status_returns_404_for_unknown_scan_id(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    status_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/index/status/{scan_id}')
+    with pytest.raises(HTTPException) as exc:
+        status_route('scan-missing')
+    assert exc.value.status_code == 404
 
 
 def test_icon_proxy_streams_binary_from_indexed_archive(tmp_path: Path):

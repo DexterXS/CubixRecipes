@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class ParseRequest(BaseModel):
@@ -14,18 +14,30 @@ class SearchRequest(BaseModel):
 
 
 class CreateRecipeRequest(BaseModel):
-    templateType: str
+    templateType: Literal['ct_shaped', 'avaritia_extreme_shaped']
     output: Optional[str] = None
-    grid: int = 3
+    grid: int = Field(default=3, ge=1, le=9)
 
 
 class SaveAsRequest(BaseModel):
     recipe_uid: str
-    recipe_type: str
+    recipe_type: Literal['ct_shaped', 'avaritia_extreme_shaped']
     output_raw: str
-    matrix: list[list[Optional[str]]]
+    matrix: list[list[Optional[str]]] = Field(min_length=1, max_length=9)
     name: Optional[str] = None
     target_path: str
+
+    @field_validator('matrix')
+    @classmethod
+    def validate_matrix(cls, matrix: list[list[Optional[str]]]) -> list[list[Optional[str]]]:
+        if not matrix:
+            raise ValueError('Matrix cannot be empty')
+        if len(matrix) > 9:
+            raise ValueError('Matrix height must not exceed 9 rows')
+        for row in matrix:
+            if len(row) > 9:
+                raise ValueError('Matrix width must not exceed 9 columns')
+        return matrix
 
 
 class ResolveRequest(BaseModel):
@@ -43,10 +55,22 @@ class CreateFileRequest(BaseModel):
 
 
 class UpdateRecipeRequest(BaseModel):
-    recipe_type: str
+    recipe_type: Literal['ct_shaped', 'avaritia_extreme_shaped']
     output_raw: str
-    matrix: list[list[Optional[str]]]
+    matrix: list[list[Optional[str]]] = Field(min_length=1, max_length=9)
     name: Optional[str] = None
+
+    @field_validator('matrix')
+    @classmethod
+    def validate_matrix(cls, matrix: list[list[Optional[str]]]) -> list[list[Optional[str]]]:
+        if not matrix:
+            raise ValueError('Matrix cannot be empty')
+        if len(matrix) > 9:
+            raise ValueError('Matrix height must not exceed 9 rows')
+        for row in matrix:
+            if len(row) > 9:
+                raise ValueError('Matrix width must not exceed 9 columns')
+        return matrix
 
 
 class PanelLayoutItemRequest(BaseModel):

@@ -119,6 +119,8 @@ class ProjectConfigService:
             'project_config_path': config.project_config_path,
         }
         validations = {key: self._validate_path(value, expect_file=(key == 'recipe_db_path' or key == 'project_config_path')) for key, value in paths.items()}
+        validations['recipe_db_path']['runtime_usage'] = 'unused'
+        validations['recipe_db_path']['message'] = 'Путь сохранён, но пока не используется backend-ом'
         validations['extra_icon_sources'] = [self._validate_path(value) for value in config.extra_icon_sources]
         validations['extra_recipe_sources'] = [self._validate_path(value) for value in config.extra_recipe_sources]
         validations['verbose_debug_logging'] = {'enabled': config.verbose_debug_logging}

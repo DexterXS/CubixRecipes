@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Fixed
+- Hardened backend write-path handling for `/api/recipes/save-as` and `/api/zs/files/create`: writes are now restricted to configured recipe roots and out-of-scope paths return HTTP 400.
+- Added backend input bounds for recipe grid/matrix payloads to prevent oversized allocations and invalid matrix dimensions.
+- Normalized API error semantics: `PUT /api/recipes/{recipe_uid}` now returns HTTP 404 for unknown recipe ids; `GET /api/index/status/{scan_id}` now returns HTTP 404 for unknown scan ids.
+- Resolver manual overrides are now applied before automatic lookup strategies, so explicit user overrides always win.
+- Reduced asset-scan report memory pressure by capping stored skipped-file samples while still tracking total skipped count.
+- Project settings validation now explicitly marks `recipe_db_path` as stored-but-unused in current backend runtime.
 - Recipe grid now renders resolved item icons directly in cells, shows Russian hover names sourced from `itempanel.csv` (by `item key + meta` fallback), and allows opening craft-edit modal from grid/output icons.
 - Added a dedicated craft-edit modal with `Очистить / Скопировать / Вставить / Применить` actions that operate on parsed CraftTweaker `addShaped(...)` source format for quick round-trip editing.
 - Fixed recipe/item key normalization across parser/index/resolver so mixed-case ids like `<Avaritia:Resource_Block:1>` resolve against lowercase indexed textures.

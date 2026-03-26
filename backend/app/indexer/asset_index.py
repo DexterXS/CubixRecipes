@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Any, Optional
 from zipfile import ZipFile
 
+MAX_SKIPPED_FILE_SAMPLES = 200
+
 
 class AssetIndex:
     def __init__(self, log_service: Any = None) -> None:
@@ -78,6 +80,7 @@ class AssetIndex:
                 'scanned': False,
                 'indexed_files': 0,
                 'skipped_files': [],
+                'skipped_files_total': 0,
                 'errors': [],
                 'registered_keys': [],
                 'nested_archives': [],
@@ -228,7 +231,9 @@ class AssetIndex:
                 source_report['registered_keys'].append(key)
                 recognized = True
             if not recognized:
-                source_report['skipped_files'].append({'path': rel_path, 'reason': 'unsupported_or_irrelevant'})
+                source_report['skipped_files_total'] += 1
+                if len(source_report['skipped_files']) < MAX_SKIPPED_FILE_SAMPLES:
+                    source_report['skipped_files'].append({'path': rel_path, 'reason': 'unsupported_or_irrelevant'})
                 if self.log_service is not None:
                     self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Skipped asset file', {'path': rel_path, 'source_path': source}, verbose_only=True)
         except Exception as exc:

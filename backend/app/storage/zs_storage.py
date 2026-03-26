@@ -24,6 +24,7 @@ class ZsStorage:
         self.scripts_dir = Path(scripts_dir)
         self.log_service = log_service
         self.extra_recipe_sources: list[Path] = []
+        self.allowed_write_roots: list[Path] = []
         self.parser = RecipeParser()
         self._recipes: dict[str, StoredRecipe] = {}
         self._by_output: dict[str, list[str]] = {}
@@ -39,6 +40,7 @@ class ZsStorage:
         self._by_output.clear()
         extra_paths = extra_paths or []
         self.extra_recipe_sources = [Path(path) for path in extra_paths if str(path)]
+        self.allowed_write_roots = self._build_allowed_write_roots()
         paths = [self.scripts_dir, *self.extra_recipe_sources]
         self.last_scan_report = {
             'active_paths': [str(path) for path in paths],
@@ -178,7 +180,7 @@ class ZsStorage:
         return self.get_recipe(recipe_uid)
 
     def save_as(self, rendered_block: str, target_path: str) -> str:
-        path = Path(target_path)
+        path = self._resolve_writable_path(target_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         prefix = '\n' if path.exists() and path.read_text(encoding='utf-8').strip() else ''
         with path.open('a', encoding='utf-8') as handle:
@@ -188,10 +190,36 @@ class ZsStorage:
         return latest.recipe.recipe_uid
 
     def create_file(self, path: str) -> str:
-        file_path = Path(path)
+        file_path = self._resolve_writable_path(path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.touch(exist_ok=True)
         return str(file_path)
+
+    def _build_allowed_write_roots(self) -> list[Path]:
+        roots = [self.scripts_dir, *self.extra_recipe_sources]
+        normalized: list[Path] = []
+        for root in roots:
+            try:
+                resolved = root.resolve(strict=False)
+            except Exception:
+                continue
+            if resolved not in normalized:
+                normalized.append(resolved)
+        return normalized
+
+    def _resolve_writable_path(self, raw_path: str) -> Path:
+        candidate = Path(raw_path)
+        if not candidate.is_absolute():
+            candidate = self.scripts_dir / candidate
+        resolved_candidate = candidate.resolve(strict=False)
+        allowed_roots = self.allowed_write_roots or self._build_allowed_write_roots()
+        for root in allowed_roots:
+            try:
+                resolved_candidate.relative_to(root)
+                return resolved_candidate
+            except ValueError:
+                continue
+        raise ValueError(f'Target path is outside allowed recipe roots: {raw_path}')
 
     def _issue(self, level: str, category: str, message: str, file_path: str = None, source_path: str = None, error_type: str = None, line: int = None, fragment: str = None) -> dict[str, Any]:
         return {
