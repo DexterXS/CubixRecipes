@@ -1,5 +1,6 @@
 const DEFAULT_API_BASE = '/api';
 const DEFAULT_BACKEND_TARGET = 'http://127.0.0.1:8000';
+const DEFAULT_ITEMPANEL_FALLBACK_TO_FIRST_META = false;
 
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
@@ -37,4 +38,12 @@ export function buildBackendUnavailableMessage(path: string): string {
     `Dev proxy target: ${getBackendTargetHint()}.`,
     'Start backend and try again.',
   ].join(' ');
+}
+
+export function getItemPanelFallbackToFirstMetaEnabled(): boolean {
+  const raw = String(import.meta.env.VITE_ITEMPANEL_FALLBACK_TO_FIRST_META ?? '').trim().toLowerCase();
+  if (!raw) {
+    return DEFAULT_ITEMPANEL_FALLBACK_TO_FIRST_META;
+  }
+  return raw === '1' || raw === 'true' || raw === 'yes' || raw === 'on';
 }

@@ -18,6 +18,19 @@ beforeEach(() => {
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
 
+    if (url === '/itempanel.csv') {
+      const csv = [
+        'key,id,meta,has_nbt,display_name',
+        'minecraft:planks,5,0,false,Oak Planks',
+        'minecraft:planks,5,1,false,Spruce Planks',
+        'minecraft:planks,5,2,false,Birch Planks'
+      ].join('\n');
+      return Promise.resolve({
+        ok: true,
+        arrayBuffer: async () => new TextEncoder().encode(csv).buffer
+      }) as Promise<Response>;
+    }
+
     if (url === '/api/debug/log') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
     }
@@ -254,6 +267,21 @@ test('manual text input with addShaped auto-parses after change', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'mods.avaritia.ExtremeCrafting.addShaped(<minecraft:glass>, [[<minecraft:stone>]])' } });
   await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
+});
+
+
+test('itempanel titles use meta mapping, default meta=0 and keep unknown meta raw when fallback is off', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+
+  const cellInput = await screen.findByLabelText('cell-0-0');
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Oak Planks'));
+
+  fireEvent.change(cellInput, { target: { value: '<minecraft:planks:1>' } });
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Spruce Planks'));
+
+  fireEvent.change(cellInput, { target: { value: '<minecraft:planks:99>' } });
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('<minecraft:planks:99>'));
 });
 
 
