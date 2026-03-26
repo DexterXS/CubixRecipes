@@ -9,6 +9,8 @@
 - Reduced asset-scan report memory pressure by capping stored skipped-file samples while still tracking total skipped count.
 - Project settings validation now explicitly marks `recipe_db_path` as stored-but-unused in current backend runtime.
 - Улучшен парсинг `itempanel.csv` во frontend: теперь учитываются `meta`, сохраняются `id`/`has_nbt` как структурные поля для будущих задач, при отсутствии meta в item raw используется дефолт `0`, а fallback на «первую попавшуюся meta» добавлен как отключаемая настройка (`VITE_ITEMPANEL_FALLBACK_TO_FIRST_META=false` по умолчанию).
+- Улучшены эвристики resolver для meta-текстур: добавлены дополнительные meta-суффиксы (`_`, `/`, `.`, `-`), ранжирование кандидатов по meta и имени предмета, а рискованный fallback на grouped variants для meta-miss теперь отключён по умолчанию и включается только через `settings.fallback_to_first_variant_for_meta_miss`.
+- Добавлены параметризованные тесты по `mods_json/*.json` для каждого мода с текстурами, чтобы проверять индексацию манифестов модов на реальных деревьях файлов.
 - Recipe grid now renders resolved item icons directly in cells, shows Russian hover names sourced from `itempanel.csv` (by `item key + meta` fallback), and allows opening craft-edit modal from grid/output icons.
 - Added a dedicated craft-edit modal with `Очистить / Скопировать / Вставить / Применить` actions that operate on parsed CraftTweaker `addShaped(...)` source format for quick round-trip editing.
 - Fixed recipe/item key normalization across parser/index/resolver so mixed-case ids like `<Avaritia:Resource_Block:1>` resolve against lowercase indexed textures.

@@ -68,7 +68,13 @@ class ItemResolver:
         if item_ref.meta_value is None:
             trace.append({'strategy': 'textures_meta_suffix', 'checked': 0})
             return None
-        suffixes = [f'{item_ref.base_key}_{item_ref.meta_value}', f'{item_ref.base_key}{item_ref.meta_value}']
+        suffixes = [
+            f'{item_ref.base_key}_{item_ref.meta_value}',
+            f'{item_ref.base_key}{item_ref.meta_value}',
+            f'{item_ref.base_key}/{item_ref.meta_value}',
+            f'{item_ref.base_key}.{item_ref.meta_value}',
+            f'{item_ref.base_key}-{item_ref.meta_value}',
+        ]
         checked_keys.extend(suffixes)
         for suffix in suffixes:
             candidates = self.asset_index.icons.get(suffix, [])
@@ -76,18 +82,53 @@ class ItemResolver:
                 checked_sources.extend([c['source_type'] for c in candidates])
                 trace.append({'strategy': 'textures_meta_suffix', 'matched': suffix})
                 return self._make_result(item_ref, candidates[:1], 0.85, 'textures_meta_suffix', trace)
+        ranked = self._meta_ranked_candidates(item_ref, checked_keys, checked_sources)
+        if ranked:
+            trace.append({'strategy': 'textures_meta_suffix', 'matched': ranked.get('matched_key'), 'ranking': ranked.get('score')})
+            return self._make_result(item_ref, [ranked['candidate']], 0.82, 'textures_meta_suffix', trace)
         trace.append({'strategy': 'textures_meta_suffix', 'matched': None})
         return None
 
     def _grouped_files(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        if item_ref.meta_value is not None and not bool(settings.get('fallback_to_first_variant_for_meta_miss', False)):
+            trace.append({'strategy': 'grouped_files', 'skipped': 'meta_present_and_fallback_disabled'})
+            return None
         variants = []
-        for icon_key, values in self.asset_index.icons.items():
+        for icon_key, values in sorted(self.asset_index.icons.items(), key=lambda entry: entry[0]):
             if icon_key.startswith(f'{item_ref.base_key}') and icon_key != key:
                 variants.extend(values)
                 checked_keys.append(icon_key)
         checked_sources.extend([c['source_type'] for c in variants])
         trace.append({'strategy': 'grouped_files', 'variants': len(variants)})
         return self._make_result(item_ref, variants[:1], 0.75, 'grouped_files', trace)
+
+    def _meta_ranked_candidates(self, item_ref, checked_keys, checked_sources):
+        if item_ref.meta_value is None:
+            return None
+        meta_token = str(item_ref.meta_value)
+        matches: list[dict[str, Any]] = []
+        for icon_key, values in self.asset_index.icons.items():
+            if not icon_key.startswith(f'{item_ref.modid}:'):
+                continue
+            tail = icon_key.split(':', 1)[1]
+            if meta_token not in tail:
+                continue
+            score = 0
+            if icon_key.startswith(f'{item_ref.base_key}'):
+                score += 5
+            if tail.endswith(f'/{meta_token}') or tail.endswith(f'_{meta_token}') or tail.endswith(f'.{meta_token}') or tail.endswith(f'-{meta_token}') or tail.endswith(meta_token):
+                score += 4
+            if item_ref.name in tail:
+                score += 2
+            if score <= 0:
+                continue
+            checked_keys.append(icon_key)
+            checked_sources.extend([candidate['source_type'] for candidate in values])
+            matches.append({'score': score, 'matched_key': icon_key, 'candidate': values[0]})
+        if not matches:
+            return None
+        matches.sort(key=lambda item: (-item['score'], item['matched_key']))
+        return matches[0]
 
     def _model_texture(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         model = self.asset_index.models.get(key)
