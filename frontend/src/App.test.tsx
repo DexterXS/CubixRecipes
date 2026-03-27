@@ -11,7 +11,8 @@ afterEach(() => {
 beforeEach(() => {
   Object.assign(navigator, {
     clipboard: {
-      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)')
+      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)'),
+      writeText: vi.fn().mockResolvedValue(undefined)
     }
   });
 
@@ -250,6 +251,22 @@ test('settings panel can disable icon animations and persist ui preference', asy
     const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
     expect(body.animations_enabled).toBe(false);
   });
+});
+
+test('grid cell action buttons copy, clear and paste values', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>'));
+
+  fireEvent.click(screen.getByLabelText('copy-cell-0-0'));
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith('<minecraft:planks>');
+
+  fireEvent.click(screen.getByLabelText('clear-cell-0-0'));
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe(''));
+
+  (navigator.clipboard.readText as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce('<minecraft:dirt>');
+  fireEvent.click(screen.getByLabelText('paste-cell-0-0'));
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:dirt>'));
 });
 
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {

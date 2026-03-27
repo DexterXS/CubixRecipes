@@ -675,6 +675,31 @@ export default function App() {
     setStatus('Скопировано значение предмета.');
   }
 
+  async function handleCellCopy(row: number, col: number) {
+    const value = matrix[row]?.[col];
+    const payload = value ?? '';
+    await navigator.clipboard.writeText(payload);
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение скопировано.`);
+  }
+
+  async function handleCellPaste(row: number, col: number) {
+    try {
+      const pasted = (await navigator.clipboard.readText()).trim();
+      setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (pasted || null) : cell))));
+      setSaveStatus(t('values.unsavedChanges'));
+      setStatus(`Ячейка ${row + 1},${col + 1}: значение вставлено.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      setStatus(message);
+    }
+  }
+
+  function handleCellClear(row: number, col: number) {
+    setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? null : cell))));
+    setSaveStatus(t('values.unsavedChanges'));
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение очищено.`);
+  }
+
   async function handleSave() {
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
       setStatus('Сохранение недоступно: используйте «Сохранить как».');
@@ -1074,7 +1099,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} onCellCopy={(row, col) => void handleCellCopy(row, col)} onCellPaste={(row, col) => void handleCellPaste(row, col)} onCellClear={handleCellClear} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
                   setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
                   setSaveStatus(t('values.unsavedChanges'));
                 }} />

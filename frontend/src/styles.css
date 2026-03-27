@@ -117,8 +117,11 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .grid-cell.is-invalid { border-color: rgba(245,158,11,.8); background: rgba(120,53,15,.28); }
 .grid-cell input { min-width: 0; padding: 8px 10px; }
 .grid-cell.is-view input { pointer-events: none; opacity: .84; }
-.cell-icon-slot { width: 32px; height: 32px; border-radius: 10px; border: 1px dashed #475569; display: grid; place-items: center; font-size: 14px; background: #0b1220; padding: 0; cursor: pointer; }
-.cell-icon-slot img, .cell-icon-slot .animated-icon { width: 24px; height: 24px; }
+.cell-visual { width: 100%; aspect-ratio: 1 / 1; min-height: 60px; }
+.cell-icon-slot { width: 100%; height: 100%; border-radius: 10px; border: 1px dashed #475569; display: grid; place-items: center; font-size: 20px; background: #0b1220; padding: 4px; cursor: pointer; }
+.cell-icon-slot img, .cell-icon-slot .animated-icon { width: 100%; height: 100%; object-fit: contain; }
+.cell-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.cell-actions .ghost-button { font-size: 11px; padding: 4px 6px; line-height: 1.1; }
 .cell-preview { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 .preview-block, .raw-block { background: #0f172a; border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .raw-block { overflow: auto; margin: 0; white-space: pre-wrap; word-break: break-word; flex: 1; min-height: 0; }
