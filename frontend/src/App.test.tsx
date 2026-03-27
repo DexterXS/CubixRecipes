@@ -328,15 +328,16 @@ test('structured item editor builds raw without empty withTag and appends NBT on
   fireEvent.change(modInput, { target: { value: 'minecraft' } });
   fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
   fireEvent.change(metaInput, { target: { value: '0' } });
-  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  fireEvent.click(screen.getByLabelText('build-raw-main'));
   expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>');
 
+  fireEvent.click(screen.getByLabelText('open-nbt-editor'));
   fireEvent.click(screen.getByLabelText('add-nbt-field'));
   const keyInput = await screen.findByLabelText(/nbt-key-/);
   const valueInput = await screen.findByLabelText(/nbt-value-/);
   fireEvent.change(keyInput, { target: { value: 'StoredEnchantments' } });
   fireEvent.change(valueInput, { target: { value: '[{lvl: 3 as short, id: 35 as short}]' } });
-  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  fireEvent.click(screen.getByLabelText('build-raw-nbt'));
   expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
 });
 
@@ -354,6 +355,7 @@ test('structured NBT tree editor supports nested list+compound with typed fields
   fireEvent.change(modInput, { target: { value: 'minecraft' } });
   fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
   fireEvent.change(metaInput, { target: { value: '0' } });
+  fireEvent.click(screen.getByLabelText('open-nbt-editor'));
   fireEvent.click(screen.getByLabelText('add-nbt-list'));
 
   fireEvent.change(screen.getByLabelText('nbt-key-0'), { target: { value: 'StoredEnchantments' } });
@@ -369,7 +371,7 @@ test('structured NBT tree editor supports nested list+compound with typed fields
   fireEvent.change(screen.getByLabelText('nbt-value-root.0.0.1'), { target: { value: '35' } });
   fireEvent.change(screen.getByLabelText('nbt-type-root.0.0.1'), { target: { value: 'short' } });
 
-  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  fireEvent.click(screen.getByLabelText('build-raw-nbt'));
   expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
 });
 

@@ -52,7 +52,7 @@ type DropTarget = {
 } | null;
 
 type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
-type ModalScaleKey = 'help' | 'layout' | 'craft';
+type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -434,6 +434,7 @@ export default function App() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
+  const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>({ kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState('');
   const [itemModDraft, setItemModDraft] = useState('minecraft');
@@ -460,7 +461,7 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [itemSearchQuery, setItemSearchQuery] = useState('');
-  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1 });
+  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
   const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
@@ -1705,13 +1706,13 @@ export default function App() {
       ) : null}
 
       {isCraftEditorOpen ? (
-        <div className="modal-backdrop" role="presentation" onClick={() => setIsCraftEditorOpen(false)}>
+        <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>
           <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('craft')}
-                <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
+                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Закрыть</button>
               </div>
             </div>
             <div className="settings-modal-body">
@@ -1754,32 +1755,10 @@ export default function App() {
                   </label>
                 </div>
                 <div className="inline-actions">
-                  <button
-                    type="button"
-                    className="ghost-button icon-button"
-                    aria-label="add-nbt-field"
-                    title="Добавить NBT поле"
-                    onClick={() => addRootEntry('int')}
-                  >
-                    +
-                  </button>
-                  <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
-                  <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
-                  <button type="button" className="secondary-button" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="Открыть отдельное окно NBT" onClick={() => setIsNbtEditorOpen(true)}>🧬</button>
+                  <span>{nbtRootDraft.entries.length ? `NBT полей: ${nbtRootDraft.entries.length}` : 'NBT не задан'}</span>
+                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
                 </div>
-                {nbtRootDraft.entries.length ? (
-                  <div className="suggestions-list" aria-label="nbt-editor-list">
-                    {nbtRootDraft.entries.map((entry, index) => (
-                      <div key={`root-entry-${index}`} className="suggestion-item">
-                        <div className="nbt-entry-line">
-                          <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
-                          {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                          <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
               </div>
               <div className="inline-actions">
                 <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
@@ -1795,11 +1774,49 @@ export default function App() {
                     }
                     setCellRaw(craftEditorTarget, trimmed);
                     setIsCraftEditorOpen(false);
+                    setIsNbtEditorOpen(false);
                   }}
                 >
                   Применить
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isNbtEditorOpen ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsNbtEditorOpen(false)}>
+          <div className="modal modal-scalable modal-nbt-tree" style={getModalScaleStyle('nbtTree')} role="dialog" aria-modal="true" aria-label="NBT tree editor" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>NBT Tree</h2>
+              <div className="inline-actions">
+                {renderModalScaleControl('nbtTree')}
+                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Закрыть</button>
+              </div>
+            </div>
+            <div className="settings-modal-body">
+              <div className="inline-actions">
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Добавить NBT поле" onClick={() => addRootEntry('int')}>+</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
+                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+              </div>
+              {nbtRootDraft.entries.length ? (
+                <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
+                  {nbtRootDraft.entries.map((entry, index) => (
+                    <div key={`root-entry-${index}`} className="suggestion-item">
+                      <div className="nbt-entry-line">
+                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                        {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
+                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="inline-hint inline-hint-warning">Добавьте NBT поле/объект/список.</div>
+              )}
             </div>
           </div>
         </div>
