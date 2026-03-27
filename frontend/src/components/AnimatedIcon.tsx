@@ -12,7 +12,7 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, an
   const [frameCount, setFrameCount] = useState(1);
 
   useEffect(() => {
-    if (!animated || !animationsEnabled) {
+    if (!animated) {
       setFrameCount(1);
       return;
     }
@@ -24,20 +24,22 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, an
       setFrameCount(guessedFrames);
     };
     img.src = iconUrl;
-  }, [animated, animationsEnabled, iconUrl]);
+  }, [animated, iconUrl]);
 
   const durationMs = useMemo(() => {
     const ticks = Math.max(1, frameTime);
     return Math.max(300, frameCount * ticks * 50);
   }, [frameCount, frameTime]);
 
-  if (!animated || !animationsEnabled || frameCount <= 1) {
+  if (!animated || frameCount <= 1) {
     return <img src={iconUrl} alt={alt} />;
   }
 
   const style = {
     backgroundImage: `url(${iconUrl})`,
-    animationDuration: `${durationMs}ms`,
+    animationDuration: animationsEnabled ? `${durationMs}ms` : '0ms',
+    animationName: animationsEnabled ? 'icon-frames' : 'none',
+    backgroundPositionY: '0%',
     ['--frame-count' as string]: String(frameCount),
   };
 

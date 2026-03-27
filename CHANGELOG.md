@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - Resolver now applies Avaritia-specific meta mapping for `Resource`, `Resource_Block`, and `Singularity`: meta is mapped to internal subtype texture keys (including shared `singularity` textures) and localized singularity names are taken from lang keys like `item.singularity_<type>.name`.
+- Fixed animated sprite previews when UI animation is disabled: animated textures now render their first frame as a static preview instead of disappearing.
 - Hardened backend write-path handling for `/api/recipes/save-as` and `/api/zs/files/create`: writes are now restricted to configured recipe roots and out-of-scope paths return HTTP 400.
 - Added backend input bounds for recipe grid/matrix payloads to prevent oversized allocations and invalid matrix dimensions.
 - Normalized API error semantics: `PUT /api/recipes/{recipe_uid}` now returns HTTP 404 for unknown recipe ids; `GET /api/index/status/{scan_id}` now returns HTTP 404 for unknown scan ids.
