@@ -203,32 +203,34 @@ class AssetIndex:
                 recognized = True
             if rel_path.endswith('.png') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
                 namespace, item_name = self._extract_texture_key(rel_path)
-                key = f'{namespace}:{item_name}'
-                self.register_icon(
-                    key,
-                    {
-                        'asset_id': self._build_asset_id(source, rel_path),
-                        'path': rel_path,
-                        'source_type': source,
-                        'animated': False,
-                        'locator': locator,
-                    },
-                )
+                keys = self._texture_keys(namespace, item_name, rel_path)
+                for key in keys:
+                    self.register_icon(
+                        key,
+                        {
+                            'asset_id': self._build_asset_id(source, rel_path),
+                            'path': rel_path,
+                            'source_type': source,
+                            'animated': False,
+                            'locator': locator,
+                        },
+                    )
                 if self.log_service is not None:
-                    self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_key': key, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
+                    self.log_service.log('BACKEND', 'INFO', 'ASSETS', 'Registered texture asset', {'item_keys': keys, 'relative_path': rel_path, 'source_path': source}, verbose_only=True)
                 counter_key = 'textures_items' if '/textures/items/' in rel_path else 'textures_blocks'
                 report['counters'][counter_key] += 1
-                report['registered_keys'].append(key)
-                source_report['registered_keys'].append(key)
+                report['registered_keys'].extend(keys)
+                source_report['registered_keys'].extend(keys)
                 recognized = True
             if rel_path.endswith('.png.mcmeta') and ('/textures/items/' in rel_path or '/textures/blocks/' in rel_path):
                 target = rel_path[:-7]
                 namespace, item_name = self._extract_texture_key(target)
-                key = f'{namespace}:{item_name}'
+                keys = self._texture_keys(namespace, item_name, target)
                 animation_meta = self._parse_animation_mcmeta(data)
-                self._mark_icon_animated(key, source, target, locator, animation_meta)
-                report['registered_keys'].append(key)
-                source_report['registered_keys'].append(key)
+                for key in keys:
+                    self._mark_icon_animated(key, source, target, locator, animation_meta)
+                report['registered_keys'].extend(keys)
+                source_report['registered_keys'].extend(keys)
                 recognized = True
             if not recognized:
                 source_report['skipped_files_total'] += 1
@@ -349,23 +351,33 @@ class AssetIndex:
                 namespace, item_name = self._extract_texture_key(texture_rel_path)
             except Exception:
                 continue
-            key = f'{namespace}:{item_name}'
+            keys = self._texture_keys(namespace, item_name, texture_rel_path)
             texture_locator = {'kind': 'archive_entry', 'archive_path': mod_path, 'entry_path': texture_rel_path}
-            self.register_icon(
-                key,
-                {
-                    'asset_id': self._build_asset_id(mod_path, texture_rel_path),
-                    'path': texture_rel_path,
-                    'source_type': mod_path,
-                    'animated': f'{texture_rel_path}.mcmeta' in mcmeta,
-                    'locator': texture_locator,
-                },
-            )
-            report['registered_keys'].append(key)
-            source_report['registered_keys'].append(key)
+            for key in keys:
+                self.register_icon(
+                    key,
+                    {
+                        'asset_id': self._build_asset_id(mod_path, texture_rel_path),
+                        'path': texture_rel_path,
+                        'source_type': mod_path,
+                        'animated': f'{texture_rel_path}.mcmeta' in mcmeta,
+                        'locator': texture_locator,
+                    },
+                )
+            report['registered_keys'].extend(keys)
+            source_report['registered_keys'].extend(keys)
             counter_key = 'textures_items' if '/textures/items/' in texture_rel_path else 'textures_blocks'
             report['counters'][counter_key] += 1
         return bool(textures)
+
+    def _texture_keys(self, namespace: str, item_name: str, rel_path: str) -> list[str]:
+        keys = [f'{namespace}:{item_name}']
+        if '/textures/blocks/' in rel_path and '/' in item_name:
+            alias = item_name.rsplit('/', 1)[-1]
+            alias_key = f'{namespace}:{alias}'
+            if alias_key not in keys:
+                keys.append(alias_key)
+        return keys
 
     def _collect_manifest_textures(self, tree: dict[str, Any]) -> tuple[set[str], set[str]]:
         textures: set[str] = set()

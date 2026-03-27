@@ -58,3 +58,24 @@ def test_each_mod_manifest_with_textures_is_indexable(manifest_path: Path):
     assert not source_report['errors']
     assert isinstance(mod_path, str) and mod_path
     assert isinstance(mcmeta, set)
+
+
+def test_draconicrevolt_block_texture_registers_basename_alias():
+    manifest_path = MODS_JSON_DIR / 'CubixDraconicRevolution-client.jar.json'
+    payload = _load_manifest(manifest_path)
+    index = AssetIndex()
+    report = {
+        'counters': {'textures_items': 0, 'textures_blocks': 0, 'lang_entries': 0, 'models_item': 0},
+        'registered_keys': [],
+        'scan_errors': [],
+    }
+    source_report = {'registered_keys': [], 'errors': []}
+    recognized = index._scan_mod_manifest(
+        rel_path=manifest_path.name,
+        data=json.dumps(payload).encode('utf-8'),
+        source=str(manifest_path),
+        source_report=source_report,
+        report=report,
+    )
+    assert recognized is True
+    assert 'draconicrevolt:der_awakeneddemonicblock' in index.icons

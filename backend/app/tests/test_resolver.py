@@ -98,3 +98,22 @@ def test_meta_miss_can_use_grouped_variant_when_enabled():
     result = resolver.resolve(item, {'fallback_to_first_variant_for_meta_miss': True})
     assert result.strategy == 'grouped_files'
     assert result.icon_asset_id == 'jar:item1'
+
+
+def test_draconicrevolt_block_in_animated_subfolder_resolves_by_basename_alias():
+    index = AssetIndex()
+    report = {'counters': {'textures_items': 0, 'textures_blocks': 0, 'lang_entries': 0, 'models_item': 0}, 'registered_keys': [], 'scan_errors': []}
+    source_report = {'registered_keys': [], 'errors': [], 'skipped_files': [], 'skipped_files_total': 0, 'indexed_files': 0}
+    index._consume_virtual(
+        rel_path='assets/draconicrevolt/textures/blocks/animated/der_awakeneddemonicblock.png',
+        data=b'png',
+        source='mock.jar',
+        source_report=source_report,
+        report=report,
+        locator={'kind': 'archive_entry', 'archive_path': 'mock.jar', 'entry_path': 'assets/draconicrevolt/textures/blocks/animated/der_awakeneddemonicblock.png'},
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<draconicrevolt:der_awakeneddemonicblock>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'textures_exact'
+    assert result.icon_asset_id is not None
