@@ -9,6 +9,7 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  window.localStorage.clear();
   Object.assign(navigator, {
     clipboard: {
       readText: vi.fn().mockResolvedValue('recipes.addShaped(...)'),
@@ -348,6 +349,32 @@ test('item search suggestions render static item icons', async () => {
     const icon = document.querySelector('.suggestion-icon-slot img') as HTMLImageElement | null;
     expect(icon?.getAttribute('src')).toContain('/api/icons/planks');
   });
+});
+
+test('item search icon cache is reused after page reload', async () => {
+  const openAndSearch = async () => {
+    const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+    expect(outputEditButton).toBeTruthy();
+    fireEvent.click(outputEditButton as HTMLElement);
+    const searchInput = await screen.findByLabelText('item-search');
+    fireEvent.change(searchInput, { target: { value: 'planks' } });
+    await screen.findByText('<minecraft:planks>');
+    await waitFor(() => {
+      const icon = document.querySelector('.suggestion-icon-slot img') as HTMLImageElement | null;
+      expect(icon?.getAttribute('src')).toContain('/api/icons/planks');
+    });
+  };
+
+  render(<App />);
+  await openAndSearch();
+  const resolveCallsAfterFirstOpen = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve').length;
+  expect(resolveCallsAfterFirstOpen).toBeGreaterThan(0);
+
+  cleanup();
+  render(<App />);
+  await openAndSearch();
+  const resolveCallsAfterSecondOpen = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve').length;
+  expect(resolveCallsAfterSecondOpen).toBe(resolveCallsAfterFirstOpen);
 });
 
 test('structured item editor builds raw without empty withTag and appends NBT only when provided', async () => {

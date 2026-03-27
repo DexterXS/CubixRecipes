@@ -95,6 +95,8 @@ type ItemPanelTranslations = {
   entries: ItemPanelEntry[];
   fallbackToFirstMeta: boolean;
 };
+const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
+const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
 
 type CraftEditorTarget =
   | { kind: 'output' }
@@ -106,6 +108,43 @@ type NbtScalarNode = { kind: 'scalar'; value: string; scalarType: NbtScalarType 
 type NbtListNode = { kind: 'list'; items: NbtNode[] };
 type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
 type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
+
+function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallbackToFirstMeta: boolean): ItemPanelTranslations {
+  const byKey = new Map<string, string>();
+  const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
+  const byDisplayRu = new Map<string, ItemPanelEntry[]>();
+  const byDisplayEn = new Map<string, ItemPanelEntry[]>();
+  const pushDisplayIndex = (index: Map<string, ItemPanelEntry[]>, label: string, entry: ItemPanelEntry) => {
+    const normalized = label.trim().toLowerCase();
+    if (!normalized) return;
+    const list = index.get(normalized) ?? [];
+    list.push(entry);
+    index.set(normalized, list);
+  };
+  entries.forEach((entry) => {
+    pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
+    pushDisplayIndex(byDisplayEn, entry.displayEn, entry);
+    let metaMap = byKeyMeta.get(entry.key);
+    if (!metaMap) {
+      metaMap = new Map<number, ItemPanelEntry>();
+      byKeyMeta.set(entry.key, metaMap);
+    }
+    if (!metaMap.has(entry.meta)) {
+      metaMap.set(entry.meta, entry);
+    }
+    if (!byKey.has(entry.key) || entry.meta === 0) {
+      byKey.set(entry.key, entry.displayRu);
+    }
+  });
+  return {
+    byKey,
+    byKeyMeta,
+    byDisplayRu,
+    byDisplayEn,
+    entries,
+    fallbackToFirstMeta
+  };
+}
 
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
@@ -461,7 +500,16 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [itemSearchQuery, setItemSearchQuery] = useState('');
-  const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>({});
+  const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
+    try {
+      const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw) as Record<string, string | null>;
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+      return {};
+    }
+  });
   const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
   const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
@@ -573,6 +621,18 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     async function loadItemPanelTranslations() {
+      const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
+      try {
+        const cached = window.localStorage.getItem(ITEMPANEL_CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[] };
+          if (Array.isArray(parsed.entries) && parsed.entries.length) {
+            setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
+          }
+        }
+      } catch {
+        // ignore corrupted cache
+      }
       try {
         const response = await fetch('/itempanel.csv');
         if (!response.ok) {
@@ -586,18 +646,7 @@ export default function App() {
           text = new TextDecoder('windows-1251').decode(bytes);
         }
         const lines = text.split(/\r?\n/).slice(1);
-        const byKey = new Map<string, string>();
-        const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
-        const byDisplayRu = new Map<string, ItemPanelEntry[]>();
-        const byDisplayEn = new Map<string, ItemPanelEntry[]>();
         const entries: ItemPanelEntry[] = [];
-        const pushDisplayIndex = (index: Map<string, ItemPanelEntry[]>, label: string, entry: ItemPanelEntry) => {
-          const normalized = label.trim().toLowerCase();
-          if (!normalized) return;
-          const list = index.get(normalized) ?? [];
-          list.push(entry);
-          index.set(normalized, list);
-        };
         lines.forEach((line) => {
           if (!line.trim()) return;
           const parts = line.split(',');
@@ -623,29 +672,14 @@ export default function App() {
             displayEn
           };
           entries.push(entry);
-          pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
-          pushDisplayIndex(byDisplayEn, entry.displayEn, entry);
-          let metaMap = byKeyMeta.get(key);
-          if (!metaMap) {
-            metaMap = new Map<number, ItemPanelEntry>();
-            byKeyMeta.set(key, metaMap);
-          }
-          if (!metaMap.has(meta)) {
-            metaMap.set(meta, entry);
-          }
-          if (!byKey.has(key) || meta === 0) {
-            byKey.set(key, entry.displayRu);
-          }
         });
         if (!cancelled) {
-          setItemPanelTranslations({
-            byKey,
-            byKeyMeta,
-            byDisplayRu,
-            byDisplayEn,
-            entries,
-            fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
-          });
+          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(entries, fallbackToFirstMeta));
+          try {
+            window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries }));
+          } catch {
+            // ignore cache persistence errors
+          }
         }
       } catch {
         // optional source
@@ -861,6 +895,14 @@ export default function App() {
       })();
     });
   }, [itemSearchSuggestions, itemSearchIcons]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ITEM_SEARCH_ICON_CACHE_KEY, JSON.stringify(itemSearchIcons));
+    } catch {
+      // ignore cache persistence errors
+    }
+  }, [itemSearchIcons]);
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
     const [modid, ...nameParts] = entry.key.split(':');
