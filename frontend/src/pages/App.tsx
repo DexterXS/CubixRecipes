@@ -90,6 +90,7 @@ type ItemPanelEntry = {
 type ItemPanelModSummary = {
   modid: string;
   itemCount: number;
+  loadedCount: number;
   completionText: string;
 };
 
@@ -506,7 +507,9 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [isTextureModsOpen, setIsTextureModsOpen] = useState(false);
-  const [isTextureBulkLoading, setIsTextureBulkLoading] = useState(false);
+  const [selectedTextureMods, setSelectedTextureMods] = useState<Record<string, boolean>>({});
+  const [textureLoadState, setTextureLoadState] = useState<'idle' | 'running' | 'paused'>('idle');
+  const [textureLoadStatus, setTextureLoadStatus] = useState('');
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
@@ -527,6 +530,8 @@ export default function App() {
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
+  const texturePauseRef = useRef(false);
+  const textureCancelRef = useRef(false);
 
   const t = createTranslator(uiPreferences.language);
   const areAnimationsEnabled = uiPreferences.animations_enabled;
@@ -852,11 +857,22 @@ export default function App() {
         return {
           modid,
           itemCount: stats.total,
+          loadedCount: stats.loaded,
           completionText: `${percent}% (${stats.loaded}/${stats.total})`
         };
       })
       .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
   }, [itemPanelTranslations.entries, itemSearchIcons]);
+
+  useEffect(() => {
+    setSelectedTextureMods((current) => {
+      const next: Record<string, boolean> = {};
+      itemPanelModSummaries.forEach((summary) => {
+        next[summary.modid] = current[summary.modid] ?? true;
+      });
+      return next;
+    });
+  }, [itemPanelModSummaries]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
@@ -936,53 +952,103 @@ export default function App() {
     }
   }, [itemSearchIcons]);
 
-  async function loadAllTexturesForItemPanel() {
-    if (isTextureBulkLoading) {
-      return;
+  async function waitWhileTextureLoadingPaused() {
+    while (texturePauseRef.current && !textureCancelRef.current) {
+      await new Promise((resolve) => window.setTimeout(resolve, 120));
     }
-    const uniqueRaws: string[] = [];
-    const seen = new Set<string>();
-    itemPanelTranslations.entries.forEach((entry) => {
-      const raw = buildItemRawValue(entry.key, entry.meta);
-      if (!seen.has(raw)) {
-        seen.add(raw);
-        uniqueRaws.push(raw);
-      }
-    });
-    const pending = uniqueRaws.filter((raw) => !Object.prototype.hasOwnProperty.call(itemSearchIcons, raw));
-    if (!pending.length) {
-      return;
-    }
-
-    setIsTextureBulkLoading(true);
-    const batchSize = 24;
-    for (let index = 0; index < pending.length; index += batchSize) {
-      const batch = pending.slice(index, index + batchSize);
-      const resolvedBatch = await Promise.all(batch.map(async (raw) => {
-        try {
-          const resolved = await resolveItemRaw(raw);
-          return [raw, resolved.icon_url ?? null] as const;
-        } catch {
-          return [raw, null] as const;
-        }
-      }));
-      setItemSearchIcons((current) => {
-        const next = { ...current };
-        resolvedBatch.forEach(([raw, iconUrl]) => {
-          next[raw] = iconUrl;
-        });
-        return next;
-      });
-    }
-    setIsTextureBulkLoading(false);
   }
 
-  function handleLoadAllTextures() {
-    const nextOpen = !isTextureModsOpen;
-    setIsTextureModsOpen(nextOpen);
-    if (nextOpen) {
-      void loadAllTexturesForItemPanel();
+  async function loadSelectedTextures() {
+    if (textureLoadState === 'running') {
+      return;
     }
+    textureCancelRef.current = false;
+    texturePauseRef.current = false;
+    setTextureLoadState('running');
+    setIsTextureModsOpen(true);
+
+    const selectedMods = new Set(Object.entries(selectedTextureMods).filter(([, checked]) => checked).map(([modid]) => modid));
+    const selectedEntries = itemPanelTranslations.entries.filter((entry) => {
+      const [modid] = entry.key.split(':');
+      return Boolean(modid) && selectedMods.has(modid);
+    });
+    if (!selectedEntries.length) {
+      setTextureLoadStatus(t('textures.noModsSelected'));
+      setTextureLoadState('idle');
+      return;
+    }
+
+    const pending: Array<{ modid: string; raw: string }> = [];
+    const seen = new Set<string>();
+    selectedEntries.forEach((entry) => {
+      const [modid] = entry.key.split(':');
+      if (!modid) return;
+      const raw = buildItemRawValue(entry.key, entry.meta);
+      if (seen.has(raw)) return;
+      seen.add(raw);
+      if (Object.prototype.hasOwnProperty.call(itemSearchIcons, raw)) return;
+      pending.push({ modid, raw });
+    });
+
+    if (!pending.length) {
+      setTextureLoadStatus(t('textures.alreadyLoaded'));
+      setTextureLoadState('idle');
+      return;
+    }
+
+    for (let index = 0; index < pending.length; index += 1) {
+      if (textureCancelRef.current) {
+        setTextureLoadStatus(t('textures.cancelled'));
+        setTextureLoadState('idle');
+        return;
+      }
+      await waitWhileTextureLoadingPaused();
+      if (textureCancelRef.current) {
+        setTextureLoadStatus(t('textures.cancelled'));
+        setTextureLoadState('idle');
+        return;
+      }
+
+      const current = pending[index];
+      setTextureLoadStatus(`${t('textures.loadingMod')} ${current.modid} (${index + 1}/${pending.length})`);
+      try {
+        const resolved = await resolveItemRaw(current.raw);
+        setItemSearchIcons((icons) => ({ ...icons, [current.raw]: resolved.icon_url ?? null }));
+      } catch {
+        setItemSearchIcons((icons) => ({ ...icons, [current.raw]: null }));
+      }
+    }
+    setTextureLoadStatus(t('textures.finished'));
+    setTextureLoadState('idle');
+  }
+
+  function handlePauseTextureLoading() {
+    texturePauseRef.current = true;
+    setTextureLoadState('paused');
+    setTextureLoadStatus(t('textures.paused'));
+  }
+
+  function handleResumeTextureLoading() {
+    texturePauseRef.current = false;
+    setTextureLoadState('running');
+    setTextureLoadStatus(t('textures.resumed'));
+  }
+
+  function handleCancelTextureLoading() {
+    textureCancelRef.current = true;
+    texturePauseRef.current = false;
+  }
+
+  function toggleTextureModSelection(modid: string, checked: boolean) {
+    setSelectedTextureMods((current) => ({ ...current, [modid]: checked }));
+  }
+
+  function setAllTextureModSelections(checked: boolean) {
+    const next: Record<string, boolean> = {};
+    itemPanelModSummaries.forEach((summary) => {
+      next[summary.modid] = checked;
+    });
+    setSelectedTextureMods(next);
   }
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
@@ -1608,7 +1674,7 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
-                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), texturesGroup: t('toolbar.texturesGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki'), loadAllTextures: t('toolbar.loadAllTextures'), loadingTextures: t('toolbar.loadingTextures'), texturesProgress: t('toolbar.texturesProgress'), texturesEmpty: t('toolbar.texturesEmpty') }}
+                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
                 onParse={() => void handleParse(input)}
                 onPaste={handlePasteFromClipboard}
                 onCreateNew={() => void handleCreateNew()}
@@ -1617,10 +1683,6 @@ export default function App() {
                 onSaveAs={() => void handleSaveAs()}
                 onHelp={() => setIsHelpOpen(true)}
                 onWiki={handleOpenWiki}
-                onLoadAllTextures={handleLoadAllTextures}
-                textureModsOpen={isTextureModsOpen}
-                textureModSummaries={itemPanelModSummaries}
-                textureLoadInProgress={isTextureBulkLoading}
               />
               <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
             </Panel>
@@ -1741,6 +1803,52 @@ export default function App() {
         <strong>CubixRecipes</strong>
         <div className="utility-actions">
           <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <div className="view-menu-wrap">
+            <button type="button" className="secondary-button" aria-expanded={isTextureModsOpen} onClick={() => setIsTextureModsOpen((value) => !value)}>{t('textures.modsDropdown')}</button>
+            {isTextureModsOpen ? (
+              <div className="view-menu texture-mods-menu">
+                <div className="texture-menu-header">
+                  <strong>{t('textures.modsDropdown')}</strong>
+                  <div className="view-menu-actions">
+                    <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(true)}>{t('textures.selectAll')}</button>
+                    <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(false)}>{t('textures.clearAll')}</button>
+                  </div>
+                </div>
+                {itemPanelModSummaries.length ? (
+                  <ul className="toolbar-texture-list">
+                    {itemPanelModSummaries.map((summary) => (
+                      <li key={summary.modid} className="toolbar-texture-item">
+                        <label className="view-toggle" aria-label={`select-mod-${summary.modid}`}>
+                          <input
+                            type="checkbox"
+                            checked={selectedTextureMods[summary.modid] ?? true}
+                            onChange={(event) => toggleTextureModSelection(summary.modid, event.target.checked)}
+                          />
+                          <span>{summary.modid}</span>
+                        </label>
+                        <span>{summary.itemCount}</span>
+                        <span>{t('textures.progress')}: {summary.completionText}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="toolbar-texture-empty">{t('textures.empty')}</p>
+                )}
+              </div>
+            ) : null}
+          </div>
+          <button type="button" className="secondary-button" onClick={() => void loadSelectedTextures()} disabled={textureLoadState === 'running' || textureLoadState === 'paused'}>{t('textures.loadSelected')}</button>
+          {textureLoadState !== 'idle' ? (
+            <>
+              {textureLoadState === 'running' ? (
+                <button type="button" className="ghost-button" onClick={handlePauseTextureLoading}>{t('textures.stop')}</button>
+              ) : (
+                <button type="button" className="ghost-button" onClick={handleResumeTextureLoading}>{t('textures.resume')}</button>
+              )}
+              <button type="button" className="ghost-button" onClick={handleCancelTextureLoading}>{t('textures.cancel')}</button>
+            </>
+          ) : null}
+          {textureLoadStatus ? <span className="texture-load-status">{textureLoadStatus}</span> : null}
           <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
           <div className="view-menu-wrap">
             <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>

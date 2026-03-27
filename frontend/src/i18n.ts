@@ -163,6 +163,24 @@ const translations: Record<UiLanguage, TranslationTree> = {
       wildcard: 'Учитывать *',
       ignore: 'Игнорировать мету'
     },
+    textures: {
+      modsDropdown: 'Список модов',
+      loadSelected: 'Загрузить в кэш',
+      progress: 'Выгружено',
+      empty: 'itempanel.csv не содержит элементов.',
+      selectAll: 'Выбрать все',
+      clearAll: 'Снять все',
+      stop: 'Стоп',
+      resume: 'Продолжить',
+      cancel: 'Отмена',
+      noModsSelected: 'Выберите хотя бы один мод для загрузки.',
+      alreadyLoaded: 'Для выбранных модов все текстуры уже в кэше.',
+      loadingMod: 'Загружается мод:',
+      paused: 'Загрузка приостановлена.',
+      resumed: 'Загрузка продолжена.',
+      cancelled: 'Загрузка отменена.',
+      finished: 'Загрузка завершена.'
+    },
     zones: {
       topLeft: 'Слева сверху',
       topRight: 'Справа сверху',
@@ -329,6 +347,24 @@ const translations: Record<UiLanguage, TranslationTree> = {
       strict: 'Strict meta',
       wildcard: 'Allow *',
       ignore: 'Ignore meta'
+    },
+    textures: {
+      modsDropdown: 'Mods list',
+      loadSelected: 'Load to cache',
+      progress: 'Loaded',
+      empty: 'itempanel.csv has no entries.',
+      selectAll: 'Select all',
+      clearAll: 'Clear all',
+      stop: 'Stop',
+      resume: 'Resume',
+      cancel: 'Cancel',
+      noModsSelected: 'Select at least one mod to load.',
+      alreadyLoaded: 'All textures for selected mods are already cached.',
+      loadingMod: 'Loading mod:',
+      paused: 'Loading paused.',
+      resumed: 'Loading resumed.',
+      cancelled: 'Loading cancelled.',
+      finished: 'Loading finished.'
     },
     zones: {
       topLeft: 'Top left',

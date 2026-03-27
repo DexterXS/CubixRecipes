@@ -474,8 +474,9 @@ test('manual text input with addShaped auto-parses after change', async () => {
 test('texture dropdown in toolbar shows mods from itempanel.csv', async () => {
   render(<App />);
 
-  const openButton = await screen.findByRole('button', { name: 'Загрузить все текстуры' });
-  fireEvent.click(openButton);
+  const openDropdownButton = await screen.findByRole('button', { name: 'Список модов' });
+  fireEvent.click(openDropdownButton);
+  fireEvent.click(screen.getByRole('button', { name: 'Загрузить в кэш' }));
 
   await waitFor(() => {
     expect(screen.getByText('minecraft')).toBeTruthy();
@@ -491,8 +492,9 @@ test('texture bulk load reuses cache and resolves only missing entries', async (
 
   render(<App />);
 
-  const openButton = await screen.findByRole('button', { name: 'Загрузить все текстуры' });
-  fireEvent.click(openButton);
+  const openDropdownButton = await screen.findByRole('button', { name: 'Список модов' });
+  fireEvent.click(openDropdownButton);
+  fireEvent.click(screen.getByRole('button', { name: 'Загрузить в кэш' }));
 
   await waitFor(() => {
     expect(screen.getByText(/Выгружено: 100% \(4\/4\)/)).toBeTruthy();
@@ -500,6 +502,39 @@ test('texture bulk load reuses cache and resolves only missing entries', async (
 
   const resolveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve');
   expect(resolveCalls).toHaveLength(3);
+});
+
+test('texture load can be paused and resumed with dedicated controls', async () => {
+  const fetchMock = global.fetch as unknown as ReturnType<typeof vi.fn>;
+  const baseImplementation = fetchMock.getMockImplementation();
+  fetchMock.mockImplementation((input: RequestInfo | URL, init?: RequestInit) => {
+    const url = String(input);
+    if (url === '/api/items/resolve' && init?.method === 'POST') {
+      const raw = JSON.parse(String(init.body)).item_raw as string;
+      const icon = raw.includes('minecraft:stick') ? '/api/icons/stick' : '/api/icons/planks';
+      return new Promise((resolve) => {
+        setTimeout(() => resolve({ ok: true, json: async () => ({ icon_url: icon, animated: false }) }), 45);
+      }) as Promise<Response>;
+    }
+    return baseImplementation?.(input, init) as Promise<Response>;
+  });
+
+  render(<App />);
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Список модов' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Загрузить в кэш' }));
+
+  const stopButton = await screen.findByRole('button', { name: 'Стоп' });
+  fireEvent.click(stopButton);
+  expect(await screen.findByRole('button', { name: 'Продолжить' })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Продолжить' }));
+  await waitFor(() => {
+    expect(screen.getByText(/Загрузка завершена/)).toBeTruthy();
+  });
+  expect(screen.queryByRole('button', { name: 'Стоп' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Продолжить' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Отмена' })).toBeFalsy();
 });
 
 
