@@ -340,6 +340,39 @@ test('structured item editor builds raw without empty withTag and appends NBT on
   expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
 });
 
+test('structured NBT tree editor supports nested list+compound with typed fields', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const modInput = await screen.findByLabelText('item-mod-input');
+  const itemInput = screen.getByLabelText('item-name-input');
+  const metaInput = screen.getByLabelText('item-meta-input');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(modInput, { target: { value: 'minecraft' } });
+  fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
+  fireEvent.change(metaInput, { target: { value: '0' } });
+  fireEvent.click(screen.getByText('+ NBT список'));
+
+  fireEvent.change(screen.getByLabelText('nbt-key-0'), { target: { value: 'StoredEnchantments' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0'), { target: { value: 'list' } });
+  fireEvent.click(screen.getByText('+ элемент'));
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0'), { target: { value: 'compound' } });
+  fireEvent.click(screen.getByText('+ поле'));
+  fireEvent.change(screen.getByLabelText('nbt-key-root.0.0-0'), { target: { value: 'lvl' } });
+  fireEvent.change(screen.getByLabelText('nbt-value-root.0.0.0'), { target: { value: '3' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0.0'), { target: { value: 'short' } });
+  fireEvent.click(screen.getByText('+ поле'));
+  fireEvent.change(screen.getByLabelText('nbt-key-root.0.0-1'), { target: { value: 'id' } });
+  fireEvent.change(screen.getByLabelText('nbt-value-root.0.0.1'), { target: { value: '35' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0.1'), { target: { value: 'short' } });
+
+  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });

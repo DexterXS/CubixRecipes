@@ -99,11 +99,12 @@ type CraftEditorTarget =
   | { kind: 'output' }
   | { kind: 'cell'; row: number; col: number };
 
-type NbtDraftRow = {
-  id: number;
-  key: string;
-  value: string;
-};
+type NbtScalarType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'string' | 'byte_array' | 'int_array' | 'long_array';
+type NbtNodeType = NbtScalarType | 'list' | 'compound';
+type NbtScalarNode = { kind: 'scalar'; value: string; scalarType: NbtScalarType };
+type NbtListNode = { kind: 'list'; items: NbtNode[] };
+type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
+type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
 
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
@@ -139,41 +140,174 @@ function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
   return `${base}.withTag(${normalizedNbt})`;
 }
 
-function parseRawForEditor(raw: string): { modid: string; item: string; meta: number; nbtRows: NbtDraftRow[] } {
+const nbtScalarTypes: NbtScalarType[] = ['byte', 'short', 'int', 'long', 'float', 'double', 'string', 'byte_array', 'int_array', 'long_array'];
+const nbtNodeTypeOptions: NbtNodeType[] = [...nbtScalarTypes, 'list', 'compound'];
+
+function splitTopLevel(source: string, delimiter: string): string[] {
+  const parts: string[] = [];
+  let depthCurly = 0;
+  let depthSquare = 0;
+  let inString = false;
+  let escape = false;
+  let start = 0;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) {
+      continue;
+    }
+    if (char === '{') depthCurly += 1;
+    else if (char === '}') depthCurly -= 1;
+    else if (char === '[') depthSquare += 1;
+    else if (char === ']') depthSquare -= 1;
+    if (char === delimiter && depthCurly === 0 && depthSquare === 0) {
+      parts.push(source.slice(start, index));
+      start = index + 1;
+    }
+  }
+  parts.push(source.slice(start));
+  return parts.map((part) => part.trim()).filter((part) => part.length > 0);
+}
+
+function splitTopLevelKeyValue(source: string): { key: string; value: string } | null {
+  let depthCurly = 0;
+  let depthSquare = 0;
+  let inString = false;
+  let escape = false;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+    if (char === '{') depthCurly += 1;
+    else if (char === '}') depthCurly -= 1;
+    else if (char === '[') depthSquare += 1;
+    else if (char === ']') depthSquare -= 1;
+    if (char === ':' && depthCurly === 0 && depthSquare === 0) {
+      return { key: source.slice(0, index).trim(), value: source.slice(index + 1).trim() };
+    }
+  }
+  return null;
+}
+
+function parseNbtScalar(value: string): NbtScalarNode {
+  const trimmed = value.trim();
+  const typedMatch = trimmed.match(/^(.*?)(?:\s+as\s+([a-z_]+))$/i);
+  if (typedMatch) {
+    const scalarType = typedMatch[2].toLowerCase() as NbtScalarType;
+    if (nbtScalarTypes.includes(scalarType)) {
+      return { kind: 'scalar', value: typedMatch[1].trim(), scalarType };
+    }
+  }
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return { kind: 'scalar', value: trimmed.slice(1, -1), scalarType: 'string' };
+  }
+  return { kind: 'scalar', value: trimmed, scalarType: 'int' };
+}
+
+function parseNbtNode(raw: string): NbtNode {
+  const trimmed = raw.trim();
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    const body = trimmed.slice(1, -1).trim();
+    if (!body) return { kind: 'compound', entries: [] };
+    const entries = splitTopLevel(body, ',').map((chunk) => splitTopLevelKeyValue(chunk)).filter((entry): entry is { key: string; value: string } => Boolean(entry))
+      .map((entry) => ({ key: entry.key.replace(/^"(.*)"$/, '$1').trim(), value: parseNbtNode(entry.value) }));
+    return { kind: 'compound', entries };
+  }
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    const body = trimmed.slice(1, -1).trim();
+    if (!body) return { kind: 'list', items: [] };
+    return { kind: 'list', items: splitTopLevel(body, ',').map((chunk) => parseNbtNode(chunk)) };
+  }
+  return parseNbtScalar(trimmed);
+}
+
+function renderNbtNode(node: NbtNode): string {
+  if (node.kind === 'compound') {
+    return `{${node.entries.map((entry) => `${entry.key}: ${renderNbtNode(entry.value)}`).join(', ')}}`;
+  }
+  if (node.kind === 'list') {
+    return `[${node.items.map((item) => renderNbtNode(item)).join(', ')}]`;
+  }
+  const scalarValue = node.scalarType === 'string' ? `"${node.value}"` : node.value.trim();
+  return node.scalarType === 'int' ? scalarValue : `${scalarValue} as ${node.scalarType}`;
+}
+
+function defaultNodeForType(type: NbtNodeType): NbtNode {
+  if (type === 'compound') return { kind: 'compound', entries: [] };
+  if (type === 'list') return { kind: 'list', items: [] };
+  return { kind: 'scalar', value: '', scalarType: type };
+}
+
+function nodeType(node: NbtNode): NbtNodeType {
+  if (node.kind === 'compound') return 'compound';
+  if (node.kind === 'list') return 'list';
+  return node.scalarType;
+}
+
+function normalizeNodeTypeChange(nextType: NbtNodeType, current: NbtNode): NbtNode {
+  if (nextType === 'compound') {
+    return current.kind === 'compound' ? current : { kind: 'compound', entries: [] };
+  }
+  if (nextType === 'list') {
+    return current.kind === 'list' ? current : { kind: 'list', items: [] };
+  }
+  if (current.kind === 'scalar') {
+    return { ...current, scalarType: nextType };
+  }
+  return { kind: 'scalar', value: '', scalarType: nextType };
+}
+
+function parseRawForEditor(raw: string): { modid: string; item: string; meta: number; nbtRoot: NbtCompoundNode } {
   const trimmed = raw.trim();
   const match = trimmed.match(/^<([a-zA-Z0-9_.-]+):([a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
   if (!match) {
-    return { modid: 'minecraft', item: 'stone', meta: 0, nbtRows: [] };
+    return { modid: 'minecraft', item: 'stone', meta: 0, nbtRoot: { kind: 'compound', entries: [] } };
   }
   const modid = match[1].toLowerCase();
   const item = match[2].toLowerCase();
   const meta = match[3] ? Number.parseInt(match[3], 10) || 0 : 0;
   const nbtRaw = (match[4] ?? '').trim();
   if (!nbtRaw || nbtRaw === '{}' || nbtRaw === '{ }') {
-    return { modid, item, meta, nbtRows: [] };
+    return { modid, item, meta, nbtRoot: { kind: 'compound', entries: [] } };
   }
-  const body = nbtRaw.replace(/^\{/, '').replace(/\}$/, '').trim();
-  if (!body) {
-    return { modid, item, meta, nbtRows: [] };
+  const parsedNode = parseNbtNode(nbtRaw);
+  if (parsedNode.kind !== 'compound') {
+    return { modid, item, meta, nbtRoot: { kind: 'compound', entries: [{ key: 'value', value: parsedNode }] } };
   }
-  const rows = body.split(',').map((chunk, index) => {
-    const [left, ...rest] = chunk.split(':');
-    return {
-      id: index + 1,
-      key: (left ?? '').trim(),
-      value: rest.join(':').trim()
-    };
-  }).filter((row) => row.key && row.value);
-  return { modid, item, meta, nbtRows: rows };
+  return { modid, item, meta, nbtRoot: parsedNode };
 }
 
-function buildNbtRawFromRows(rows: NbtDraftRow[]): string {
-  const parts = rows
-    .map((row) => ({ key: row.key.trim(), value: row.value.trim() }))
-    .filter((row) => row.key && row.value)
-    .map((row) => `${row.key}: ${row.value}`);
-  if (!parts.length) return '';
-  return `{${parts.join(', ')}}`;
+function buildNbtRawFromRoot(root: NbtCompoundNode): string {
+  const compacted: NbtCompoundNode = {
+    kind: 'compound',
+    entries: root.entries
+      .map((entry) => ({ key: entry.key.trim(), value: entry.value }))
+      .filter((entry) => entry.key.length > 0)
+  };
+  if (!compacted.entries.length) return '';
+  return renderNbtNode(compacted);
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -304,7 +438,8 @@ export default function App() {
   const [itemModDraft, setItemModDraft] = useState('minecraft');
   const [itemNameDraft, setItemNameDraft] = useState('stone');
   const [itemMetaDraft, setItemMetaDraft] = useState('0');
-  const [nbtRowsDraft, setNbtRowsDraft] = useState<NbtDraftRow[]>([]);
+  const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
+  const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -328,7 +463,6 @@ export default function App() {
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
-  const nbtRowIdRef = useRef(1);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -703,7 +837,8 @@ export default function App() {
     setItemModDraft(modid);
     setItemNameDraft(itemName);
     setItemMetaDraft(String(entry.meta));
-    setNbtRowsDraft([]);
+    setNbtRootDraft({ kind: 'compound', entries: [] });
+    setCollapsedNbtPaths({});
     const nextRaw = buildItemRawValue(entry.key, entry.meta);
     setCraftSourceDraft(nextRaw);
     setItemSearchQuery(`${entry.key}:${entry.meta}`);
@@ -717,8 +852,93 @@ export default function App() {
     }
     const parsedMeta = Number.parseInt(itemMetaDraft.trim() || '0', 10);
     const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
-    const nbtRaw = buildNbtRawFromRows(nbtRowsDraft);
+    const nbtRaw = buildNbtRawFromRoot(nbtRootDraft);
     setCraftSourceDraft(buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw));
+  }
+
+  function setNbtPathCollapsed(path: string, collapsed: boolean) {
+    setCollapsedNbtPaths((current) => ({ ...current, [path]: collapsed }));
+  }
+
+  function updateRootEntry(index: number, updater: (entry: NbtCompoundNode['entries'][number]) => NbtCompoundNode['entries'][number]) {
+    setNbtRootDraft((current) => ({
+      ...current,
+      entries: current.entries.map((entry, entryIndex) => (entryIndex === index ? updater(entry) : entry))
+    }));
+  }
+
+  function addRootEntry(type: NbtNodeType = 'int') {
+    setNbtRootDraft((current) => ({
+      ...current,
+      entries: [...current.entries, { key: '', value: defaultNodeForType(type) }]
+    }));
+  }
+
+  function renderNbtNodeEditor(node: NbtNode, path: string, onChange: (nextNode: NbtNode) => void): JSX.Element {
+    const currentType = nodeType(node);
+    const isCollapsed = collapsedNbtPaths[path] ?? false;
+    if (node.kind === 'scalar') {
+      return (
+        <div className="nbt-row-grid">
+          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onChange({ ...node, value: event.target.value })} />
+          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </div>
+      );
+    }
+    if (node.kind === 'compound') {
+      return (
+        <div className="nbt-node-block">
+          <div className="inline-actions">
+            <button type="button" className="ghost-button" onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+            <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+              {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+            </select>
+            <button type="button" className="ghost-button" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+ поле</button>
+          </div>
+          {!isCollapsed ? (
+            <div className="nbt-children">
+              {node.entries.map((entry, index) => (
+                <div key={path + index} className="nbt-entry-line">
+                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
+                  {renderNbtNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onChange({
+                    ...node,
+                    entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
+                  }))}
+                  <button type="button" className="ghost-button" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>Удалить</button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+    return (
+      <div className="nbt-node-block">
+        <div className="inline-actions">
+          <button type="button" className="ghost-button" onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+          <button type="button" className="ghost-button" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+ элемент</button>
+        </div>
+        {!isCollapsed ? (
+          <div className="nbt-children">
+            {node.items.map((item, index) => (
+              <div key={path + index} className="nbt-entry-line">
+                <span className="nbt-list-index">[{index}]</span>
+                {renderNbtNodeEditor(item, `${path}.${index}`, (nextNode) => onChange({
+                  ...node,
+                  items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
+                }))}
+                <button type="button" className="ghost-button" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
   }
 
   function getCellRaw(target: CraftEditorTarget): string {
@@ -837,11 +1057,11 @@ export default function App() {
     setCraftEditorTarget(target);
     const raw = getCellRaw(target);
     const parsed = parseRawForEditor(raw);
-    nbtRowIdRef.current = parsed.nbtRows.length + 1;
     setItemModDraft(parsed.modid);
     setItemNameDraft(parsed.item);
     setItemMetaDraft(String(parsed.meta));
-    setNbtRowsDraft(parsed.nbtRows);
+    setNbtRootDraft(parsed.nbtRoot);
+    setCollapsedNbtPaths({});
     setCraftSourceDraft(raw);
     setItemSearchQuery('');
     setIsCraftEditorOpen(true);
@@ -1500,23 +1720,22 @@ export default function App() {
                   <button
                     type="button"
                     className="ghost-button"
-                    onClick={() => {
-                      const nextId = nbtRowIdRef.current++;
-                      setNbtRowsDraft((current) => [...current, { id: nextId, key: '', value: '' }]);
-                    }}
+                    onClick={() => addRootEntry('int')}
                   >
                     + NBT поле
                   </button>
+                  <button type="button" className="ghost-button" onClick={() => addRootEntry('compound')}>+ NBT объект</button>
+                  <button type="button" className="ghost-button" onClick={() => addRootEntry('list')}>+ NBT список</button>
                   <button type="button" className="secondary-button" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
                 </div>
-                {nbtRowsDraft.length ? (
+                {nbtRootDraft.entries.length ? (
                   <div className="suggestions-list" aria-label="nbt-editor-list">
-                    {nbtRowsDraft.map((row) => (
-                      <div key={row.id} className="suggestion-item">
-                        <div className="inline-actions">
-                          <input aria-label={`nbt-key-${row.id}`} type="text" value={row.key} placeholder="ключ" onChange={(event) => setNbtRowsDraft((current) => current.map((entry) => entry.id === row.id ? { ...entry, key: event.target.value } : entry))} />
-                          <input aria-label={`nbt-value-${row.id}`} type="text" value={row.value} placeholder="значение (например 3 as short)" onChange={(event) => setNbtRowsDraft((current) => current.map((entry) => entry.id === row.id ? { ...entry, value: event.target.value } : entry))} />
-                          <button type="button" className="ghost-button" onClick={() => setNbtRowsDraft((current) => current.filter((entry) => entry.id !== row.id))}>Удалить</button>
+                    {nbtRootDraft.entries.map((entry, index) => (
+                      <div key={`root-entry-${index}`} className="suggestion-item">
+                        <div className="nbt-entry-line">
+                          <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                          {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
+                          <button type="button" className="ghost-button" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
                         </div>
                       </div>
                     ))}
