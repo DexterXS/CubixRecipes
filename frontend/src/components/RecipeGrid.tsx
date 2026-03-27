@@ -47,7 +47,7 @@ export function RecipeGrid({ matrix, displayMode, animationsEnabled, editorMode,
                 className={`${cellClass} ${isEmpty ? 'is-empty' : 'is-filled'} ${isInvalid ? 'is-invalid' : ''} ${editorMode === 'view' ? 'is-view' : 'is-edit'}`.trim()}
                 title={title}
               >
-                <span className="cell-coord">{rowIndex + 1},{colIndex + 1}</span>
+                {displayMode !== 'icons' ? <span className="cell-coord">{rowIndex + 1},{colIndex + 1}</span> : null}
                 <div className="cell-visual">
                   <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                     {displayMode === 'icons' && iconUrl
@@ -56,19 +56,23 @@ export function RecipeGrid({ matrix, displayMode, animationsEnabled, editorMode,
                   </button>
                 </div>
                 <div className="cell-actions">
-                  <button type="button" className="ghost-button" aria-label={`copy-cell-${rowIndex}-${colIndex}`} onClick={() => onCellCopy(rowIndex, colIndex)}>Копировать</button>
-                  <button type="button" className="ghost-button" aria-label={`paste-cell-${rowIndex}-${colIndex}`} disabled={editorMode === 'view'} onClick={() => onCellPaste(rowIndex, colIndex)}>Вставить</button>
-                  <button type="button" className="ghost-button" aria-label={`clear-cell-${rowIndex}-${colIndex}`} disabled={editorMode === 'view'} onClick={() => onCellClear(rowIndex, colIndex)}>Очистить</button>
+                  <button type="button" className="ghost-button" aria-label={`copy-cell-${rowIndex}-${colIndex}`} title="Копировать" onClick={() => onCellCopy(rowIndex, colIndex)}>⧉</button>
+                  <button type="button" className="ghost-button" aria-label={`paste-cell-${rowIndex}-${colIndex}`} title="Вставить" disabled={editorMode === 'view'} onClick={() => onCellPaste(rowIndex, colIndex)}>⎘</button>
+                  <button type="button" className="ghost-button" aria-label={`clear-cell-${rowIndex}-${colIndex}`} title="Очистить" disabled={editorMode === 'view'} onClick={() => onCellClear(rowIndex, colIndex)}>✕</button>
                 </div>
-                <input
-                  aria-label={`cell-${rowIndex}-${colIndex}`}
-                  value={value}
-                  title={title}
-                  placeholder={placeholder}
-                  readOnly={editorMode === 'view'}
-                  onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
-                />
-                <span className="cell-preview" title={title}>{value ? shortenCellValue(value) : 'empty'}</span>
+                {displayMode !== 'icons' ? (
+                  <>
+                    <input
+                      aria-label={`cell-${rowIndex}-${colIndex}`}
+                      value={value}
+                      title={title}
+                      placeholder={placeholder}
+                      readOnly={editorMode === 'view'}
+                      onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
+                    />
+                    <span className="cell-preview" title={title}>{value ? shortenCellValue(value) : 'empty'}</span>
+                  </>
+                ) : null}
               </div>
             );
           })}
