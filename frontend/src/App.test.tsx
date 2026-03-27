@@ -480,7 +480,22 @@ test('texture dropdown in toolbar shows mods from itempanel.csv', async () => {
   await waitFor(() => {
     expect(screen.getByText('minecraft')).toBeTruthy();
     expect(screen.getByText('4')).toBeTruthy();
-    expect(screen.getByText(/Выгружено: —/)).toBeTruthy();
+    expect(screen.getByText(/Выгружено: 0% \(0\/4\)/)).toBeTruthy();
+  });
+});
+
+test('texture dropdown progress uses resolved icon cache ratio', async () => {
+  window.localStorage.setItem('cubixrecipes:item-search-icon-cache-v1', JSON.stringify({
+    '<minecraft:planks>': '/api/icons/planks'
+  }));
+
+  render(<App />);
+
+  const openButton = await screen.findByRole('button', { name: 'Загрузить все текстуры' });
+  fireEvent.click(openButton);
+
+  await waitFor(() => {
+    expect(screen.getByText(/Выгружено: 25% \(1\/4\)/)).toBeTruthy();
   });
 });
 

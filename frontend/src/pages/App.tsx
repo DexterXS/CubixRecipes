@@ -833,16 +833,29 @@ export default function App() {
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
   const itemPanelModSummaries = useMemo<ItemPanelModSummary[]>(() => {
-    const counters = new Map<string, number>();
+    const counters = new Map<string, { total: number; loaded: number }>();
     itemPanelTranslations.entries.forEach((entry) => {
       const [modid] = entry.key.split(':');
       if (!modid) return;
-      counters.set(modid, (counters.get(modid) ?? 0) + 1);
+      const raw = buildItemRawValue(entry.key, entry.meta);
+      const stats = counters.get(modid) ?? { total: 0, loaded: 0 };
+      stats.total += 1;
+      if (itemSearchIcons[raw]) {
+        stats.loaded += 1;
+      }
+      counters.set(modid, stats);
     });
     return Array.from(counters.entries())
-      .map(([modid, itemCount]) => ({ modid, itemCount, completionText: '—' }))
+      .map(([modid, stats]) => {
+        const percent = stats.total > 0 ? Math.round((stats.loaded / stats.total) * 100) : 0;
+        return {
+          modid,
+          itemCount: stats.total,
+          completionText: `${percent}% (${stats.loaded}/${stats.total})`
+        };
+      })
       .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
-  }, [itemPanelTranslations.entries]);
+  }, [itemPanelTranslations.entries, itemSearchIcons]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
