@@ -8,6 +8,7 @@
 - Craft editor now includes item autocomplete search from a single CSV source with support for `ID`, `ID:meta`, `mod:item`, `mod:item:meta`, RU names, and EN names; selected suggestions are inserted without empty `.withTag(...)` suffixes.
 - Added a first-stage structured NBT editor in the craft modal (fixed `mod/item/meta` fields + add/remove NBT key/value rows) with raw builder logic that only appends `.withTag(...)` when NBT fields are non-empty.
 - Backend parser now accepts item references with optional `.withTag(...)` suffix in item-query and matrix parsing flows, so frontend structured editor output works end-to-end with save/parse routes.
+- Fixed `invalid syntax` failures when parsing `addShaped` matrices that contain `<item>.withTag({...})` cells (including 9x9 Avaritia recipes).
 - Hardened backend write-path handling for `/api/recipes/save-as` and `/api/zs/files/create`: writes are now restricted to configured recipe roots and out-of-scope paths return HTTP 400.
 - Added backend input bounds for recipe grid/matrix payloads to prevent oversized allocations and invalid matrix dimensions.
 - Normalized API error semantics: `PUT /api/recipes/{recipe_uid}` now returns HTTP 404 for unknown recipe ids; `GET /api/index/status/{scan_id}` now returns HTTP 404 for unknown scan ids.

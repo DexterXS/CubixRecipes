@@ -214,7 +214,7 @@ class RecipeParser:
         return self.parse_item_ref(item_match.group(0))
 
     def _parse_matrix(self, matrix_raw: str) -> list[list[Optional[str]]]:
-        transformed = re.sub(r'<([^>]+)>', lambda match: repr(f"<{match.group(1)}>"), matrix_raw)
+        transformed = re.sub(r'<[^>]+>(?:\.withTag\(([\s\S]*?)\))?', lambda match: repr(match.group(0)), matrix_raw)
         transformed = re.sub(r'\bnull\b', 'None', transformed)
         matrix = ast.literal_eval(transformed)
         if not isinstance(matrix, list):
