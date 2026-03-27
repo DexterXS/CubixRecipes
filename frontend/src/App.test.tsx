@@ -314,6 +314,32 @@ test('item search in craft modal supports ID, ID:meta, RU and EN names', async (
   expect(sourceTextarea.value).toBe('<minecraft:planks>');
 });
 
+test('structured item editor builds raw without empty withTag and appends NBT only when provided', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const modInput = await screen.findByLabelText('item-mod-input');
+  const itemInput = screen.getByLabelText('item-name-input');
+  const metaInput = screen.getByLabelText('item-meta-input');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(modInput, { target: { value: 'minecraft' } });
+  fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
+  fireEvent.change(metaInput, { target: { value: '0' } });
+  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>');
+
+  fireEvent.click(screen.getByText('+ NBT поле'));
+  const keyInput = await screen.findByLabelText(/nbt-key-/);
+  const valueInput = await screen.findByLabelText(/nbt-value-/);
+  fireEvent.change(keyInput, { target: { value: 'StoredEnchantments' } });
+  fireEvent.change(valueInput, { target: { value: '[{lvl: 3 as short, id: 35 as short}]' } });
+  fireEvent.click(screen.getByText('Собрать raw из полей'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });

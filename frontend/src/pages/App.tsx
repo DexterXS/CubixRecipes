@@ -99,6 +99,12 @@ type CraftEditorTarget =
   | { kind: 'output' }
   | { kind: 'cell'; row: number; col: number };
 
+type NbtDraftRow = {
+  id: number;
+  key: string;
+  value: string;
+};
+
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
 }
@@ -131,6 +137,43 @@ function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
     return base;
   }
   return `${base}.withTag(${normalizedNbt})`;
+}
+
+function parseRawForEditor(raw: string): { modid: string; item: string; meta: number; nbtRows: NbtDraftRow[] } {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^<([a-zA-Z0-9_.-]+):([a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
+  if (!match) {
+    return { modid: 'minecraft', item: 'stone', meta: 0, nbtRows: [] };
+  }
+  const modid = match[1].toLowerCase();
+  const item = match[2].toLowerCase();
+  const meta = match[3] ? Number.parseInt(match[3], 10) || 0 : 0;
+  const nbtRaw = (match[4] ?? '').trim();
+  if (!nbtRaw || nbtRaw === '{}' || nbtRaw === '{ }') {
+    return { modid, item, meta, nbtRows: [] };
+  }
+  const body = nbtRaw.replace(/^\{/, '').replace(/\}$/, '').trim();
+  if (!body) {
+    return { modid, item, meta, nbtRows: [] };
+  }
+  const rows = body.split(',').map((chunk, index) => {
+    const [left, ...rest] = chunk.split(':');
+    return {
+      id: index + 1,
+      key: (left ?? '').trim(),
+      value: rest.join(':').trim()
+    };
+  }).filter((row) => row.key && row.value);
+  return { modid, item, meta, nbtRows: rows };
+}
+
+function buildNbtRawFromRows(rows: NbtDraftRow[]): string {
+  const parts = rows
+    .map((row) => ({ key: row.key.trim(), value: row.value.trim() }))
+    .filter((row) => row.key && row.value)
+    .map((row) => `${row.key}: ${row.value}`);
+  if (!parts.length) return '';
+  return `{${parts.join(', ')}}`;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -258,6 +301,10 @@ export default function App() {
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>({ kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState('');
+  const [itemModDraft, setItemModDraft] = useState('minecraft');
+  const [itemNameDraft, setItemNameDraft] = useState('stone');
+  const [itemMetaDraft, setItemMetaDraft] = useState('0');
+  const [nbtRowsDraft, setNbtRowsDraft] = useState<NbtDraftRow[]>([]);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -281,6 +328,7 @@ export default function App() {
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
+  const nbtRowIdRef = useRef(1);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -650,9 +698,27 @@ export default function App() {
   }, [itemSearchQuery, itemPanelTranslations]);
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
+    const [modid, ...nameParts] = entry.key.split(':');
+    const itemName = nameParts.join(':');
+    setItemModDraft(modid);
+    setItemNameDraft(itemName);
+    setItemMetaDraft(String(entry.meta));
+    setNbtRowsDraft([]);
     const nextRaw = buildItemRawValue(entry.key, entry.meta);
     setCraftSourceDraft(nextRaw);
     setItemSearchQuery(`${entry.key}:${entry.meta}`);
+  }
+
+  function applyRawFromStructuredEditor() {
+    const modid = itemModDraft.trim().toLowerCase();
+    const item = itemNameDraft.trim().toLowerCase();
+    if (!modid || !item) {
+      return;
+    }
+    const parsedMeta = Number.parseInt(itemMetaDraft.trim() || '0', 10);
+    const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
+    const nbtRaw = buildNbtRawFromRows(nbtRowsDraft);
+    setCraftSourceDraft(buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw));
   }
 
   function getCellRaw(target: CraftEditorTarget): string {
@@ -769,7 +835,14 @@ export default function App() {
 
   function openCraftEditorModal(target: CraftEditorTarget) {
     setCraftEditorTarget(target);
-    setCraftSourceDraft(getCellRaw(target));
+    const raw = getCellRaw(target);
+    const parsed = parseRawForEditor(raw);
+    nbtRowIdRef.current = parsed.nbtRows.length + 1;
+    setItemModDraft(parsed.modid);
+    setItemNameDraft(parsed.item);
+    setItemMetaDraft(String(parsed.meta));
+    setNbtRowsDraft(parsed.nbtRows);
+    setCraftSourceDraft(raw);
     setItemSearchQuery('');
     setIsCraftEditorOpen(true);
   }
@@ -1407,6 +1480,49 @@ export default function App() {
                 <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
               </label>
+              <div className="field-block">
+                <span>Структурный редактор item</span>
+                <div className="settings-grid">
+                  <label className="field-block">
+                    <span>Mod</span>
+                    <input aria-label="item-mod-input" type="text" value={itemModDraft} onChange={(event) => setItemModDraft(event.target.value)} />
+                  </label>
+                  <label className="field-block">
+                    <span>Item</span>
+                    <input aria-label="item-name-input" type="text" value={itemNameDraft} onChange={(event) => setItemNameDraft(event.target.value)} />
+                  </label>
+                  <label className="field-block">
+                    <span>Meta</span>
+                    <input aria-label="item-meta-input" type="number" min={0} value={itemMetaDraft} onChange={(event) => setItemMetaDraft(event.target.value)} />
+                  </label>
+                </div>
+                <div className="inline-actions">
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    onClick={() => {
+                      const nextId = nbtRowIdRef.current++;
+                      setNbtRowsDraft((current) => [...current, { id: nextId, key: '', value: '' }]);
+                    }}
+                  >
+                    + NBT поле
+                  </button>
+                  <button type="button" className="secondary-button" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                </div>
+                {nbtRowsDraft.length ? (
+                  <div className="suggestions-list" aria-label="nbt-editor-list">
+                    {nbtRowsDraft.map((row) => (
+                      <div key={row.id} className="suggestion-item">
+                        <div className="inline-actions">
+                          <input aria-label={`nbt-key-${row.id}`} type="text" value={row.key} placeholder="ключ" onChange={(event) => setNbtRowsDraft((current) => current.map((entry) => entry.id === row.id ? { ...entry, key: event.target.value } : entry))} />
+                          <input aria-label={`nbt-value-${row.id}`} type="text" value={row.value} placeholder="значение (например 3 as short)" onChange={(event) => setNbtRowsDraft((current) => current.map((entry) => entry.id === row.id ? { ...entry, value: event.target.value } : entry))} />
+                          <button type="button" className="ghost-button" onClick={() => setNbtRowsDraft((current) => current.filter((entry) => entry.id !== row.id))}>Удалить</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
               <div className="inline-actions">
                 <button type="button" className="ghost-button" onClick={() => setCraftSourceDraft('')}>Очистить</button>
                 <button type="button" className="secondary-button" onClick={() => void handleCraftModalCopy()}>Скопировать</button>
