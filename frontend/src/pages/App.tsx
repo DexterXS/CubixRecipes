@@ -52,6 +52,7 @@ type DropTarget = {
 } | null;
 
 type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
+type ModalScaleKey = 'help' | 'layout' | 'craft';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -459,6 +460,8 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [itemSearchQuery, setItemSearchQuery] = useState('');
+  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1 });
+  const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -497,6 +500,14 @@ export default function App() {
       };
     }));
   }, [matrix, recipe.matrix]);
+
+  function patchModalScale(key: ModalScaleKey, nextScale: number) {
+    setModalScales((current) => ({ ...current, [key]: clamp(nextScale, 0.8, 1.5) }));
+  }
+
+  function getModalScaleStyle(key: ModalScaleKey): CSSProperties {
+    return { '--modal-scale': modalScales[key] } as CSSProperties;
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -891,11 +902,11 @@ export default function App() {
       return (
         <div className="nbt-node-block">
           <div className="inline-actions">
-            <button type="button" className="ghost-button" onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
             <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
               {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
             </select>
-            <button type="button" className="ghost-button" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+ поле</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Добавить поле" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
           </div>
           {!isCollapsed ? (
             <div className="nbt-children">
@@ -906,7 +917,7 @@ export default function App() {
                     ...node,
                     entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
                   }))}
-                  <button type="button" className="ghost-button" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>Удалить</button>
+                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>🗑️</button>
                 </div>
               ))}
             </div>
@@ -917,11 +928,11 @@ export default function App() {
     return (
       <div className="nbt-node-block">
         <div className="inline-actions">
-          <button type="button" className="ghost-button" onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
-          <button type="button" className="ghost-button" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+ элемент</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Добавить элемент" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
         </div>
         {!isCollapsed ? (
           <div className="nbt-children">
@@ -932,9 +943,26 @@ export default function App() {
                   ...node,
                   items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
                 }))}
-                <button type="button" className="ghost-button" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
+                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>🗑️</button>
               </div>
             ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  function renderModalScaleControl(key: ModalScaleKey): JSX.Element {
+    const isOpen = activeScaleControl === key;
+    return (
+      <div className="modal-scale-wrap">
+        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="Масштаб окна" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>⚙️</button>
+        {isOpen ? (
+          <div className="modal-scale-popover">
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>−</button>
+            <input aria-label={`modal-scale-${key}-range`} type="range" min="0.8" max="1.5" step="0.1" value={modalScales[key]} onChange={(event) => patchModalScale(key, Number(event.target.value))} />
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>+</button>
+            <span>{Math.round(modalScales[key] * 100)}%</span>
           </div>
         ) : null}
       </div>
@@ -1635,10 +1663,13 @@ export default function App() {
 
       {isHelpOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsHelpOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('help')} role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{t('help.title')}</h2>
-              <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('help')}
+                <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
+              </div>
             </div>
             <ul>
               {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
@@ -1649,10 +1680,13 @@ export default function App() {
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('layout')} role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{t('layoutSettings.title')}</h2>
-              <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('layout')}
+                <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              </div>
             </div>
             <div className="settings-modal-body">
               <p>{t('layoutSettings.description')}</p>
@@ -1672,17 +1706,20 @@ export default function App() {
 
       {isCraftEditorOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsCraftEditorOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
-              <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('craft')}
+                <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
+              </div>
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
                 <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
                 <div className="inline-actions">
                   <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
-                  <button type="button" className="ghost-button" onClick={() => setItemSearchQuery('')}>Очистить поиск</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="Очистить поиск" onClick={() => setItemSearchQuery('')}>🧹</button>
                 </div>
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
@@ -1719,13 +1756,15 @@ export default function App() {
                 <div className="inline-actions">
                   <button
                     type="button"
-                    className="ghost-button"
+                    className="ghost-button icon-button"
+                    aria-label="add-nbt-field"
+                    title="Добавить NBT поле"
                     onClick={() => addRootEntry('int')}
                   >
-                    + NBT поле
+                    +
                   </button>
-                  <button type="button" className="ghost-button" onClick={() => addRootEntry('compound')}>+ NBT объект</button>
-                  <button type="button" className="ghost-button" onClick={() => addRootEntry('list')}>+ NBT список</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
                   <button type="button" className="secondary-button" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
                 </div>
                 {nbtRootDraft.entries.length ? (
@@ -1735,7 +1774,7 @@ export default function App() {
                         <div className="nbt-entry-line">
                           <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
                           {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                          <button type="button" className="ghost-button" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
+                          <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
                         </div>
                       </div>
                     ))}
@@ -1743,9 +1782,9 @@ export default function App() {
                 ) : null}
               </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button" onClick={() => setCraftSourceDraft('')}>Очистить</button>
-                <button type="button" className="secondary-button" onClick={() => void handleCraftModalCopy()}>Скопировать</button>
-                <button type="button" className="secondary-button" onClick={() => void handleCraftModalPaste()}>Вставить</button>
+                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
+                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="Скопировать" onClick={() => void handleCraftModalCopy()}>📋</button>
+                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Вставить" onClick={() => void handleCraftModalPaste()}>📥</button>
                 <button
                   type="button"
                   onClick={() => {
