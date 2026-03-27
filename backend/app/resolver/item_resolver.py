@@ -22,6 +22,7 @@ class ItemResolver:
         strategies = [
             self._manual_override,
             self._contenttweaker_exact,
+            self._avaritia_meta_mapping,
             self._textures_exact,
             self._textures_meta_suffix,
             self._grouped_files,
@@ -63,6 +64,80 @@ class ItemResolver:
         trace.append({'strategy': 'textures_exact', 'checked': len(candidates)})
         checked_sources.extend([c['source_type'] for c in candidates])
         return self._make_result(item_ref, candidates[:1], 0.9, 'textures_exact', trace)
+
+    def _avaritia_meta_mapping(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        if item_ref.modid != 'avaritia' or item_ref.meta_value is None:
+            trace.append({'strategy': 'avaritia_meta_mapping', 'skipped': 'not_applicable'})
+            return None
+
+        resource_types = [
+            'diamond_lattice',
+            'crystal_matrix_ingot',
+            'neutron_pile',
+            'neutron_nugget',
+            'neutronium_ingot',
+            'infinity_catalyst',
+            'infinity_ingot',
+            'record_fragment',
+            'starfuel',
+            'neutronium_gear',
+        ]
+        resource_block_types = ['neutronium', 'infinity']
+        singularity_types = ['iron', 'gold', 'lapis', 'redstone', 'quartz', 'copper', 'tin', 'lead', 'silver', 'nickel', 'clay']
+
+        candidate_keys: list[str] = []
+        lang_keys: list[str] = []
+        subtype: Optional[str] = None
+
+        if item_ref.name == 'resource' and 0 <= item_ref.meta_value < len(resource_types):
+            subtype = resource_types[item_ref.meta_value]
+            candidate_keys = [
+                f'{item_ref.modid}:resource_{subtype}',
+                f'{item_ref.modid}:resource_{item_ref.meta_value}',
+                f'{item_ref.modid}:{item_ref.name}_{item_ref.meta_value}',
+            ]
+            lang_keys = [f'item.resource_{subtype}.name', f'item.{item_ref.modid}.resource_{subtype}.name']
+        elif item_ref.name == 'resource_block' and 0 <= item_ref.meta_value < len(resource_block_types):
+            subtype = resource_block_types[item_ref.meta_value]
+            candidate_keys = [
+                f'{item_ref.modid}:block_{subtype}',
+                f'{item_ref.modid}:{item_ref.name}_{item_ref.meta_value}',
+                f'{item_ref.modid}:resource_block_{subtype}',
+            ]
+            lang_keys = [f'tile.block_{subtype}.name', f'tile.{item_ref.modid}.block_{subtype}.name']
+        elif item_ref.name == 'singularity' and 0 <= item_ref.meta_value < len(singularity_types):
+            subtype = singularity_types[item_ref.meta_value]
+            candidate_keys = [
+                f'{item_ref.modid}:singularity',
+                f'{item_ref.modid}:singularity2',
+                f'{item_ref.modid}:singularity_{subtype}',
+            ]
+            lang_keys = [f'item.singularity_{subtype}.name', f'item.{item_ref.modid}.singularity_{subtype}.name']
+
+        if not candidate_keys:
+            trace.append({'strategy': 'avaritia_meta_mapping', 'matched': None})
+            return None
+
+        checked_keys.extend(candidate_keys)
+        if lang_keys:
+            checked_keys.extend(lang_keys)
+
+        for candidate_key in candidate_keys:
+            candidates = self.asset_index.icons.get(candidate_key, [])
+            if not candidates:
+                continue
+            checked_sources.extend([c['source_type'] for c in candidates])
+            trace.append({'strategy': 'avaritia_meta_mapping', 'matched': candidate_key, 'subtype': subtype})
+            result = self._make_result(item_ref, candidates[:1], 0.88, 'avaritia_meta_mapping', trace)
+            if result is None:
+                return None
+            localized_name = self._lookup_lang_value(lang_keys, settings.get('locale', 'ru_ru'))
+            if localized_name:
+                result.display_name = localized_name
+            return result
+
+        trace.append({'strategy': 'avaritia_meta_mapping', 'matched': None, 'subtype': subtype})
+        return None
 
     def _textures_meta_suffix(self, item_ref, key, settings, trace, checked_keys, checked_sources):
         if item_ref.meta_value is None:
@@ -188,6 +263,16 @@ class ItemResolver:
             return None
         override = overrides[item_ref.raw]
         return ResolutionResult(item_raw=item_ref.raw, display_name=override.get('display_name'), icon_asset_id=override.get('icon_asset_id'), icon_url=override.get('icon_url'), animated=False, animation_meta=override.get('animation_meta'), confidence=0.99, strategy='manual_override', trace=list(trace))
+
+    def _lookup_lang_value(self, lang_keys: list[str], locale: str) -> Optional[str]:
+        if not lang_keys:
+            return None
+        mapping = self.asset_index.lang.get(locale, {}) or self.asset_index.lang.get('en_us', {})
+        for key in lang_keys:
+            value = mapping.get(key)
+            if value:
+                return value
+        return None
 
     def _make_result(self, item_ref, candidates, confidence, strategy, trace):
         if not candidates:

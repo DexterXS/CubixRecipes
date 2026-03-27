@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 ### Fixed
+- Resolver now applies Avaritia-specific meta mapping for `Resource`, `Resource_Block`, and `Singularity`: meta is mapped to internal subtype texture keys (including shared `singularity` textures) and localized singularity names are taken from lang keys like `item.singularity_<type>.name`.
+- Fixed animated sprite previews when UI animation is disabled: animated textures now render their first frame as a static preview instead of disappearing.
+- Fixed grid icon refresh after inline cell edits: clearing a cell now removes stale icons immediately, and pasting a known item raw restores its icon preview without requiring a full re-parse.
+- Craft editor now includes item autocomplete search from a single CSV source with support for `ID`, `ID:meta`, `mod:item`, `mod:item:meta`, RU names, and EN names; selected suggestions are inserted without empty `.withTag(...)` suffixes.
+- Added a first-stage structured NBT editor in the craft modal (fixed `mod/item/meta` fields + add/remove NBT key/value rows) with raw builder logic that only appends `.withTag(...)` when NBT fields are non-empty.
+- Replaced stage-1 NBT key/value rows with a collapsible tree editor that supports nested `compound`/`list` nodes and per-value type dropdowns (`byte`/`short`/`int`/`long`/`float`/`double`/`string`/arrays) for cleaner `.withTag(...)` construction.
+- Craft/help/layout modals now support local zoom via a gear control (`0.8x`–`1.5x`) and manual resize, reducing overlap in dense editors; craft-modal utility actions were switched to icon buttons for clearer compact controls.
+- Structured NBT tree editor moved into its own dedicated modal window (with separate zoom control) and NBT row layout was widened/reflowed to prevent value/type overlap in dense nested trees.
+- Item-search suggestions no longer duplicate Russian name in the second line when `display_en` is missing in `itempanel.csv` (second line is now hidden unless distinct EN text exists).
+- Craft item-search suggestions now show mini static item icons (non-animated) using a cached `/api/items/resolve` lookup per suggestion.
+- Frontend now persists item-search caches in browser `localStorage` (`itempanel` entries + resolved suggestion icons), so refreshes reuse cached data and reduce slow reload-time icon lookups.
+- Backend parser now accepts item references with optional `.withTag(...)` suffix in item-query and matrix parsing flows, so frontend structured editor output works end-to-end with save/parse routes.
+- Fixed `invalid syntax` failures when parsing `addShaped` matrices that contain `<item>.withTag({...})` cells (including 9x9 Avaritia recipes).
 - Hardened backend write-path handling for `/api/recipes/save-as` and `/api/zs/files/create`: writes are now restricted to configured recipe roots and out-of-scope paths return HTTP 400.
 - Added backend input bounds for recipe grid/matrix payloads to prevent oversized allocations and invalid matrix dimensions.
 - Normalized API error semantics: `PUT /api/recipes/{recipe_uid}` now returns HTTP 404 for unknown recipe ids; `GET /api/index/status/{scan_id}` now returns HTTP 404 for unknown scan ids.
@@ -34,6 +47,8 @@
 - Fixed noisy asset scan parse errors by only parsing `.png.mcmeta` animation metadata for texture paths under `/textures/items/` and `/textures/blocks/`.
 
 ### Added
+- Added a persisted UI preference `animations_enabled` with a new Settings panel toggle, allowing users to disable animated item icons globally for output and grid previews.
+- Grid cells now use an expanded icon area (near full-cell preview) and include inline `Копировать / Вставить / Очистить` actions for faster per-cell editing without opening the craft modal.
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
 - Added a utility-bar settings button with an explicit “save current window layout” action that writes the current panel arrangement and zone sizes back to the backend config for reuse on the next app start.
 - Added structured backend debug diagnostics endpoints/state for config, recipe scans, asset scans, resolver traces, parse history, missing links, summary counters, and a ring-buffer unified log API that collects backend/frontend/API/UI events.

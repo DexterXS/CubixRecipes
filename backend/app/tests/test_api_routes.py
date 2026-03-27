@@ -395,6 +395,7 @@ def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
 
     response = put_route(type('UiRequest', (), {'model_dump': lambda self=None: {
         'display_mode': 'icons',
+        'animations_enabled': False,
         'density_mode': 'compact',
         'editor_mode': 'edit',
         'language': 'ru',
@@ -409,6 +410,7 @@ def test_project_ui_preferences_update_is_lightweight(tmp_path: Path):
     }})())
 
     assert response['ui_preferences']['workspace_layout']['columns'] == 2
+    assert response['ui_preferences']['animations_enabled'] is False
     assert response['ui_preferences']['panel_layout'][1]['height'] == 500
     stored = json.loads(config_path.read_text(encoding='utf-8'))
     assert stored['ui_preferences']['workspace_layout']['compact_header'] is True

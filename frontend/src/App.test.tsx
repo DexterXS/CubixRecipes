@@ -9,9 +9,11 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  window.localStorage.clear();
   Object.assign(navigator, {
     clipboard: {
-      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)')
+      readText: vi.fn().mockResolvedValue('recipes.addShaped(...)'),
+      writeText: vi.fn().mockResolvedValue(undefined)
     }
   });
 
@@ -20,10 +22,11 @@ beforeEach(() => {
 
     if (url === '/itempanel.csv') {
       const csv = [
-        'key,id,meta,has_nbt,display_name',
-        'minecraft:planks,5,0,false,Oak Planks',
-        'minecraft:planks,5,1,false,Spruce Planks',
-        'minecraft:planks,5,2,false,Birch Planks'
+        'key,id,meta,has_nbt,display_ru,display_en',
+        'minecraft:planks,5,0,false,Дубовые доски,Oak Planks',
+        'minecraft:planks,5,1,false,Еловые доски,Spruce Planks',
+        'minecraft:planks,5,2,false,Берёзовые доски,Birch Planks',
+        'minecraft:stick,280,0,false,Палка,'
       ].join('\n');
       return Promise.resolve({
         ok: true,
@@ -49,6 +52,7 @@ beforeEach(() => {
           project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json',
           ui_preferences: {
             display_mode: 'text',
+            animations_enabled: true,
             density_mode: 'normal',
             editor_mode: 'edit',
             language: 'ru',
@@ -106,7 +110,7 @@ beforeEach(() => {
             grid_h: 2,
             source: { kind: 'zs_file', path: 'scripts/test.zs' },
             matrix: [
-              [{ raw: '<minecraft:planks>' }, { raw: null }],
+              [{ raw: '<minecraft:planks>', resolution: { display_name: 'Oak Planks', icon_url: '/api/icons/planks', animated: false } }, { raw: null }],
               [{ raw: null }, { raw: '<minecraft:stick>' }]
             ]
           }
@@ -127,6 +131,12 @@ beforeEach(() => {
     if (url === '/api/recipes/save-as') {
       const body = JSON.parse(String(init?.body));
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, new_uid: 'saved-1', recipe: { recipe_uid: 'saved-1', recipe_type: 'ct_shaped', name: null, output: { raw: body.output_raw }, output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' }, grid_w: 2, grid_h: 2, source: { kind: 'zs_file', path: 'scripts/new_recipe.zs' }, matrix: [[{ raw: '<minecraft:planks>' }, { raw: null }], [{ raw: null }, { raw: '<minecraft:stick>' }]] } }) }) as Promise<Response>;
+    }
+
+    if (url === '/api/items/resolve' && init?.method === 'POST') {
+      const raw = JSON.parse(String(init.body)).item_raw as string;
+      const icon = raw.includes('minecraft:stick') ? '/api/icons/stick' : '/api/icons/planks';
+      return Promise.resolve({ ok: true, json: async () => ({ icon_url: icon, animated: false }) }) as Promise<Response>;
     }
 
     throw new Error(`Unexpected fetch call: ${url}`);
@@ -236,6 +246,198 @@ test('layout settings button saves the current workspace arrangement explicitly'
   });
 });
 
+test('settings panel can disable icon animations and persist ui preference', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.click(screen.getAllByLabelText('Настройки')[0]);
+
+  const animationsToggle = await screen.findByLabelText('Анимации иконок');
+  fireEvent.click(animationsToggle);
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    expect(body.animations_enabled).toBe(false);
+  });
+});
+
+test('grid cell action buttons copy, clear and paste values', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>'));
+
+  fireEvent.click(screen.getByLabelText('copy-cell-0-0'));
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith('<minecraft:planks>');
+
+  fireEvent.click(screen.getByLabelText('clear-cell-0-0'));
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe(''));
+
+  (navigator.clipboard.readText as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce('<minecraft:dirt>');
+  fireEvent.click(screen.getByLabelText('paste-cell-0-0'));
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:dirt>'));
+});
+
+test('grid icons update after clear and paste actions in icon mode', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>'));
+
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.click(screen.getAllByLabelText('Настройки')[0]);
+  fireEvent.change(screen.getByLabelText('Режим отображения'), { target: { value: 'icons' } });
+
+  const iconButton = screen.getByLabelText('open-craft-editor-0-0');
+  await waitFor(() => expect(iconButton.querySelector('img')).toBeTruthy());
+
+  fireEvent.click(screen.getByLabelText('clear-cell-0-0'));
+  await waitFor(() => expect(iconButton.textContent).toContain('?'));
+
+  (navigator.clipboard.readText as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce('<minecraft:planks>');
+  fireEvent.click(screen.getByLabelText('paste-cell-0-0'));
+  await waitFor(() => expect(iconButton.querySelector('img')).toBeTruthy());
+});
+
+test('item search in craft modal supports ID, ID:meta, RU and EN names', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(searchInput, { target: { value: '5:1' } });
+  const idMetaSuggestion = await screen.findByText('<minecraft:planks:1>');
+  fireEvent.click(idMetaSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks:1>');
+
+  fireEvent.change(searchInput, { target: { value: 'Берёзовые доски' } });
+  const ruSuggestion = await screen.findByText('<minecraft:planks:2>');
+  fireEvent.click(ruSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks:2>');
+
+  fireEvent.change(searchInput, { target: { value: 'Oak Planks' } });
+  const enSuggestion = await screen.findByText('<minecraft:planks>');
+  fireEvent.click(enSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks>');
+});
+
+test('item search suggestion hides second title when displayEn is missing', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  fireEvent.change(searchInput, { target: { value: 'Палка' } });
+
+  await screen.findByText('<minecraft:stick>');
+  expect(screen.getAllByText('Палка')).toHaveLength(1);
+});
+
+test('item search suggestions render static item icons', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  fireEvent.change(searchInput, { target: { value: 'planks' } });
+
+  await screen.findByText('<minecraft:planks>');
+  await waitFor(() => {
+    const icon = document.querySelector('.suggestion-icon-slot img') as HTMLImageElement | null;
+    expect(icon?.getAttribute('src')).toContain('/api/icons/planks');
+  });
+});
+
+test('item search icon cache is reused after page reload', async () => {
+  const openAndSearch = async () => {
+    const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+    expect(outputEditButton).toBeTruthy();
+    fireEvent.click(outputEditButton as HTMLElement);
+    const searchInput = await screen.findByLabelText('item-search');
+    fireEvent.change(searchInput, { target: { value: 'planks' } });
+    await screen.findByText('<minecraft:planks>');
+    await waitFor(() => {
+      const icon = document.querySelector('.suggestion-icon-slot img') as HTMLImageElement | null;
+      expect(icon?.getAttribute('src')).toContain('/api/icons/planks');
+    });
+  };
+
+  render(<App />);
+  await openAndSearch();
+  const resolveCallsAfterFirstOpen = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve').length;
+  expect(resolveCallsAfterFirstOpen).toBeGreaterThan(0);
+
+  cleanup();
+  render(<App />);
+  await openAndSearch();
+  const resolveCallsAfterSecondOpen = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve').length;
+  expect(resolveCallsAfterSecondOpen).toBe(resolveCallsAfterFirstOpen);
+});
+
+test('structured item editor builds raw without empty withTag and appends NBT only when provided', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const modInput = await screen.findByLabelText('item-mod-input');
+  const itemInput = screen.getByLabelText('item-name-input');
+  const metaInput = screen.getByLabelText('item-meta-input');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(modInput, { target: { value: 'minecraft' } });
+  fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
+  fireEvent.change(metaInput, { target: { value: '0' } });
+  fireEvent.click(screen.getByLabelText('build-raw-main'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>');
+
+  fireEvent.click(screen.getByLabelText('open-nbt-editor'));
+  fireEvent.click(screen.getByLabelText('add-nbt-field'));
+  const keyInput = await screen.findByLabelText(/nbt-key-/);
+  const valueInput = await screen.findByLabelText(/nbt-value-/);
+  fireEvent.change(keyInput, { target: { value: 'StoredEnchantments' } });
+  fireEvent.change(valueInput, { target: { value: '[{lvl: 3 as short, id: 35 as short}]' } });
+  fireEvent.click(screen.getByLabelText('build-raw-nbt'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
+});
+
+test('structured NBT tree editor supports nested list+compound with typed fields', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const modInput = await screen.findByLabelText('item-mod-input');
+  const itemInput = screen.getByLabelText('item-name-input');
+  const metaInput = screen.getByLabelText('item-meta-input');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(modInput, { target: { value: 'minecraft' } });
+  fireEvent.change(itemInput, { target: { value: 'enchanted_book' } });
+  fireEvent.change(metaInput, { target: { value: '0' } });
+  fireEvent.click(screen.getByLabelText('open-nbt-editor'));
+  fireEvent.click(screen.getByLabelText('add-nbt-list'));
+
+  fireEvent.change(screen.getByLabelText('nbt-key-0'), { target: { value: 'StoredEnchantments' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0'), { target: { value: 'list' } });
+  fireEvent.click(screen.getByLabelText('add-nbt-item-root.0'));
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0'), { target: { value: 'compound' } });
+  fireEvent.click(screen.getByLabelText('add-nbt-child-root.0.0'));
+  fireEvent.change(screen.getByLabelText('nbt-key-root.0.0-0'), { target: { value: 'lvl' } });
+  fireEvent.change(screen.getByLabelText('nbt-value-root.0.0.0'), { target: { value: '3' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0.0'), { target: { value: 'short' } });
+  fireEvent.click(screen.getByLabelText('add-nbt-child-root.0.0'));
+  fireEvent.change(screen.getByLabelText('nbt-key-root.0.0-1'), { target: { value: 'id' } });
+  fireEvent.change(screen.getByLabelText('nbt-value-root.0.0.1'), { target: { value: '35' } });
+  fireEvent.change(screen.getByLabelText('nbt-type-root.0.0.1'), { target: { value: 'short' } });
+
+  fireEvent.click(screen.getByLabelText('build-raw-nbt'));
+  expect(sourceTextarea.value).toBe('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})');
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
@@ -275,10 +477,10 @@ test('itempanel titles use meta mapping, default meta=0 and keep unknown meta ra
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
 
   const cellInput = await screen.findByLabelText('cell-0-0');
-  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Oak Planks'));
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Дубовые доски'));
 
   fireEvent.change(cellInput, { target: { value: '<minecraft:planks:1>' } });
-  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Spruce Planks'));
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Еловые доски'));
 
   fireEvent.change(cellInput, { target: { value: '<minecraft:planks:99>' } });
   await waitFor(() => expect(cellInput.getAttribute('title')).toBe('<minecraft:planks:99>'));
@@ -292,7 +494,7 @@ test('shows backend unavailable inline message when parse request cannot reach a
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
     }
     if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
-      return Promise.resolve({ ok: true, json: async () => ({ scripts_dir: 'scripts', mods_dir: '', assets_dir: '', recipe_db_path: '', extra_icon_sources: [], extra_recipe_sources: [], verbose_debug_logging: false, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json', ui_preferences: { display_mode: 'text', density_mode: 'normal', editor_mode: 'edit', language: 'ru', active_view_tab: 'editor', reset_layout_version: 4, workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 }, panel_layout: [{ id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 }, { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 }, { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 }, { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 }, { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 }, { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 }, { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 }, { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 }, { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 }, { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 }, { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 }, { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }] } }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ scripts_dir: 'scripts', mods_dir: '', assets_dir: '', recipe_db_path: '', extra_icon_sources: [], extra_recipe_sources: [], verbose_debug_logging: false, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json', ui_preferences: { display_mode: 'text', animations_enabled: true, density_mode: 'normal', editor_mode: 'edit', language: 'ru', active_view_tab: 'editor', reset_layout_version: 4, workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 }, panel_layout: [{ id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 }, { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 }, { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 }, { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 }, { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 }, { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 }, { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 }, { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 }, { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 }, { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 }, { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 }, { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }] } }) }) as Promise<Response>;
     }
     if (url === '/api/parse') {
       return Promise.reject(new TypeError('Failed to fetch'));

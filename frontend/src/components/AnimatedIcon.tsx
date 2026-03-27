@@ -5,9 +5,10 @@ interface Props {
   alt: string;
   animated?: boolean;
   frameTime?: number;
+  animationsEnabled?: boolean;
 }
 
-export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: Props) {
+export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, animationsEnabled = true }: Props) {
   const [frameCount, setFrameCount] = useState(1);
 
   useEffect(() => {
@@ -36,7 +37,9 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: 
 
   const style = {
     backgroundImage: `url(${iconUrl})`,
-    animationDuration: `${durationMs}ms`,
+    animationDuration: animationsEnabled ? `${durationMs}ms` : '0ms',
+    animationName: animationsEnabled ? 'icon-frames' : 'none',
+    backgroundPositionY: '0%',
     ['--frame-count' as string]: String(frameCount),
   };
 

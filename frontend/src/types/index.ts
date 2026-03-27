@@ -53,6 +53,7 @@ export interface WorkspaceLayout {
 
 export interface UiPreferences {
   display_mode: DisplayMode;
+  animations_enabled: boolean;
   density_mode: DensityMode;
   editor_mode: EditorMode;
   language: UiLanguage;

@@ -8,7 +8,7 @@ from typing import Optional
 
 from app.domain.models import ItemRef, MetaMode, Recipe, RecipeCell, RecipeSource
 
-ITEM_RE = re.compile(r"^<([a-zA-Z0-9_\-.]+):([a-zA-Z0-9_\-/\.]+)(?::([0-9*]+))?>$")
+ITEM_RE = re.compile(r"^<([a-zA-Z0-9_\-.]+):([a-zA-Z0-9_\-/\.]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$")
 CALL_PREFIXES = (
     'recipes.addShaped',
     'mods.avaritia.ExtremeCrafting.addShaped',
@@ -26,7 +26,7 @@ class ParseResult:
 class RecipeParser:
     def parse(self, text: str, source_kind: str = 'clipboard') -> ParseResult:
         stripped = self._normalize_input_text(text)
-        if stripped.startswith('<') and stripped.endswith('>') and '.addShaped' not in stripped:
+        if self._looks_like_item_query(stripped) and '.addShaped' not in stripped:
             return ParseResult(kind='item_query', item=self.parse_item_ref(stripped), diagnostics=[])
         if any(prefix in stripped for prefix in CALL_PREFIXES):
             recipe = self._parse_recipe(stripped, source_kind=source_kind)
@@ -37,7 +37,7 @@ class RecipeParser:
         match = ITEM_RE.match(raw.strip())
         if not match:
             raise ValueError(f'Invalid item reference: {raw}')
-        modid, name, meta = match.groups()
+        modid, name, meta, _nbt = match.groups()
         modid = modid.lower()
         name = name.lower()
         if meta is None:
@@ -45,6 +45,9 @@ class RecipeParser:
         if meta == '*':
             return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.WILDCARD)
         return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.EXACT, meta_value=int(meta))
+
+    def _looks_like_item_query(self, text: str) -> bool:
+        return bool(ITEM_RE.match(text.strip()))
 
     def parse_item_ref_safe(self, raw: str) -> tuple[Optional[ItemRef], Optional[str]]:
         try:
@@ -199,7 +202,7 @@ class RecipeParser:
         normalized = raw.strip()
         if normalized == 'null':
             return None
-        item_match = re.search(r'<[^>]+>', normalized)
+        item_match = re.search(r'<[^>]+>(?:\.withTag\(([\s\S]*)\))?', normalized)
         if item_match:
             return item_match.group(0)
         raise ValueError(f'Unsupported recipe key value: {raw}')
@@ -211,7 +214,7 @@ class RecipeParser:
         return self.parse_item_ref(item_match.group(0))
 
     def _parse_matrix(self, matrix_raw: str) -> list[list[Optional[str]]]:
-        transformed = re.sub(r'<([^>]+)>', lambda match: repr(f"<{match.group(1)}>"), matrix_raw)
+        transformed = re.sub(r'<[^>]+>(?:\.withTag\(([\s\S]*?)\))?', lambda match: repr(match.group(0)), matrix_raw)
         transformed = re.sub(r'\bnull\b', 'None', transformed)
         matrix = ast.literal_eval(transformed)
         if not isinstance(matrix, list):

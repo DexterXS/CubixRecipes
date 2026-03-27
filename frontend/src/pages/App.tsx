@@ -7,7 +7,7 @@ import { TabNav } from '../components/TabNav';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
+import { createRecipeTemplate, getProjectSettings, parseText, resolveItemRaw, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
@@ -52,9 +52,11 @@ type DropTarget = {
 } | null;
 
 type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
+type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
+  animations_enabled: true,
   density_mode: 'normal',
   editor_mode: 'edit',
   language: 'ru',
@@ -81,18 +83,68 @@ type ItemPanelEntry = {
   legacyId: number | null;
   meta: number;
   hasNbt: boolean;
-  display: string;
+  displayRu: string;
+  displayEn: string;
 };
 
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
   byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
+  byDisplayRu: Map<string, ItemPanelEntry[]>;
+  byDisplayEn: Map<string, ItemPanelEntry[]>;
+  entries: ItemPanelEntry[];
   fallbackToFirstMeta: boolean;
 };
+const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
+const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
 
 type CraftEditorTarget =
   | { kind: 'output' }
   | { kind: 'cell'; row: number; col: number };
+
+type NbtScalarType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'string' | 'byte_array' | 'int_array' | 'long_array';
+type NbtNodeType = NbtScalarType | 'list' | 'compound';
+type NbtScalarNode = { kind: 'scalar'; value: string; scalarType: NbtScalarType };
+type NbtListNode = { kind: 'list'; items: NbtNode[] };
+type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
+type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
+
+function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallbackToFirstMeta: boolean): ItemPanelTranslations {
+  const byKey = new Map<string, string>();
+  const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
+  const byDisplayRu = new Map<string, ItemPanelEntry[]>();
+  const byDisplayEn = new Map<string, ItemPanelEntry[]>();
+  const pushDisplayIndex = (index: Map<string, ItemPanelEntry[]>, label: string, entry: ItemPanelEntry) => {
+    const normalized = label.trim().toLowerCase();
+    if (!normalized) return;
+    const list = index.get(normalized) ?? [];
+    list.push(entry);
+    index.set(normalized, list);
+  };
+  entries.forEach((entry) => {
+    pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
+    pushDisplayIndex(byDisplayEn, entry.displayEn, entry);
+    let metaMap = byKeyMeta.get(entry.key);
+    if (!metaMap) {
+      metaMap = new Map<number, ItemPanelEntry>();
+      byKeyMeta.set(entry.key, metaMap);
+    }
+    if (!metaMap.has(entry.meta)) {
+      metaMap.set(entry.meta, entry);
+    }
+    if (!byKey.has(entry.key) || entry.meta === 0) {
+      byKey.set(entry.key, entry.displayRu);
+    }
+  });
+  return {
+    byKey,
+    byKeyMeta,
+    byDisplayRu,
+    byDisplayEn,
+    entries,
+    fallbackToFirstMeta
+  };
+}
 
 function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
   return matrix.map((row) => [...row]);
@@ -103,7 +155,7 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
 }
 
 function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: number | null } | null {
-  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
+  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
   if (!match) return null;
   const rawMeta = (match[2] ?? '').toLowerCase();
   if (rawMeta === '*') {
@@ -117,6 +169,185 @@ function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: 
     return { key: match[1].toLowerCase(), wildcardMeta: false, meta: 0 };
   }
   return { key: match[1].toLowerCase(), wildcardMeta: false, meta: parsedMeta };
+}
+
+function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
+  const normalizedNbt = (nbtRaw ?? '').trim();
+  const base = `<${key}${meta > 0 ? `:${meta}` : ''}>`;
+  if (!normalizedNbt) {
+    return base;
+  }
+  return `${base}.withTag(${normalizedNbt})`;
+}
+
+const nbtScalarTypes: NbtScalarType[] = ['byte', 'short', 'int', 'long', 'float', 'double', 'string', 'byte_array', 'int_array', 'long_array'];
+const nbtNodeTypeOptions: NbtNodeType[] = [...nbtScalarTypes, 'list', 'compound'];
+
+function splitTopLevel(source: string, delimiter: string): string[] {
+  const parts: string[] = [];
+  let depthCurly = 0;
+  let depthSquare = 0;
+  let inString = false;
+  let escape = false;
+  let start = 0;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) {
+      continue;
+    }
+    if (char === '{') depthCurly += 1;
+    else if (char === '}') depthCurly -= 1;
+    else if (char === '[') depthSquare += 1;
+    else if (char === ']') depthSquare -= 1;
+    if (char === delimiter && depthCurly === 0 && depthSquare === 0) {
+      parts.push(source.slice(start, index));
+      start = index + 1;
+    }
+  }
+  parts.push(source.slice(start));
+  return parts.map((part) => part.trim()).filter((part) => part.length > 0);
+}
+
+function splitTopLevelKeyValue(source: string): { key: string; value: string } | null {
+  let depthCurly = 0;
+  let depthSquare = 0;
+  let inString = false;
+  let escape = false;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+    if (char === '{') depthCurly += 1;
+    else if (char === '}') depthCurly -= 1;
+    else if (char === '[') depthSquare += 1;
+    else if (char === ']') depthSquare -= 1;
+    if (char === ':' && depthCurly === 0 && depthSquare === 0) {
+      return { key: source.slice(0, index).trim(), value: source.slice(index + 1).trim() };
+    }
+  }
+  return null;
+}
+
+function parseNbtScalar(value: string): NbtScalarNode {
+  const trimmed = value.trim();
+  const typedMatch = trimmed.match(/^(.*?)(?:\s+as\s+([a-z_]+))$/i);
+  if (typedMatch) {
+    const scalarType = typedMatch[2].toLowerCase() as NbtScalarType;
+    if (nbtScalarTypes.includes(scalarType)) {
+      return { kind: 'scalar', value: typedMatch[1].trim(), scalarType };
+    }
+  }
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return { kind: 'scalar', value: trimmed.slice(1, -1), scalarType: 'string' };
+  }
+  return { kind: 'scalar', value: trimmed, scalarType: 'int' };
+}
+
+function parseNbtNode(raw: string): NbtNode {
+  const trimmed = raw.trim();
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    const body = trimmed.slice(1, -1).trim();
+    if (!body) return { kind: 'compound', entries: [] };
+    const entries = splitTopLevel(body, ',').map((chunk) => splitTopLevelKeyValue(chunk)).filter((entry): entry is { key: string; value: string } => Boolean(entry))
+      .map((entry) => ({ key: entry.key.replace(/^"(.*)"$/, '$1').trim(), value: parseNbtNode(entry.value) }));
+    return { kind: 'compound', entries };
+  }
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    const body = trimmed.slice(1, -1).trim();
+    if (!body) return { kind: 'list', items: [] };
+    return { kind: 'list', items: splitTopLevel(body, ',').map((chunk) => parseNbtNode(chunk)) };
+  }
+  return parseNbtScalar(trimmed);
+}
+
+function renderNbtNode(node: NbtNode): string {
+  if (node.kind === 'compound') {
+    return `{${node.entries.map((entry) => `${entry.key}: ${renderNbtNode(entry.value)}`).join(', ')}}`;
+  }
+  if (node.kind === 'list') {
+    return `[${node.items.map((item) => renderNbtNode(item)).join(', ')}]`;
+  }
+  const scalarValue = node.scalarType === 'string' ? `"${node.value}"` : node.value.trim();
+  return node.scalarType === 'int' ? scalarValue : `${scalarValue} as ${node.scalarType}`;
+}
+
+function defaultNodeForType(type: NbtNodeType): NbtNode {
+  if (type === 'compound') return { kind: 'compound', entries: [] };
+  if (type === 'list') return { kind: 'list', items: [] };
+  return { kind: 'scalar', value: '', scalarType: type };
+}
+
+function nodeType(node: NbtNode): NbtNodeType {
+  if (node.kind === 'compound') return 'compound';
+  if (node.kind === 'list') return 'list';
+  return node.scalarType;
+}
+
+function normalizeNodeTypeChange(nextType: NbtNodeType, current: NbtNode): NbtNode {
+  if (nextType === 'compound') {
+    return current.kind === 'compound' ? current : { kind: 'compound', entries: [] };
+  }
+  if (nextType === 'list') {
+    return current.kind === 'list' ? current : { kind: 'list', items: [] };
+  }
+  if (current.kind === 'scalar') {
+    return { ...current, scalarType: nextType };
+  }
+  return { kind: 'scalar', value: '', scalarType: nextType };
+}
+
+function parseRawForEditor(raw: string): { modid: string; item: string; meta: number; nbtRoot: NbtCompoundNode } {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^<([a-zA-Z0-9_.-]+):([a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
+  if (!match) {
+    return { modid: 'minecraft', item: 'stone', meta: 0, nbtRoot: { kind: 'compound', entries: [] } };
+  }
+  const modid = match[1].toLowerCase();
+  const item = match[2].toLowerCase();
+  const meta = match[3] ? Number.parseInt(match[3], 10) || 0 : 0;
+  const nbtRaw = (match[4] ?? '').trim();
+  if (!nbtRaw || nbtRaw === '{}' || nbtRaw === '{ }') {
+    return { modid, item, meta, nbtRoot: { kind: 'compound', entries: [] } };
+  }
+  const parsedNode = parseNbtNode(nbtRaw);
+  if (parsedNode.kind !== 'compound') {
+    return { modid, item, meta, nbtRoot: { kind: 'compound', entries: [{ key: 'value', value: parsedNode }] } };
+  }
+  return { modid, item, meta, nbtRoot: parsedNode };
+}
+
+function buildNbtRawFromRoot(root: NbtCompoundNode): string {
+  const compacted: NbtCompoundNode = {
+    kind: 'compound',
+    entries: root.entries
+      .map((entry) => ({ key: entry.key.trim(), value: entry.value }))
+      .filter((entry) => entry.key.length > 0)
+  };
+  if (!compacted.entries.length) return '';
+  return renderNbtNode(compacted);
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -220,6 +451,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   const source = settings?.ui_preferences;
   return {
     display_mode: (source?.display_mode ?? 'text') as DisplayMode,
+    animations_enabled: source?.animations_enabled !== false,
     density_mode: (source?.density_mode ?? 'normal') as DensityMode,
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
     language: (source?.language ?? 'ru') as UiLanguage,
@@ -241,8 +473,14 @@ export default function App() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
+  const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>({ kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState('');
+  const [itemModDraft, setItemModDraft] = useState('minecraft');
+  const [itemNameDraft, setItemNameDraft] = useState('stone');
+  const [itemMetaDraft, setItemMetaDraft] = useState('0');
+  const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
+  const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
@@ -256,8 +494,24 @@ export default function App() {
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
     byKeyMeta: new Map(),
+    byDisplayRu: new Map(),
+    byDisplayEn: new Map(),
+    entries: [],
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
+  const [itemSearchQuery, setItemSearchQuery] = useState('');
+  const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
+    try {
+      const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw) as Record<string, string | null>;
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+      return {};
+    }
+  });
+  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
+  const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -267,6 +521,7 @@ export default function App() {
   const lastRequestedParseRef = useRef('');
 
   const t = createTranslator(uiPreferences.language);
+  const areAnimationsEnabled = uiPreferences.animations_enabled;
   const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
@@ -275,10 +530,34 @@ export default function App() {
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
   const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
-  const matrixWithResolution = useMemo(
-    () => matrix.map((row, rowIndex) => row.map((cell, colIndex) => ({ raw: cell, resolution: recipe.matrix[rowIndex]?.[colIndex]?.resolution ?? null }))),
-    [matrix, recipe.matrix]
-  );
+  const matrixWithResolution = useMemo(() => {
+    const resolutionByRaw = new Map<string, RecipeView['matrix'][number][number]['resolution']>();
+    recipe.matrix.forEach((row) => row.forEach((cell) => {
+      const raw = cell.raw;
+      if (!raw || resolutionByRaw.has(raw)) return;
+      if (cell.resolution?.icon_url) {
+        resolutionByRaw.set(raw, cell.resolution);
+      }
+    }));
+
+    return matrix.map((row, rowIndex) => row.map((cell, colIndex) => {
+      const parsedCell = recipe.matrix[rowIndex]?.[colIndex];
+      const directResolution = parsedCell?.raw === cell ? (parsedCell?.resolution ?? null) : null;
+      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? null) : null;
+      return {
+        raw: cell,
+        resolution: directResolution ?? fallbackResolution
+      };
+    }));
+  }, [matrix, recipe.matrix]);
+
+  function patchModalScale(key: ModalScaleKey, nextScale: number) {
+    setModalScales((current) => ({ ...current, [key]: clamp(nextScale, 0.8, 1.5) }));
+  }
+
+  function getModalScaleStyle(key: ModalScaleKey): CSSProperties {
+    return { '--modal-scale': modalScales[key] } as CSSProperties;
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -342,17 +621,32 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     async function loadItemPanelTranslations() {
+      const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
+      try {
+        const cached = window.localStorage.getItem(ITEMPANEL_CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[] };
+          if (Array.isArray(parsed.entries) && parsed.entries.length) {
+            setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
+          }
+        }
+      } catch {
+        // ignore corrupted cache
+      }
       try {
         const response = await fetch('/itempanel.csv');
         if (!response.ok) {
           return;
         }
         const bytes = await response.arrayBuffer();
-        const decoder = new TextDecoder('windows-1251');
-        const text = decoder.decode(bytes);
+        let text = '';
+        try {
+          text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+        } catch {
+          text = new TextDecoder('windows-1251').decode(bytes);
+        }
         const lines = text.split(/\r?\n/).slice(1);
-        const byKey = new Map<string, string>();
-        const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
+        const entries: ItemPanelEntry[] = [];
         lines.forEach((line) => {
           if (!line.trim()) return;
           const parts = line.split(',');
@@ -361,8 +655,10 @@ export default function App() {
           const legacyIdRaw = parts[1]?.trim();
           const metaRaw = parts[2]?.trim();
           const hasNbtRaw = parts[3]?.trim().toLowerCase();
-          const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          if (!key || !display || display === '-' || display === '- ') return;
+          const displayRu = (parts[4] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+          const displayEn = (parts[5] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+          const primaryDisplay = displayRu || displayEn;
+          if (!key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
           const meta = Number.parseInt(metaRaw || '0', 10);
           if (Number.isNaN(meta)) return;
           const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
@@ -372,26 +668,18 @@ export default function App() {
             legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
             meta,
             hasNbt,
-            display
+            displayRu: displayRu || primaryDisplay,
+            displayEn
           };
-          let metaMap = byKeyMeta.get(key);
-          if (!metaMap) {
-            metaMap = new Map<number, ItemPanelEntry>();
-            byKeyMeta.set(key, metaMap);
-          }
-          if (!metaMap.has(meta)) {
-            metaMap.set(meta, entry);
-          }
-          if (!byKey.has(key) || meta === 0) {
-            byKey.set(key, display);
-          }
+          entries.push(entry);
         });
         if (!cancelled) {
-          setItemPanelTranslations({
-            byKey,
-            byKeyMeta,
-            fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
-          });
+          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(entries, fallbackToFirstMeta));
+          try {
+            window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries }));
+          } catch {
+            // ignore cache persistence errors
+          }
         }
       } catch {
         // optional source
@@ -506,15 +794,15 @@ export default function App() {
     const metaMap = itemPanelTranslations.byKeyMeta.get(parsed.key);
     if (parsed.meta !== null && metaMap?.has(parsed.meta)) {
       const exact = metaMap.get(parsed.meta);
-      if (exact?.display) {
-        return exact.display;
+      if (exact?.displayRu) {
+        return exact.displayRu;
       }
     }
     if (parsed.meta !== null && itemPanelTranslations.fallbackToFirstMeta && metaMap && metaMap.size > 0) {
       const firstMeta = [...metaMap.keys()].sort((a, b) => a - b)[0];
       const firstEntry = metaMap.get(firstMeta);
-      if (firstEntry?.display) {
-        return firstEntry.display;
+      if (firstEntry?.displayRu) {
+        return firstEntry.displayRu;
       }
     }
     if (parsed.meta !== null && !itemPanelTranslations.fallbackToFirstMeta) {
@@ -537,6 +825,211 @@ export default function App() {
     }
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
+
+  const itemSearchSuggestions = useMemo(() => {
+    const query = itemSearchQuery.trim().toLowerCase();
+    if (!query) {
+      return [] as ItemPanelEntry[];
+    }
+
+    const unique = new Map<string, ItemPanelEntry>();
+    const push = (entry: ItemPanelEntry) => {
+      const uniqueKey = `${entry.key}:${entry.meta}`;
+      if (!unique.has(uniqueKey)) unique.set(uniqueKey, entry);
+    };
+
+    if (/^\d+(:\d+)?$/.test(query)) {
+      const [idPart, metaPart] = query.split(':');
+      const legacyId = Number.parseInt(idPart, 10);
+      const meta = metaPart !== undefined ? Number.parseInt(metaPart, 10) : null;
+      itemPanelTranslations.entries.forEach((entry) => {
+        if (entry.legacyId !== legacyId) return;
+        if (meta !== null && entry.meta !== meta) return;
+        push(entry);
+      });
+      return [...unique.values()].slice(0, 20);
+    }
+
+    const keyMetaMatch = query.match(/^([a-z0-9_.-]+:[a-z0-9_./-]+)(?::([0-9*]+))?$/);
+    if (keyMetaMatch) {
+      const parsedKey = keyMetaMatch[1];
+      const parsedMeta = keyMetaMatch[2] ? Number.parseInt(keyMetaMatch[2], 10) : null;
+      if (parsedMeta !== null && !Number.isNaN(parsedMeta)) {
+        const exact = itemPanelTranslations.byKeyMeta.get(parsedKey)?.get(parsedMeta);
+        if (exact) push(exact);
+      } else {
+        const metaMap = itemPanelTranslations.byKeyMeta.get(parsedKey);
+        metaMap?.forEach((entry) => push(entry));
+      }
+      return [...unique.values()].slice(0, 20);
+    }
+
+    itemPanelTranslations.entries.forEach((entry) => {
+      if (
+        entry.key.includes(query)
+        || entry.displayRu.toLowerCase().includes(query)
+        || entry.displayEn.toLowerCase().includes(query)
+        || entry.key.startsWith(`${query}:`)
+      ) {
+        push(entry);
+      }
+    });
+
+    return [...unique.values()].slice(0, 20);
+  }, [itemSearchQuery, itemPanelTranslations]);
+
+  useEffect(() => {
+    const suggestions = itemSearchSuggestions.slice(0, 8);
+    suggestions.forEach((entry) => {
+      const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+      if (Object.prototype.hasOwnProperty.call(itemSearchIcons, raw)) {
+        return;
+      }
+      void (async () => {
+        try {
+          const resolved = await resolveItemRaw(raw);
+          setItemSearchIcons((current) => ({ ...current, [raw]: resolved.icon_url ?? null }));
+        } catch {
+          setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+        }
+      })();
+    });
+  }, [itemSearchSuggestions, itemSearchIcons]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ITEM_SEARCH_ICON_CACHE_KEY, JSON.stringify(itemSearchIcons));
+    } catch {
+      // ignore cache persistence errors
+    }
+  }, [itemSearchIcons]);
+
+  function applyItemSearchSuggestion(entry: ItemPanelEntry) {
+    const [modid, ...nameParts] = entry.key.split(':');
+    const itemName = nameParts.join(':');
+    setItemModDraft(modid);
+    setItemNameDraft(itemName);
+    setItemMetaDraft(String(entry.meta));
+    setNbtRootDraft({ kind: 'compound', entries: [] });
+    setCollapsedNbtPaths({});
+    const nextRaw = buildItemRawValue(entry.key, entry.meta);
+    setCraftSourceDraft(nextRaw);
+    setItemSearchQuery(`${entry.key}:${entry.meta}`);
+  }
+
+  function applyRawFromStructuredEditor() {
+    const modid = itemModDraft.trim().toLowerCase();
+    const item = itemNameDraft.trim().toLowerCase();
+    if (!modid || !item) {
+      return;
+    }
+    const parsedMeta = Number.parseInt(itemMetaDraft.trim() || '0', 10);
+    const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
+    const nbtRaw = buildNbtRawFromRoot(nbtRootDraft);
+    setCraftSourceDraft(buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw));
+  }
+
+  function setNbtPathCollapsed(path: string, collapsed: boolean) {
+    setCollapsedNbtPaths((current) => ({ ...current, [path]: collapsed }));
+  }
+
+  function updateRootEntry(index: number, updater: (entry: NbtCompoundNode['entries'][number]) => NbtCompoundNode['entries'][number]) {
+    setNbtRootDraft((current) => ({
+      ...current,
+      entries: current.entries.map((entry, entryIndex) => (entryIndex === index ? updater(entry) : entry))
+    }));
+  }
+
+  function addRootEntry(type: NbtNodeType = 'int') {
+    setNbtRootDraft((current) => ({
+      ...current,
+      entries: [...current.entries, { key: '', value: defaultNodeForType(type) }]
+    }));
+  }
+
+  function renderNbtNodeEditor(node: NbtNode, path: string, onChange: (nextNode: NbtNode) => void): JSX.Element {
+    const currentType = nodeType(node);
+    const isCollapsed = collapsedNbtPaths[path] ?? false;
+    if (node.kind === 'scalar') {
+      return (
+        <div className="nbt-row-grid">
+          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onChange({ ...node, value: event.target.value })} />
+          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </div>
+      );
+    }
+    if (node.kind === 'compound') {
+      return (
+        <div className="nbt-node-block">
+          <div className="inline-actions">
+            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+            <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+              {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+            </select>
+            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Добавить поле" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
+          </div>
+          {!isCollapsed ? (
+            <div className="nbt-children">
+              {node.entries.map((entry, index) => (
+                <div key={path + index} className="nbt-entry-line">
+                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
+                  {renderNbtNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onChange({
+                    ...node,
+                    entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
+                  }))}
+                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>🗑️</button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+    return (
+      <div className="nbt-node-block">
+        <div className="inline-actions">
+          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
+            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Добавить элемент" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
+        </div>
+        {!isCollapsed ? (
+          <div className="nbt-children">
+            {node.items.map((item, index) => (
+              <div key={path + index} className="nbt-entry-line">
+                <span className="nbt-list-index">[{index}]</span>
+                {renderNbtNodeEditor(item, `${path}.${index}`, (nextNode) => onChange({
+                  ...node,
+                  items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
+                }))}
+                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>🗑️</button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  function renderModalScaleControl(key: ModalScaleKey): JSX.Element {
+    const isOpen = activeScaleControl === key;
+    return (
+      <div className="modal-scale-wrap">
+        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="Масштаб окна" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>⚙️</button>
+        {isOpen ? (
+          <div className="modal-scale-popover">
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>−</button>
+            <input aria-label={`modal-scale-${key}-range`} type="range" min="0.8" max="1.5" step="0.1" value={modalScales[key]} onChange={(event) => patchModalScale(key, Number(event.target.value))} />
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>+</button>
+            <span>{Math.round(modalScales[key] * 100)}%</span>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   function getCellRaw(target: CraftEditorTarget): string {
     if (target.kind === 'output') {
@@ -652,7 +1145,15 @@ export default function App() {
 
   function openCraftEditorModal(target: CraftEditorTarget) {
     setCraftEditorTarget(target);
-    setCraftSourceDraft(getCellRaw(target));
+    const raw = getCellRaw(target);
+    const parsed = parseRawForEditor(raw);
+    setItemModDraft(parsed.modid);
+    setItemNameDraft(parsed.item);
+    setItemMetaDraft(String(parsed.meta));
+    setNbtRootDraft(parsed.nbtRoot);
+    setCollapsedNbtPaths({});
+    setCraftSourceDraft(raw);
+    setItemSearchQuery('');
     setIsCraftEditorOpen(true);
   }
 
@@ -670,6 +1171,31 @@ export default function App() {
     const payload = craftSourceDraft || getCellRaw(craftEditorTarget);
     await navigator.clipboard.writeText(payload);
     setStatus('Скопировано значение предмета.');
+  }
+
+  async function handleCellCopy(row: number, col: number) {
+    const value = matrix[row]?.[col];
+    const payload = value ?? '';
+    await navigator.clipboard.writeText(payload);
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение скопировано.`);
+  }
+
+  async function handleCellPaste(row: number, col: number) {
+    try {
+      const pasted = (await navigator.clipboard.readText()).trim();
+      setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (pasted || null) : cell))));
+      setSaveStatus(t('values.unsavedChanges'));
+      setStatus(`Ячейка ${row + 1},${col + 1}: значение вставлено.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Clipboard unavailable';
+      setStatus(message);
+    }
+  }
+
+  function handleCellClear(row: number, col: number) {
+    setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? null : cell))));
+    setSaveStatus(t('values.unsavedChanges'));
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение очищено.`);
   }
 
   async function handleSave() {
@@ -741,7 +1267,7 @@ export default function App() {
   }
 
   function resetLayout() {
-    persistUiPreferences({ ...defaultUiPreferences, language: uiPreferences.language, display_mode: uiPreferences.display_mode, density_mode: uiPreferences.density_mode, editor_mode: uiPreferences.editor_mode });
+    persistUiPreferences({ ...defaultUiPreferences, language: uiPreferences.language, display_mode: uiPreferences.display_mode, animations_enabled: uiPreferences.animations_enabled, density_mode: uiPreferences.density_mode, editor_mode: uiPreferences.editor_mode });
   }
 
   function setPanelVisible(panelId: PanelId, visible: boolean) {
@@ -1045,7 +1571,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
                 <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
-                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} /> : <span>?</span>}
+                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} animationsEnabled={areAnimationsEnabled} /> : <span>?</span>}
                 </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
@@ -1071,7 +1597,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} editorMode={uiPreferences.editor_mode} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} onCellCopy={(row, col) => void handleCellCopy(row, col)} onCellPaste={(row, col) => void handleCellPaste(row, col)} onCellClear={handleCellClear} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
                   setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
                   setSaveStatus(t('values.unsavedChanges'));
                 }} />
@@ -1087,6 +1613,7 @@ export default function App() {
                 <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
                 <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
                 <label className="field-block"><span>{t('fields.displayMode')}</span><select value={uiPreferences.display_mode} onChange={(event) => patchUiPreferences({ display_mode: event.target.value as DisplayMode })}><option value="text">text</option><option value="icons">icons</option></select></label>
+                <label className="field-block"><span>{t('fields.animations')}</span><input type="checkbox" checked={uiPreferences.animations_enabled} onChange={(event) => patchUiPreferences({ animations_enabled: event.target.checked })} /></label>
                 <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
                 <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
               </div>
@@ -1198,10 +1725,13 @@ export default function App() {
 
       {isHelpOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsHelpOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('help')} role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{t('help.title')}</h2>
-              <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('help')}
+                <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
+              </div>
             </div>
             <ul>
               {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
@@ -1212,10 +1742,13 @@ export default function App() {
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('layout')} role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{t('layoutSettings.title')}</h2>
-              <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('layout')}
+                <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+              </div>
             </div>
             <div className="settings-modal-body">
               <p>{t('layoutSettings.description')}</p>
@@ -1234,21 +1767,75 @@ export default function App() {
       ) : null}
 
       {isCraftEditorOpen ? (
-        <div className="modal-backdrop" role="presentation" onClick={() => setIsCraftEditorOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
+        <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>
+          <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
-              <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
+              <div className="inline-actions">
+                {renderModalScaleControl('craft')}
+                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Закрыть</button>
+              </div>
             </div>
             <div className="settings-modal-body">
+              <label className="field-block">
+                <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
+                <div className="inline-actions">
+                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
+                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="Очистить поиск" onClick={() => setItemSearchQuery('')}>🧹</button>
+                </div>
+                {itemSearchSuggestions.length ? (
+                  <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
+                    {itemSearchSuggestions.map((entry) => (
+                      <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
+                        {(() => {
+                          const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+                          const iconUrl = itemSearchIcons[raw];
+                          return (
+                            <span className="suggestion-icon-slot" aria-hidden="true">
+                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
+                            </span>
+                          );
+                        })()}
+                        <div className="suggestion-content">
+                          <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
+                          <span>{entry.displayRu}</span>
+                          {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </label>
               <label className="field-block">
                 <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
               </label>
+              <div className="field-block">
+                <span>Структурный редактор item</span>
+                <div className="settings-grid">
+                  <label className="field-block">
+                    <span>Mod</span>
+                    <input aria-label="item-mod-input" type="text" value={itemModDraft} onChange={(event) => setItemModDraft(event.target.value)} />
+                  </label>
+                  <label className="field-block">
+                    <span>Item</span>
+                    <input aria-label="item-name-input" type="text" value={itemNameDraft} onChange={(event) => setItemNameDraft(event.target.value)} />
+                  </label>
+                  <label className="field-block">
+                    <span>Meta</span>
+                    <input aria-label="item-meta-input" type="number" min={0} value={itemMetaDraft} onChange={(event) => setItemMetaDraft(event.target.value)} />
+                  </label>
+                </div>
+                <div className="inline-actions">
+                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="Открыть отдельное окно NBT" onClick={() => setIsNbtEditorOpen(true)}>🧬</button>
+                  <span>{nbtRootDraft.entries.length ? `NBT полей: ${nbtRootDraft.entries.length}` : 'NBT не задан'}</span>
+                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                </div>
+              </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button" onClick={() => setCraftSourceDraft('')}>Очистить</button>
-                <button type="button" className="secondary-button" onClick={() => void handleCraftModalCopy()}>Скопировать</button>
-                <button type="button" className="secondary-button" onClick={() => void handleCraftModalPaste()}>Вставить</button>
+                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
+                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="Скопировать" onClick={() => void handleCraftModalCopy()}>📋</button>
+                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Вставить" onClick={() => void handleCraftModalPaste()}>📥</button>
                 <button
                   type="button"
                   onClick={() => {
@@ -1259,11 +1846,49 @@ export default function App() {
                     }
                     setCellRaw(craftEditorTarget, trimmed);
                     setIsCraftEditorOpen(false);
+                    setIsNbtEditorOpen(false);
                   }}
                 >
                   Применить
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isNbtEditorOpen ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setIsNbtEditorOpen(false)}>
+          <div className="modal modal-scalable modal-nbt-tree" style={getModalScaleStyle('nbtTree')} role="dialog" aria-modal="true" aria-label="NBT tree editor" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2>NBT Tree</h2>
+              <div className="inline-actions">
+                {renderModalScaleControl('nbtTree')}
+                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Закрыть</button>
+              </div>
+            </div>
+            <div className="settings-modal-body">
+              <div className="inline-actions">
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Добавить NBT поле" onClick={() => addRootEntry('int')}>+</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
+                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+              </div>
+              {nbtRootDraft.entries.length ? (
+                <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
+                  {nbtRootDraft.entries.map((entry, index) => (
+                    <div key={`root-entry-${index}`} className="suggestion-item">
+                      <div className="nbt-entry-line">
+                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                        {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
+                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="inline-hint inline-hint-warning">Добавьте NBT поле/объект/список.</div>
+              )}
             </div>
           </div>
         </div>
