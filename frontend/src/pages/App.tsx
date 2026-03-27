@@ -5,7 +5,7 @@ import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { TabNav } from '../components/TabNav';
 import { AnimatedIcon } from '../components/AnimatedIcon';
-import { apiPath, getBackendTargetHint } from '../config/runtime';
+import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
 import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
@@ -76,8 +76,18 @@ const defaultRecipe: RecipeView = {
   source: { kind: 'generated', path: null }
 };
 
+type ItemPanelEntry = {
+  key: string;
+  legacyId: number | null;
+  meta: number;
+  hasNbt: boolean;
+  display: string;
+};
+
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
+  byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
+  fallbackToFirstMeta: boolean;
 };
 
 type CraftEditorTarget =
@@ -92,10 +102,21 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
 }
 
-function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean } | null {
+function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: number | null } | null {
   const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
   if (!match) return null;
-  return { key: match[1].toLowerCase(), wildcardMeta: (match[2] ?? '').toLowerCase() === '*' };
+  const rawMeta = (match[2] ?? '').toLowerCase();
+  if (rawMeta === '*') {
+    return { key: match[1].toLowerCase(), wildcardMeta: true, meta: null };
+  }
+  if (!rawMeta) {
+    return { key: match[1].toLowerCase(), wildcardMeta: false, meta: 0 };
+  }
+  const parsedMeta = Number.parseInt(rawMeta, 10);
+  if (Number.isNaN(parsedMeta)) {
+    return { key: match[1].toLowerCase(), wildcardMeta: false, meta: 0 };
+  }
+  return { key: match[1].toLowerCase(), wildcardMeta: false, meta: parsedMeta };
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -232,7 +253,11 @@ export default function App() {
   const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget>(null);
   const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
-  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({ byKey: new Map() });
+  const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
+    byKey: new Map(),
+    byKeyMeta: new Map(),
+    fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
+  });
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -327,19 +352,46 @@ export default function App() {
         const text = decoder.decode(bytes);
         const lines = text.split(/\r?\n/).slice(1);
         const byKey = new Map<string, string>();
+        const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
         lines.forEach((line) => {
           if (!line.trim()) return;
           const parts = line.split(',');
           if (parts.length < 5) return;
           const key = parts[0]?.trim().toLowerCase();
+          const legacyIdRaw = parts[1]?.trim();
+          const metaRaw = parts[2]?.trim();
+          const hasNbtRaw = parts[3]?.trim().toLowerCase();
           const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          if (!key) return;
-          if (display && display !== '-' && display !== '- ') {
+          if (!key || !display || display === '-' || display === '- ') return;
+          const meta = Number.parseInt(metaRaw || '0', 10);
+          if (Number.isNaN(meta)) return;
+          const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
+          const hasNbt = hasNbtRaw === 'true' || hasNbtRaw === '1' || hasNbtRaw === 'yes';
+          const entry: ItemPanelEntry = {
+            key,
+            legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
+            meta,
+            hasNbt,
+            display
+          };
+          let metaMap = byKeyMeta.get(key);
+          if (!metaMap) {
+            metaMap = new Map<number, ItemPanelEntry>();
+            byKeyMeta.set(key, metaMap);
+          }
+          if (!metaMap.has(meta)) {
+            metaMap.set(meta, entry);
+          }
+          if (!byKey.has(key) || meta === 0) {
             byKey.set(key, display);
           }
         });
         if (!cancelled) {
-          setItemPanelTranslations({ byKey });
+          setItemPanelTranslations({
+            byKey,
+            byKeyMeta,
+            fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
+          });
         }
       } catch {
         // optional source
@@ -449,6 +501,23 @@ export default function App() {
   function resolveCellTitle(raw: string): string {
     const parsed = parseItemRaw(raw);
     if (!parsed) {
+      return raw;
+    }
+    const metaMap = itemPanelTranslations.byKeyMeta.get(parsed.key);
+    if (parsed.meta !== null && metaMap?.has(parsed.meta)) {
+      const exact = metaMap.get(parsed.meta);
+      if (exact?.display) {
+        return exact.display;
+      }
+    }
+    if (parsed.meta !== null && itemPanelTranslations.fallbackToFirstMeta && metaMap && metaMap.size > 0) {
+      const firstMeta = [...metaMap.keys()].sort((a, b) => a - b)[0];
+      const firstEntry = metaMap.get(firstMeta);
+      if (firstEntry?.display) {
+        return firstEntry.display;
+      }
+    }
+    if (parsed.meta !== null && !itemPanelTranslations.fallbackToFirstMeta) {
       return raw;
     }
     const display = itemPanelTranslations.byKey.get(parsed.key);

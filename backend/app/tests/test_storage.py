@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from app.storage.zs_storage import ZsStorage
 
 
@@ -37,3 +39,14 @@ def test_append_and_create_new_file(tmp_path: Path):
     uid = storage.save_as('recipes.addShaped(<minecraft:torch>, [[<minecraft:coal>]]);', str(target))
     assert uid
     assert '<minecraft:torch>' in target.read_text(encoding='utf-8')
+
+
+def test_rejects_writes_outside_allowed_recipe_roots(tmp_path: Path):
+    scripts = tmp_path / 'scripts'
+    scripts.mkdir()
+    storage = ZsStorage(scripts)
+    storage.scan()
+
+    outside = tmp_path / 'outside.zs'
+    with pytest.raises(ValueError):
+        storage.create_file(str(outside))

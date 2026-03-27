@@ -27,7 +27,7 @@ def test_grouped_files_strategy():
     index.register_icon('mod:compressor1', {'asset_id': 'jar:icon1', 'path': 'assets/mod/textures/items/compressor1.png', 'source_type': 'jar', 'animated': False})
     resolver = ItemResolver(index)
     item = RecipeParser().parse_item_ref('<mod:compressor:3>')
-    result = resolver.resolve(item)
+    result = resolver.resolve(item, {'fallback_to_first_variant_for_meta_miss': True})
     assert result.strategy == 'grouped_files'
 
 
@@ -39,6 +39,16 @@ def test_lang_lookup_strategy():
     result = resolver.resolve(item, {'locale': 'ru_ru'})
     assert result.strategy == 'lang_lookup'
     assert result.display_name == 'Предмет'
+
+
+def test_manual_override_takes_priority_over_indexed_icon():
+    index = AssetIndex()
+    index.register_icon('mod:item', {'asset_id': 'jar:icon1', 'path': 'assets/mod/textures/items/item.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:item>')
+    result = resolver.resolve(item, {'manual_overrides': {'<mod:item>': {'display_name': 'Override', 'icon_asset_id': 'custom:override', 'icon_url': '/api/icons/custom'}}})
+    assert result.strategy == 'manual_override'
+    assert result.icon_asset_id == 'custom:override'
 
 
 def test_invalid_model_texture_reference_does_not_crash_resolution():
@@ -59,3 +69,51 @@ def test_uppercase_item_key_matches_lowercase_icon_index():
     result = resolver.resolve(item)
     assert result.strategy in {'textures_meta_suffix', 'grouped_files'}
     assert result.icon_asset_id == 'jar:avaritia_resource_block_1'
+
+
+def test_meta_ranked_candidate_supports_slash_variant():
+    index = AssetIndex()
+    index.register_icon('mod:backpacks/1', {'asset_id': 'jar:bp1', 'path': 'assets/mod/textures/items/backpacks/1.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:backpacks:1>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'textures_meta_suffix'
+    assert result.icon_asset_id == 'jar:bp1'
+
+
+def test_meta_miss_does_not_pick_grouped_variant_by_default():
+    index = AssetIndex()
+    index.register_icon('mod:item_1', {'asset_id': 'jar:item1', 'path': 'assets/mod/textures/items/item_1.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:item:9>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'placeholder'
+
+
+def test_meta_miss_can_use_grouped_variant_when_enabled():
+    index = AssetIndex()
+    index.register_icon('mod:item_1', {'asset_id': 'jar:item1', 'path': 'assets/mod/textures/items/item_1.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<mod:item:9>')
+    result = resolver.resolve(item, {'fallback_to_first_variant_for_meta_miss': True})
+    assert result.strategy == 'grouped_files'
+    assert result.icon_asset_id == 'jar:item1'
+
+
+def test_draconicrevolt_block_in_animated_subfolder_resolves_by_basename_alias():
+    index = AssetIndex()
+    report = {'counters': {'textures_items': 0, 'textures_blocks': 0, 'lang_entries': 0, 'models_item': 0}, 'registered_keys': [], 'scan_errors': []}
+    source_report = {'registered_keys': [], 'errors': [], 'skipped_files': [], 'skipped_files_total': 0, 'indexed_files': 0}
+    index._consume_virtual(
+        rel_path='assets/draconicrevolt/textures/blocks/animated/der_awakeneddemonicblock.png',
+        data=b'png',
+        source='mock.jar',
+        source_report=source_report,
+        report=report,
+        locator={'kind': 'archive_entry', 'archive_path': 'mock.jar', 'entry_path': 'assets/draconicrevolt/textures/blocks/animated/der_awakeneddemonicblock.png'},
+    )
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<draconicrevolt:der_awakeneddemonicblock>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'textures_exact'
+    assert result.icon_asset_id is not None

@@ -181,9 +181,18 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.put('/recipes/{recipe_uid}')
     def update_recipe(recipe_uid: str, request: UpdateRecipeRequest):
         started_at = perf_counter()
-        recipe = service.update_recipe(storage.get_recipe(recipe_uid), request.output_raw, request.matrix, request.name)
+        try:
+            existing = storage.get_recipe(recipe_uid)
+        except KeyError as exc:
+            _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '404', started_at, {'detail': 'Recipe not found'}, level='ERROR')
+            raise HTTPException(status_code=404, detail='Recipe not found') from exc
+        recipe = service.update_recipe(existing, request.output_raw, request.matrix, request.name)
         rendered = service.render_recipe(recipe)
-        updated = storage.save_existing(recipe_uid, rendered)
+        try:
+            updated = storage.save_existing(recipe_uid, rendered)
+        except KeyError as exc:
+            _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '404', started_at, {'detail': 'Recipe not found'}, level='ERROR')
+            raise HTTPException(status_code=404, detail='Recipe not found') from exc
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe updated', {'recipe_uid': recipe_uid, 'output_raw': request.output_raw, 'matrix_rows': len(request.matrix)})
         response_body = {'ok': True, 'updatedRecipe': serialize_recipe(_resolve_recipe_items(updated, resolver, debug_service))}
@@ -208,7 +217,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.post('/zs/files/create')
     def create_zs_file(request: CreateFileRequest):
         started_at = perf_counter()
-        path = storage.create_file(request.path)
+        try:
+            path = storage.create_file(request.path)
+        except ValueError as exc:
+            _log_api(log_service, 'POST', '/api/zs/files/create', {'path': request.path}, '400', started_at, {'detail': str(exc)}, level='ERROR')
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Created .zs file', {'path': path})
         _log_api(log_service, 'POST', '/api/zs/files/create', {'path': request.path}, '200', started_at, {'path': path})
         return {'ok': True, 'path': path}
@@ -223,7 +236,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix))
             recipe.recipe_uid = request.recipe_uid
             recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name)
-        new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
+        try:
+            new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
+        except ValueError as exc:
+            _log_api(log_service, 'POST', '/api/recipes/save-as', {'target_path': request.target_path}, '400', started_at, {'detail': str(exc)}, level='ERROR')
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe saved as', {'recipe_uid': request.recipe_uid, 'new_uid': new_uid, 'target_path': request.target_path})
         response = {'ok': True, 'new_uid': new_uid, 'recipe': serialize_recipe(_resolve_recipe_items(storage.get_recipe(new_uid), resolver, debug_service))}
@@ -243,7 +260,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.get('/index/status/{scan_id}')
     def index_status(scan_id: str):
         started_at = perf_counter()
-        status = asset_index.scan_status.get(scan_id, {'progress': 0, 'errors': ['unknown scan id'], 'startedAt': None})
+        status = asset_index.scan_status.get(scan_id)
+        if status is None:
+            _log_api(log_service, 'GET', f'/api/index/status/{scan_id}', {}, '404', started_at, {'detail': 'Unknown scan id'}, level='ERROR')
+            raise HTTPException(status_code=404, detail='Unknown scan id')
         _log_api(log_service, 'GET', f'/api/index/status/{scan_id}', {}, '200', started_at, {'progress': status.get('progress')})
         return status
 
@@ -349,7 +369,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/debug/log')
     def debug_log(source: str = 'All', level: str = 'All', since_id: int = 0, limit: int = 100, include_details: bool = False, include_text: bool = False):
-        query = log_service.query_events(source=source, level=level, since_id=since_id, limit=limit, include_details=include_details)
+        safe_since_id = max(0, since_id)
+        safe_limit = min(max(0, limit), 1000)
+        query = log_service.query_events(source=source, level=level, since_id=safe_since_id, limit=safe_limit, include_details=include_details)
         events = query['events']
         response = {
             'events': events,
