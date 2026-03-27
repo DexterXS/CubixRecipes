@@ -619,7 +619,7 @@ export default function App() {
             meta,
             hasNbt,
             displayRu: displayRu || primaryDisplay,
-            displayEn: displayEn || primaryDisplay
+            displayEn
           };
           entries.push(entry);
           pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
@@ -1728,7 +1728,7 @@ export default function App() {
                       <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item" onClick={() => applyItemSearchSuggestion(entry)}>
                         <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
                         <span>{entry.displayRu}</span>
-                        <span>{entry.displayEn}</span>
+                        {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
                       </button>
                     ))}
                   </div>

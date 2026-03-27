@@ -24,7 +24,8 @@ beforeEach(() => {
         'key,id,meta,has_nbt,display_ru,display_en',
         'minecraft:planks,5,0,false,Дубовые доски,Oak Planks',
         'minecraft:planks,5,1,false,Еловые доски,Spruce Planks',
-        'minecraft:planks,5,2,false,Берёзовые доски,Birch Planks'
+        'minecraft:planks,5,2,false,Берёзовые доски,Birch Planks',
+        'minecraft:stick,280,0,false,Палка,'
       ].join('\n');
       return Promise.resolve({
         ok: true,
@@ -312,6 +313,19 @@ test('item search in craft modal supports ID, ID:meta, RU and EN names', async (
   const enSuggestion = await screen.findByText('<minecraft:planks>');
   fireEvent.click(enSuggestion);
   expect(sourceTextarea.value).toBe('<minecraft:planks>');
+});
+
+test('item search suggestion hides second title when displayEn is missing', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  fireEvent.change(searchInput, { target: { value: 'Палка' } });
+
+  await screen.findByText('<minecraft:stick>');
+  expect(screen.getAllByText('Палка')).toHaveLength(1);
 });
 
 test('structured item editor builds raw without empty withTag and appends NBT only when provided', async () => {
