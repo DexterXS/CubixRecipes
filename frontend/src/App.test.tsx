@@ -471,6 +471,19 @@ test('manual text input with addShaped auto-parses after change', async () => {
   await waitFor(() => expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>'));
 });
 
+test('texture dropdown in toolbar shows mods from itempanel.csv', async () => {
+  render(<App />);
+
+  const openButton = await screen.findByRole('button', { name: 'Загрузить все текстуры' });
+  fireEvent.click(openButton);
+
+  await waitFor(() => {
+    expect(screen.getByText('minecraft')).toBeTruthy();
+    expect(screen.getByText('4')).toBeTruthy();
+    expect(screen.getByText(/Выгружено: —/)).toBeTruthy();
+  });
+});
+
 
 test('itempanel titles use meta mapping, default meta=0 and keep unknown meta raw when fallback is off', async () => {
   render(<App />);

@@ -87,6 +87,12 @@ type ItemPanelEntry = {
   displayEn: string;
 };
 
+type ItemPanelModSummary = {
+  modid: string;
+  itemCount: number;
+  completionText: string;
+};
+
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
   byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
@@ -499,6 +505,7 @@ export default function App() {
     entries: [],
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
+  const [isTextureModsOpen, setIsTextureModsOpen] = useState(false);
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
@@ -825,6 +832,17 @@ export default function App() {
     }
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
+  const itemPanelModSummaries = useMemo<ItemPanelModSummary[]>(() => {
+    const counters = new Map<string, number>();
+    itemPanelTranslations.entries.forEach((entry) => {
+      const [modid] = entry.key.split(':');
+      if (!modid) return;
+      counters.set(modid, (counters.get(modid) ?? 0) + 1);
+    });
+    return Array.from(counters.entries())
+      .map(([modid, itemCount]) => ({ modid, itemCount, completionText: '—' }))
+      .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
+  }, [itemPanelTranslations.entries]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
@@ -1527,7 +1545,7 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
-                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
+                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), texturesGroup: t('toolbar.texturesGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki'), loadAllTextures: t('toolbar.loadAllTextures'), texturesProgress: t('toolbar.texturesProgress'), texturesEmpty: t('toolbar.texturesEmpty') }}
                 onParse={() => void handleParse(input)}
                 onPaste={handlePasteFromClipboard}
                 onCreateNew={() => void handleCreateNew()}
@@ -1536,6 +1554,9 @@ export default function App() {
                 onSaveAs={() => void handleSaveAs()}
                 onHelp={() => setIsHelpOpen(true)}
                 onWiki={handleOpenWiki}
+                onToggleTextureMods={() => setIsTextureModsOpen((current) => !current)}
+                textureModsOpen={isTextureModsOpen}
+                textureModSummaries={itemPanelModSummaries}
               />
               <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
             </Panel>

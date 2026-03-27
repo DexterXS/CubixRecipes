@@ -38,6 +38,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       work: 'Работа',
       saveGroup: 'Сохранение',
       helpGroup: 'Помощь',
+      texturesGroup: 'Текстуры',
       parse: 'Парсить',
       paste: 'Вставить из буфера',
       new: 'Создать новый',
@@ -45,7 +46,10 @@ const translations: Record<UiLanguage, TranslationTree> = {
       save: 'Сохранить',
       saveAs: 'Сохранить как',
       help: 'Справка',
-      wiki: 'Вики'
+      wiki: 'Вики',
+      loadAllTextures: 'Загрузить все текстуры',
+      texturesProgress: 'Выгружено',
+      texturesEmpty: 'itempanel.csv не содержит элементов.'
     },
     tabs: {
       editor: 'Редактор',
@@ -200,6 +204,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       work: 'Work',
       saveGroup: 'Save',
       helpGroup: 'Help',
+      texturesGroup: 'Textures',
       parse: 'Parse',
       paste: 'Paste from clipboard',
       new: 'Create New',
@@ -207,7 +212,10 @@ const translations: Record<UiLanguage, TranslationTree> = {
       save: 'Save',
       saveAs: 'Save As',
       help: 'Help',
-      wiki: 'Wiki'
+      wiki: 'Wiki',
+      loadAllTextures: 'Load all textures',
+      texturesProgress: 'Loaded',
+      texturesEmpty: 'itempanel.csv has no entries.'
     },
     tabs: {
       editor: 'Editor',
