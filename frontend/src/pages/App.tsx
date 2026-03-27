@@ -506,6 +506,7 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [isTextureModsOpen, setIsTextureModsOpen] = useState(false);
+  const [isTextureBulkLoading, setIsTextureBulkLoading] = useState(false);
   const [itemSearchQuery, setItemSearchQuery] = useState('');
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
@@ -934,6 +935,55 @@ export default function App() {
       // ignore cache persistence errors
     }
   }, [itemSearchIcons]);
+
+  async function loadAllTexturesForItemPanel() {
+    if (isTextureBulkLoading) {
+      return;
+    }
+    const uniqueRaws: string[] = [];
+    const seen = new Set<string>();
+    itemPanelTranslations.entries.forEach((entry) => {
+      const raw = buildItemRawValue(entry.key, entry.meta);
+      if (!seen.has(raw)) {
+        seen.add(raw);
+        uniqueRaws.push(raw);
+      }
+    });
+    const pending = uniqueRaws.filter((raw) => !Object.prototype.hasOwnProperty.call(itemSearchIcons, raw));
+    if (!pending.length) {
+      return;
+    }
+
+    setIsTextureBulkLoading(true);
+    const batchSize = 24;
+    for (let index = 0; index < pending.length; index += batchSize) {
+      const batch = pending.slice(index, index + batchSize);
+      const resolvedBatch = await Promise.all(batch.map(async (raw) => {
+        try {
+          const resolved = await resolveItemRaw(raw);
+          return [raw, resolved.icon_url ?? null] as const;
+        } catch {
+          return [raw, null] as const;
+        }
+      }));
+      setItemSearchIcons((current) => {
+        const next = { ...current };
+        resolvedBatch.forEach(([raw, iconUrl]) => {
+          next[raw] = iconUrl;
+        });
+        return next;
+      });
+    }
+    setIsTextureBulkLoading(false);
+  }
+
+  function handleLoadAllTextures() {
+    const nextOpen = !isTextureModsOpen;
+    setIsTextureModsOpen(nextOpen);
+    if (nextOpen) {
+      void loadAllTexturesForItemPanel();
+    }
+  }
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
     const [modid, ...nameParts] = entry.key.split(':');
@@ -1558,7 +1608,7 @@ export default function App() {
           <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
-                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), texturesGroup: t('toolbar.texturesGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki'), loadAllTextures: t('toolbar.loadAllTextures'), texturesProgress: t('toolbar.texturesProgress'), texturesEmpty: t('toolbar.texturesEmpty') }}
+                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), texturesGroup: t('toolbar.texturesGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki'), loadAllTextures: t('toolbar.loadAllTextures'), loadingTextures: t('toolbar.loadingTextures'), texturesProgress: t('toolbar.texturesProgress'), texturesEmpty: t('toolbar.texturesEmpty') }}
                 onParse={() => void handleParse(input)}
                 onPaste={handlePasteFromClipboard}
                 onCreateNew={() => void handleCreateNew()}
@@ -1567,9 +1617,10 @@ export default function App() {
                 onSaveAs={() => void handleSaveAs()}
                 onHelp={() => setIsHelpOpen(true)}
                 onWiki={handleOpenWiki}
-                onToggleTextureMods={() => setIsTextureModsOpen((current) => !current)}
+                onLoadAllTextures={handleLoadAllTextures}
                 textureModsOpen={isTextureModsOpen}
                 textureModSummaries={itemPanelModSummaries}
+                textureLoadInProgress={isTextureBulkLoading}
               />
               <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
             </Panel>

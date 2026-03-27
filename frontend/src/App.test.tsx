@@ -480,11 +480,11 @@ test('texture dropdown in toolbar shows mods from itempanel.csv', async () => {
   await waitFor(() => {
     expect(screen.getByText('minecraft')).toBeTruthy();
     expect(screen.getByText('4')).toBeTruthy();
-    expect(screen.getByText(/Выгружено: 0% \(0\/4\)/)).toBeTruthy();
+    expect(screen.getByText(/Выгружено: 100% \(4\/4\)/)).toBeTruthy();
   });
 });
 
-test('texture dropdown progress uses resolved icon cache ratio', async () => {
+test('texture bulk load reuses cache and resolves only missing entries', async () => {
   window.localStorage.setItem('cubixrecipes:item-search-icon-cache-v1', JSON.stringify({
     '<minecraft:planks>': '/api/icons/planks'
   }));
@@ -495,8 +495,11 @@ test('texture dropdown progress uses resolved icon cache ratio', async () => {
   fireEvent.click(openButton);
 
   await waitFor(() => {
-    expect(screen.getByText(/Выгружено: 25% \(1\/4\)/)).toBeTruthy();
+    expect(screen.getByText(/Выгружено: 100% \(4\/4\)/)).toBeTruthy();
   });
+
+  const resolveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/items/resolve');
+  expect(resolveCalls).toHaveLength(3);
 });
 
 

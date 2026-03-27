@@ -48,6 +48,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       help: 'Справка',
       wiki: 'Вики',
       loadAllTextures: 'Загрузить все текстуры',
+      loadingTextures: 'Загрузка текстур...',
       texturesProgress: 'Выгружено',
       texturesEmpty: 'itempanel.csv не содержит элементов.'
     },
@@ -214,6 +215,7 @@ const translations: Record<UiLanguage, TranslationTree> = {
       help: 'Help',
       wiki: 'Wiki',
       loadAllTextures: 'Load all textures',
+      loadingTextures: 'Loading textures...',
       texturesProgress: 'Loaded',
       texturesEmpty: 'itempanel.csv has no entries.'
     },

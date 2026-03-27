@@ -12,6 +12,7 @@ interface ActionToolbarLabels {
   help: string;
   wiki: string;
   loadAllTextures: string;
+  loadingTextures: string;
   texturesProgress: string;
   texturesEmpty: string;
 }
@@ -32,9 +33,10 @@ interface ActionToolbarProps {
   onSaveAs: () => void;
   onHelp: () => void;
   onWiki: () => void;
-  onToggleTextureMods: () => void;
+  onLoadAllTextures: () => void;
   textureModsOpen: boolean;
   textureModSummaries: TextureModSummary[];
+  textureLoadInProgress: boolean;
 }
 
 export function ActionToolbar(props: ActionToolbarProps) {
@@ -61,7 +63,7 @@ export function ActionToolbar(props: ActionToolbarProps) {
       <div className="toolbar-group toolbar-group-textures">
         <span className="toolbar-label">{labels.texturesGroup}</span>
         <div className="toolbar-texture-wrap">
-          <button type="button" className="secondary-button" aria-expanded={props.textureModsOpen} onClick={props.onToggleTextureMods}>{labels.loadAllTextures}</button>
+          <button type="button" className="secondary-button" aria-expanded={props.textureModsOpen} onClick={props.onLoadAllTextures} disabled={props.textureLoadInProgress}>{props.textureLoadInProgress ? labels.loadingTextures : labels.loadAllTextures}</button>
           {props.textureModsOpen ? (
             <div className="toolbar-texture-dropdown" role="region" aria-label={labels.loadAllTextures}>
               {props.textureModSummaries.length ? (
