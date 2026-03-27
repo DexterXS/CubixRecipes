@@ -132,6 +132,12 @@ beforeEach(() => {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, new_uid: 'saved-1', recipe: { recipe_uid: 'saved-1', recipe_type: 'ct_shaped', name: null, output: { raw: body.output_raw }, output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' }, grid_w: 2, grid_h: 2, source: { kind: 'zs_file', path: 'scripts/new_recipe.zs' }, matrix: [[{ raw: '<minecraft:planks>' }, { raw: null }], [{ raw: null }, { raw: '<minecraft:stick>' }]] } }) }) as Promise<Response>;
     }
 
+    if (url === '/api/items/resolve' && init?.method === 'POST') {
+      const raw = JSON.parse(String(init.body)).item_raw as string;
+      const icon = raw.includes('minecraft:stick') ? '/api/icons/stick' : '/api/icons/planks';
+      return Promise.resolve({ ok: true, json: async () => ({ icon_url: icon, animated: false }) }) as Promise<Response>;
+    }
+
     throw new Error(`Unexpected fetch call: ${url}`);
   }) as typeof fetch;
 
@@ -326,6 +332,22 @@ test('item search suggestion hides second title when displayEn is missing', asyn
 
   await screen.findByText('<minecraft:stick>');
   expect(screen.getAllByText('Палка')).toHaveLength(1);
+});
+
+test('item search suggestions render static item icons', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  fireEvent.change(searchInput, { target: { value: 'planks' } });
+
+  await screen.findByText('<minecraft:planks>');
+  await waitFor(() => {
+    const icon = document.querySelector('.suggestion-icon-slot img') as HTMLImageElement | null;
+    expect(icon?.getAttribute('src')).toContain('/api/icons/planks');
+  });
 });
 
 test('structured item editor builds raw without empty withTag and appends NBT only when provided', async () => {

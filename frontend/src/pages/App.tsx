@@ -7,7 +7,7 @@ import { TabNav } from '../components/TabNav';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getProjectSettings, parseText, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
+import { createRecipeTemplate, getProjectSettings, parseText, resolveItemRaw, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
 
@@ -461,6 +461,7 @@ export default function App() {
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [itemSearchQuery, setItemSearchQuery] = useState('');
+  const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>({});
   const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
   const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
@@ -842,6 +843,24 @@ export default function App() {
 
     return [...unique.values()].slice(0, 20);
   }, [itemSearchQuery, itemPanelTranslations]);
+
+  useEffect(() => {
+    const suggestions = itemSearchSuggestions.slice(0, 8);
+    suggestions.forEach((entry) => {
+      const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+      if (Object.prototype.hasOwnProperty.call(itemSearchIcons, raw)) {
+        return;
+      }
+      void (async () => {
+        try {
+          const resolved = await resolveItemRaw(raw);
+          setItemSearchIcons((current) => ({ ...current, [raw]: resolved.icon_url ?? null }));
+        } catch {
+          setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+        }
+      })();
+    });
+  }, [itemSearchSuggestions, itemSearchIcons]);
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
     const [modid, ...nameParts] = entry.key.split(':');
@@ -1725,10 +1744,21 @@ export default function App() {
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
                     {itemSearchSuggestions.map((entry) => (
-                      <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item" onClick={() => applyItemSearchSuggestion(entry)}>
-                        <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
-                        <span>{entry.displayRu}</span>
-                        {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
+                      <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
+                        {(() => {
+                          const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+                          const iconUrl = itemSearchIcons[raw];
+                          return (
+                            <span className="suggestion-icon-slot" aria-hidden="true">
+                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
+                            </span>
+                          );
+                        })()}
+                        <div className="suggestion-content">
+                          <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
+                          <span>{entry.displayRu}</span>
+                          {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
+                        </div>
                       </button>
                     ))}
                   </div>

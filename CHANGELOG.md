@@ -11,6 +11,7 @@
 - Craft/help/layout modals now support local zoom via a gear control (`0.8x`–`1.5x`) and manual resize, reducing overlap in dense editors; craft-modal utility actions were switched to icon buttons for clearer compact controls.
 - Structured NBT tree editor moved into its own dedicated modal window (with separate zoom control) and NBT row layout was widened/reflowed to prevent value/type overlap in dense nested trees.
 - Item-search suggestions no longer duplicate Russian name in the second line when `display_en` is missing in `itempanel.csv` (second line is now hidden unless distinct EN text exists).
+- Craft item-search suggestions now show mini static item icons (non-animated) using a cached `/api/items/resolve` lookup per suggestion.
 - Backend parser now accepts item references with optional `.withTag(...)` suffix in item-query and matrix parsing flows, so frontend structured editor output works end-to-end with save/parse routes.
 - Fixed `invalid syntax` failures when parsing `addShaped` matrices that contain `<item>.withTag({...})` cells (including 9x9 Avaritia recipes).
 - Hardened backend write-path handling for `/api/recipes/save-as` and `/api/zs/files/create`: writes are now restricted to configured recipe roots and out-of-scope paths return HTTP 400.

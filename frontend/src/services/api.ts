@@ -8,6 +8,13 @@ interface ParseResponse {
   item?: { raw: string };
 }
 
+interface ResolveItemResponse {
+  icon_url?: string | null;
+  icon_asset_id?: string | null;
+  display_name?: string | null;
+  animated?: boolean;
+}
+
 interface CreateRecipePayload {
   templateType: string;
   output?: string;
@@ -137,5 +144,13 @@ export async function updateProjectUiPreferences(uiPreferences: UiPreferences): 
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(uiPreferences)
+  });
+}
+
+export async function resolveItemRaw(raw: string): Promise<ResolveItemResponse> {
+  return request<ResolveItemResponse>(apiPath('/items/resolve'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ item_raw: raw, settings: {} })
   });
 }
