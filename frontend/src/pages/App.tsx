@@ -114,7 +114,7 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
 }
 
 function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: number | null } | null {
-  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>$/);
+  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
   if (!match) return null;
   const rawMeta = (match[2] ?? '').toLowerCase();
   if (rawMeta === '*') {

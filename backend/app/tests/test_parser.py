@@ -90,6 +90,21 @@ def test_parse_meta_wildcard():
     assert item.meta_mode == MetaMode.WILDCARD
 
 
+def test_parse_item_ref_with_nbt_suffix_keeps_item_lookup_fields():
+    parser = RecipeParser()
+    item = parser.parse_item_ref('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})')
+    assert item.modid == 'minecraft'
+    assert item.name == 'enchanted_book'
+    assert item.meta_value is None
+
+
+def test_parse_item_query_with_nbt_suffix():
+    parser = RecipeParser()
+    result = parser.parse('<minecraft:enchanted_book>.withTag({StoredEnchantments: [{lvl: 3 as short, id: 35 as short}]})')
+    assert result.kind == 'item_query'
+    assert result.item.base_key == 'minecraft:enchanted_book'
+
+
 def test_parse_112_name_syntax():
     parser = RecipeParser()
     text = 'recipes.addShaped("CTLeggings", <minecraft:iron_leggings>, [[<minecraft:iron_ingot>, <minecraft:iron_ingot>, <minecraft:iron_ingot>],[<minecraft:iron_ingot>, null, <minecraft:iron_ingot>],[<minecraft:iron_ingot>, null, <minecraft:iron_ingot>]]);'
