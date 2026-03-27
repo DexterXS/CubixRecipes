@@ -108,7 +108,7 @@ beforeEach(() => {
             grid_h: 2,
             source: { kind: 'zs_file', path: 'scripts/test.zs' },
             matrix: [
-              [{ raw: '<minecraft:planks>' }, { raw: null }],
+              [{ raw: '<minecraft:planks>', resolution: { display_name: 'Oak Planks', icon_url: '/api/icons/planks', animated: false } }, { raw: null }],
               [{ raw: null }, { raw: '<minecraft:stick>' }]
             ]
           }
@@ -267,6 +267,26 @@ test('grid cell action buttons copy, clear and paste values', async () => {
   (navigator.clipboard.readText as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce('<minecraft:dirt>');
   fireEvent.click(screen.getByLabelText('paste-cell-0-0'));
   await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:dirt>'));
+});
+
+test('grid icons update after clear and paste actions in icon mode', async () => {
+  render(<App />);
+  fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
+  await waitFor(() => expect((screen.getByLabelText('cell-0-0') as HTMLInputElement).value).toBe('<minecraft:planks>'));
+
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.click(screen.getAllByLabelText('Настройки')[0]);
+  fireEvent.change(screen.getByLabelText('Режим отображения'), { target: { value: 'icons' } });
+
+  const iconButton = screen.getByLabelText('open-craft-editor-0-0');
+  await waitFor(() => expect(iconButton.querySelector('img')).toBeTruthy());
+
+  fireEvent.click(screen.getByLabelText('clear-cell-0-0'));
+  await waitFor(() => expect(iconButton.textContent).toContain('?'));
+
+  (navigator.clipboard.readText as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce('<minecraft:planks>');
+  fireEvent.click(screen.getByLabelText('paste-cell-0-0'));
+  await waitFor(() => expect(iconButton.querySelector('img')).toBeTruthy());
 });
 
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {

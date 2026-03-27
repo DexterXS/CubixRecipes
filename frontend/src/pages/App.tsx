@@ -278,10 +278,26 @@ export default function App() {
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
   const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
-  const matrixWithResolution = useMemo(
-    () => matrix.map((row, rowIndex) => row.map((cell, colIndex) => ({ raw: cell, resolution: recipe.matrix[rowIndex]?.[colIndex]?.resolution ?? null }))),
-    [matrix, recipe.matrix]
-  );
+  const matrixWithResolution = useMemo(() => {
+    const resolutionByRaw = new Map<string, RecipeView['matrix'][number][number]['resolution']>();
+    recipe.matrix.forEach((row) => row.forEach((cell) => {
+      const raw = cell.raw;
+      if (!raw || resolutionByRaw.has(raw)) return;
+      if (cell.resolution?.icon_url) {
+        resolutionByRaw.set(raw, cell.resolution);
+      }
+    }));
+
+    return matrix.map((row, rowIndex) => row.map((cell, colIndex) => {
+      const parsedCell = recipe.matrix[rowIndex]?.[colIndex];
+      const directResolution = parsedCell?.raw === cell ? (parsedCell?.resolution ?? null) : null;
+      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? null) : null;
+      return {
+        raw: cell,
+        resolution: directResolution ?? fallbackResolution
+      };
+    }));
+  }, [matrix, recipe.matrix]);
 
   useEffect(() => {
     let cancelled = false;
