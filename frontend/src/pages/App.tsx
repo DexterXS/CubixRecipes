@@ -82,12 +82,16 @@ type ItemPanelEntry = {
   legacyId: number | null;
   meta: number;
   hasNbt: boolean;
-  display: string;
+  displayRu: string;
+  displayEn: string;
 };
 
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
   byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
+  byDisplayRu: Map<string, ItemPanelEntry[]>;
+  byDisplayEn: Map<string, ItemPanelEntry[]>;
+  entries: ItemPanelEntry[];
   fallbackToFirstMeta: boolean;
 };
 
@@ -118,6 +122,15 @@ function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: 
     return { key: match[1].toLowerCase(), wildcardMeta: false, meta: 0 };
   }
   return { key: match[1].toLowerCase(), wildcardMeta: false, meta: parsedMeta };
+}
+
+function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
+  const normalizedNbt = (nbtRaw ?? '').trim();
+  const base = `<${key}${meta > 0 ? `:${meta}` : ''}>`;
+  if (!normalizedNbt) {
+    return base;
+  }
+  return `${base}.withTag(${normalizedNbt})`;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -258,8 +271,12 @@ export default function App() {
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
     byKeyMeta: new Map(),
+    byDisplayRu: new Map(),
+    byDisplayEn: new Map(),
+    entries: [],
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
+  const [itemSearchQuery, setItemSearchQuery] = useState('');
 
   const persistTimerRef = useRef<number | null>(null);
   const autoParseTimerRef = useRef<number | null>(null);
@@ -367,11 +384,25 @@ export default function App() {
           return;
         }
         const bytes = await response.arrayBuffer();
-        const decoder = new TextDecoder('windows-1251');
-        const text = decoder.decode(bytes);
+        let text = '';
+        try {
+          text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+        } catch {
+          text = new TextDecoder('windows-1251').decode(bytes);
+        }
         const lines = text.split(/\r?\n/).slice(1);
         const byKey = new Map<string, string>();
         const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
+        const byDisplayRu = new Map<string, ItemPanelEntry[]>();
+        const byDisplayEn = new Map<string, ItemPanelEntry[]>();
+        const entries: ItemPanelEntry[] = [];
+        const pushDisplayIndex = (index: Map<string, ItemPanelEntry[]>, label: string, entry: ItemPanelEntry) => {
+          const normalized = label.trim().toLowerCase();
+          if (!normalized) return;
+          const list = index.get(normalized) ?? [];
+          list.push(entry);
+          index.set(normalized, list);
+        };
         lines.forEach((line) => {
           if (!line.trim()) return;
           const parts = line.split(',');
@@ -380,8 +411,10 @@ export default function App() {
           const legacyIdRaw = parts[1]?.trim();
           const metaRaw = parts[2]?.trim();
           const hasNbtRaw = parts[3]?.trim().toLowerCase();
-          const display = parts.slice(4).join(',').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          if (!key || !display || display === '-' || display === '- ') return;
+          const displayRu = (parts[4] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+          const displayEn = (parts[5] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+          const primaryDisplay = displayRu || displayEn;
+          if (!key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
           const meta = Number.parseInt(metaRaw || '0', 10);
           if (Number.isNaN(meta)) return;
           const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
@@ -391,8 +424,12 @@ export default function App() {
             legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
             meta,
             hasNbt,
-            display
+            displayRu: displayRu || primaryDisplay,
+            displayEn: displayEn || primaryDisplay
           };
+          entries.push(entry);
+          pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
+          pushDisplayIndex(byDisplayEn, entry.displayEn, entry);
           let metaMap = byKeyMeta.get(key);
           if (!metaMap) {
             metaMap = new Map<number, ItemPanelEntry>();
@@ -402,13 +439,16 @@ export default function App() {
             metaMap.set(meta, entry);
           }
           if (!byKey.has(key) || meta === 0) {
-            byKey.set(key, display);
+            byKey.set(key, entry.displayRu);
           }
         });
         if (!cancelled) {
           setItemPanelTranslations({
             byKey,
             byKeyMeta,
+            byDisplayRu,
+            byDisplayEn,
+            entries,
             fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
           });
         }
@@ -525,15 +565,15 @@ export default function App() {
     const metaMap = itemPanelTranslations.byKeyMeta.get(parsed.key);
     if (parsed.meta !== null && metaMap?.has(parsed.meta)) {
       const exact = metaMap.get(parsed.meta);
-      if (exact?.display) {
-        return exact.display;
+      if (exact?.displayRu) {
+        return exact.displayRu;
       }
     }
     if (parsed.meta !== null && itemPanelTranslations.fallbackToFirstMeta && metaMap && metaMap.size > 0) {
       const firstMeta = [...metaMap.keys()].sort((a, b) => a - b)[0];
       const firstEntry = metaMap.get(firstMeta);
-      if (firstEntry?.display) {
-        return firstEntry.display;
+      if (firstEntry?.displayRu) {
+        return firstEntry.displayRu;
       }
     }
     if (parsed.meta !== null && !itemPanelTranslations.fallbackToFirstMeta) {
@@ -556,6 +596,64 @@ export default function App() {
     }
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
+
+  const itemSearchSuggestions = useMemo(() => {
+    const query = itemSearchQuery.trim().toLowerCase();
+    if (!query) {
+      return [] as ItemPanelEntry[];
+    }
+
+    const unique = new Map<string, ItemPanelEntry>();
+    const push = (entry: ItemPanelEntry) => {
+      const uniqueKey = `${entry.key}:${entry.meta}`;
+      if (!unique.has(uniqueKey)) unique.set(uniqueKey, entry);
+    };
+
+    if (/^\d+(:\d+)?$/.test(query)) {
+      const [idPart, metaPart] = query.split(':');
+      const legacyId = Number.parseInt(idPart, 10);
+      const meta = metaPart !== undefined ? Number.parseInt(metaPart, 10) : null;
+      itemPanelTranslations.entries.forEach((entry) => {
+        if (entry.legacyId !== legacyId) return;
+        if (meta !== null && entry.meta !== meta) return;
+        push(entry);
+      });
+      return [...unique.values()].slice(0, 20);
+    }
+
+    const keyMetaMatch = query.match(/^([a-z0-9_.-]+:[a-z0-9_./-]+)(?::([0-9*]+))?$/);
+    if (keyMetaMatch) {
+      const parsedKey = keyMetaMatch[1];
+      const parsedMeta = keyMetaMatch[2] ? Number.parseInt(keyMetaMatch[2], 10) : null;
+      if (parsedMeta !== null && !Number.isNaN(parsedMeta)) {
+        const exact = itemPanelTranslations.byKeyMeta.get(parsedKey)?.get(parsedMeta);
+        if (exact) push(exact);
+      } else {
+        const metaMap = itemPanelTranslations.byKeyMeta.get(parsedKey);
+        metaMap?.forEach((entry) => push(entry));
+      }
+      return [...unique.values()].slice(0, 20);
+    }
+
+    itemPanelTranslations.entries.forEach((entry) => {
+      if (
+        entry.key.includes(query)
+        || entry.displayRu.toLowerCase().includes(query)
+        || entry.displayEn.toLowerCase().includes(query)
+        || entry.key.startsWith(`${query}:`)
+      ) {
+        push(entry);
+      }
+    });
+
+    return [...unique.values()].slice(0, 20);
+  }, [itemSearchQuery, itemPanelTranslations]);
+
+  function applyItemSearchSuggestion(entry: ItemPanelEntry) {
+    const nextRaw = buildItemRawValue(entry.key, entry.meta);
+    setCraftSourceDraft(nextRaw);
+    setItemSearchQuery(`${entry.key}:${entry.meta}`);
+  }
 
   function getCellRaw(target: CraftEditorTarget): string {
     if (target.kind === 'output') {
@@ -672,6 +770,7 @@ export default function App() {
   function openCraftEditorModal(target: CraftEditorTarget) {
     setCraftEditorTarget(target);
     setCraftSourceDraft(getCellRaw(target));
+    setItemSearchQuery('');
     setIsCraftEditorOpen(true);
   }
 
@@ -1286,6 +1385,24 @@ export default function App() {
               <button type="button" onClick={() => setIsCraftEditorOpen(false)}>Закрыть</button>
             </div>
             <div className="settings-modal-body">
+              <label className="field-block">
+                <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
+                <div className="inline-actions">
+                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
+                  <button type="button" className="ghost-button" onClick={() => setItemSearchQuery('')}>Очистить поиск</button>
+                </div>
+                {itemSearchSuggestions.length ? (
+                  <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
+                    {itemSearchSuggestions.map((entry) => (
+                      <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item" onClick={() => applyItemSearchSuggestion(entry)}>
+                        <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
+                        <span>{entry.displayRu}</span>
+                        <span>{entry.displayEn}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </label>
               <label className="field-block">
                 <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />

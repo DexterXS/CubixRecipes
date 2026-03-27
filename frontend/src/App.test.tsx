@@ -21,10 +21,10 @@ beforeEach(() => {
 
     if (url === '/itempanel.csv') {
       const csv = [
-        'key,id,meta,has_nbt,display_name',
-        'minecraft:planks,5,0,false,Oak Planks',
-        'minecraft:planks,5,1,false,Spruce Planks',
-        'minecraft:planks,5,2,false,Birch Planks'
+        'key,id,meta,has_nbt,display_ru,display_en',
+        'minecraft:planks,5,0,false,Дубовые доски,Oak Planks',
+        'minecraft:planks,5,1,false,Еловые доски,Spruce Planks',
+        'minecraft:planks,5,2,false,Берёзовые доски,Birch Planks'
       ].join('\n');
       return Promise.resolve({
         ok: true,
@@ -289,6 +289,31 @@ test('grid icons update after clear and paste actions in icon mode', async () =>
   await waitFor(() => expect(iconButton.querySelector('img')).toBeTruthy());
 });
 
+test('item search in craft modal supports ID, ID:meta, RU and EN names', async () => {
+  render(<App />);
+  const outputEditButton = document.querySelector('.output-icon-button') as HTMLElement | null;
+  expect(outputEditButton).toBeTruthy();
+  fireEvent.click(outputEditButton as HTMLElement);
+
+  const searchInput = await screen.findByLabelText('item-search');
+  const sourceTextarea = screen.getByLabelText('craft-source-modal') as HTMLTextAreaElement;
+
+  fireEvent.change(searchInput, { target: { value: '5:1' } });
+  const idMetaSuggestion = await screen.findByText('<minecraft:planks:1>');
+  fireEvent.click(idMetaSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks:1>');
+
+  fireEvent.change(searchInput, { target: { value: 'Берёзовые доски' } });
+  const ruSuggestion = await screen.findByText('<minecraft:planks:2>');
+  fireEvent.click(ruSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks:2>');
+
+  fireEvent.change(searchInput, { target: { value: 'Oak Planks' } });
+  const enSuggestion = await screen.findByText('<minecraft:planks>');
+  fireEvent.click(enSuggestion);
+  expect(sourceTextarea.value).toBe('<minecraft:planks>');
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
@@ -328,10 +353,10 @@ test('itempanel titles use meta mapping, default meta=0 and keep unknown meta ra
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
 
   const cellInput = await screen.findByLabelText('cell-0-0');
-  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Oak Planks'));
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Дубовые доски'));
 
   fireEvent.change(cellInput, { target: { value: '<minecraft:planks:1>' } });
-  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Spruce Planks'));
+  await waitFor(() => expect(cellInput.getAttribute('title')).toBe('Еловые доски'));
 
   fireEvent.change(cellInput, { target: { value: '<minecraft:planks:99>' } });
   await waitFor(() => expect(cellInput.getAttribute('title')).toBe('<minecraft:planks:99>'));
