@@ -67,8 +67,30 @@ def test_uppercase_item_key_matches_lowercase_icon_index():
     resolver = ItemResolver(index)
     item = RecipeParser().parse_item_ref('<Avaritia:Resource_Block:1>')
     result = resolver.resolve(item)
-    assert result.strategy in {'textures_meta_suffix', 'grouped_files'}
+    assert result.strategy in {'avaritia_meta_mapping', 'textures_meta_suffix', 'grouped_files'}
     assert result.icon_asset_id == 'jar:avaritia_resource_block_1'
+
+
+def test_avaritia_resource_meta_maps_to_internal_subtype_texture():
+    index = AssetIndex()
+    index.register_icon('avaritia:resource_infinity_catalyst', {'asset_id': 'jar:avaritia_resource_infinity_catalyst', 'path': 'assets/avaritia/textures/items/resource_infinity_catalyst.png', 'source_type': 'jar', 'animated': False})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Resource:5>')
+    result = resolver.resolve(item)
+    assert result.strategy == 'avaritia_meta_mapping'
+    assert result.icon_asset_id == 'jar:avaritia_resource_infinity_catalyst'
+
+
+def test_avaritia_singularity_meta_uses_shared_texture_and_lang_name():
+    index = AssetIndex()
+    index.register_icon('avaritia:singularity', {'asset_id': 'jar:avaritia_singularity', 'path': 'assets/avaritia/textures/items/singularity.png', 'source_type': 'jar', 'animated': False})
+    index.register_lang('ru_ru', {'item.singularity_clay.name': 'Глиняная сингулярность'})
+    resolver = ItemResolver(index)
+    item = RecipeParser().parse_item_ref('<Avaritia:Singularity:10>')
+    result = resolver.resolve(item, {'locale': 'ru_ru'})
+    assert result.strategy == 'avaritia_meta_mapping'
+    assert result.icon_asset_id == 'jar:avaritia_singularity'
+    assert result.display_name == 'Глиняная сингулярность'
 
 
 def test_meta_ranked_candidate_supports_slash_variant():
