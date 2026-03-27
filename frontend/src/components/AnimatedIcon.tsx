@@ -5,13 +5,14 @@ interface Props {
   alt: string;
   animated?: boolean;
   frameTime?: number;
+  animationsEnabled?: boolean;
 }
 
-export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: Props) {
+export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1, animationsEnabled = true }: Props) {
   const [frameCount, setFrameCount] = useState(1);
 
   useEffect(() => {
-    if (!animated) {
+    if (!animated || !animationsEnabled) {
       setFrameCount(1);
       return;
     }
@@ -23,14 +24,14 @@ export function AnimatedIcon({ iconUrl, alt, animated = false, frameTime = 1 }: 
       setFrameCount(guessedFrames);
     };
     img.src = iconUrl;
-  }, [animated, iconUrl]);
+  }, [animated, animationsEnabled, iconUrl]);
 
   const durationMs = useMemo(() => {
     const ticks = Math.max(1, frameTime);
     return Math.max(300, frameCount * ticks * 50);
   }, [frameCount, frameTime]);
 
-  if (!animated || frameCount <= 1) {
+  if (!animated || !animationsEnabled || frameCount <= 1) {
     return <img src={iconUrl} alt={alt} />;
   }
 

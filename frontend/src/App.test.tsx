@@ -49,6 +49,7 @@ beforeEach(() => {
           project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json',
           ui_preferences: {
             display_mode: 'text',
+            animations_enabled: true,
             density_mode: 'normal',
             editor_mode: 'edit',
             language: 'ru',
@@ -236,6 +237,21 @@ test('layout settings button saves the current workspace arrangement explicitly'
   });
 });
 
+test('settings panel can disable icon animations and persist ui preference', async () => {
+  render(<App />);
+  fireEvent.click(screen.getByText('Вид'));
+  fireEvent.click(screen.getAllByLabelText('Настройки')[0]);
+
+  const animationsToggle = await screen.findByLabelText('Анимации иконок');
+  fireEvent.click(animationsToggle);
+
+  await waitFor(() => {
+    const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
+    const body = JSON.parse(String(putCalls.at(-1)?.[1]?.body));
+    expect(body.animations_enabled).toBe(false);
+  });
+});
+
 test('toolbar actions still support save, save-as, create and help/wiki', async () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText('paste-input'), { target: { value: 'recipes.addShaped(...)' } });
@@ -292,7 +308,7 @@ test('shows backend unavailable inline message when parse request cannot reach a
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
     }
     if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
-      return Promise.resolve({ ok: true, json: async () => ({ scripts_dir: 'scripts', mods_dir: '', assets_dir: '', recipe_db_path: '', extra_icon_sources: [], extra_recipe_sources: [], verbose_debug_logging: false, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json', ui_preferences: { display_mode: 'text', density_mode: 'normal', editor_mode: 'edit', language: 'ru', active_view_tab: 'editor', reset_layout_version: 4, workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 }, panel_layout: [{ id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 }, { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 }, { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 }, { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 }, { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 }, { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 }, { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 }, { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 }, { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 }, { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 }, { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 }, { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }] } }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, json: async () => ({ scripts_dir: 'scripts', mods_dir: '', assets_dir: '', recipe_db_path: '', extra_icon_sources: [], extra_recipe_sources: [], verbose_debug_logging: false, project_config_path: '/workspace/CubixRecipes/cubixrecipes.config.json', ui_preferences: { display_mode: 'text', animations_enabled: true, density_mode: 'normal', editor_mode: 'edit', language: 'ru', active_view_tab: 'editor', reset_layout_version: 4, workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 }, panel_layout: [{ id: 'hero', zone: 'topLeft', order: 0, visible: true, height: 120, width_units: 3 }, { id: 'toolbar', zone: 'topLeft', order: 1, visible: true, height: 96, width_units: 3 }, { id: 'input', zone: 'topLeft', order: 2, visible: true, height: 320, width_units: 2 }, { id: 'output', zone: 'topRight', order: 3, visible: true, height: 320, width_units: 1 }, { id: 'grid', zone: 'bottom', order: 4, visible: true, height: 380, width_units: 3 }, { id: 'statusBar', zone: 'topRight', order: 5, visible: false, height: 72, width_units: 3 }, { id: 'settings', zone: 'bottom', order: 6, visible: false, height: 260, width_units: 1 }, { id: 'info', zone: 'sidebar', order: 7, visible: false, height: 260, width_units: 1 }, { id: 'debug', zone: 'sidebar', order: 8, visible: false, height: 260, width_units: 1 }, { id: 'diagnostics', zone: 'sidebar', order: 9, visible: false, height: 260, width_units: 1 }, { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 }, { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }] } }) }) as Promise<Response>;
     }
     if (url === '/api/parse') {
       return Promise.reject(new TypeError('Failed to fetch'));

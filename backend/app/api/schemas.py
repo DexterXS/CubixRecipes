@@ -89,6 +89,7 @@ class WorkspaceLayoutRequest(BaseModel):
 
 class UiPreferencesRequest(BaseModel):
     display_mode: Literal['text', 'icons'] = 'text'
+    animations_enabled: bool = True
     density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
     editor_mode: Literal['view', 'edit'] = 'edit'
     language: Literal['ru', 'en'] = 'ru'

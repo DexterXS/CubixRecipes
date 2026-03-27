@@ -34,6 +34,7 @@
 - Fixed noisy asset scan parse errors by only parsing `.png.mcmeta` animation metadata for texture paths under `/textures/items/` and `/textures/blocks/`.
 
 ### Added
+- Added a persisted UI preference `animations_enabled` with a new Settings panel toggle, allowing users to disable animated item icons globally for output and grid previews.
 - Added zoned frontend docking layout with separate top-left, top-right, bottom, and sidebar drop targets, per-zone drag reorder, visible drop-zone highlighting, panel resize, and persisted native resizers for the main/sidebar split, top-left/top-right split, and top/bottom section heights.
 - Added a utility-bar settings button with an explicit “save current window layout” action that writes the current panel arrangement and zone sizes back to the backend config for reuse on the next app start.
 - Added structured backend debug diagnostics endpoints/state for config, recipe scans, asset scans, resolver traces, parse history, missing links, summary counters, and a ring-buffer unified log API that collects backend/frontend/API/UI events.

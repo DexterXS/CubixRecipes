@@ -42,6 +42,7 @@ class WorkspaceLayoutConfig:
 @dataclass
 class UiPreferencesConfig:
     display_mode: str = 'text'
+    animations_enabled: bool = True
     density_mode: str = 'normal'
     editor_mode: str = 'edit'
     language: str = 'ru'
@@ -179,6 +180,7 @@ class ProjectConfigService:
         payload = raw if isinstance(raw, dict) else {}
         return UiPreferencesConfig(
             display_mode=str(payload.get('display_mode', 'text') or 'text'),
+            animations_enabled=bool(payload.get('animations_enabled', True)),
             density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
             language=str(payload.get('language', 'ru') or 'ru'),

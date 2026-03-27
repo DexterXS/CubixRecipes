@@ -4,6 +4,7 @@ import { CellValue, DisplayMode, EditorMode, ResolutionView } from '../types';
 interface Props {
   matrix: { raw: CellValue; resolution?: ResolutionView | null }[][];
   displayMode: DisplayMode;
+  animationsEnabled: boolean;
   editorMode: EditorMode;
   onCellChange: (row: number, col: number, value: string) => void;
   resolveCellTitle: (raw: string) => string;
@@ -14,7 +15,7 @@ function shortenCellValue(value: string): string {
   return value.length > 14 ? `${value.slice(0, 12)}…` : value;
 }
 
-export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, resolveCellTitle, onIconClick }: Props) {
+export function RecipeGrid({ matrix, displayMode, animationsEnabled, editorMode, onCellChange, resolveCellTitle, onIconClick }: Props) {
   const size = Math.max(matrix.length, matrix[0]?.length ?? 0, 1);
   const cellClass = size >= 9 ? 'grid-cell size-9' : size >= 5 ? 'grid-cell size-5' : 'grid-cell size-3';
 
@@ -46,7 +47,7 @@ export function RecipeGrid({ matrix, displayMode, editorMode, onCellChange, reso
                 <span className="cell-coord">{rowIndex + 1},{colIndex + 1}</span>
                 <button type="button" className="cell-icon-slot" aria-label={`open-craft-editor-${rowIndex}-${colIndex}`} title={title} onClick={() => onIconClick(rowIndex, colIndex)}>
                   {displayMode === 'icons' && iconUrl
-                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} />
+                    ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} animationsEnabled={animationsEnabled} />
                     : <span aria-hidden="true">{displayMode === 'icons' ? '?' : '□'}</span>}
                 </button>
                 <input
