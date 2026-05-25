@@ -1,10 +1,34 @@
 import json
 from pathlib import Path
 from zipfile import ZipFile
+import struct
+import zlib
 
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
+
+
+def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
+    height = len(pixels) // width
+    raw_rows = []
+    for row in range(height):
+        raw = bytearray()
+        for r, g, b, a in pixels[row * width:(row + 1) * width]:
+            raw.extend([r, g, b, a])
+        raw_rows.append(b'\x00' + bytes(raw))
+    payload = zlib.compress(b''.join(raw_rows))
+
+    def chunk(name: bytes, data: bytes) -> bytes:
+        body = name + data
+        return struct.pack('>I', len(data)) + body + struct.pack('>I', zlib.crc32(body) & 0xFFFFFFFF)
+
+    path.write_bytes(
+        b'\x89PNG\r\n\x1a\n'
+        + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0))
+        + chunk(b'IDAT', payload)
+        + chunk(b'IEND', b'')
+    )
 
 
 def test_health_endpoint_is_available(tmp_path: Path):
@@ -12,6 +36,23 @@ def test_health_endpoint_is_available(tmp_path: Path):
     health_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/health')
 
     assert health_route() == {'ok': True}
+
+
+def test_itempanel_atlas_routes_are_available(tmp_path: Path):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    (tmp_path / 'itempanel.csv').write_text('Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Stone\n', encoding='utf-8')
+    _write_rgba_png(icons_dir / 'Stone.png', [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas')
+    png_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas.png')
+
+    manifest = manifest_route()
+    png_response = png_route()
+
+    assert '<minecraft:stone>' in manifest['entries']
+    assert png_response.media_type == 'image/png'
+    assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
 
 
 def test_save_as_accepts_generated_recipe(tmp_path: Path):
@@ -327,6 +368,26 @@ def test_icon_proxy_streams_binary_from_indexed_archive(tmp_path: Path):
     assert response.media_type == 'image/png'
     assert response.body == b'png-binary'
     assert '%' in resolved['icon_url']
+
+
+def test_itempanel_icon_catalog_resolves_before_asset_scan(tmp_path: Path):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    (tmp_path / 'itempanel.csv').write_text('Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Камень\n', encoding='cp1251')
+    _write_rgba_png(icons_dir / 'Камень.png', [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    resolve_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/resolve')
+    icon_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/icons/{icon_asset_id:path}')
+
+    resolved = resolve_route(type('ResolveRequest', (), {'item_raw': '<minecraft:stone>', 'settings': {}})())
+    encoded_asset_id = resolved['icon_url'].split('/api/icons/', 1)[1]
+    response = icon_route(encoded_asset_id)
+
+    assert resolved['strategy'] == 'itempanel_icon_catalog'
+    assert resolved['display_name'] == 'Камень'
+    assert response.media_type == 'image/png'
+    assert response.body.startswith(b'\x89PNG')
 
 
 def test_asset_scan_registers_icons_from_mods_json_tree(tmp_path: Path):

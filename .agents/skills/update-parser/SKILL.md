@@ -1,20 +1,27 @@
 # update-parser
 
 ## When to use
-- Use this skill when the task directly involves update parser workflows in CubixRecipes.
+- Use this skill when adding parser support for a new recipe/item syntax or fixing an incorrect parse result.
+
+## Required context
+- Read `AGENTS.md`.
+- Read `backend/app/parsers/recipe_parser.py`.
+- Read parser tests and the domain model fields the parser populates.
 
 ## Steps
-1. Read AGENTS.md and relevant module files.
-2. Update or add the minimal modular components required for the workflow.
-3. Add or adjust tests and docs impacted by the change.
-4. Record any new follow-up in project memory sections when needed.
+1. Capture the exact input text that fails or needs support.
+2. Add a failing parser test first when practical.
+3. Change only parser logic needed for the syntax.
+4. Preserve existing normalization and trim behavior.
+5. Run focused parser tests.
+6. Update docs/changelog when user-facing syntax support changes.
 
 ## Common mistakes
-- Editing multiple layers in one file instead of preserving module boundaries.
-- Forgetting to update tests, changelog, or skills after the workflow changes.
-- Missing Russian-facing documentation when behavior changes.
+- Parsing with broad string replacements that break NBT or nested calls.
+- Changing matrix trimming while adding unrelated syntax.
+- Mixing parser changes with resolver/storage changes.
 
 ## Done criteria
-- Code is modular and covered by focused tests.
-- Documentation/changelog are updated.
-- The workflow can be reused for the next similar task.
+- New syntax or fixed parse case is covered by tests.
+- Existing parser tests still pass.
+- Parser output remains compatible with service/storage code.

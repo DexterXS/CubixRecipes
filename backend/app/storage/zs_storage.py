@@ -34,6 +34,7 @@ class ZsStorage:
             'scan_errors': [],
             'unparsed_fragments': [],
         }
+        self._recipe_pattern = re.compile(r'(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\(.*?\);', re.S)
 
     def scan(self, extra_paths: list[Union[str, Path]] = None) -> None:
         self._recipes.clear()
@@ -48,7 +49,6 @@ class ZsStorage:
             'scan_errors': [],
             'unparsed_fragments': [],
         }
-        pattern = re.compile(r'(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\(.*?\);', re.S)
         if self.log_service is not None:
             self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe scan started', {'active_paths': [str(path) for path in paths]})
         for root in paths:
@@ -59,12 +59,12 @@ class ZsStorage:
                     self.log_service.log('BACKEND', 'ERROR', 'RECIPES', 'Recipe source path does not exist', issue)
                 continue
             if root.is_file() and root.suffix == '.zs':
-                self._scan_file(root, root.parent, pattern, source='extra_recipe_source_file')
+                self._scan_file(root, root.parent, self._recipe_pattern, source='extra_recipe_source_file')
                 continue
             if root.is_dir():
                 for file_path in sorted(root.rglob('*.zs')):
                     source = 'scripts_dir' if root == self.scripts_dir else 'extra_recipe_source'
-                    self._scan_file(file_path, root, pattern, source=source)
+                    self._scan_file(file_path, root, self._recipe_pattern, source=source)
                 continue
             issue = self._issue('warning', 'recipe_path', 'Unsupported recipe source type', source_path=str(root))
             self.last_scan_report['scan_errors'].append(issue)
@@ -176,7 +176,7 @@ class ZsStorage:
         text = path.read_text(encoding='utf-8')
         updated = text[: stored.start_offset] + rendered_block + text[stored.end_offset :]
         path.write_text(updated, encoding='utf-8')
-        self.scan(extra_paths=self.extra_recipe_sources)
+        self._rescan_file(path)
         return self.get_recipe(recipe_uid)
 
     def save_as(self, rendered_block: str, target_path: str) -> str:
@@ -185,7 +185,7 @@ class ZsStorage:
         prefix = '\n' if path.exists() and path.read_text(encoding='utf-8').strip() else ''
         with path.open('a', encoding='utf-8') as handle:
             handle.write(prefix + rendered_block + '\n')
-        self.scan(extra_paths=self.extra_recipe_sources)
+        self._rescan_file(path)
         latest = max((item for item in self._recipes.values() if item.file_path == str(path)), key=lambda item: item.start_offset)
         return latest.recipe.recipe_uid
 
@@ -220,6 +220,48 @@ class ZsStorage:
             except ValueError:
                 continue
         raise ValueError(f'Target path is outside allowed recipe roots: {raw_path}')
+
+    def _rescan_file(self, file_path: Path) -> None:
+        resolved = file_path.resolve(strict=False)
+        self._remove_file_from_index(resolved)
+        root, source = self._scan_root_for_file(resolved)
+        self._scan_file(resolved, root, self._recipe_pattern, source=source)
+
+    def _remove_file_from_index(self, file_path: Path) -> None:
+        file_key = str(file_path)
+        removed_uids = [uid for uid, stored in self._recipes.items() if stored.file_path == file_key]
+        for uid in removed_uids:
+            self._recipes.pop(uid, None)
+        self._rebuild_output_index()
+        self.last_scan_report['files'] = [
+            entry for entry in self.last_scan_report['files']
+            if entry.get('path') != file_key
+        ]
+        self.last_scan_report['unparsed_fragments'] = [
+            entry for entry in self.last_scan_report['unparsed_fragments']
+            if entry.get('file_path') != file_key
+        ]
+        self.last_scan_report['scan_errors'] = [
+            entry for entry in self.last_scan_report['scan_errors']
+            if entry.get('file_path') != file_key
+        ]
+
+    def _rebuild_output_index(self) -> None:
+        self._by_output.clear()
+        for uid, stored in self._recipes.items():
+            for key in {stored.recipe.output.raw, stored.recipe.output.base_key}:
+                self._by_output.setdefault(key, []).append(uid)
+
+    def _scan_root_for_file(self, file_path: Path) -> tuple[Path, str]:
+        roots = [(self.scripts_dir, 'scripts_dir'), *[(path, 'extra_recipe_source') for path in self.extra_recipe_sources]]
+        for root, source in roots:
+            root_resolved = root.resolve(strict=False)
+            try:
+                file_path.relative_to(root_resolved)
+                return root_resolved, source
+            except ValueError:
+                continue
+        return file_path.parent, 'extra_recipe_source_file'
 
     def _issue(self, level: str, category: str, message: str, file_path: str = None, source_path: str = None, error_type: str = None, line: int = None, fragment: str = None) -> dict[str, Any]:
         return {

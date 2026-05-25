@@ -45,6 +45,7 @@ class UiPreferencesConfig:
     animations_enabled: bool = True
     density_mode: str = 'normal'
     editor_mode: str = 'edit'
+    ui_scale: float = 1.15
     language: str = 'ru'
     active_view_tab: str = 'editor'
     reset_layout_version: int = 4
@@ -135,8 +136,16 @@ class ProjectConfigService:
 
     def build_recipe_scan_paths(self, config: Optional[ProjectPathsConfig] = None) -> list[str]:
         current = self.normalize(config or self.load())
-        candidates = [current.scripts_dir, *current.extra_recipe_sources]
-        return [value for value in candidates if value]
+        candidates = [current.scripts_dir, *self.build_extra_recipe_scan_paths(current)]
+        return self._dedupe_paths([value for value in candidates if value])
+
+    def build_extra_recipe_scan_paths(self, config: Optional[ProjectPathsConfig] = None) -> list[str]:
+        current = self.normalize(config or self.load())
+        candidates = [*current.extra_recipe_sources]
+        local_recipes_dir = self.config_path.resolve(strict=False).parent / 'Recipes'
+        if local_recipes_dir.exists():
+            candidates.append(str(local_recipes_dir))
+        return self._dedupe_paths([value for value in candidates if value])
 
     def normalize(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
         ui_preferences = self._coerce_ui_preferences(asdict(config.ui_preferences) if isinstance(config.ui_preferences, UiPreferencesConfig) else config.ui_preferences)
@@ -176,6 +185,20 @@ class ProjectConfigService:
             values = []
         return [value for value in values if value]
 
+    def _dedupe_paths(self, values: list[str]) -> list[str]:
+        result: list[str] = []
+        seen: set[str] = set()
+        for value in values:
+            try:
+                key = str(Path(value).resolve(strict=False)).lower()
+            except Exception:
+                key = value.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append(value)
+        return result
+
     def _coerce_ui_preferences(self, raw: Any) -> UiPreferencesConfig:
         payload = raw if isinstance(raw, dict) else {}
         return UiPreferencesConfig(
@@ -183,6 +206,7 @@ class ProjectConfigService:
             animations_enabled=bool(payload.get('animations_enabled', True)),
             density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
+            ui_scale=float(payload.get('ui_scale', 1.15) or 1.15),
             language=str(payload.get('language', 'ru') or 'ru'),
             active_view_tab=str(payload.get('active_view_tab', 'editor') or 'editor'),
             reset_layout_version=int(payload.get('reset_layout_version', 4) or 4),

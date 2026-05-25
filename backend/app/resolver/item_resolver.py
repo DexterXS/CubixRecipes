@@ -5,12 +5,14 @@ from typing import Any, Optional
 
 from app.domain.models import ItemRef, ResolutionResult
 from app.indexer.asset_index import AssetIndex
+from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 
 
 class ItemResolver:
-    def __init__(self, asset_index: AssetIndex, log_service: Optional[Any] = None):
+    def __init__(self, asset_index: AssetIndex, log_service: Optional[Any] = None, itempanel_icon_catalog: Optional[ItemPanelIconCatalog] = None):
         self.asset_index = asset_index
         self.log_service = log_service
+        self.itempanel_icon_catalog = itempanel_icon_catalog
         self.last_resolution_details: dict[str, dict] = {}
 
     def resolve(self, item_ref: ItemRef, settings: Optional[dict] = None) -> ResolutionResult:
@@ -21,6 +23,7 @@ class ItemResolver:
         checked_sources: list[str] = list(dict.fromkeys(self.asset_index.last_scan_report.get('indexed_paths', [])))
         strategies = [
             self._manual_override,
+            self._itempanel_icon_catalog,
             self._contenttweaker_exact,
             self._avaritia_meta_mapping,
             self._textures_exact,
@@ -263,6 +266,21 @@ class ItemResolver:
             return None
         override = overrides[item_ref.raw]
         return ResolutionResult(item_raw=item_ref.raw, display_name=override.get('display_name'), icon_asset_id=override.get('icon_asset_id'), icon_url=override.get('icon_url'), animated=False, animation_meta=override.get('animation_meta'), confidence=0.99, strategy='manual_override', trace=list(trace))
+
+    def _itempanel_icon_catalog(self, item_ref, key, settings, trace, checked_keys, checked_sources):
+        if self.itempanel_icon_catalog is None:
+            trace.append({'strategy': 'itempanel_icon_catalog', 'skipped': 'catalog_unavailable'})
+            return None
+        result = self.itempanel_icon_catalog.resolve(item_ref)
+        if result is None:
+            trace.append({'strategy': 'itempanel_icon_catalog', 'matched': None})
+            return None
+        trace.extend(result.trace)
+        checked_sources.append(str(self.itempanel_icon_catalog.icons_dir))
+        if result.icon_url is None:
+            return None
+        result.trace = list(trace)
+        return result
 
     def _lookup_lang_value(self, lang_keys: list[str], locale: str) -> Optional[str]:
         if not lang_keys:

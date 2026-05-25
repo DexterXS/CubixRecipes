@@ -1,20 +1,28 @@
 # save-recipe-safe
 
 ## When to use
-- Use this skill when the task directly involves save recipe safe workflows in CubixRecipes.
+- Use this skill when changing recipe save, save-as, file creation, write roots, or `.zs` source replacement.
+
+## Required context
+- Read `AGENTS.md`.
+- Read `backend/app/storage/zs_storage.py`.
+- Read save-related API schemas/routes/tests.
 
 ## Steps
-1. Read AGENTS.md and relevant module files.
-2. Update or add the minimal modular components required for the workflow.
-3. Add or adjust tests and docs impacted by the change.
-4. Record any new follow-up in project memory sections when needed.
+1. Confirm the target path is inside allowed recipe roots.
+2. Preserve source offsets or rebuild the affected file index safely.
+3. Avoid full rescans unless the change explicitly requires them.
+4. Keep rendered `.zs` syntax stable.
+5. Add tests for allowed writes, rejected writes, and post-save lookup behavior.
+6. Update the optimization roadmap if save performance changes.
 
 ## Common mistakes
-- Editing multiple layers in one file instead of preserving module boundaries.
-- Forgetting to update tests, changelog, or skills after the workflow changes.
-- Missing Russian-facing documentation when behavior changes.
+- Trusting a frontend path without backend validation.
+- Replacing the wrong recipe block after offsets changed.
+- Full rescanning every source after a single-file edit without measuring cost.
+- Losing the newly saved recipe uid.
 
 ## Done criteria
-- Code is modular and covered by focused tests.
-- Documentation/changelog are updated.
-- The workflow can be reused for the next similar task.
+- Writes are path-safe.
+- Updated recipes remain searchable.
+- Tests cover success and rejection paths.

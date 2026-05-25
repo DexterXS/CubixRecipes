@@ -16,6 +16,7 @@ from app.debug.debug_service import DebugService
 from app.debug.log_service import DebugLogService
 from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
+from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
 from app.services.recipe_service import RecipeService
@@ -86,6 +87,17 @@ def _log_api(log_service: DebugLogService, method: str, path: str, payload: dict
     log_service.log('API', level, 'API', f'{method} {path} -> {status}', details, verbose_only=(level == 'INFO'))
 
 
+def _project_root_for_catalog(config_service: ProjectConfigService) -> Path:
+    config_root = config_service.config_path.resolve(strict=False).parent
+    if (config_root / 'itempanel.csv').is_file() or (config_root / 'itempanel_icons').is_dir():
+        return config_root
+    return Path(__file__).resolve().parents[3]
+
+
+def _has_itempanel_icon_catalog(catalog: ItemPanelIconCatalog) -> bool:
+    return bool(catalog.last_scan_report.get('matched', 0))
+
+
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
     parser = RecipeParser()
     config_service = ProjectConfigService(Path(config_path) if config_path else None)
@@ -101,11 +113,14 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     debug_service = DebugService(config_service)
     active_scripts_dir = scripts_dir if scripts_dir != 'scripts' else config.scripts_dir
     storage = ZsStorage(active_scripts_dir, log_service=log_service)
-    storage.scan(extra_paths=config.extra_recipe_sources)
+    storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(config))
     asset_index = AssetIndex(log_service=log_service)
-    resolver = ItemResolver(asset_index, log_service=log_service)
+    project_root = _project_root_for_catalog(config_service)
+    itempanel_icon_catalog = ItemPanelIconCatalog(project_root / 'itempanel.csv', project_root / 'itempanel_icons')
+    itempanel_icon_catalog.scan()
+    resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
     index_paths = config_service.build_index_paths(config)
-    if index_paths:
+    if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
         asset_index.scan_paths(index_paths)
     debug_service.update_config(config, used_recipe_paths=config_service.build_recipe_scan_paths(config), used_asset_paths=index_paths)
     debug_service.record_recipe_scan(storage.last_scan_report)
@@ -120,6 +135,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         'final_recipe_scan_paths': config_service.build_recipe_scan_paths(config),
         'scripts_dir': active_scripts_dir,
         'verbose_debug_logging': config.verbose_debug_logging,
+        'itempanel_icon_catalog': itempanel_icon_catalog.last_scan_report,
     })
 
     router = APIRouter(prefix='/api')
@@ -279,6 +295,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         _log_api(log_service, 'POST', '/api/items/resolve', {'item_raw': request.item_raw}, '200', started_at, {'strategy': result.strategy, 'icon_asset_id': result.icon_asset_id})
         return result.__dict__
 
+    @router.get('/itempanel/atlas')
+    def itempanel_atlas_manifest():
+        return itempanel_icon_catalog.get_atlas_manifest()
+
+    @router.get('/itempanel/atlas.png')
+    def itempanel_atlas_png():
+        content = itempanel_icon_catalog.read_atlas_png()
+        if content is None:
+            raise HTTPException(status_code=404, detail='Itempanel atlas is not available')
+        return Response(content=content, media_type='image/png')
+
     @router.get('/settings/project')
     def get_project_settings():
         current = config_service.load()
@@ -291,10 +318,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         updated = config_service.update(request.model_dump())
         log_service.set_verbose(updated.verbose_debug_logging)
         storage.scripts_dir = Path(updated.scripts_dir)
-        storage.scan(extra_paths=updated.extra_recipe_sources)
+        storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(updated))
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)
-        if index_paths:
+        if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
             asset_index.scan_paths(index_paths)
         debug_service.update_config(updated, used_recipe_paths=config_service.build_recipe_scan_paths(updated), used_asset_paths=index_paths)
         debug_service.record_recipe_scan(storage.last_scan_report)
@@ -403,6 +430,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.get('/icons/{icon_asset_id:path}')
     def icon_proxy(icon_asset_id: str):
         icon_asset_id = unquote(icon_asset_id)
+        itempanel_content = itempanel_icon_catalog.read_icon(icon_asset_id)
+        if itempanel_content is not None:
+            return Response(content=itempanel_content, media_type='image/png')
         candidate = asset_index.icon_assets.get(icon_asset_id)
         if candidate is None:
             parsed = asset_index.parse_asset_id(icon_asset_id)

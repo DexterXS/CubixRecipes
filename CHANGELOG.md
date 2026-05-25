@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 ### Fixed
+- Fixed recipe builder slot atlas previews after NEI insertion: craft-grid atlas sprites now keep a real `32x32` source box, scale visually instead of collapsing to zero height, and hover/drop layers cover the whole slot.
+- Fixed wildcard-meta item previews in recipe cells and output slots so raws like `<mod:item:*>` use the first matching itempanel atlas sprite instead of showing a `?`.
+- Restored the main PySide `admin_panel.py` / `CubixRecipes_Admin.exe` control panel and added a `Rebuild Atlas` action with progress/status there.
+- Added NEI painting controls for the recipe grid: clicking outside cells drops the held cursor item, left-dragging with a held item fills crossed cells, and right-dragging with an empty cursor clears crossed cells.
+- Added NEI recipe lookup with the `R` key: hovering an item opens the matching recipe from the local `Recipes` folder, and the normal save action writes it back through the same loaded recipe source.
+- Hardened the PySide admin panel port handling: backend startup now uses a real bind-test for `127.0.0.1:8000`, distinguishes `API: OCCUPIED` from panel-owned `API: ONLINE`, resolves the project root correctly from onedir builds, and only reports port cleanup success after the port is actually reusable.
+- Stopped the admin panel from polling `/health` forever; API checks now run only as a short backend readiness probe and stop after the first `200 OK` or a startup timeout, avoiding continuous `TIME_WAIT` growth.
+- Reworked the recipe craft grid into a Minecraft-style grey slot board, limited recipe builder sizes to `3x3` and `9x9`, and wired grid/output cells to render itempanel atlas icons directly.
+- Added a generated static itempanel atlas fallback in `frontend/public`, removed the atlas builder's Pillow dependency, fixed NEI wheel paging to use a non-passive listener, and deduplicated itempanel entries to stop React duplicate-key warnings.
+- Fixed the PySide admin panel controls: start/stop buttons now follow `QProcess` state, stop requests terminate child process trees, backend reload is opt-in, and panel restart uses a detached launch to avoid PyInstaller `_MEI` runtime errors.
+- Added lazy itempanel icon atlas generation (`/api/itempanel/atlas` + `/api/itempanel/atlas.png`) and switched the NEI item panel to render atlas slices instead of issuing one image request per visible item.
+- Added NEI-style paging to the right item panel: dense icon pages now show a page counter, next/previous controls, and mouse-wheel page switching while keeping search scoped and resetting to page 1 on new queries.
+- Reworked the frontend workspace around top-level tabs (`Редактор`, `Рецепт`, `Предметы`, `Отладка`), moved texture-cache controls into the `Предметы` tab, reduced header button clutter, and added a persisted dark/light theme toggle.
+- Simplified the editor tools panel to only save actions (`Сохранить`, `Сохранить как`); parsing now relies on the existing automatic parse flow for pasted/edited recipes.
+- Rebuilt the frontend workspace into a fixed three-column layout and removed dynamic panel drag/drop, drop targets, and resize handles while keeping panel visibility controls and modal workflows.
+- Added `itempanel_icons`/NEI dump support as the primary icon source: backend now resolves item icons through `itempanel.csv` display names first, filters broken dump icons, and skips the heavy asset scan during startup when the catalog is available.
+- Optimized backend asset indexing by skipping irrelevant files before reading bytes and registering texture PNGs from their paths/locators without loading binary content during scans.
+- Optimized recipe saves so `save_existing` and `save_as` rescan only the changed `.zs` file instead of all configured recipe sources.
 - Resolver now applies Avaritia-specific meta mapping for `Resource`, `Resource_Block`, and `Singularity`: meta is mapped to internal subtype texture keys (including shared `singularity` textures) and localized singularity names are taken from lang keys like `item.singularity_<type>.name`.
 - Fixed animated sprite previews when UI animation is disabled: animated textures now render their first frame as a static preview instead of disappearing.
 - Fixed grid icon refresh after inline cell edits: clearing a cell now removes stale icons immediately, and pasting a known item raw restores its icon preview without requiring a full re-parse.
