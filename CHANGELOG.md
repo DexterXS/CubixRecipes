@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Improved Railway auth configuration detection: backend now accepts common Postgres URL aliases and lets CORS preflight requests pass before auth checks.
+- Fixed cross-domain Railway auth sessions by using `SameSite=None; Secure` cookies when `FRONTEND_PUBLIC_URL` and `APP_PUBLIC_URL` point to different hosts.
 - Fixed separate Railway frontend/backend deployments by allowing absolute `VITE_API_BASE` values and enabling credentialed CORS from `FRONTEND_PUBLIC_URL`.
 - Added mandatory Google account authentication backed by PostgreSQL users, with `admin`/`moderator`/`default` roles and immutable root-admin protection for `root.user76@gmail.com`.
 - Added `backend/requirements.txt` for Railpack-style backend deploys so `fastapi`, `pydantic`, and `uvicorn` are installed before the container runs `uvicorn`.

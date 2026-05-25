@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
+from urllib.parse import urlparse
 from urllib.parse import unquote
 from zipfile import ZipFile
 
@@ -161,6 +162,17 @@ def _cors_origins() -> list[str]:
             if origin and origin not in origins:
                 origins.append(origin)
     return origins
+
+
+def _cookie_same_site() -> str:
+    configured = os.environ.get('AUTH_COOKIE_SAMESITE', '').strip().lower()
+    if configured in {'lax', 'strict', 'none'}:
+        return configured
+    frontend_url = os.environ.get('FRONTEND_PUBLIC_URL', '').strip()
+    app_url = os.environ.get('APP_PUBLIC_URL', '').strip()
+    if frontend_url and app_url and urlparse(frontend_url).netloc != urlparse(app_url).netloc:
+        return 'none'
+    return 'lax'
 
 
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
@@ -598,18 +610,12 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     app = FastAPI(title='CubixRecipes API')
     cors_origins = _cors_origins()
-    if cors_origins:
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=cors_origins,
-            allow_credentials=True,
-            allow_methods=['*'],
-            allow_headers=['*'],
-        )
 
     @app.middleware('http')
     async def require_authenticated_api(request: Request, call_next):
         path = request.url.path
+        if request.method.upper() == 'OPTIONS':
+            return await call_next(request)
         if not path.startswith('/api') or _is_public_api_path(path):
             return await call_next(request)
         if not auth_service.is_configured:
@@ -643,9 +649,23 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             SessionMiddleware = None  # type: ignore[assignment]
         app_public_url = os.environ.get('APP_PUBLIC_URL', '').strip().lower()
         cookie_secure = os.environ.get('AUTH_COOKIE_SECURE', '').strip().lower()
-        https_only = cookie_secure in {'1', 'true', 'yes', 'on'} or (not cookie_secure and app_public_url.startswith('https://'))
+        same_site = _cookie_same_site()
+        https_only = (
+            same_site == 'none'
+            or cookie_secure in {'1', 'true', 'yes', 'on'}
+            or (not cookie_secure and app_public_url.startswith('https://'))
+        )
         if SessionMiddleware is not None:
-            app.add_middleware(SessionMiddleware, secret_key=session_secret, same_site='lax', https_only=https_only)
+            app.add_middleware(SessionMiddleware, secret_key=session_secret, same_site=same_site, https_only=https_only)
+
+    if cors_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=cors_origins,
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*'],
+        )
 
     @app.get('/health')
     def health_check():
