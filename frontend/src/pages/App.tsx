@@ -6,9 +6,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getItemPanelAtlas, getProjectSettings, parseText, resolveItemRaw, saveRecipeAs, searchRecipesByOutput, updateProjectUiPreferences, updateRecipe } from '../services/api';
+import { createRecipeTemplate, getItemPanelAtlas, getProjectSettings, listUsers, parseText, resolveItemRaw, saveRecipeAs, searchRecipesByOutput, updateProjectUiPreferences, updateRecipe, updateUserRole } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, WorkspaceLayout } from '../types';
+import { can } from '../auth/permissions';
+import { AppTab, AuthUser, CellValue, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -108,6 +109,11 @@ type NbtScalarNode = { kind: 'scalar'; value: string; scalarType: NbtScalarType 
 type NbtListNode = { kind: 'list'; items: NbtNode[] };
 type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
 type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
+
+interface AppProps {
+  authUser: AuthUser;
+  onLogout: () => Promise<void>;
+}
 
 function itemPanelEntryIdentity(entry: ItemPanelEntry): string {
   return `${entry.key}:${entry.meta}`;
@@ -459,7 +465,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   };
 }
 
-export default function App() {
+export default function App({ authUser, onLogout }: AppProps) {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
   const [status, setStatus] = useState('Р“РѕС‚РѕРІРѕ');
@@ -503,6 +509,8 @@ export default function App() {
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
   const [hoveredNeiRaw, setHoveredNeiRaw] = useState<string | null>(null);
+  const [adminUsers, setAdminUsers] = useState<AuthUser[]>([]);
+  const [adminUsersStatus, setAdminUsersStatus] = useState('');
   const [cursorPoint, setCursorPoint] = useState({ x: 0, y: 0 });
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
@@ -533,10 +541,46 @@ export default function App() {
   const workspaceTabLabels: Record<WorkspaceTab, string> = uiPreferences.language === 'ru'
     ? { editor: 'Создать рецепт', recipe: 'Рецепты', items: 'Предметы', debug: 'Отладка' }
     : { editor: 'Create Recipe', recipe: 'Recipes', items: 'Items', debug: 'Debug' };
+  const canEditRecipes = can(authUser, 'recipes:edit');
+  const canCreateTemplates = can(authUser, 'templates:create');
+  const canManageSettings = can(authUser, 'settings:manage');
+  const canManageRoles = can(authUser, 'roles:manage');
+
+  async function refreshAdminUsers() {
+    if (!canManageRoles) return;
+    setAdminUsersStatus('Loading users...');
+    try {
+      const payload = await listUsers();
+      setAdminUsers(payload.users);
+      setAdminUsersStatus(`Users: ${payload.users.length}`);
+    } catch (error) {
+      setAdminUsersStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function changeAdminUserRole(userId: number, role: UserRole) {
+    setAdminUsersStatus('Saving role...');
+    try {
+      const payload = await updateUserRole(userId, role);
+      setAdminUsers((current) => current.map((user) => user.id === payload.user.id ? payload.user : user));
+      setAdminUsersStatus('Role saved');
+    } catch (error) {
+      setAdminUsersStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
 
   useEffect(() => {
     document.documentElement.dataset.theme = uiPreferences.theme_mode;
   }, [uiPreferences.theme_mode]);
+
+  useEffect(() => {
+    if (canManageRoles) {
+      void refreshAdminUsers();
+    } else {
+      setAdminUsers([]);
+      setAdminUsersStatus('');
+    }
+  }, [canManageRoles]);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -1726,7 +1770,7 @@ export default function App() {
                 atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
                 displayMode={uiPreferences.display_mode}
                 animationsEnabled={areAnimationsEnabled}
-                editorMode={uiPreferences.editor_mode}
+                editorMode={(canCreateTemplates || canEditRecipes) ? uiPreferences.editor_mode : 'view'}
                 heldItemRaw={heldItemRaw}
                 resolveCellTitle={resolveCellTitle}
                 onCellClick={handleCraftCellClick}
@@ -1740,14 +1784,20 @@ export default function App() {
               <button
                 type="button"
                 className="output-icon-slot output-icon-button craft-output-slot"
+                disabled={!canCreateTemplates && !canEditRecipes}
                 onClick={handleCraftOutputClick}
                 onContextMenu={(event) => {
                   event.preventDefault();
                   setCellRaw({ kind: 'output' }, '');
                 }}
-                onDragOver={(event) => event.preventDefault()}
+                onDragOver={(event) => {
+                  if (canCreateTemplates || canEditRecipes) {
+                    event.preventDefault();
+                  }
+                }}
                 onDrop={(event) => {
                   event.preventDefault();
+                  if (!canCreateTemplates && !canEditRecipes) return;
                   handleRecipeItemDrop({ kind: 'output' }, event.dataTransfer.getData('text/plain'));
                 }}
                 title={outputDisplayName ?? outputRaw}
@@ -1890,6 +1940,41 @@ export default function App() {
     );
   }
 
+  function renderAdminUsersPanel() {
+    if (!canManageRoles) return null;
+    return (
+      <div className="workspace-panel-shell panel-admin-users">
+        <Panel title="Users" subtitle="Roles and access">
+          <div className="admin-users-toolbar">
+            <button type="button" className="secondary-button" onClick={() => void refreshAdminUsers()}>Refresh</button>
+            <span>{adminUsersStatus}</span>
+          </div>
+          <div className="admin-users-list">
+            {adminUsers.map((user) => (
+              <div key={user.id} className="admin-user-row">
+                <div className="user-chip" title={user.email}>
+                  {user.avatar_url ? <img src={user.avatar_url} alt="" /> : null}
+                  <span>{user.email}</span>
+                  {user.is_root_admin ? <strong>root</strong> : null}
+                </div>
+                <select
+                  aria-label={`role-${user.email}`}
+                  value={user.role}
+                  disabled={user.is_root_admin}
+                  onChange={(event) => void changeAdminUserRole(user.id, event.target.value as UserRole)}
+                >
+                  <option value="default">default</option>
+                  <option value="moderator">moderator</option>
+                  <option value="admin">admin</option>
+                </select>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      </div>
+    );
+  }
+
   function renderWorkspace() {
     if (workspaceTab === 'items') {
       return (
@@ -1918,7 +2003,10 @@ export default function App() {
         <div className="workspace-layout workspace-layout-debug">
           {renderColumn([getPanelForTab('settings'), getPanelForTab('statusBar')], 'workspace-left')}
           {renderColumn([getPanelForTab('diagnostics'), getPanelForTab('debug')], 'workspace-center')}
-          {renderColumn([getPanelForTab('raw'), getPanelForTab('info')], 'workspace-right')}
+          <div className="workspace-column workspace-right">
+            {renderAdminUsersPanel()}
+            {renderColumn([getPanelForTab('raw'), getPanelForTab('info')], '')}
+          </div>
         </div>
       );
     }
@@ -1972,6 +2060,7 @@ export default function App() {
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
                 labels={{ save: t('toolbar.save'), saveAs: t('toolbar.saveAs') }}
+                canSave={canEditRecipes}
                 onSave={() => void handleSave()}
                 onSaveAs={() => void handleSaveAs()}
               />
@@ -1985,11 +2074,11 @@ export default function App() {
               <div className="field-header">
                 <span>{t('fields.sourceText')}</span>
                 <div className="inline-actions">
-                  <button type="button" className="secondary-button" onClick={() => void handlePasteFromClipboard()}>{t('toolbar.paste')}</button>
-                  <button type="button" className="ghost-button" onClick={() => setInput('')}>{t('toolbar.clear')}</button>
+                  <button type="button" className="secondary-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => void handlePasteFromClipboard()}>{t('toolbar.paste')}</button>
+                  <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => setInput('')}>{t('toolbar.clear')}</button>
                 </div>
               </div>
-              <textarea aria-label="paste-input" value={input} onChange={handleInputChange} onPaste={handleInputPaste} />
+              <textarea aria-label="paste-input" value={input} readOnly={!canCreateTemplates && !canEditRecipes} onChange={handleInputChange} onPaste={handleInputPaste} />
               <div className={`inline-status inline-status-${inputStatusTone}`}>
                 <strong>{t('status.status')}:</strong>
                 <span>{status}</span>
@@ -2098,12 +2187,17 @@ export default function App() {
           ))}
         </nav>
         <div className="utility-actions">
-          <label className="ui-scale-switch compact-switch"><span>Масштаб</span><select aria-label="ui-scale" value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}><option value={1}>100%</option><option value={1.15}>115%</option><option value={1.3}>130%</option><option value={1.5}>150%</option></select></label>
-          <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
-          <button type="button" className="theme-toggle" aria-label={uiPreferences.theme_mode === 'dark' ? 'Светлая тема' : 'Темная тема'} onClick={() => patchUiPreferences({ theme_mode: uiPreferences.theme_mode === 'dark' ? 'light' : 'dark' })}>
+          <div className="user-chip" title={authUser.email}>
+            {authUser.avatar_url ? <img src={authUser.avatar_url} alt="" /> : null}
+            <span>{authUser.email}</span>
+            <strong>{authUser.role}</strong>
+          </div>
+          <label className="ui-scale-switch compact-switch"><span>Масштаб</span><select aria-label="ui-scale" disabled={!canManageSettings} value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}><option value={1}>100%</option><option value={1.15}>115%</option><option value={1.3}>130%</option><option value={1.5}>150%</option></select></label>
+          <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} disabled={!canManageSettings} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <button type="button" className="theme-toggle" disabled={!canManageSettings} aria-label={uiPreferences.theme_mode === 'dark' ? 'Светлая тема' : 'Темная тема'} onClick={() => patchUiPreferences({ theme_mode: uiPreferences.theme_mode === 'dark' ? 'light' : 'dark' })}>
             <span aria-hidden="true">{uiPreferences.theme_mode === 'dark' ? '☀' : '☾'}</span>
           </button>
-          <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
+          <button type="button" className="secondary-button" disabled={!canManageSettings} onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
           <div className="view-menu-wrap">
             <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
             {isViewMenuOpen ? (
@@ -2129,6 +2223,7 @@ export default function App() {
               </div>
             ) : null}
           </div>
+          <button type="button" className="ghost-button" onClick={() => void onLogout()}>Logout</button>
         </div>
       </div>
 

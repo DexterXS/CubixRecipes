@@ -97,3 +97,24 @@ export interface ItemPanelAtlas {
   rows: number;
   entries: Record<string, ItemPanelAtlasEntry>;
 }
+
+export type UserRole = 'admin' | 'moderator' | 'default';
+
+export interface AuthUser {
+  id: number;
+  email: string;
+  name?: string | null;
+  avatar_url?: string | null;
+  role: UserRole;
+  is_root_admin: boolean;
+  created_at?: string | null;
+  last_login_at?: string | null;
+}
+
+export interface AuthMeResponse {
+  authenticated: boolean;
+  auth_configured: boolean;
+  root_admin_email: string;
+  configuration_error?: string | null;
+  user: AuthUser | null;
+}

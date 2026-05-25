@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences } from '../types';
+import { AuthMeResponse, AuthUser, ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences, UserRole } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -46,7 +46,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   let response: Response;
   try {
-    response = await fetch(path, init);
+    response = await fetch(path, { credentials: 'include', ...init });
   } catch (error) {
     const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
     const message = buildBackendUnavailableMessage(path);
@@ -173,4 +173,28 @@ export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
     // Fall back to backend-generated atlas below.
   }
   return request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
+}
+
+export async function getCurrentUser(): Promise<AuthMeResponse> {
+  return request<AuthMeResponse>(apiPath('/auth/me'));
+}
+
+export function getGoogleLoginUrl(): string {
+  return apiPath('/auth/google/start');
+}
+
+export async function logoutCurrentUser(): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>(apiPath('/auth/logout'), { method: 'POST' });
+}
+
+export async function listUsers(): Promise<{ users: AuthUser[] }> {
+  return request<{ users: AuthUser[] }>(apiPath('/admin/users'));
+}
+
+export async function updateUserRole(userId: number, role: UserRole): Promise<{ ok: boolean; user: AuthUser }> {
+  return request<{ ok: boolean; user: AuthUser }>(apiPath(`/admin/users/${userId}/role`), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ role })
+  });
 }

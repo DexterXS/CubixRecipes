@@ -111,6 +111,10 @@ class ProjectSettingsRequest(BaseModel):
     ui_preferences: UiPreferencesRequest = Field(default_factory=UiPreferencesRequest)
 
 
+class RoleUpdateRequest(BaseModel):
+    role: Literal['admin', 'moderator', 'default']
+
+
 class DebugLogEventRequest(BaseModel):
     source: str = 'FRONTEND'
     level: str = 'INFO'
