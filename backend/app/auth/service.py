@@ -8,6 +8,8 @@ from typing import Any, Callable
 from app.auth.database import UserRecord, build_session_factory, utc_now
 from app.auth.permissions import ROOT_ADMIN_EMAIL, is_root_admin_email, normalize_email, normalize_role
 
+DATABASE_ENV_KEYS = ('DATABASE_URL', 'DATABASE_PRIVATE_URL', 'POSTGRES_URL', 'POSTGRES_DATABASE_URL')
+
 
 @dataclass(frozen=True)
 class PublicUser:
@@ -35,17 +37,29 @@ class PublicUser:
 
 class AuthService:
     def __init__(self, database_url: str | None = None, root_admin_email: str = ROOT_ADMIN_EMAIL):
-        self.database_url = (database_url or os.environ.get('DATABASE_URL') or '').strip()
+        self.database_url, self.database_env_key = self._resolve_database_url(database_url)
         self.root_admin_email = normalize_email(root_admin_email)
         self._session_factory: Callable[[], Any] | None = None
         self.configuration_error: str | None = None
         if not self.database_url:
-            self.configuration_error = 'DATABASE_URL is required for authentication'
+            self.configuration_error = f'One of {", ".join(DATABASE_ENV_KEYS)} is required for authentication'
+        elif self.database_url.startswith('${{'):
+            self.configuration_error = f'{self.database_env_key} is not resolved by the platform'
         else:
             try:
                 self._session_factory = build_session_factory(self.database_url)
             except Exception as exc:
                 self.configuration_error = str(exc)
+
+    def _resolve_database_url(self, database_url: str | None) -> tuple[str, str | None]:
+        explicit = (database_url or '').strip()
+        if explicit:
+            return explicit, 'explicit'
+        for key in DATABASE_ENV_KEYS:
+            value = os.environ.get(key, '').strip()
+            if value:
+                return value, key
+        return '', None
 
     @property
     def is_configured(self) -> bool:
@@ -56,6 +70,8 @@ class AuthService:
             'auth_configured': self.is_configured,
             'root_admin_email': self.root_admin_email,
             'configuration_error': self.configuration_error,
+            'database_env_key': self.database_env_key,
+            'database_env_present': bool(self.database_url),
         }
 
     def _require_session_factory(self):

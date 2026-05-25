@@ -614,6 +614,8 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @app.middleware('http')
     async def require_authenticated_api(request: Request, call_next):
         path = request.url.path
+        if request.method.upper() == 'OPTIONS':
+            return await call_next(request)
         if not path.startswith('/api') or _is_public_api_path(path):
             return await call_next(request)
         if not auth_service.is_configured:
