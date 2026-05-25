@@ -50,6 +50,7 @@ AUTH_SESSION_SECRET=...
 APP_PUBLIC_URL=https://your-backend.example
 FRONTEND_PUBLIC_URL=https://your-frontend.example
 ROOT_ADMIN_EMAIL=root.user76@gmail.com
+AUTH_COOKIE_SAMESITE=none
 ```
 
 If frontend and backend are separate Railway services, set the frontend build variable too:
