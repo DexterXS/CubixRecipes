@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
 from urllib.parse import unquote
 from zipfile import ZipFile
 
-from fastapi import APIRouter, FastAPI, HTTPException, Response
-from fastapi.responses import PlainTextResponse
+from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
+from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.auth.permissions import permission_for_request, role_has_permission
+from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
 from app.debug.debug_service import DebugService
 from app.debug.log_service import DebugLogService
@@ -98,6 +101,53 @@ def _has_itempanel_icon_catalog(catalog: ItemPanelIconCatalog) -> bool:
     return bool(catalog.last_scan_report.get('matched', 0))
 
 
+def _frontend_redirect_url() -> str:
+    return os.environ.get('FRONTEND_PUBLIC_URL', '/').strip() or '/'
+
+
+def _google_redirect_uri(request: Request) -> str:
+    app_public_url = os.environ.get('APP_PUBLIC_URL', '').strip().rstrip('/')
+    if app_public_url:
+        return f'{app_public_url}/api/auth/google/callback'
+    return str(request.url_for('google_auth_callback'))
+
+
+def _get_request_session(request: Request) -> dict:
+    try:
+        return request.session
+    except AssertionError:
+        return {}
+
+
+def _is_public_api_path(path: str) -> bool:
+    return path in {
+        '/api/auth/me',
+        '/api/auth/google/start',
+        '/api/auth/google/callback',
+        '/api/auth/logout',
+    }
+
+
+def _build_google_oauth():
+    client_id = os.environ.get('GOOGLE_CLIENT_ID', '').strip()
+    client_secret = os.environ.get('GOOGLE_CLIENT_SECRET', '').strip()
+    if not client_id or not client_secret:
+        raise HTTPException(status_code=503, detail='GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required')
+    try:
+        from authlib.integrations.starlette_client import OAuth
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail='Authlib is not installed') from exc
+    oauth = OAuth()
+    oauth.register(
+        name='google',
+        client_id=client_id,
+        client_secret=client_secret,
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'},
+    )
+    return oauth
+
+
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
     parser = RecipeParser()
     config_service = ProjectConfigService(Path(config_path) if config_path else None)
@@ -126,6 +176,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     debug_service.record_recipe_scan(storage.last_scan_report)
     debug_service.record_asset_scan(asset_index.last_scan_report)
     service = RecipeService(storage, parser)
+    auth_service = AuthService(root_admin_email=os.environ.get('ROOT_ADMIN_EMAIL', 'root.user76@gmail.com'))
 
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
         'config_file': config.project_config_path,
@@ -139,6 +190,66 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     })
 
     router = APIRouter(prefix='/api')
+
+    @router.get('/auth/me')
+    def auth_me(request: Request):
+        session = _get_request_session(request)
+        user_id = session.get('user_id')
+        if not auth_service.is_configured or not user_id:
+            return {'authenticated': False, 'user': None, **auth_service.public_config()}
+        try:
+            user = auth_service.get_user(int(user_id))
+        except Exception:
+            session.clear()
+            return {'authenticated': False, 'user': None, **auth_service.public_config()}
+        if user is None:
+            session.clear()
+            return {'authenticated': False, 'user': None, **auth_service.public_config()}
+        return {'authenticated': True, 'user': user.as_dict(), **auth_service.public_config()}
+
+    @router.get('/auth/google/start')
+    async def google_auth_start(request: Request):
+        if not auth_service.is_configured:
+            raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
+        oauth = _build_google_oauth()
+        return await oauth.google.authorize_redirect(request, _google_redirect_uri(request))
+
+    @router.get('/auth/google/callback', name='google_auth_callback')
+    async def google_auth_callback(request: Request):
+        if not auth_service.is_configured:
+            raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
+        oauth = _build_google_oauth()
+        token = await oauth.google.authorize_access_token(request)
+        profile = dict(token.get('userinfo') or {})
+        if not profile and token.get('id_token'):
+            profile = dict(await oauth.google.parse_id_token(request, token))
+        if profile.get('email_verified') is False:
+            raise HTTPException(status_code=403, detail='Google account email is not verified')
+        user = auth_service.upsert_google_user(profile)
+        session = _get_request_session(request)
+        session.clear()
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        return RedirectResponse(_frontend_redirect_url())
+
+    @router.post('/auth/logout')
+    def auth_logout(request: Request):
+        _get_request_session(request).clear()
+        return {'ok': True}
+
+    @router.get('/admin/users')
+    def admin_list_users():
+        return {'users': [user.as_dict() for user in auth_service.list_users()]}
+
+    @router.patch('/admin/users/{user_id}/role')
+    def admin_update_user_role(user_id: int, request: RoleUpdateRequest):
+        try:
+            user = auth_service.set_user_role(user_id, request.role)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail='User not found') from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return {'ok': True, 'user': user.as_dict()}
 
     @router.post('/parse')
     def parse_route(request: ParseRequest):
@@ -466,7 +577,51 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=404, detail='Icon binary is unavailable for this asset')
         return Response(content=content, media_type='image/png')
 
+    session_secret = os.environ.get('AUTH_SESSION_SECRET', '').strip()
+    if not session_secret:
+        auth_service.configuration_error = auth_service.configuration_error or 'AUTH_SESSION_SECRET is required for authentication'
+
     app = FastAPI(title='CubixRecipes API')
+
+    @app.middleware('http')
+    async def require_authenticated_api(request: Request, call_next):
+        path = request.url.path
+        if not path.startswith('/api') or _is_public_api_path(path):
+            return await call_next(request)
+        if not auth_service.is_configured:
+            return JSONResponse(
+                {'detail': auth_service.configuration_error or 'Authentication is not configured', **auth_service.public_config()},
+                status_code=503,
+            )
+        session = _get_request_session(request)
+        user_id = session.get('user_id')
+        if user_id is None:
+            return JSONResponse({'detail': 'Authentication required'}, status_code=401)
+        try:
+            user = auth_service.get_user(int(user_id))
+        except Exception:
+            session.clear()
+            return JSONResponse({'detail': 'Authentication required'}, status_code=401)
+        if user is None:
+            session.clear()
+            return JSONResponse({'detail': 'Authentication required'}, status_code=401)
+        permission = permission_for_request(request.method, path)
+        if not role_has_permission(user.role, permission, user.email):
+            return JSONResponse({'detail': 'Forbidden', 'permission': permission}, status_code=403)
+        request.state.auth_user = user.as_dict()
+        return await call_next(request)
+
+    if session_secret:
+        try:
+            from starlette.middleware.sessions import SessionMiddleware
+        except Exception as exc:
+            auth_service.configuration_error = f'itsdangerous is required for session cookies: {exc}'
+            SessionMiddleware = None  # type: ignore[assignment]
+        app_public_url = os.environ.get('APP_PUBLIC_URL', '').strip().lower()
+        cookie_secure = os.environ.get('AUTH_COOKIE_SECURE', '').strip().lower()
+        https_only = cookie_secure in {'1', 'true', 'yes', 'on'} or (not cookie_secure and app_public_url.startswith('https://'))
+        if SessionMiddleware is not None:
+            app.add_middleware(SessionMiddleware, secret_key=session_secret, same_site='lax', https_only=https_only)
 
     @app.get('/health')
     def health_check():

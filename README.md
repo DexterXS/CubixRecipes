@@ -41,6 +41,17 @@ pip install -e .[dev]
 uvicorn app.main:app --reload
 ```
 
+Required auth/deploy env:
+```bash
+DATABASE_URL=postgresql://...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+AUTH_SESSION_SECRET=...
+APP_PUBLIC_URL=https://your-backend.example
+FRONTEND_PUBLIC_URL=https://your-frontend.example
+ROOT_ADMIN_EMAIL=root.user76@gmail.com
+```
+
 ### Frontend
 ```bash
 cd frontend
