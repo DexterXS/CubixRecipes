@@ -9,6 +9,7 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
 from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
@@ -146,6 +147,20 @@ def _build_google_oauth():
         client_kwargs={'scope': 'openid email profile'},
     )
     return oauth
+
+
+def _cors_origins() -> list[str]:
+    raw_values = [
+        os.environ.get('FRONTEND_PUBLIC_URL', ''),
+        os.environ.get('CORS_ALLOWED_ORIGINS', ''),
+    ]
+    origins: list[str] = []
+    for raw_value in raw_values:
+        for value in raw_value.split(','):
+            origin = value.strip().rstrip('/')
+            if origin and origin not in origins:
+                origins.append(origin)
+    return origins
 
 
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
@@ -582,6 +597,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         auth_service.configuration_error = auth_service.configuration_error or 'AUTH_SESSION_SECRET is required for authentication'
 
     app = FastAPI(title='CubixRecipes API')
+    cors_origins = _cors_origins()
+    if cors_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=cors_origins,
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*'],
+        )
 
     @app.middleware('http')
     async def require_authenticated_api(request: Request, call_next):
