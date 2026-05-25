@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Fixed separate Railway frontend/backend deployments by allowing absolute `VITE_API_BASE` values and enabling credentialed CORS from `FRONTEND_PUBLIC_URL`.
 - Added mandatory Google account authentication backed by PostgreSQL users, with `admin`/`moderator`/`default` roles and immutable root-admin protection for `root.user76@gmail.com`.
 - Added `backend/requirements.txt` for Railpack-style backend deploys so `fastapi`, `pydantic`, and `uvicorn` are installed before the container runs `uvicorn`.
 - Fixed recipe builder slot atlas previews after NEI insertion: craft-grid atlas sprites now keep a real `32x32` source box, scale visually instead of collapsing to zero height, and hover/drop layers cover the whole slot.

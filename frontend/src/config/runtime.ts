@@ -6,10 +6,17 @@ function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
 }
 
+function isAbsoluteHttpUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value);
+}
+
 export function getApiBase(): string {
   const configured = import.meta.env.VITE_API_BASE?.trim();
   if (!configured) {
     return DEFAULT_API_BASE;
+  }
+  if (isAbsoluteHttpUrl(configured)) {
+    return trimTrailingSlash(configured);
   }
   return configured.startsWith('/') ? trimTrailingSlash(configured) : `/${trimTrailingSlash(configured)}`;
 }

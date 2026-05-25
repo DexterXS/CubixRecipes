@@ -80,6 +80,19 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(message);
   }
 
+  const contentType = response.headers.get('content-type') ?? '';
+  if (!contentType.toLowerCase().includes('application/json')) {
+    const preview = (await response.text()).slice(0, 120);
+    const message = `API returned non-JSON response for ${path}. Check VITE_API_BASE and backend /api routing. Preview: ${preview}`;
+    logFrontendEvent({
+      level: 'ERROR',
+      category: 'API',
+      message,
+      details: { status: response.status, durationMs, payload: payloadPreview, contentType }
+    });
+    throw new Error(message);
+  }
+
   const data = await response.json() as T;
   logFrontendEvent({
     level: 'INFO',
