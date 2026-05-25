@@ -1,15 +1,14 @@
-import { Fragment, type CSSProperties, type DragEvent, type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionToolbar } from '../components/ActionToolbar';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
-import { TabNav } from '../components/TabNav';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
-import { createTranslator, getHelpItems, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getProjectSettings, parseText, resolveItemRaw, saveRecipeAs, updateProjectUiPreferences, updateRecipe } from '../services/api';
+import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
+import { createRecipeTemplate, getItemPanelAtlas, getProjectSettings, parseText, resolveItemRaw, saveRecipeAs, searchRecipesByOutput, updateProjectUiPreferences, updateRecipe } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
-import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, PanelId, PanelLayoutItem, PanelZone, ProjectSettings, RecipeView, UiLanguage, UiPreferences, WorkspaceLayout } from '../types';
+import { AppTab, CellValue, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -42,23 +41,16 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 ];
 
 const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
-const zoneOrder: PanelZone[] = ['topLeft', 'topRight', 'bottom', 'sidebar'];
-const MIN_HEIGHT = 72;
-const MAX_HEIGHT = 960;
-
-type DropTarget = {
-  zone: PanelZone;
-  index: number;
-} | null;
-
-type ZoneResizeKind = 'topSplit' | 'mainSidebarSplit' | 'topBottomSplit';
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
+type WorkspaceTab = 'editor' | 'recipe' | 'items' | 'debug';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
   animations_enabled: true,
   density_mode: 'normal',
   editor_mode: 'edit',
+  theme_mode: 'dark',
+  ui_scale: 1.15,
   language: 'ru',
   active_view_tab: 'editor',
   reset_layout_version: 4,
@@ -87,6 +79,13 @@ type ItemPanelEntry = {
   displayEn: string;
 };
 
+type ItemPanelModSummary = {
+  modid: string;
+  itemCount: number;
+  loadedCount: number;
+  completionText: string;
+};
+
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
   byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
@@ -97,6 +96,7 @@ type ItemPanelTranslations = {
 };
 const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
+const NEI_PAGE_SIZE = 240;
 
 type CraftEditorTarget =
   | { kind: 'output' }
@@ -109,7 +109,23 @@ type NbtListNode = { kind: 'list'; items: NbtNode[] };
 type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
 type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
 
+function itemPanelEntryIdentity(entry: ItemPanelEntry): string {
+  return `${entry.key}:${entry.meta}`;
+}
+
+function dedupeItemPanelEntries(entries: ItemPanelEntry[]): ItemPanelEntry[] {
+  const unique = new Map<string, ItemPanelEntry>();
+  entries.forEach((entry) => {
+    const identity = itemPanelEntryIdentity(entry);
+    if (!unique.has(identity)) {
+      unique.set(identity, entry);
+    }
+  });
+  return [...unique.values()];
+}
+
 function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallbackToFirstMeta: boolean): ItemPanelTranslations {
+  const uniqueEntries = dedupeItemPanelEntries(entries);
   const byKey = new Map<string, string>();
   const byKeyMeta = new Map<string, Map<number, ItemPanelEntry>>();
   const byDisplayRu = new Map<string, ItemPanelEntry[]>();
@@ -121,7 +137,7 @@ function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallba
     list.push(entry);
     index.set(normalized, list);
   };
-  entries.forEach((entry) => {
+  uniqueEntries.forEach((entry) => {
     pushDisplayIndex(byDisplayRu, entry.displayRu, entry);
     pushDisplayIndex(byDisplayEn, entry.displayEn, entry);
     let metaMap = byKeyMeta.get(entry.key);
@@ -141,7 +157,7 @@ function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallba
     byKeyMeta,
     byDisplayRu,
     byDisplayEn,
-    entries,
+    entries: uniqueEntries,
     fallbackToFirstMeta
   };
 }
@@ -178,6 +194,48 @@ function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
     return base;
   }
   return `${base}.withTag(${normalizedNbt})`;
+}
+
+function normalizeAtlasImageUrl(imageUrl: string): string {
+  if (imageUrl.startsWith('/api/')) {
+    return apiPath(imageUrl.slice(4));
+  }
+  return imageUrl;
+}
+
+function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw: string): ItemPanelAtlasEntry | undefined {
+  const exact = atlas?.entries[raw];
+  if (exact) return exact;
+  const parsed = parseItemRaw(raw);
+  if (!atlas || !parsed) return undefined;
+  const entries = Object.values(atlas.entries);
+  const byKeyMeta = entries.find((entry) => entry.item_key === parsed.key && (entry.meta ?? 0) === (parsed.meta ?? 0));
+  const byKeyZero = entries.find((entry) => entry.item_key === parsed.key && (entry.meta ?? 0) === 0);
+  const firstByKey = entries.find((entry) => entry.item_key === parsed.key);
+  if (parsed.wildcardMeta) {
+    return firstByKey ?? byKeyZero;
+  }
+  return atlas.entries[`<${parsed.key}${(parsed.meta ?? 0) > 0 ? `:${parsed.meta}` : ''}>`]
+    ?? byKeyMeta
+    ?? byKeyZero
+    ?? firstByKey;
+}
+
+function buildAtlasIconStyle(atlas: ItemPanelAtlas, entry: ItemPanelAtlasEntry): CSSProperties {
+  return {
+    backgroundImage: `url(${normalizeAtlasImageUrl(atlas.image_url)})`,
+    backgroundPosition: `-${entry.x}px -${entry.y}px`,
+    backgroundSize: `${atlas.columns * atlas.tile_size}px ${atlas.rows * atlas.tile_size}px`
+  };
+}
+
+function preloadImage(imageUrl: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error(`Failed to load ${imageUrl}`));
+    image.src = imageUrl;
+  });
 }
 
 const nbtScalarTypes: NbtScalarType[] = ['byte', 'short', 'int', 'long', 'float', 'double', 'string', 'byte_array', 'int_array', 'long_array'];
@@ -354,106 +412,45 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(value, max));
 }
 
-function widthToSpan(widthUnits: number, columns: 1 | 2 | 3): number {
-  if (columns === 1) return 12;
-  if (columns === 2) return widthUnits >= 2 ? 12 : 6;
-  return widthUnits === 3 ? 12 : widthUnits === 2 ? 8 : 4;
-}
-
-function normalizePanelOrdersByZone(layout: PanelLayoutItem[]): PanelLayoutItem[] {
-  const byZone = new Map<PanelZone, PanelLayoutItem[]>();
-
-  zoneOrder.forEach((zone) => byZone.set(zone, []));
-
-  layout.forEach((item) => {
-    const zoneItems = byZone.get(item.zone) ?? [];
-    zoneItems.push({ ...item });
-    byZone.set(item.zone, zoneItems);
-  });
-
-  const result: PanelLayoutItem[] = [];
-
-  zoneOrder.forEach((zone) => {
-    const items = (byZone.get(zone) ?? [])
-      .sort((a, b) => a.order - b.order)
-      .map((item, index) => ({
-        ...item,
-        order: index
-      }));
-    result.push(...items);
-  });
-
-  return result;
-}
-
 function normalizePanelLayout(raw?: PanelLayoutItem[] | null): PanelLayoutItem[] {
-  const existing = raw && raw.length ? raw.map((item) => ({ ...item })) : [];
-  const seen = new Set(existing.map((item) => item.id));
-  defaultPanelLayout.forEach((panel) => {
-    if (!seen.has(panel.id)) {
-      existing.push({ ...panel });
-    }
+  const existingById = new Map((raw ?? []).map((item) => [item.id, item]));
+  return defaultPanelLayout.map((panel) => {
+    const existing = existingById.get(panel.id);
+    return {
+      ...panel,
+      visible: existing?.visible ?? panel.visible
+    };
   });
-  return normalizePanelOrdersByZone(existing
-    .map((item, index) => ({
-      id: item.id,
-      zone: item.zone ?? 'bottom',
-      order: Number.isFinite(item.order) ? item.order : index,
-      visible: item.visible !== false,
-      height: typeof item.height === 'number' ? clamp(Math.round(item.height), MIN_HEIGHT, MAX_HEIGHT) : defaultPanelLayout.find((panel) => panel.id === item.id)?.height,
-      width_units: typeof item.width_units === 'number' ? clamp(Math.round(item.width_units), 1, 3) : defaultPanelLayout.find((panel) => panel.id === item.id)?.width_units ?? 1
-    })));
 }
 
-function movePanelToZone(layout: PanelLayoutItem[], draggedPanelId: PanelId, targetZone: PanelZone, targetIndex: number): PanelLayoutItem[] {
-  const dragged = layout.find((item) => item.id === draggedPanelId);
-  if (!dragged) return layout.map((item) => ({ ...item }));
-
-  const withoutDragged = layout
-    .filter((item) => item.id !== draggedPanelId)
-    .map((item) => ({ ...item }));
-
-  const targetZoneItems = withoutDragged
-    .filter((item) => item.zone === targetZone)
-    .sort((a, b) => a.order - b.order);
-
-  const otherItems = withoutDragged.filter((item) => item.zone !== targetZone);
-
-  const nextDragged: PanelLayoutItem = {
-    ...dragged,
-    zone: targetZone
-  };
-
-  const safeIndex = Math.max(0, Math.min(targetIndex, targetZoneItems.length));
-  targetZoneItems.splice(safeIndex, 0, nextDragged);
-
-  return normalizePanelOrdersByZone([...otherItems, ...targetZoneItems]);
-}
-
-function getPanelsForZone(layout: PanelLayoutItem[], zone: PanelZone): PanelLayoutItem[] {
-  return normalizePanelLayout(layout)
-    .filter((panel) => panel.visible && panel.zone === zone)
-    .sort((a, b) => a.order - b.order);
+function getVisiblePanels(layout: PanelLayoutItem[], panelIds: PanelId[]): PanelLayoutItem[] {
+  const normalized = normalizePanelLayout(layout);
+  return panelIds
+    .map((panelId) => normalized.find((panel) => panel.id === panelId))
+    .filter((panel): panel is PanelLayoutItem => Boolean(panel?.visible));
 }
 
 function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout {
   return {
     columns: clamp(Number(raw?.columns ?? 3), 1, 3) as 1 | 2 | 3,
     compact_header: Boolean(raw?.compact_header ?? true),
-    top_split_ratio: clamp(Number(raw?.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68), 0.25, 0.75),
-    main_sidebar_ratio: clamp(Number(raw?.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76), 0.55, 0.9),
-    top_height: clamp(Number(raw?.top_height ?? defaultWorkspaceLayout.top_height ?? 560), 240, 1200),
-    bottom_height: clamp(Number(raw?.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260), 120, 1000)
+    top_split_ratio: defaultWorkspaceLayout.top_split_ratio,
+    main_sidebar_ratio: defaultWorkspaceLayout.main_sidebar_ratio,
+    top_height: defaultWorkspaceLayout.top_height,
+    bottom_height: defaultWorkspaceLayout.bottom_height
   };
 }
 
 function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreferences {
   const source = settings?.ui_preferences;
+  const normalizedScale = clamp(Number(source?.ui_scale ?? 1.15), 1, 1.5);
   return {
     display_mode: (source?.display_mode ?? 'text') as DisplayMode,
     animations_enabled: source?.animations_enabled !== false,
     density_mode: (source?.density_mode ?? 'normal') as DensityMode,
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
+    theme_mode: (source?.theme_mode ?? 'dark') as ThemeMode,
+    ui_scale: ([1, 1.15, 1.3, 1.5].includes(normalizedScale) ? normalizedScale : 1.15) as UiScale,
     language: (source?.language ?? 'ru') as UiLanguage,
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
     reset_layout_version: source?.reset_layout_version ?? 4,
@@ -465,12 +462,11 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
 export default function App() {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
-  const [status, setStatus] = useState('Готово');
+  const [status, setStatus] = useState('Р“РѕС‚РѕРІРѕ');
   const [strictBinding, setStrictBinding] = useState(true);
   const [metaMode, setMetaMode] = useState('strict');
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
@@ -482,15 +478,13 @@ export default function App() {
   const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
   const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
-  const [saveStatus, setSaveStatus] = useState('Не сохранено');
+  const [saveStatus, setSaveStatus] = useState('РќРµ СЃРѕС…СЂР°РЅРµРЅРѕ');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
-  const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
+  const [lastParseResult, setLastParseResult] = useState('Р•С‰С‘ РЅРµ РІС‹РїРѕР»РЅСЏР»СЃСЏ');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
-  const [draggedPanelId, setDraggedPanelId] = useState<PanelId | null>(null);
-  const [dropTarget, setDropTarget] = useState<DropTarget>(null);
-  const [activeZoneResizer, setActiveZoneResizer] = useState<ZoneResizeKind | null>(null);
+  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>('editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
     byKeyMeta: new Map(),
@@ -499,7 +493,17 @@ export default function App() {
     entries: [],
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
+  const [isTextureModsOpen, setIsTextureModsOpen] = useState(false);
+  const [selectedTextureMods, setSelectedTextureMods] = useState<Record<string, boolean>>({});
+  const [textureLoadState, setTextureLoadState] = useState<'idle' | 'running' | 'paused'>('idle');
+  const [textureLoadStatus, setTextureLoadStatus] = useState('');
   const [itemSearchQuery, setItemSearchQuery] = useState('');
+  const [neiSearchQuery, setNeiSearchQuery] = useState('');
+  const [neiPage, setNeiPage] = useState(0);
+  const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
+  const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
+  const [hoveredNeiRaw, setHoveredNeiRaw] = useState<string | null>(null);
+  const [cursorPoint, setCursorPoint] = useState({ x: 0, y: 0 });
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
       const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
@@ -519,17 +523,63 @@ export default function App() {
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
+  const texturePauseRef = useRef(false);
+  const textureCancelRef = useRef(false);
+  const iconRequestRef = useRef<Set<string>>(new Set());
+  const neiListRef = useRef<HTMLDivElement | null>(null);
 
   const t = createTranslator(uiPreferences.language);
   const areAnimationsEnabled = uiPreferences.animations_enabled;
-  const summary = useMemo(() => `${matrix.length}×${matrix[0]?.length ?? 0}`, [matrix]);
+  const workspaceTabLabels: Record<WorkspaceTab, string> = uiPreferences.language === 'ru'
+    ? { editor: 'Создать рецепт', recipe: 'Рецепты', items: 'Предметы', debug: 'Отладка' }
+    : { editor: 'Create Recipe', recipe: 'Recipes', items: 'Items', debug: 'Debug' };
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = uiPreferences.theme_mode;
+  }, [uiPreferences.theme_mode]);
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      setCursorPoint({ x: event.clientX, y: event.clientY });
+    };
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setHeldItemRaw(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== 'r' || event.repeat || !hoveredNeiRaw) {
+        return;
+      }
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+        return;
+      }
+      event.preventDefault();
+      void openRecipeForNeiItem(hoveredNeiRaw);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hoveredNeiRaw]);
+
+  const summary = useMemo(() => `${matrix.length}x${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
   const nullCells = useMemo(() => matrix.flat().filter((cell) => !cell || cell === 'null').length, [matrix]);
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
-  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
+  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('РћС€РёР±РєР°') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
   const matrixWithResolution = useMemo(() => {
     const resolutionByRaw = new Map<string, RecipeView['matrix'][number][number]['resolution']>();
     recipe.matrix.forEach((row) => row.forEach((cell) => {
@@ -543,13 +593,13 @@ export default function App() {
     return matrix.map((row, rowIndex) => row.map((cell, colIndex) => {
       const parsedCell = recipe.matrix[rowIndex]?.[colIndex];
       const directResolution = parsedCell?.raw === cell ? (parsedCell?.resolution ?? null) : null;
-      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? null) : null;
+      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? (itemSearchIcons[cell] ? { item_raw: cell, icon_url: itemSearchIcons[cell], display_name: resolveCellTitle(cell), strategy: 'itempanel_cache' } : null)) : null;
       return {
         raw: cell,
         resolution: directResolution ?? fallbackResolution
       };
     }));
-  }, [matrix, recipe.matrix]);
+  }, [matrix, recipe.matrix, itemSearchIcons, itemPanelTranslations]);
 
   function patchModalScale(key: ModalScaleKey, nextScale: number) {
     setModalScales((current) => ({ ...current, [key]: clamp(nextScale, 0.8, 1.5) }));
@@ -557,6 +607,10 @@ export default function App() {
 
   function getModalScaleStyle(key: ModalScaleKey): CSSProperties {
     return { '--modal-scale': modalScales[key] } as CSSProperties;
+  }
+
+  function getAppShellStyle(): CSSProperties {
+    return { '--ui-scale': uiPreferences.ui_scale } as CSSProperties;
   }
 
   useEffect(() => {
@@ -575,7 +629,7 @@ export default function App() {
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
-        setStatus((current) => current === 'Не удалось загрузить UI-настройки, используются значения по умолчанию.' ? 'Подключение к backend восстановлено, UI-настройки загружены.' : current);
+        setStatus((current) => current === 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ UI-РЅР°СЃС‚СЂРѕР№РєРё, РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.' ? 'РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє backend РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРѕ, UI-РЅР°СЃС‚СЂРѕР№РєРё Р·Р°РіСЂСѓР¶РµРЅС‹.' : current);
         if (settingsRetryTimerRef.current !== null) {
           window.clearTimeout(settingsRetryTimerRef.current);
           settingsRetryTimerRef.current = null;
@@ -585,7 +639,7 @@ export default function App() {
           return;
         }
         setBackendAvailable(false);
-        setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
+        setStatus('РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ UI-РЅР°СЃС‚СЂРѕР№РєРё, РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.');
         if (settingsRetryTimerRef.current === null) {
           settingsRetryTimerRef.current = window.setTimeout(() => {
             settingsRetryTimerRef.current = null;
@@ -674,9 +728,10 @@ export default function App() {
           entries.push(entry);
         });
         if (!cancelled) {
-          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(entries, fallbackToFirstMeta));
+          const uniqueEntries = dedupeItemPanelEntries(entries);
+          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(uniqueEntries, fallbackToFirstMeta));
           try {
-            window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries }));
+            window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries: uniqueEntries }));
           } catch {
             // ignore cache persistence errors
           }
@@ -686,6 +741,30 @@ export default function App() {
       }
     }
     void loadItemPanelTranslations();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const atlas = await getItemPanelAtlas();
+        if (!cancelled && atlas.entries) {
+          if (Object.keys(atlas.entries).length > 0) {
+            await preloadImage(normalizeAtlasImageUrl(atlas.image_url));
+          }
+          if (!cancelled) {
+            setItemPanelAtlas(atlas);
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setItemPanelAtlas(null);
+        }
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -728,15 +807,6 @@ export default function App() {
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
     persistUiPreferences({ ...latestUiPreferencesRef.current, panel_layout: normalizePanelLayout(nextLayout) });
-  }
-
-  function patchWorkspaceLayout(patch: Partial<WorkspaceLayout>) {
-    patchUiPreferences({
-      workspace_layout: normalizeWorkspaceLayout({
-        ...latestUiPreferencesRef.current.workspace_layout,
-        ...patch
-      })
-    });
   }
 
   async function saveCurrentWindowLayout() {
@@ -825,6 +895,41 @@ export default function App() {
     }
     return localized;
   }, [outputRaw, outputDisplayNameFromResolver, itemPanelTranslations]);
+  const itemPanelModSummaries = useMemo<ItemPanelModSummary[]>(() => {
+    const counters = new Map<string, { total: number; loaded: number }>();
+    itemPanelTranslations.entries.forEach((entry) => {
+      const [modid] = entry.key.split(':');
+      if (!modid) return;
+      const raw = buildItemRawValue(entry.key, entry.meta);
+      const stats = counters.get(modid) ?? { total: 0, loaded: 0 };
+      stats.total += 1;
+      if (itemSearchIcons[raw]) {
+        stats.loaded += 1;
+      }
+      counters.set(modid, stats);
+    });
+    return Array.from(counters.entries())
+      .map(([modid, stats]) => {
+        const percent = stats.total > 0 ? Math.round((stats.loaded / stats.total) * 100) : 0;
+        return {
+          modid,
+          itemCount: stats.total,
+          loadedCount: stats.loaded,
+          completionText: `${percent}% (${stats.loaded}/${stats.total})`
+        };
+      })
+      .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
+  }, [itemPanelTranslations.entries, itemSearchIcons]);
+
+  useEffect(() => {
+    setSelectedTextureMods((current) => {
+      const next: Record<string, boolean> = {};
+      itemPanelModSummaries.forEach((summary) => {
+        next[summary.modid] = current[summary.modid] ?? true;
+      });
+      return next;
+    });
+  }, [itemPanelModSummaries]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
@@ -878,13 +983,59 @@ export default function App() {
     return [...unique.values()].slice(0, 20);
   }, [itemSearchQuery, itemPanelTranslations]);
 
+  const filteredNeiItems = useMemo(() => {
+    const query = neiSearchQuery.trim().toLowerCase();
+    return query
+      ? itemPanelTranslations.entries.filter((entry) => (
+        entry.key.includes(query)
+        || entry.displayRu.toLowerCase().includes(query)
+        || entry.displayEn.toLowerCase().includes(query)
+        || String(entry.legacyId ?? '').includes(query)
+      ))
+      : itemPanelTranslations.entries;
+  }, [neiSearchQuery, itemPanelTranslations.entries]);
+
+  const neiPageCount = Math.max(1, Math.ceil(filteredNeiItems.length / NEI_PAGE_SIZE));
+  const neiItems = useMemo(() => {
+    const safePage = clamp(neiPage, 0, neiPageCount - 1);
+    const start = safePage * NEI_PAGE_SIZE;
+    return filteredNeiItems.slice(start, start + NEI_PAGE_SIZE);
+  }, [filteredNeiItems, neiPage, neiPageCount]);
+
+  const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => buildItemRawValue(entry.key, entry.meta)), [neiItems]);
+
+  useEffect(() => {
+    setNeiPage(0);
+  }, [neiSearchQuery]);
+
+  useEffect(() => {
+    setNeiPage((current) => clamp(current, 0, neiPageCount - 1));
+  }, [neiPageCount]);
+
+  useEffect(() => {
+    const element = neiListRef.current;
+    if (!element) {
+      return undefined;
+    }
+    const handleWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) < 20 || neiPageCount <= 1) {
+        return;
+      }
+      event.preventDefault();
+      setNeiPage((current) => clamp(current + (event.deltaY > 0 ? 1 : -1), 0, neiPageCount - 1));
+    };
+    element.addEventListener('wheel', handleWheel, { passive: false });
+    return () => element.removeEventListener('wheel', handleWheel);
+  }, [neiPageCount]);
+
   useEffect(() => {
     const suggestions = itemSearchSuggestions.slice(0, 8);
     suggestions.forEach((entry) => {
       const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
-      if (Object.prototype.hasOwnProperty.call(itemSearchIcons, raw)) {
+      if (itemSearchIcons[raw] || iconRequestRef.current.has(raw)) {
         return;
       }
+      iconRequestRef.current.add(raw);
       void (async () => {
         try {
           const resolved = await resolveItemRaw(raw);
@@ -897,12 +1048,146 @@ export default function App() {
   }, [itemSearchSuggestions, itemSearchIcons]);
 
   useEffect(() => {
+    let cancelled = false;
+    const missing = visibleNeiRawItems.filter((raw) => !itemPanelAtlas?.entries[raw] && !itemSearchIcons[raw] && !iconRequestRef.current.has(raw));
+    if (itemPanelAtlas === undefined) {
+      return;
+    }
+    missing.forEach((raw) => iconRequestRef.current.add(raw));
+
+    async function loadVisibleIcons() {
+      const queue = [...missing];
+      const workerCount = Math.min(12, queue.length);
+      await Promise.all(Array.from({ length: workerCount }, async () => {
+        while (!cancelled && queue.length > 0) {
+          const raw = queue.shift();
+          if (!raw) return;
+          try {
+            const resolved = await resolveItemRaw(raw);
+            if (!cancelled) {
+              setItemSearchIcons((current) => ({ ...current, [raw]: resolved.icon_url ?? null }));
+            }
+          } catch {
+            if (!cancelled) {
+              setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+            }
+          }
+        }
+      }));
+    }
+
+    void loadVisibleIcons();
+    return () => {
+      cancelled = true;
+    };
+  }, [visibleNeiRawItems, itemSearchIcons, itemPanelAtlas]);
+
+  useEffect(() => {
     try {
       window.localStorage.setItem(ITEM_SEARCH_ICON_CACHE_KEY, JSON.stringify(itemSearchIcons));
     } catch {
       // ignore cache persistence errors
     }
   }, [itemSearchIcons]);
+
+  async function waitWhileTextureLoadingPaused() {
+    while (texturePauseRef.current && !textureCancelRef.current) {
+      await new Promise((resolve) => window.setTimeout(resolve, 120));
+    }
+  }
+
+  async function loadSelectedTextures() {
+    if (textureLoadState === 'running') {
+      return;
+    }
+    textureCancelRef.current = false;
+    texturePauseRef.current = false;
+    setTextureLoadState('running');
+    setIsTextureModsOpen(true);
+
+    const selectedMods = new Set(Object.entries(selectedTextureMods).filter(([, checked]) => checked).map(([modid]) => modid));
+    const selectedEntries = itemPanelTranslations.entries.filter((entry) => {
+      const [modid] = entry.key.split(':');
+      return Boolean(modid) && selectedMods.has(modid);
+    });
+    if (!selectedEntries.length) {
+      setTextureLoadStatus(t('textures.noModsSelected'));
+      setTextureLoadState('idle');
+      return;
+    }
+
+    const pending: Array<{ modid: string; raw: string }> = [];
+    const seen = new Set<string>();
+    selectedEntries.forEach((entry) => {
+      const [modid] = entry.key.split(':');
+      if (!modid) return;
+      const raw = buildItemRawValue(entry.key, entry.meta);
+      if (seen.has(raw)) return;
+      seen.add(raw);
+      if (Object.prototype.hasOwnProperty.call(itemSearchIcons, raw)) return;
+      pending.push({ modid, raw });
+    });
+
+    if (!pending.length) {
+      setTextureLoadStatus(t('textures.alreadyLoaded'));
+      setTextureLoadState('idle');
+      return;
+    }
+
+    for (let index = 0; index < pending.length; index += 1) {
+      if (textureCancelRef.current) {
+        setTextureLoadStatus(t('textures.cancelled'));
+        setTextureLoadState('idle');
+        return;
+      }
+      await waitWhileTextureLoadingPaused();
+      if (textureCancelRef.current) {
+        setTextureLoadStatus(t('textures.cancelled'));
+        setTextureLoadState('idle');
+        return;
+      }
+
+      const current = pending[index];
+      setTextureLoadStatus(`${t('textures.loadingMod')} ${current.modid} (${index + 1}/${pending.length})`);
+      try {
+        const resolved = await resolveItemRaw(current.raw);
+        setItemSearchIcons((icons) => ({ ...icons, [current.raw]: resolved.icon_url ?? null }));
+      } catch {
+        setItemSearchIcons((icons) => ({ ...icons, [current.raw]: null }));
+      }
+    }
+    setTextureLoadStatus(t('textures.finished'));
+    setTextureLoadState('idle');
+  }
+
+  function handlePauseTextureLoading() {
+    texturePauseRef.current = true;
+    setTextureLoadState('paused');
+    setTextureLoadStatus(t('textures.paused'));
+  }
+
+  function handleResumeTextureLoading() {
+    texturePauseRef.current = false;
+    setTextureLoadState('running');
+    setTextureLoadStatus(t('textures.resumed'));
+  }
+
+  function handleCancelTextureLoading() {
+    textureCancelRef.current = true;
+    texturePauseRef.current = false;
+  }
+
+  function toggleTextureModSelection(modid: string, checked: boolean) {
+    setSelectedTextureMods((current) => ({ ...current, [modid]: checked }));
+  }
+
+  function setAllTextureModSelections(checked: boolean) {
+    const next: Record<string, boolean> = {};
+    itemPanelModSummaries.forEach((summary) => {
+      next[summary.modid] = checked;
+    });
+    setSelectedTextureMods(next);
+  }
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
     const [modid, ...nameParts] = entry.key.split(':');
@@ -953,7 +1238,7 @@ export default function App() {
     if (node.kind === 'scalar') {
       return (
         <div className="nbt-row-grid">
-          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onChange({ ...node, value: event.target.value })} />
+          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="Р·РЅР°С‡РµРЅРёРµ" onChange={(event) => onChange({ ...node, value: event.target.value })} />
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
@@ -964,22 +1249,22 @@ export default function App() {
       return (
         <div className="nbt-node-block">
           <div className="inline-actions">
-            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'в–¶' : 'в–ј'}</button>
             <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
               {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
             </select>
-            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Добавить поле" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Р”РѕР±Р°РІРёС‚СЊ РїРѕР»Рµ" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
           </div>
           {!isCollapsed ? (
             <div className="nbt-children">
               {node.entries.map((entry, index) => (
                 <div key={path + index} className="nbt-entry-line">
-                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
+                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="РєР»СЋС‡" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
                   {renderNbtNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onChange({
                     ...node,
                     entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
                   }))}
-                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>🗑️</button>
+                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>рџ—‘пёЏ</button>
                 </div>
               ))}
             </div>
@@ -990,11 +1275,11 @@ export default function App() {
     return (
       <div className="nbt-node-block">
         <div className="inline-actions">
-          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'в–¶' : 'в–ј'}</button>
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
-          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Добавить элемент" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Р”РѕР±Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
         </div>
         {!isCollapsed ? (
           <div className="nbt-children">
@@ -1005,7 +1290,7 @@ export default function App() {
                   ...node,
                   items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
                 }))}
-                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>🗑️</button>
+                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>рџ—‘пёЏ</button>
               </div>
             ))}
           </div>
@@ -1018,10 +1303,10 @@ export default function App() {
     const isOpen = activeScaleControl === key;
     return (
       <div className="modal-scale-wrap">
-        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="Масштаб окна" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>⚙️</button>
+        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="РњР°СЃС€С‚Р°Р± РѕРєРЅР°" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>вљ™пёЏ</button>
         {isOpen ? (
           <div className="modal-scale-popover">
-            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>−</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>в€’</button>
             <input aria-label={`modal-scale-${key}-range`} type="range" min="0.8" max="1.5" step="0.1" value={modalScales[key]} onChange={(event) => patchModalScale(key, Number(event.target.value))} />
             <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>+</button>
             <span>{Math.round(modalScales[key] * 100)}%</span>
@@ -1041,15 +1326,124 @@ export default function App() {
   function setCellRaw(target: CraftEditorTarget, raw: string) {
     if (target.kind === 'output') {
       setOutputRaw(raw);
-      setRecipe((current) => ({ ...current, output: { ...current.output, raw } }));
+      setRecipe((current) => ({
+        ...current,
+        output: { ...current.output, raw },
+        output_resolution: itemSearchIcons[raw]
+          ? { item_raw: raw, icon_url: itemSearchIcons[raw], display_name: resolveCellTitle(raw), strategy: 'itempanel_cache' }
+          : current.output_resolution
+      }));
       setSaveStatus(t('values.unsavedChanges'));
       return;
     }
-    setMatrix((current) => current.map((row, rowIndex) => row.map((cell, colIndex) => {
-      if (rowIndex !== target.row || colIndex !== target.col) return cell;
-      return raw === '' || raw === 'null' ? null : raw;
-    })));
+    setMatrixCell(target.row, target.col, raw);
+  }
+
+  function setGridSize(size: number) {
+    const nextSize = Number(size) >= 9 ? 9 : 3;
+    const nextMatrix = Array.from({ length: nextSize }, (_, rowIndex) => (
+      Array.from({ length: nextSize }, (_, colIndex) => matrix[rowIndex]?.[colIndex] ?? null)
+    ));
+    setMatrix(nextMatrix);
+    setRecipe((current) => ({
+      ...current,
+      recipe_type: nextSize >= 9 ? 'avaritia_extreme_shaped' : 'ct_shaped',
+      grid_w: nextSize,
+      grid_h: nextSize,
+      matrix: nextMatrix.map((row) => row.map((raw) => ({ raw })))
+    }));
     setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function handleRecipeItemDrop(target: CraftEditorTarget, raw: string) {
+    const normalized = raw.trim();
+    if (!normalized) return;
+    setCellRaw(target, normalized);
+  }
+
+  function setMatrixCell(row: number, col: number, raw: string | null) {
+    const nextRaw = raw === null || raw === '' || raw === 'null' ? null : raw;
+    setMatrix((current) => current.map((line, rowIndex) => line.map((cell, colIndex) => (
+      rowIndex === row && colIndex === col ? nextRaw : cell
+    ))));
+    setRecipe((current) => ({
+      ...current,
+      matrix: current.matrix.map((line, rowIndex) => line.map((cell, colIndex) => (
+        rowIndex === row && colIndex === col
+          ? { raw: nextRaw, resolution: cell.raw === nextRaw ? cell.resolution : null }
+          : cell
+      )))
+    }));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function handleCraftCellClick(row: number, col: number) {
+    const currentRaw = matrix[row]?.[col] ?? null;
+    if (heldItemRaw) {
+      setMatrixCell(row, col, heldItemRaw);
+      return;
+    }
+    if (currentRaw) {
+      setHeldItemRaw(String(currentRaw));
+      setMatrixCell(row, col, null);
+    }
+  }
+
+  function handleCraftCellContextMenu(row: number, col: number) {
+    setMatrixCell(row, col, null);
+  }
+
+  function handleCraftOutputClick() {
+    if (!heldItemRaw) {
+      return;
+    }
+    handleRecipeItemDrop({ kind: 'output' }, heldItemRaw);
+  }
+
+  function handleNeiItemPick(raw: string) {
+    setHeldItemRaw((current) => (current === raw ? null : raw));
+  }
+
+  async function openRecipeForNeiItem(raw: string) {
+    setStatus(`Ищу рецепт для ${raw}...`);
+    setLastApiStatus(t('values.pending'));
+    try {
+      const result = await searchRecipesByOutput(raw);
+      const match = result.matches[0];
+      if (!match) {
+        setStatus(`Рецепт для ${raw} не найден в Recipes.`);
+        setLastApiStatus(t('values.ok'));
+        return;
+      }
+      applyRecipe(match);
+      setHeldItemRaw(null);
+      setWorkspaceTab('editor');
+      setStatus(`Открыт рецепт ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`);
+      setLastParseResult(match.recipe_type);
+      setLastApiStatus(t('values.ok'));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`Не удалось открыть рецепт для ${raw}: ${message}`);
+      setLastApiStatus(t('values.error'));
+    }
+  }
+
+  function handleHeldItemOutsideMouseDown(event: MouseEvent<HTMLElement>) {
+    if (!heldItemRaw || event.button !== 0) {
+      return;
+    }
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) {
+      return;
+    }
+    if (target.closest('.grid-cell, .nei-item, .craft-output-slot, .held-item-cursor')) {
+      return;
+    }
+    setHeldItemRaw(null);
+  }
+
+  function changeNeiPage(direction: -1 | 1) {
+    setNeiPage((current) => clamp(current + direction, 0, neiPageCount - 1));
   }
 
   function isParseableInput(value: string) {
@@ -1091,7 +1485,7 @@ export default function App() {
         setLastParseResult(result.item.raw);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      const message = error instanceof Error ? error.message : 'РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°';
       if (message.includes('Backend unavailable')) {
         setBackendAvailable(false);
         setStatus(message);
@@ -1170,22 +1564,21 @@ export default function App() {
   async function handleCraftModalCopy() {
     const payload = craftSourceDraft || getCellRaw(craftEditorTarget);
     await navigator.clipboard.writeText(payload);
-    setStatus('Скопировано значение предмета.');
+    setStatus('РЎРєРѕРїРёСЂРѕРІР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРґРјРµС‚Р°.');
   }
 
   async function handleCellCopy(row: number, col: number) {
     const value = matrix[row]?.[col];
     const payload = value ?? '';
     await navigator.clipboard.writeText(payload);
-    setStatus(`Ячейка ${row + 1},${col + 1}: значение скопировано.`);
+    setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ СЃРєРѕРїРёСЂРѕРІР°РЅРѕ.`);
   }
 
   async function handleCellPaste(row: number, col: number) {
     try {
       const pasted = (await navigator.clipboard.readText()).trim();
-      setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (pasted || null) : cell))));
-      setSaveStatus(t('values.unsavedChanges'));
-      setStatus(`Ячейка ${row + 1},${col + 1}: значение вставлено.`);
+      setMatrixCell(row, col, pasted || null);
+      setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ РІСЃС‚Р°РІР»РµРЅРѕ.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Clipboard unavailable';
       setStatus(message);
@@ -1193,17 +1586,16 @@ export default function App() {
   }
 
   function handleCellClear(row: number, col: number) {
-    setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? null : cell))));
-    setSaveStatus(t('values.unsavedChanges'));
-    setStatus(`Ячейка ${row + 1},${col + 1}: значение очищено.`);
+    setMatrixCell(row, col, null);
+    setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ РѕС‡РёС‰РµРЅРѕ.`);
   }
 
   async function handleSave() {
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
-      setStatus('Сохранение недоступно: используйте «Сохранить как».');
+      setStatus('РЎРѕС…СЂР°РЅРµРЅРёРµ РЅРµРґРѕСЃС‚СѓРїРЅРѕ: РёСЃРїРѕР»СЊР·СѓР№С‚Рµ В«РЎРѕС…СЂР°РЅРёС‚СЊ РєР°РєВ».');
       return;
     }
-    setStatus('Сохраняем...');
+    setStatus('РЎРѕС…СЂР°РЅСЏРµРј...');
     setSaveStatus(t('values.pending'));
     try {
       const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name });
@@ -1220,12 +1612,12 @@ export default function App() {
   }
 
   async function handleSaveAs() {
-    const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
+    const targetPath = window.prompt('РљСѓРґР° СЃРѕС…СЂР°РЅРёС‚СЊ СЂРµС†РµРїС‚? РЈРєР°Р¶РёС‚Рµ РїСѓС‚СЊ Рє .zs С„Р°Р№Р»Сѓ.', recipe.source.path ?? 'scripts/new_recipe.zs');
     if (!targetPath) {
       setStatus(t('status.saveAsCancelled'));
       return;
     }
-    setStatus('Сохраняем как...');
+    setStatus('РЎРѕС…СЂР°РЅСЏРµРј РєР°Рє...');
     setSaveStatus(t('values.pending'));
     try {
       if (recipe.recipe_uid === 'new-recipe') {
@@ -1236,7 +1628,7 @@ export default function App() {
         const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath });
         applyRecipe(response.recipe, input);
       }
-      setStatus(`${t('status.saved')} → ${targetPath}`);
+      setStatus(`${t('status.saved')} в†’ ${targetPath}`);
       setSaveStatus(t('values.saved'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -1245,260 +1637,312 @@ export default function App() {
     }
   }
 
-  async function handleCreateNew() {
-    setStatus(t('status.creating'));
-    try {
-      const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: recipe.recipe_type === 'avaritia_extreme_shaped' ? 9 : 3 });
-      applyRecipe(created, '');
-      setStatus(t('status.created'));
-      setLastParseResult(t('status.created'));
-    } catch (error) {
-      setStatus(`${t('status.saveError')}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
-  function handleOpenWiki() {
-    const wikiUrl = new URL('/wiki.html', window.location.origin).toString();
-    const openedWindow = window.open(wikiUrl, '_blank', 'noopener,noreferrer');
-    if (!openedWindow) {
-      window.location.assign(wikiUrl);
-    }
-    setStatus(t('status.docsOpened'));
-  }
-
   function resetLayout() {
-    persistUiPreferences({ ...defaultUiPreferences, language: uiPreferences.language, display_mode: uiPreferences.display_mode, animations_enabled: uiPreferences.animations_enabled, density_mode: uiPreferences.density_mode, editor_mode: uiPreferences.editor_mode });
+    persistUiPreferences({ ...defaultUiPreferences, language: uiPreferences.language, display_mode: uiPreferences.display_mode, animations_enabled: uiPreferences.animations_enabled, density_mode: uiPreferences.density_mode, editor_mode: uiPreferences.editor_mode, theme_mode: uiPreferences.theme_mode, ui_scale: uiPreferences.ui_scale });
   }
 
   function setPanelVisible(panelId: PanelId, visible: boolean) {
     patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, visible } : panel));
   }
 
-  function updatePanel(panelId: PanelId, patch: Partial<PanelLayoutItem>) {
-    patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => panel.id === panelId ? { ...panel, ...patch } : panel));
-  }
-
-  function startResize(panelId: PanelId, startX: number, startY: number) {
-    const panel = uiPreferences.panel_layout.find((item) => item.id === panelId);
-    if (!panel) return;
-    const startHeight = panel.height ?? 240;
-    const startWidthUnits = panel.width_units ?? 1;
-    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
-      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
-      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      const nextWidthUnits = clamp(startWidthUnits + Math.round(deltaX / 180), 1, uiPreferences.workspace_layout.columns) as 1 | 2 | 3;
-      updatePanel(panelId, { width_units: nextWidthUnits, height: clamp(startHeight + deltaY, MIN_HEIGHT, MAX_HEIGHT) });
-    };
-    const onUp = () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('mouseup', onUp);
-    };
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('mouseup', onUp);
-  }
-
-  function startZoneResize(kind: ZoneResizeKind, startX: number, startY: number) {
-    const startLayout = latestUiPreferencesRef.current.workspace_layout;
-    const startTopHeight = startLayout.top_height ?? defaultWorkspaceLayout.top_height ?? 560;
-    const startBottomHeight = startLayout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260;
-
-    setActiveZoneResizer(kind);
-
-    const onMove = (event: globalThis.PointerEvent | MouseEvent) => {
-      const currentX = Number.isFinite(event.clientX) ? event.clientX : startX;
-      const currentY = Number.isFinite(event.clientY) ? event.clientY : startY;
-
-      if (kind === 'topSplit') {
-        const container = document.querySelector('.workspace-top');
-        if (!container) return;
-        const rect = container.getBoundingClientRect();
-        if (!rect.width) return;
-        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.25, 0.75);
-        patchWorkspaceLayout({ top_split_ratio: nextRatio });
-        return;
-      }
-
-      if (kind === 'mainSidebarSplit') {
-        const container = document.querySelector('.workspace-layout');
-        if (!container) return;
-        const rect = container.getBoundingClientRect();
-        if (!rect.width) return;
-        const nextRatio = clamp((currentX - rect.left) / rect.width, 0.55, 0.9);
-        patchWorkspaceLayout({ main_sidebar_ratio: nextRatio });
-        return;
-      }
-
-      const deltaY = currentY - startY;
-      patchWorkspaceLayout({
-        top_height: clamp(startTopHeight + deltaY, 240, 1200),
-        bottom_height: clamp(startBottomHeight - deltaY, 120, 1000)
-      });
-    };
-
-    const onUp = () => {
-      setActiveZoneResizer(null);
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('mouseup', onUp);
-    };
-
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('mouseup', onUp);
-  }
-
-  const topLeftPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topLeft'), [uiPreferences.panel_layout]);
-  const topRightPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'topRight'), [uiPreferences.panel_layout]);
-  const bottomPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'bottom'), [uiPreferences.panel_layout]);
-  const sidebarPanels = useMemo(() => getPanelsForZone(uiPreferences.panel_layout, 'sidebar'), [uiPreferences.panel_layout]);
-  const workspaceLayoutStyle = useMemo(() => {
-    const mainSidebarRatio = uiPreferences.workspace_layout.main_sidebar_ratio ?? defaultWorkspaceLayout.main_sidebar_ratio ?? 0.76;
-
-    return {
-      gridTemplateColumns: `${mainSidebarRatio}fr 10px ${1 - mainSidebarRatio}fr`
-    } satisfies CSSProperties;
-  }, [uiPreferences.workspace_layout.main_sidebar_ratio]);
-  const workspaceMainStyle = useMemo(() => ({
-    gridTemplateRows: `minmax(${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px, auto) 10px minmax(${uiPreferences.workspace_layout.bottom_height ?? defaultWorkspaceLayout.bottom_height ?? 260}px, auto)`
-  } satisfies CSSProperties), [uiPreferences.workspace_layout.bottom_height, uiPreferences.workspace_layout.top_height]);
-  const workspaceTopStyle = useMemo(() => ({
-    gridTemplateColumns: `${uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68}fr 10px ${1 - (uiPreferences.workspace_layout.top_split_ratio ?? defaultWorkspaceLayout.top_split_ratio ?? 0.68)}fr`,
-    minHeight: `${uiPreferences.workspace_layout.top_height ?? defaultWorkspaceLayout.top_height ?? 560}px`
-  } satisfies CSSProperties), [uiPreferences.workspace_layout.top_height, uiPreferences.workspace_layout.top_split_ratio]);
-
   const statusItems = [
-    { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
+    { label: t('status.status'), value: status, tone: status.includes('РћС€РёР±РєР°') || status.includes('error') ? 'warning' as const : 'success' as const },
     { label: t('status.type'), value: recipe.recipe_type },
     { label: t('status.size'), value: summary },
     { label: t('status.saveState'), value: saveStatus },
     { label: t('status.icons'), value: `${iconsResolved}/${iconTotal}` },
-    { label: t('status.mode'), value: `${uiPreferences.display_mode} • ${uiPreferences.language}` }
+    { label: t('status.mode'), value: `${uiPreferences.display_mode} вЂў ${uiPreferences.language}` }
   ];
 
-  const tabLabels: Record<AppTab, string> = {
-    editor: getTabLabel(uiPreferences.language, 'editor'),
-    preview: getTabLabel(uiPreferences.language, 'preview'),
-    diagnostics: getTabLabel(uiPreferences.language, 'diagnostics'),
-    raw: getTabLabel(uiPreferences.language, 'raw')
-  };
-
-  function commitDrop(target: DropTarget) {
-    if (!draggedPanelId || !target) {
-      setDraggedPanelId(null);
-      setDropTarget(null);
-      return;
-    }
-
-    patchPanelLayout(movePanelToZone(uiPreferences.panel_layout, draggedPanelId, target.zone, target.index));
-    setDraggedPanelId(null);
-    setDropTarget(null);
+  function getPanelForTab(panelId: PanelId): PanelLayoutItem {
+    return { ...(uiPreferences.panel_layout.find((panel) => panel.id === panelId) ?? defaultPanelLayout.find((panel) => panel.id === panelId)!), visible: true };
   }
 
-  function renderZoneDropSlot(zone: PanelZone, targetIndex: number) {
-    const active = dropTarget?.zone === zone && dropTarget.index === targetIndex;
-
+  function renderColumn(panels: PanelLayoutItem[], className: string) {
     return (
-      <div
-        key={`drop-${zone}-${targetIndex}`}
-        className={`zone-drop-slot ${draggedPanelId ? 'is-visible' : ''} ${active ? 'is-active' : ''}`.trim()}
-        data-zone={zone}
-        data-index={targetIndex}
-        onDragOver={(event) => {
-          event.preventDefault();
-          setDropTarget({ zone, index: targetIndex });
-        }}
-        onDrop={(event) => {
-          event.preventDefault();
-          commitDrop({ zone, index: targetIndex });
-        }}
-      />
+      <div className={`workspace-column ${className}`.trim()}>
+        {panels.map((panel) => renderPanel(panel))}
+      </div>
     );
   }
 
-  function renderZone(zone: PanelZone, panels: PanelLayoutItem[], className?: string) {
-    const isZoneActive = dropTarget?.zone === zone;
+  function renderCraftItemIcon(raw: string, iconUrl?: string | null, animated?: boolean, frameTime?: number, title?: string) {
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw);
+    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
+    if (atlasStyle) {
+      return <span className="cell-atlas-icon output-atlas-icon" style={atlasStyle} aria-hidden="true" />;
+    }
+    if (iconUrl) {
+      return <AnimatedIcon iconUrl={iconUrl} alt={title ?? raw} animated={Boolean(animated)} frameTime={frameTime ?? 1} animationsEnabled={areAnimationsEnabled} />;
+    }
+    return <span>?</span>;
+  }
 
+  function renderHeldItemIcon(raw: string) {
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw);
+    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
+    const iconUrl = itemSearchIcons[raw];
+    if (atlasStyle) {
+      return <span className="held-atlas-icon" style={atlasStyle} aria-hidden="true" />;
+    }
+    if (iconUrl) {
+      return <img src={iconUrl} alt="" />;
+    }
+    return <span>?</span>;
+  }
+
+  function renderRecipeBuilderPanel() {
+    const gridSize = matrix.length;
     return (
-      <div
-        className={`workspace-zone ${className ?? ''} ${draggedPanelId ? 'is-dragging' : ''} ${isZoneActive ? 'is-drag-over' : ''}`.trim()}
-        data-zone={zone}
-        onDragOver={(event) => {
-          event.preventDefault();
-          if (!panels.length) {
-            setDropTarget({ zone, index: 0 });
-          }
-        }}
-        onDrop={(event) => {
-          event.preventDefault();
-          const target = dropTarget?.zone === zone ? dropTarget : { zone, index: panels.length };
-          commitDrop(target);
-        }}
-      >
-        {renderZoneDropSlot(zone, 0)}
-        {panels.map((panel, index) => (
-          <Fragment key={`${zone}-${panel.id}`}>
-            {renderPanel(panel)}
-            {renderZoneDropSlot(zone, index + 1)}
-          </Fragment>
-        ))}
-        {!panels.length ? (
-          <div className="workspace-zone-empty">Перетащите панель сюда</div>
-        ) : null}
+      <div className="workspace-panel-shell panel-recipe-builder">
+        <Panel title="Создатель рецепта" subtitle="Сетка, входные предметы и результат" className="recipe-builder-panel">
+          <div className="recipe-builder-controls">
+            <label className="field-block">
+              <span>Размер сетки</span>
+              <select aria-label="recipe-grid-size" value={gridSize} onChange={(event) => setGridSize(Number(event.target.value))}>
+                {[3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}
+              </select>
+            </label>
+            <label className="field-block recipe-output-drop">
+              <span>Результат крафта</span>
+              <input
+                aria-label="output-raw"
+                value={outputRaw}
+                onChange={(event) => handleRecipeItemDrop({ kind: 'output' }, event.target.value)}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  handleRecipeItemDrop({ kind: 'output' }, event.dataTransfer.getData('text/plain'));
+                }}
+              />
+            </label>
+          </div>
+          <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
+          <div className="grid-scroll-zone recipe-builder-grid">
+            <div className="recipe-craft-board">
+              <RecipeGrid
+                matrix={matrixWithResolution}
+                atlas={itemPanelAtlas}
+                atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
+                displayMode={uiPreferences.display_mode}
+                animationsEnabled={areAnimationsEnabled}
+                editorMode={uiPreferences.editor_mode}
+                heldItemRaw={heldItemRaw}
+                resolveCellTitle={resolveCellTitle}
+                onCellClick={handleCraftCellClick}
+                onCellContextMenu={handleCraftCellContextMenu}
+                onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)}
+                onCellChange={(row, col, value) => {
+                  setMatrixCell(row, col, value);
+                }}
+              />
+              <div className="craft-arrow" aria-hidden="true" />
+              <button
+                type="button"
+                className="output-icon-slot output-icon-button craft-output-slot"
+                onClick={handleCraftOutputClick}
+                onContextMenu={(event) => {
+                  event.preventDefault();
+                  setCellRaw({ kind: 'output' }, '');
+                }}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  handleRecipeItemDrop({ kind: 'output' }, event.dataTransfer.getData('text/plain'));
+                }}
+                title={outputDisplayName ?? outputRaw}
+              >
+                {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
+              </button>
+            </div>
+          </div>
+        </Panel>
+      </div>
+    );
+  }
+
+  function renderNeiPanel() {
+    const atlasImageUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
+    return (
+      <div className="workspace-panel-shell panel-nei">
+        <Panel title="NEI предметы" subtitle="Поиск и перетаскивание в рецепт" className="nei-panel">
+          <input aria-label="nei-search" type="search" value={neiSearchQuery} onChange={(event) => setNeiSearchQuery(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
+          <div className="nei-pager" aria-label="nei-pagination">
+            <button type="button" className="ghost-button icon-button" aria-label="nei-prev-page" disabled={neiPage <= 0} onClick={() => changeNeiPage(-1)}>‹</button>
+            <strong>{neiPage + 1}/{neiPageCount}</strong>
+            <button type="button" className="ghost-button icon-button" aria-label="nei-next-page" disabled={neiPage >= neiPageCount - 1} onClick={() => changeNeiPage(1)}>›</button>
+          </div>
+          <div
+            ref={neiListRef}
+            className="nei-list"
+            aria-label="nei-items"
+          >
+            {neiItems.map((entry) => {
+              const raw = buildItemRawValue(entry.key, entry.meta);
+              const iconUrl = itemSearchIcons[raw];
+              const atlasEntry = itemPanelAtlas?.entries[raw];
+              const atlasStyle = itemPanelAtlas && atlasEntry
+                ? {
+                  backgroundImage: `url(${atlasImageUrl})`,
+                  backgroundPosition: `-${atlasEntry.x}px -${atlasEntry.y}px`,
+                  backgroundSize: `${itemPanelAtlas.columns * itemPanelAtlas.tile_size}px ${itemPanelAtlas.rows * itemPanelAtlas.tile_size}px`
+                }
+                : undefined;
+              return (
+                <button
+                  key={itemPanelEntryIdentity(entry)}
+                  type="button"
+                  className={`nei-item ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}`}
+                  aria-label={`nei-item-${raw}`}
+                  draggable
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData('text/plain', raw);
+                    event.dataTransfer.effectAllowed = 'copy';
+                    setHeldItemRaw(raw);
+                  }}
+                  onDragEnd={() => {
+                    setHeldItemRaw((current) => (current === raw ? null : current));
+                  }}
+                  onMouseEnter={() => setHoveredNeiRaw(raw)}
+                  onFocus={() => setHoveredNeiRaw(raw)}
+                  onMouseLeave={() => setHoveredNeiRaw((current) => (current === raw ? null : current))}
+                  onBlur={() => setHoveredNeiRaw((current) => (current === raw ? null : current))}
+                  onClick={() => handleNeiItemPick(raw)}
+                  onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
+                >
+                  <span className={`nei-icon ${atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
+                    {atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
+                    {!atlasStyle && iconUrl ? (
+                      <img
+                        src={iconUrl}
+                        alt=""
+                        onError={() => {
+                          setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+                        }}
+                      />
+                    ) : null}
+                  </span>
+                  <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
+                  <span className="nei-raw" aria-hidden="true">{raw}</span>
+                </button>
+              );
+            })}
+          </div>
+        </Panel>
+      </div>
+    );
+  }
+
+  function renderTextureToolsPanel() {
+    return (
+      <div className="workspace-panel-shell panel-textures">
+        <Panel title={t('textures.modsDropdown')} subtitle={uiPreferences.language === 'ru' ? 'РљСЌС€ РёРєРѕРЅРѕРє РёР· itempanel.csv' : 'Icon cache from itempanel.csv'} className="texture-panel">
+          <div className="texture-toolbar">
+            <button type="button" className="secondary-button" aria-expanded={isTextureModsOpen} onClick={() => setIsTextureModsOpen((value) => !value)}>{t('textures.modsDropdown')}</button>
+            <button type="button" onClick={() => void loadSelectedTextures()} disabled={textureLoadState === 'running' || textureLoadState === 'paused'}>{t('textures.loadSelected')}</button>
+            {textureLoadState === 'running' ? (
+              <button type="button" className="ghost-button" onClick={handlePauseTextureLoading}>{t('textures.stop')}</button>
+            ) : null}
+            {textureLoadState === 'paused' ? (
+              <button type="button" className="ghost-button" onClick={handleResumeTextureLoading}>{t('textures.resume')}</button>
+            ) : null}
+            {textureLoadState !== 'idle' ? (
+              <button type="button" className="ghost-button" onClick={handleCancelTextureLoading}>{t('textures.cancel')}</button>
+            ) : null}
+          </div>
+          {textureLoadStatus ? <div className="inline-status inline-status-default texture-status-line">{textureLoadStatus}</div> : null}
+          <div className="texture-menu-header">
+            <strong>{uiPreferences.language === 'ru' ? 'РњРѕРґС‹' : 'Mods'}</strong>
+            <div className="view-menu-actions">
+              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(true)}>{t('textures.selectAll')}</button>
+              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(false)}>{t('textures.clearAll')}</button>
+            </div>
+          </div>
+          {isTextureModsOpen && itemPanelModSummaries.length ? (
+            <ul className="toolbar-texture-list texture-list-panel">
+              {itemPanelModSummaries.map((summary) => (
+                <li key={summary.modid} className="toolbar-texture-item">
+                  <label className="view-toggle" aria-label={`select-mod-${summary.modid}`}>
+                    <input
+                      type="checkbox"
+                      checked={selectedTextureMods[summary.modid] ?? true}
+                      onChange={(event) => toggleTextureModSelection(summary.modid, event.target.checked)}
+                    />
+                    <span>{summary.modid}</span>
+                  </label>
+                  <span>{summary.itemCount}</span>
+                  <span>{t('textures.progress')}: {summary.completionText}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {isTextureModsOpen && !itemPanelModSummaries.length ? <p className="toolbar-texture-empty">{t('textures.empty')}</p> : null}
+          {!isTextureModsOpen ? (
+            <div className="kv-grid">
+              <div><span>{uiPreferences.language === 'ru' ? 'РњРѕРґРѕРІ' : 'Mods'}</span><strong>{itemPanelModSummaries.length}</strong></div>
+              <div><span>{t('status.icons')}</span><strong>{iconsResolved}/{iconTotal}</strong></div>
+              <div><span>{t('textures.progress')}</span><strong>{itemPanelModSummaries.find((summary) => selectedTextureMods[summary.modid] ?? true)?.completionText ?? '0%'}</strong></div>
+            </div>
+          ) : null}
+        </Panel>
+      </div>
+    );
+  }
+
+  function renderWorkspace() {
+    if (workspaceTab === 'items') {
+      return (
+        <div className="workspace-layout workspace-layout-items">
+          {renderColumn([getPanelForTab('input')], 'workspace-left')}
+          <div className="workspace-column workspace-center">{renderTextureToolsPanel()}</div>
+          {renderColumn([getPanelForTab('settings'), getPanelForTab('debug')], 'workspace-right')}
+        </div>
+      );
+    }
+    if (workspaceTab === 'recipe') {
+      return (
+        <div className="workspace-layout workspace-layout-recipe">
+          {renderColumn([getPanelForTab('input'), getPanelForTab('output')], 'workspace-left')}
+          {renderColumn([getPanelForTab('preview'), getPanelForTab('raw')], 'workspace-center')}
+          <div className="workspace-column workspace-right">
+            {renderNeiPanel()}
+            {renderPanel(getPanelForTab('info'))}
+            {renderPanel(getPanelForTab('statusBar'))}
+          </div>
+        </div>
+      );
+    }
+    if (workspaceTab === 'debug') {
+      return (
+        <div className="workspace-layout workspace-layout-debug">
+          {renderColumn([getPanelForTab('settings'), getPanelForTab('statusBar')], 'workspace-left')}
+          {renderColumn([getPanelForTab('diagnostics'), getPanelForTab('debug')], 'workspace-center')}
+          {renderColumn([getPanelForTab('raw'), getPanelForTab('info')], 'workspace-right')}
+        </div>
+      );
+    }
+    return (
+      <div className="workspace-layout workspace-layout-editor workspace-layout-builder">
+        <div className="workspace-column workspace-center">
+          {renderRecipeBuilderPanel()}
+          {renderPanel(getPanelForTab('toolbar'))}
+        </div>
+        <div className="workspace-column workspace-right">
+          {renderNeiPanel()}
+        </div>
       </div>
     );
   }
 
   function renderPanel(panel: PanelLayoutItem) {
     const panelId = panel.id;
-    const common = {
-      actions: <button type="button" className="ghost-button" onClick={() => setPanelVisible(panelId, false)}>{t('app.hidePanel')}</button>,
-      dragHandle: (
-        <button
-          type="button"
-          className="panel-drag-handle"
-          draggable
-          aria-label={`${t('app.dragPanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
-          onDragStart={(event: DragEvent<HTMLButtonElement>) => {
-            if (event.dataTransfer) {
-              event.dataTransfer.effectAllowed = 'move';
-            }
-            setDraggedPanelId(panelId);
-          }}
-          onDragEnd={() => {
-            setDraggedPanelId(null);
-            setDropTarget(null);
-          }}
-        >
-          ⋮⋮
-        </button>
-      ),
-      footer: (
-        <button
-          type="button"
-          className="panel-resize-handle"
-          aria-label={`${t('app.resizePanel')}: ${getPanelLabel(uiPreferences.language, panelId)}`}
-          onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
-            event.preventDefault();
-            startResize(panelId, event.clientX, event.clientY);
-          }}
-        >
-          <span />
-        </button>
-      )
-    };
+    const common = {};
 
     switch (panelId) {
       case 'hero':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('app.subtitle')} {...common} className="hero-panel">
               <div className="hero-panel-grid">
                 <div>
@@ -1516,7 +1960,7 @@ export default function App() {
         );
       case 'statusBar':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('status.logReady')} {...common}>
               <StatusBar items={statusItems} />
             </Panel>
@@ -1524,26 +1968,19 @@ export default function App() {
         );
       case 'toolbar':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
               <ActionToolbar
-                labels={{ work: t('toolbar.work'), saveGroup: t('toolbar.saveGroup'), helpGroup: t('toolbar.helpGroup'), parse: t('toolbar.parse'), paste: t('toolbar.paste'), createNew: t('toolbar.new'), clear: t('toolbar.clear'), save: t('toolbar.save'), saveAs: t('toolbar.saveAs'), help: t('toolbar.help'), wiki: t('toolbar.wiki') }}
-                onParse={() => void handleParse(input)}
-                onPaste={handlePasteFromClipboard}
-                onCreateNew={() => void handleCreateNew()}
-                onClear={clearEditor}
+                labels={{ save: t('toolbar.save'), saveAs: t('toolbar.saveAs') }}
                 onSave={() => void handleSave()}
                 onSaveAs={() => void handleSaveAs()}
-                onHelp={() => setIsHelpOpen(true)}
-                onWiki={handleOpenWiki}
               />
-              <TabNav labels={tabLabels} value={uiPreferences.active_view_tab} onChange={(tab) => patchUiPreferences({ active_view_tab: tab })} />
             </Panel>
           </div>
         );
       case 'input':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 2, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.sourceText')} {...common}>
               <div className="field-header">
                 <span>{t('fields.sourceText')}</span>
@@ -1567,11 +2004,11 @@ export default function App() {
         );
       case 'output':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
                 <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
-                  {uiPreferences.display_mode === 'icons' && recipe.output_resolution?.icon_url ? <AnimatedIcon iconUrl={recipe.output_resolution.icon_url} alt={outputDisplayName ?? outputRaw} animated={Boolean(recipe.output_resolution.animated)} frameTime={recipe.output_resolution.animation_meta?.frametime ?? 1} animationsEnabled={areAnimationsEnabled} /> : <span>?</span>}
+                  {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
                 </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
@@ -1582,7 +2019,7 @@ export default function App() {
                   }} /></label>
                   <div className="kv-grid">
                     <div><span>{t('fields.displayName')}</span><strong>{outputDisplayName ?? t('values.unresolved')}</strong></div>
-                    <div><span>{t('fields.rawId')}</span><strong>{outputRaw || '—'}</strong></div>
+                    <div><span>{t('fields.rawId')}</span><strong>{outputRaw || 'вЂ”'}</strong></div>
                     <div><span>{t('fields.iconStatus')}</span><strong>{recipe.output_resolution?.icon_url ?? t('values.placeholder')}</strong></div>
                     <div><span>{t('fields.strategy')}</span><strong>{recipe.output_resolution?.strategy ?? 'n/a'}</strong></div>
                   </div>
@@ -1593,13 +2030,12 @@ export default function App() {
         );
       case 'grid':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 3, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} onCellCopy={(row, col) => void handleCellCopy(row, col)} onCellPaste={(row, col) => void handleCellPaste(row, col)} onCellClear={handleCellClear} resolveCellTitle={resolveCellTitle} onIconClick={(row, col) => openCraftEditorModal({ kind: 'cell', row, col })} onCellChange={(row, col, value) => {
-                  setMatrix((current) => current.map((line, r) => line.map((cell, c) => (r === row && c === col ? (value === 'null' || value === '' ? null : value) : cell))));
-                  setSaveStatus(t('values.unsavedChanges'));
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} resolveCellTitle={resolveCellTitle} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                  setMatrixCell(row, col, value);
                 }} />
               </div>
             </Panel>
@@ -1607,7 +2043,7 @@ export default function App() {
         );
       case 'settings':
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.visiblePanels')} {...common}>
               <div className="settings-grid">
                 <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
@@ -1628,7 +2064,7 @@ export default function App() {
         const renderExtra = () => {
           switch (panelId) {
             case 'info':
-              return <div className="kv-grid"><div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div><div><span>{t('fields.sourceFile')}</span><strong>{recipe.source.path ?? '—'}</strong></div><div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div><div><span>{t('fields.originPath')}</span><strong>{recipe.source.path ?? settings?.project_config_path ?? '—'}</strong></div></div>;
+              return <div className="kv-grid"><div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div><div><span>{t('fields.sourceFile')}</span><strong>{recipe.source.path ?? 'вЂ”'}</strong></div><div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div><div><span>{t('fields.originPath')}</span><strong>{recipe.source.path ?? settings?.project_config_path ?? 'вЂ”'}</strong></div></div>;
             case 'debug':
               return <div className="kv-grid"><div><span>{t('fields.lastApiStatus')}</span><strong>{lastApiStatus}</strong></div><div><span>{t('fields.lastParseResult')}</span><strong>{lastParseResult}</strong></div><div><span>{t('fields.iconFound')}</span><strong>{recipe.output_resolution?.icon_url ? t('values.yes') : t('values.no')}</strong></div></div>;
             case 'diagnostics':
@@ -1640,7 +2076,7 @@ export default function App() {
           }
         };
         return (
-          <div key={panelId} className="workspace-panel-shell" style={{ gridColumn: `span ${widthToSpan(panel.width_units ?? 1, uiPreferences.workspace_layout.columns)}`, minHeight: panel.height }}>
+          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={panelId === 'diagnostics' ? getTabLabel(uiPreferences.language, 'diagnostics') : undefined} {...common}>{renderExtra()}</Panel>
           </div>
         );
@@ -1651,11 +2087,22 @@ export default function App() {
   }
 
   return (
-    <main className={`app-shell density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`}>
+    <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown}>
       <div className="utility-bar">
         <strong>CubixRecipes</strong>
+        <nav className="main-tabs" aria-label="workspace-tabs">
+          {(Object.keys(workspaceTabLabels) as WorkspaceTab[]).map((tab) => (
+            <button key={tab} type="button" className={`main-tab-button ${workspaceTab === tab ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab)}>
+              {workspaceTabLabels[tab]}
+            </button>
+          ))}
+        </nav>
         <div className="utility-actions">
+          <label className="ui-scale-switch compact-switch"><span>Масштаб</span><select aria-label="ui-scale" value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}><option value={1}>100%</option><option value={1.15}>115%</option><option value={1.3}>130%</option><option value={1.5}>150%</option></select></label>
           <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <button type="button" className="theme-toggle" aria-label={uiPreferences.theme_mode === 'dark' ? 'Светлая тема' : 'Темная тема'} onClick={() => patchUiPreferences({ theme_mode: uiPreferences.theme_mode === 'dark' ? 'light' : 'dark' })}>
+            <span aria-hidden="true">{uiPreferences.theme_mode === 'dark' ? '☀' : '☾'}</span>
+          </button>
           <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
           <div className="view-menu-wrap">
             <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
@@ -1685,58 +2132,15 @@ export default function App() {
         </div>
       </div>
 
-      <div className="workspace-layout" style={workspaceLayoutStyle}>
-        <div className="workspace-main" style={workspaceMainStyle}>
-          <div className="workspace-top" style={workspaceTopStyle}>
-            {renderZone('topLeft', topLeftPanels, 'zone-top-left')}
-            <button
-              type="button"
-              className={`layout-resizer layout-resizer-top-split ${activeZoneResizer === 'topSplit' ? 'is-active' : ''}`.trim()}
-              aria-label="Изменить ширину верхних зон"
-              onPointerDown={(event) => {
-                event.preventDefault();
-                startZoneResize('topSplit', event.clientX, event.clientY);
-              }}
-            />
-            {renderZone('topRight', topRightPanels, 'zone-top-right')}
-          </div>
-          <button
-            type="button"
-            className={`layout-resizer layout-resizer-top-bottom ${activeZoneResizer === 'topBottomSplit' ? 'is-active' : ''}`.trim()}
-            aria-label="Изменить высоту верхней и нижней зоны"
-            onPointerDown={(event) => {
-              event.preventDefault();
-              startZoneResize('topBottomSplit', event.clientX, event.clientY);
-            }}
-          />
-          {renderZone('bottom', bottomPanels, 'zone-bottom')}
-        </div>
-        <button
-          type="button"
-          className={`layout-resizer layout-resizer-main-sidebar ${activeZoneResizer === 'mainSidebarSplit' ? 'is-active' : ''}`.trim()}
-          aria-label="Изменить ширину основной области и sidebar"
-          onPointerDown={(event) => {
-            event.preventDefault();
-            startZoneResize('mainSidebarSplit', event.clientX, event.clientY);
-          }}
-        />
-        {renderZone('sidebar', sidebarPanels, 'zone-sidebar')}
-      </div>
+      {renderWorkspace()}
 
-      {isHelpOpen ? (
-        <div className="modal-backdrop" role="presentation" onClick={() => setIsHelpOpen(false)}>
-          <div className="modal modal-scalable" style={getModalScaleStyle('help')} role="dialog" aria-modal="true" aria-label={t('help.title')} onClick={(event) => event.stopPropagation()}>
-            <div className="modal-header">
-              <h2>{t('help.title')}</h2>
-              <div className="inline-actions">
-                {renderModalScaleControl('help')}
-                <button type="button" onClick={() => setIsHelpOpen(false)}>{t('help.close')}</button>
-              </div>
-            </div>
-            <ul>
-              {getHelpItems(uiPreferences.language).map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </div>
+      {heldItemRaw ? (
+        <div
+          className="held-item-cursor"
+          style={{ left: cursorPoint.x + 14, top: cursorPoint.y + 14 }}
+          aria-hidden="true"
+        >
+          {renderHeldItemIcon(heldItemRaw)}
         </div>
       ) : null}
 
@@ -1755,7 +2159,7 @@ export default function App() {
               <div className="kv-grid">
                 <div><span>{t('app.columns')}</span><strong>{uiPreferences.workspace_layout.columns}</strong></div>
                 <div><span>{t('app.zone')}</span><strong>{uiPreferences.panel_layout.filter((panel) => panel.visible).length}</strong></div>
-                <div><span>{t('app.file')}</span><strong>{settings?.project_config_path ?? '—'}</strong></div>
+                <div><span>{t('app.file')}</span><strong>{settings?.project_config_path ?? 'вЂ”'}</strong></div>
               </div>
               <div className="view-menu-actions">
                 <button type="button" onClick={() => void saveCurrentWindowLayout()}>{t('layoutSettings.saveCurrent')}</button>
@@ -1770,29 +2174,29 @@ export default function App() {
         <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>
           <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
+              <h2>{craftEditorTarget.kind === 'output' ? 'Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ output' : `Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЏС‡РµР№РєРё ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('craft')}
-                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Закрыть</button>
+                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Р—Р°РєСЂС‹С‚СЊ</button>
               </div>
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
-                <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
+                <span>РџРѕРёСЃРє РїСЂРµРґРјРµС‚Р° (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
                 <div className="inline-actions">
-                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
-                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="Очистить поиск" onClick={() => setItemSearchQuery('')}>🧹</button>
+                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="РЅР°РїСЂРёРјРµСЂ: draconicrevolt:der_awakeneddemonicblock РёР»Рё 482:1" />
+                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="РћС‡РёСЃС‚РёС‚СЊ РїРѕРёСЃРє" onClick={() => setItemSearchQuery('')}>рџ§№</button>
                 </div>
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
                     {itemSearchSuggestions.map((entry) => (
-                      <button key={`${entry.key}:${entry.meta}`} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
+                      <button key={itemPanelEntryIdentity(entry)} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
                         {(() => {
                           const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
                           const iconUrl = itemSearchIcons[raw];
                           return (
                             <span className="suggestion-icon-slot" aria-hidden="true">
-                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
+                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : 'в–Ў'}
                             </span>
                           );
                         })()}
@@ -1807,11 +2211,11 @@ export default function App() {
                 ) : null}
               </label>
               <label className="field-block">
-                <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
+                <span>Raw РїСЂРµРґРјРµС‚Р° (С„РѕСЂРјР°С‚ parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
               </label>
               <div className="field-block">
-                <span>Структурный редактор item</span>
+                <span>РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ item</span>
                 <div className="settings-grid">
                   <label className="field-block">
                     <span>Mod</span>
@@ -1827,15 +2231,15 @@ export default function App() {
                   </label>
                 </div>
                 <div className="inline-actions">
-                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="Открыть отдельное окно NBT" onClick={() => setIsNbtEditorOpen(true)}>🧬</button>
-                  <span>{nbtRootDraft.entries.length ? `NBT полей: ${nbtRootDraft.entries.length}` : 'NBT не задан'}</span>
-                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="РћС‚РєСЂС‹С‚СЊ РѕС‚РґРµР»СЊРЅРѕРµ РѕРєРЅРѕ NBT" onClick={() => setIsNbtEditorOpen(true)}>рџ§¬</button>
+                  <span>{nbtRootDraft.entries.length ? `NBT РїРѕР»РµР№: ${nbtRootDraft.entries.length}` : 'NBT РЅРµ Р·Р°РґР°РЅ'}</span>
+                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>РЎРѕР±СЂР°С‚СЊ raw РёР· РїРѕР»РµР№</button>
                 </div>
               </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
-                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="Скопировать" onClick={() => void handleCraftModalCopy()}>📋</button>
-                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Вставить" onClick={() => void handleCraftModalPaste()}>📥</button>
+                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="РћС‡РёСЃС‚РёС‚СЊ" onClick={() => setCraftSourceDraft('')}>рџ§№</button>
+                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="РЎРєРѕРїРёСЂРѕРІР°С‚СЊ" onClick={() => void handleCraftModalCopy()}>рџ“‹</button>
+                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Р’СЃС‚Р°РІРёС‚СЊ" onClick={() => void handleCraftModalPaste()}>рџ“Ґ</button>
                 <button
                   type="button"
                   onClick={() => {
@@ -1849,7 +2253,7 @@ export default function App() {
                     setIsNbtEditorOpen(false);
                   }}
                 >
-                  Применить
+                  РџСЂРёРјРµРЅРёС‚СЊ
                 </button>
               </div>
             </div>
@@ -1864,30 +2268,30 @@ export default function App() {
               <h2>NBT Tree</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('nbtTree')}
-                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Закрыть</button>
+                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Р—Р°РєСЂС‹С‚СЊ</button>
               </div>
             </div>
             <div className="settings-modal-body">
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Добавить NBT поле" onClick={() => addRootEntry('int')}>+</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
-                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Р”РѕР±Р°РІРёС‚СЊ NBT РїРѕР»Рµ" onClick={() => addRootEntry('int')}>+</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Р”РѕР±Р°РІРёС‚СЊ NBT РѕР±СЉРµРєС‚" onClick={() => addRootEntry('compound')}>в—«</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Р”РѕР±Р°РІРёС‚СЊ NBT СЃРїРёСЃРѕРє" onClick={() => addRootEntry('list')}>в°</button>
+                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>РЎРѕР±СЂР°С‚СЊ raw РёР· РїРѕР»РµР№</button>
               </div>
               {nbtRootDraft.entries.length ? (
                 <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
                   {nbtRootDraft.entries.map((entry, index) => (
                     <div key={`root-entry-${index}`} className="suggestion-item">
                       <div className="nbt-entry-line">
-                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="РєР»СЋС‡" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
                         {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>рџ—‘пёЏ</button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="inline-hint inline-hint-warning">Добавьте NBT поле/объект/список.</div>
+                <div className="inline-hint inline-hint-warning">Р”РѕР±Р°РІСЊС‚Рµ NBT РїРѕР»Рµ/РѕР±СЉРµРєС‚/СЃРїРёСЃРѕРє.</div>
               )}
             </div>
           </div>

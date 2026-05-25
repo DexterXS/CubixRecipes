@@ -134,6 +134,9 @@ class AssetIndex:
                 self._scan_zip(file_path, source_report, report)
                 continue
             rel_path = file_path.relative_to(root).as_posix()
+            if not self._is_relevant_asset_path(rel_path):
+                self._record_skipped_file(rel_path, source_report)
+                continue
             self._consume_file(file_path, rel_path, source=str(root), source_report=source_report, report=report)
 
     def _scan_zip(self, archive_path: Path, source_report: dict[str, Any], report: dict[str, Any]) -> None:
@@ -141,9 +144,12 @@ class AssetIndex:
             for name in archive.namelist():
                 if name.endswith('/'):
                     continue
+                if not self._is_relevant_asset_path(name):
+                    self._record_skipped_file(name, source_report)
+                    continue
                 self._consume_virtual(
                     name,
-                    archive.read(name),
+                    archive.read(name) if self._path_needs_content(name) else b'',
                     source=str(archive_path),
                     source_report=source_report,
                     report=report,
@@ -151,15 +157,17 @@ class AssetIndex:
                 )
 
     def _consume_file(self, file_path: Path, rel_path: str, source: str, source_report: dict[str, Any], report: dict[str, Any]) -> None:
-        try:
-            data = file_path.read_bytes()
-        except Exception as exc:
-            issue = self._issue('error', 'asset_read', str(exc), file_path=str(file_path), source_path=source, error_type=exc.__class__.__name__)
-            source_report['errors'].append(issue)
-            report['scan_errors'].append(issue)
-            if self.log_service is not None:
-                self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to read asset file', issue)
-            return
+        data = b''
+        if self._path_needs_content(rel_path):
+            try:
+                data = file_path.read_bytes()
+            except Exception as exc:
+                issue = self._issue('error', 'asset_read', str(exc), file_path=str(file_path), source_path=source, error_type=exc.__class__.__name__)
+                source_report['errors'].append(issue)
+                report['scan_errors'].append(issue)
+                if self.log_service is not None:
+                    self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to read asset file', issue)
+                return
         self._consume_virtual(
             rel_path,
             data,
@@ -244,6 +252,32 @@ class AssetIndex:
             report['scan_errors'].append(issue)
             if self.log_service is not None:
                 self.log_service.log('BACKEND', 'ERROR', 'ASSETS', 'Failed to parse asset file', issue)
+
+    def _is_relevant_asset_path(self, rel_path: str) -> bool:
+        normalized = rel_path.replace('\\', '/')
+        if normalized.endswith('.png') and ('/textures/items/' in normalized or '/textures/blocks/' in normalized):
+            return True
+        if normalized.endswith('.png.mcmeta') and ('/textures/items/' in normalized or '/textures/blocks/' in normalized):
+            return True
+        if '/lang/' in normalized and (normalized.endswith('.json') or normalized.endswith('.lang')):
+            return True
+        if '/models/item/' in normalized and normalized.endswith('.json'):
+            return True
+        return normalized.endswith('.jar.tree.json') or normalized.endswith('.jar.json')
+
+    def _path_needs_content(self, rel_path: str) -> bool:
+        normalized = rel_path.replace('\\', '/')
+        if normalized.endswith('.png') and ('/textures/items/' in normalized or '/textures/blocks/' in normalized):
+            return False
+        return True
+
+    def _record_skipped_file(self, rel_path: str, source_report: dict[str, Any]) -> None:
+        source_report['indexed_files'] += 1
+        source_report['skipped_files_total'] += 1
+        if len(source_report['skipped_files']) < MAX_SKIPPED_FILE_SAMPLES:
+            source_report['skipped_files'].append({'path': rel_path, 'reason': 'unsupported_or_irrelevant'})
+        if self.log_service is not None:
+            self.log_service.log('BACKEND', 'DEBUG', 'ASSETS', 'Skipped asset file', {'path': rel_path, 'source_path': source_report['source_path']}, verbose_only=True)
 
     def _extract_namespace_name(self, rel_path: str, folder: str, suffix: str) -> tuple[str, str]:
         namespace = rel_path.split('/')[1].lower()

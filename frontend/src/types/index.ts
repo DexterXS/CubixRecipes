@@ -2,6 +2,8 @@ export type CellValue = string | null;
 export type DisplayMode = 'text' | 'icons';
 export type DensityMode = 'compact' | 'normal' | 'wide';
 export type EditorMode = 'view' | 'edit';
+export type ThemeMode = 'dark' | 'light';
+export type UiScale = 1 | 1.15 | 1.3 | 1.5;
 export type AppTab = 'editor' | 'preview' | 'diagnostics' | 'raw';
 export type UiLanguage = 'ru' | 'en';
 export type PanelId = 'hero' | 'statusBar' | 'toolbar' | 'input' | 'output' | 'grid' | 'info' | 'debug' | 'settings' | 'diagnostics' | 'preview' | 'raw';
@@ -56,6 +58,8 @@ export interface UiPreferences {
   animations_enabled: boolean;
   density_mode: DensityMode;
   editor_mode: EditorMode;
+  theme_mode: ThemeMode;
+  ui_scale: UiScale;
   language: UiLanguage;
   active_view_tab: AppTab;
   reset_layout_version: number;
@@ -74,4 +78,22 @@ export interface ProjectSettings {
   project_config_path: string;
   ui_preferences: UiPreferences;
   validation?: Record<string, unknown>;
+}
+
+export interface ItemPanelAtlasEntry {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  display_name: string;
+  item_key: string;
+  meta: number | null;
+}
+
+export interface ItemPanelAtlas {
+  image_url: string;
+  tile_size: number;
+  columns: number;
+  rows: number;
+  entries: Record<string, ItemPanelAtlasEntry>;
 }

@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { ProjectSettings, RecipeView, UiPreferences } from '../types';
+import { ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -120,6 +120,14 @@ export async function updateRecipe(payload: UpdateRecipePayload): Promise<{ ok: 
   });
 }
 
+export async function searchRecipesByOutput(outputItemRaw: string): Promise<{ matches: RecipeView[] }> {
+  return request<{ matches: RecipeView[] }>(apiPath('/recipes/search'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ output_item_raw: outputItemRaw })
+  });
+}
+
 export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolean; new_uid: string; recipe: RecipeView }> {
   return request<{ ok: boolean; new_uid: string; recipe: RecipeView }>(apiPath('/recipes/save-as'), {
     method: 'POST',
@@ -153,4 +161,16 @@ export async function resolveItemRaw(raw: string): Promise<ResolveItemResponse> 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ item_raw: raw, settings: {} })
   });
+}
+
+export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
+  try {
+    const response = await fetch('/itempanel-atlas.json');
+    if (response.ok) {
+      return await response.json() as ItemPanelAtlas;
+    }
+  } catch {
+    // Fall back to backend-generated atlas below.
+  }
+  return request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
 }

@@ -92,6 +92,7 @@ class UiPreferencesRequest(BaseModel):
     animations_enabled: bool = True
     density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
     editor_mode: Literal['view', 'edit'] = 'edit'
+    ui_scale: float = 1.15
     language: Literal['ru', 'en'] = 'ru'
     active_view_tab: Literal['editor', 'preview', 'diagnostics', 'raw'] = 'editor'
     reset_layout_version: int = 4
