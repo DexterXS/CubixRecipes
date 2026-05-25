@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Added `backend/requirements.txt` for Railpack-style backend deploys so `fastapi`, `pydantic`, and `uvicorn` are installed before the container runs `uvicorn`.
 - Fixed recipe builder slot atlas previews after NEI insertion: craft-grid atlas sprites now keep a real `32x32` source box, scale visually instead of collapsing to zero height, and hover/drop layers cover the whole slot.
 - Fixed wildcard-meta item previews in recipe cells and output slots so raws like `<mod:item:*>` use the first matching itempanel atlas sprite instead of showing a `?`.
 - Restored the main PySide `admin_panel.py` / `CubixRecipes_Admin.exe` control panel and added a `Rebuild Atlas` action with progress/status there.
