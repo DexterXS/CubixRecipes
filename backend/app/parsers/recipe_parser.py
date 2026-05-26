@@ -202,9 +202,9 @@ class RecipeParser:
         normalized = raw.strip()
         if normalized == 'null':
             return None
-        item_match = re.search(r'<[^>]+>(?:\.withTag\(([\s\S]*)\))?', normalized)
-        if item_match:
-            return item_match.group(0)
+        item_ref = self._extract_item_reference(normalized)
+        if item_ref:
+            return item_ref
         raise ValueError(f'Unsupported recipe key value: {raw}')
 
     def _parse_output_item(self, output_raw: str) -> ItemRef:
@@ -214,12 +214,90 @@ class RecipeParser:
         return self.parse_item_ref(item_match.group(0))
 
     def _parse_matrix(self, matrix_raw: str) -> list[list[Optional[str]]]:
-        transformed = re.sub(r'<[^>]+>(?:\.withTag\(([\s\S]*?)\))?', lambda match: repr(match.group(0)), matrix_raw)
-        transformed = re.sub(r'\bnull\b', 'None', transformed)
-        matrix = ast.literal_eval(transformed)
-        if not isinstance(matrix, list):
+        rows_raw = self._split_list_items(matrix_raw)
+        matrix: list[list[Optional[str]]] = []
+        for row_raw in rows_raw:
+            row_text = row_raw.strip()
+            if not row_text.startswith('['):
+                raise ValueError('Recipe matrix rows must be lists')
+            matrix.append([self._parse_matrix_cell_value(cell_raw) for cell_raw in self._split_list_items(row_text)])
+        return matrix
+
+    def _split_list_items(self, list_raw: str) -> list[str]:
+        normalized = list_raw.strip()
+        if not normalized.startswith('[') or not normalized.endswith(']'):
             raise ValueError('Recipe matrix must be a list')
-        return [[self._normalize_cell_value(cell) for cell in row] for row in matrix]
+        inner = normalized[1:-1].strip()
+        if not inner:
+            return []
+        return self._split_top_level_args(inner)
+
+    def _parse_matrix_cell_value(self, raw: str) -> Optional[str]:
+        normalized = raw.strip()
+        if not normalized or normalized in {'null', 'None'}:
+            return None
+        item_ref = self._extract_item_reference(normalized)
+        if item_ref:
+            return item_ref
+        if normalized.startswith(("'", '"')):
+            try:
+                value = ast.literal_eval(normalized)
+            except (SyntaxError, ValueError):
+                return normalized
+            return self._normalize_cell_value(value)
+        return normalized
+
+    def _extract_item_reference(self, raw: str) -> Optional[str]:
+        item_match = re.search(r'<[^>]+>', raw)
+        if not item_match:
+            return None
+
+        item_end = item_match.end()
+        suffix = raw[item_end:]
+        suffix_stripped = suffix.lstrip()
+        if not suffix_stripped.startswith('.withTag('):
+            return item_match.group(0)
+
+        suffix_offset = item_end + (len(suffix) - len(suffix_stripped))
+        open_paren_index = suffix_offset + len('.withTag')
+        close_paren_index = self._find_matching_paren(raw, open_paren_index)
+        if close_paren_index is None:
+            return item_match.group(0)
+        return raw[item_match.start() : close_paren_index + 1].strip()
+
+    def _find_matching_paren(self, text: str, open_index: int) -> Optional[int]:
+        if open_index >= len(text) or text[open_index] != '(':
+            return None
+
+        depth = 0
+        in_string = False
+        string_quote = ''
+        escape = False
+        for index in range(open_index, len(text)):
+            char = text[index]
+            if escape:
+                escape = False
+                continue
+            if char == '\\':
+                escape = True
+                continue
+            if char in {'"', "'"}:
+                if in_string and char == string_quote:
+                    in_string = False
+                    string_quote = ''
+                elif not in_string:
+                    in_string = True
+                    string_quote = char
+                continue
+            if in_string:
+                continue
+            if char == '(':
+                depth += 1
+            elif char == ')':
+                depth -= 1
+                if depth == 0:
+                    return index
+        return None
 
     def _split_call(self, text: str) -> tuple[str, str]:
         call_start = text.index('(')

@@ -131,3 +131,12 @@ def test_parse_extreme_recipe_matrix_with_nbt_item_references():
     recipe = parser.parse(text).recipe
     assert recipe.recipe_type == 'avaritia_extreme_shaped'
     assert recipe.matrix[1][4].raw.startswith('<minecraft:enchanted_book>.withTag(')
+
+
+def test_parse_matrix_cell_wrapped_in_crafttweaker_call():
+    parser = RecipeParser()
+    text = 'recipes.addShaped(<energyadditions:aenergyarmorchest:27>, [[mods.example.wrap(<energyadditions:aenergyarmorchest:1>), <minecraft:diamond>]]);'
+    recipe = parser.parse(text).recipe
+    assert recipe.output.raw == '<energyadditions:aenergyarmorchest:27>'
+    assert recipe.matrix[0][0].raw == '<energyadditions:aenergyarmorchest:1>'
+    assert recipe.matrix[0][1].raw == '<minecraft:diamond>'

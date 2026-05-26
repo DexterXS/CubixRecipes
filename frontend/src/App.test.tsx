@@ -191,11 +191,12 @@ beforeEach(() => {
       }) as Promise<Response>;
     }
     if (url === '/api/recipes/uses' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body));
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
         json: async () => ({
-          matches: [{
+          matches: body.item_raw === '<minecraft:planks>' ? [{
             recipe_uid: 'recipe-uses-1',
             recipe_type: 'ct_shaped',
             name: null,
@@ -208,7 +209,7 @@ beforeEach(() => {
               [{ raw: '<minecraft:planks>', resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks', animated: false } }, { raw: null }],
               [{ raw: null }, { raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]
             ]
-          }]
+          }] : []
         })
       }) as Promise<Response>;
     }
@@ -400,7 +401,7 @@ test('R falls back to a local uploaded draft when backend search has no match', 
   await waitFor(() => {
     expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:stick>');
   });
-  expect(screen.getByText('backend lookup empty, checking uploaded drafts')).toBeTruthy();
+  expect(screen.getByText('uploaded draft cache hit')).toBeTruthy();
   expect(screen.getByText('uploaded draft recipe applied')).toBeTruthy();
 });
 
@@ -427,4 +428,29 @@ test('U opens paged recipe uses for a hovered craft-grid item', async () => {
     const usesCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/recipes/uses');
     expect(String(usesCalls[0][1]?.body)).toContain('<minecraft:planks>');
   });
+});
+
+test('U includes local uploaded draft uses when backend search has no match', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  enableHotkeyDebug();
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:stick>]]);';
+  const file = new File([source], 'local-uses.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+
+  const search = screen.getByLabelText('nei-search') as HTMLInputElement;
+  const item = await screen.findByLabelText('nei-item-<minecraft:stick>');
+  fireEvent.change(search, { target: { value: 'stick' } });
+  fireEvent.mouseEnter(item);
+  fireEvent.keyDown(window, { key: 'u', code: 'KeyU' });
+
+  const dialog = await screen.findByRole('dialog');
+  expect(dialog).toBeTruthy();
+  expect(within(dialog).getByText('1/1')).toBeTruthy();
+  expect(screen.getByText('uploaded draft uses parsed')).toBeTruthy();
 });
