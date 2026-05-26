@@ -226,6 +226,21 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .held-item-cursor { position: fixed; z-index: 2000; width: 36px; height: 36px; display: grid; place-items: center; pointer-events: none; transform: translateZ(0); filter: drop-shadow(0 8px 14px rgba(0,0,0,.35)); }
 .held-item-cursor img,
 .held-atlas-icon { width: 32px; height: 32px; display: block; background-repeat: no-repeat; object-fit: contain; image-rendering: pixelated; }
+.hotkey-debug-panel { position: fixed; left: 16px; bottom: 16px; z-index: 2600; width: min(520px, calc(100vw - 32px)); max-height: min(46vh, 440px); display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; padding: 10px; border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); border-radius: 8px; background: color-mix(in srgb, var(--panel) 94%, #111827); box-shadow: 0 18px 44px var(--shadow); font-size: 12px; }
+.hotkey-debug-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.hotkey-debug-header button { padding: 4px 8px; border-radius: 6px; }
+.hotkey-debug-list { display: grid; gap: 6px; overflow: auto; margin: 0; padding: 0; list-style: none; }
+.hotkey-debug-event { display: grid; gap: 5px; padding: 7px 8px; border-left: 3px solid var(--muted); border-radius: 6px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
+.hotkey-debug-success { border-left-color: #22c55e; }
+.hotkey-debug-warning { border-left-color: #f59e0b; }
+.hotkey-debug-error { border-left-color: #ef4444; }
+.hotkey-debug-line { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.hotkey-debug-line span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.hotkey-debug-line strong { overflow-wrap: anywhere; }
+.hotkey-debug-event dl { display: grid; grid-template-columns: minmax(82px, 0.8fr) minmax(0, 2fr); column-gap: 8px; row-gap: 3px; margin: 0; }
+.hotkey-debug-event dl div { display: contents; }
+.hotkey-debug-event dt { color: var(--muted); overflow-wrap: anywhere; }
+.hotkey-debug-event dd { margin: 0; font-family: ui-monospace, SFMono-Regular, monospace; overflow-wrap: anywhere; }
 .preview-block, .raw-block { background: var(--field-bg); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .raw-block { overflow: auto; margin: 0; white-space: pre-wrap; word-break: break-word; flex: 1; min-height: 0; }
 .diagnostics-list { padding-left: 20px; margin: 0; }

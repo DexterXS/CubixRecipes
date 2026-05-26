@@ -353,11 +353,13 @@ test('R opens a hovered NEI recipe even when search input keeps focus', async ()
   fireEvent.change(search, { target: { value: 'planks' } });
   search.focus();
   fireEvent.mouseEnter(item);
-  fireEvent.keyDown(search, { key: 'r' });
+  fireEvent.keyDown(search, { key: 'к', code: 'KeyR' });
 
   await waitFor(() => {
     expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
   });
+  expect(screen.getByLabelText('recipe-hotkey-debug')).toBeTruthy();
+  expect(screen.getByText('keydown captured')).toBeTruthy();
 });
 
 test('U opens paged recipe uses for a hovered craft-grid item', async () => {
@@ -374,7 +376,7 @@ test('U opens paged recipe uses for a hovered craft-grid item', async () => {
 
   const firstCell = screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement;
   fireEvent.mouseEnter(firstCell);
-  fireEvent.keyDown(window, { key: 'u' });
+  fireEvent.keyDown(window, { key: 'г', code: 'KeyU' });
 
   const dialog = await screen.findByRole('dialog', { name: 'Использования предмета' });
   expect(dialog).toBeTruthy();
