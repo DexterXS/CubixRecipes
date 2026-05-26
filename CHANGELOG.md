@@ -1,7 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added two admin-only frontend workspaces: `Иконки модов` for `.zip` uploads with strict `modid_x32.png` / `modid_x256.png` validation and per-size atlas generation, and `Облако .zs` for listing, downloading, renaming, and deleting all managed `.zs` files.
+- Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
+
 ### Fixed
+- Made Google OAuth start URL construction compatible with the project Python range by removing a Python 3.12-only multiline f-string expression.
 - Reworked the `Черновики` workspace into an item-first draft browser with count sorting, draft-only filtering, purple draft outlines, recipe-preview tooltips, open/delete actions, and separate local/cloud/draft save buttons guarded by output-result validation.
 - Hid the recipe-grid internal raw inputs in view mode so read-only/default users no longer see dark dots over craft slots while editing remains blocked.
 - Indexed uploaded `.zs` draft recipe outputs in the frontend so `R` can open already-loaded local draft recipes without waiting for empty backend lookups, and added hotkey debug timings for recipe searches and draft parsing.

@@ -9,6 +9,8 @@ def test_root_admin_email_is_always_admin():
 
 def test_role_permissions_match_expected_access():
     assert role_has_permission('admin', 'files:add')
+    assert role_has_permission('admin', 'files:manage')
+    assert role_has_permission('admin', 'mod-icons:manage')
     assert role_has_permission('moderator', 'templates:create')
     assert not role_has_permission('moderator', 'recipes:edit')
     assert role_has_permission('default', 'view')
@@ -19,4 +21,6 @@ def test_permission_mapping_protects_mutating_routes():
     assert permission_for_request('POST', '/api/recipes/create') == 'templates:create'
     assert permission_for_request('PUT', '/api/recipes/abc') == 'recipes:edit'
     assert permission_for_request('POST', '/api/recipes/save-as') == 'files:add'
+    assert permission_for_request('GET', '/api/admin/zs-cloud/files') == 'files:manage'
+    assert permission_for_request('POST', '/api/admin/mod-icons/generate') == 'mod-icons:manage'
     assert permission_for_request('GET', '/api/recipes/abc') == 'view'

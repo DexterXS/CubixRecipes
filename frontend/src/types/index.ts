@@ -131,3 +131,68 @@ export interface CustomItem {
   created_at?: string | null;
   updated_at?: string | null;
 }
+
+export interface ModIconArchiveInfo {
+  name: string;
+  size: number;
+  modifiedAt?: string;
+}
+
+export interface ModIconAtlasEntry {
+  modid: string;
+  size: number;
+  page: number;
+  atlasFile: string;
+  image_url: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface ModIconAtlasManifest {
+  updatedAt?: string;
+  maxAtlasSize: number;
+  fallbackAtlasUrl: string;
+  archives: ModIconArchiveInfo[];
+  atlases: Array<{
+    size: number;
+    page: number;
+    image_url: string;
+    file: string;
+    columns: number;
+    rows: number;
+    tileSize: number;
+    entries: Record<string, ModIconAtlasEntry>;
+  }>;
+  entries: Record<'x32' | 'x256', Record<string, ModIconAtlasEntry>>;
+  duplicates: Array<Record<string, string>>;
+  rejected: Array<Record<string, string>>;
+  totalMods: number;
+}
+
+export interface ModIconAdminStatus {
+  archives: ModIconArchiveInfo[];
+  manifest: ModIconAtlasManifest | null;
+  rules: {
+    acceptedArchive: string;
+    acceptedFiles: string[];
+    maxAtlasSize: number;
+  };
+}
+
+export interface ZsCloudFile {
+  path: string;
+  name: string;
+  size: number;
+  modifiedAt: string;
+  recipeCount: number;
+}
+
+export interface ZsCloudBackup {
+  id: string;
+  name: string;
+  originalPath: string;
+  size: number;
+  updatedAt: string;
+}

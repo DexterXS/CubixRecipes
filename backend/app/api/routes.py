@@ -8,7 +8,7 @@ import secrets
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
-from urllib.parse import urlencode, urlparse
+from urllib.parse import quote, urlencode, urlparse
 from urllib.parse import unquote
 from zipfile import ZipFile
 
@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import BatchSearchRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -28,7 +28,9 @@ from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
+from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, InvalidModIconArchiveError, ModIconAtlasService
 from app.services.recipe_service import RecipeService
+from app.storage.zs_cloud import ZsCloudBackupService
 from app.storage.zs_storage import ZsStorage
 
 
@@ -249,6 +251,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     project_root = _project_root_for_catalog(config_service)
     itempanel_icon_catalog = ItemPanelIconCatalog(project_root / 'itempanel.csv', project_root / 'itempanel_icons')
     itempanel_icon_catalog.scan()
+    admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
+    storage.excluded_managed_roots = [admin_data_dir]
+    mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
+    zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
     resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
     index_paths = config_service.build_index_paths(config)
     if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
@@ -273,6 +279,14 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     router = APIRouter(prefix='/api')
 
+    def _attachment_headers(filename: str) -> dict[str, str]:
+        return {'Content-Disposition': f"attachment; filename*=UTF-8''{quote(filename)}"}
+
+    def _require_root_admin(request: Request) -> None:
+        user = getattr(request.state, 'auth_user', {}) or {}
+        if not user.get('is_root_admin'):
+            raise HTTPException(status_code=403, detail='Root admin access required')
+
     @router.get('/auth/me')
     def auth_me(request: Request):
         session = _get_request_session(request)
@@ -295,14 +309,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
         client_id, _client_secret = _google_client_config()
         state = _sign_oauth_state(secrets.token_urlsafe(32))
-        auth_url = f'{GOOGLE_AUTH_URL}?{urlencode({
+        auth_params = {
             "client_id": client_id,
             "redirect_uri": _google_redirect_uri(request),
             "response_type": "code",
             "scope": "openid email profile",
             "state": state,
             "prompt": "select_account",
-        })}'
+        }
+        auth_url = f'{GOOGLE_AUTH_URL}?{urlencode(auth_params)}'
         response = RedirectResponse(auth_url)
         same_site = _cookie_same_site()
         response.set_cookie(
@@ -383,6 +398,89 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return {'ok': True, 'user': user.as_dict()}
+
+    @router.get('/admin/mod-icons')
+    def admin_mod_icons_status():
+        return mod_icon_atlas_service.status()
+
+    @router.post('/admin/mod-icons/archive')
+    async def admin_upload_mod_icons_archive(request: Request, filename: str = '', replace: bool = False):
+        archive_name = filename or request.headers.get('x-archive-filename', '')
+        content = await request.body()
+        try:
+            uploaded = mod_icon_atlas_service.upload_archive(archive_name, content, replace=replace)
+        except ArchiveAlreadyExistsError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except InvalidModIconArchiveError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon archive uploaded', uploaded)
+        return {'ok': True, 'archive': uploaded, 'status': mod_icon_atlas_service.status()}
+
+    @router.post('/admin/mod-icons/generate')
+    def admin_generate_mod_icon_atlases():
+        manifest = mod_icon_atlas_service.generate_atlases()
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon atlases generated', {'atlases': len(manifest.get('atlases', [])), 'totalMods': manifest.get('totalMods')})
+        return {'ok': True, 'manifest': manifest}
+
+    @router.get('/admin/mod-icons/atlases/{filename}')
+    def admin_mod_icon_atlas_png(filename: str):
+        content = mod_icon_atlas_service.read_atlas_png(filename)
+        if content is None:
+            raise HTTPException(status_code=404, detail='Mod icon atlas is not available')
+        return Response(content=content, media_type='image/png')
+
+    @router.get('/admin/zs-cloud/files')
+    def admin_list_zs_cloud_files():
+        return {'files': storage.list_managed_zs_files()}
+
+    @router.get('/admin/zs-cloud/files/download')
+    def admin_download_zs_cloud_file(path: str):
+        try:
+            file_path, text = storage.read_zs_file(path)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return Response(content=text.encode('utf-8'), media_type='text/plain; charset=utf-8', headers=_attachment_headers(file_path.name))
+
+    @router.delete('/admin/zs-cloud/files')
+    def admin_delete_zs_cloud_file(request: CloudFileRequest):
+        try:
+            file_path = storage.resolve_existing_zs_file(request.path)
+            zs_backup_service.backup_file(file_path)
+            deleted = storage.delete_zs_file(request.path)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        debug_service.record_recipe_scan(storage.last_scan_report)
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Admin deleted .zs file', {'path': str(deleted)})
+        return {'ok': True, 'path': str(deleted), 'files': storage.list_managed_zs_files()}
+
+    @router.patch('/admin/zs-cloud/files/rename')
+    def admin_rename_zs_cloud_file(request: RenameCloudFileRequest):
+        try:
+            old_path = storage.resolve_existing_zs_file(request.path)
+            zs_backup_service.backup_file(old_path)
+            new_path = storage.rename_zs_file(request.path, request.new_name)
+            zs_backup_service.backup_file(new_path)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        debug_service.record_recipe_scan(storage.last_scan_report)
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Admin renamed .zs file', {'old_path': request.path, 'new_path': str(new_path)})
+        return {'ok': True, 'path': str(new_path), 'files': storage.list_managed_zs_files()}
+
+    @router.get('/admin/zs-cloud/backups')
+    def admin_list_zs_cloud_backups(request: Request):
+        _require_root_admin(request)
+        managed_paths = [Path(str(item['path'])) for item in storage.list_managed_zs_files()]
+        zs_backup_service.backup_many(managed_paths)
+        return {'backups': zs_backup_service.list_backups()}
+
+    @router.get('/admin/zs-cloud/backups/{backup_id}/download')
+    def admin_download_zs_cloud_backup(backup_id: str, request: Request):
+        _require_root_admin(request)
+        backup = zs_backup_service.read_backup(backup_id)
+        if backup is None:
+            raise HTTPException(status_code=404, detail='Backup file not found')
+        filename, content = backup
+        return Response(content=content, media_type='text/plain; charset=utf-8', headers=_attachment_headers(filename))
 
     @router.post('/parse')
     def parse_route(request: ParseRequest):
@@ -470,6 +568,8 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except KeyError as exc:
             _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '404', started_at, {'detail': 'Recipe not found'}, level='ERROR')
             raise HTTPException(status_code=404, detail='Recipe not found') from exc
+        if updated.source.path:
+            zs_backup_service.backup_file(Path(updated.source.path))
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe updated', {'recipe_uid': recipe_uid, 'output_raw': request.output_raw, 'matrix_rows': len(request.matrix)})
         response_body = {'ok': True, 'updatedRecipe': serialize_recipe(_resolve_recipe_items(updated, resolver, debug_service))}
@@ -499,6 +599,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except ValueError as exc:
             _log_api(log_service, 'POST', '/api/zs/files/create', {'path': request.path}, '400', started_at, {'detail': str(exc)}, level='ERROR')
             raise HTTPException(status_code=400, detail=str(exc)) from exc
+        zs_backup_service.backup_file(Path(path))
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Created .zs file', {'path': path})
         _log_api(log_service, 'POST', '/api/zs/files/create', {'path': request.path}, '200', started_at, {'path': path})
         return {'ok': True, 'path': path}
@@ -518,9 +619,12 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except ValueError as exc:
             _log_api(log_service, 'POST', '/api/recipes/save-as', {'target_path': request.target_path}, '400', started_at, {'detail': str(exc)}, level='ERROR')
             raise HTTPException(status_code=400, detail=str(exc)) from exc
+        saved_recipe = storage.get_recipe(new_uid)
+        if saved_recipe.source.path:
+            zs_backup_service.backup_file(Path(saved_recipe.source.path))
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe saved as', {'recipe_uid': request.recipe_uid, 'new_uid': new_uid, 'target_path': request.target_path})
-        response = {'ok': True, 'new_uid': new_uid, 'recipe': serialize_recipe(_resolve_recipe_items(storage.get_recipe(new_uid), resolver, debug_service))}
+        response = {'ok': True, 'new_uid': new_uid, 'recipe': serialize_recipe(_resolve_recipe_items(saved_recipe, resolver, debug_service))}
         _log_api(log_service, 'POST', '/api/recipes/save-as', {'target_path': request.target_path}, '200', started_at, {'new_uid': new_uid})
         return response
 

@@ -71,6 +71,15 @@ class CreateFileRequest(BaseModel):
     path: str
 
 
+class CloudFileRequest(BaseModel):
+    path: str
+
+
+class RenameCloudFileRequest(BaseModel):
+    path: str
+    new_name: str = Field(min_length=1, max_length=255)
+
+
 class UpdateRecipeRequest(BaseModel):
     recipe_type: Literal['ct_shaped', 'avaritia_extreme_shaped']
     output_raw: str

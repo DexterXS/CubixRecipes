@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences, UserRole } from '../types';
+import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -42,6 +42,21 @@ interface CustomItemPayload {
   nbt_raw?: string | null;
 }
 
+export class ApiConflictError extends Error {}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  let message = `HTTP ${response.status}`;
+  try {
+    const payload = await response.json();
+    if ((payload as { detail?: string })?.detail) {
+      message = (payload as { detail: string }).detail;
+    }
+  } catch {
+    // ignore invalid JSON bodies
+  }
+  return message;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const startedAt = performance.now();
   const payloadPreview = typeof init?.body === 'string' ? init.body.slice(0, 600) : undefined;
@@ -70,21 +85,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
 
   if (!response.ok) {
-    let message = `HTTP ${response.status}`;
-    let errorPayload: unknown = null;
-    try {
-      errorPayload = await response.json();
-      if ((errorPayload as { detail?: string })?.detail) {
-        message = (errorPayload as { detail: string }).detail;
-      }
-    } catch {
-      // ignore invalid JSON bodies
-    }
+    const message = await readErrorMessage(response);
     logFrontendEvent({
       level: 'ERROR',
       category: 'API',
       message: `${init?.method ?? 'GET'} ${path} failed`,
-      details: { status: response.status, durationMs, payload: payloadPreview, response: errorPayload }
+      details: { status: response.status, durationMs, payload: payloadPreview }
     });
     throw new Error(message);
   }
@@ -111,6 +117,20 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     verbose_only: true
   });
   return data;
+}
+
+async function requestBlob(path: string, init?: RequestInit): Promise<{ blob: Blob; filename: string }> {
+  const response = await fetch(path, { credentials: 'include', ...init });
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
+  }
+  const disposition = response.headers.get('content-disposition') ?? '';
+  const encodedMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+  const plainMatch = disposition.match(/filename="?([^";]+)"?/i);
+  const filename = encodedMatch
+    ? decodeURIComponent(encodedMatch[1])
+    : plainMatch?.[1] ?? 'download.zs';
+  return { blob: await response.blob(), filename };
 }
 
 export async function parseText(text: string): Promise<ParseResponse> {
@@ -251,4 +271,64 @@ export async function updateUserRole(userId: number, role: UserRole): Promise<{ 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ role })
   });
+}
+
+export async function getModIconAdminStatus(): Promise<ModIconAdminStatus> {
+  return request<ModIconAdminStatus>(apiPath('/admin/mod-icons'));
+}
+
+export async function uploadModIconArchive(file: File, replace = false): Promise<ModIconAdminStatus> {
+  const path = apiPath(`/admin/mod-icons/archive?filename=${encodeURIComponent(file.name)}&replace=${replace ? 'true' : 'false'}`);
+  const response = await fetch(path, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/zip' },
+    body: file
+  });
+  if (!response.ok) {
+    const message = await readErrorMessage(response);
+    if (response.status === 409) {
+      throw new ApiConflictError(message);
+    }
+    throw new Error(message);
+  }
+  const payload = await response.json() as { status: ModIconAdminStatus };
+  return payload.status;
+}
+
+export async function generateModIconAtlases(): Promise<ModIconAtlasManifest> {
+  const payload = await request<{ ok: boolean; manifest: ModIconAtlasManifest }>(apiPath('/admin/mod-icons/generate'), { method: 'POST' });
+  return payload.manifest;
+}
+
+export async function listZsCloudFiles(): Promise<{ files: ZsCloudFile[] }> {
+  return request<{ files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files'));
+}
+
+export async function downloadZsCloudFile(path: string): Promise<{ blob: Blob; filename: string }> {
+  return requestBlob(apiPath(`/admin/zs-cloud/files/download?path=${encodeURIComponent(path)}`));
+}
+
+export async function deleteZsCloudFile(path: string): Promise<{ ok: boolean; files: ZsCloudFile[] }> {
+  return request<{ ok: boolean; files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files'), {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path })
+  });
+}
+
+export async function renameZsCloudFile(path: string, newName: string): Promise<{ ok: boolean; files: ZsCloudFile[] }> {
+  return request<{ ok: boolean; files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files/rename'), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path, new_name: newName })
+  });
+}
+
+export async function listZsCloudBackups(): Promise<{ backups: ZsCloudBackup[] }> {
+  return request<{ backups: ZsCloudBackup[] }>(apiPath('/admin/zs-cloud/backups'));
+}
+
+export async function downloadZsCloudBackup(backupId: string): Promise<{ blob: Blob; filename: string }> {
+  return requestBlob(apiPath(`/admin/zs-cloud/backups/${encodeURIComponent(backupId)}/download`));
 }

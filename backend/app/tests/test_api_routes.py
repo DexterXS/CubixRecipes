@@ -1,3 +1,4 @@
+import asyncio
 import json
 from pathlib import Path
 from zipfile import ZipFile
@@ -55,6 +56,60 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
 
 
+def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
+    icon_path = tmp_path / 'icon.png'
+    _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    archive_path = tmp_path / 'mods.zip'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.write(icon_path, 'examplemod_x32.png')
+        archive.write(icon_path, 'examplemod_x256.png')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
+    generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate')
+    atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/atlases/{filename}')
+
+    class BodyRequest:
+        headers = {}
+
+        async def body(self):
+            return archive_path.read_bytes()
+
+    uploaded = asyncio.run(upload_route(BodyRequest(), filename='mods.zip', replace=False))
+    generated = generate_route()
+    first_atlas = generated['manifest']['atlases'][0]
+    atlas_response = atlas_route(first_atlas['file'])
+
+    assert uploaded['archive']['name'] == 'mods.zip'
+    assert generated['manifest']['entries']['x32']['examplemod']['w'] == 32
+    assert generated['manifest']['entries']['x256']['examplemod']['w'] == 256
+    assert atlas_response.media_type == 'image/png'
+    assert atlas_response.body.startswith(b'\x89PNG')
+
+
+def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):
+    icon_path = tmp_path / 'icon.png'
+    _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    archive_path = tmp_path / 'mods.zip'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.write(icon_path, 'ExampleMod_x32.png')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
+
+    class BodyRequest:
+        headers = {}
+
+        async def body(self):
+            return archive_path.read_bytes()
+
+    with pytest.raises(HTTPException) as exc_info:
+        asyncio.run(upload_route(BodyRequest(), filename='mods.zip', replace=False))
+
+    assert exc_info.value.status_code == 400
+    assert 'unsupported files' in exc_info.value.detail
+
+
 def test_save_as_accepts_generated_recipe(tmp_path: Path):
     app = create_app(str(tmp_path))
     save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
@@ -79,6 +134,39 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
     assert response['recipe']['output']['raw'] == '<minecraft:torch>'
     assert response['recipe']['matrix'][0][0]['raw'] == '<minecraft:coal>'
     assert (tmp_path / 'saved.zs').read_text(encoding='utf-8').strip().startswith('recipes.addShaped("Torch Recipe"')
+
+
+def test_admin_zs_cloud_can_rename_delete_and_keep_root_backup(tmp_path: Path):
+    recipe_path = tmp_path / 'cloud.zs'
+    recipe_path.write_text('recipes.addShaped(<minecraft:apple>, [[<minecraft:stick>]]);\n', encoding='utf-8')
+    app = create_app(str(tmp_path), config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    list_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files' and 'GET' in getattr(route, 'methods', set()))
+    download_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files/download')
+    rename_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files/rename')
+    delete_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files' and 'DELETE' in getattr(route, 'methods', set()))
+    backup_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/backups')
+
+    files = list_route()['files']
+    assert [item['name'] for item in files] == ['cloud.zs']
+    assert not any('.cubixrecipes_admin' in item['path'] for item in files)
+
+    downloaded = download_route(path=str(recipe_path))
+    renamed = rename_route(type('RenameRequest', (), {'path': str(recipe_path), 'new_name': 'renamed.zs'})())
+    renamed_path = tmp_path / 'renamed.zs'
+    deleted = delete_route(type('DeleteRequest', (), {'path': str(renamed_path)})())
+
+    class RootRequest:
+        state = type('State', (), {'auth_user': {'is_root_admin': True}})()
+
+    backups = backup_route(RootRequest())['backups']
+
+    assert downloaded.body.startswith(b'recipes.addShaped')
+    assert renamed['files'][0]['name'] == 'renamed.zs'
+    assert deleted['files'] == []
+    assert not renamed_path.exists()
+    assert any(item['name'] == 'cloud.zs' for item in backups)
+    assert any(item['name'] == 'renamed.zs' for item in backups)
+    assert list_route()['files'] == []
 
 
 
