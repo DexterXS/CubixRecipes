@@ -19,6 +19,7 @@ button, input, textarea, select { font: inherit; }
 button { border: 1px solid transparent; border-radius: 12px; background: linear-gradient(180deg, #3b82f6, #2563eb); color: white; padding: 8px 12px; cursor: pointer; }
 button:hover { filter: brightness(1.06); }
 button:disabled { cursor: default; opacity: 0.52; filter: none; }
+button[aria-disabled='true'] { cursor: default; opacity: 0.52; }
 .secondary-button { background: #1e293b; border-color: #334155; }
 .ghost-button { background: transparent; border-color: var(--border); color: var(--text); }
 input, textarea, select { width: 100%; border-radius: 12px; border: 1px solid var(--border); background: var(--field-bg); color: var(--text); padding: 10px 12px; min-width: 0; }
@@ -238,7 +239,18 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .modal-scalable { zoom: var(--modal-scale, 1); max-height: min(92vh, calc(96vh / var(--modal-scale, 1))); overflow: auto; resize: both; min-width: 420px; min-height: 220px; }
 .modal-nbt-tree { width: min(1100px, 96vw); min-width: 760px; min-height: 420px; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.modal-subtitle { display: block; margin-top: 4px; color: var(--muted); overflow-wrap: anywhere; }
 .settings-modal-body { display: grid; gap: 16px; }
+.modal-recipe-uses { width: min(920px, 96vw); max-height: 92vh; overflow: auto; }
+.recipe-uses-view { display: grid; gap: 12px; }
+.recipe-uses-output { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: center; }
+.recipe-uses-output .output-icon-slot { width: 72px; border-radius: 8px; }
+.recipe-uses-output strong,
+.recipe-uses-output span { display: block; overflow-wrap: anywhere; }
+.recipe-uses-output span { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.recipe-uses-grid { min-height: 190px; display: grid; place-items: center; }
+.recipe-uses-actions { display: grid; grid-template-columns: 36px minmax(64px, 1fr) 36px auto; gap: 8px; align-items: center; }
+.recipe-uses-actions strong { text-align: center; font-variant-numeric: tabular-nums; }
 .modal-scale-wrap { position: relative; }
 .modal-scale-popover { position: absolute; right: 0; top: calc(100% + 6px); display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 6px 8px; z-index: 30; }
 .modal-scale-popover input[type="range"] { width: 120px; }

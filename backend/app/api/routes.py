@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import BatchSearchRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.api.schemas import BatchSearchRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -425,6 +425,14 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         matches = [serialize_recipe(_resolve_recipe_items(recipe, resolver, debug_service)) for recipe in storage.search_by_output(request.output_item_raw)]
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe search completed', {'output_item_raw': request.output_item_raw, 'matches': len(matches)})
         _log_api(log_service, 'POST', '/api/recipes/search', {'output_item_raw': request.output_item_raw}, '200', started_at, {'matches': len(matches)})
+        return {'matches': matches}
+
+    @router.post('/recipes/uses')
+    def recipe_uses_route(request: IngredientSearchRequest):
+        started_at = perf_counter()
+        matches = [serialize_recipe(_resolve_recipe_items(recipe, resolver, debug_service)) for recipe in storage.search_by_ingredient(request.item_raw)]
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe uses search completed', {'item_raw': request.item_raw, 'matches': len(matches)})
+        _log_api(log_service, 'POST', '/api/recipes/uses', {'item_raw': request.item_raw}, '200', started_at, {'matches': len(matches)})
         return {'matches': matches}
 
     @router.post('/recipes/search-batch')

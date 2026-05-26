@@ -164,6 +164,18 @@ def test_update_existing_recipe_persists_changes(tmp_path: Path):
     assert '<minecraft:redstone>' in recipe_file.read_text(encoding='utf-8')
 
 
+def test_recipe_uses_route_finds_ingredient_matches(tmp_path: Path):
+    recipe_file = tmp_path / 'recipes.zs'
+    recipe_file.write_text('recipes.addShaped(<minecraft:torch>, [[<minecraft:coal>], [<minecraft:stick>]]);\n', encoding='utf-8')
+    app = create_app(str(tmp_path))
+    uses_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/uses')
+
+    response = uses_route(type('UsesRequest', (), {'item_raw': '<minecraft:stick:0>'})())
+
+    assert response['matches'][0]['output']['raw'] == '<minecraft:torch>'
+    assert response['matches'][0]['matrix'][1][0]['raw'] == '<minecraft:stick>'
+
+
 def test_update_recipe_returns_404_when_recipe_uid_is_missing(tmp_path: Path):
     app = create_app(str(tmp_path))
     update_route = next(

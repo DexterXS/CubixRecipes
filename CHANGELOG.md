@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Added per-user local draft persistence keyed by a hashed Google email, so the current craft, editor input, NEI search, recipe history, uploaded draft metadata, and temporary craft/NBT editor fields survive page reloads on the same PC.
+- Made recipe hotkeys item-aware outside NEI: `R` now opens recipes from hovered NEI, craft-grid, and output items, `U` opens a paged "used in recipes" modal, and recipe navigation now has back/forward arrows.
 - Repaired mojibake Russian UI strings in the React app, raised modal layering above grid hover targets, added NEI recipe-availability highlighting with a backend batch lookup, and added PostgreSQL-backed custom item overrides with per-user/global scope plus NBT editing.
 - Simplified the frontend shell into a static `Главное меню` / `Черновики` / admin-only `Отладка` flow, moved scale and staff-role controls into Settings, removed the View/items customization controls, and added recipe file draft import/download actions.
 - Prevented Railway Google sign-in from saving the session on a different backend host than the one used by `VITE_API_BASE`; OAuth callbacks now follow the actual `/auth/google/start` request host unless `GOOGLE_REDIRECT_URI` is explicitly set.

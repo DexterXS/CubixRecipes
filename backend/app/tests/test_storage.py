@@ -18,6 +18,17 @@ def test_search_by_output(tmp_path: Path):
     assert len(storage.search_by_output('<minecraft:stick:0>')) == 1
 
 
+def test_search_by_ingredient(tmp_path: Path):
+    scripts = tmp_path / 'scripts'
+    scripts.mkdir()
+    (scripts / 'sample.zs').write_text(SAMPLE, encoding='utf-8')
+    storage = ZsStorage(scripts)
+    storage.scan()
+    assert len(storage.search_by_ingredient('<minecraft:planks>')) == 1
+    assert len(storage.search_by_ingredient('<minecraft:planks:0>')) == 1
+    assert len(storage.search_by_ingredient('<minecraft:stick>')) == 0
+
+
 def test_replace_existing_recipe(tmp_path: Path):
     scripts = tmp_path / 'scripts'
     scripts.mkdir()
