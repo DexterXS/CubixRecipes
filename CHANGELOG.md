@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Added a root `requirements.txt` that delegates to `backend/requirements.txt` so Railway/Railpack installs backend auth dependencies even when the service root is the repository root.
 - Added Railway Postgres fallbacks for `DATABASE_PUBLIC_URL` and `PGHOST`/`PGPORT`/`PGUSER`/`PGPASSWORD`/`PGDATABASE` when `DATABASE_URL` is not injected into the backend service.
 - Improved Railway auth configuration detection: backend now accepts common Postgres URL aliases and lets CORS preflight requests pass before auth checks.
 - Fixed cross-domain Railway auth sessions by using `SameSite=None; Secure` cookies when `FRONTEND_PUBLIC_URL` and `APP_PUBLIC_URL` point to different hosts.
