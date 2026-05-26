@@ -129,6 +129,7 @@ const LOCAL_DRAFT_SAVE_DELAY_MS = 250;
 const LOCAL_DRAFT_MAX_HISTORY = 20;
 const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
 const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
+const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
 
 type CraftEditorTarget =
   | { kind: 'output' }
@@ -491,6 +492,16 @@ function collectRecipeOutputRaws(source: string): string[] {
     outputRaws.add(match[1].trim());
   }
   return [...outputRaws];
+}
+
+function collectRecipeBlocks(source: string): string[] {
+  const blocks: string[] = [];
+  const blockPattern = /(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
+  let match: RegExpExecArray | null;
+  while ((match = blockPattern.exec(source)) !== null) {
+    blocks.push(match[0]);
+  }
+  return blocks;
 }
 
 function customItemToEntry(item: CustomItem): ItemPanelEntry {
@@ -858,6 +869,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
   const [recipeBackHistory, setRecipeBackHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeBackHistory ?? []);
   const [recipeForwardHistory, setRecipeForwardHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeForwardHistory ?? []);
+  const [isHotkeyDebugEnabled, setIsHotkeyDebugEnabled] = useState(() => {
+    try {
+      return window.localStorage.getItem(HOTKEY_DEBUG_ENABLED_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [hotkeyDebugEvents, setHotkeyDebugEvents] = useState<HotkeyDebugEvent[]>([]);
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [customItemsStatus, setCustomItemsStatus] = useState('');
@@ -904,6 +922,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canManageSettings = can(authUser, 'settings:manage');
   const canManageRoles = can(authUser, 'roles:manage');
   const canUseDebug = can(authUser, 'debug:manage');
+  const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   const workspaceTabs = [
     { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
     { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
@@ -911,6 +930,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   ].filter((tab) => tab.visible);
 
   function logHotkeyDebug(message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
+    if (!isHotkeyDebugActive) {
+      return;
+    }
     const entry: HotkeyDebugEvent = {
       id: hotkeyDebugCounterRef.current + 1,
       timestamp: new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
@@ -921,6 +943,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     hotkeyDebugCounterRef.current = entry.id;
     setHotkeyDebugEvents((current) => [entry, ...current].slice(0, 32));
     console.info('[CubixRecipes R/U debug]', message, details ?? {});
+  }
+
+  function setHotkeyDebugEnabledForAdmin(enabled: boolean) {
+    if (!canManageSettings) {
+      return;
+    }
+    setIsHotkeyDebugEnabled(enabled);
+    if (!enabled) {
+      setHotkeyDebugEvents([]);
+    }
+    try {
+      window.localStorage.setItem(HOTKEY_DEBUG_ENABLED_STORAGE_KEY, enabled ? 'true' : 'false');
+    } catch {
+      // Local debug preferences are best-effort only.
+    }
   }
 
   function updateHoveredItemRaw(next: string | null | ((current: string | null) => string | null)) {
@@ -964,6 +1001,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   useEffect(() => {
     document.documentElement.dataset.theme = uiPreferences.theme_mode;
   }, [uiPreferences.theme_mode]);
+
+  useEffect(() => {
+    if (!isHotkeyDebugActive && hotkeyDebugEvents.length) {
+      setHotkeyDebugEvents([]);
+    }
+  }, [isHotkeyDebugActive, hotkeyDebugEvents.length]);
 
   useEffect(() => {
     if (canManageRoles) {
@@ -2082,6 +2125,49 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setHeldItemRaw((current) => (current === raw ? null : raw));
   }
 
+  function findUploadedDraftRecipeBlock(raw: string): { draft: UploadedDraft; block: string; matchedRaw: string } | null {
+    const targetKeys = new Set(recipeLookupKeysForRaw(raw));
+    for (const draft of uploadedDrafts) {
+      const blocks = collectRecipeBlocks(draft.text);
+      for (const block of blocks) {
+        const matchedRaw = collectRecipeOutputRaws(block).find((outputRaw) => (
+          recipeLookupKeysForRaw(outputRaw).some((key) => targetKeys.has(key))
+        ));
+        if (matchedRaw) {
+          return { draft, block, matchedRaw };
+        }
+      }
+    }
+    return null;
+  }
+
+  async function openRecipeFromUploadedDraft(raw: string): Promise<boolean> {
+    const match = findUploadedDraftRecipeBlock(raw);
+    if (!match) {
+      logHotkeyDebug('uploaded draft lookup response', { raw, matches: 0 }, 'warning');
+      return false;
+    }
+    logHotkeyDebug('uploaded draft match found', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw }, 'success');
+    setSelectedDraftId(match.draft.id);
+    const result = await parseText(match.block);
+    if (!result.recipe) {
+      logHotkeyDebug('uploaded draft parse returned no recipe', { raw, draft: match.draft.name }, 'warning');
+      return false;
+    }
+    const recipeFromDraft: RecipeView = {
+      ...result.recipe,
+      source: { ...result.recipe.source, path: match.draft.name }
+    };
+    applyRecipe(recipeFromDraft, match.block, { rememberCurrent: true });
+    setHeldItemRaw(null);
+    setWorkspaceTab('editor');
+    setStatus(`Открыт локальный черновик ${recipeFromDraft.output.raw} из ${match.draft.name}.`);
+    setLastParseResult(recipeFromDraft.recipe_type);
+    setLastApiStatus(t('values.ok'));
+    logHotkeyDebug('uploaded draft recipe applied', { raw, outputRaw: recipeFromDraft.output.raw, draft: match.draft.name }, 'success');
+    return true;
+  }
+
   function inspectActiveItemRaw(): ActiveItemInspection {
     const hoveredRef = hoveredItemRawRef.current?.trim() || null;
     const hoveredStateValue = hoveredItemRaw?.trim() || null;
@@ -2125,11 +2211,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus(`Ищу рецепт для ${normalizedRaw}...`);
     setLastApiStatus(t('values.pending'));
     try {
-      const result = await searchRecipesByOutput(normalizedRaw);
-      logHotkeyDebug('recipe lookup response', { raw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
-      const match = result.matches[0];
+      const lookupKeys = recipeLookupKeysForRaw(normalizedRaw);
+      let match: RecipeView | undefined;
+      for (const lookupRaw of lookupKeys) {
+        const result = await searchRecipesByOutput(lookupRaw);
+        logHotkeyDebug('recipe lookup response', { raw: lookupRaw, requestedRaw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
+        if (result.matches[0]) {
+          match = result.matches[0];
+          break;
+        }
+      }
       if (!match) {
-        setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes.`);
+        logHotkeyDebug('backend lookup empty, checking uploaded drafts', { raw: normalizedRaw, keys: lookupKeys.join(', ') }, 'warning');
+        if (await openRecipeFromUploadedDraft(normalizedRaw)) {
+          return;
+        }
+        setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes и локальных черновиках.`);
         setLastApiStatus(t('values.ok'));
         return;
       }
@@ -2920,7 +3017,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderHotkeyDebugPanel() {
-    if (!hotkeyDebugEvents.length) return null;
+    if (!isHotkeyDebugActive || !hotkeyDebugEvents.length) return null;
     return (
       <aside className="hotkey-debug-panel" aria-label="recipe-hotkey-debug">
         <div className="hotkey-debug-header">
@@ -3428,6 +3525,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <option value={1.5}>150%</option>
                 </select>
               </label>
+              <section className="settings-section">
+                <div className="settings-section-title">
+                  <h3>R/U debug</h3>
+                  <span>Логи наведения, клавиш и поиска рецепта видны только админам.</span>
+                </div>
+                <label className="field-block">
+                  <span>Включить отладку R/U</span>
+                  <input
+                    aria-label="hotkey-debug-enabled"
+                    type="checkbox"
+                    checked={isHotkeyDebugEnabled}
+                    onChange={(event) => setHotkeyDebugEnabledForAdmin(event.target.checked)}
+                  />
+                </label>
+              </section>
               <section className="settings-section">
                 <div className="settings-section-title">
                   <h3>Права персонала</h3>
