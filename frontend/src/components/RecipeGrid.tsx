@@ -10,6 +10,7 @@ interface Props {
   animationsEnabled: boolean;
   editorMode: EditorMode;
   heldItemRaw?: string | null;
+  tooltipsDisabled?: boolean;
   onCellChange: (row: number, col: number, value: string) => void;
   onCellClick: (row: number, col: number) => void;
   onCellContextMenu: (row: number, col: number) => void;
@@ -42,6 +43,7 @@ export function RecipeGrid({
   animationsEnabled,
   editorMode,
   heldItemRaw,
+  tooltipsDisabled,
   onCellChange,
   onCellClick,
   onCellContextMenu,
@@ -189,7 +191,7 @@ export function RecipeGrid({
                 data-craft-cell="true"
                 data-row={rowIndex}
                 data-col={colIndex}
-                title={title}
+                title={tooltipsDisabled ? undefined : title}
                 onMouseDown={(event) => startCellPaint(event, rowIndex, colIndex)}
                 onMouseEnter={() => continueCellPaint(rowIndex, colIndex)}
                 onMouseOver={() => continueCellPaint(rowIndex, colIndex)}
@@ -219,7 +221,7 @@ export function RecipeGrid({
                 }}
               >
                 <div className="cell-visual">
-                  <div className="cell-icon-slot" aria-label={`craft-cell-${rowIndex}-${colIndex}`} title={title}>
+                  <div className="cell-icon-slot" aria-label={`craft-cell-${rowIndex}-${colIndex}`} title={tooltipsDisabled ? undefined : title}>
                     {atlasStyle ? <span className="cell-atlas-icon" style={atlasStyle} aria-hidden="true" /> : null}
                     {!atlasStyle && iconUrl
                       ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} animationsEnabled={animationsEnabled} />
@@ -231,11 +233,11 @@ export function RecipeGrid({
                   className="cell-raw-input"
                   aria-label={`cell-${rowIndex}-${colIndex}`}
                   value={value}
-                  title={title}
+                  title={tooltipsDisabled ? undefined : title}
                   readOnly={editorMode === 'view'}
                   onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
                 />
-                <span className="cell-preview" title={title}>{value ? shortenCellValue(value) : ''}</span>
+                <span className="cell-preview" title={tooltipsDisabled ? undefined : title}>{value ? shortenCellValue(value) : ''}</span>
               </div>
             );
           })}

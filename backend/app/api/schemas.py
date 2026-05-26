@@ -13,6 +13,10 @@ class SearchRequest(BaseModel):
     output_item_raw: str
 
 
+class BatchSearchRequest(BaseModel):
+    output_item_raws: list[str] = Field(default_factory=list, max_length=300)
+
+
 class CreateRecipeRequest(BaseModel):
     templateType: Literal['ct_shaped', 'avaritia_extreme_shaped']
     output: Optional[str] = None
@@ -43,6 +47,15 @@ class SaveAsRequest(BaseModel):
 class ResolveRequest(BaseModel):
     item_raw: str
     settings: dict = Field(default_factory=dict)
+
+
+class CustomItemRequest(BaseModel):
+    id: Optional[int] = None
+    scope: Literal['global', 'user'] = 'user'
+    source_raw: str = Field(min_length=1, max_length=1024)
+    item_raw: str = Field(min_length=1, max_length=1024)
+    display_name: str = Field(min_length=1, max_length=255)
+    nbt_raw: Optional[str] = Field(default=None, max_length=8192)
 
 
 class IndexScanRequest(BaseModel):
