@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Made Google OAuth `state` self-contained and signed so Railway callbacks can complete even when the temporary state cookie is not returned by the browser.
 - Replaced Authlib's session-backed OAuth state handling with an explicit signed HttpOnly state cookie to avoid Google callback `mismatching_state` failures on Railway.
 - Added `httpx` to backend runtime dependencies because Authlib's Starlette OAuth client imports it outside the dev/test dependency set.
 - Added a root `requirements.txt` that delegates to `backend/requirements.txt` so Railway/Railpack installs backend auth dependencies even when the service root is the repository root.
