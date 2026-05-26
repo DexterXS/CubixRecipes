@@ -312,6 +312,33 @@ test('local user draft survives a reload', async () => {
   expect((screen.getByLabelText('nei-search') as HTMLInputElement).value).toBe('planks');
 });
 
+test('saved recipe draft templates can be browsed, opened, and removed', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:planks>' } });
+  fireEvent.click(screen.getByLabelText('save-draft-template'));
+
+  fireEvent.click(screen.getByRole('button', { name: 'Черновики' }));
+  const draftItem = await screen.findByLabelText('draft-item-<minecraft:planks>');
+  expect(draftItem.className).toContain('has-drafts');
+  fireEvent.click(draftItem);
+
+  const templateList = screen.getByLabelText('draft-template-list');
+  const template = within(templateList).getByLabelText(/^draft-template-<minecraft:planks>-/);
+  expect(within(template).getByText(adminUser.email)).toBeTruthy();
+
+  fireEvent.click(template);
+  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+  expect(screen.queryByLabelText('draft-template-list')).toBeFalsy();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Черновики' }));
+  const reopenedTemplate = await screen.findByLabelText(/^draft-template-<minecraft:planks>-/);
+  fireEvent.contextMenu(reopenedTemplate, { clientX: 120, clientY: 80 });
+  fireEvent.click(screen.getByLabelText('delete-draft-template'));
+  expect(screen.queryByLabelText(/^draft-template-<minecraft:planks>-/)).toBeFalsy();
+});
+
 test('NEI context menu can save a personal custom item', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
