@@ -147,6 +147,28 @@ type RecipeUsesModalState = {
   error?: string;
 };
 
+type HotkeyDebugLevel = 'info' | 'success' | 'warning' | 'error';
+type HotkeyDebugDetails = Record<string, string | number | boolean | null | undefined>;
+type HotkeyDebugEvent = {
+  id: number;
+  timestamp: string;
+  level: HotkeyDebugLevel;
+  message: string;
+  details?: HotkeyDebugDetails;
+};
+
+type ActiveItemInspection = {
+  raw: string | null;
+  source: 'hover-ref' | 'hover-state' | 'dom' | 'held' | 'none';
+  hoveredRef: string | null;
+  hoveredState: string | null;
+  domRaw: string | null;
+  heldRaw: string | null;
+  pointElement: string;
+  itemElement: string;
+  cursor: string;
+};
+
 type LocalDraftState = {
   input: string;
   matrix: CellValue[][];
@@ -523,6 +545,34 @@ function buildAtlasIconStyle(atlas: ItemPanelAtlas, entry: ItemPanelAtlasEntry):
   };
 }
 
+function describeElement(element: Element | null): string {
+  if (!element) return 'none';
+  const className = element instanceof HTMLElement && typeof element.className === 'string'
+    ? element.className.split(/\s+/).filter(Boolean).slice(0, 4).map((item) => `.${item}`).join('')
+    : '';
+  const ariaLabel = element.getAttribute('aria-label')?.trim();
+  const title = element.getAttribute('title')?.trim();
+  const label = ariaLabel || title;
+  return `${element.tagName.toLowerCase()}${className}${label ? `[${label.slice(0, 64)}]` : ''}`;
+}
+
+function recipeHotkeyAction(event: KeyboardEvent): 'recipe' | 'uses' | null {
+  const key = event.key.toLowerCase();
+  if (event.code === 'KeyR' || key === 'r' || key === 'к') {
+    return 'recipe';
+  }
+  if (event.code === 'KeyU' || key === 'u' || key === 'г') {
+    return 'uses';
+  }
+  return null;
+}
+
+function formatHotkeyDebugValue(value: string | number | boolean | null | undefined): string {
+  if (value === null) return 'null';
+  if (value === undefined) return 'undefined';
+  return String(value);
+}
+
 function preloadImage(imageUrl: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -808,6 +858,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
   const [recipeBackHistory, setRecipeBackHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeBackHistory ?? []);
   const [recipeForwardHistory, setRecipeForwardHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeForwardHistory ?? []);
+  const [hotkeyDebugEvents, setHotkeyDebugEvents] = useState<HotkeyDebugEvent[]>([]);
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
@@ -844,6 +895,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const neiListRef = useRef<HTMLDivElement | null>(null);
   const cursorPointRef = useRef({ x: 0, y: 0 });
   const hoveredItemRawRef = useRef<string | null>(null);
+  const hotkeyDebugCounterRef = useRef(0);
 
   const t = createTranslator(uiPreferences.language);
   const areAnimationsEnabled = uiPreferences.animations_enabled;
@@ -858,10 +910,32 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     { id: 'debug' as const, label: uiPreferences.language === 'ru' ? 'Отладка' : 'Debug', visible: canUseDebug }
   ].filter((tab) => tab.visible);
 
+  function logHotkeyDebug(message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
+    const entry: HotkeyDebugEvent = {
+      id: hotkeyDebugCounterRef.current + 1,
+      timestamp: new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      level,
+      message,
+      details
+    };
+    hotkeyDebugCounterRef.current = entry.id;
+    setHotkeyDebugEvents((current) => [entry, ...current].slice(0, 32));
+    console.info('[CubixRecipes R/U debug]', message, details ?? {});
+  }
+
   function updateHoveredItemRaw(next: string | null | ((current: string | null) => string | null)) {
+    const previous = hoveredItemRawRef.current;
     const value = typeof next === 'function' ? next(hoveredItemRawRef.current) : next;
+    if (value === previous) {
+      return;
+    }
     hoveredItemRawRef.current = value;
     setHoveredItemRaw(value);
+    if (value) {
+      logHotkeyDebug('hover set', { raw: value }, 'info');
+    } else if (previous) {
+      logHotkeyDebug('hover cleared', { previous }, 'info');
+    }
   }
 
   async function refreshAdminUsers() {
@@ -956,13 +1030,41 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
-      if ((key !== 'r' && key !== 'u') || event.repeat) {
+      const action = recipeHotkeyAction(event);
+      if (!action) {
+        return;
+      }
+      if (event.repeat) {
+        logHotkeyDebug('keydown ignored: repeat', { key: event.key, code: event.code }, 'warning');
         return;
       }
       const target = event.target instanceof HTMLElement ? event.target : null;
-      const raw = readActiveItemRaw();
+      const inspection = inspectActiveItemRaw();
+      const raw = inspection.raw;
+      logHotkeyDebug('keydown captured', {
+        action,
+        key: event.key,
+        code: event.code,
+        raw,
+        source: inspection.source,
+        activeElement: describeElement(target),
+        pointElement: inspection.pointElement,
+        itemElement: inspection.itemElement,
+        hoveredRef: inspection.hoveredRef,
+        hoveredState: inspection.hoveredState,
+        domRaw: inspection.domRaw,
+        heldRaw: inspection.heldRaw,
+        cursor: inspection.cursor
+      });
       if (!raw) {
+        logHotkeyDebug('keydown stopped: no active item raw', {
+          action,
+          key: event.key,
+          code: event.code,
+          activeElement: describeElement(target),
+          pointElement: inspection.pointElement,
+          cursor: inspection.cursor
+        }, 'warning');
         return;
       }
       if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
@@ -970,11 +1072,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           ? document.elementFromPoint(cursorPointRef.current.x, cursorPointRef.current.y)
           : null;
         if (!pointTarget?.closest('[data-item-raw]') && !hoveredItemRawRef.current) {
+          logHotkeyDebug('keydown stopped: focus is editable and cursor is not over item', {
+            action,
+            key: event.key,
+            code: event.code,
+            raw,
+            activeElement: describeElement(target),
+            pointElement: describeElement(pointTarget)
+          }, 'warning');
           return;
         }
+        logHotkeyDebug('editable focus allowed because item is hovered', {
+          action,
+          raw,
+          pointElement: describeElement(pointTarget),
+          hoveredRef: hoveredItemRawRef.current
+        });
       }
       event.preventDefault();
-      if (key === 'r') {
+      logHotkeyDebug('hotkey accepted', { action, raw, source: inspection.source }, 'success');
+      if (action === 'recipe') {
         void openRecipeForItem(raw);
       } else {
         void openRecipeUsesForItem(raw);
@@ -1965,26 +2082,51 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setHeldItemRaw((current) => (current === raw ? null : raw));
   }
 
-  function readActiveItemRaw(): string | null {
-    const hovered = hoveredItemRawRef.current?.trim() || hoveredItemRaw?.trim();
-    if (hovered) {
-      return hovered;
-    }
+  function inspectActiveItemRaw(): ActiveItemInspection {
+    const hoveredRef = hoveredItemRawRef.current?.trim() || null;
+    const hoveredStateValue = hoveredItemRaw?.trim() || null;
     const point = cursorPointRef.current;
     const target = typeof document.elementFromPoint === 'function'
       ? document.elementFromPoint(point.x, point.y)
       : null;
-    const rawFromDom = target?.closest<HTMLElement>('[data-item-raw]')?.dataset.itemRaw?.trim();
-    return rawFromDom || heldItemRaw;
+    const itemElement = target?.closest<HTMLElement>('[data-item-raw]') ?? null;
+    const domRaw = itemElement?.dataset.itemRaw?.trim() || null;
+    const heldRaw = heldItemRaw?.trim() || null;
+    const raw = hoveredRef || hoveredStateValue || domRaw || heldRaw || null;
+    const source = hoveredRef
+      ? 'hover-ref'
+      : hoveredStateValue
+        ? 'hover-state'
+        : domRaw
+          ? 'dom'
+          : heldRaw
+            ? 'held'
+            : 'none';
+    return {
+      raw,
+      source,
+      hoveredRef,
+      hoveredState: hoveredStateValue,
+      domRaw,
+      heldRaw,
+      pointElement: describeElement(target),
+      itemElement: describeElement(itemElement),
+      cursor: `${Math.round(point.x)},${Math.round(point.y)}`
+    };
   }
 
   async function openRecipeForItem(raw: string) {
     const normalizedRaw = raw.trim();
-    if (!normalizedRaw) return;
+    if (!normalizedRaw) {
+      logHotkeyDebug('recipe lookup stopped: empty raw', { raw }, 'warning');
+      return;
+    }
+    logHotkeyDebug('recipe lookup started', { raw: normalizedRaw });
     setStatus(`Ищу рецепт для ${normalizedRaw}...`);
     setLastApiStatus(t('values.pending'));
     try {
       const result = await searchRecipesByOutput(normalizedRaw);
+      logHotkeyDebug('recipe lookup response', { raw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
       const match = result.matches[0];
       if (!match) {
         setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes.`);
@@ -1992,6 +2134,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return;
       }
       applyRecipe(match, undefined, { rememberCurrent: true });
+      logHotkeyDebug('recipe applied', { requestedRaw: normalizedRaw, outputRaw: match.output.raw, recipeUid: match.recipe_uid, sourcePath: match.source.path ?? 'Recipes' }, 'success');
       setHeldItemRaw(null);
       setWorkspaceTab('editor');
       setStatus(`Открыт рецепт ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`);
@@ -1999,6 +2142,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setLastApiStatus(t('values.ok'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
+      logHotkeyDebug('recipe lookup failed', { raw: normalizedRaw, error: message }, 'error');
       setStatus(`Не удалось открыть рецепт для ${normalizedRaw}: ${message}`);
       setLastApiStatus(t('values.error'));
     }
@@ -2006,12 +2150,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   async function openRecipeUsesForItem(raw: string) {
     const normalizedRaw = raw.trim();
-    if (!normalizedRaw) return;
+    if (!normalizedRaw) {
+      logHotkeyDebug('uses lookup stopped: empty raw', { raw }, 'warning');
+      return;
+    }
+    logHotkeyDebug('uses lookup started', { raw: normalizedRaw });
     setRecipeUsesModal({ raw: normalizedRaw, matches: [], page: 0, status: 'loading' });
     setStatus(`Ищу, где используется ${normalizedRaw}...`);
     setLastApiStatus(t('values.pending'));
     try {
       const result = await searchRecipesUsingItem(normalizedRaw);
+      logHotkeyDebug('uses lookup response', { raw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
       setRecipeUsesModal((current) => (
         current?.raw === normalizedRaw
           ? { raw: normalizedRaw, matches: result.matches, page: 0, status: 'ready' }
@@ -2023,6 +2172,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setLastApiStatus(t('values.ok'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
+      logHotkeyDebug('uses lookup failed', { raw: normalizedRaw, error: message }, 'error');
       setRecipeUsesModal((current) => (
         current?.raw === normalizedRaw
           ? { raw: normalizedRaw, matches: [], page: 0, status: 'error', error: message }
@@ -2769,6 +2919,38 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderHotkeyDebugPanel() {
+    if (!hotkeyDebugEvents.length) return null;
+    return (
+      <aside className="hotkey-debug-panel" aria-label="recipe-hotkey-debug">
+        <div className="hotkey-debug-header">
+          <strong>R/U debug</strong>
+          <button type="button" className="ghost-button" onClick={() => setHotkeyDebugEvents([])}>clear</button>
+        </div>
+        <ol className="hotkey-debug-list">
+          {hotkeyDebugEvents.map((entry) => (
+            <li key={entry.id} className={`hotkey-debug-event hotkey-debug-${entry.level}`}>
+              <div className="hotkey-debug-line">
+                <span>{entry.timestamp}</span>
+                <strong>{entry.message}</strong>
+              </div>
+              {entry.details ? (
+                <dl>
+                  {Object.entries(entry.details).map(([key, value]) => (
+                    <div key={key}>
+                      <dt>{key}</dt>
+                      <dd>{formatHotkeyDebugValue(value)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : null}
+            </li>
+          ))}
+        </ol>
+      </aside>
+    );
+  }
+
   function renderCustomItemModal() {
     if (!customItemForm) return null;
     const canUseGlobalScope = canManageSettings;
@@ -3222,6 +3404,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           {renderHeldItemIcon(heldItemRaw)}
         </div>
       ) : null}
+      {renderHotkeyDebugPanel()}
       {renderNeiContextMenu()}
       {renderCustomItemModal()}
       {renderRecipeUsesModal()}
