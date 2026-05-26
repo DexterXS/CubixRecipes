@@ -116,11 +116,31 @@ def _frontend_redirect_url() -> str:
     return os.environ.get('FRONTEND_PUBLIC_URL', '/').strip() or '/'
 
 
+def _first_forwarded_value(value: str) -> str:
+    return value.split(',', 1)[0].strip()
+
+
+def _public_request_origin(request: Request) -> str:
+    proto = _first_forwarded_value(request.headers.get('x-forwarded-proto', '')).lower()
+    if proto not in {'http', 'https'}:
+        proto = request.url.scheme
+    host = _first_forwarded_value(
+        request.headers.get('x-forwarded-host')
+        or request.headers.get('host')
+        or request.url.netloc
+    )
+    return f'{proto}://{host}'.rstrip('/')
+
+
 def _google_redirect_uri(request: Request) -> str:
+    explicit_redirect_uri = os.environ.get('GOOGLE_REDIRECT_URI', '').strip()
+    if explicit_redirect_uri:
+        return explicit_redirect_uri
+    request_origin = _public_request_origin(request)
     app_public_url = os.environ.get('APP_PUBLIC_URL', '').strip().rstrip('/')
-    if app_public_url:
+    if app_public_url and urlparse(app_public_url).netloc == urlparse(request_origin).netloc:
         return f'{app_public_url}/api/auth/google/callback'
-    return str(request.url_for('google_auth_callback'))
+    return f'{request_origin}/api/auth/google/callback'
 
 
 def _session_secret() -> str:
