@@ -157,12 +157,20 @@ def _sign_oauth_state(state: str) -> str:
     return f'{state}.{signature}'
 
 
-def _verify_oauth_state(signed_state: str | None, returned_state: str | None) -> bool:
-    if not signed_state or not returned_state or '.' not in signed_state:
+def _verify_signed_oauth_state(signed_state: str | None) -> bool:
+    if not signed_state or '.' not in signed_state:
         return False
     state, signature = signed_state.rsplit('.', 1)
     expected = _sign_oauth_state(state).rsplit('.', 1)[1]
-    return hmac.compare_digest(state, returned_state) and hmac.compare_digest(signature, expected)
+    return hmac.compare_digest(signature, expected)
+
+
+def _verify_oauth_state(cookie_state: str | None, returned_state: str | None) -> bool:
+    if not _verify_signed_oauth_state(returned_state):
+        return False
+    if cookie_state:
+        return hmac.compare_digest(cookie_state, returned_state)
+    return True
 
 
 def _cors_origins() -> list[str]:
@@ -264,7 +272,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         if not auth_service.is_configured:
             raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
         client_id, _client_secret = _google_client_config()
-        state = secrets.token_urlsafe(32)
+        state = _sign_oauth_state(secrets.token_urlsafe(32))
         auth_url = f'{GOOGLE_AUTH_URL}?{urlencode({
             "client_id": client_id,
             "redirect_uri": _google_redirect_uri(request),
@@ -277,7 +285,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         same_site = _cookie_same_site()
         response.set_cookie(
             OAUTH_STATE_COOKIE,
-            _sign_oauth_state(state),
+            state,
             max_age=600,
             httponly=True,
             secure=_cookie_https_only(same_site),
