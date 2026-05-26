@@ -67,6 +67,13 @@ function findLocalDraftPayload() {
   return null;
 }
 
+function enableHotkeyDebug() {
+  fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
+  const dialog = screen.getByRole('dialog', { name: 'Настройки' });
+  fireEvent.click(screen.getByLabelText('hotkey-debug-enabled'));
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Закрыть' }));
+}
+
 beforeEach(() => {
   window.localStorage.clear();
   class MockImage {
@@ -121,6 +128,11 @@ beforeEach(() => {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, user: { ...moderatorUser, role: 'admin' } }) }) as Promise<Response>;
     }
     if (url === '/api/parse') {
+      const body = JSON.parse(String(init?.body ?? '{}'));
+      const text = String(body.text ?? '');
+      const outputRaw = text.match(/addShaped\(\s*(<[^>]+>)/)?.[1] ?? '<minecraft:torch>';
+      const outputName = outputRaw === '<minecraft:stick>' ? 'Палка' : outputRaw === '<minecraft:planks>' ? 'Дубовые доски' : 'Факел';
+      const outputIcon = outputRaw === '<minecraft:stick>' ? '/api/icons/stick' : outputRaw === '<minecraft:planks>' ? '/api/icons/planks' : '/api/icons/torch';
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
@@ -128,11 +140,11 @@ beforeEach(() => {
         json: async () => ({
           kind: 'recipe',
           recipe: {
-            recipe_uid: 'recipe-1',
+            recipe_uid: outputRaw === '<minecraft:stick>' ? 'recipe-stick-draft' : 'recipe-1',
             recipe_type: 'ct_shaped',
             name: null,
-            output: { raw: '<minecraft:torch>' },
-            output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' },
+            output: { raw: outputRaw },
+            output_resolution: { display_name: outputName, icon_url: outputIcon },
             grid_w: 2,
             grid_h: 2,
             source: { kind: 'zs_file', path: 'scripts/test.zs' },
@@ -347,6 +359,7 @@ test('R opens a recipe from a hovered craft-grid item and history can return', a
 
 test('R opens a hovered NEI recipe even when search input keeps focus', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  enableHotkeyDebug();
   const search = screen.getByLabelText('nei-search') as HTMLInputElement;
   const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
 
@@ -360,6 +373,35 @@ test('R opens a hovered NEI recipe even when search input keeps focus', async ()
   });
   expect(screen.getByLabelText('recipe-hotkey-debug')).toBeTruthy();
   expect(screen.getByText('keydown captured')).toBeTruthy();
+});
+
+test('R falls back to a local uploaded draft when backend search has no match', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  enableHotkeyDebug();
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = [
+    'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);',
+    'recipes.addShaped(<minecraft:stick>, [[<minecraft:planks>]]);'
+  ].join('\n');
+  const file = new File([source], 'local-drafts.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+
+  const search = screen.getByLabelText('nei-search') as HTMLInputElement;
+  const item = await screen.findByLabelText('nei-item-<minecraft:stick>');
+  fireEvent.change(search, { target: { value: 'stick' } });
+  fireEvent.mouseEnter(item);
+  fireEvent.keyDown(window, { key: 'r', code: 'KeyR' });
+
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:stick>');
+  });
+  expect(screen.getByText('backend lookup empty, checking uploaded drafts')).toBeTruthy();
+  expect(screen.getByText('uploaded draft recipe applied')).toBeTruthy();
 });
 
 test('U opens paged recipe uses for a hovered craft-grid item', async () => {

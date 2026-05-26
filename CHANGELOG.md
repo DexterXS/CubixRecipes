@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Fixed
+- Moved the on-page R/U hotkey debug panel behind an admin-only Settings toggle and disabled it by default.
+- Made `R` fall back to matching locally uploaded `.zs` drafts when backend recipe search returns no matches, and log that fallback in the on-page hotkey debug panel.
 - Added an on-page R/U hotkey debug panel and made recipe/uses hotkeys read physical `KeyR`/`KeyU`, so they work across English and Russian keyboard layouts while exposing hover, focus, DOM raw, and API lookup steps.
 - Added per-user local draft persistence keyed by a hashed Google email, so the current craft, editor input, NEI search, recipe history, uploaded draft metadata, and temporary craft/NBT editor fields survive page reloads on the same PC.
 - Made recipe hotkeys item-aware outside NEI: `R` now opens recipes from hovered NEI, craft-grid, and output items, `U` opens a paged "used in recipes" modal, and recipe navigation now has back/forward arrows.
