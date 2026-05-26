@@ -138,7 +138,7 @@ def _build_google_oauth():
     try:
         from authlib.integrations.starlette_client import OAuth
     except Exception as exc:
-        raise HTTPException(status_code=503, detail='Authlib is not installed') from exc
+        raise HTTPException(status_code=503, detail=f'Google OAuth dependencies are not installed: {exc.__class__.__name__}: {exc}') from exc
     oauth = OAuth()
     oauth.register(
         name='google',
