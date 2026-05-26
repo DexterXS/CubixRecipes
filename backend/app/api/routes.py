@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import hmac
 import os
+import secrets
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 from urllib.parse import unquote
 from zipfile import ZipFile
 
@@ -26,6 +29,12 @@ from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
 from app.services.recipe_service import RecipeService
 from app.storage.zs_storage import ZsStorage
+
+
+GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
+GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
+GOOGLE_USERINFO_URL = 'https://openidconnect.googleapis.com/v1/userinfo'
+OAUTH_STATE_COOKIE = 'cubix_oauth_state'
 
 
 def serialize_recipe(recipe: Recipe) -> dict:
@@ -114,6 +123,10 @@ def _google_redirect_uri(request: Request) -> str:
     return str(request.url_for('google_auth_callback'))
 
 
+def _session_secret() -> str:
+    return os.environ.get('AUTH_SESSION_SECRET', '').strip()
+
+
 def _get_request_session(request: Request) -> dict:
     try:
         return request.session
@@ -130,24 +143,26 @@ def _is_public_api_path(path: str) -> bool:
     }
 
 
-def _build_google_oauth():
+def _google_client_config() -> tuple[str, str]:
     client_id = os.environ.get('GOOGLE_CLIENT_ID', '').strip()
     client_secret = os.environ.get('GOOGLE_CLIENT_SECRET', '').strip()
     if not client_id or not client_secret:
         raise HTTPException(status_code=503, detail='GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required')
-    try:
-        from authlib.integrations.starlette_client import OAuth
-    except Exception as exc:
-        raise HTTPException(status_code=503, detail=f'Google OAuth dependencies are not installed: {exc.__class__.__name__}: {exc}') from exc
-    oauth = OAuth()
-    oauth.register(
-        name='google',
-        client_id=client_id,
-        client_secret=client_secret,
-        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-        client_kwargs={'scope': 'openid email profile'},
-    )
-    return oauth
+    return client_id, client_secret
+
+
+def _sign_oauth_state(state: str) -> str:
+    secret = _session_secret()
+    signature = hmac.new(secret.encode('utf-8'), state.encode('utf-8'), hashlib.sha256).hexdigest()
+    return f'{state}.{signature}'
+
+
+def _verify_oauth_state(signed_state: str | None, returned_state: str | None) -> bool:
+    if not signed_state or not returned_state or '.' not in signed_state:
+        return False
+    state, signature = signed_state.rsplit('.', 1)
+    expected = _sign_oauth_state(state).rsplit('.', 1)[1]
+    return hmac.compare_digest(state, returned_state) and hmac.compare_digest(signature, expected)
 
 
 def _cors_origins() -> list[str]:
@@ -173,6 +188,16 @@ def _cookie_same_site() -> str:
     if frontend_url and app_url and urlparse(frontend_url).netloc != urlparse(app_url).netloc:
         return 'none'
     return 'lax'
+
+
+def _cookie_https_only(same_site: str) -> bool:
+    app_public_url = os.environ.get('APP_PUBLIC_URL', '').strip().lower()
+    cookie_secure = os.environ.get('AUTH_COOKIE_SECURE', '').strip().lower()
+    return (
+        same_site == 'none'
+        or cookie_secure in {'1', 'true', 'yes', 'on'}
+        or (not cookie_secure and app_public_url.startswith('https://'))
+    )
 
 
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
@@ -235,21 +260,70 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         return {'authenticated': True, 'user': user.as_dict(), **auth_service.public_config()}
 
     @router.get('/auth/google/start')
-    async def google_auth_start(request: Request):
+    def google_auth_start(request: Request):
         if not auth_service.is_configured:
             raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
-        oauth = _build_google_oauth()
-        return await oauth.google.authorize_redirect(request, _google_redirect_uri(request))
+        client_id, _client_secret = _google_client_config()
+        state = secrets.token_urlsafe(32)
+        auth_url = f'{GOOGLE_AUTH_URL}?{urlencode({
+            "client_id": client_id,
+            "redirect_uri": _google_redirect_uri(request),
+            "response_type": "code",
+            "scope": "openid email profile",
+            "state": state,
+            "prompt": "select_account",
+        })}'
+        response = RedirectResponse(auth_url)
+        same_site = _cookie_same_site()
+        response.set_cookie(
+            OAUTH_STATE_COOKIE,
+            _sign_oauth_state(state),
+            max_age=600,
+            httponly=True,
+            secure=_cookie_https_only(same_site),
+            samesite=same_site,
+        )
+        return response
 
     @router.get('/auth/google/callback', name='google_auth_callback')
     async def google_auth_callback(request: Request):
         if not auth_service.is_configured:
             raise HTTPException(status_code=503, detail=auth_service.configuration_error or 'Authentication is not configured')
-        oauth = _build_google_oauth()
-        token = await oauth.google.authorize_access_token(request)
-        profile = dict(token.get('userinfo') or {})
-        if not profile and token.get('id_token'):
-            profile = dict(await oauth.google.parse_id_token(request, token))
+        error = request.query_params.get('error')
+        if error:
+            raise HTTPException(status_code=400, detail=f'Google OAuth failed: {error}')
+        code = request.query_params.get('code')
+        state = request.query_params.get('state')
+        if not code:
+            raise HTTPException(status_code=400, detail='Google OAuth callback did not include code')
+        if not _verify_oauth_state(request.cookies.get(OAUTH_STATE_COOKIE), state):
+            raise HTTPException(status_code=400, detail='Google OAuth state mismatch. Start login again.')
+        client_id, client_secret = _google_client_config()
+        try:
+            import httpx
+        except Exception as exc:
+            raise HTTPException(status_code=503, detail=f'Google OAuth HTTP client is not installed: {exc.__class__.__name__}: {exc}') from exc
+        async with httpx.AsyncClient(timeout=15) as client:
+            token_response = await client.post(
+                GOOGLE_TOKEN_URL,
+                data={
+                    'code': code,
+                    'client_id': client_id,
+                    'client_secret': client_secret,
+                    'redirect_uri': _google_redirect_uri(request),
+                    'grant_type': 'authorization_code',
+                },
+            )
+            if token_response.status_code >= 400:
+                raise HTTPException(status_code=400, detail=f'Google token exchange failed: {token_response.text[:300]}')
+            token = token_response.json()
+            userinfo_response = await client.get(
+                GOOGLE_USERINFO_URL,
+                headers={'Authorization': f"Bearer {token.get('access_token', '')}"},
+            )
+            if userinfo_response.status_code >= 400:
+                raise HTTPException(status_code=400, detail=f'Google userinfo failed: {userinfo_response.text[:300]}')
+            profile = dict(userinfo_response.json())
         if profile.get('email_verified') is False:
             raise HTTPException(status_code=403, detail='Google account email is not verified')
         user = auth_service.upsert_google_user(profile)
@@ -257,7 +331,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         session.clear()
         session['user_id'] = user.id
         session['user_email'] = user.email
-        return RedirectResponse(_frontend_redirect_url())
+        response = RedirectResponse(_frontend_redirect_url())
+        response.delete_cookie(OAUTH_STATE_COOKIE)
+        return response
 
     @router.post('/auth/logout')
     def auth_logout(request: Request):
