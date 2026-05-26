@@ -8,7 +8,14 @@ from typing import Any, Callable
 from app.auth.database import UserRecord, build_session_factory, utc_now
 from app.auth.permissions import ROOT_ADMIN_EMAIL, is_root_admin_email, normalize_email, normalize_role
 
-DATABASE_ENV_KEYS = ('DATABASE_URL', 'DATABASE_PRIVATE_URL', 'POSTGRES_URL', 'POSTGRES_DATABASE_URL')
+DATABASE_ENV_KEYS = (
+    'DATABASE_URL',
+    'DATABASE_PRIVATE_URL',
+    'DATABASE_PUBLIC_URL',
+    'POSTGRES_URL',
+    'POSTGRES_DATABASE_URL',
+)
+PG_ENV_KEYS = ('PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGDATABASE')
 
 
 @dataclass(frozen=True)
@@ -59,6 +66,13 @@ class AuthService:
             value = os.environ.get(key, '').strip()
             if value:
                 return value, key
+        pg_values = {key: os.environ.get(key, '').strip() for key in PG_ENV_KEYS}
+        if all(pg_values.values()):
+            return (
+                f"postgresql+psycopg://{pg_values['PGUSER']}:{pg_values['PGPASSWORD']}"
+                f"@{pg_values['PGHOST']}:{pg_values['PGPORT']}/{pg_values['PGDATABASE']}",
+                'PG*',
+            )
         return '', None
 
     @property
@@ -72,6 +86,7 @@ class AuthService:
             'configuration_error': self.configuration_error,
             'database_env_key': self.database_env_key,
             'database_env_present': bool(self.database_url),
+            'pg_env_present': all(os.environ.get(key, '').strip() for key in PG_ENV_KEYS),
         }
 
     def _require_session_factory(self):
