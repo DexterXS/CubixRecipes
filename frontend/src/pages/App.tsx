@@ -98,9 +98,31 @@ type UploadedDraft = {
 };
 
 type UploadedDraftRecipeMatch = {
-  draft: UploadedDraft;
+  sourceId: string;
+  sourceName: string;
   block: string;
   matchedRaw: string;
+  createdByEmail?: string;
+  templateId?: string;
+};
+
+type RecipeDraftTemplate = {
+  id: string;
+  outputRaw: string;
+  recipe: RecipeView;
+  sourceText: string;
+  createdByEmail: string;
+  createdAt: number;
+  updatedAt: number;
+  name: string;
+};
+
+type DraftItemSortMode = 'name' | 'drafts-desc' | 'drafts-asc';
+
+type DraftTemplateContextMenuState = {
+  draftId: string;
+  x: number;
+  y: number;
 };
 
 type NeiContextMenuState = {
@@ -136,6 +158,9 @@ const LOCAL_DRAFT_MAX_HISTORY = 20;
 const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
 const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
 const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
+const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
+const RECIPE_DRAFT_MAX_TEMPLATES = 200;
+const DRAFT_ITEM_PAGE_SIZE = 240;
 
 type CraftEditorTarget =
   | { kind: 'output' }
@@ -295,6 +320,10 @@ function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
 }
 
+function maxGridWidth(matrix: CellValue[][]): number {
+  return Math.max(0, ...matrix.map((row) => row.length));
+}
+
 function stableHash(value: string): string {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1) {
@@ -310,6 +339,10 @@ function localDraftUserHash(email: string): string {
 
 function localDraftStorageKey(email: string): string {
   return `${LOCAL_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function recipeDraftStorageKey(email: string): string {
+  return `${RECIPE_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
 }
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
@@ -372,6 +405,49 @@ function normalizeUploadedDrafts(value: unknown): UploadedDraft[] {
       ...draft,
       text: draft.text.slice(0, LOCAL_DRAFT_MAX_UPLOADED_TEXT)
     }));
+}
+
+function normalizeRecipeDraftTemplates(value: unknown): RecipeDraftTemplate[] {
+  const rawTemplates = isObjectRecord(value) && Array.isArray(value.templates)
+    ? value.templates
+    : value;
+  if (!Array.isArray(rawTemplates)) return [];
+  return rawTemplates
+    .filter((draft): draft is RecipeDraftTemplate => (
+      isObjectRecord(draft)
+      && typeof draft.id === 'string'
+      && typeof draft.outputRaw === 'string'
+      && isRecipeView(draft.recipe)
+      && typeof draft.sourceText === 'string'
+      && typeof draft.createdByEmail === 'string'
+      && typeof draft.createdAt === 'number'
+      && typeof draft.updatedAt === 'number'
+      && typeof draft.name === 'string'
+    ))
+    .slice(0, RECIPE_DRAFT_MAX_TEMPLATES);
+}
+
+function loadRecipeDraftTemplates(email: string): RecipeDraftTemplate[] {
+  try {
+    const raw = window.localStorage.getItem(recipeDraftStorageKey(email));
+    if (!raw) return [];
+    return normalizeRecipeDraftTemplates(JSON.parse(raw) as unknown);
+  } catch {
+    return [];
+  }
+}
+
+function persistRecipeDraftTemplates(email: string, templates: RecipeDraftTemplate[]) {
+  try {
+    window.localStorage.setItem(recipeDraftStorageKey(email), JSON.stringify({
+      schemaVersion: 1,
+      userHash: localDraftUserHash(email),
+      savedAt: Date.now(),
+      templates: normalizeRecipeDraftTemplates(templates)
+    }));
+  } catch {
+    // Local recipe draft persistence is best-effort.
+  }
 }
 
 function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
@@ -905,6 +981,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [hoveredItemRaw, setHoveredItemRaw] = useState<string | null>(null);
   const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>(restoredDraft?.uploadedDrafts ?? []);
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(restoredDraft?.selectedDraftId ?? null);
+  const [recipeDraftTemplates, setRecipeDraftTemplates] = useState<RecipeDraftTemplate[]>(() => loadRecipeDraftTemplates(authUser.email));
+  const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
+  const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
+  const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
+  const [showOnlyDraftItems, setShowOnlyDraftItems] = useState(false);
+  const [draftItemPage, setDraftItemPage] = useState(0);
+  const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
   const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
   const [recipeBackHistory, setRecipeBackHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeBackHistory ?? []);
@@ -1056,6 +1139,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setAdminUsersStatus('');
     }
   }, [canManageRoles]);
+
+  useEffect(() => {
+    setRecipeDraftTemplates(loadRecipeDraftTemplates(authUser.email));
+  }, [authUser.email]);
+
+  useEffect(() => {
+    persistRecipeDraftTemplates(authUser.email, recipeDraftTemplates);
+  }, [authUser.email, recipeDraftTemplates]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1733,20 +1824,52 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const uploadedDraftRecipeIndexes = useMemo(() => {
     const byOutput = new Map<string, UploadedDraftRecipeMatch>();
     const byIngredient = new Map<string, UploadedDraftRecipeMatch[]>();
+    recipeDraftTemplates.forEach((template) => {
+      collectRecipeOutputRaws(template.sourceText).forEach((outputRaw) => {
+        recipeLookupKeysForRaw(outputRaw).forEach((key) => {
+          if (!byOutput.has(key)) {
+            byOutput.set(key, {
+              sourceId: template.id,
+              sourceName: template.name,
+              block: template.sourceText,
+              matchedRaw: outputRaw,
+              createdByEmail: template.createdByEmail,
+              templateId: template.id
+            });
+          }
+        });
+      });
+      collectRecipeIngredientRaws(template.sourceText).forEach((ingredientRaw) => {
+        recipeLookupKeysForRaw(ingredientRaw).forEach((key) => {
+          const matches = byIngredient.get(key) ?? [];
+          if (!matches.some((match) => match.templateId === template.id)) {
+            matches.push({
+              sourceId: template.id,
+              sourceName: template.name,
+              block: template.sourceText,
+              matchedRaw: ingredientRaw,
+              createdByEmail: template.createdByEmail,
+              templateId: template.id
+            });
+            byIngredient.set(key, matches);
+          }
+        });
+      });
+    });
     uploadedDrafts.forEach((draft) => {
       collectRecipeBlocks(draft.text).forEach((block) => {
         collectRecipeOutputRaws(block).forEach((outputRaw) => {
           recipeLookupKeysForRaw(outputRaw).forEach((key) => {
             if (!byOutput.has(key)) {
-              byOutput.set(key, { draft, block, matchedRaw: outputRaw });
+              byOutput.set(key, { sourceId: draft.id, sourceName: draft.name, block, matchedRaw: outputRaw });
             }
           });
         });
         collectRecipeIngredientRaws(block).forEach((ingredientRaw) => {
           recipeLookupKeysForRaw(ingredientRaw).forEach((key) => {
             const matches = byIngredient.get(key) ?? [];
-            if (!matches.some((match) => match.draft.id === draft.id && match.block === block)) {
-              matches.push({ draft, block, matchedRaw: ingredientRaw });
+            if (!matches.some((match) => match.sourceId === draft.id && match.block === block)) {
+              matches.push({ sourceId: draft.id, sourceName: draft.name, block, matchedRaw: ingredientRaw });
               byIngredient.set(key, matches);
             }
           });
@@ -1754,17 +1877,100 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       });
     });
     return { byOutput, byIngredient };
-  }, [uploadedDrafts]);
+  }, [uploadedDrafts, recipeDraftTemplates]);
   const uploadedDraftRecipeIndex = uploadedDraftRecipeIndexes.byOutput;
   const uploadedDraftIngredientIndex = uploadedDraftRecipeIndexes.byIngredient;
   const uploadedDraftOutputKeys = useMemo(() => new Set(uploadedDraftRecipeIndex.keys()), [uploadedDraftRecipeIndex]);
+  const recipeDraftTemplatesByOutputKey = useMemo(() => {
+    const byOutput = new Map<string, RecipeDraftTemplate[]>();
+    recipeDraftTemplates.forEach((template) => {
+      recipeLookupKeysForRaw(template.outputRaw).forEach((key) => {
+        const templates = byOutput.get(key) ?? [];
+        if (!templates.some((current) => current.id === template.id)) {
+          templates.push(template);
+          byOutput.set(key, templates);
+        }
+      });
+    });
+    return byOutput;
+  }, [recipeDraftTemplates]);
+  function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
+    const templates = new Map<string, RecipeDraftTemplate>();
+    recipeLookupKeysForRaw(raw).forEach((key) => {
+      (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
+    });
+    return [...templates.values()];
+  }
+
+  function getRecipeDraftCountForRaw(raw: string): number {
+    return getRecipeDraftTemplatesForRaw(raw).length;
+  }
+
+  const draftItemEntries = useMemo(() => {
+    const query = draftItemSearchQuery.trim().toLowerCase();
+    const entries = neiCatalogEntries
+      .filter((entry) => {
+        const raw = itemPanelRaw(entry);
+        const draftCount = getRecipeDraftCountForRaw(raw);
+        if (showOnlyDraftItems && draftCount === 0) return false;
+        if (!query) return true;
+        return (
+          raw.toLowerCase().includes(query)
+          || entry.key.includes(query)
+          || entry.displayRu.toLowerCase().includes(query)
+          || entry.displayEn.toLowerCase().includes(query)
+          || String(entry.legacyId ?? '').includes(query)
+        );
+      });
+    return entries.sort((left, right) => {
+      const leftCount = getRecipeDraftCountForRaw(itemPanelRaw(left));
+      const rightCount = getRecipeDraftCountForRaw(itemPanelRaw(right));
+      if (draftItemSortMode === 'drafts-desc') {
+        return rightCount - leftCount || (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+      }
+      if (draftItemSortMode === 'drafts-asc') {
+        return leftCount - rightCount || (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+      }
+      return (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+    });
+  }, [draftItemSearchQuery, draftItemSortMode, neiCatalogEntries, recipeDraftTemplatesByOutputKey, showOnlyDraftItems]);
+  const draftItemPageCount = Math.max(1, Math.ceil(draftItemEntries.length / DRAFT_ITEM_PAGE_SIZE));
+  const draftItemsPage = useMemo(() => {
+    const safePage = clamp(draftItemPage, 0, draftItemPageCount - 1);
+    return draftItemEntries.slice(safePage * DRAFT_ITEM_PAGE_SIZE, safePage * DRAFT_ITEM_PAGE_SIZE + DRAFT_ITEM_PAGE_SIZE);
+  }, [draftItemEntries, draftItemPage, draftItemPageCount]);
+  const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => itemPanelRaw(entry)), [draftItemsPage]);
+  const availabilityLookupRaws = useMemo(() => (
+    [...new Set([...visibleNeiRawItems, ...visibleDraftRawItems].flatMap(recipeLookupKeysForRaw))].slice(0, 300)
+  ), [visibleDraftRawItems, visibleNeiRawItems]);
+  const selectedDraftTemplates = useMemo(() => {
+    if (!selectedDraftItemRaw) return [];
+    return getRecipeDraftTemplatesForRaw(selectedDraftItemRaw).sort((left, right) => right.updatedAt - left.updatedAt);
+  }, [recipeDraftTemplatesByOutputKey, selectedDraftItemRaw]);
 
   useEffect(() => {
     setNeiPage(0);
   }, [neiSearchQuery]);
 
   useEffect(() => {
-    const lookupRaws = [...new Set(visibleNeiRawItems.flatMap(recipeLookupKeysForRaw))].slice(0, 300);
+    setDraftItemPage(0);
+  }, [draftItemSearchQuery, draftItemSortMode, showOnlyDraftItems]);
+
+  useEffect(() => {
+    setDraftItemPage((current) => clamp(current, 0, draftItemPageCount - 1));
+  }, [draftItemPageCount]);
+
+  useEffect(() => {
+    const visibleRaws = draftItemEntries.map(itemPanelRaw);
+    if (selectedDraftItemRaw && visibleRaws.includes(selectedDraftItemRaw)) {
+      return;
+    }
+    const firstWithDraft = visibleRaws.find((raw) => getRecipeDraftCountForRaw(raw) > 0);
+    setSelectedDraftItemRaw(firstWithDraft ?? visibleRaws[0] ?? null);
+  }, [draftItemEntries.map(itemPanelRaw).join('|'), recipeDraftTemplatesByOutputKey, selectedDraftItemRaw]);
+
+  useEffect(() => {
+    const lookupRaws = availabilityLookupRaws;
     if (!lookupRaws.length) return undefined;
     let cancelled = false;
     async function loadAvailability() {
@@ -1786,7 +1992,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, [visibleNeiRawItems.join('|')]);
+  }, [availabilityLookupRaws.join('|')]);
 
   useEffect(() => {
     setNeiPage((current) => clamp(current, 0, neiPageCount - 1));
@@ -2198,7 +2404,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     for (const key of recipeLookupKeysForRaw(raw)) {
       const keyMatches = uploadedDraftIngredientIndex.get(key) ?? [];
       keyMatches.forEach((match) => {
-        const matchKey = `${match.draft.id}:${match.block}`;
+        const matchKey = `${match.sourceId}:${match.block}`;
         if (seen.has(matchKey)) return;
         seen.add(matchKey);
         matches.push(match);
@@ -2214,16 +2420,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       try {
         const result = await parseText(match.block);
         if (!result.recipe) {
-          logHotkeyDebug('uploaded draft uses parse returned no recipe', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw }, 'warning');
+          logHotkeyDebug('uploaded draft uses parse returned no recipe', { raw, draft: match.sourceName, matchedRaw: match.matchedRaw }, 'warning');
           return null;
         }
         return {
           ...result.recipe,
-          source: { ...result.recipe.source, path: match.draft.name }
+          source: { ...result.recipe.source, path: match.sourceName }
         };
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error';
-        logHotkeyDebug('uploaded draft uses parse failed', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw, error: message }, 'error');
+        logHotkeyDebug('uploaded draft uses parse failed', { raw, draft: match.sourceName, matchedRaw: match.matchedRaw, error: message }, 'error');
         return null;
       }
     }));
@@ -2238,26 +2444,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       logHotkeyDebug('uploaded draft lookup response', { raw, matches: 0 }, 'warning');
       return false;
     }
-    logHotkeyDebug('uploaded draft match found', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw }, 'success');
-    setSelectedDraftId(match.draft.id);
+    logHotkeyDebug('uploaded draft match found', { raw, draft: match.sourceName, matchedRaw: match.matchedRaw }, 'success');
+    setSelectedDraftId(match.sourceId);
     const parseStartedAt = performance.now();
     const result = await parseText(match.block);
-    logHotkeyDebug('uploaded draft parse completed', { raw, draft: match.draft.name, durationMs: elapsedMs(parseStartedAt) }, 'success');
+    logHotkeyDebug('uploaded draft parse completed', { raw, draft: match.sourceName, durationMs: elapsedMs(parseStartedAt) }, 'success');
     if (!result.recipe) {
-      logHotkeyDebug('uploaded draft parse returned no recipe', { raw, draft: match.draft.name }, 'warning');
+      logHotkeyDebug('uploaded draft parse returned no recipe', { raw, draft: match.sourceName }, 'warning');
       return false;
     }
     const recipeFromDraft: RecipeView = {
       ...result.recipe,
-      source: { ...result.recipe.source, path: match.draft.name }
+      source: { ...result.recipe.source, path: match.sourceName }
     };
     applyRecipe(recipeFromDraft, match.block, { rememberCurrent: true });
     setHeldItemRaw(null);
     setWorkspaceTab('editor');
-    setStatus(`Открыт локальный черновик ${recipeFromDraft.output.raw} из ${match.draft.name}.`);
+    setStatus(`Открыт локальный черновик ${recipeFromDraft.output.raw} из ${match.sourceName}.`);
     setLastParseResult(recipeFromDraft.recipe_type);
     setLastApiStatus(t('values.ok'));
-    logHotkeyDebug('uploaded draft recipe applied', { raw, outputRaw: recipeFromDraft.output.raw, draft: match.draft.name }, 'success');
+    logHotkeyDebug('uploaded draft recipe applied', { raw, outputRaw: recipeFromDraft.output.raw, draft: match.sourceName }, 'success');
     return true;
   }
 
@@ -2308,7 +2514,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const draftMatch = findUploadedDraftRecipeBlock(normalizedRaw);
       const hasKnownBackendMatch = lookupKeys.some((lookupRaw) => recipeAvailability[lookupRaw] === true);
       if (draftMatch && !hasKnownBackendMatch) {
-        logHotkeyDebug('uploaded draft cache hit', { raw: normalizedRaw, draft: draftMatch.draft.name, matchedRaw: draftMatch.matchedRaw }, 'success');
+        logHotkeyDebug('uploaded draft cache hit', { raw: normalizedRaw, draft: draftMatch.sourceName, matchedRaw: draftMatch.matchedRaw }, 'success');
         if (await openRecipeFromUploadedDraft(normalizedRaw, draftMatch)) {
           return;
         }
@@ -2439,6 +2645,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         setNeiContextMenu(null);
       }
     }
+    if (draftTemplateContextMenu) {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest('.draft-template-context-menu')) {
+        setDraftTemplateContextMenu(null);
+      }
+    }
     if (!heldItemRaw || event.button !== 0) {
       return;
     }
@@ -2446,7 +2658,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!target) {
       return;
     }
-    if (target.closest('.grid-cell, .nei-item, .craft-output-slot, .held-item-cursor')) {
+    if (target.closest('.grid-cell, .nei-item, .draft-item-button, .craft-output-slot, .held-item-cursor')) {
       return;
     }
     setHeldItemRaw(null);
@@ -2454,6 +2666,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function changeNeiPage(direction: -1 | 1) {
     setNeiPage((current) => clamp(current + direction, 0, neiPageCount - 1));
+  }
+
+  function changeDraftItemPage(direction: -1 | 1) {
+    setDraftItemPage((current) => clamp(current + direction, 0, draftItemPageCount - 1));
   }
 
   function isParseableInput(value: string) {
@@ -2514,7 +2730,20 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const rows = matrix
       .map((row) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]`)
       .join(',\n');
-    return `${call}(${outputRaw || '<minecraft:stone>'}, [\n${rows}\n]);\n`;
+    return `${call}(${outputRaw.trim()}, [\n${rows}\n]);\n`;
+  }
+
+  function getValidOutputRaw(): string | null {
+    const normalized = outputRaw.trim();
+    return normalized && parseItemRaw(normalized) ? normalized : null;
+  }
+
+  function requireOutputForSave(): string | null {
+    const validOutput = getValidOutputRaw();
+    if (validOutput) return validOutput;
+    setStatus('Нельзя сохранить: у крафта нет корректного результата <mod:item>.');
+    setSaveStatus(t('values.error'));
+    return null;
   }
 
   function downloadTextFile(filename: string, text: string) {
@@ -2537,6 +2766,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function downloadCurrentRecipe() {
+    if (!requireOutputForSave()) return;
     downloadTextFile(currentRecipeFilename(), input.trim() ? input : buildRecipeSource());
     setStatus('Рецепт скачан.');
   }
@@ -2669,6 +2899,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function handleSave() {
+    if (!requireOutputForSave()) return;
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
       setStatus('Сохранение недоступно: используйте «Сохранить как».');
       return;
@@ -2690,6 +2921,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function handleSaveAs() {
+    if (!requireOutputForSave()) return;
     const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
     if (!targetPath) {
       setStatus(t('status.saveAsCancelled'));
@@ -2713,6 +2945,62 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setStatus(`${t('status.saveError')}: ${message}`);
       setSaveStatus(t('values.error'));
     }
+  }
+
+  async function handleSaveToCloud() {
+    if (!requireOutputForSave()) return;
+    if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
+      await handleSaveAs();
+      return;
+    }
+    await handleSave();
+  }
+
+  function handleSaveDraftTemplate() {
+    const validOutput = requireOutputForSave();
+    if (!validOutput) return;
+    const sourceText = buildRecipeSource();
+    const now = Date.now();
+    const draftRecipe: RecipeView = {
+      ...recipe,
+      recipe_uid: `local-draft-${stableHash(`${authUser.email}:${sourceText}:${now}`)}`,
+      output: { raw: validOutput },
+      source: { kind: 'local_draft', path: `draft:${validOutput}` },
+      matrix: matrixWithResolution,
+      grid_h: matrix.length,
+      grid_w: maxGridWidth(matrix)
+    };
+    const name = `${resolveCellTitle(validOutput) || validOutput} #${recipeDraftTemplates.length + 1}`;
+    const draft: RecipeDraftTemplate = {
+      id: `${now.toString(36)}-${stableHash(`${authUser.email}:${validOutput}:${sourceText}`)}`,
+      outputRaw: validOutput,
+      recipe: draftRecipe,
+      sourceText,
+      createdByEmail: authUser.email,
+      createdAt: now,
+      updatedAt: now,
+      name
+    };
+    setRecipeDraftTemplates((current) => [draft, ...current].slice(0, RECIPE_DRAFT_MAX_TEMPLATES));
+    setSelectedDraftItemRaw(validOutput);
+    setStatus(`Шаблон сохранён в черновики: ${validOutput}`);
+    setSaveStatus(t('values.saved'));
+  }
+
+  function openRecipeDraftTemplate(draft: RecipeDraftTemplate) {
+    applyRecipe(draft.recipe, draft.sourceText, { rememberCurrent: true });
+    setWorkspaceTab('editor');
+    setHeldItemRaw(null);
+    setDraftTemplateContextMenu(null);
+    setStatus(`Открыт шаблон ${draft.outputRaw} из черновиков.`);
+    setLastParseResult(draft.recipe.recipe_type);
+  }
+
+  function removeRecipeDraftTemplate(draftId: string) {
+    const draft = recipeDraftTemplates.find((item) => item.id === draftId);
+    setRecipeDraftTemplates((current) => current.filter((item) => item.id !== draftId));
+    setDraftTemplateContextMenu(null);
+    setStatus(draft ? `Шаблон удалён: ${draft.outputRaw}` : 'Шаблон удалён.');
   }
 
   function resetLayout() {
@@ -2771,6 +3059,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderRecipeBuilderPanel() {
     const gridSize = matrix.length;
+    const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
     return (
       <div className="workspace-panel-shell panel-recipe-builder">
         <Panel
@@ -2781,7 +3070,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <div className="inline-actions">
               <button type="button" className="ghost-button icon-button" aria-label="recipe-history-back" title="Предыдущий открытый рецепт" disabled={!recipeBackHistory.length} onClick={() => restoreRecipeFromHistory(-1)}>‹</button>
               <button type="button" className="ghost-button icon-button" aria-label="recipe-history-forward" title="Следующий открытый рецепт" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>›</button>
-              <button type="button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => recipe.source.kind === 'generated' ? void handleSaveAs() : void handleSave()}>Сохранить изменения</button>
+              <button type="button" className="secondary-button" aria-label="save-local" disabled={!canSaveActions} onClick={downloadCurrentRecipe}>Сохранить локально</button>
+              <button type="button" aria-label="save-cloud" disabled={!canSaveActions} onClick={() => void handleSaveToCloud()}>Сохранить в облако</button>
+              <button type="button" className="secondary-button" aria-label="save-draft-template" disabled={!canSaveActions} onClick={handleSaveDraftTemplate}>Сохранить в черновик</button>
               <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
             </div>
           )}
@@ -3050,6 +3341,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderDraftTemplateContextMenu() {
+    if (!draftTemplateContextMenu) return null;
+    const draft = recipeDraftTemplates.find((item) => item.id === draftTemplateContextMenu.draftId);
+    if (!draft) return null;
+    return (
+      <div
+        className="context-menu draft-template-context-menu"
+        style={{ left: draftTemplateContextMenu.x, top: draftTemplateContextMenu.y }}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <strong>{draft.name}</strong>
+        <button type="button" aria-label="open-draft-template" onClick={() => openRecipeDraftTemplate(draft)}>Открыть</button>
+        <button type="button" className="danger-button" aria-label="delete-draft-template" onClick={() => removeRecipeDraftTemplate(draft.id)}>Удалить шаблон</button>
+        <button type="button" className="ghost-button" onClick={() => setDraftTemplateContextMenu(null)}>Закрыть</button>
+      </div>
+    );
+  }
+
   function renderRecipeUsesModal() {
     if (!recipeUsesModal) return null;
     const pageCount = Math.max(1, recipeUsesModal.matches.length);
@@ -3290,6 +3599,132 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderDraftCatalogIcon(raw: string) {
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
+    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
+    const iconUrl = itemSearchIcons[raw];
+    if (atlasStyle) {
+      return <span className="nei-atlas-icon" style={atlasStyle} aria-hidden="true" />;
+    }
+    if (iconUrl) {
+      return <img src={iconUrl} alt="" onError={() => setItemSearchIcons((current) => ({ ...current, [raw]: null }))} />;
+    }
+    return null;
+  }
+
+  function renderDraftItemsPanel() {
+    return (
+      <div className="workspace-panel-shell panel-draft-items">
+        <Panel title="Черновики" subtitle="Предметы и сохранённые шаблоны" className="draft-items-panel">
+          <div className="draft-filter-grid">
+            <input aria-label="draft-item-search" type="search" value={draftItemSearchQuery} onChange={(event) => setDraftItemSearchQuery(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
+            <select aria-label="draft-item-sort" value={draftItemSortMode} onChange={(event) => setDraftItemSortMode(event.target.value as DraftItemSortMode)}>
+              <option value="drafts-desc">Сначала больше черновиков</option>
+              <option value="drafts-asc">Сначала меньше черновиков</option>
+              <option value="name">По названию</option>
+            </select>
+            <label className="view-toggle draft-only-toggle">
+              <input type="checkbox" checked={showOnlyDraftItems} onChange={(event) => setShowOnlyDraftItems(event.target.checked)} />
+              <span>Только с черновиками</span>
+            </label>
+          </div>
+          <div className="nei-pager" aria-label="draft-item-pagination">
+            <button type="button" className="ghost-button icon-button" aria-label="draft-items-prev-page" disabled={draftItemPage <= 0} onClick={() => changeDraftItemPage(-1)}>‹</button>
+            <strong>{draftItemPage + 1}/{draftItemPageCount}</strong>
+            <button type="button" className="ghost-button icon-button" aria-label="draft-items-next-page" disabled={draftItemPage >= draftItemPageCount - 1} onClick={() => changeDraftItemPage(1)}>›</button>
+          </div>
+          <div className="draft-item-list" aria-label="draft-item-list">
+            {draftItemsPage.map((entry) => {
+              const raw = itemPanelRaw(entry);
+              const draftCount = getRecipeDraftCountForRaw(raw);
+              const availability = getRecipeAvailability(raw);
+              const selected = raw === selectedDraftItemRaw;
+              const icon = renderDraftCatalogIcon(raw);
+              return (
+                <button
+                  key={itemPanelEntryIdentity(entry)}
+                  type="button"
+                  className={`draft-item-button recipe-${availability} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
+                  aria-label={`draft-item-${raw}`}
+                  data-item-raw={raw}
+                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}`}
+                  onMouseEnter={() => updateHoveredItemRaw(raw)}
+                  onFocus={() => updateHoveredItemRaw(raw)}
+                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                  onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                  onClick={() => setSelectedDraftItemRaw(raw)}
+                >
+                  <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
+                    {icon}
+                  </span>
+                  {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
+                </button>
+              );
+            })}
+          </div>
+        </Panel>
+      </div>
+    );
+  }
+
+  function renderDraftTemplatesPanel() {
+    const selectedTitle = selectedDraftItemRaw ? resolveCellTitle(selectedDraftItemRaw) : 'Предмет не выбран';
+    return (
+      <div className="workspace-panel-shell panel-draft-templates">
+        <Panel title="Шаблоны" subtitle={selectedDraftItemRaw ?? 'Выберите предмет слева'} className="draft-templates-panel">
+          {selectedDraftItemRaw ? (
+            <div className="draft-selected-item">
+              <span className="output-icon-slot draft-selected-icon">{renderCraftItemIcon(selectedDraftItemRaw, undefined, false, 1, selectedTitle)}</span>
+              <div>
+                <strong>{selectedTitle}</strong>
+                <span>{selectedDraftItemRaw}</span>
+              </div>
+            </div>
+          ) : null}
+          {selectedDraftTemplates.length ? (
+            <div className="draft-template-list" aria-label="draft-template-list">
+              {selectedDraftTemplates.map((draft) => (
+                <div
+                  key={draft.id}
+                  className="draft-template-card"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`draft-template-${draft.outputRaw}-${draft.id}`}
+                  onClick={() => openRecipeDraftTemplate(draft)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      openRecipeDraftTemplate(draft);
+                    }
+                  }}
+                  onContextMenu={(event) => {
+                    event.preventDefault();
+                    setDraftTemplateContextMenu({ draftId: draft.id, x: event.clientX, y: event.clientY });
+                  }}
+                >
+                  <div className="draft-template-main">
+                    <strong>{draft.name}</strong>
+                    <span>{new Date(draft.updatedAt).toLocaleString()}</span>
+                    <span>{draft.createdByEmail}</span>
+                  </div>
+                  <div className="draft-template-tooltip" role="tooltip">
+                    <strong>{draft.outputRaw}</strong>
+                    <span>Создал: {draft.createdByEmail}</span>
+                    <div className="draft-template-tooltip-grid">
+                      <RecipeGrid matrix={draft.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="inline-hint inline-hint-warning">Нет шаблонов для выбранного предмета.</div>
+          )}
+        </Panel>
+      </div>
+    );
+  }
+
   function renderTextureToolsPanel() {
     return (
       <div className="workspace-panel-shell panel-textures">
@@ -3393,14 +3828,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (workspaceTab === 'recipe') {
       return (
         <div className="workspace-layout workspace-layout-drafts">
-          <div className="workspace-column workspace-left">
-            {renderRecipeFilesPanel()}
-            {renderPanel(getPanelForTab('input'))}
-          </div>
-          {renderColumn([getPanelForTab('output'), getPanelForTab('info'), getPanelForTab('statusBar')], 'workspace-center')}
-          <div className="workspace-column workspace-right">
-            {renderNeiPanel()}
-          </div>
+          <div className="workspace-column workspace-left">{renderDraftItemsPanel()}</div>
+          <div className="workspace-column workspace-right">{renderDraftTemplatesPanel()}</div>
         </div>
       );
     }
@@ -3616,6 +4045,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       ) : null}
       {renderHotkeyDebugPanel()}
       {renderNeiContextMenu()}
+      {renderDraftTemplateContextMenu()}
       {renderCustomItemModal()}
       {renderRecipeUsesModal()}
 

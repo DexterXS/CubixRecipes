@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Reworked the `Черновики` workspace into an item-first draft browser with count sorting, draft-only filtering, purple draft outlines, recipe-preview tooltips, open/delete actions, and separate local/cloud/draft save buttons guarded by output-result validation.
 - Hid the recipe-grid internal raw inputs in view mode so read-only/default users no longer see dark dots over craft slots while editing remains blocked.
 - Indexed uploaded `.zs` draft recipe outputs in the frontend so `R` can open already-loaded local draft recipes without waiting for empty backend lookups, and added hotkey debug timings for recipe searches and draft parsing.
 - Added local uploaded `.zs` draft fallback for `U` uses lookup, so the paged uses window can show recipes from already-loaded drafts even when backend `/recipes/uses` returns no matches.
