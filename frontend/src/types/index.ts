@@ -118,3 +118,16 @@ export interface AuthMeResponse {
   configuration_error?: string | null;
   user: AuthUser | null;
 }
+
+export interface CustomItem {
+  id: number;
+  scope: 'global' | 'user';
+  owner_email?: string | null;
+  created_by_email: string;
+  source_raw: string;
+  item_raw: string;
+  display_name: string;
+  nbt_raw?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}

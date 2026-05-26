@@ -137,6 +137,16 @@ beforeEach(() => {
     if (url === '/api/items/resolve' && init?.method === 'POST') {
       return Promise.resolve({ ok: true, json: async () => ({ icon_url: '/api/icons/item', animated: false }) }) as Promise<Response>;
     }
+    if (url === '/api/items/custom' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({ ok: true, json: async () => ({ items: [] }) }) as Promise<Response>;
+    }
+    if (url === '/api/items/custom' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body));
+      return Promise.resolve({ ok: true, json: async () => ({ ok: true, item: { id: 10, created_by_email: adminUser.email, owner_email: adminUser.email, created_at: null, updated_at: null, ...body } }) }) as Promise<Response>;
+    }
+    if (url === '/api/recipes/search-batch' && init?.method === 'POST') {
+      return Promise.resolve({ ok: true, json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0 } }) }) as Promise<Response>;
+    }
     if (url === '/api/recipes/save-as') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, recipe: projectSettings() }) }) as Promise<Response>;
     }
@@ -209,5 +219,24 @@ test('local recipe file import loads the draft into the editor', async () => {
   expect(await screen.findByText('torch.zs')).toBeTruthy();
   await waitFor(() => {
     expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+});
+
+test('NEI context menu can save a personal custom item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  fireEvent.click(await screen.findByRole('button', { name: 'Редактировать для себя' }));
+
+  expect(screen.getByRole('dialog', { name: 'Редактор предмета' })).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('custom-item-name'), { target: { value: 'Разноцветные доски' } });
+  fireEvent.change(screen.getByLabelText('custom-item-raw'), { target: { value: '<minecraft:planks:*>' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Сохранить предмет' }));
+
+  await waitFor(() => {
+    const saveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/items/custom' && init?.method === 'POST');
+    expect(saveCalls.length).toBeGreaterThan(0);
+    expect(String(saveCalls[0][1]?.body)).toContain('<minecraft:planks:*>');
   });
 });

@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, getItemPanelAtlas, getProjectSettings, listUsers, parseText, resolveItemRaw, saveRecipeAs, searchRecipesByOutput, updateProjectUiPreferences, updateRecipe, updateUserRole } from '../services/api';
+import { createRecipeTemplate, deleteCustomItem, getItemPanelAtlas, getProjectSettings, listCustomItems, listUsers, parseText, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, updateProjectUiPreferences, updateRecipe, updateUserRole } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AppTab, AuthUser, CellValue, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout } from '../types';
+import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -76,6 +76,10 @@ type ItemPanelEntry = {
   hasNbt: boolean;
   displayRu: string;
   displayEn: string;
+  raw?: string;
+  customItemId?: number;
+  customScope?: 'global' | 'user';
+  customOwnerEmail?: string | null;
 };
 
 type ItemPanelModSummary = {
@@ -91,6 +95,21 @@ type UploadedDraft = {
   size: number;
   text: string;
   lastModified: number;
+};
+
+type NeiContextMenuState = {
+  raw: string;
+  x: number;
+  y: number;
+};
+
+type CustomItemFormState = {
+  id: number | null;
+  scope: 'global' | 'user';
+  sourceRaw: string;
+  itemRaw: string;
+  displayName: string;
+  nbtRaw: string;
 };
 
 type ItemPanelTranslations = {
@@ -131,6 +150,9 @@ const fallbackAuthUser: AuthUser = {
 };
 
 function itemPanelEntryIdentity(entry: ItemPanelEntry): string {
+  if (entry.customItemId !== undefined) {
+    return `custom:${entry.customItemId}:${entry.raw ?? ''}`;
+  }
   return `${entry.key}:${entry.meta}`;
 }
 
@@ -217,6 +239,47 @@ function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
   return `${base}.withTag(${normalizedNbt})`;
 }
 
+function itemPanelRaw(entry: ItemPanelEntry): string {
+  return entry.raw ?? buildItemRawValue(entry.key, entry.meta);
+}
+
+function recipeLookupKeysForRaw(raw: string): string[] {
+  const parsed = parseItemRaw(raw);
+  if (!parsed) return [raw];
+  const keys = new Set<string>([raw]);
+  keys.add(`<${parsed.key}>`);
+  if (parsed.meta !== null) {
+    keys.add(`<${parsed.key}:${parsed.meta}>`);
+  }
+  return [...keys];
+}
+
+function collectRecipeOutputRaws(source: string): string[] {
+  const outputRaws = new Set<string>();
+  const outputPattern = /(?:addShaped|addShapeless)\s*\(\s*(<[^>]+>(?:\.withTag\([\s\S]*?\))?)/g;
+  let match: RegExpExecArray | null;
+  while ((match = outputPattern.exec(source)) !== null) {
+    outputRaws.add(match[1].trim());
+  }
+  return [...outputRaws];
+}
+
+function customItemToEntry(item: CustomItem): ItemPanelEntry {
+  const parsed = parseItemRaw(item.item_raw);
+  return {
+    key: parsed?.key ?? item.item_raw.replace(/[<>]/g, '').toLowerCase(),
+    legacyId: null,
+    meta: parsed?.meta ?? 0,
+    hasNbt: Boolean(item.nbt_raw),
+    displayRu: item.display_name,
+    displayEn: item.display_name,
+    raw: item.item_raw,
+    customItemId: item.id,
+    customScope: item.scope,
+    customOwnerEmail: item.owner_email ?? null
+  };
+}
+
 function normalizeAtlasImageUrl(imageUrl: string): string {
   if (imageUrl.startsWith('/api/')) {
     return apiPath(imageUrl.slice(4));
@@ -224,7 +287,7 @@ function normalizeAtlasImageUrl(imageUrl: string): string {
   return imageUrl;
 }
 
-function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw: string): ItemPanelAtlasEntry | undefined {
+function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw: string, wildcardTick = 0): ItemPanelAtlasEntry | undefined {
   const exact = atlas?.entries[raw];
   if (exact) return exact;
   const parsed = parseItemRaw(raw);
@@ -234,7 +297,10 @@ function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw:
   const byKeyZero = entries.find((entry) => entry.item_key === parsed.key && (entry.meta ?? 0) === 0);
   const firstByKey = entries.find((entry) => entry.item_key === parsed.key);
   if (parsed.wildcardMeta) {
-    return firstByKey ?? byKeyZero;
+    const variants = entries
+      .filter((entry) => entry.item_key === parsed.key)
+      .sort((left, right) => (left.meta ?? 0) - (right.meta ?? 0));
+    return variants[wildcardTick % Math.max(variants.length, 1)] ?? firstByKey ?? byKeyZero;
   }
   return atlas.entries[`<${parsed.key}${(parsed.meta ?? 0) > 0 ? `:${parsed.meta}` : ''}>`]
     ?? byKeyMeta
@@ -483,7 +549,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
 export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined }: AppProps) {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
-  const [status, setStatus] = useState('Р“РѕС‚РѕРІРѕ');
+  const [status, setStatus] = useState('Готово');
   const [strictBinding, setStrictBinding] = useState(true);
   const [metaMode, setMetaMode] = useState('strict');
   const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
@@ -498,9 +564,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemMetaDraft, setItemMetaDraft] = useState('0');
   const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
   const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
-  const [saveStatus, setSaveStatus] = useState('РќРµ СЃРѕС…СЂР°РЅРµРЅРѕ');
+  const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
-  const [lastParseResult, setLastParseResult] = useState('Р•С‰С‘ РЅРµ РІС‹РїРѕР»РЅСЏР»СЃСЏ');
+  const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
@@ -525,6 +591,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [hoveredNeiRaw, setHoveredNeiRaw] = useState<string | null>(null);
   const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>([]);
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
+  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
+  const [customItemsStatus, setCustomItemsStatus] = useState('');
+  const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [customItemForm, setCustomItemForm] = useState<CustomItemFormState | null>(null);
+  const [customItemNbtRoot, setCustomItemNbtRoot] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
+  const [wildcardCycleTick, setWildcardCycleTick] = useState(0);
   const [adminUsers, setAdminUsers] = useState<AuthUser[]>([]);
   const [adminUsersStatus, setAdminUsersStatus] = useState('');
   const [cursorPoint, setCursorPoint] = useState({ x: 0, y: 0 });
@@ -602,6 +675,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [canManageRoles]);
 
   useEffect(() => {
+    let cancelled = false;
+    async function loadCustomItems() {
+      try {
+        const payload = await listCustomItems();
+        if (!cancelled) {
+          setCustomItems(payload.items);
+          setCustomItemsStatus(`Предметов: ${payload.items.length}`);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setCustomItemsStatus(error instanceof Error ? error.message : String(error));
+        }
+      }
+    }
+    void loadCustomItems();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setWildcardCycleTick((current) => current + 1);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     if (!workspaceTabs.some((tab) => tab.id === workspaceTab)) {
       setWorkspaceTab('editor');
     }
@@ -648,7 +749,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
-  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('РћС€РёР±РєР°') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
+  const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
   const matrixWithResolution = useMemo(() => {
     const resolutionByRaw = new Map<string, RecipeView['matrix'][number][number]['resolution']>();
     recipe.matrix.forEach((row) => row.forEach((cell) => {
@@ -668,7 +769,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         resolution: directResolution ?? fallbackResolution
       };
     }));
-  }, [matrix, recipe.matrix, itemSearchIcons, itemPanelTranslations]);
+  }, [matrix, recipe.matrix, itemSearchIcons, itemPanelTranslations, customItems]);
 
   function patchModalScale(key: ModalScaleKey, nextScale: number) {
     setModalScales((current) => ({ ...current, [key]: clamp(nextScale, 0.8, 1.5) }));
@@ -698,7 +799,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           latestUiPreferencesRef.current = normalized;
           setUiPreferences(normalized);
         }
-        setStatus((current) => current === 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ UI-РЅР°СЃС‚СЂРѕР№РєРё, РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.' ? 'РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє backend РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРѕ, UI-РЅР°СЃС‚СЂРѕР№РєРё Р·Р°РіСЂСѓР¶РµРЅС‹.' : current);
+        setStatus((current) => current === 'Не удалось загрузить UI-настройки, используются значения по умолчанию.' ? 'Подключение к backend восстановлено, UI-настройки загружены.' : current);
         if (settingsRetryTimerRef.current !== null) {
           window.clearTimeout(settingsRetryTimerRef.current);
           settingsRetryTimerRef.current = null;
@@ -708,7 +809,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           return;
         }
         setBackendAvailable(false);
-        setStatus('РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ UI-РЅР°СЃС‚СЂРѕР№РєРё, РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.');
+        setStatus('Не удалось загрузить UI-настройки, используются значения по умолчанию.');
         if (settingsRetryTimerRef.current === null) {
           settingsRetryTimerRef.current = window.setTimeout(() => {
             settingsRetryTimerRef.current = null;
@@ -926,6 +1027,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function resolveCellTitle(raw: string): string {
+    const custom = customItems.find((item) => item.item_raw === raw);
+    if (custom) {
+      return custom.display_name;
+    }
     const parsed = parseItemRaw(raw);
     if (!parsed) {
       return raw;
@@ -1000,6 +1105,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     });
   }, [itemPanelModSummaries]);
 
+  const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
+  const neiCatalogEntries = useMemo(() => [...customItemEntries, ...itemPanelTranslations.entries], [customItemEntries, itemPanelTranslations.entries]);
+
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
     if (!query) {
@@ -1008,7 +1116,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
     const unique = new Map<string, ItemPanelEntry>();
     const push = (entry: ItemPanelEntry) => {
-      const uniqueKey = `${entry.key}:${entry.meta}`;
+      const uniqueKey = itemPanelEntryIdentity(entry);
       if (!unique.has(uniqueKey)) unique.set(uniqueKey, entry);
     };
 
@@ -1016,7 +1124,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const [idPart, metaPart] = query.split(':');
       const legacyId = Number.parseInt(idPart, 10);
       const meta = metaPart !== undefined ? Number.parseInt(metaPart, 10) : null;
-      itemPanelTranslations.entries.forEach((entry) => {
+      neiCatalogEntries.forEach((entry) => {
         if (entry.legacyId !== legacyId) return;
         if (meta !== null && entry.meta !== meta) return;
         push(entry);
@@ -1038,7 +1146,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return [...unique.values()].slice(0, 20);
     }
 
-    itemPanelTranslations.entries.forEach((entry) => {
+    neiCatalogEntries.forEach((entry) => {
       if (
         entry.key.includes(query)
         || entry.displayRu.toLowerCase().includes(query)
@@ -1050,19 +1158,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     });
 
     return [...unique.values()].slice(0, 20);
-  }, [itemSearchQuery, itemPanelTranslations]);
+  }, [itemSearchQuery, itemPanelTranslations, neiCatalogEntries]);
 
   const filteredNeiItems = useMemo(() => {
     const query = neiSearchQuery.trim().toLowerCase();
     return query
-      ? itemPanelTranslations.entries.filter((entry) => (
+      ? neiCatalogEntries.filter((entry) => (
         entry.key.includes(query)
         || entry.displayRu.toLowerCase().includes(query)
         || entry.displayEn.toLowerCase().includes(query)
         || String(entry.legacyId ?? '').includes(query)
       ))
-      : itemPanelTranslations.entries;
-  }, [neiSearchQuery, itemPanelTranslations.entries]);
+      : neiCatalogEntries;
+  }, [neiSearchQuery, neiCatalogEntries]);
 
   const neiPageCount = Math.max(1, Math.ceil(filteredNeiItems.length / NEI_PAGE_SIZE));
   const neiItems = useMemo(() => {
@@ -1071,11 +1179,45 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return filteredNeiItems.slice(start, start + NEI_PAGE_SIZE);
   }, [filteredNeiItems, neiPage, neiPageCount]);
 
-  const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => buildItemRawValue(entry.key, entry.meta)), [neiItems]);
+  const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => itemPanelRaw(entry)), [neiItems]);
+  const uploadedDraftOutputKeys = useMemo(() => {
+    const keys = new Set<string>();
+    uploadedDrafts.forEach((draft) => {
+      collectRecipeOutputRaws(draft.text).forEach((raw) => {
+        recipeLookupKeysForRaw(raw).forEach((key) => keys.add(key));
+      });
+    });
+    return keys;
+  }, [uploadedDrafts]);
 
   useEffect(() => {
     setNeiPage(0);
   }, [neiSearchQuery]);
+
+  useEffect(() => {
+    const lookupRaws = [...new Set(visibleNeiRawItems.flatMap(recipeLookupKeysForRaw))].slice(0, 300);
+    if (!lookupRaws.length) return undefined;
+    let cancelled = false;
+    async function loadAvailability() {
+      try {
+        const response = await searchRecipesByOutputs(lookupRaws);
+        if (cancelled) return;
+        setRecipeAvailability((current) => {
+          const next = { ...current };
+          lookupRaws.forEach((raw) => {
+            next[raw] = (response.matches[raw] ?? 0) > 0;
+          });
+          return next;
+        });
+      } catch {
+        // Availability is a visual hint only; editing must stay usable offline.
+      }
+    }
+    void loadAvailability();
+    return () => {
+      cancelled = true;
+    };
+  }, [visibleNeiRawItems.join('|')]);
 
   useEffect(() => {
     setNeiPage((current) => clamp(current, 0, neiPageCount - 1));
@@ -1307,7 +1449,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (node.kind === 'scalar') {
       return (
         <div className="nbt-row-grid">
-          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="Р·РЅР°С‡РµРЅРёРµ" onChange={(event) => onChange({ ...node, value: event.target.value })} />
+          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onChange({ ...node, value: event.target.value })} />
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
@@ -1318,22 +1460,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return (
         <div className="nbt-node-block">
           <div className="inline-actions">
-            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'в–¶' : 'в–ј'}</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
             <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
               {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
             </select>
-            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Р”РѕР±Р°РІРёС‚СЊ РїРѕР»Рµ" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Добавить поле" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
           </div>
           {!isCollapsed ? (
             <div className="nbt-children">
               {node.entries.map((entry, index) => (
                 <div key={path + index} className="nbt-entry-line">
-                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="РєР»СЋС‡" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
+                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
                   {renderNbtNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onChange({
                     ...node,
                     entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
                   }))}
-                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>рџ—‘пёЏ</button>
+                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>🗑️</button>
                 </div>
               ))}
             </div>
@@ -1344,11 +1486,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div className="nbt-node-block">
         <div className="inline-actions">
-          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'в–¶' : 'в–ј'}</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
-          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Р”РѕР±Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
+          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Добавить элемент" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
         </div>
         {!isCollapsed ? (
           <div className="nbt-children">
@@ -1359,7 +1501,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   ...node,
                   items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
                 }))}
-                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>рџ—‘пёЏ</button>
+                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>🗑️</button>
               </div>
             ))}
           </div>
@@ -1372,10 +1514,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const isOpen = activeScaleControl === key;
     return (
       <div className="modal-scale-wrap">
-        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="РњР°СЃС€С‚Р°Р± РѕРєРЅР°" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>вљ™пёЏ</button>
+        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="Масштаб окна" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>⚙️</button>
         {isOpen ? (
           <div className="modal-scale-popover">
-            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>в€’</button>
+            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>−</button>
             <input aria-label={`modal-scale-${key}-range`} type="range" min="0.8" max="1.5" step="0.1" value={modalScales[key]} onChange={(event) => patchModalScale(key, Number(event.target.value))} />
             <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>+</button>
             <span>{Math.round(modalScales[key] * 100)}%</span>
@@ -1498,6 +1640,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function handleHeldItemOutsideMouseDown(event: MouseEvent<HTMLElement>) {
+    if (neiContextMenu) {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest('.nei-context-menu')) {
+        setNeiContextMenu(null);
+      }
+    }
     if (!heldItemRaw || event.button !== 0) {
       return;
     }
@@ -1554,7 +1702,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         setLastParseResult(result.item.raw);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°';
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       if (message.includes('Backend unavailable')) {
         setBackendAvailable(false);
         setStatus(message);
@@ -1701,21 +1849,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   async function handleCraftModalCopy() {
     const payload = craftSourceDraft || getCellRaw(craftEditorTarget);
     await navigator.clipboard.writeText(payload);
-    setStatus('РЎРєРѕРїРёСЂРѕРІР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРґРјРµС‚Р°.');
+    setStatus('Скопировано значение предмета.');
   }
 
   async function handleCellCopy(row: number, col: number) {
     const value = matrix[row]?.[col];
     const payload = value ?? '';
     await navigator.clipboard.writeText(payload);
-    setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ СЃРєРѕРїРёСЂРѕРІР°РЅРѕ.`);
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение скопировано.`);
   }
 
   async function handleCellPaste(row: number, col: number) {
     try {
       const pasted = (await navigator.clipboard.readText()).trim();
       setMatrixCell(row, col, pasted || null);
-      setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ РІСЃС‚Р°РІР»РµРЅРѕ.`);
+      setStatus(`Ячейка ${row + 1},${col + 1}: значение вставлено.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Clipboard unavailable';
       setStatus(message);
@@ -1724,15 +1872,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function handleCellClear(row: number, col: number) {
     setMatrixCell(row, col, null);
-    setStatus(`РЇС‡РµР№РєР° ${row + 1},${col + 1}: Р·РЅР°С‡РµРЅРёРµ РѕС‡РёС‰РµРЅРѕ.`);
+    setStatus(`Ячейка ${row + 1},${col + 1}: значение очищено.`);
   }
 
   async function handleSave() {
     if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
-      setStatus('РЎРѕС…СЂР°РЅРµРЅРёРµ РЅРµРґРѕСЃС‚СѓРїРЅРѕ: РёСЃРїРѕР»СЊР·СѓР№С‚Рµ В«РЎРѕС…СЂР°РЅРёС‚СЊ РєР°РєВ».');
+      setStatus('Сохранение недоступно: используйте «Сохранить как».');
       return;
     }
-    setStatus('РЎРѕС…СЂР°РЅСЏРµРј...');
+    setStatus('Сохраняем...');
     setSaveStatus(t('values.pending'));
     try {
       const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name });
@@ -1749,12 +1897,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function handleSaveAs() {
-    const targetPath = window.prompt('РљСѓРґР° СЃРѕС…СЂР°РЅРёС‚СЊ СЂРµС†РµРїС‚? РЈРєР°Р¶РёС‚Рµ РїСѓС‚СЊ Рє .zs С„Р°Р№Р»Сѓ.', recipe.source.path ?? 'scripts/new_recipe.zs');
+    const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
     if (!targetPath) {
       setStatus(t('status.saveAsCancelled'));
       return;
     }
-    setStatus('РЎРѕС…СЂР°РЅСЏРµРј РєР°Рє...');
+    setStatus('Сохраняем как...');
     setSaveStatus(t('values.pending'));
     try {
       if (recipe.recipe_uid === 'new-recipe') {
@@ -1765,7 +1913,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath });
         applyRecipe(response.recipe, input);
       }
-      setStatus(`${t('status.saved')} в†’ ${targetPath}`);
+      setStatus(`${t('status.saved')} → ${targetPath}`);
       setSaveStatus(t('values.saved'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -1783,12 +1931,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   const statusItems = [
-    { label: t('status.status'), value: status, tone: status.includes('РћС€РёР±РєР°') || status.includes('error') ? 'warning' as const : 'success' as const },
+    { label: t('status.status'), value: status, tone: status.includes('Ошибка') || status.includes('error') ? 'warning' as const : 'success' as const },
     { label: t('status.type'), value: recipe.recipe_type },
     { label: t('status.size'), value: summary },
     { label: t('status.saveState'), value: saveStatus },
     { label: t('status.icons'), value: `${iconsResolved}/${iconTotal}` },
-    { label: t('status.mode'), value: `${uiPreferences.display_mode} вЂў ${uiPreferences.language}` }
+    { label: t('status.mode'), value: `${uiPreferences.display_mode} ? ${uiPreferences.language}` }
   ];
 
   function getPanelForTab(panelId: PanelId): PanelLayoutItem {
@@ -1804,7 +1952,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderCraftItemIcon(raw: string, iconUrl?: string | null, animated?: boolean, frameTime?: number, title?: string) {
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw);
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
     if (atlasStyle) {
       return <span className="cell-atlas-icon output-atlas-icon" style={atlasStyle} aria-hidden="true" />;
@@ -1816,7 +1964,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderHeldItemIcon(raw: string) {
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw);
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
     const iconUrl = itemSearchIcons[raw];
     if (atlasStyle) {
@@ -1875,6 +2023,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 animationsEnabled={areAnimationsEnabled}
                 editorMode={(canCreateTemplates || canEditRecipes) ? uiPreferences.editor_mode : 'view'}
                 heldItemRaw={heldItemRaw}
+                tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)}
                 resolveCellTitle={resolveCellTitle}
                 onCellClick={handleCraftCellClick}
                 onCellContextMenu={handleCraftCellContextMenu}
@@ -1915,6 +2064,86 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function getRecipeAvailability(raw: string): 'available' | 'missing' | 'unknown' {
+    const keys = recipeLookupKeysForRaw(raw);
+    if (keys.some((key) => uploadedDraftOutputKeys.has(key))) {
+      return 'available';
+    }
+    const known = keys.map((key) => recipeAvailability[key]).find((value) => value !== undefined);
+    if (known === true) return 'available';
+    if (known === false) return 'missing';
+    return 'unknown';
+  }
+
+  function rawWithoutNbt(raw: string): string {
+    return raw.replace(/\.withTag\([\s\S]*\)\s*$/, '').trim();
+  }
+
+  function openCustomItemEditor(raw: string, scope: 'global' | 'user') {
+    const existing = customItems.find((item) => item.item_raw === raw && item.scope === scope);
+    const sourceRaw = existing?.source_raw ?? raw;
+    const itemRaw = existing?.item_raw ?? raw;
+    const parsed = parseRawForEditor(itemRaw);
+    const nbtRaw = existing?.nbt_raw ?? '';
+    setCustomItemNbtRoot(nbtRaw ? (parseNbtNode(nbtRaw).kind === 'compound' ? parseNbtNode(nbtRaw) as NbtCompoundNode : { kind: 'compound', entries: [{ key: 'value', value: parseNbtNode(nbtRaw) }] }) : parsed.nbtRoot);
+    setCustomItemForm({
+      id: existing?.id ?? null,
+      scope,
+      sourceRaw,
+      itemRaw,
+      displayName: existing?.display_name ?? resolveCellTitle(raw).replace(/\*$/, '') ?? raw,
+      nbtRaw
+    });
+    setNeiContextMenu(null);
+  }
+
+  async function saveCustomItemForm() {
+    if (!customItemForm) return;
+    const nbtRaw = buildNbtRawFromRoot(customItemNbtRoot);
+    const itemRawBase = rawWithoutNbt(customItemForm.itemRaw);
+    const itemRaw = nbtRaw ? `${itemRawBase}.withTag(${nbtRaw})` : itemRawBase;
+    try {
+      const payload = await saveCustomItem({
+        id: customItemForm.id,
+        scope: customItemForm.scope,
+        source_raw: customItemForm.sourceRaw,
+        item_raw: itemRaw,
+        display_name: customItemForm.displayName.trim() || itemRaw,
+        nbt_raw: nbtRaw || null
+      });
+      setCustomItems((current) => {
+        const withoutSaved = current.filter((item) => item.id !== payload.item.id);
+        return [payload.item, ...withoutSaved];
+      });
+      setCustomItemsStatus('Предмет сохранен');
+      setCustomItemForm(null);
+    } catch (error) {
+      setCustomItemsStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function removeCustomItem(item: CustomItem) {
+    try {
+      await deleteCustomItem(item.id);
+      setCustomItems((current) => current.filter((currentItem) => currentItem.id !== item.id));
+      setCustomItemsStatus('Предмет удален');
+      setNeiContextMenu(null);
+    } catch (error) {
+      setCustomItemsStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  function addCustomNbtRootEntry(type: NbtNodeType) {
+    setCustomItemNbtRoot((current) => ({ ...current, entries: [...current.entries, { key: '', value: defaultNodeForType(type) }] }));
+  }
+
+  function updateCustomNbtRootEntry(index: number, updater: (entry: { key: string; value: NbtNode }) => { key: string; value: NbtNode }) {
+    setCustomItemNbtRoot((current) => ({
+      ...current,
+      entries: current.entries.map((entry, entryIndex) => entryIndex === index ? updater(entry) : entry)
+    }));
+  }
+
   function renderNeiPanel() {
     const atlasImageUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
     return (
@@ -1932,9 +2161,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             aria-label="nei-items"
           >
             {neiItems.map((entry) => {
-              const raw = buildItemRawValue(entry.key, entry.meta);
+              const raw = itemPanelRaw(entry);
               const iconUrl = itemSearchIcons[raw];
-              const atlasEntry = itemPanelAtlas?.entries[raw];
+              const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
+              const availability = getRecipeAvailability(raw);
+              const customForRaw = customItems.find((item) => item.item_raw === raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
                   backgroundImage: `url(${atlasImageUrl})`,
@@ -1946,8 +2177,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <button
                   key={itemPanelEntryIdentity(entry)}
                   type="button"
-                  className={`nei-item ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
-                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}`}
+                  className={`nei-item recipe-${availability} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}`}
                   aria-label={`nei-item-${raw}`}
                   draggable
                   onDragStart={(event) => {
@@ -1964,6 +2195,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   onBlur={() => setHoveredNeiRaw((current) => (current === raw ? null : current))}
                   onClick={() => handleNeiItemPick(raw)}
                   onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
+                  onContextMenu={(event) => {
+                    event.preventDefault();
+                    setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
+                  }}
                 >
                   <span className={`nei-icon ${atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
                     {atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
@@ -1979,11 +2214,105 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   </span>
                   <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
+                  {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
                 </button>
               );
             })}
           </div>
         </Panel>
+      </div>
+    );
+  }
+
+  function renderNeiContextMenu() {
+    if (!neiContextMenu) return null;
+    const raw = neiContextMenu.raw;
+    const custom = customItems.find((item) => item.item_raw === raw);
+    return (
+      <div
+        className="context-menu nei-context-menu"
+        style={{ left: neiContextMenu.x, top: neiContextMenu.y }}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <strong>{raw}</strong>
+        <button type="button" onClick={() => openCustomItemEditor(raw, 'user')}>Редактировать для себя</button>
+        {canManageSettings ? <button type="button" onClick={() => openCustomItemEditor(raw, 'global')}>Редактировать глобально</button> : null}
+        <button type="button" onClick={() => openCustomItemEditor(raw, 'user')}>NBT редактор</button>
+        {custom ? <button type="button" className="danger-button" onClick={() => void removeCustomItem(custom)}>Удалить созданный предмет</button> : null}
+        <button type="button" className="ghost-button" onClick={() => setNeiContextMenu(null)}>Закрыть</button>
+      </div>
+    );
+  }
+
+  function renderCustomItemModal() {
+    if (!customItemForm) return null;
+    const canUseGlobalScope = canManageSettings;
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => setCustomItemForm(null)}>
+        <div className="modal modal-scalable modal-custom-item" role="dialog" aria-modal="true" aria-label="Редактор предмета" onClick={(event) => event.stopPropagation()}>
+          <div className="modal-header">
+            <h2>Редактор предмета</h2>
+            <div className="inline-actions">
+              <button type="button" onClick={() => setCustomItemForm(null)}>Закрыть</button>
+            </div>
+          </div>
+          <div className="settings-modal-body">
+            <div className="settings-grid">
+              <label className="field-block">
+                <span>Область</span>
+                <select
+                  aria-label="custom-item-scope"
+                  value={customItemForm.scope}
+                  disabled={!canUseGlobalScope}
+                  onChange={(event) => setCustomItemForm((current) => current ? { ...current, scope: event.target.value as 'global' | 'user' } : current)}
+                >
+                  <option value="user">Только для меня</option>
+                  <option value="global">Для всех</option>
+                </select>
+              </label>
+              <label className="field-block">
+                <span>Название</span>
+                <input aria-label="custom-item-name" type="text" value={customItemForm.displayName} onChange={(event) => setCustomItemForm((current) => current ? { ...current, displayName: event.target.value } : current)} />
+              </label>
+            </div>
+            <label className="field-block">
+              <span>Raw предмета</span>
+              <input aria-label="custom-item-raw" type="text" value={customItemForm.itemRaw} onChange={(event) => setCustomItemForm((current) => current ? { ...current, itemRaw: event.target.value } : current)} />
+              <span className="inline-hint">Для переливающихся вариантов укажите meta `*`, например `&lt;minecraft:wool:*&gt;`.</span>
+            </label>
+            <div className="settings-section">
+              <div className="settings-section-title">
+                <h3>NBT</h3>
+                <span>Эти поля попадут в `.withTag(...)` у созданного предмета.</span>
+              </div>
+              <div className="inline-actions">
+                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-field" title="Добавить NBT поле" onClick={() => addCustomNbtRootEntry('int')}>+</button>
+                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-object" title="Добавить NBT объект" onClick={() => addCustomNbtRootEntry('compound')}>◫</button>
+                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-list" title="Добавить NBT список" onClick={() => addCustomNbtRootEntry('list')}>☰</button>
+              </div>
+              {customItemNbtRoot.entries.length ? (
+                <div className="suggestions-list nbt-editor-list" aria-label="custom-nbt-editor-list">
+                  {customItemNbtRoot.entries.map((entry, index) => (
+                    <div key={`custom-root-entry-${index}`} className="suggestion-item">
+                      <div className="nbt-entry-line">
+                        <input aria-label={`custom-nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateCustomNbtRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                        {renderNbtNodeEditor(entry.value, `custom.${index}`, (nextNode) => updateCustomNbtRootEntry(index, (current) => ({ ...current, value: nextNode })))}
+                        <button type="button" className="ghost-button icon-button" aria-label={`delete-custom-nbt-root-${index}`} title="Удалить" onClick={() => setCustomItemNbtRoot((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="inline-hint inline-hint-warning">NBT не задан.</div>
+              )}
+            </div>
+            {customItemsStatus ? <div className="inline-status inline-status-default">{customItemsStatus}</div> : null}
+            <div className="inline-actions">
+              <button type="button" className="secondary-button" onClick={() => void saveCustomItemForm()}>Сохранить предмет</button>
+              <button type="button" className="ghost-button" onClick={() => setCustomItemForm(null)}>Отмена</button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -2047,7 +2376,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderTextureToolsPanel() {
     return (
       <div className="workspace-panel-shell panel-textures">
-        <Panel title={t('textures.modsDropdown')} subtitle={uiPreferences.language === 'ru' ? 'РљСЌС€ РёРєРѕРЅРѕРє РёР· itempanel.csv' : 'Icon cache from itempanel.csv'} className="texture-panel">
+        <Panel title={t('textures.modsDropdown')} subtitle={uiPreferences.language === 'ru' ? 'Кэш иконок из itempanel.csv' : 'Icon cache from itempanel.csv'} className="texture-panel">
           <div className="texture-toolbar">
             <button type="button" className="secondary-button" aria-expanded={isTextureModsOpen} onClick={() => setIsTextureModsOpen((value) => !value)}>{t('textures.modsDropdown')}</button>
             <button type="button" onClick={() => void loadSelectedTextures()} disabled={textureLoadState === 'running' || textureLoadState === 'paused'}>{t('textures.loadSelected')}</button>
@@ -2063,7 +2392,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           </div>
           {textureLoadStatus ? <div className="inline-status inline-status-default texture-status-line">{textureLoadStatus}</div> : null}
           <div className="texture-menu-header">
-            <strong>{uiPreferences.language === 'ru' ? 'РњРѕРґС‹' : 'Mods'}</strong>
+            <strong>{uiPreferences.language === 'ru' ? 'Моды' : 'Mods'}</strong>
             <div className="view-menu-actions">
               <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(true)}>{t('textures.selectAll')}</button>
               <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(false)}>{t('textures.clearAll')}</button>
@@ -2090,7 +2419,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           {isTextureModsOpen && !itemPanelModSummaries.length ? <p className="toolbar-texture-empty">{t('textures.empty')}</p> : null}
           {!isTextureModsOpen ? (
             <div className="kv-grid">
-              <div><span>{uiPreferences.language === 'ru' ? 'РњРѕРґРѕРІ' : 'Mods'}</span><strong>{itemPanelModSummaries.length}</strong></div>
+              <div><span>{uiPreferences.language === 'ru' ? 'Модов' : 'Mods'}</span><strong>{itemPanelModSummaries.length}</strong></div>
               <div><span>{t('status.icons')}</span><strong>{iconsResolved}/{iconTotal}</strong></div>
               <div><span>{t('textures.progress')}</span><strong>{itemPanelModSummaries.find((summary) => selectedTextureMods[summary.modid] ?? true)?.completionText ?? '0%'}</strong></div>
             </div>
@@ -2257,7 +2586,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   }} /></label>
                   <div className="kv-grid">
                     <div><span>{t('fields.displayName')}</span><strong>{outputDisplayName ?? t('values.unresolved')}</strong></div>
-                    <div><span>{t('fields.rawId')}</span><strong>{outputRaw || 'вЂ”'}</strong></div>
+                    <div><span>{t('fields.rawId')}</span><strong>{outputRaw || '?'}</strong></div>
                     <div><span>{t('fields.iconStatus')}</span><strong>{recipe.output_resolution?.icon_url ?? t('values.placeholder')}</strong></div>
                     <div><span>{t('fields.strategy')}</span><strong>{recipe.output_resolution?.strategy ?? 'n/a'}</strong></div>
                   </div>
@@ -2272,7 +2601,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} resolveCellTitle={resolveCellTitle} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
                   setMatrixCell(row, col, value);
                 }} />
               </div>
@@ -2302,7 +2631,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         const renderExtra = () => {
           switch (panelId) {
             case 'info':
-              return <div className="kv-grid"><div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div><div><span>{t('fields.sourceFile')}</span><strong>{recipe.source.path ?? 'вЂ”'}</strong></div><div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div><div><span>{t('fields.originPath')}</span><strong>{recipe.source.path ?? settings?.project_config_path ?? 'вЂ”'}</strong></div></div>;
+              return <div className="kv-grid"><div><span>{t('status.type')}</span><strong>{recipe.recipe_type}</strong></div><div><span>{t('fields.sourceFile')}</span><strong>{recipe.source.path ?? '?'}</strong></div><div><span>{t('app.uid')}</span><strong>{recipe.recipe_uid}</strong></div><div><span>{t('fields.originPath')}</span><strong>{recipe.source.path ?? settings?.project_config_path ?? '?'}</strong></div></div>;
             case 'debug':
               return <div className="kv-grid"><div><span>{t('fields.lastApiStatus')}</span><strong>{lastApiStatus}</strong></div><div><span>{t('fields.lastParseResult')}</span><strong>{lastParseResult}</strong></div><div><span>{t('fields.iconFound')}</span><strong>{recipe.output_resolution?.icon_url ? t('values.yes') : t('values.no')}</strong></div></div>;
             case 'diagnostics':
@@ -2358,6 +2687,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           {renderHeldItemIcon(heldItemRaw)}
         </div>
       ) : null}
+      {renderNeiContextMenu()}
+      {renderCustomItemModal()}
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
@@ -2405,18 +2736,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>
           <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>{craftEditorTarget.kind === 'output' ? 'Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ output' : `Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ СЏС‡РµР№РєРё ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
+              <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('craft')}
-                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Р—Р°РєСЂС‹С‚СЊ</button>
+                <button type="button" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>Закрыть</button>
               </div>
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
-                <span>РџРѕРёСЃРє РїСЂРµРґРјРµС‚Р° (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
+                <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
                 <div className="inline-actions">
-                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="РЅР°РїСЂРёРјРµСЂ: draconicrevolt:der_awakeneddemonicblock РёР»Рё 482:1" />
-                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="РћС‡РёСЃС‚РёС‚СЊ РїРѕРёСЃРє" onClick={() => setItemSearchQuery('')}>рџ§№</button>
+                  <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
+                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="Очистить поиск" onClick={() => setItemSearchQuery('')}>🧹</button>
                 </div>
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
@@ -2427,7 +2758,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                           const iconUrl = itemSearchIcons[raw];
                           return (
                             <span className="suggestion-icon-slot" aria-hidden="true">
-                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : 'в–Ў'}
+                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
                             </span>
                           );
                         })()}
@@ -2442,11 +2773,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 ) : null}
               </label>
               <label className="field-block">
-                <span>Raw РїСЂРµРґРјРµС‚Р° (С„РѕСЂРјР°С‚ parser: {'<modid:item[:meta]>'})</span>
+                <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
                 <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
               </label>
               <div className="field-block">
-                <span>РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ item</span>
+                <span>Структурный редактор item</span>
                 <div className="settings-grid">
                   <label className="field-block">
                     <span>Mod</span>
@@ -2462,15 +2793,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   </label>
                 </div>
                 <div className="inline-actions">
-                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="РћС‚РєСЂС‹С‚СЊ РѕС‚РґРµР»СЊРЅРѕРµ РѕРєРЅРѕ NBT" onClick={() => setIsNbtEditorOpen(true)}>рџ§¬</button>
-                  <span>{nbtRootDraft.entries.length ? `NBT РїРѕР»РµР№: ${nbtRootDraft.entries.length}` : 'NBT РЅРµ Р·Р°РґР°РЅ'}</span>
-                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>РЎРѕР±СЂР°С‚СЊ raw РёР· РїРѕР»РµР№</button>
+                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="Открыть отдельное окно NBT" onClick={() => setIsNbtEditorOpen(true)}>🧬</button>
+                  <span>{nbtRootDraft.entries.length ? `NBT полей: ${nbtRootDraft.entries.length}` : 'NBT не задан'}</span>
+                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
                 </div>
               </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="РћС‡РёСЃС‚РёС‚СЊ" onClick={() => setCraftSourceDraft('')}>рџ§№</button>
-                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="РЎРєРѕРїРёСЂРѕРІР°С‚СЊ" onClick={() => void handleCraftModalCopy()}>рџ“‹</button>
-                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Р’СЃС‚Р°РІРёС‚СЊ" onClick={() => void handleCraftModalPaste()}>рџ“Ґ</button>
+                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
+                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="Скопировать" onClick={() => void handleCraftModalCopy()}>📋</button>
+                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Вставить" onClick={() => void handleCraftModalPaste()}>📥</button>
                 <button
                   type="button"
                   onClick={() => {
@@ -2484,7 +2815,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     setIsNbtEditorOpen(false);
                   }}
                 >
-                  РџСЂРёРјРµРЅРёС‚СЊ
+                  Применить
                 </button>
               </div>
             </div>
@@ -2499,30 +2830,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <h2>NBT Tree</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('nbtTree')}
-                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Р—Р°РєСЂС‹С‚СЊ</button>
+                <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Закрыть</button>
               </div>
             </div>
             <div className="settings-modal-body">
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Р”РѕР±Р°РІРёС‚СЊ NBT РїРѕР»Рµ" onClick={() => addRootEntry('int')}>+</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Р”РѕР±Р°РІРёС‚СЊ NBT РѕР±СЉРµРєС‚" onClick={() => addRootEntry('compound')}>в—«</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Р”РѕР±Р°РІРёС‚СЊ NBT СЃРїРёСЃРѕРє" onClick={() => addRootEntry('list')}>в°</button>
-                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>РЎРѕР±СЂР°С‚СЊ raw РёР· РїРѕР»РµР№</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Добавить NBT поле" onClick={() => addRootEntry('int')}>+</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
+                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
+                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
               </div>
               {nbtRootDraft.entries.length ? (
                 <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
                   {nbtRootDraft.entries.map((entry, index) => (
                     <div key={`root-entry-${index}`} className="suggestion-item">
                       <div className="nbt-entry-line">
-                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="РєР»СЋС‡" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
+                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
                         {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="РЈРґР°Р»РёС‚СЊ" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>рџ—‘пёЏ</button>
+                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="inline-hint inline-hint-warning">Р”РѕР±Р°РІСЊС‚Рµ NBT РїРѕР»Рµ/РѕР±СЉРµРєС‚/СЃРїРёСЃРѕРє.</div>
+                <div className="inline-hint inline-hint-warning">Добавьте NBT поле/объект/список.</div>
               )}
             </div>
           </div>

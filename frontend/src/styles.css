@@ -107,8 +107,14 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .nei-pager .icon-button { width: 32px; height: 32px; padding: 0; border-radius: 4px; font-size: 20px; line-height: 1; }
 .nei-pager .icon-button:disabled { opacity: 0.35; cursor: default; }
 .nei-list { display: grid; grid-template-columns: repeat(auto-fill, 34px); justify-content: start; align-content: start; gap: 5px; max-height: calc(100vh - 240px); overflow: hidden; padding-right: 4px; overscroll-behavior: contain; }
-.nei-list .nei-item { width: 34px; height: 34px; min-width: 34px; display: grid; place-items: center; padding: 0; border-radius: 4px; background: transparent; border: 1px solid transparent; color: var(--text); box-shadow: none; }
+.nei-list .nei-item { position: relative; width: 34px; height: 34px; min-width: 34px; display: grid; place-items: center; padding: 0; border-radius: 4px; background: transparent; border: 1px solid transparent; color: var(--text); box-shadow: none; }
 .nei-list .nei-item:hover, .nei-list .nei-item.is-held { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); filter: none; }
+.nei-list .nei-item.recipe-available { background: color-mix(in srgb, #22c55e 18%, transparent); border-color: color-mix(in srgb, #22c55e 62%, transparent); box-shadow: inset 0 0 0 1px rgba(187, 247, 208, 0.1); }
+.nei-list .nei-item.recipe-missing { background: color-mix(in srgb, #ef4444 13%, transparent); border-color: color-mix(in srgb, #ef4444 42%, transparent); }
+.nei-list .nei-item.recipe-available:hover { background: color-mix(in srgb, #22c55e 28%, var(--accent) 12%); border-color: #86efac; }
+.nei-list .nei-item.recipe-missing:hover { background: color-mix(in srgb, #ef4444 20%, var(--accent) 10%); border-color: #fca5a5; }
+.nei-list .nei-item.is-custom { outline: 1px solid color-mix(in srgb, var(--accent) 58%, transparent); outline-offset: -3px; }
+.nei-custom-dot { position: absolute; right: 3px; bottom: 3px; width: 5px; height: 5px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8); }
 .nei-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 3px; background: transparent; color: var(--muted); overflow: hidden; }
 .nei-icon.is-loading { opacity: 0.28; }
 .nei-icon.is-loading::before { content: ""; width: 18px; height: 18px; border: 1px dashed var(--border); border-radius: 3px; }
@@ -145,6 +151,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .field-block { display: grid; gap: 8px; min-width: 0; }
 .settings-grid, .kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .settings-modal { width: min(860px, 100%); }
+.modal-custom-item { width: min(880px, 96vw); max-height: 92vh; overflow: auto; }
 .settings-section { display: grid; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
 .settings-section-title { display: grid; gap: 4px; }
 .settings-section-title h3 { margin: 0; font-size: 16px; }
@@ -226,8 +233,8 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .compact-header h1 { font-size: 22px; margin-bottom: 0; }
 .compact-header .panel-header { padding-top: 10px; }
 .compact-header .panel-body { padding-top: 10px; padding-bottom: 10px; }
-.modal-backdrop { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.74); display: flex; align-items: center; justify-content: center; padding: 24px; }
-.modal { width: min(720px, 100%); background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
+.modal-backdrop { position: fixed; inset: 0; z-index: 3000; background: rgba(2, 6, 23, 0.74); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.modal { position: relative; z-index: 3001; width: min(720px, 100%); background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .modal-scalable { zoom: var(--modal-scale, 1); max-height: min(92vh, calc(96vh / var(--modal-scale, 1))); overflow: auto; resize: both; min-width: 420px; min-height: 220px; }
 .modal-nbt-tree { width: min(1100px, 96vw); min-width: 760px; min-height: 420px; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -235,6 +242,10 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .modal-scale-wrap { position: relative; }
 .modal-scale-popover { position: absolute; right: 0; top: calc(100% + 6px); display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 6px 8px; z-index: 30; }
 .modal-scale-popover input[type="range"] { width: 120px; }
+.context-menu { position: fixed; z-index: 2500; width: 230px; display: grid; gap: 6px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-strong); box-shadow: 0 18px 40px var(--shadow); }
+.context-menu strong { overflow-wrap: anywhere; font-size: 12px; color: var(--muted); }
+.context-menu button { justify-content: flex-start; width: 100%; }
+.danger-button { background: color-mix(in srgb, #ef4444 20%, transparent); border-color: color-mix(in srgb, #ef4444 55%, var(--border)); color: #fecaca; }
 .suggestions-list { max-height: 220px; overflow: auto; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--field-bg) 86%, transparent); padding: 6px; display: grid; gap: 6px; }
 .suggestion-item { display: grid; gap: 2px; text-align: left; border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; background: rgba(30, 41, 59, 0.45); color: var(--text); }
 .suggestion-item-with-icon { grid-template-columns: 28px minmax(0, 1fr); align-items: center; column-gap: 8px; }

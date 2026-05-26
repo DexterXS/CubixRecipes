@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import CreateFileRequest, CreateRecipeRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.api.schemas import BatchSearchRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, ParseRequest, ProjectSettingsRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -25,6 +25,7 @@ from app.debug.log_service import DebugLogService
 from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
+from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
 from app.services.recipe_service import RecipeService
@@ -257,6 +258,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     debug_service.record_asset_scan(asset_index.last_scan_report)
     service = RecipeService(storage, parser)
     auth_service = AuthService(root_admin_email=os.environ.get('ROOT_ADMIN_EMAIL', 'root.user76@gmail.com'))
+    custom_item_service = CustomItemService(auth_service.require_session_factory)
 
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
         'config_file': config.project_config_path,
@@ -425,6 +427,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         _log_api(log_service, 'POST', '/api/recipes/search', {'output_item_raw': request.output_item_raw}, '200', started_at, {'matches': len(matches)})
         return {'matches': matches}
 
+    @router.post('/recipes/search-batch')
+    def search_batch_route(request: BatchSearchRequest):
+        started_at = perf_counter()
+        unique_raws = list(dict.fromkeys(raw.strip() for raw in request.output_item_raws if raw.strip()))
+        matches = {raw: len(storage.search_by_output(raw)) for raw in unique_raws}
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe batch search completed', {'items': len(unique_raws), 'matched': sum(1 for count in matches.values() if count > 0)})
+        _log_api(log_service, 'POST', '/api/recipes/search-batch', {'items': len(unique_raws)}, '200', started_at, {'matched': sum(1 for count in matches.values() if count > 0)})
+        return {'matches': matches}
+
     @router.get('/recipes/{recipe_uid}')
     def get_recipe(recipe_uid: str):
         started_at = perf_counter()
@@ -536,6 +547,35 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             log_service.log('BACKEND', 'WARN', 'ICON', 'Resolver returned no icon', {'raw_item_id': item.raw, 'checked': resolver.last_resolution_details.get(item.raw)})
         _log_api(log_service, 'POST', '/api/items/resolve', {'item_raw': request.item_raw}, '200', started_at, {'strategy': result.strategy, 'icon_asset_id': result.icon_asset_id})
         return result.__dict__
+
+    @router.get('/items/custom')
+    def list_custom_items(request: Request):
+        user = request.state.auth_user
+        return {'items': custom_item_service.list_for_user(user['email'])}
+
+    @router.post('/items/custom')
+    def save_custom_item(request: Request, payload: CustomItemRequest):
+        user = request.state.auth_user
+        is_global = payload.scope == 'global'
+        if is_global and not role_has_permission(user.get('role'), 'settings:manage', user.get('email')):
+            raise HTTPException(status_code=403, detail='Only admins can save global custom items')
+        try:
+            saved = custom_item_service.save_for_user(payload.model_dump(), user['email'], is_global)
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from exc
+        return {'ok': True, 'item': saved}
+
+    @router.delete('/items/custom/{item_id}')
+    def delete_custom_item(item_id: int, request: Request):
+        user = request.state.auth_user
+        can_delete_global = role_has_permission(user.get('role'), 'settings:manage', user.get('email'))
+        try:
+            custom_item_service.delete_for_user(item_id, user['email'], can_delete_global)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail='Custom item not found') from exc
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from exc
+        return {'ok': True}
 
     @router.get('/itempanel/atlas')
     def itempanel_atlas_manifest():

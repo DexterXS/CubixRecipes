@@ -94,6 +94,9 @@ class AuthService:
             raise RuntimeError(self.configuration_error or 'DATABASE_URL is required for authentication')
         return self._session_factory
 
+    def require_session_factory(self):
+        return self._require_session_factory()
+
     def _to_public_user(self, record: UserRecord) -> PublicUser:
         email = normalize_email(record.email)
         return PublicUser(

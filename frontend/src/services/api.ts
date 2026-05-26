@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AuthMeResponse, AuthUser, ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences, UserRole } from '../types';
+import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ProjectSettings, RecipeView, UiPreferences, UserRole } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -31,6 +31,15 @@ interface UpdateRecipePayload {
 
 interface SaveAsPayload extends UpdateRecipePayload {
   targetPath: string;
+}
+
+interface CustomItemPayload {
+  id?: number | null;
+  scope: 'global' | 'user';
+  source_raw: string;
+  item_raw: string;
+  display_name: string;
+  nbt_raw?: string | null;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -141,6 +150,14 @@ export async function searchRecipesByOutput(outputItemRaw: string): Promise<{ ma
   });
 }
 
+export async function searchRecipesByOutputs(outputItemRaws: string[]): Promise<{ matches: Record<string, number> }> {
+  return request<{ matches: Record<string, number> }>(apiPath('/recipes/search-batch'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ output_item_raws: outputItemRaws })
+  });
+}
+
 export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolean; new_uid: string; recipe: RecipeView }> {
   return request<{ ok: boolean; new_uid: string; recipe: RecipeView }>(apiPath('/recipes/save-as'), {
     method: 'POST',
@@ -174,6 +191,22 @@ export async function resolveItemRaw(raw: string): Promise<ResolveItemResponse> 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ item_raw: raw, settings: {} })
   });
+}
+
+export async function listCustomItems(): Promise<{ items: CustomItem[] }> {
+  return request<{ items: CustomItem[] }>(apiPath('/items/custom'));
+}
+
+export async function saveCustomItem(payload: CustomItemPayload): Promise<{ ok: boolean; item: CustomItem }> {
+  return request<{ ok: boolean; item: CustomItem }>(apiPath('/items/custom'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+}
+
+export async function deleteCustomItem(itemId: number): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>(apiPath(`/items/custom/${itemId}`), { method: 'DELETE' });
 }
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
