@@ -28,6 +28,7 @@ class ZsStorage:
         self.parser = RecipeParser()
         self._recipes: dict[str, StoredRecipe] = {}
         self._by_output: dict[str, list[str]] = {}
+        self._by_ingredient: dict[str, list[str]] = {}
         self.last_scan_report: dict[str, Any] = {
             'active_paths': [],
             'files': [],
@@ -39,6 +40,7 @@ class ZsStorage:
     def scan(self, extra_paths: list[Union[str, Path]] = None) -> None:
         self._recipes.clear()
         self._by_output.clear()
+        self._by_ingredient.clear()
         extra_paths = extra_paths or []
         self.extra_recipe_sources = [Path(path) for path in extra_paths if str(path)]
         self.allowed_write_roots = self._build_allowed_write_roots()
@@ -128,6 +130,7 @@ class ZsStorage:
                 })
                 for key in {recipe.output.raw, recipe.output.base_key}:
                     self._by_output.setdefault(key, []).append(uid)
+                self._index_recipe_ingredients(uid, recipe)
                 if self.log_service is not None:
                     self.log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe parsed from file', {'file_path': str(file_path), 'recipe_uid': uid, 'recipe_type': recipe.recipe_type, 'output': recipe.output.raw, 'grid': f'{recipe.grid_w}x{recipe.grid_h}', 'diagnostics': list(recipe.diagnostics)}, verbose_only=True)
             except Exception as exc:
@@ -162,6 +165,21 @@ class ZsStorage:
         seen: set[str] = set()
         for key in keys:
             for uid in self._by_output.get(key, []):
+                if uid not in seen:
+                    seen.add(uid)
+                    matches.append(self._recipes[uid].recipe)
+        return matches
+
+    def search_by_ingredient(self, item_raw: str) -> list[Recipe]:
+        try:
+            item = self.parser.parse_item_ref(item_raw)
+            keys = [item_raw, item.base_key]
+        except Exception:
+            keys = [item_raw]
+        matches = []
+        seen: set[str] = set()
+        for key in keys:
+            for uid in self._by_ingredient.get(key, []):
                 if uid not in seen:
                     seen.add(uid)
                     matches.append(self._recipes[uid].recipe)
@@ -248,9 +266,19 @@ class ZsStorage:
 
     def _rebuild_output_index(self) -> None:
         self._by_output.clear()
+        self._by_ingredient.clear()
         for uid, stored in self._recipes.items():
             for key in {stored.recipe.output.raw, stored.recipe.output.base_key}:
                 self._by_output.setdefault(key, []).append(uid)
+            self._index_recipe_ingredients(uid, stored.recipe)
+
+    def _index_recipe_ingredients(self, uid: str, recipe: Recipe) -> None:
+        for row in recipe.matrix:
+            for cell in row:
+                if cell.raw is None or cell.item is None:
+                    continue
+                for key in {cell.raw, cell.item.base_key}:
+                    self._by_ingredient.setdefault(key, []).append(uid)
 
     def _scan_root_for_file(self, file_path: Path) -> tuple[Path, str]:
         roots = [(self.scripts_dir, 'scripts_dir'), *[(path, 'extra_recipe_source') for path in self.extra_recipe_sources]]

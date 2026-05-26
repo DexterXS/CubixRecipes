@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import App from './pages/App';
@@ -55,6 +55,16 @@ function projectSettings() {
       panel_layout: []
     }
   };
+}
+
+function findLocalDraftPayload() {
+  for (let index = 0; index < window.localStorage.length; index += 1) {
+    const key = window.localStorage.key(index);
+    if (key?.startsWith('cubixrecipes:local-draft:v1:')) {
+      return JSON.parse(window.localStorage.getItem(key) ?? '{}');
+    }
+  }
+  return null;
 }
 
 beforeEach(() => {
@@ -147,6 +157,49 @@ beforeEach(() => {
     if (url === '/api/recipes/search-batch' && init?.method === 'POST') {
       return Promise.resolve({ ok: true, json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0 } }) }) as Promise<Response>;
     }
+    if (url === '/api/recipes/search' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body));
+      const match = body.output_item_raw === '<minecraft:planks>'
+        ? {
+          recipe_uid: 'recipe-planks',
+          recipe_type: 'ct_shaped',
+          name: null,
+          output: { raw: '<minecraft:planks>' },
+          output_resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks' },
+          grid_w: 1,
+          grid_h: 1,
+          source: { kind: 'zs_file', path: 'scripts/planks.zs' },
+          matrix: [[{ raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]]
+        }
+        : null;
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ matches: match ? [match] : [] })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/recipes/uses' && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          matches: [{
+            recipe_uid: 'recipe-uses-1',
+            recipe_type: 'ct_shaped',
+            name: null,
+            output: { raw: '<minecraft:torch>' },
+            output_resolution: { display_name: 'Факел', icon_url: '/api/icons/torch' },
+            grid_w: 2,
+            grid_h: 2,
+            source: { kind: 'zs_file', path: 'scripts/test.zs' },
+            matrix: [
+              [{ raw: '<minecraft:planks>', resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks', animated: false } }, { raw: null }],
+              [{ raw: null }, { raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]
+            ]
+          }]
+        })
+      }) as Promise<Response>;
+    }
     if (url === '/api/recipes/save-as') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, recipe: projectSettings() }) }) as Promise<Response>;
     }
@@ -222,6 +275,30 @@ test('local recipe file import loads the draft into the editor', async () => {
   });
 });
 
+test('local user draft survives a reload', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'torch.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'planks' } });
+
+  await waitFor(() => {
+    const payload = findLocalDraftPayload();
+    expect(payload?.state?.outputRaw).toBe('<minecraft:torch>');
+    expect(payload?.state?.neiSearchQuery).toBe('planks');
+    expect(payload?.craftHash).toBeTruthy();
+  });
+
+  cleanup();
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  expect((screen.getByLabelText('nei-search') as HTMLInputElement).value).toBe('planks');
+});
+
 test('NEI context menu can save a personal custom item', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
@@ -238,5 +315,72 @@ test('NEI context menu can save a personal custom item', async () => {
     const saveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/items/custom' && init?.method === 'POST');
     expect(saveCalls.length).toBeGreaterThan(0);
     expect(String(saveCalls[0][1]?.body)).toContain('<minecraft:planks:*>');
+  });
+});
+
+test('R opens a recipe from a hovered craft-grid item and history can return', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'torch.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+
+  const firstCell = screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement;
+  fireEvent.mouseEnter(firstCell);
+  fireEvent.keyDown(window, { key: 'r' });
+
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+  });
+
+  fireEvent.click(screen.getByLabelText('recipe-history-back'));
+
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+});
+
+test('R opens a hovered NEI recipe even when search input keeps focus', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const search = screen.getByLabelText('nei-search') as HTMLInputElement;
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.change(search, { target: { value: 'planks' } });
+  search.focus();
+  fireEvent.mouseEnter(item);
+  fireEvent.keyDown(search, { key: 'r' });
+
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+  });
+});
+
+test('U opens paged recipe uses for a hovered craft-grid item', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'torch.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  await waitFor(() => {
+    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  });
+
+  const firstCell = screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement;
+  fireEvent.mouseEnter(firstCell);
+  fireEvent.keyDown(window, { key: 'u' });
+
+  const dialog = await screen.findByRole('dialog', { name: 'Использования предмета' });
+  expect(dialog).toBeTruthy();
+  expect(within(dialog).getByText('1/1')).toBeTruthy();
+  await waitFor(() => {
+    const usesCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/recipes/uses');
+    expect(String(usesCalls[0][1]?.body)).toContain('<minecraft:planks>');
   });
 });

@@ -13,6 +13,10 @@ class SearchRequest(BaseModel):
     output_item_raw: str
 
 
+class IngredientSearchRequest(BaseModel):
+    item_raw: str
+
+
 class BatchSearchRequest(BaseModel):
     output_item_raws: list[str] = Field(default_factory=list, max_length=300)
 

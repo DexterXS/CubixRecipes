@@ -150,6 +150,14 @@ export async function searchRecipesByOutput(outputItemRaw: string): Promise<{ ma
   });
 }
 
+export async function searchRecipesUsingItem(itemRaw: string): Promise<{ matches: RecipeView[] }> {
+  return request<{ matches: RecipeView[] }>(apiPath('/recipes/uses'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ item_raw: itemRaw })
+  });
+}
+
 export async function searchRecipesByOutputs(outputItemRaws: string[]): Promise<{ matches: Record<string, number> }> {
   return request<{ matches: Record<string, number> }>(apiPath('/recipes/search-batch'), {
     method: 'POST',

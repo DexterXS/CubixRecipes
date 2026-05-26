@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { createRecipeTemplate, deleteCustomItem, getItemPanelAtlas, getProjectSettings, listCustomItems, listUsers, parseText, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, updateProjectUiPreferences, updateRecipe, updateUserRole } from '../services/api';
+import { createRecipeTemplate, deleteCustomItem, getItemPanelAtlas, getProjectSettings, listCustomItems, listUsers, parseText, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout } from '../types';
@@ -123,10 +123,63 @@ type ItemPanelTranslations = {
 const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
 const NEI_PAGE_SIZE = 240;
+const LOCAL_DRAFT_SCHEMA_VERSION = 1;
+const LOCAL_DRAFT_STORAGE_PREFIX = 'cubixrecipes:local-draft:v1';
+const LOCAL_DRAFT_SAVE_DELAY_MS = 250;
+const LOCAL_DRAFT_MAX_HISTORY = 20;
+const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
+const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
 
 type CraftEditorTarget =
   | { kind: 'output' }
   | { kind: 'cell'; row: number; col: number };
+
+type RecipeHistoryEntry = {
+  recipe: RecipeView;
+  input: string;
+};
+
+type RecipeUsesModalState = {
+  raw: string;
+  matches: RecipeView[];
+  page: number;
+  status: 'loading' | 'ready' | 'error';
+  error?: string;
+};
+
+type LocalDraftState = {
+  input: string;
+  matrix: CellValue[][];
+  recipe: RecipeView;
+  outputRaw: string;
+  strictBinding: boolean;
+  metaMode: string;
+  workspaceTab: WorkspaceTab;
+  itemSearchQuery: string;
+  neiSearchQuery: string;
+  neiPage: number;
+  selectedTextureMods: Record<string, boolean>;
+  craftEditorTarget: CraftEditorTarget;
+  craftSourceDraft: string;
+  itemModDraft: string;
+  itemNameDraft: string;
+  itemMetaDraft: string;
+  nbtRootDraft: NbtCompoundNode;
+  collapsedNbtPaths: Record<string, boolean>;
+  uploadedDrafts: UploadedDraft[];
+  selectedDraftId: string | null;
+  recipeBackHistory: RecipeHistoryEntry[];
+  recipeForwardHistory: RecipeHistoryEntry[];
+  modalScales: Record<ModalScaleKey, number>;
+};
+
+type LocalDraftPayload = {
+  schemaVersion: typeof LOCAL_DRAFT_SCHEMA_VERSION;
+  userHash: string;
+  craftHash: string;
+  savedAt: number;
+  state: LocalDraftState;
+};
 
 type NbtScalarType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'string' | 'byte_array' | 'int_array' | 'long_array';
 type NbtNodeType = NbtScalarType | 'list' | 'compound';
@@ -211,6 +264,160 @@ function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
 
 function toCellMatrix(recipe: RecipeView): CellValue[][] {
   return recipe.matrix.map((row) => row.map((cell) => cell.raw));
+}
+
+function stableHash(value: string): string {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function localDraftUserHash(email: string): string {
+  return stableHash(email.trim().toLowerCase() || 'local-user');
+}
+
+function localDraftStorageKey(email: string): string {
+  return `${LOCAL_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+}
+
+function isCellMatrix(value: unknown): value is CellValue[][] {
+  return Array.isArray(value) && value.every((row) => (
+    Array.isArray(row) && row.every((cell) => cell === null || typeof cell === 'string')
+  ));
+}
+
+function isRecipeView(value: unknown): value is RecipeView {
+  if (!isObjectRecord(value)) return false;
+  const output = value.output;
+  return (
+    typeof value.recipe_uid === 'string'
+    && typeof value.recipe_type === 'string'
+    && isObjectRecord(output)
+    && typeof output.raw === 'string'
+    && Array.isArray(value.matrix)
+    && isObjectRecord(value.source)
+  );
+}
+
+function isCraftEditorTarget(value: unknown): value is CraftEditorTarget {
+  if (!isObjectRecord(value)) return false;
+  if (value.kind === 'output') return true;
+  return value.kind === 'cell' && Number.isFinite(value.row) && Number.isFinite(value.col);
+}
+
+function isNbtCompoundNode(value: unknown): value is NbtCompoundNode {
+  return isObjectRecord(value) && value.kind === 'compound' && Array.isArray(value.entries);
+}
+
+function normalizeRecipeHistory(value: unknown): RecipeHistoryEntry[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((entry): entry is RecipeHistoryEntry => (
+      isObjectRecord(entry)
+      && isRecipeView(entry.recipe)
+      && typeof entry.input === 'string'
+    ))
+    .slice(-LOCAL_DRAFT_MAX_HISTORY);
+}
+
+function normalizeUploadedDrafts(value: unknown): UploadedDraft[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((draft): draft is UploadedDraft => (
+      isObjectRecord(draft)
+      && typeof draft.id === 'string'
+      && typeof draft.name === 'string'
+      && typeof draft.size === 'number'
+      && typeof draft.text === 'string'
+      && typeof draft.lastModified === 'number'
+    ))
+    .slice(0, LOCAL_DRAFT_MAX_UPLOADED_DRAFTS)
+    .map((draft) => ({
+      ...draft,
+      text: draft.text.slice(0, LOCAL_DRAFT_MAX_UPLOADED_TEXT)
+    }));
+}
+
+function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
+  if (!isObjectRecord(value) || !isRecipeView(value.recipe) || !isCellMatrix(value.matrix)) {
+    return null;
+  }
+
+  const workspaceTab = value.workspaceTab === 'recipe' || value.workspaceTab === 'debug' ? value.workspaceTab : 'editor';
+  const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
+  const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
+  const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
+  const selectedDraftId = typeof value.selectedDraftId === 'string' && uploadedDrafts.some((draft) => draft.id === value.selectedDraftId)
+    ? value.selectedDraftId
+    : null;
+
+  return {
+    input: typeof value.input === 'string' ? value.input : '',
+    matrix: value.matrix,
+    recipe: value.recipe,
+    outputRaw: typeof value.outputRaw === 'string' ? value.outputRaw : value.recipe.output.raw,
+    strictBinding: value.strictBinding !== false,
+    metaMode: typeof value.metaMode === 'string' ? value.metaMode : 'strict',
+    workspaceTab,
+    itemSearchQuery: typeof value.itemSearchQuery === 'string' ? value.itemSearchQuery : '',
+    neiSearchQuery: typeof value.neiSearchQuery === 'string' ? value.neiSearchQuery : '',
+    neiPage: Math.max(0, Math.floor(Number(value.neiPage) || 0)),
+    selectedTextureMods: isObjectRecord(value.selectedTextureMods) ? value.selectedTextureMods as Record<string, boolean> : {},
+    craftEditorTarget,
+    craftSourceDraft: typeof value.craftSourceDraft === 'string' ? value.craftSourceDraft : '',
+    itemModDraft: typeof value.itemModDraft === 'string' ? value.itemModDraft : 'minecraft',
+    itemNameDraft: typeof value.itemNameDraft === 'string' ? value.itemNameDraft : 'stone',
+    itemMetaDraft: typeof value.itemMetaDraft === 'string' ? value.itemMetaDraft : '0',
+    nbtRootDraft: isNbtCompoundNode(value.nbtRootDraft) ? value.nbtRootDraft : { kind: 'compound', entries: [] },
+    collapsedNbtPaths: isObjectRecord(value.collapsedNbtPaths) ? value.collapsedNbtPaths as Record<string, boolean> : {},
+    uploadedDrafts,
+    selectedDraftId,
+    recipeBackHistory: normalizeRecipeHistory(value.recipeBackHistory),
+    recipeForwardHistory: normalizeRecipeHistory(value.recipeForwardHistory),
+    modalScales: {
+      help: clamp(Number(modalScales.help ?? 1), 0.8, 1.5),
+      layout: clamp(Number(modalScales.layout ?? 1), 0.8, 1.5),
+      craft: clamp(Number(modalScales.craft ?? 1), 0.8, 1.5),
+      nbtTree: clamp(Number(modalScales.nbtTree ?? 1.1), 0.8, 1.5)
+    }
+  };
+}
+
+function hashLocalDraftState(state: LocalDraftState): string {
+  return stableHash(JSON.stringify(state));
+}
+
+function loadLocalDraftPayload(email: string): LocalDraftPayload | null {
+  try {
+    const raw = window.localStorage.getItem(localDraftStorageKey(email));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isObjectRecord(parsed) || parsed.schemaVersion !== LOCAL_DRAFT_SCHEMA_VERSION || typeof parsed.craftHash !== 'string') {
+      return null;
+    }
+    const state = normalizeLocalDraftState(parsed.state);
+    if (!state) return null;
+    const craftHash = hashLocalDraftState(state);
+    if (parsed.craftHash !== craftHash) {
+      return null;
+    }
+    return {
+      schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION,
+      userHash: typeof parsed.userHash === 'string' ? parsed.userHash : localDraftUserHash(email),
+      craftHash,
+      savedAt: Number(parsed.savedAt) || 0,
+      state
+    };
+  } catch {
+    return null;
+  }
 }
 
 function parseItemRaw(raw: string): { key: string; wildcardMeta: boolean; meta: number | null } | null {
@@ -547,30 +754,36 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
 }
 
 export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined }: AppProps) {
-  const [input, setInput] = useState('');
-  const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
+  const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
+  if (localDraftRef.current === undefined) {
+    localDraftRef.current = loadLocalDraftPayload(authUser.email);
+  }
+  const restoredDraft = localDraftRef.current?.state ?? null;
+
+  const [input, setInput] = useState(restoredDraft?.input ?? '');
+  const [matrix, setMatrix] = useState<CellValue[][]>(() => restoredDraft ? cloneMatrix(restoredDraft.matrix) : cloneMatrix(defaultMatrix));
   const [status, setStatus] = useState('Готово');
-  const [strictBinding, setStrictBinding] = useState(true);
-  const [metaMode, setMetaMode] = useState('strict');
-  const [recipe, setRecipe] = useState<RecipeView>(defaultRecipe);
-  const [outputRaw, setOutputRaw] = useState(defaultRecipe.output.raw);
+  const [strictBinding, setStrictBinding] = useState(restoredDraft?.strictBinding ?? true);
+  const [metaMode, setMetaMode] = useState(restoredDraft?.metaMode ?? 'strict');
+  const [recipe, setRecipe] = useState<RecipeView>(restoredDraft?.recipe ?? defaultRecipe);
+  const [outputRaw, setOutputRaw] = useState(restoredDraft?.outputRaw ?? defaultRecipe.output.raw);
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
-  const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>({ kind: 'output' });
-  const [craftSourceDraft, setCraftSourceDraft] = useState('');
-  const [itemModDraft, setItemModDraft] = useState('minecraft');
-  const [itemNameDraft, setItemNameDraft] = useState('stone');
-  const [itemMetaDraft, setItemMetaDraft] = useState('0');
-  const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
-  const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
+  const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>(restoredDraft?.craftEditorTarget ?? { kind: 'output' });
+  const [craftSourceDraft, setCraftSourceDraft] = useState(restoredDraft?.craftSourceDraft ?? '');
+  const [itemModDraft, setItemModDraft] = useState(restoredDraft?.itemModDraft ?? 'minecraft');
+  const [itemNameDraft, setItemNameDraft] = useState(restoredDraft?.itemNameDraft ?? 'stone');
+  const [itemMetaDraft, setItemMetaDraft] = useState(restoredDraft?.itemMetaDraft ?? '0');
+  const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>(restoredDraft?.nbtRootDraft ?? { kind: 'compound', entries: [] });
+  const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>(restoredDraft?.collapsedNbtPaths ?? {});
   const [saveStatus, setSaveStatus] = useState('Не сохранено');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
   const [lastParseResult, setLastParseResult] = useState('Ещё не выполнялся');
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
-  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>('editor');
+  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>(restoredDraft?.workspaceTab ?? 'editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
     byKeyMeta: new Map(),
@@ -580,18 +793,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     fallbackToFirstMeta: getItemPanelFallbackToFirstMetaEnabled()
   });
   const [isTextureModsOpen, setIsTextureModsOpen] = useState(false);
-  const [selectedTextureMods, setSelectedTextureMods] = useState<Record<string, boolean>>({});
+  const [selectedTextureMods, setSelectedTextureMods] = useState<Record<string, boolean>>(restoredDraft?.selectedTextureMods ?? {});
   const [textureLoadState, setTextureLoadState] = useState<'idle' | 'running' | 'paused'>('idle');
   const [textureLoadStatus, setTextureLoadStatus] = useState('');
-  const [itemSearchQuery, setItemSearchQuery] = useState('');
-  const [neiSearchQuery, setNeiSearchQuery] = useState('');
-  const [neiPage, setNeiPage] = useState(0);
+  const [itemSearchQuery, setItemSearchQuery] = useState(restoredDraft?.itemSearchQuery ?? '');
+  const [neiSearchQuery, setNeiSearchQuery] = useState(restoredDraft?.neiSearchQuery ?? '');
+  const [neiPage, setNeiPage] = useState(restoredDraft?.neiPage ?? 0);
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
-  const [hoveredNeiRaw, setHoveredNeiRaw] = useState<string | null>(null);
-  const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>([]);
-  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const [hoveredItemRaw, setHoveredItemRaw] = useState<string | null>(null);
+  const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>(restoredDraft?.uploadedDrafts ?? []);
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(restoredDraft?.selectedDraftId ?? null);
   const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
+  const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
+  const [recipeBackHistory, setRecipeBackHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeBackHistory ?? []);
+  const [recipeForwardHistory, setRecipeForwardHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeForwardHistory ?? []);
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
@@ -611,10 +827,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return {};
     }
   });
-  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>({ help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
+  const [modalScales, setModalScales] = useState<Record<ModalScaleKey, number>>(restoredDraft?.modalScales ?? { help: 1, layout: 1, craft: 1, nbtTree: 1.1 });
   const [activeScaleControl, setActiveScaleControl] = useState<ModalScaleKey | null>(null);
 
   const persistTimerRef = useRef<number | null>(null);
+  const localDraftPersistTimerRef = useRef<number | null>(null);
+  const lastLocalDraftHashRef = useRef(localDraftRef.current?.craftHash ?? '');
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
@@ -624,6 +842,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const textureCancelRef = useRef(false);
   const iconRequestRef = useRef<Set<string>>(new Set());
   const neiListRef = useRef<HTMLDivElement | null>(null);
+  const cursorPointRef = useRef({ x: 0, y: 0 });
+  const hoveredItemRawRef = useRef<string | null>(null);
 
   const t = createTranslator(uiPreferences.language);
   const areAnimationsEnabled = uiPreferences.animations_enabled;
@@ -637,6 +857,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
     { id: 'debug' as const, label: uiPreferences.language === 'ru' ? 'Отладка' : 'Debug', visible: canUseDebug }
   ].filter((tab) => tab.visible);
+
+  function updateHoveredItemRaw(next: string | null | ((current: string | null) => string | null)) {
+    const value = typeof next === 'function' ? next(hoveredItemRawRef.current) : next;
+    hoveredItemRawRef.current = value;
+    setHoveredItemRaw(value);
+  }
 
   async function refreshAdminUsers() {
     if (!canManageRoles) return;
@@ -710,7 +936,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
-      setCursorPoint({ x: event.clientX, y: event.clientY });
+      const nextPoint = { x: event.clientX, y: event.clientY };
+      cursorPointRef.current = nextPoint;
+      setCursorPoint(nextPoint);
     };
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     return () => window.removeEventListener('pointermove', handlePointerMove);
@@ -728,19 +956,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() !== 'r' || event.repeat || !hoveredNeiRaw) {
+      const key = event.key.toLowerCase();
+      if ((key !== 'r' && key !== 'u') || event.repeat) {
         return;
       }
       const target = event.target instanceof HTMLElement ? event.target : null;
-      if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+      const raw = readActiveItemRaw();
+      if (!raw) {
         return;
       }
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) {
+        const pointTarget = typeof document.elementFromPoint === 'function'
+          ? document.elementFromPoint(cursorPointRef.current.x, cursorPointRef.current.y)
+          : null;
+        if (!pointTarget?.closest('[data-item-raw]') && !hoveredItemRawRef.current) {
+          return;
+        }
+      }
       event.preventDefault();
-      void openRecipeForNeiItem(hoveredNeiRaw);
+      if (key === 'r') {
+        void openRecipeForItem(raw);
+      } else {
+        void openRecipeUsesForItem(raw);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hoveredNeiRaw]);
+  }, [hoveredItemRaw, heldItemRaw]);
 
   const summary = useMemo(() => `${matrix.length}x${matrix[0]?.length ?? 0}`, [matrix]);
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
@@ -834,6 +1076,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (persistTimerRef.current !== null) {
       window.clearTimeout(persistTimerRef.current);
     }
+    if (localDraftPersistTimerRef.current !== null) {
+      window.clearTimeout(localDraftPersistTimerRef.current);
+    }
     if (autoParseTimerRef.current !== null) {
       window.clearTimeout(autoParseTimerRef.current);
     }
@@ -841,6 +1086,94 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       window.clearTimeout(settingsRetryTimerRef.current);
     }
   }, []);
+
+  useEffect(() => {
+    const draftState: LocalDraftState = {
+      input,
+      matrix,
+      recipe,
+      outputRaw,
+      strictBinding,
+      metaMode,
+      workspaceTab,
+      itemSearchQuery,
+      neiSearchQuery,
+      neiPage,
+      selectedTextureMods,
+      craftEditorTarget,
+      craftSourceDraft,
+      itemModDraft,
+      itemNameDraft,
+      itemMetaDraft,
+      nbtRootDraft,
+      collapsedNbtPaths,
+      uploadedDrafts: normalizeUploadedDrafts(uploadedDrafts),
+      selectedDraftId,
+      recipeBackHistory: recipeBackHistory.slice(-LOCAL_DRAFT_MAX_HISTORY),
+      recipeForwardHistory: recipeForwardHistory.slice(0, LOCAL_DRAFT_MAX_HISTORY),
+      modalScales
+    };
+    const craftHash = hashLocalDraftState(draftState);
+    if (craftHash === lastLocalDraftHashRef.current) {
+      return undefined;
+    }
+
+    if (localDraftPersistTimerRef.current !== null) {
+      window.clearTimeout(localDraftPersistTimerRef.current);
+    }
+    localDraftPersistTimerRef.current = window.setTimeout(() => {
+      const userHash = localDraftUserHash(authUser.email);
+      const payload: LocalDraftPayload = {
+        schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION,
+        userHash,
+        craftHash,
+        savedAt: Date.now(),
+        state: draftState
+      };
+      try {
+        window.localStorage.setItem(localDraftStorageKey(authUser.email), JSON.stringify(payload));
+        lastLocalDraftHashRef.current = craftHash;
+      } catch (error) {
+        logFrontendEvent({
+          level: 'WARN',
+          category: 'LOCAL_DRAFT',
+          message: 'Local draft autosave failed',
+          details: { error: error instanceof Error ? error.message : String(error) }
+        });
+      }
+    }, LOCAL_DRAFT_SAVE_DELAY_MS);
+
+    return () => {
+      if (localDraftPersistTimerRef.current !== null) {
+        window.clearTimeout(localDraftPersistTimerRef.current);
+      }
+    };
+  }, [
+    authUser.email,
+    input,
+    matrix,
+    recipe,
+    outputRaw,
+    strictBinding,
+    metaMode,
+    workspaceTab,
+    itemSearchQuery,
+    neiSearchQuery,
+    neiPage,
+    selectedTextureMods,
+    craftEditorTarget,
+    craftSourceDraft,
+    itemModDraft,
+    itemNameDraft,
+    itemMetaDraft,
+    nbtRootDraft,
+    collapsedNbtPaths,
+    uploadedDrafts,
+    selectedDraftId,
+    recipeBackHistory,
+    recipeForwardHistory,
+    modalScales
+  ]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1008,7 +1341,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  function applyRecipe(nextRecipe: RecipeView, nextInput?: string) {
+  function createRecipeHistoryEntry(): RecipeHistoryEntry {
+    return { recipe, input };
+  }
+
+  function rememberRecipeBeforeNavigation(nextRecipe: RecipeView) {
+    if (recipe.recipe_uid === nextRecipe.recipe_uid && recipe.source.path === nextRecipe.source.path) {
+      return;
+    }
+    setRecipeBackHistory((current) => [...current, createRecipeHistoryEntry()].slice(-40));
+    setRecipeForwardHistory([]);
+  }
+
+  function applyRecipe(nextRecipe: RecipeView, nextInput?: string, options?: { rememberCurrent?: boolean }) {
+    if (options?.rememberCurrent) {
+      rememberRecipeBeforeNavigation(nextRecipe);
+    }
     setRecipe(nextRecipe);
     setOutputRaw(nextRecipe.output.raw);
     setMatrix(toCellMatrix(nextRecipe));
@@ -1020,6 +1368,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function clearEditor() {
     applyRecipe(defaultRecipe, '');
+    setRecipeBackHistory([]);
+    setRecipeForwardHistory([]);
     setStatus(t('status.cleared'));
     setSaveStatus(t('values.reset'));
     setLastApiStatus(t('values.idle'));
@@ -1615,18 +1965,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setHeldItemRaw((current) => (current === raw ? null : raw));
   }
 
-  async function openRecipeForNeiItem(raw: string) {
-    setStatus(`Ищу рецепт для ${raw}...`);
+  function readActiveItemRaw(): string | null {
+    const hovered = hoveredItemRawRef.current?.trim() || hoveredItemRaw?.trim();
+    if (hovered) {
+      return hovered;
+    }
+    const point = cursorPointRef.current;
+    const target = typeof document.elementFromPoint === 'function'
+      ? document.elementFromPoint(point.x, point.y)
+      : null;
+    const rawFromDom = target?.closest<HTMLElement>('[data-item-raw]')?.dataset.itemRaw?.trim();
+    return rawFromDom || heldItemRaw;
+  }
+
+  async function openRecipeForItem(raw: string) {
+    const normalizedRaw = raw.trim();
+    if (!normalizedRaw) return;
+    setStatus(`Ищу рецепт для ${normalizedRaw}...`);
     setLastApiStatus(t('values.pending'));
     try {
-      const result = await searchRecipesByOutput(raw);
+      const result = await searchRecipesByOutput(normalizedRaw);
       const match = result.matches[0];
       if (!match) {
-        setStatus(`Рецепт для ${raw} не найден в Recipes.`);
+        setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes.`);
         setLastApiStatus(t('values.ok'));
         return;
       }
-      applyRecipe(match);
+      applyRecipe(match, undefined, { rememberCurrent: true });
       setHeldItemRaw(null);
       setWorkspaceTab('editor');
       setStatus(`Открыт рецепт ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`);
@@ -1634,9 +1999,77 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setLastApiStatus(t('values.ok'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      setStatus(`Не удалось открыть рецепт для ${raw}: ${message}`);
+      setStatus(`Не удалось открыть рецепт для ${normalizedRaw}: ${message}`);
       setLastApiStatus(t('values.error'));
     }
+  }
+
+  async function openRecipeUsesForItem(raw: string) {
+    const normalizedRaw = raw.trim();
+    if (!normalizedRaw) return;
+    setRecipeUsesModal({ raw: normalizedRaw, matches: [], page: 0, status: 'loading' });
+    setStatus(`Ищу, где используется ${normalizedRaw}...`);
+    setLastApiStatus(t('values.pending'));
+    try {
+      const result = await searchRecipesUsingItem(normalizedRaw);
+      setRecipeUsesModal((current) => (
+        current?.raw === normalizedRaw
+          ? { raw: normalizedRaw, matches: result.matches, page: 0, status: 'ready' }
+          : current
+      ));
+      setStatus(result.matches.length
+        ? `Найдено применений для ${normalizedRaw}: ${result.matches.length}.`
+        : `${normalizedRaw} не найден в ингредиентах рецептов.`);
+      setLastApiStatus(t('values.ok'));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setRecipeUsesModal((current) => (
+        current?.raw === normalizedRaw
+          ? { raw: normalizedRaw, matches: [], page: 0, status: 'error', error: message }
+          : current
+      ));
+      setStatus(`Не удалось найти применения для ${normalizedRaw}: ${message}`);
+      setLastApiStatus(t('values.error'));
+    }
+  }
+
+  function openRecipeFromUses(recipeToOpen: RecipeView) {
+    applyRecipe(recipeToOpen, undefined, { rememberCurrent: true });
+    setHeldItemRaw(null);
+    setWorkspaceTab('editor');
+    setRecipeUsesModal(null);
+    setStatus(`Открыт рецепт ${recipeToOpen.output.raw} из ${recipeToOpen.source.path ?? 'Recipes'}.`);
+    setLastParseResult(recipeToOpen.recipe_type);
+  }
+
+  function changeRecipeUsesPage(direction: -1 | 1) {
+    setRecipeUsesModal((current) => {
+      if (!current) return current;
+      const pageCount = Math.max(1, current.matches.length);
+      return { ...current, page: clamp(current.page + direction, 0, pageCount - 1) };
+    });
+  }
+
+  function restoreRecipeFromHistory(direction: -1 | 1) {
+    if (direction === -1) {
+      const previous = recipeBackHistory[recipeBackHistory.length - 1];
+      if (!previous) return;
+      setRecipeBackHistory((current) => current.slice(0, -1));
+      setRecipeForwardHistory((current) => [createRecipeHistoryEntry(), ...current].slice(0, 40));
+      applyRecipe(previous.recipe, previous.input);
+      setWorkspaceTab('editor');
+      setStatus(`Открыт предыдущий рецепт ${previous.recipe.output.raw}.`);
+      setLastParseResult(previous.recipe.recipe_type);
+      return;
+    }
+    const next = recipeForwardHistory[0];
+    if (!next) return;
+    setRecipeForwardHistory((current) => current.slice(1));
+    setRecipeBackHistory((current) => [...current, createRecipeHistoryEntry()].slice(-40));
+    applyRecipe(next.recipe, next.input);
+    setWorkspaceTab('editor');
+    setStatus(`Открыт следующий рецепт ${next.recipe.output.raw}.`);
+    setLastParseResult(next.recipe.recipe_type);
   }
 
   function handleHeldItemOutsideMouseDown(event: MouseEvent<HTMLElement>) {
@@ -1986,6 +2419,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           className="recipe-builder-panel"
           actions={(
             <div className="inline-actions">
+              <button type="button" className="ghost-button icon-button" aria-label="recipe-history-back" title="Предыдущий открытый рецепт" disabled={!recipeBackHistory.length} onClick={() => restoreRecipeFromHistory(-1)}>‹</button>
+              <button type="button" className="ghost-button icon-button" aria-label="recipe-history-forward" title="Следующий открытый рецепт" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>›</button>
               <button type="button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => recipe.source.kind === 'generated' ? void handleSaveAs() : void handleSave()}>Сохранить изменения</button>
               <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
             </div>
@@ -2025,6 +2460,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 heldItemRaw={heldItemRaw}
                 tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)}
                 resolveCellTitle={resolveCellTitle}
+                onItemHover={updateHoveredItemRaw}
                 onCellClick={handleCraftCellClick}
                 onCellContextMenu={handleCraftCellContextMenu}
                 onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)}
@@ -2036,10 +2472,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <button
                 type="button"
                 className="output-icon-slot output-icon-button craft-output-slot"
-                disabled={!canCreateTemplates && !canEditRecipes}
-                onClick={handleCraftOutputClick}
+                data-item-raw={outputRaw || undefined}
+                aria-disabled={!canCreateTemplates && !canEditRecipes}
+                onMouseEnter={() => updateHoveredItemRaw(outputRaw || null)}
+                onMouseLeave={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
+                onFocus={() => updateHoveredItemRaw(outputRaw || null)}
+                onBlur={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
+                onClick={() => {
+                  if (!canCreateTemplates && !canEditRecipes) return;
+                  handleCraftOutputClick();
+                }}
                 onContextMenu={(event) => {
                   event.preventDefault();
+                  if (!canCreateTemplates && !canEditRecipes) return;
                   setCellRaw({ kind: 'output' }, '');
                 }}
                 onDragOver={(event) => {
@@ -2180,6 +2625,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   className={`nei-item recipe-${availability} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
                   title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}`}
                   aria-label={`nei-item-${raw}`}
+                  data-item-raw={raw}
                   draggable
                   onDragStart={(event) => {
                     event.dataTransfer.setData('text/plain', raw);
@@ -2189,10 +2635,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   onDragEnd={() => {
                     setHeldItemRaw((current) => (current === raw ? null : current));
                   }}
-                  onMouseEnter={() => setHoveredNeiRaw(raw)}
-                  onFocus={() => setHoveredNeiRaw(raw)}
-                  onMouseLeave={() => setHoveredNeiRaw((current) => (current === raw ? null : current))}
-                  onBlur={() => setHoveredNeiRaw((current) => (current === raw ? null : current))}
+                  onMouseEnter={() => updateHoveredItemRaw(raw)}
+                  onFocus={() => updateHoveredItemRaw(raw)}
+                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                  onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
                   onClick={() => handleNeiItemPick(raw)}
                   onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
                   onContextMenu={(event) => {
@@ -2240,6 +2686,85 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         <button type="button" onClick={() => openCustomItemEditor(raw, 'user')}>NBT редактор</button>
         {custom ? <button type="button" className="danger-button" onClick={() => void removeCustomItem(custom)}>Удалить созданный предмет</button> : null}
         <button type="button" className="ghost-button" onClick={() => setNeiContextMenu(null)}>Закрыть</button>
+      </div>
+    );
+  }
+
+  function renderRecipeUsesModal() {
+    if (!recipeUsesModal) return null;
+    const pageCount = Math.max(1, recipeUsesModal.matches.length);
+    const safePage = clamp(recipeUsesModal.page, 0, pageCount - 1);
+    const selectedRecipe = recipeUsesModal.matches[safePage] ?? null;
+    const selectedTitle = selectedRecipe
+      ? (resolveCellTitle(selectedRecipe.output.raw) || selectedRecipe.output.raw)
+      : recipeUsesModal.raw;
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => setRecipeUsesModal(null)}>
+        <div className="modal modal-recipe-uses" role="dialog" aria-modal="true" aria-label="Использования предмета" onClick={(event) => event.stopPropagation()}>
+          <div className="modal-header">
+            <div>
+              <h2>Использования предмета</h2>
+              <span className="modal-subtitle">{recipeUsesModal.raw}</span>
+            </div>
+            <div className="inline-actions">
+              <button type="button" onClick={() => setRecipeUsesModal(null)}>Закрыть</button>
+            </div>
+          </div>
+          <div className="settings-modal-body">
+            {recipeUsesModal.status === 'loading' ? <div className="inline-status inline-status-default">Ищу рецепты...</div> : null}
+            {recipeUsesModal.status === 'error' ? <div className="inline-status inline-status-warning">{recipeUsesModal.error ?? 'Не удалось загрузить применения.'}</div> : null}
+            {recipeUsesModal.status === 'ready' && !recipeUsesModal.matches.length ? (
+              <div className="inline-hint inline-hint-warning">Этот предмет не найден в ингредиентах рецептов.</div>
+            ) : null}
+            {selectedRecipe ? (
+              <div className="recipe-uses-view">
+                <div className="recipe-uses-output">
+                  <button
+                    type="button"
+                    className="output-icon-slot output-icon-button"
+                    data-item-raw={selectedRecipe.output.raw}
+                    onMouseEnter={() => updateHoveredItemRaw(selectedRecipe.output.raw)}
+                    onMouseLeave={() => updateHoveredItemRaw((current) => (current === selectedRecipe.output.raw ? null : current))}
+                    onFocus={() => updateHoveredItemRaw(selectedRecipe.output.raw)}
+                    onBlur={() => updateHoveredItemRaw((current) => (current === selectedRecipe.output.raw ? null : current))}
+                    onClick={() => openRecipeFromUses(selectedRecipe)}
+                    title={selectedTitle}
+                  >
+                    {renderCraftItemIcon(selectedRecipe.output.raw, selectedRecipe.output_resolution?.icon_url, selectedRecipe.output_resolution?.animated, selectedRecipe.output_resolution?.animation_meta?.frametime, selectedTitle)}
+                  </button>
+                  <div>
+                    <strong>{selectedTitle}</strong>
+                    <span>{selectedRecipe.output.raw}</span>
+                    <span>{selectedRecipe.source.path ?? 'Recipes'}</span>
+                  </div>
+                </div>
+                <div className="grid-scroll-zone recipe-uses-grid">
+                  <RecipeGrid
+                    matrix={selectedRecipe.matrix}
+                    atlas={itemPanelAtlas}
+                    atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
+                    displayMode={uiPreferences.display_mode}
+                    animationsEnabled={areAnimationsEnabled}
+                    editorMode="view"
+                    heldItemRaw={null}
+                    tooltipsDisabled={false}
+                    resolveCellTitle={resolveCellTitle}
+                    onItemHover={updateHoveredItemRaw}
+                    onCellClick={() => undefined}
+                    onCellContextMenu={() => undefined}
+                    onCellChange={() => undefined}
+                  />
+                </div>
+                <div className="recipe-uses-actions">
+                  <button type="button" className="ghost-button icon-button" aria-label="uses-prev-page" disabled={safePage <= 0} onClick={() => changeRecipeUsesPage(-1)}>‹</button>
+                  <strong>{safePage + 1}/{pageCount}</strong>
+                  <button type="button" className="ghost-button icon-button" aria-label="uses-next-page" disabled={safePage >= pageCount - 1} onClick={() => changeRecipeUsesPage(1)}>›</button>
+                  <button type="button" className="secondary-button" onClick={() => openRecipeFromUses(selectedRecipe)}>Открыть рецепт</button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
     );
   }
@@ -2574,7 +3099,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('panel.output')} {...common}>
               <div className="output-card">
-                <button type="button" className="output-icon-slot output-icon-button" onClick={() => openCraftEditorModal({ kind: 'output' })} title={t('panel.output')}>
+                <button
+                  type="button"
+                  className="output-icon-slot output-icon-button"
+                  data-item-raw={outputRaw || undefined}
+                  onMouseEnter={() => updateHoveredItemRaw(outputRaw || null)}
+                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
+                  onFocus={() => updateHoveredItemRaw(outputRaw || null)}
+                  onBlur={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
+                  onClick={() => openCraftEditorModal({ kind: 'output' })}
+                  title={t('panel.output')}
+                >
                   {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
                 </button>
                 <div className="output-details">
@@ -2601,7 +3136,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
                   setMatrixCell(row, col, value);
                 }} />
               </div>
@@ -2689,6 +3224,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       ) : null}
       {renderNeiContextMenu()}
       {renderCustomItemModal()}
+      {renderRecipeUsesModal()}
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>

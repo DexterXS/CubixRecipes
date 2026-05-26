@@ -16,6 +16,7 @@ interface Props {
   onCellContextMenu: (row: number, col: number) => void;
   resolveCellTitle: (raw: string) => string;
   onCellDrop?: (row: number, col: number, value: string) => void;
+  onItemHover?: (raw: string | null) => void;
 }
 
 function shortenCellValue(value: string): string {
@@ -48,7 +49,8 @@ export function RecipeGrid({
   onCellClick,
   onCellContextMenu,
   resolveCellTitle,
-  onCellDrop
+  onCellDrop,
+  onItemHover
 }: Props) {
   const size = Math.max(matrix.length, matrix[0]?.length ?? 0, 1);
   const cellClass = size >= 9 ? 'grid-cell size-9' : 'grid-cell size-3';
@@ -191,10 +193,17 @@ export function RecipeGrid({
                 data-craft-cell="true"
                 data-row={rowIndex}
                 data-col={colIndex}
+                data-item-raw={value || undefined}
                 title={tooltipsDisabled ? undefined : title}
                 onMouseDown={(event) => startCellPaint(event, rowIndex, colIndex)}
-                onMouseEnter={() => continueCellPaint(rowIndex, colIndex)}
+                onMouseEnter={() => {
+                  onItemHover?.(value || null);
+                  continueCellPaint(rowIndex, colIndex);
+                }}
                 onMouseOver={() => continueCellPaint(rowIndex, colIndex)}
+                onMouseLeave={() => onItemHover?.(null)}
+                onFocus={() => onItemHover?.(value || null)}
+                onBlur={() => onItemHover?.(null)}
                 onMouseUp={stopCellPaint}
                 onClick={() => {
                   if (editorMode !== 'view') {
