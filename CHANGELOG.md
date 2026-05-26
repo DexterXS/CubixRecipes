@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Fixed
+- Indexed uploaded `.zs` draft recipe outputs in the frontend so `R` can open already-loaded local draft recipes without waiting for empty backend lookups, and added hotkey debug timings for recipe searches and draft parsing.
+- Added local uploaded `.zs` draft fallback for `U` uses lookup, so the paged uses window can show recipes from already-loaded drafts even when backend `/recipes/uses` returns no matches.
+- Made backend matrix parsing tolerate CraftTweaker wrapper calls around item references, fixing local draft recipe opens that failed with `malformed node or string` during `R` lookup.
 - Moved the on-page R/U hotkey debug panel behind an admin-only Settings toggle and disabled it by default.
 - Made `R` fall back to matching locally uploaded `.zs` drafts when backend recipe search returns no matches, and log that fallback in the on-page hotkey debug panel.
 - Added an on-page R/U hotkey debug panel and made recipe/uses hotkeys read physical `KeyR`/`KeyU`, so they work across English and Russian keyboard layouts while exposing hover, focus, DOM raw, and API lookup steps.

@@ -97,6 +97,12 @@ type UploadedDraft = {
   lastModified: number;
 };
 
+type UploadedDraftRecipeMatch = {
+  draft: UploadedDraft;
+  block: string;
+  matchedRaw: string;
+};
+
 type NeiContextMenuState = {
   raw: string;
   x: number;
@@ -494,6 +500,23 @@ function collectRecipeOutputRaws(source: string): string[] {
   return [...outputRaws];
 }
 
+function collectRecipeIngredientRaws(block: string): string[] {
+  const ingredientRaws = new Set<string>();
+  const outputRaws = new Set(collectRecipeOutputRaws(block));
+  const skippedOutputs = new Set<string>();
+  const itemPattern = /<[^>]+>(?:\.withTag\([\s\S]*?\))?/g;
+  let match: RegExpExecArray | null;
+  while ((match = itemPattern.exec(block)) !== null) {
+    const raw = match[0].trim();
+    if (outputRaws.has(raw) && !skippedOutputs.has(raw)) {
+      skippedOutputs.add(raw);
+      continue;
+    }
+    ingredientRaws.add(raw);
+  }
+  return [...ingredientRaws];
+}
+
 function collectRecipeBlocks(source: string): string[] {
   const blocks: string[] = [];
   const blockPattern = /(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
@@ -502,6 +525,23 @@ function collectRecipeBlocks(source: string): string[] {
     blocks.push(match[0]);
   }
   return blocks;
+}
+
+function elapsedMs(startedAt: number): number {
+  return Math.round((performance.now() - startedAt) * 10) / 10;
+}
+
+function mergeRecipeMatches(...groups: RecipeView[][]): RecipeView[] {
+  const merged: RecipeView[] = [];
+  const seen = new Set<string>();
+  groups.flat().forEach((recipe) => {
+    const matrixKey = recipe.matrix.map((row) => row.map((cell) => cell.raw ?? '').join(',')).join(';');
+    const key = `${recipe.output.raw}:${matrixKey}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(recipe);
+  });
+  return merged;
 }
 
 function customItemToEntry(item: CustomItem): ItemPanelEntry {
@@ -1690,15 +1730,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [filteredNeiItems, neiPage, neiPageCount]);
 
   const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => itemPanelRaw(entry)), [neiItems]);
-  const uploadedDraftOutputKeys = useMemo(() => {
-    const keys = new Set<string>();
+  const uploadedDraftRecipeIndexes = useMemo(() => {
+    const byOutput = new Map<string, UploadedDraftRecipeMatch>();
+    const byIngredient = new Map<string, UploadedDraftRecipeMatch[]>();
     uploadedDrafts.forEach((draft) => {
-      collectRecipeOutputRaws(draft.text).forEach((raw) => {
-        recipeLookupKeysForRaw(raw).forEach((key) => keys.add(key));
+      collectRecipeBlocks(draft.text).forEach((block) => {
+        collectRecipeOutputRaws(block).forEach((outputRaw) => {
+          recipeLookupKeysForRaw(outputRaw).forEach((key) => {
+            if (!byOutput.has(key)) {
+              byOutput.set(key, { draft, block, matchedRaw: outputRaw });
+            }
+          });
+        });
+        collectRecipeIngredientRaws(block).forEach((ingredientRaw) => {
+          recipeLookupKeysForRaw(ingredientRaw).forEach((key) => {
+            const matches = byIngredient.get(key) ?? [];
+            if (!matches.some((match) => match.draft.id === draft.id && match.block === block)) {
+              matches.push({ draft, block, matchedRaw: ingredientRaw });
+              byIngredient.set(key, matches);
+            }
+          });
+        });
       });
     });
-    return keys;
+    return { byOutput, byIngredient };
   }, [uploadedDrafts]);
+  const uploadedDraftRecipeIndex = uploadedDraftRecipeIndexes.byOutput;
+  const uploadedDraftIngredientIndex = uploadedDraftRecipeIndexes.byIngredient;
+  const uploadedDraftOutputKeys = useMemo(() => new Set(uploadedDraftRecipeIndex.keys()), [uploadedDraftRecipeIndex]);
 
   useEffect(() => {
     setNeiPage(0);
@@ -2125,31 +2184,65 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setHeldItemRaw((current) => (current === raw ? null : raw));
   }
 
-  function findUploadedDraftRecipeBlock(raw: string): { draft: UploadedDraft; block: string; matchedRaw: string } | null {
-    const targetKeys = new Set(recipeLookupKeysForRaw(raw));
-    for (const draft of uploadedDrafts) {
-      const blocks = collectRecipeBlocks(draft.text);
-      for (const block of blocks) {
-        const matchedRaw = collectRecipeOutputRaws(block).find((outputRaw) => (
-          recipeLookupKeysForRaw(outputRaw).some((key) => targetKeys.has(key))
-        ));
-        if (matchedRaw) {
-          return { draft, block, matchedRaw };
-        }
-      }
+  function findUploadedDraftRecipeBlock(raw: string): UploadedDraftRecipeMatch | null {
+    for (const key of recipeLookupKeysForRaw(raw)) {
+      const match = uploadedDraftRecipeIndex.get(key);
+      if (match) return match;
     }
     return null;
   }
 
-  async function openRecipeFromUploadedDraft(raw: string): Promise<boolean> {
-    const match = findUploadedDraftRecipeBlock(raw);
+  function findUploadedDraftRecipeUses(raw: string): UploadedDraftRecipeMatch[] {
+    const matches: UploadedDraftRecipeMatch[] = [];
+    const seen = new Set<string>();
+    for (const key of recipeLookupKeysForRaw(raw)) {
+      const keyMatches = uploadedDraftIngredientIndex.get(key) ?? [];
+      keyMatches.forEach((match) => {
+        const matchKey = `${match.draft.id}:${match.block}`;
+        if (seen.has(matchKey)) return;
+        seen.add(matchKey);
+        matches.push(match);
+      });
+    }
+    return matches;
+  }
+
+  async function parseUploadedDraftRecipeMatches(raw: string, matches: UploadedDraftRecipeMatch[]): Promise<RecipeView[]> {
+    if (!matches.length) return [];
+    const startedAt = performance.now();
+    const parsedMatches = await Promise.all(matches.map(async (match) => {
+      try {
+        const result = await parseText(match.block);
+        if (!result.recipe) {
+          logHotkeyDebug('uploaded draft uses parse returned no recipe', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw }, 'warning');
+          return null;
+        }
+        return {
+          ...result.recipe,
+          source: { ...result.recipe.source, path: match.draft.name }
+        };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        logHotkeyDebug('uploaded draft uses parse failed', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw, error: message }, 'error');
+        return null;
+      }
+    }));
+    const recipes = parsedMatches.filter((recipe): recipe is RecipeView => Boolean(recipe));
+    logHotkeyDebug('uploaded draft uses parsed', { raw, candidates: matches.length, matches: recipes.length, durationMs: elapsedMs(startedAt) }, recipes.length ? 'success' : 'warning');
+    return recipes;
+  }
+
+  async function openRecipeFromUploadedDraft(raw: string, knownMatch?: UploadedDraftRecipeMatch): Promise<boolean> {
+    const match = knownMatch ?? findUploadedDraftRecipeBlock(raw);
     if (!match) {
       logHotkeyDebug('uploaded draft lookup response', { raw, matches: 0 }, 'warning');
       return false;
     }
     logHotkeyDebug('uploaded draft match found', { raw, draft: match.draft.name, matchedRaw: match.matchedRaw }, 'success');
     setSelectedDraftId(match.draft.id);
+    const parseStartedAt = performance.now();
     const result = await parseText(match.block);
+    logHotkeyDebug('uploaded draft parse completed', { raw, draft: match.draft.name, durationMs: elapsedMs(parseStartedAt) }, 'success');
     if (!result.recipe) {
       logHotkeyDebug('uploaded draft parse returned no recipe', { raw, draft: match.draft.name }, 'warning');
       return false;
@@ -2212,18 +2305,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setLastApiStatus(t('values.pending'));
     try {
       const lookupKeys = recipeLookupKeysForRaw(normalizedRaw);
-      let match: RecipeView | undefined;
-      for (const lookupRaw of lookupKeys) {
-        const result = await searchRecipesByOutput(lookupRaw);
-        logHotkeyDebug('recipe lookup response', { raw: lookupRaw, requestedRaw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
-        if (result.matches[0]) {
-          match = result.matches[0];
-          break;
+      const draftMatch = findUploadedDraftRecipeBlock(normalizedRaw);
+      const hasKnownBackendMatch = lookupKeys.some((lookupRaw) => recipeAvailability[lookupRaw] === true);
+      if (draftMatch && !hasKnownBackendMatch) {
+        logHotkeyDebug('uploaded draft cache hit', { raw: normalizedRaw, draft: draftMatch.draft.name, matchedRaw: draftMatch.matchedRaw }, 'success');
+        if (await openRecipeFromUploadedDraft(normalizedRaw, draftMatch)) {
+          return;
         }
       }
+
+      const lookupResults = await Promise.all(lookupKeys.map(async (lookupRaw) => {
+        const searchStartedAt = performance.now();
+        const result = await searchRecipesByOutput(lookupRaw);
+        logHotkeyDebug('recipe lookup response', { raw: lookupRaw, requestedRaw: normalizedRaw, matches: result.matches.length, durationMs: elapsedMs(searchStartedAt) }, result.matches.length ? 'success' : 'warning');
+        return { lookupRaw, result };
+      }));
+      const match = lookupResults.find(({ result }) => Boolean(result.matches[0]))?.result.matches[0];
       if (!match) {
         logHotkeyDebug('backend lookup empty, checking uploaded drafts', { raw: normalizedRaw, keys: lookupKeys.join(', ') }, 'warning');
-        if (await openRecipeFromUploadedDraft(normalizedRaw)) {
+        if (await openRecipeFromUploadedDraft(normalizedRaw, draftMatch ?? undefined)) {
           return;
         }
         setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes и локальных черновиках.`);
@@ -2256,15 +2356,28 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus(`Ищу, где используется ${normalizedRaw}...`);
     setLastApiStatus(t('values.pending'));
     try {
-      const result = await searchRecipesUsingItem(normalizedRaw);
-      logHotkeyDebug('uses lookup response', { raw: normalizedRaw, matches: result.matches.length }, result.matches.length ? 'success' : 'warning');
+      const localUseMatches = findUploadedDraftRecipeUses(normalizedRaw);
+      logHotkeyDebug('uploaded draft uses candidates', { raw: normalizedRaw, matches: localUseMatches.length }, localUseMatches.length ? 'success' : 'warning');
+      const backendStartedAt = performance.now();
+      const backendLookup = searchRecipesUsingItem(normalizedRaw);
+      const localRecipes = await parseUploadedDraftRecipeMatches(normalizedRaw, localUseMatches);
+      if (localRecipes.length) {
+        setRecipeUsesModal((current) => (
+          current?.raw === normalizedRaw
+            ? { raw: normalizedRaw, matches: localRecipes, page: 0, status: 'ready' }
+            : current
+        ));
+      }
+      const result = await backendLookup;
+      logHotkeyDebug('uses lookup response', { raw: normalizedRaw, matches: result.matches.length, durationMs: elapsedMs(backendStartedAt) }, result.matches.length ? 'success' : 'warning');
+      const matches = mergeRecipeMatches(result.matches, localRecipes);
       setRecipeUsesModal((current) => (
         current?.raw === normalizedRaw
-          ? { raw: normalizedRaw, matches: result.matches, page: 0, status: 'ready' }
+          ? { raw: normalizedRaw, matches, page: 0, status: 'ready' }
           : current
       ));
-      setStatus(result.matches.length
-        ? `Найдено применений для ${normalizedRaw}: ${result.matches.length}.`
+      setStatus(matches.length
+        ? `Найдено применений для ${normalizedRaw}: ${matches.length}.`
         : `${normalizedRaw} не найден в ингредиентах рецептов.`);
       setLastApiStatus(t('values.ok'));
     } catch (error) {
