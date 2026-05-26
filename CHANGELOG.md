@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Simplified the frontend shell into a static `Главное меню` / `Черновики` / admin-only `Отладка` flow, moved scale and staff-role controls into Settings, removed the View/items customization controls, and added recipe file draft import/download actions.
 - Prevented Railway Google sign-in from saving the session on a different backend host than the one used by `VITE_API_BASE`; OAuth callbacks now follow the actual `/auth/google/start` request host unless `GOOGLE_REDIRECT_URI` is explicitly set.
 - Made Google OAuth `state` self-contained and signed so Railway callbacks can complete even when the temporary state cookie is not returned by the browser.
 - Replaced Authlib's session-backed OAuth state handling with an explicit signed HttpOnly state cookie to avoid Google callback `mismatching_state` failures on Railway.

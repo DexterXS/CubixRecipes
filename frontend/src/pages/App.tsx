@@ -1,5 +1,4 @@
 import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { ActionToolbar } from '../components/ActionToolbar';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
@@ -41,9 +40,8 @@ const defaultPanelLayout: PanelLayoutItem[] = [
   { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }
 ];
 
-const allPanelIds: PanelId[] = defaultPanelLayout.map((panel) => panel.id);
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
-type WorkspaceTab = 'editor' | 'recipe' | 'items' | 'debug';
+type WorkspaceTab = 'editor' | 'recipe' | 'debug';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -87,6 +85,14 @@ type ItemPanelModSummary = {
   completionText: string;
 };
 
+type UploadedDraft = {
+  id: string;
+  name: string;
+  size: number;
+  text: string;
+  lastModified: number;
+};
+
 type ItemPanelTranslations = {
   byKey: Map<string, string>;
   byKeyMeta: Map<string, Map<number, ItemPanelEntry>>;
@@ -111,9 +117,18 @@ type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNod
 type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
 
 interface AppProps {
-  authUser: AuthUser;
-  onLogout: () => Promise<void>;
+  authUser?: AuthUser;
+  onLogout?: () => Promise<void>;
 }
+
+const fallbackAuthUser: AuthUser = {
+  id: 0,
+  email: 'root.user76@gmail.com',
+  name: 'Local Admin',
+  avatar_url: null,
+  role: 'admin',
+  is_root_admin: true
+};
 
 function itemPanelEntryIdentity(entry: ItemPanelEntry): string {
   return `${entry.key}:${entry.meta}`;
@@ -465,7 +480,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   };
 }
 
-export default function App({ authUser, onLogout }: AppProps) {
+export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined }: AppProps) {
   const [input, setInput] = useState('');
   const [matrix, setMatrix] = useState<CellValue[][]>(cloneMatrix(defaultMatrix));
   const [status, setStatus] = useState('Р“РѕС‚РѕРІРѕ');
@@ -483,7 +498,6 @@ export default function App({ authUser, onLogout }: AppProps) {
   const [itemMetaDraft, setItemMetaDraft] = useState('0');
   const [nbtRootDraft, setNbtRootDraft] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
   const [collapsedNbtPaths, setCollapsedNbtPaths] = useState<Record<string, boolean>>({});
-  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState('РќРµ СЃРѕС…СЂР°РЅРµРЅРѕ');
   const [lastApiStatus, setLastApiStatus] = useState('idle');
   const [lastParseResult, setLastParseResult] = useState('Р•С‰С‘ РЅРµ РІС‹РїРѕР»РЅСЏР»СЃСЏ');
@@ -509,6 +523,8 @@ export default function App({ authUser, onLogout }: AppProps) {
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
   const [hoveredNeiRaw, setHoveredNeiRaw] = useState<string | null>(null);
+  const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>([]);
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
   const [adminUsers, setAdminUsers] = useState<AuthUser[]>([]);
   const [adminUsersStatus, setAdminUsersStatus] = useState('');
   const [cursorPoint, setCursorPoint] = useState({ x: 0, y: 0 });
@@ -538,13 +554,16 @@ export default function App({ authUser, onLogout }: AppProps) {
 
   const t = createTranslator(uiPreferences.language);
   const areAnimationsEnabled = uiPreferences.animations_enabled;
-  const workspaceTabLabels: Record<WorkspaceTab, string> = uiPreferences.language === 'ru'
-    ? { editor: 'Создать рецепт', recipe: 'Рецепты', items: 'Предметы', debug: 'Отладка' }
-    : { editor: 'Create Recipe', recipe: 'Recipes', items: 'Items', debug: 'Debug' };
   const canEditRecipes = can(authUser, 'recipes:edit');
   const canCreateTemplates = can(authUser, 'templates:create');
   const canManageSettings = can(authUser, 'settings:manage');
   const canManageRoles = can(authUser, 'roles:manage');
+  const canUseDebug = can(authUser, 'debug:manage');
+  const workspaceTabs = [
+    { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
+    { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
+    { id: 'debug' as const, label: uiPreferences.language === 'ru' ? 'Отладка' : 'Debug', visible: canUseDebug }
+  ].filter((tab) => tab.visible);
 
   async function refreshAdminUsers() {
     if (!canManageRoles) return;
@@ -581,6 +600,12 @@ export default function App({ authUser, onLogout }: AppProps) {
       setAdminUsersStatus('');
     }
   }, [canManageRoles]);
+
+  useEffect(() => {
+    if (!workspaceTabs.some((tab) => tab.id === workspaceTab)) {
+      setWorkspaceTab('editor');
+    }
+  }, [workspaceTab, canCreateTemplates, canEditRecipes, canUseDebug]);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -1541,6 +1566,74 @@ export default function App({ authUser, onLogout }: AppProps) {
     }
   }
 
+  function buildRecipeSource(): string {
+    const call = recipe.recipe_type === 'avaritia_extreme_shaped'
+      ? 'mods.avaritia.ExtremeCrafting.addShaped'
+      : 'recipes.addShaped';
+    const rows = matrix
+      .map((row) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]`)
+      .join(',\n');
+    return `${call}(${outputRaw || '<minecraft:stone>'}, [\n${rows}\n]);\n`;
+  }
+
+  function downloadTextFile(filename: string, text: string) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function currentRecipeFilename(): string {
+    const sourceName = recipe.source.path?.split(/[\\/]/).pop();
+    if (sourceName) return sourceName.endsWith('.zs') ? sourceName : `${sourceName}.zs`;
+    const rawName = outputRaw.replace(/[<>:"/\\|?*\s]+/g, '_').replace(/^_+|_+$/g, '');
+    return `${rawName || 'recipe'}.zs`;
+  }
+
+  function downloadCurrentRecipe() {
+    downloadTextFile(currentRecipeFilename(), input.trim() ? input : buildRecipeSource());
+    setStatus('Рецепт скачан.');
+  }
+
+  function downloadSelectedDraft() {
+    const selected = uploadedDrafts.find((draft) => draft.id === selectedDraftId);
+    if (!selected) return;
+    downloadTextFile(selected.name, selected.text);
+    setStatus(`Черновик скачан: ${selected.name}`);
+  }
+
+  async function importRecipeFiles(files: FileList | File[]) {
+    const fileArray = Array.from(files).filter((file) => file.name.endsWith('.zs') || file.type.startsWith('text/') || !file.type);
+    if (!fileArray.length) {
+      setStatus('Выберите .zs или текстовые файлы рецептов.');
+      return;
+    }
+    const drafts: UploadedDraft[] = [];
+    for (const file of fileArray) {
+      const text = await file.text();
+      drafts.push({
+        id: `${file.name}:${file.lastModified}:${file.size}`,
+        name: file.name,
+        size: file.size,
+        text,
+        lastModified: file.lastModified
+      });
+    }
+    setUploadedDrafts((current) => {
+      const nextById = new Map(current.map((draft) => [draft.id, draft]));
+      drafts.forEach((draft) => nextById.set(draft.id, draft));
+      return Array.from(nextById.values());
+    });
+    setSelectedDraftId(drafts[0].id);
+    await handleParse(drafts[0].text);
+    setStatus(`Загружено файлов: ${drafts.length}`);
+  }
+
   useEffect(() => {
     const trimmed = input.trim();
     if (!trimmed) {
@@ -1739,7 +1832,17 @@ export default function App({ authUser, onLogout }: AppProps) {
     const gridSize = matrix.length;
     return (
       <div className="workspace-panel-shell panel-recipe-builder">
-        <Panel title="Создатель рецепта" subtitle="Сетка, входные предметы и результат" className="recipe-builder-panel">
+        <Panel
+          title="Создать рецепт"
+          subtitle="Сетка, входные предметы и результат"
+          className="recipe-builder-panel"
+          actions={(
+            <div className="inline-actions">
+              <button type="button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => recipe.source.kind === 'generated' ? void handleSaveAs() : void handleSave()}>Сохранить изменения</button>
+              <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
+            </div>
+          )}
+        >
           <div className="recipe-builder-controls">
             <label className="field-block">
               <span>Размер сетки</span>
@@ -1804,6 +1907,7 @@ export default function App({ authUser, onLogout }: AppProps) {
               >
                 {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
               </button>
+              <button type="button" className="secondary-button craft-detail-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => openCraftEditorModal({ kind: 'output' })}>Детальные настройки</button>
             </div>
           </div>
         </Panel>
@@ -1884,6 +1988,62 @@ export default function App({ authUser, onLogout }: AppProps) {
     );
   }
 
+  function renderRecipeFilesPanel() {
+    const selectedDraft = uploadedDrafts.find((draft) => draft.id === selectedDraftId);
+    return (
+      <div className="workspace-panel-shell panel-recipe-files">
+        <Panel title="Файлы рецептов" subtitle="Загрузка, редактирование и скачивание">
+          <label
+            className="file-drop-zone"
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              void importRecipeFiles(event.dataTransfer.files);
+            }}
+          >
+            <input
+              type="file"
+              accept=".zs,text/plain"
+              multiple
+              onChange={(event) => {
+                if (event.target.files) {
+                  void importRecipeFiles(event.target.files);
+                  event.currentTarget.value = '';
+                }
+              }}
+            />
+            <strong>Закиньте свои файлы для редактирования рецептов</strong>
+            <span>.zs файлы можно перетащить сюда или выбрать через окно файла</span>
+          </label>
+          {uploadedDrafts.length ? (
+            <div className="uploaded-drafts-list" aria-label="uploaded-drafts">
+              {uploadedDrafts.map((draft) => (
+                <button
+                  key={draft.id}
+                  type="button"
+                  className={`uploaded-draft-row ${selectedDraftId === draft.id ? 'active' : ''}`.trim()}
+                  onClick={() => {
+                    setSelectedDraftId(draft.id);
+                    void handleParse(draft.text);
+                  }}
+                >
+                  <span>{draft.name}</span>
+                  <small>{Math.max(1, Math.round(draft.size / 1024))} KB</small>
+                </button>
+              ))}
+            </div>
+          ) : null}
+          <div className="file-actions">
+            <button type="button" className="secondary-button" onClick={downloadCurrentRecipe}>Скачать текущий</button>
+            <button type="button" disabled={!canEditRecipes && !canCreateTemplates} onClick={() => void handleSaveAs()}>Выгрузить в хранилище</button>
+            <button type="button" className="secondary-button" disabled={!selectedDraft} onClick={downloadSelectedDraft}>Скачать выделенное</button>
+            <button type="button" className="ghost-button" disabled={!uploadedDrafts.length} onClick={() => { setUploadedDrafts([]); setSelectedDraftId(null); }}>Очистить все</button>
+          </div>
+        </Panel>
+      </div>
+    );
+  }
+
   function renderTextureToolsPanel() {
     return (
       <div className="workspace-panel-shell panel-textures">
@@ -1940,13 +2100,11 @@ export default function App({ authUser, onLogout }: AppProps) {
     );
   }
 
-  function renderAdminUsersPanel() {
-    if (!canManageRoles) return null;
+  function renderAdminUsersContent() {
     return (
-      <div className="workspace-panel-shell panel-admin-users">
-        <Panel title="Users" subtitle="Roles and access">
+      <>
           <div className="admin-users-toolbar">
-            <button type="button" className="secondary-button" onClick={() => void refreshAdminUsers()}>Refresh</button>
+            <button type="button" className="secondary-button" onClick={() => void refreshAdminUsers()}>Обновить</button>
             <span>{adminUsersStatus}</span>
           </div>
           <div className="admin-users-list">
@@ -1970,51 +2128,53 @@ export default function App({ authUser, onLogout }: AppProps) {
               </div>
             ))}
           </div>
+      </>
+    );
+  }
+
+  function renderAdminUsersPanel() {
+    if (!canManageRoles) return null;
+    return (
+      <div className="workspace-panel-shell panel-admin-users">
+        <Panel title="Персонал" subtitle="Роли и доступ по Google почте">
+          {renderAdminUsersContent()}
         </Panel>
       </div>
     );
   }
 
   function renderWorkspace() {
-    if (workspaceTab === 'items') {
-      return (
-        <div className="workspace-layout workspace-layout-items">
-          {renderColumn([getPanelForTab('input')], 'workspace-left')}
-          <div className="workspace-column workspace-center">{renderTextureToolsPanel()}</div>
-          {renderColumn([getPanelForTab('settings'), getPanelForTab('debug')], 'workspace-right')}
-        </div>
-      );
-    }
     if (workspaceTab === 'recipe') {
       return (
-        <div className="workspace-layout workspace-layout-recipe">
-          {renderColumn([getPanelForTab('input'), getPanelForTab('output')], 'workspace-left')}
-          {renderColumn([getPanelForTab('preview'), getPanelForTab('raw')], 'workspace-center')}
+        <div className="workspace-layout workspace-layout-drafts">
+          <div className="workspace-column workspace-left">
+            {renderRecipeFilesPanel()}
+            {renderPanel(getPanelForTab('input'))}
+          </div>
+          {renderColumn([getPanelForTab('output'), getPanelForTab('info'), getPanelForTab('statusBar')], 'workspace-center')}
           <div className="workspace-column workspace-right">
             {renderNeiPanel()}
-            {renderPanel(getPanelForTab('info'))}
-            {renderPanel(getPanelForTab('statusBar'))}
           </div>
         </div>
       );
     }
-    if (workspaceTab === 'debug') {
+    if (workspaceTab === 'debug' && canUseDebug) {
       return (
         <div className="workspace-layout workspace-layout-debug">
-          {renderColumn([getPanelForTab('settings'), getPanelForTab('statusBar')], 'workspace-left')}
+          {renderColumn([getPanelForTab('statusBar'), getPanelForTab('info')], 'workspace-left')}
           {renderColumn([getPanelForTab('diagnostics'), getPanelForTab('debug')], 'workspace-center')}
           <div className="workspace-column workspace-right">
             {renderAdminUsersPanel()}
-            {renderColumn([getPanelForTab('raw'), getPanelForTab('info')], '')}
+            {renderColumn([getPanelForTab('raw')], '')}
           </div>
         </div>
       );
     }
     return (
-      <div className="workspace-layout workspace-layout-editor workspace-layout-builder">
+      <div className="workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main">
         <div className="workspace-column workspace-center">
           {renderRecipeBuilderPanel()}
-          {renderPanel(getPanelForTab('toolbar'))}
+          {renderRecipeFilesPanel()}
         </div>
         <div className="workspace-column workspace-right">
           {renderNeiPanel()}
@@ -2055,18 +2215,7 @@ export default function App({ authUser, onLogout }: AppProps) {
           </div>
         );
       case 'toolbar':
-        return (
-          <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
-            <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.workspace')} {...common}>
-              <ActionToolbar
-                labels={{ save: t('toolbar.save'), saveAs: t('toolbar.saveAs') }}
-                canSave={canEditRecipes}
-                onSave={() => void handleSave()}
-                onSaveAs={() => void handleSaveAs()}
-              />
-            </Panel>
-          </div>
-        );
+        return null;
       case 'input':
         return (
           <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
@@ -2180,9 +2329,9 @@ export default function App({ authUser, onLogout }: AppProps) {
       <div className="utility-bar">
         <strong>CubixRecipes</strong>
         <nav className="main-tabs" aria-label="workspace-tabs">
-          {(Object.keys(workspaceTabLabels) as WorkspaceTab[]).map((tab) => (
-            <button key={tab} type="button" className={`main-tab-button ${workspaceTab === tab ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab)}>
-              {workspaceTabLabels[tab]}
+          {workspaceTabs.map((tab) => (
+            <button key={tab.id} type="button" className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>
+              {tab.label}
             </button>
           ))}
         </nav>
@@ -2192,37 +2341,8 @@ export default function App({ authUser, onLogout }: AppProps) {
             <span>{authUser.email}</span>
             <strong>{authUser.role}</strong>
           </div>
-          <label className="ui-scale-switch compact-switch"><span>Масштаб</span><select aria-label="ui-scale" disabled={!canManageSettings} value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}><option value={1}>100%</option><option value={1.15}>115%</option><option value={1.3}>130%</option><option value={1.5}>150%</option></select></label>
           <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} disabled={!canManageSettings} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
-          <button type="button" className="theme-toggle" disabled={!canManageSettings} aria-label={uiPreferences.theme_mode === 'dark' ? 'Светлая тема' : 'Темная тема'} onClick={() => patchUiPreferences({ theme_mode: uiPreferences.theme_mode === 'dark' ? 'light' : 'dark' })}>
-            <span aria-hidden="true">{uiPreferences.theme_mode === 'dark' ? '☀' : '☾'}</span>
-          </button>
-          <button type="button" className="secondary-button" disabled={!canManageSettings} onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button>
-          <div className="view-menu-wrap">
-            <button type="button" className="secondary-button" onClick={() => setIsViewMenuOpen((value) => !value)}>{t('app.view')}</button>
-            {isViewMenuOpen ? (
-              <div className="view-menu">
-                <strong>{t('fields.visiblePanels')}</strong>
-                {allPanelIds.map((panelId) => {
-                  const panel = uiPreferences.panel_layout.find((item) => item.id === panelId);
-                  return (
-                    <label key={panelId} className="view-toggle" aria-label={getPanelLabel(uiPreferences.language, panelId)}>
-                      <input type="checkbox" checked={panel?.visible ?? false} onChange={(event) => setPanelVisible(panelId, event.target.checked)} />
-                      <span>{getPanelLabel(uiPreferences.language, panelId)}</span>
-                    </label>
-                  );
-                })}
-                <div className="view-menu-controls">
-                  <label className="view-toggle"><input type="checkbox" checked={uiPreferences.workspace_layout.compact_header} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, compact_header: event.target.checked } })} /><span>{t('app.compactHeader')}</span></label>
-                  <label className="field-block"><span>{t('app.columns')}</span><select aria-label={t('app.columns')} value={uiPreferences.workspace_layout.columns} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, columns: Number(event.target.value) as 1 | 2 | 3 } })}><option value="1">{t('app.oneColumn')}</option><option value="2">{t('app.twoColumns')}</option><option value="3">{t('app.threeColumns')}</option></select></label>
-                </div>
-                <div className="view-menu-actions">
-                  <button type="button" onClick={() => patchPanelLayout(latestUiPreferencesRef.current.panel_layout.map((panel) => ({ ...panel, visible: true })))}> {t('app.showAllPanels')}</button>
-                  <button type="button" className="ghost-button" onClick={resetLayout}>{t('app.resetLayout')}</button>
-                </div>
-              </div>
-            ) : null}
-          </div>
+          {canManageSettings ? <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button> : null}
           <button type="button" className="ghost-button" onClick={() => void onLogout()}>Logout</button>
         </div>
       </div>
@@ -2241,25 +2361,41 @@ export default function App({ authUser, onLogout }: AppProps) {
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
-          <div className="modal modal-scalable" style={getModalScaleStyle('layout')} role="dialog" aria-modal="true" aria-label={t('layoutSettings.title')} onClick={(event) => event.stopPropagation()}>
+          <div className="modal settings-modal" role="dialog" aria-modal="true" aria-label="Настройки" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>{t('layoutSettings.title')}</h2>
+              <h2>Настройки</h2>
               <div className="inline-actions">
-                {renderModalScaleControl('layout')}
-                <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
+                <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>Закрыть</button>
               </div>
             </div>
             <div className="settings-modal-body">
-              <p>{t('layoutSettings.description')}</p>
-              <div className="kv-grid">
-                <div><span>{t('app.columns')}</span><strong>{uiPreferences.workspace_layout.columns}</strong></div>
-                <div><span>{t('app.zone')}</span><strong>{uiPreferences.panel_layout.filter((panel) => panel.visible).length}</strong></div>
-                <div><span>{t('app.file')}</span><strong>{settings?.project_config_path ?? 'вЂ”'}</strong></div>
-              </div>
-              <div className="view-menu-actions">
-                <button type="button" onClick={() => void saveCurrentWindowLayout()}>{t('layoutSettings.saveCurrent')}</button>
-                <button type="button" className="ghost-button" onClick={() => setIsLayoutSettingsOpen(false)}>{t('layoutSettings.close')}</button>
-              </div>
+              <label className="field-block settings-scale-control">
+                <span>Масштаб интерфейса</span>
+                <select aria-label="ui-scale" value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}>
+                  <option value={1}>100%</option>
+                  <option value={1.15}>115%</option>
+                  <option value={1.3}>130%</option>
+                  <option value={1.5}>150%</option>
+                </select>
+              </label>
+              <section className="settings-section">
+                <div className="settings-section-title">
+                  <h3>Права персонала</h3>
+                  <span>Роли выдаются по Google почте</span>
+                </div>
+                {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+              </section>
+              <section className="settings-section">
+                <div className="settings-section-title">
+                  <h3>Доступ по ролям</h3>
+                  <span>Индивидуальные права сверх роли потребуют отдельной схемы хранения в backend.</span>
+                </div>
+                <div className="permissions-grid">
+                  <div><strong>admin</strong><span>файлы, рецепты, настройки, роли, отладка</span></div>
+                  <div><strong>moderator</strong><span>создание шаблонов и черновиков</span></div>
+                  <div><strong>default</strong><span>только просмотр</span></div>
+                </div>
+              </section>
             </div>
           </div>
         </div>

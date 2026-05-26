@@ -64,6 +64,16 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .admin-users-toolbar span { color: var(--muted); font-size: 12px; }
 .admin-users-list { display: grid; gap: 8px; }
 .admin-user-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 10px; align-items: center; }
+.file-drop-zone { min-height: 150px; display: grid; place-items: center; text-align: center; gap: 8px; padding: 20px; border: 2px solid var(--border); background: color-mix(in srgb, var(--field-bg) 84%, transparent); cursor: pointer; }
+.file-drop-zone input { display: none; }
+.file-drop-zone strong { font-size: 16px; }
+.file-drop-zone span { color: var(--muted); font-size: 12px; }
+.uploaded-drafts-list { display: grid; gap: 6px; max-height: 180px; overflow: auto; }
+.uploaded-draft-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; text-align: left; background: transparent; border-color: var(--border); color: var(--text); }
+.uploaded-draft-row.active { background: color-mix(in srgb, var(--accent-strong) 24%, transparent); border-color: var(--accent); }
+.uploaded-draft-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.uploaded-draft-row small { color: var(--muted); }
+.file-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
 .main-tab-button.active { background: var(--accent-strong); color: #fff; }
@@ -82,11 +92,12 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .recipe-builder-output span { display: block; overflow-wrap: anywhere; }
 .recipe-builder-output span { color: var(--muted); font-size: 12px; margin-top: 4px; }
 .recipe-builder-grid { max-height: calc(100vh - 280px); min-height: 360px; display: grid; place-items: center; }
-.recipe-craft-board { display: grid; grid-template-columns: minmax(0, max-content) 46px 52px; gap: 16px; align-items: center; justify-content: center; min-width: max-content; padding: 14px 18px; background: #c8c8c8; }
+.recipe-craft-board { display: grid; grid-template-columns: minmax(0, max-content) 46px 92px; gap: 12px 16px; align-items: center; justify-content: center; min-width: max-content; padding: 14px 18px; background: #c8c8c8; }
 .craft-arrow { width: 44px; height: 28px; position: relative; }
 .craft-arrow::before { content: ""; position: absolute; left: 0; top: 11px; width: 30px; height: 6px; background: #8f8f8f; }
 .craft-arrow::after { content: ""; position: absolute; right: 0; top: 2px; border-top: 14px solid transparent; border-bottom: 14px solid transparent; border-left: 16px solid #8f8f8f; }
 .craft-output-slot { width: 52px; height: 52px; border-radius: 0; border: 2px solid #333; border-top-color: #eeeeee; border-left-color: #eeeeee; border-right-color: #4a4a4a; border-bottom-color: #4a4a4a; background: #8f8f8f; box-shadow: inset -2px -2px 0 rgba(0,0,0,.28), inset 2px 2px 0 rgba(255,255,255,.28); padding: 4px; }
+.craft-detail-button { grid-column: 3; width: 100%; min-height: 44px; padding: 6px 8px; font-size: 12px; line-height: 1.2; white-space: normal; }
 .craft-output-slot img,
 .craft-output-slot .animated-icon,
 .craft-output-slot .output-atlas-icon { width: 32px; height: 32px; transform: none; }
@@ -117,6 +128,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .view-menu-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .workspace-layout { display: grid; grid-template-columns: minmax(360px, 0.95fr) minmax(700px, 1.55fr) minmax(260px, 0.55fr); gap: 14px; align-items: start; }
 .workspace-layout-builder { grid-template-columns: minmax(700px, 1fr) minmax(300px, 360px); max-width: 1510px; margin: 0 auto; }
+.workspace-layout-main { align-items: start; }
 .workspace-layout-builder .panel-recipe-builder { min-height: 0; }
 .workspace-layout-builder .recipe-builder-panel { min-height: 520px; }
 .workspace-column { min-width: 0; display: grid; gap: 14px; align-items: start; }
@@ -132,6 +144,15 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .field-header, .inline-actions, .panel-controls { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .field-block { display: grid; gap: 8px; min-width: 0; }
 .settings-grid, .kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.settings-modal { width: min(860px, 100%); }
+.settings-section { display: grid; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
+.settings-section-title { display: grid; gap: 4px; }
+.settings-section-title h3 { margin: 0; font-size: 16px; }
+.settings-section-title span { color: var(--muted); font-size: 12px; }
+.settings-scale-control { max-width: 240px; }
+.permissions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+.permissions-grid div { display: grid; gap: 4px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--field-bg); }
+.permissions-grid span { color: var(--muted); font-size: 12px; }
 .kv-grid div, .hero-summary-grid div { padding: 10px 12px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); border: 1px solid var(--border); border-radius: 14px; min-width: 0; }
 .kv-grid strong, .hero-summary-grid strong { display: block; margin-top: 6px; word-break: break-word; }
 .hero-panel .panel-body { gap: 10px; }
