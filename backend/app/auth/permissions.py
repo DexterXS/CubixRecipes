@@ -15,6 +15,8 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         'view',
         'files:add',
         'files:download',
+        'files:manage',
+        'mod-icons:manage',
         'recipes:edit',
         'templates:create',
         'templates:edit',
@@ -54,6 +56,10 @@ def permission_for_request(method: str, path: str) -> str:
     normalized_method = method.upper()
     if path.startswith('/api/admin/users'):
         return 'roles:manage'
+    if path.startswith('/api/admin/mod-icons'):
+        return 'mod-icons:manage'
+    if path.startswith('/api/admin/zs-cloud'):
+        return 'files:manage'
     if normalized_method == 'GET':
         return 'view'
     if path == '/api/recipes/create' and normalized_method == 'POST':

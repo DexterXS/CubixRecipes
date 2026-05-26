@@ -127,6 +127,94 @@ beforeEach(() => {
     if (url === '/api/admin/users/2/role' && init?.method === 'PATCH') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, user: { ...moderatorUser, role: 'admin' } }) }) as Promise<Response>;
     }
+    if (url === '/api/admin/mod-icons') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+          manifest: {
+            updatedAt: '2026-05-26T00:00:00+00:00',
+            maxAtlasSize: 4096,
+            fallbackAtlasUrl: '/api/itempanel/atlas.png',
+            archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            atlases: [{
+              size: 32,
+              page: 1,
+              image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png',
+              file: 'mod-icons-x32-1.png',
+              columns: 1,
+              rows: 1,
+              tileSize: 32,
+              entries: { examplemod: { modid: 'examplemod', size: 32, page: 1, atlasFile: 'mod-icons-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png', x: 0, y: 0, w: 32, h: 32 } }
+            }],
+            entries: {
+              x32: { examplemod: { modid: 'examplemod', size: 32, page: 1, atlasFile: 'mod-icons-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png', x: 0, y: 0, w: 32, h: 32 } },
+              x256: {}
+            },
+            duplicates: [],
+            rejected: [],
+            totalMods: 1
+          },
+          rules: { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.png', 'modid_x256.png'], maxAtlasSize: 4096 }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/mod-icons/generate' && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          manifest: {
+            updatedAt: '2026-05-26T00:00:00+00:00',
+            maxAtlasSize: 4096,
+            fallbackAtlasUrl: '/api/itempanel/atlas.png',
+            archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            atlases: [],
+            entries: { x32: {}, x256: {} },
+            duplicates: [],
+            rejected: [],
+            totalMods: 1
+          }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/zs-cloud/files' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ files: [{ path: 'scripts/test.zs', name: 'test.zs', size: 88, modifiedAt: '2026-05-26T00:00:00+00:00', recipeCount: 1 }] })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/zs-cloud/files/download')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-disposition': "attachment; filename*=UTF-8''test.zs" }),
+        blob: async () => new Blob(['recipes.addShaped(<minecraft:apple>, []);'])
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/zs-cloud/files/rename' && init?.method === 'PATCH') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, files: [{ path: 'scripts/renamed.zs', name: 'renamed.zs', size: 88, modifiedAt: '2026-05-26T00:00:00+00:00', recipeCount: 1 }] })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/zs-cloud/files' && init?.method === 'DELETE') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, files: [] })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/zs-cloud/backups') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ backups: [{ id: 'abc123abc123abcd', name: 'test.zs', originalPath: 'scripts/test.zs', size: 88, updatedAt: '2026-05-26T00:00:00+00:00' }] })
+      }) as Promise<Response>;
+    }
     if (url === '/api/parse') {
       const body = JSON.parse(String(init?.body ?? '{}'));
       const text = String(body.text ?? '');
@@ -231,6 +319,8 @@ test('renders the cleaned static workspace for admins', async () => {
 
   expect(screen.getByRole('button', { name: 'Главное меню' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Иконки модов' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Облако .zs' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Отладка' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Предметы' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Вид' })).toBeFalsy();
@@ -241,14 +331,40 @@ test('renders the cleaned static workspace for admins', async () => {
   await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/admin/users', expect.anything()));
 });
 
+test('admin mod icons tab shows archive and atlas status', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Иконки модов' }));
+
+  expect(await screen.findByText('mods.zip')).toBeTruthy();
+  expect(await screen.findByLabelText('mod-icon-examplemod-x32')).toBeTruthy();
+});
+
+test('cloud storage shows files and root backup only after Ctrl+B', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Облако .zs' }));
+
+  expect(await screen.findByText('test.zs')).toBeTruthy();
+  expect(screen.queryByText('ROOT backup')).toBeFalsy();
+  fireEvent.keyDown(window, { key: 'b', code: 'KeyB', ctrlKey: true });
+
+  expect(await screen.findByText('ROOT backup')).toBeTruthy();
+  expect(await screen.findByLabelText('root-backup-files')).toBeTruthy();
+});
+
 test('shows drafts for moderators but keeps debug/admin settings hidden from viewers', () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Облако .zs' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
   cleanup();
 
   render(<App authUser={defaultUser} onLogout={vi.fn()} />);
   expect(screen.queryByRole('button', { name: 'Черновики' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Облако .zs' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Настройки' })).toBeFalsy();
 });

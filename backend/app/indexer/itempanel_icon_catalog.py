@@ -213,8 +213,8 @@ class ItemPanelIconCatalog:
             'entries': manifest_entries,
         }
 
-    def _read_png_rgba(self, path: Path) -> tuple[int, int, list[bytes]]:
-        width, height, rows, channels, palette, alpha_palette = self._decode_png(path)
+    def read_png_rgba_bytes(self, data: bytes) -> tuple[int, int, list[bytes]]:
+        width, height, rows, channels, palette, alpha_palette = self._decode_png_bytes(data)
         if width <= 0 or height <= 0 or rows is None:
             raise ValueError('unsupported png')
         rgba_rows: list[bytes] = []
@@ -236,6 +236,9 @@ class ItemPanelIconCatalog:
             return width, height, rgba_rows
         rgba_rows = [bytes(row) for row in rows]
         return width, height, rgba_rows
+
+    def _read_png_rgba(self, path: Path) -> tuple[int, int, list[bytes]]:
+        return self.read_png_rgba_bytes(path.read_bytes())
 
     def _resize_nearest_rgba(self, width: int, height: int, rows: list[bytes], max_size: int) -> tuple[int, int, list[bytes]]:
         scale = min(max_size / width, max_size / height)
@@ -376,7 +379,9 @@ class ItemPanelIconCatalog:
         return visible, brightness, magenta, dark
 
     def _decode_png(self, path: Path):
-        data = path.read_bytes()
+        return self._decode_png_bytes(path.read_bytes())
+
+    def _decode_png_bytes(self, data: bytes):
         if not data.startswith(b'\x89PNG\r\n\x1a\n'):
             raise ValueError('not a png')
         pos = 8

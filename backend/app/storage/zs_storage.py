@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -25,6 +26,7 @@ class ZsStorage:
         self.log_service = log_service
         self.extra_recipe_sources: list[Path] = []
         self.allowed_write_roots: list[Path] = []
+        self.excluded_managed_roots: list[Path] = []
         self.parser = RecipeParser()
         self._recipes: dict[str, StoredRecipe] = {}
         self._by_output: dict[str, list[str]] = {}
@@ -155,6 +157,43 @@ class ZsStorage:
             for item in self.last_scan_report['files']
         ]
 
+    def list_managed_zs_files(self) -> list[dict[str, Union[str, int]]]:
+        recipe_counts = {
+            str(Path(str(item.get('path', ''))).resolve(strict=False)): int(item.get('recipe_count', 0) or 0)
+            for item in self.last_scan_report['files']
+            if item.get('path')
+        }
+        roots = self.allowed_write_roots or self._build_allowed_write_roots()
+        files: dict[str, Path] = {}
+        for root in roots:
+            if root.is_file() and root.suffix.lower() == '.zs':
+                resolved_file = root.resolve(strict=False)
+                if not self._is_excluded_managed_path(resolved_file):
+                    files[str(resolved_file)] = resolved_file
+                continue
+            if root.is_dir():
+                for path in root.rglob('*.zs'):
+                    resolved_file = path.resolve(strict=False)
+                    if self._is_excluded_managed_path(resolved_file):
+                        continue
+                    files[str(resolved_file)] = resolved_file
+        result: list[dict[str, Union[str, int]]] = []
+        for file_key, path in sorted(files.items(), key=lambda item: item[0].lower()):
+            try:
+                stat = path.stat()
+                size = stat.st_size
+                modified_at = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
+            except OSError:
+                continue
+            result.append({
+                'path': file_key,
+                'name': path.name,
+                'size': size,
+                'modifiedAt': modified_at,
+                'recipeCount': recipe_counts.get(file_key, 0),
+            })
+        return result
+
     def search_by_output(self, output_raw: str) -> list[Recipe]:
         try:
             item = self.parser.parse_item_ref(output_raw)
@@ -211,7 +250,47 @@ class ZsStorage:
         file_path = self._resolve_writable_path(path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.touch(exist_ok=True)
+        self._rescan_file(file_path)
         return str(file_path)
+
+    def read_zs_file(self, path: str) -> tuple[Path, str]:
+        file_path = self.resolve_existing_zs_file(path)
+        return file_path, file_path.read_text(encoding='utf-8')
+
+    def delete_zs_file(self, path: str) -> Path:
+        file_path = self.resolve_existing_zs_file(path)
+        file_path.unlink()
+        self._remove_file_from_index(file_path)
+        return file_path
+
+    def rename_zs_file(self, path: str, new_name: str) -> Path:
+        file_path = self.resolve_existing_zs_file(path)
+        clean_name = (new_name or '').strip()
+        if not clean_name:
+            raise ValueError('New file name is required')
+        if not clean_name.lower().endswith('.zs'):
+            clean_name = f'{clean_name}.zs'
+        if Path(clean_name).name != clean_name:
+            raise ValueError('New file name must not include directories')
+        target = (file_path.parent / clean_name).resolve(strict=False)
+        try:
+            target.relative_to(file_path.parent.resolve(strict=False))
+        except ValueError as exc:
+            raise ValueError('New file name resolves outside the current directory') from exc
+        if target.exists():
+            raise ValueError(f'Target file already exists: {clean_name}')
+        file_path.rename(target)
+        self._remove_file_from_index(file_path)
+        self._rescan_file(target)
+        return target
+
+    def resolve_existing_zs_file(self, raw_path: str) -> Path:
+        path = self._resolve_writable_path(raw_path)
+        if path.suffix.lower() != '.zs':
+            raise ValueError(f'Only .zs files are managed: {raw_path}')
+        if not path.is_file():
+            raise ValueError(f'File does not exist: {raw_path}')
+        return path
 
     def _build_allowed_write_roots(self) -> list[Path]:
         roots = [self.scripts_dir, *self.extra_recipe_sources]
@@ -238,6 +317,15 @@ class ZsStorage:
             except ValueError:
                 continue
         raise ValueError(f'Target path is outside allowed recipe roots: {raw_path}')
+
+    def _is_excluded_managed_path(self, path: Path) -> bool:
+        for root in self.excluded_managed_roots:
+            try:
+                path.relative_to(root.resolve(strict=False))
+                return True
+            except ValueError:
+                continue
+        return False
 
     def _rescan_file(self, file_path: Path) -> None:
         resolved = file_path.resolve(strict=False)

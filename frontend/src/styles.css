@@ -75,6 +75,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .uploaded-draft-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .uploaded-draft-row small { color: var(--muted); }
 .file-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.workspace-layout.workspace-layout-admin { grid-template-columns: minmax(520px, 1fr) minmax(340px, 0.72fr); max-width: 1510px; margin: 0 auto; }
+.admin-file-list { display: grid; gap: 8px; max-height: calc(100vh - 260px); overflow: auto; padding-right: 4px; }
+.admin-file-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); color: var(--text); text-align: left; }
+.admin-file-row div { min-width: 0; }
+.admin-file-row strong,
+.admin-file-row span { display: block; overflow-wrap: anywhere; }
+.admin-file-row span { color: var(--muted); font-size: 12px; }
+.admin-file-button { cursor: pointer; }
+.admin-file-button:hover { filter: none; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--field-bg)); }
+.mod-icon-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, 40px); gap: 8px; align-content: start; max-height: 440px; overflow: auto; }
+.mod-icon-preview { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 6px; background-repeat: no-repeat; image-rendering: pixelated; background-color: var(--field-bg); background-origin: content-box; background-clip: content-box; }
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
 .main-tab-button.active { background: var(--accent-strong); color: #fff; }
