@@ -53,12 +53,15 @@ APP_PUBLIC_URL=https://your-backend.example
 FRONTEND_PUBLIC_URL=https://your-frontend.example
 ROOT_ADMIN_EMAIL=root.user76@gmail.com
 AUTH_COOKIE_SAMESITE=none
+AUTH_COOKIE_SECURE=true
 ```
 
 If frontend and backend are separate Railway services, set the frontend build variable too:
 ```bash
 VITE_API_BASE=https://your-backend.example/api
 ```
+
+`APP_PUBLIC_URL` must use the same backend host as `VITE_API_BASE`; otherwise Google can complete the callback on one Railway domain while the frontend checks `/api/auth/me` on another domain and the session cookie will not match. `GOOGLE_REDIRECT_URI` can override the callback URL only when that exact host is also the API host used by the frontend.
 
 ### Frontend
 ```bash
