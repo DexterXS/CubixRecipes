@@ -94,6 +94,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       message: `${init?.method ?? 'GET'} ${path} failed`,
       details: { status: response.status, durationMs, payload: payloadPreview }
     });
+    if (response.status === 409) {
+      throw new ApiConflictError(message);
+    }
     throw new Error(message);
   }
 
@@ -316,6 +319,14 @@ export async function listZsCloudFiles(): Promise<{ files: ZsCloudFile[] }> {
 
 export async function downloadZsCloudFile(path: string): Promise<{ blob: Blob; filename: string }> {
   return requestBlob(apiPath(`/admin/zs-cloud/files/download?path=${encodeURIComponent(path)}`));
+}
+
+export async function uploadZsCloudFile(filename: string, text: string, mode: 'fail' | 'overwrite' | 'append' = 'fail'): Promise<{ ok: boolean; path: string; files: ZsCloudFile[] }> {
+  return request<{ ok: boolean; path: string; files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files/upload'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename, text, mode })
+  });
 }
 
 export async function deleteZsCloudFile(path: string): Promise<{ ok: boolean; files: ZsCloudFile[] }> {

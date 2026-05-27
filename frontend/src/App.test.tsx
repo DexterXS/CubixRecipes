@@ -232,6 +232,26 @@ beforeEach(() => {
         blob: async () => new Blob(['recipes.addShaped(<minecraft:apple>, []);'])
       }) as Promise<Response>;
     }
+    if (url === '/api/admin/zs-cloud/files/upload' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      if (body.filename === 'conflict.zs' && body.mode === 'fail') {
+        return Promise.resolve({
+          ok: false,
+          status: 409,
+          headers: new Headers({ 'content-type': 'application/json' }),
+          json: async () => ({ detail: 'File already exists: conflict.zs' })
+        }) as Promise<Response>;
+      }
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          path: `scripts/${body.filename}`,
+          files: [{ path: `scripts/${body.filename}`, name: body.filename, size: String(body.text ?? '').length, modifiedAt: '2026-05-26T00:00:00+00:00', recipeCount: 1 }]
+        })
+      }) as Promise<Response>;
+    }
     if (url === '/api/admin/zs-cloud/files/rename' && init?.method === 'PATCH') {
       return Promise.resolve({
         ok: true,
@@ -553,6 +573,59 @@ test('local recipe files can be selected for bulk download and deletion', async 
   expect(screen.queryByText('torch.zs')).toBeFalsy();
   expect(screen.queryByText('stick.zs')).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Удалить выбранные' })).toBeFalsy();
+});
+
+test('recipe files panel uploads uploaded file content to cloud instead of current recipe', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'uploaded_file.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('uploaded_file.zs')).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:stone>' } });
+
+  const createObjectUrlCalls = (URL.createObjectURL as unknown as ReturnType<typeof vi.fn>).mock.calls.length;
+  fireEvent.click(screen.getByLabelText('download-active-draft'));
+  expect((URL.createObjectURL as unknown as ReturnType<typeof vi.fn>).mock.calls.length).toBe(createObjectUrlCalls + 1);
+
+  fireEvent.click(screen.getByLabelText('upload-drafts-cloud'));
+
+  await waitFor(() => {
+    const uploadCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url]) => url === '/api/admin/zs-cloud/files/upload');
+    expect(uploadCall).toBeTruthy();
+    const body = JSON.parse(String(uploadCall?.[1]?.body ?? '{}'));
+    expect(body.filename).toBe('uploaded_file.zs');
+    expect(body.text).toBe(source);
+    expect(body.mode).toBe('fail');
+  });
+  const saveAsCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/recipes/save-as');
+  expect(saveAsCalls.length).toBe(0);
+});
+
+test('recipe files cloud upload asks how to handle existing files', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:stick>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'conflict.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('conflict.zs')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('upload-drafts-cloud'));
+
+  expect(await screen.findByLabelText('cloud-upload-conflict')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('cloud-upload-append'));
+
+  await waitFor(() => {
+    const uploadCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url]) => url === '/api/admin/zs-cloud/files/upload');
+    expect(uploadCalls.length).toBe(2);
+    const retryBody = JSON.parse(String(uploadCalls[1]?.[1]?.body ?? '{}'));
+    expect(retryBody.filename).toBe('conflict.zs');
+    expect(retryBody.mode).toBe('append');
+    expect(retryBody.text).toBe(source);
+  });
 });
 
 test('local user draft survives a reload', async () => {
