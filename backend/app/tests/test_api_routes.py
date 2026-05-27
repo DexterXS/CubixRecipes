@@ -59,10 +59,10 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
 def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     icon_path = tmp_path / 'icon.png'
     _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
-    archive_path = tmp_path / 'mods.zip'
+    archive_path = tmp_path / 'examplemod_x32.zip'
     with ZipFile(archive_path, 'w') as archive:
-        archive.write(icon_path, 'examplemod_x32.png')
-        archive.write(icon_path, 'examplemod_x256.png')
+        archive.write(icon_path, 'examplemod_x32/First icon.png')
+        archive.write(icon_path, 'examplemod_x32/Second icon.png')
 
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
     upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
@@ -75,14 +75,17 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
         async def body(self):
             return archive_path.read_bytes()
 
-    uploaded = asyncio.run(upload_route(BodyRequest(), filename='mods.zip', replace=False))
+    uploaded = asyncio.run(upload_route(BodyRequest(), filename='examplemod_x32.zip', replace=False))
     generated = generate_route()
     first_atlas = generated['manifest']['atlases'][0]
     atlas_response = atlas_route(first_atlas['file'])
 
-    assert uploaded['archive']['name'] == 'mods.zip'
-    assert generated['manifest']['entries']['x32']['examplemod']['w'] == 32
-    assert generated['manifest']['entries']['x256']['examplemod']['w'] == 256
+    assert uploaded['archive']['name'] == 'examplemod_x32.zip'
+    assert generated['manifest']['totalMods'] == 1
+    assert generated['manifest']['totalIcons'] == 2
+    assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-examplemod-x32-1.png'
+    assert generated['manifest']['entries']['x32']['examplemod/First icon']['w'] == 32
+    assert generated['manifest']['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
     assert atlas_response.media_type == 'image/png'
     assert atlas_response.body.startswith(b'\x89PNG')
 
@@ -90,9 +93,9 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
 def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):
     icon_path = tmp_path / 'icon.png'
     _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
-    archive_path = tmp_path / 'mods.zip'
+    archive_path = tmp_path / 'examplemod_x32.zip'
     with ZipFile(archive_path, 'w') as archive:
-        archive.write(icon_path, 'ExampleMod_x32.png')
+        archive.write(icon_path, 'otherfolder/icon.png')
 
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
     upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
@@ -104,7 +107,7 @@ def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):
             return archive_path.read_bytes()
 
     with pytest.raises(HTTPException) as exc_info:
-        asyncio.run(upload_route(BodyRequest(), filename='mods.zip', replace=False))
+        asyncio.run(upload_route(BodyRequest(), filename='examplemod_x32.zip', replace=False))
 
     assert exc_info.value.status_code == 400
     assert 'unsupported files' in exc_info.value.detail
@@ -125,6 +128,7 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
                 'matrix': [['<minecraft:coal>', None], [None, '<minecraft:stick>']],
                 'name': 'Torch Recipe',
                 'target_path': str(tmp_path / 'saved.zs'),
+                'binding_mode': 'soft',
             },
         )()
     )
@@ -134,6 +138,32 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
     assert response['recipe']['output']['raw'] == '<minecraft:torch>'
     assert response['recipe']['matrix'][0][0]['raw'] == '<minecraft:coal>'
     assert (tmp_path / 'saved.zs').read_text(encoding='utf-8').strip().startswith('recipes.addShaped("Torch Recipe"')
+
+
+def test_save_as_accepts_shapeless_recipe(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
+
+    response = save_as(
+        type(
+            'Request',
+            (),
+            {
+                'recipe_uid': 'new-recipe',
+                'recipe_type': 'ct_shapeless',
+                'output_raw': '<minecraft:torch>',
+                'matrix': [['<minecraft:coal>', '<minecraft:stick>'], [None, None]],
+                'name': None,
+                'target_path': str(tmp_path / 'shapeless.zs'),
+                'binding_mode': 'soft',
+            },
+        )()
+    )
+
+    saved_text = (tmp_path / 'shapeless.zs').read_text(encoding='utf-8').strip()
+    assert response['ok'] is True
+    assert response['recipe']['recipe_type'] == 'ct_shapeless'
+    assert saved_text == 'recipes.addShapeless(<minecraft:torch>, [<minecraft:coal>, <minecraft:stick>]);'
 
 
 def test_admin_zs_cloud_can_rename_delete_and_keep_root_backup(tmp_path: Path):
@@ -191,6 +221,7 @@ def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):
                 ],
                 'name': None,
                 'target_path': str(tmp_path / 'trimmed.zs'),
+                'binding_mode': 'soft',
             },
         )()
     )
@@ -218,6 +249,7 @@ def test_save_as_rejects_target_path_outside_allowed_roots(tmp_path: Path):
                     'matrix': [[None, '<minecraft:planks>']],
                     'name': None,
                     'target_path': str(outside_path),
+                    'binding_mode': 'soft',
                 },
             )()
         )
@@ -243,6 +275,7 @@ def test_update_existing_recipe_persists_changes(tmp_path: Path):
                 'output_raw': '<minecraft:torch>',
                 'matrix': [['<minecraft:redstone>']],
                 'name': None,
+                'binding_mode': 'soft',
             },
         )(),
     )
@@ -281,6 +314,7 @@ def test_update_recipe_returns_404_when_recipe_uid_is_missing(tmp_path: Path):
                     'output_raw': '<minecraft:torch>',
                     'matrix': [['<minecraft:redstone>']],
                     'name': None,
+                    'binding_mode': 'soft',
                 },
             )(),
         )

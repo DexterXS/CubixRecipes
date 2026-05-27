@@ -6,11 +6,12 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
-from app.domain.models import ItemRef, MetaMode, Recipe, RecipeCell, RecipeSource
+from app.domain.models import BindingMode, ItemRef, MetaMode, Recipe, RecipeCell, RecipeSource
 
 ITEM_RE = re.compile(r"^<([a-zA-Z0-9_\-.]+):([a-zA-Z0-9_\-/\.]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$")
 CALL_PREFIXES = (
     'recipes.addShaped',
+    'recipes.addShapeless',
     'mods.avaritia.ExtremeCrafting.addShaped',
 )
 
@@ -26,7 +27,7 @@ class ParseResult:
 class RecipeParser:
     def parse(self, text: str, source_kind: str = 'clipboard') -> ParseResult:
         stripped = self._normalize_input_text(text)
-        if self._looks_like_item_query(stripped) and '.addShaped' not in stripped:
+        if self._looks_like_item_query(stripped) and '.addShaped' not in stripped and '.addShapeless' not in stripped:
             return ParseResult(kind='item_query', item=self.parse_item_ref(stripped), diagnostics=[])
         if any(prefix in stripped for prefix in CALL_PREFIXES):
             recipe = self._parse_recipe(stripped, source_kind=source_kind)
@@ -55,14 +56,23 @@ class RecipeParser:
         except Exception as exc:
             return None, str(exc)
 
-    def normalize_editor_matrix(self, matrix: list[list[Optional[str]]], recipe_type: str) -> list[list[Optional[str]]]:
+    def normalize_editor_matrix(
+        self,
+        matrix: list[list[Optional[str]]],
+        recipe_type: str,
+        binding_mode: BindingMode | str = BindingMode.SOFT,
+    ) -> list[list[Optional[str]]]:
         normalized = [[self._normalize_cell_value(cell) for cell in row] for row in matrix]
+        normalized_binding = self._coerce_binding_mode(binding_mode)
         if recipe_type == 'avaritia_extreme_shaped':
             size = max(9, len(normalized), max((len(row) for row in normalized), default=0))
             normalized = [list(row[:size]) + [None] * max(0, size - len(row)) for row in normalized[:size]]
             while len(normalized) < size:
                 normalized.append([None] * size)
             return normalized
+
+        if recipe_type == 'ct_shapeless' or normalized_binding == BindingMode.STRICT:
+            return self._pad_matrix(normalized)
 
         trimmed = self._trim_empty_edges(normalized)
         if not trimmed:
@@ -79,8 +89,10 @@ class RecipeParser:
         name: Optional[str] = None,
         recipe_uid: str = 'new-recipe',
         source_path: Optional[str] = None,
+        binding_mode: BindingMode | str = BindingMode.SOFT,
     ) -> Recipe:
-        normalized = self.normalize_editor_matrix(matrix, recipe_type)
+        normalized_binding = self._coerce_binding_mode(binding_mode)
+        normalized = self.normalize_editor_matrix(matrix, recipe_type, normalized_binding)
         diagnostics: list[str] = []
         cells: list[list[RecipeCell]] = []
         for row_index, row in enumerate(normalized):
@@ -97,6 +109,7 @@ class RecipeParser:
         return Recipe(
             recipe_uid=recipe_uid,
             recipe_type=recipe_type,
+            binding_mode=normalized_binding,
             output=self._parse_output_item(output_raw),
             matrix=cells,
             grid_w=max((len(row) for row in normalized), default=0),
@@ -118,10 +131,15 @@ class RecipeParser:
 
     def _parse_recipe(self, text: str, source_kind: str) -> Recipe:
         func, args = self._split_call(text)
-        recipe_type = 'avaritia_extreme_shaped' if 'mods.avaritia.ExtremeCrafting.addShaped' in func else 'ct_shaped'
+        if 'mods.avaritia.ExtremeCrafting.addShaped' in func:
+            recipe_type = 'avaritia_extreme_shaped'
+        elif 'recipes.addShapeless' in func:
+            recipe_type = 'ct_shapeless'
+        else:
+            recipe_type = 'ct_shaped'
         parsed_args = self._split_top_level_args(args)
         if len(parsed_args) < 2:
-            raise ValueError('addShaped call must contain at least output and recipe body')
+            raise ValueError('Recipe call must contain at least output and recipe body')
 
         name = None
         start_index = 0
@@ -131,7 +149,10 @@ class RecipeParser:
 
         output_raw = parsed_args[start_index].strip()
         recipe_body = parsed_args[start_index + 1 :]
-        matrix, diagnostics = self._parse_recipe_body(recipe_body)
+        if recipe_type == 'ct_shapeless':
+            matrix, diagnostics = self._parse_shapeless_body(recipe_body)
+        else:
+            matrix, diagnostics = self._parse_recipe_body(recipe_body)
         recipe = self.build_recipe_from_matrix(
             recipe_type=recipe_type,
             output_raw=output_raw,
@@ -139,10 +160,28 @@ class RecipeParser:
             source_kind=source_kind,
             name=name,
             recipe_uid=hashlib.sha1(text.encode('utf-8')).hexdigest()[:12],
+            binding_mode=BindingMode.SOFT,
         )
         recipe.raw_text = text
         recipe.diagnostics.extend(diagnostics)
         return recipe
+
+    def _parse_shapeless_body(self, recipe_body: list[str]) -> tuple[list[list[Optional[str]]], list[str]]:
+        if not recipe_body:
+            raise ValueError('Recipe body is empty')
+        first = recipe_body[0].strip()
+        tokens = self._split_list_items(first) if first.startswith('[') else recipe_body
+        ingredients = [self._parse_mapping_value(token) for token in tokens]
+        if not ingredients:
+            return [[None, None], [None, None]], []
+        size = 2 if len(ingredients) <= 4 else 3
+        matrix: list[list[Optional[str]]] = []
+        for row_index in range(size):
+            row: list[Optional[str]] = []
+            for col_index in range(size):
+                row.append(ingredients[row_index * size + col_index] if row_index * size + col_index < len(ingredients) else None)
+            matrix.append(row)
+        return matrix, []
 
     def _parse_recipe_body(self, recipe_body: list[str]) -> tuple[list[list[Optional[str]]], list[str]]:
         if not recipe_body:
@@ -351,6 +390,21 @@ class RecipeParser:
         if not text or text == 'null':
             return None
         return text
+
+    def _coerce_binding_mode(self, binding_mode: BindingMode | str) -> BindingMode:
+        if isinstance(binding_mode, BindingMode):
+            return binding_mode
+        try:
+            return BindingMode(str(binding_mode))
+        except ValueError:
+            return BindingMode.SOFT
+
+    def _pad_matrix(self, matrix: list[list[Optional[str]]]) -> list[list[Optional[str]]]:
+        if not matrix:
+            return [[None]]
+        width = max(1, max((len(row) for row in matrix), default=1))
+        padded = [list(row) + [None] * max(0, width - len(row)) for row in matrix]
+        return padded or [[None]]
 
     def _trim_empty_edges(self, matrix: list[list[Optional[str]]]) -> list[list[Optional[str]]]:
         if not matrix:

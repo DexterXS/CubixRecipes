@@ -42,6 +42,9 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 type WorkspaceTab = 'editor' | 'recipe' | 'modIcons' | 'cloud' | 'debug';
+type RecipeType = 'ct_shaped' | 'ct_shapeless' | 'avaritia_extreme_shaped';
+type RecipeCraftMode = 'shaped' | 'shapeless';
+type RecipeBindingMode = 'soft' | 'strict';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -60,6 +63,7 @@ const defaultUiPreferences: UiPreferences = {
 const defaultRecipe: RecipeView = {
   recipe_uid: 'new-recipe',
   recipe_type: 'ct_shaped',
+  binding_mode: 'soft',
   name: null,
   output: { raw: '<minecraft:stone>' },
   output_resolution: null,
@@ -330,6 +334,71 @@ function maxGridWidth(matrix: CellValue[][]): number {
   return Math.max(0, ...matrix.map((row) => row.length));
 }
 
+function normalizeGridSize(size: number): 2 | 3 | 9 {
+  if (size >= 9) return 9;
+  return size <= 2 ? 2 : 3;
+}
+
+function resizeMatrix(matrix: CellValue[][], size: number): CellValue[][] {
+  return Array.from({ length: size }, (_, rowIndex) => (
+    Array.from({ length: size }, (_, colIndex) => matrix[rowIndex]?.[colIndex] ?? null)
+  ));
+}
+
+function rowIsEmpty(row: CellValue[]): boolean {
+  return row.every((cell) => !cell || cell === 'null');
+}
+
+function columnIsEmpty(matrix: CellValue[][], index: number): boolean {
+  return matrix.every((row) => index >= row.length || !row[index] || row[index] === 'null');
+}
+
+function trimMatrixEdges(matrix: CellValue[][]): CellValue[][] {
+  if (!matrix.length) return [[null]];
+  let top = 0;
+  let bottom = matrix.length;
+  while (top < bottom && rowIsEmpty(matrix[top])) top += 1;
+  while (bottom > top && rowIsEmpty(matrix[bottom - 1])) bottom -= 1;
+  const cropped = matrix.slice(top, bottom).map((row) => [...row]);
+  if (!cropped.length) return [[null]];
+  let left = 0;
+  let right = maxGridWidth(cropped);
+  while (left < right && columnIsEmpty(cropped, left)) left += 1;
+  while (right > left && columnIsEmpty(cropped, right - 1)) right -= 1;
+  const trimmed = cropped.map((row) => row.slice(left, right));
+  const width = Math.max(1, maxGridWidth(trimmed));
+  return trimmed.map((row) => [...row, ...Array.from({ length: Math.max(0, width - row.length) }, () => null)]);
+}
+
+function matrixForRecipeSource(matrix: CellValue[][], recipeType: string, bindingMode: RecipeBindingMode): CellValue[][] {
+  if (recipeType === 'avaritia_extreme_shaped' || bindingMode === 'strict' || recipeType === 'ct_shapeless') {
+    const width = Math.max(1, maxGridWidth(matrix));
+    return matrix.length
+      ? matrix.map((row) => [...row, ...Array.from({ length: Math.max(0, width - row.length) }, () => null)])
+      : [[null]];
+  }
+  return trimMatrixEdges(matrix);
+}
+
+function recipeTypeFromCraftMode(mode: RecipeCraftMode, gridSize: number): RecipeType {
+  if (gridSize >= 9) return 'avaritia_extreme_shaped';
+  return mode === 'shapeless' ? 'ct_shapeless' : 'ct_shaped';
+}
+
+function craftModeFromRecipeType(recipeType: string): RecipeCraftMode {
+  return recipeType === 'ct_shapeless' ? 'shapeless' : 'shaped';
+}
+
+function buildStructuredItemRaw(modidDraft: string, itemDraft: string, metaDraft: string, nbtRoot: NbtCompoundNode): string {
+  const modid = modidDraft.trim().toLowerCase();
+  const item = itemDraft.trim().toLowerCase();
+  if (!modid || !item) return '';
+  const parsedMeta = Number.parseInt(metaDraft.trim() || '0', 10);
+  const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
+  const nbtRaw = buildNbtRawFromRoot(nbtRoot);
+  return buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw);
+}
+
 function stableHash(value: string): string {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1) {
@@ -474,7 +543,7 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
     matrix: value.matrix,
     recipe: value.recipe,
     outputRaw: typeof value.outputRaw === 'string' ? value.outputRaw : value.recipe.output.raw,
-    strictBinding: value.strictBinding !== false,
+    strictBinding: value.strictBinding === true && value.recipe.binding_mode === 'strict',
     metaMode: typeof value.metaMode === 'string' ? value.metaMode : 'strict',
     workspaceTab,
     itemSearchQuery: typeof value.itemSearchQuery === 'string' ? value.itemSearchQuery : '',
@@ -601,7 +670,7 @@ function collectRecipeIngredientRaws(block: string): string[] {
 
 function collectRecipeBlocks(source: string): string[] {
   const blocks: string[] = [];
-  const blockPattern = /(?:recipes\.addShaped|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
+  const blockPattern = /(?:recipes\.addShaped|recipes\.addShapeless|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
   let match: RegExpExecArray | null;
   while ((match = blockPattern.exec(source)) !== null) {
     blocks.push(match[0]);
@@ -952,7 +1021,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [input, setInput] = useState(restoredDraft?.input ?? '');
   const [matrix, setMatrix] = useState<CellValue[][]>(() => restoredDraft ? cloneMatrix(restoredDraft.matrix) : cloneMatrix(defaultMatrix));
   const [status, setStatus] = useState('Готово');
-  const [strictBinding, setStrictBinding] = useState(restoredDraft?.strictBinding ?? true);
+  const [strictBinding, setStrictBinding] = useState(restoredDraft?.strictBinding ?? defaultRecipe.binding_mode === 'strict');
   const [metaMode, setMetaMode] = useState(restoredDraft?.metaMode ?? 'strict');
   const [recipe, setRecipe] = useState<RecipeView>(restoredDraft?.recipe ?? defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(restoredDraft?.outputRaw ?? defaultRecipe.output.raw);
@@ -961,6 +1030,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>(restoredDraft?.craftEditorTarget ?? { kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState(restoredDraft?.craftSourceDraft ?? '');
+  const [craftSourceMode, setCraftSourceMode] = useState<'structured' | 'raw'>('structured');
   const [itemModDraft, setItemModDraft] = useState(restoredDraft?.itemModDraft ?? 'minecraft');
   const [itemNameDraft, setItemNameDraft] = useState(restoredDraft?.itemNameDraft ?? 'stone');
   const [itemMetaDraft, setItemMetaDraft] = useState(restoredDraft?.itemMetaDraft ?? '0');
@@ -993,6 +1063,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [hoveredItemRaw, setHoveredItemRaw] = useState<string | null>(null);
   const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>(restoredDraft?.uploadedDrafts ?? []);
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(restoredDraft?.selectedDraftId ?? null);
+  const [selectedUploadedDraftIds, setSelectedUploadedDraftIds] = useState<Record<string, boolean>>({});
   const [recipeDraftTemplates, setRecipeDraftTemplates] = useState<RecipeDraftTemplate[]>(() => loadRecipeDraftTemplates(authUser.email));
   const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
@@ -1486,6 +1557,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [hoveredItemRaw, heldItemRaw]);
 
   const summary = useMemo(() => `${matrix.length}x${matrix[0]?.length ?? 0}`, [matrix]);
+  const recipeCraftMode = craftModeFromRecipeType(recipe.recipe_type);
+  const recipeBindingMode: RecipeBindingMode = strictBinding ? 'strict' : 'soft';
+  const structuredCraftRaw = useMemo(
+    () => buildStructuredItemRaw(itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft),
+    [itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft]
+  );
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
   const nullCells = useMemo(() => matrix.flat().filter((cell) => !cell || cell === 'null').length, [matrix]);
@@ -1513,6 +1590,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       };
     }));
   }, [matrix, recipe.matrix, itemSearchIcons, itemPanelTranslations, customItems]);
+
+  useEffect(() => {
+    if (!isCraftEditorOpen || craftSourceMode !== 'structured') {
+      return;
+    }
+    setCraftSourceDraft(structuredCraftRaw);
+  }, [isCraftEditorOpen, craftSourceMode, structuredCraftRaw]);
 
   function patchModalScale(key: ModalScaleKey, nextScale: number) {
     setModalScales((current) => ({ ...current, [key]: clamp(nextScale, 0.8, 1.5) }));
@@ -1861,6 +1945,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setRecipe(nextRecipe);
     setOutputRaw(nextRecipe.output.raw);
     setMatrix(toCellMatrix(nextRecipe));
+    setStrictBinding(nextRecipe.binding_mode === 'strict');
     setSaveStatus(nextRecipe.source.kind === 'generated' ? t('values.draft') : t('values.synchronized'));
     if (nextInput !== undefined) {
       setInput(nextInput);
@@ -2395,19 +2480,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setCollapsedNbtPaths({});
     const nextRaw = buildItemRawValue(entry.key, entry.meta);
     setCraftSourceDraft(nextRaw);
+    setCraftSourceMode('structured');
     setItemSearchQuery(`${entry.key}:${entry.meta}`);
-  }
-
-  function applyRawFromStructuredEditor() {
-    const modid = itemModDraft.trim().toLowerCase();
-    const item = itemNameDraft.trim().toLowerCase();
-    if (!modid || !item) {
-      return;
-    }
-    const parsedMeta = Number.parseInt(itemMetaDraft.trim() || '0', 10);
-    const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
-    const nbtRaw = buildNbtRawFromRoot(nbtRootDraft);
-    setCraftSourceDraft(buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw));
   }
 
   function setNbtPathCollapsed(path: string, collapsed: boolean) {
@@ -2445,11 +2519,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return (
         <div className="nbt-node-block">
           <div className="inline-actions">
-            <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+            <button type="button" className="ghost-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
             <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
               {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
             </select>
-            <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-child-${path}`} title="Добавить поле" onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>+</button>
+            <button type="button" className="ghost-button" aria-label={`add-nbt-child-${path}`} onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>Добавить поле</button>
           </div>
           {!isCollapsed ? (
             <div className="nbt-children">
@@ -2460,7 +2534,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     ...node,
                     entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
                   }))}
-                  <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-child-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>🗑️</button>
+                  <button type="button" className="ghost-button" aria-label={`delete-nbt-child-${path}-${index}`} onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>Удалить</button>
                 </div>
               ))}
             </div>
@@ -2471,11 +2545,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div className="nbt-node-block">
         <div className="inline-actions">
-          <button type="button" className="ghost-button icon-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? '▶' : '▼'}</button>
+          <button type="button" className="ghost-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
           <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
             {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
-          <button type="button" className="ghost-button icon-button" aria-label={`add-nbt-item-${path}`} title="Добавить элемент" onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>+</button>
+          <button type="button" className="ghost-button" aria-label={`add-nbt-item-${path}`} onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>Добавить элемент</button>
         </div>
         {!isCollapsed ? (
           <div className="nbt-children">
@@ -2486,7 +2560,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   ...node,
                   items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
                 }))}
-                <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-item-${path}-${index}`} title="Удалить" onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>🗑️</button>
+                <button type="button" className="ghost-button" aria-label={`delete-nbt-item-${path}-${index}`} onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
               </div>
             ))}
           </div>
@@ -2499,12 +2573,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const isOpen = activeScaleControl === key;
     return (
       <div className="modal-scale-wrap">
-        <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}`} title="Масштаб окна" onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>⚙️</button>
+        <button type="button" className="ghost-button modal-scale-button" aria-label={`modal-scale-${key}`} onClick={() => setActiveScaleControl((current) => current === key ? null : key)}>Масштаб</button>
         {isOpen ? (
           <div className="modal-scale-popover">
-            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>−</button>
+            <button type="button" className="ghost-button" aria-label={`modal-scale-${key}-down`} onClick={() => patchModalScale(key, modalScales[key] - 0.1)}>Меньше</button>
             <input aria-label={`modal-scale-${key}-range`} type="range" min="0.8" max="1.5" step="0.1" value={modalScales[key]} onChange={(event) => patchModalScale(key, Number(event.target.value))} />
-            <button type="button" className="ghost-button icon-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>+</button>
+            <button type="button" className="ghost-button" aria-label={`modal-scale-${key}-up`} onClick={() => patchModalScale(key, modalScales[key] + 0.1)}>Больше</button>
             <span>{Math.round(modalScales[key] * 100)}%</span>
           </div>
         ) : null}
@@ -2536,17 +2610,51 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function setGridSize(size: number) {
-    const nextSize = Number(size) >= 9 ? 9 : 3;
-    const nextMatrix = Array.from({ length: nextSize }, (_, rowIndex) => (
-      Array.from({ length: nextSize }, (_, colIndex) => matrix[rowIndex]?.[colIndex] ?? null)
-    ));
+    const nextSize = normalizeGridSize(Number(size));
+    const nextMatrix = resizeMatrix(matrix, nextSize);
+    const nextRecipeType = recipeTypeFromCraftMode(recipeCraftMode, nextSize);
+    const nextBindingMode = nextRecipeType === 'ct_shapeless' ? 'soft' : recipeBindingMode;
     setMatrix(nextMatrix);
+    if (nextRecipeType === 'ct_shapeless') {
+      setStrictBinding(false);
+    }
     setRecipe((current) => ({
       ...current,
-      recipe_type: nextSize >= 9 ? 'avaritia_extreme_shaped' : 'ct_shaped',
+      recipe_type: nextRecipeType,
+      binding_mode: nextBindingMode,
       grid_w: nextSize,
       grid_h: nextSize,
       matrix: nextMatrix.map((row) => row.map((raw) => ({ raw })))
+    }));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function setRecipeCraftMode(mode: RecipeCraftMode) {
+    const currentSize = normalizeGridSize(matrix.length);
+    const nextSize = mode === 'shapeless' && currentSize === 9 ? 3 : currentSize;
+    const nextRecipeType = recipeTypeFromCraftMode(mode, nextSize);
+    const nextMatrix = nextSize === matrix.length ? matrix : resizeMatrix(matrix, nextSize);
+    const nextBindingMode = nextRecipeType === 'ct_shapeless' ? 'soft' : recipeBindingMode;
+    setMatrix(nextMatrix);
+    if (nextRecipeType === 'ct_shapeless') {
+      setStrictBinding(false);
+    }
+    setRecipe((current) => ({
+      ...current,
+      recipe_type: nextRecipeType,
+      binding_mode: nextBindingMode,
+      grid_w: nextSize,
+      grid_h: nextSize,
+      matrix: nextMatrix.map((row) => row.map((raw) => ({ raw })))
+    }));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function setRecipeBindingMode(nextBindingMode: RecipeBindingMode) {
+    setStrictBinding(nextBindingMode === 'strict');
+    setRecipe((current) => ({
+      ...current,
+      binding_mode: nextBindingMode
     }));
     setSaveStatus(t('values.unsavedChanges'));
   }
@@ -2890,7 +2998,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function isParseableInput(value: string) {
     const trimmed = value.trim();
-    return trimmed.includes('.addShaped') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
+    return trimmed.includes('.addShaped') || trimmed.includes('.addShapeless') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
   }
 
   function handleInputChange(event: ChangeEvent<HTMLTextAreaElement>) {
@@ -2940,10 +3048,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function buildRecipeSource(): string {
+    if (recipe.recipe_type === 'ct_shapeless') {
+      const ingredients = matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null'));
+      return `recipes.addShapeless(${outputRaw.trim()}, [${ingredients.join(', ')}]);\n`;
+    }
     const call = recipe.recipe_type === 'avaritia_extreme_shaped'
       ? 'mods.avaritia.ExtremeCrafting.addShaped'
       : 'recipes.addShaped';
-    const rows = matrix
+    const sourceMatrix = matrixForRecipeSource(matrix, recipe.recipe_type, recipeBindingMode);
+    const rows = sourceMatrix
       .map((row) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]`)
       .join(',\n');
     return `${call}(${outputRaw.trim()}, [\n${rows}\n]);\n`;
@@ -2987,11 +3100,43 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus('Рецепт скачан.');
   }
 
-  function downloadSelectedDraft() {
-    const selected = uploadedDrafts.find((draft) => draft.id === selectedDraftId);
-    if (!selected) return;
-    downloadTextFile(selected.name, selected.text);
-    setStatus(`Черновик скачан: ${selected.name}`);
+  function setUploadedDraftSelection(draftId: string, selected: boolean) {
+    setSelectedUploadedDraftIds((current) => {
+      if (selected) {
+        return { ...current, [draftId]: true };
+      }
+      if (!current[draftId]) return current;
+      const next = { ...current };
+      delete next[draftId];
+      return next;
+    });
+  }
+
+  function setAllUploadedDraftsSelected(selected: boolean) {
+    if (!selected) {
+      setSelectedUploadedDraftIds({});
+      return;
+    }
+    setSelectedUploadedDraftIds(Object.fromEntries(uploadedDrafts.map((draft) => [draft.id, true])));
+  }
+
+  function downloadUploadedDrafts(drafts: UploadedDraft[]) {
+    if (!drafts.length) return;
+    drafts.forEach((draft) => downloadTextFile(draft.name, draft.text));
+    setStatus(`Скачано файлов: ${drafts.length}`);
+  }
+
+  function deleteUploadedDrafts(drafts: UploadedDraft[]) {
+    if (!drafts.length) return;
+    const draftIds = new Set(drafts.map((draft) => draft.id));
+    setUploadedDrafts((current) => current.filter((draft) => !draftIds.has(draft.id)));
+    setSelectedUploadedDraftIds((current) => {
+      const next = { ...current };
+      draftIds.forEach((draftId) => delete next[draftId]);
+      return next;
+    });
+    setSelectedDraftId((current) => current && draftIds.has(current) ? null : current);
+    setStatus(`Удалено файлов: ${drafts.length}`);
   }
 
   async function importRecipeFiles(files: FileList | File[]) {
@@ -3071,6 +3216,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setNbtRootDraft(parsed.nbtRoot);
     setCollapsedNbtPaths({});
     setCraftSourceDraft(raw);
+    setCraftSourceMode('structured');
     setItemSearchQuery('');
     setIsCraftEditorOpen(true);
   }
@@ -3079,6 +3225,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       const pasted = await navigator.clipboard.readText();
       setCraftSourceDraft(pasted);
+      setCraftSourceMode('raw');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Clipboard unavailable';
       setStatus(message);
@@ -3123,7 +3270,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus('Сохраняем...');
     setSaveStatus(t('values.pending'));
     try {
-      const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name });
+      const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, bindingMode: recipeBindingMode });
       applyRecipe(updated.updatedRecipe, input);
       setStatus(t('status.saved'));
       setSaveStatus(t('values.saved'));
@@ -3147,11 +3294,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setSaveStatus(t('values.pending'));
     try {
       if (recipe.recipe_uid === 'new-recipe') {
-        const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: matrix.length });
-        const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath });
+        const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: matrix.length, bindingMode: recipeBindingMode });
+        const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath, bindingMode: recipeBindingMode });
         applyRecipe(response.recipe, input);
       } else {
-        const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath });
+        const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath, bindingMode: recipeBindingMode });
         applyRecipe(response.recipe, input);
       }
       setStatus(`${t('status.saved')} → ${targetPath}`);
@@ -3180,6 +3327,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const draftRecipe: RecipeView = {
       ...recipe,
       recipe_uid: `local-draft-${stableHash(`${authUser.email}:${sourceText}:${now}`)}`,
+      binding_mode: recipeBindingMode,
       output: { raw: validOutput },
       source: { kind: 'local_draft', path: `draft:${validOutput}` },
       matrix: matrixWithResolution,
@@ -3297,7 +3445,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <label className="field-block">
               <span>Размер сетки</span>
               <select aria-label="recipe-grid-size" value={gridSize} onChange={(event) => setGridSize(Number(event.target.value))}>
-                {[3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}
+                {[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}
+              </select>
+            </label>
+            <label className="field-block">
+              <span>Тип рецепта</span>
+              <select aria-label="recipe-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}>
+                <option value="shaped">Форменный</option>
+                <option value="shapeless" disabled={gridSize === 9}>Бесформенный</option>
+              </select>
+            </label>
+            <label className="field-block">
+              <span>Позиция</span>
+              <select aria-label="recipe-binding-mode" value={recipeBindingMode} disabled={recipe.recipe_type === 'ct_shapeless'} onChange={(event) => setRecipeBindingMode(event.target.value as RecipeBindingMode)}>
+                <option value="soft">Свободная</option>
+                <option value="strict">Точная</option>
               </select>
             </label>
             <label className="field-block recipe-output-drop">
@@ -3747,9 +3909,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <span>Эти поля попадут в `.withTag(...)` у созданного предмета.</span>
               </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-field" title="Добавить NBT поле" onClick={() => addCustomNbtRootEntry('int')}>+</button>
-                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-object" title="Добавить NBT объект" onClick={() => addCustomNbtRootEntry('compound')}>◫</button>
-                <button type="button" className="ghost-button icon-button" aria-label="custom-add-nbt-list" title="Добавить NBT список" onClick={() => addCustomNbtRootEntry('list')}>☰</button>
+                <button type="button" className="ghost-button" aria-label="custom-add-nbt-field" onClick={() => addCustomNbtRootEntry('int')}>Добавить поле</button>
+                <button type="button" className="ghost-button" aria-label="custom-add-nbt-object" onClick={() => addCustomNbtRootEntry('compound')}>Добавить объект</button>
+                <button type="button" className="ghost-button" aria-label="custom-add-nbt-list" onClick={() => addCustomNbtRootEntry('list')}>Добавить список</button>
               </div>
               {customItemNbtRoot.entries.length ? (
                 <div className="suggestions-list nbt-editor-list" aria-label="custom-nbt-editor-list">
@@ -3758,7 +3920,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                       <div className="nbt-entry-line">
                         <input aria-label={`custom-nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateCustomNbtRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
                         {renderNbtNodeEditor(entry.value, `custom.${index}`, (nextNode) => updateCustomNbtRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button icon-button" aria-label={`delete-custom-nbt-root-${index}`} title="Удалить" onClick={() => setCustomItemNbtRoot((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                        <button type="button" className="ghost-button" aria-label={`delete-custom-nbt-root-${index}`} onClick={() => setCustomItemNbtRoot((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
                       </div>
                     </div>
                   ))}
@@ -3785,7 +3947,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       <div className="workspace-layout workspace-layout-admin">
         <div className="workspace-column workspace-left">
           <div className="workspace-panel-shell panel-admin-mod-icons">
-            <Panel title="Иконки модов" subtitle="ZIP архивы с файлами modid_x32.png и modid_x256.png">
+            <Panel title="Иконки модов" subtitle="ZIP архивы формата modid_x32.zip или modid_x256.zip с PNG внутри">
               <label
                 className="file-drop-zone"
                 onDragOver={(event) => event.preventDefault()}
@@ -3805,7 +3967,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   }}
                 />
                 <strong>Загрузить ZIP архив иконок</strong>
-                <span>Принимаются только PNG: modid_x32.png и modid_x256.png</span>
+                <span>Например: energyadditions_x32.zip с папкой energyadditions_x32/ и PNG-файлами внутри</span>
               </label>
               <div className="file-actions">
                 <button type="button" disabled={modIconUploading} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
@@ -3832,6 +3994,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title="Атласы" subtitle="4096x4096 максимум, дополнительные страницы создаются автоматически">
               <div className="kv-grid">
                 <div><span>Модов</span><strong>{manifest?.totalMods ?? 0}</strong></div>
+                <div><span>Иконок</span><strong>{manifest?.totalIcons ?? atlasEntries.length}</strong></div>
                 <div><span>Атласов</span><strong>{manifest?.atlases.length ?? 0}</strong></div>
                 <div><span>Fallback</span><strong>itempanel atlas</strong></div>
               </div>
@@ -3844,15 +4007,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   const previewScale = 40 / entry.w;
                   return (
                     <span
-                      key={`${entry.size}-${entry.modid}`}
+                      key={`${entry.size}-${entry.key ?? entry.modid}-${entry.x}-${entry.y}`}
                       className="mod-icon-preview"
-                      title={`${entry.modid} x${entry.size}`}
+                      title={`${entry.modid}: ${entry.iconName ?? entry.modid} x${entry.size}`}
                       style={{
                         backgroundImage: `url(${normalizeAtlasImageUrl(entry.image_url)})`,
                         backgroundPosition: `-${entry.x * previewScale}px -${entry.y * previewScale}px`,
                         backgroundSize: `${(atlas?.columns ?? 1) * entry.w * previewScale}px ${(atlas?.rows ?? 1) * entry.h * previewScale}px`
                       }}
-                      aria-label={`mod-icon-${entry.modid}-x${entry.size}`}
+                      aria-label={`mod-icon-${entry.key ?? entry.modid}-x${entry.size}`}
                     />
                   );
                 })}
@@ -3938,7 +4101,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderRecipeFilesPanel() {
-    const selectedDraft = uploadedDrafts.find((draft) => draft.id === selectedDraftId);
+    const selectedUploadedDrafts = uploadedDrafts.filter((draft) => selectedUploadedDraftIds[draft.id]);
+    const selectedUploadedDraftCount = selectedUploadedDrafts.length;
+    const allUploadedDraftsSelected = uploadedDrafts.length > 0 && selectedUploadedDraftCount === uploadedDrafts.length;
     return (
       <div className="workspace-panel-shell panel-recipe-files">
         <Panel title="Файлы рецептов" subtitle="Загрузка, редактирование и скачивание">
@@ -3966,28 +4131,61 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           </label>
           {uploadedDrafts.length ? (
             <div className="uploaded-drafts-list" aria-label="uploaded-drafts">
+              <div className="uploaded-draft-toolbar">
+                <label className="uploaded-draft-select-all">
+                  <input
+                    type="checkbox"
+                    checked={allUploadedDraftsSelected}
+                    onChange={(event) => setAllUploadedDraftsSelected(event.target.checked)}
+                  />
+                  <span>Все файлы</span>
+                </label>
+                <span>{selectedUploadedDraftCount ? `Выбрано: ${selectedUploadedDraftCount}` : `${uploadedDrafts.length} файлов`}</span>
+              </div>
               {uploadedDrafts.map((draft) => (
-                <button
+                <div
                   key={draft.id}
-                  type="button"
+                  role="button"
+                  tabIndex={0}
                   className={`uploaded-draft-row ${selectedDraftId === draft.id ? 'active' : ''}`.trim()}
+                  aria-label={`Открыть ${draft.name}`}
                   onClick={() => {
                     setSelectedDraftId(draft.id);
                     void handleParse(draft.text);
                   }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setSelectedDraftId(draft.id);
+                      void handleParse(draft.text);
+                    }
+                  }}
                 >
+                  <input
+                    type="checkbox"
+                    aria-label={`Выбрать ${draft.name}`}
+                    checked={Boolean(selectedUploadedDraftIds[draft.id])}
+                    onClick={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => event.stopPropagation()}
+                    onChange={(event) => setUploadedDraftSelection(draft.id, event.target.checked)}
+                  />
                   <span>{draft.name}</span>
                   <small>{Math.max(1, Math.round(draft.size / 1024))} KB</small>
-                </button>
+                </div>
               ))}
             </div>
           ) : null}
           <div className="file-actions">
             <button type="button" className="secondary-button" onClick={downloadCurrentRecipe}>Скачать текущий</button>
-            <button type="button" disabled={!canEditRecipes && !canCreateTemplates} onClick={() => void handleSaveAs()}>Выгрузить в хранилище</button>
-            <button type="button" className="secondary-button" disabled={!selectedDraft} onClick={downloadSelectedDraft}>Скачать выделенное</button>
-            <button type="button" className="ghost-button" disabled={!uploadedDrafts.length} onClick={() => { setUploadedDrafts([]); setSelectedDraftId(null); }}>Очистить все</button>
+            <button type="button" disabled={!canEditRecipes && !canCreateTemplates} onClick={() => void handleSaveAs()}>Выгрузить в Облако</button>
           </div>
+          {selectedUploadedDraftCount ? (
+            <div className="uploaded-draft-selection-actions">
+              <button type="button" className="secondary-button" onClick={() => downloadUploadedDrafts(selectedUploadedDrafts)}>Скачать выбранные</button>
+              <button type="button" className="ghost-button" onClick={() => deleteUploadedDrafts(selectedUploadedDrafts)}>Удалить выбранные</button>
+              <button type="button" className="ghost-button" onClick={() => setSelectedUploadedDraftIds({})}>Снять выбор</button>
+            </div>
+          ) : null}
         </Panel>
       </div>
     );
@@ -4368,13 +4566,27 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return (
           <div key={panelId} className={`workspace-panel-shell panel-${panelId}`}>
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={t('fields.visiblePanels')} {...common}>
-              <div className="settings-grid">
-                <label className="field-block"><span>{t('fields.strictBinding')}</span><input type="checkbox" checked={strictBinding} onChange={() => setStrictBinding((value) => !value)} /></label>
-                <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
-                <label className="field-block"><span>{t('fields.displayMode')}</span><select value={uiPreferences.display_mode} onChange={(event) => patchUiPreferences({ display_mode: event.target.value as DisplayMode })}><option value="text">text</option><option value="icons">icons</option></select></label>
-                <label className="field-block"><span>{t('fields.animations')}</span><input type="checkbox" checked={uiPreferences.animations_enabled} onChange={(event) => patchUiPreferences({ animations_enabled: event.target.checked })} /></label>
-                <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
-                <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
+              <div className="recipe-settings-modern">
+                <div className="settings-section-title compact">
+                  <h3>Крафт</h3>
+                  <span>{recipe.recipe_type}</span>
+                </div>
+                <div className="settings-grid">
+                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={gridSize} onChange={(event) => setGridSize(Number(event.target.value))}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
+                  <label className="field-block"><span>Тип</span><select aria-label="settings-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}><option value="shaped">Форменный</option><option value="shapeless" disabled={gridSize === 9}>Бесформенный</option></select></label>
+                  <label className="field-block"><span>Позиция</span><select aria-label="settings-binding-mode" value={recipeBindingMode} disabled={recipe.recipe_type === 'ct_shapeless'} onChange={(event) => setRecipeBindingMode(event.target.value as RecipeBindingMode)}><option value="soft">Свободная</option><option value="strict">Точная</option></select></label>
+                  <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
+                </div>
+                <div className="settings-section-title compact">
+                  <h3>Вид</h3>
+                  <span>{uiPreferences.editor_mode}</span>
+                </div>
+                <div className="settings-grid">
+                  <label className="field-block"><span>{t('fields.displayMode')}</span><select value={uiPreferences.display_mode} onChange={(event) => patchUiPreferences({ display_mode: event.target.value as DisplayMode })}><option value="text">text</option><option value="icons">icons</option></select></label>
+                  <label className="field-block switch-field"><span>{t('fields.animations')}</span><input type="checkbox" checked={uiPreferences.animations_enabled} onChange={(event) => patchUiPreferences({ animations_enabled: event.target.checked })} /></label>
+                  <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
+                  <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
+                </div>
               </div>
             </Panel>
           </div>
@@ -4509,7 +4721,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
       {isCraftEditorOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>
-          <div className="modal modal-scalable" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
+          <div className="modal modal-scalable craft-editor-modal" style={getModalScaleStyle('craft')} role="dialog" aria-modal="true" aria-label="Craft editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
               <h2>{craftEditorTarget.kind === 'output' ? 'Редактирование output' : `Редактирование ячейки ${craftEditorTarget.row + 1},${craftEditorTarget.col + 1}`}</h2>
               <div className="inline-actions">
@@ -4522,7 +4734,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <span>Поиск предмета (ID, ID:meta, mod:item, mod:item:meta, RU/EN)</span>
                 <div className="inline-actions">
                   <input aria-label="item-search" type="text" value={itemSearchQuery} onChange={(event) => setItemSearchQuery(event.target.value)} placeholder="например: draconicrevolt:der_awakeneddemonicblock или 482:1" />
-                  <button type="button" className="ghost-button icon-button" aria-label="clear-item-search" title="Очистить поиск" onClick={() => setItemSearchQuery('')}>🧹</button>
+                  <button type="button" className="ghost-button" aria-label="clear-item-search" onClick={() => setItemSearchQuery('')}>Очистить</button>
                 </div>
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
@@ -4549,7 +4761,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </label>
               <label className="field-block">
                 <span>Raw предмета (формат parser: {'<modid:item[:meta]>'})</span>
-                <textarea aria-label="craft-source-modal" value={craftSourceDraft} onChange={(event) => setCraftSourceDraft(event.target.value)} rows={8} />
+                <textarea
+                  aria-label="craft-source-modal"
+                  value={craftSourceDraft}
+                  onChange={(event) => {
+                    setCraftSourceMode('raw');
+                    setCraftSourceDraft(event.target.value);
+                  }}
+                  rows={6}
+                />
               </label>
               <div className="field-block">
                 <span>Структурный редактор item</span>
@@ -4568,21 +4788,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   </label>
                 </div>
                 <div className="inline-actions">
-                  <button type="button" className="ghost-button icon-button" aria-label="open-nbt-editor" title="Открыть отдельное окно NBT" onClick={() => setIsNbtEditorOpen(true)}>🧬</button>
+                  <button type="button" className="secondary-button" aria-label="open-nbt-editor" onClick={() => setIsNbtEditorOpen(true)}>Открыть NBT</button>
                   <span>{nbtRootDraft.entries.length ? `NBT полей: ${nbtRootDraft.entries.length}` : 'NBT не задан'}</span>
-                  <button type="button" className="secondary-button" aria-label="build-raw-main" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+                  {craftSourceMode === 'raw' ? <button type="button" className="ghost-button" onClick={() => setCraftSourceMode('structured')}>Использовать поля</button> : null}
                 </div>
+                <div className="raw-preview-line"><span>Итоговый raw</span><strong>{structuredCraftRaw || '?'}</strong></div>
               </div>
               <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="clear-craft-source" title="Очистить" onClick={() => setCraftSourceDraft('')}>🧹</button>
-                <button type="button" className="secondary-button icon-button" aria-label="copy-craft-source" title="Скопировать" onClick={() => void handleCraftModalCopy()}>📋</button>
-                <button type="button" className="secondary-button icon-button" aria-label="paste-craft-source" title="Вставить" onClick={() => void handleCraftModalPaste()}>📥</button>
+                <button type="button" className="ghost-button" aria-label="clear-craft-source" onClick={() => { setCraftSourceMode('raw'); setCraftSourceDraft(''); }}>Очистить raw</button>
+                <button type="button" className="secondary-button" aria-label="copy-craft-source" onClick={() => void handleCraftModalCopy()}>Скопировать</button>
+                <button type="button" className="secondary-button" aria-label="paste-craft-source" onClick={() => void handleCraftModalPaste()}>Вставить</button>
                 <button
                   type="button"
                   onClick={() => {
-                    const trimmed = craftSourceDraft.trim();
-                    if (trimmed.includes('.addShaped')) {
-                      void handleParse(craftSourceDraft);
+                    const rawCandidate = craftSourceMode === 'structured' ? structuredCraftRaw : craftSourceDraft;
+                    const trimmed = rawCandidate.trim();
+                    if (trimmed.includes('.addShaped') || trimmed.includes('.addShapeless')) {
+                      void handleParse(trimmed);
                       return;
                     }
                     setCellRaw(craftEditorTarget, trimmed);
@@ -4602,18 +4824,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         <div className="modal-backdrop" role="presentation" onClick={() => setIsNbtEditorOpen(false)}>
           <div className="modal modal-scalable modal-nbt-tree" style={getModalScaleStyle('nbtTree')} role="dialog" aria-modal="true" aria-label="NBT tree editor" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <h2>NBT Tree</h2>
+              <h2>Дерево NBT</h2>
               <div className="inline-actions">
                 {renderModalScaleControl('nbtTree')}
                 <button type="button" onClick={() => setIsNbtEditorOpen(false)}>Закрыть</button>
               </div>
             </div>
             <div className="settings-modal-body">
-              <div className="inline-actions">
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-field" title="Добавить NBT поле" onClick={() => addRootEntry('int')}>+</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-object" title="Добавить NBT объект" onClick={() => addRootEntry('compound')}>◫</button>
-                <button type="button" className="ghost-button icon-button" aria-label="add-nbt-list" title="Добавить NBT список" onClick={() => addRootEntry('list')}>☰</button>
-                <button type="button" className="secondary-button" aria-label="build-raw-nbt" onClick={applyRawFromStructuredEditor}>Собрать raw из полей</button>
+              <div className="inline-actions nbt-toolbar">
+                <button type="button" className="secondary-button" aria-label="add-nbt-field" onClick={() => addRootEntry('int')}>Добавить поле</button>
+                <button type="button" className="secondary-button" aria-label="add-nbt-object" onClick={() => addRootEntry('compound')}>Добавить объект</button>
+                <button type="button" className="secondary-button" aria-label="add-nbt-list" onClick={() => addRootEntry('list')}>Добавить список</button>
               </div>
               {nbtRootDraft.entries.length ? (
                 <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
@@ -4622,7 +4843,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                       <div className="nbt-entry-line">
                         <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
                         {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button icon-button" aria-label={`delete-nbt-root-${index}`} title="Удалить" onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>🗑️</button>
+                        <button type="button" className="ghost-button" aria-label={`delete-nbt-root-${index}`} onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
                       </div>
                     </div>
                   ))}

@@ -22,18 +22,20 @@ class BatchSearchRequest(BaseModel):
 
 
 class CreateRecipeRequest(BaseModel):
-    templateType: Literal['ct_shaped', 'avaritia_extreme_shaped']
+    templateType: Literal['ct_shaped', 'ct_shapeless', 'avaritia_extreme_shaped']
     output: Optional[str] = None
     grid: int = Field(default=3, ge=1, le=9)
+    bindingMode: Literal['soft', 'strict'] = 'soft'
 
 
 class SaveAsRequest(BaseModel):
     recipe_uid: str
-    recipe_type: Literal['ct_shaped', 'avaritia_extreme_shaped']
+    recipe_type: Literal['ct_shaped', 'ct_shapeless', 'avaritia_extreme_shaped']
     output_raw: str
     matrix: list[list[Optional[str]]] = Field(min_length=1, max_length=9)
     name: Optional[str] = None
     target_path: str
+    binding_mode: Literal['soft', 'strict'] = 'soft'
 
     @field_validator('matrix')
     @classmethod
@@ -81,10 +83,11 @@ class RenameCloudFileRequest(BaseModel):
 
 
 class UpdateRecipeRequest(BaseModel):
-    recipe_type: Literal['ct_shaped', 'avaritia_extreme_shaped']
+    recipe_type: Literal['ct_shaped', 'ct_shapeless', 'avaritia_extreme_shaped']
     output_raw: str
     matrix: list[list[Optional[str]]] = Field(min_length=1, max_length=9)
     name: Optional[str] = None
+    binding_mode: Literal['soft', 'strict'] = 'soft'
 
     @field_validator('matrix')
     @classmethod

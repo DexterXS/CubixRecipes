@@ -19,6 +19,7 @@ interface CreateRecipePayload {
   templateType: string;
   output?: string;
   grid: number;
+  bindingMode?: 'soft' | 'strict';
 }
 
 interface UpdateRecipePayload {
@@ -27,6 +28,7 @@ interface UpdateRecipePayload {
   outputRaw: string;
   matrix: (string | null)[][];
   name?: string | null;
+  bindingMode?: 'soft' | 'strict';
 }
 
 interface SaveAsPayload extends UpdateRecipePayload {
@@ -157,7 +159,8 @@ export async function updateRecipe(payload: UpdateRecipePayload): Promise<{ ok: 
       recipe_type: payload.recipeType,
       output_raw: payload.outputRaw,
       matrix: payload.matrix,
-      name: payload.name ?? null
+      name: payload.name ?? null,
+      binding_mode: payload.bindingMode ?? 'soft'
     })
   });
 }
@@ -196,7 +199,8 @@ export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolea
       output_raw: payload.outputRaw,
       matrix: payload.matrix,
       name: payload.name ?? null,
-      target_path: payload.targetPath
+      target_path: payload.targetPath,
+      binding_mode: payload.bindingMode ?? 'soft'
     })
   });
 }

@@ -23,6 +23,7 @@ export interface ResolutionView {
 export interface RecipeView {
   recipe_uid: string;
   recipe_type: string;
+  binding_mode?: 'soft' | 'strict';
   name?: string | null;
   output: { raw: string };
   output_resolution?: ResolutionView | null;
@@ -139,7 +140,10 @@ export interface ModIconArchiveInfo {
 }
 
 export interface ModIconAtlasEntry {
+  key?: string;
   modid: string;
+  iconName?: string;
+  entryName?: string;
   size: number;
   page: number;
   atlasFile: string;
@@ -160,6 +164,7 @@ export interface ModIconAtlasManifest {
     page: number;
     image_url: string;
     file: string;
+    modid?: string;
     columns: number;
     rows: number;
     tileSize: number;
@@ -169,6 +174,7 @@ export interface ModIconAtlasManifest {
   duplicates: Array<Record<string, string>>;
   rejected: Array<Record<string, string>>;
   totalMods: number;
+  totalIcons?: number;
 }
 
 export interface ModIconAdminStatus {
