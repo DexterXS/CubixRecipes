@@ -430,6 +430,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=404, detail='Mod icon atlas is not available')
         return Response(content=content, media_type='image/png')
 
+    @router.get('/mod-icons/atlas')
+    def mod_icon_atlas_manifest():
+        return {'manifest': mod_icon_atlas_service.read_manifest()}
+
+    @router.get('/mod-icons/atlases/{filename}')
+    def mod_icon_atlas_png(filename: str):
+        content = mod_icon_atlas_service.read_atlas_png(filename)
+        if content is None:
+            raise HTTPException(status_code=404, detail='Mod icon atlas is not available')
+        return Response(content=content, media_type='image/png')
+
     @router.get('/admin/zs-cloud/files')
     def admin_list_zs_cloud_files():
         return {'files': storage.list_managed_zs_files()}

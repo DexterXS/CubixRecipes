@@ -93,7 +93,8 @@ beforeEach(() => {
       const csv = [
         'key,id,meta,has_nbt,display_ru,display_en',
         'minecraft:planks,5,0,false,Дубовые доски,Oak Planks',
-        'minecraft:stick,280,0,false,Палка,Stick'
+        'minecraft:stick,280,0,false,Палка,Stick',
+        'examplemod:item,9000,0,false,First icon,First icon'
       ].join('\n');
       return Promise.resolve({ ok: true, arrayBuffer: async () => new TextEncoder().encode(csv).buffer }) as Promise<Response>;
     }
@@ -108,6 +109,39 @@ beforeEach(() => {
           entries: {
             '<minecraft:planks>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Дубовые доски', item_key: 'minecraft:planks', meta: 0 },
             '<minecraft:stick>': { x: 0, y: 32, w: 32, h: 32, display_name: 'Палка', item_key: 'minecraft:stick', meta: 0 }
+          }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/mod-icons/atlas') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          manifest: {
+            updatedAt: '2026-05-26T00:00:00+00:00',
+            maxAtlasSize: 4096,
+            fallbackAtlasUrl: '/api/itempanel/atlas.png',
+            archives: [{ name: 'examplemod_x32.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            atlases: [{
+              modid: 'examplemod',
+              size: 32,
+              page: 1,
+              image_url: '/api/mod-icons/atlases/mod-icons-examplemod-x32-1.png',
+              file: 'mod-icons-examplemod-x32-1.png',
+              columns: 1,
+              rows: 1,
+              tileSize: 32,
+              entries: { 'examplemod/First icon': { key: 'examplemod/First icon', modid: 'examplemod', iconName: 'First icon', size: 32, page: 1, atlasFile: 'mod-icons-examplemod-x32-1.png', image_url: '/api/mod-icons/atlases/mod-icons-examplemod-x32-1.png', x: 0, y: 0, w: 32, h: 32 } }
+            }],
+            entries: {
+              x32: { 'examplemod/First icon': { key: 'examplemod/First icon', modid: 'examplemod', iconName: 'First icon', size: 32, page: 1, atlasFile: 'mod-icons-examplemod-x32-1.png', image_url: '/api/mod-icons/atlases/mod-icons-examplemod-x32-1.png', x: 0, y: 0, w: 32, h: 32 } },
+              x256: {}
+            },
+            duplicates: [],
+            rejected: [],
+            totalMods: 1,
+            totalIcons: 1
           }
         })
       }) as Promise<Response>;
@@ -383,6 +417,19 @@ test('admin mod icons tab shows archive and atlas status', async () => {
   expect(await screen.findByText('examplemod_x32.zip')).toBeTruthy();
   expect(await screen.findByText('Иконок')).toBeTruthy();
   expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
+});
+
+test('NEI uses generated mod icon atlas entries matched by itempanel display name', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'examplemod' } });
+  const item = await screen.findByLabelText('nei-item-<examplemod:item>');
+
+  await waitFor(() => {
+    const icon = item.querySelector('.nei-atlas-icon') as HTMLElement | null;
+    expect(icon).toBeTruthy();
+    expect(icon?.style.backgroundImage).toContain('mod-icons-examplemod-x32-1.png');
+  });
 });
 
 test('cloud storage shows files and root backup only after Ctrl+B', async () => {
