@@ -399,6 +399,29 @@ function buildStructuredItemRaw(modidDraft: string, itemDraft: string, metaDraft
   return buildItemRawValue(`${modid}:${item}`, safeMeta, nbtRaw);
 }
 
+function validateCloudRecipeFilename(value: string): { filename: string | null; error: string | null } {
+  const trimmed = value.trim();
+  if (!trimmed) return { filename: null, error: 'Введите имя .zs файла.' };
+  if (/[\\/]/.test(trimmed) || trimmed.includes('..')) {
+    return { filename: null, error: 'Имя файла должно быть без папок и переходов ..' };
+  }
+  if (/[<>:"|?*\x00-\x1F]/.test(trimmed)) {
+    return { filename: null, error: 'В имени есть недопустимые символы.' };
+  }
+  const filename = trimmed.toLowerCase().endsWith('.zs') ? trimmed : `${trimmed}.zs`;
+  if (filename.toLowerCase() === '.zs') return { filename: null, error: 'Введите имя .zs файла.' };
+  return { filename, error: null };
+}
+
+function buildDefaultCloudRecipeFilename(sourcePath: string | null | undefined, outputRaw: string): string {
+  const sourceName = sourcePath?.split(/[\\/]/).pop();
+  if (sourceName && !validateCloudRecipeFilename(sourceName).error) {
+    return validateCloudRecipeFilename(sourceName).filename ?? sourceName;
+  }
+  const rawName = outputRaw.replace(/[<>:"/\\|?*\s]+/g, '_').replace(/^_+|_+$/g, '');
+  return `${rawName || 'new_recipe'}.zs`;
+}
+
 function stableHash(value: string): string {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1) {
@@ -1028,6 +1051,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
+  const [isCloudSaveModalOpen, setIsCloudSaveModalOpen] = useState(false);
+  const [cloudSaveNameDraft, setCloudSaveNameDraft] = useState('');
+  const [cloudSaveError, setCloudSaveError] = useState('');
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>(restoredDraft?.craftEditorTarget ?? { kind: 'output' });
   const [craftSourceDraft, setCraftSourceDraft] = useState(restoredDraft?.craftSourceDraft ?? '');
   const [craftSourceMode, setCraftSourceMode] = useState<'structured' | 'raw'>('structured');
@@ -3100,6 +3126,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus('Рецепт скачан.');
   }
 
+  function openCloudSaveModal() {
+    if (!requireOutputForSave()) return;
+    setCloudSaveNameDraft(buildDefaultCloudRecipeFilename(recipe.source.path, outputRaw));
+    setCloudSaveError('');
+    setIsCloudSaveModalOpen(true);
+  }
+
   function setUploadedDraftSelection(draftId: string, selected: boolean) {
     setSelectedUploadedDraftIds((current) => {
       if (selected) {
@@ -3285,11 +3318,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   async function handleSaveAs() {
     if (!requireOutputForSave()) return;
-    const targetPath = window.prompt('Куда сохранить рецепт? Укажите путь к .zs файлу.', recipe.source.path ?? 'scripts/new_recipe.zs');
-    if (!targetPath) {
-      setStatus(t('status.saveAsCancelled'));
+    openCloudSaveModal();
+  }
+
+  async function submitCloudSave() {
+    if (!requireOutputForSave()) return;
+    const validation = validateCloudRecipeFilename(cloudSaveNameDraft);
+    if (validation.error || !validation.filename) {
+      setCloudSaveError(validation.error ?? 'Введите корректное имя .zs файла.');
       return;
     }
+    const targetPath = validation.filename;
+    setIsCloudSaveModalOpen(false);
+    setCloudSaveError('');
     setStatus('Сохраняем как...');
     setSaveStatus(t('values.pending'));
     try {
@@ -3303,10 +3344,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
       setStatus(`${t('status.saved')} → ${targetPath}`);
       setSaveStatus(t('values.saved'));
+      if (canManageCloudFiles) {
+        void refreshCloudFiles();
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       setStatus(`${t('status.saveError')}: ${message}`);
       setSaveStatus(t('values.error'));
+      setIsCloudSaveModalOpen(true);
     }
   }
 
@@ -4191,6 +4236,59 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderCloudSaveModal() {
+    if (!isCloudSaveModalOpen) return null;
+    const validation = validateCloudRecipeFilename(cloudSaveNameDraft);
+    const visibleError = cloudSaveError || validation.error;
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => { setIsCloudSaveModalOpen(false); setCloudSaveError(''); }}>
+        <form
+          className="modal cloud-save-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Сохранить рецепт в облако"
+          onClick={(event) => event.stopPropagation()}
+          onSubmit={(event) => {
+            event.preventDefault();
+            void submitCloudSave();
+          }}
+        >
+          <div className="modal-header">
+            <div>
+              <h2>Выгрузить в Облако</h2>
+              <span className="modal-subtitle">Сохранение доступно только в папку рецептов. Укажите имя файла, без пути.</span>
+            </div>
+            <button type="button" className="ghost-button" onClick={() => { setIsCloudSaveModalOpen(false); setCloudSaveError(''); }}>Закрыть</button>
+          </div>
+          <div className="settings-modal-body">
+            <label className="field-block">
+              <span>Имя .zs файла</span>
+              <input
+                aria-label="cloud-save-filename"
+                autoFocus
+                value={cloudSaveNameDraft}
+                onChange={(event) => {
+                  setCloudSaveNameDraft(event.target.value);
+                  setCloudSaveError('');
+                }}
+                placeholder="new_recipe.zs"
+              />
+            </label>
+            <div className="cloud-save-preview">
+              <span>Файл в облаке</span>
+              <strong>{validation.filename ?? '...'}</strong>
+            </div>
+            {visibleError ? <div className="inline-hint inline-hint-warning">{visibleError}</div> : null}
+            <div className="inline-actions cloud-save-actions">
+              <button type="button" className="ghost-button" onClick={() => { setIsCloudSaveModalOpen(false); setCloudSaveError(''); }}>Отмена</button>
+              <button type="submit" disabled={Boolean(validation.error)}>Сохранить</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   function renderDraftCatalogIcon(raw: string) {
     const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
@@ -4661,6 +4759,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderCloudContextMenu()}
       {renderCustomItemModal()}
       {renderRecipeUsesModal()}
+      {renderCloudSaveModal()}
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>

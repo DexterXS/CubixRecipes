@@ -127,7 +127,7 @@ def test_save_as_accepts_generated_recipe(tmp_path: Path):
                 'output_raw': '<minecraft:torch>',
                 'matrix': [['<minecraft:coal>', None], [None, '<minecraft:stick>']],
                 'name': 'Torch Recipe',
-                'target_path': str(tmp_path / 'saved.zs'),
+                'target_path': 'saved.zs',
                 'binding_mode': 'soft',
             },
         )()
@@ -154,7 +154,7 @@ def test_save_as_accepts_shapeless_recipe(tmp_path: Path):
                 'output_raw': '<minecraft:torch>',
                 'matrix': [['<minecraft:coal>', '<minecraft:stick>'], [None, None]],
                 'name': None,
-                'target_path': str(tmp_path / 'shapeless.zs'),
+                'target_path': 'shapeless.zs',
                 'binding_mode': 'soft',
             },
         )()
@@ -220,7 +220,7 @@ def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):
                     [None, None, None, None],
                 ],
                 'name': None,
-                'target_path': str(tmp_path / 'trimmed.zs'),
+                'target_path': 'trimmed.zs',
                 'binding_mode': 'soft',
             },
         )()
@@ -236,7 +236,6 @@ def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):
 def test_save_as_rejects_target_path_outside_allowed_roots(tmp_path: Path):
     app = create_app(str(tmp_path))
     save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
-    outside_path = tmp_path.parent / 'outside-save.zs'
     with pytest.raises(HTTPException) as exc:
         save_as(
             type(
@@ -248,7 +247,7 @@ def test_save_as_rejects_target_path_outside_allowed_roots(tmp_path: Path):
                     'output_raw': '<minecraft:chest>',
                     'matrix': [[None, '<minecraft:planks>']],
                     'name': None,
-                    'target_path': str(outside_path),
+                    'target_path': '../outside-save.zs',
                     'binding_mode': 'soft',
                 },
             )()

@@ -306,8 +306,47 @@ beforeEach(() => {
         })
       }) as Promise<Response>;
     }
+    if (url === '/api/recipes/create') {
+      const body = JSON.parse(String(init?.body ?? '{}'));
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          recipe_uid: 'created-recipe',
+          recipe_type: body.templateType ?? 'ct_shaped',
+          binding_mode: body.bindingMode ?? 'soft',
+          name: null,
+          output: { raw: body.output ?? '<minecraft:stone>' },
+          output_resolution: null,
+          grid_w: body.grid ?? 3,
+          grid_h: body.grid ?? 3,
+          matrix: [[{ raw: null, resolution: null }]],
+          source: { kind: 'generated', path: null }
+        })
+      }) as Promise<Response>;
+    }
     if (url === '/api/recipes/save-as') {
-      return Promise.resolve({ ok: true, json: async () => ({ ok: true, recipe: projectSettings() }) }) as Promise<Response>;
+      const body = JSON.parse(String(init?.body ?? '{}'));
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          new_uid: 'saved-recipe',
+          recipe: {
+            recipe_uid: 'saved-recipe',
+            recipe_type: body.recipe_type ?? 'ct_shaped',
+            binding_mode: body.binding_mode ?? 'soft',
+            name: body.name ?? null,
+            output: { raw: body.output_raw ?? '<minecraft:stone>' },
+            output_resolution: null,
+            grid_w: body.matrix?.[0]?.length ?? 1,
+            grid_h: body.matrix?.length ?? 1,
+            matrix: (body.matrix ?? [[null]]).map((row: Array<string | null>) => row.map((raw) => ({ raw, resolution: null }))),
+            source: { kind: 'zs_file', path: body.target_path ?? 'recipe.zs' }
+          }
+        })
+      }) as Promise<Response>;
     }
     throw new Error(`Unexpected fetch call: ${url}`);
   }) as typeof fetch;
@@ -408,6 +447,35 @@ test('local recipe file import loads the draft into the editor', async () => {
   await waitFor(() => {
     expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
   });
+});
+
+test('cloud save uses a controlled filename modal instead of a path prompt', async () => {
+  const promptSpy = vi.spyOn(window, 'prompt');
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByLabelText('save-cloud'));
+
+  expect(promptSpy).not.toHaveBeenCalled();
+  const dialog = await screen.findByRole('dialog', { name: 'Сохранить рецепт в облако' });
+  const filenameInput = within(dialog).getByLabelText('cloud-save-filename') as HTMLInputElement;
+  fireEvent.change(filenameInput, { target: { value: 'scripts/unsafe.zs' } });
+
+  expect(within(dialog).getByText('Имя файла должно быть без папок и переходов ..')).toBeTruthy();
+  expect((within(dialog).getByRole('button', { name: 'Сохранить' }) as HTMLButtonElement).disabled).toBe(true);
+
+  fireEvent.change(filenameInput, { target: { value: 'safe_recipe.zs' } });
+  await waitFor(() => expect(within(dialog).getByText('safe_recipe.zs')).toBeTruthy());
+  const saveButton = within(dialog).getByRole('button', { name: 'Сохранить' }) as HTMLButtonElement;
+  expect(saveButton.disabled).toBe(false);
+  fireEvent.click(saveButton);
+
+  await waitFor(() => {
+    const saveAsCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url]) => url === '/api/recipes/save-as');
+    expect(saveAsCall).toBeTruthy();
+    const body = JSON.parse(String(saveAsCall?.[1]?.body ?? '{}'));
+    expect(body.target_path).toBe('safe_recipe.zs');
+  });
+  expect(promptSpy).not.toHaveBeenCalled();
 });
 
 test('local recipe files can be selected for bulk download and deletion', async () => {

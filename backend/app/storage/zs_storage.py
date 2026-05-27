@@ -237,7 +237,7 @@ class ZsStorage:
         return self.get_recipe(recipe_uid)
 
     def save_as(self, rendered_block: str, target_path: str) -> str:
-        path = self._resolve_writable_path(target_path)
+        path = self._resolve_cloud_save_path(target_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         prefix = '\n' if path.exists() and path.read_text(encoding='utf-8').strip() else ''
         with path.open('a', encoding='utf-8') as handle:
@@ -303,6 +303,31 @@ class ZsStorage:
             if resolved not in normalized:
                 normalized.append(resolved)
         return normalized
+
+    def _resolve_cloud_save_path(self, raw_name: str) -> Path:
+        clean_name = (raw_name or '').strip()
+        if not clean_name:
+            raise ValueError('Recipe file name is required')
+        if '/' in clean_name or '\\' in clean_name or '..' in clean_name:
+            raise ValueError('Recipe file name must not include directories or parent path segments')
+        if any(ord(char) < 32 for char in clean_name) or any(char in '<>:"|?*' for char in clean_name):
+            raise ValueError('Recipe file name contains unsupported characters')
+        if not clean_name.lower().endswith('.zs'):
+            clean_name = f'{clean_name}.zs'
+        if clean_name.lower() == '.zs':
+            raise ValueError('Recipe file name is required')
+        if Path(clean_name).name != clean_name:
+            raise ValueError('Recipe file name must not include directories')
+        reserved_windows_names = {'CON', 'PRN', 'AUX', 'NUL', *(f'COM{index}' for index in range(1, 10)), *(f'LPT{index}' for index in range(1, 10))}
+        if clean_name.split('.', 1)[0].upper() in reserved_windows_names:
+            raise ValueError('Recipe file name is reserved')
+        scripts_root = self.scripts_dir.resolve(strict=False)
+        target = (scripts_root / clean_name).resolve(strict=False)
+        try:
+            target.relative_to(scripts_root)
+        except ValueError as exc:
+            raise ValueError('Recipe file name resolves outside scripts directory') from exc
+        return target
 
     def _resolve_writable_path(self, raw_path: str) -> Path:
         candidate = Path(raw_path)
