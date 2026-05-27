@@ -77,6 +77,12 @@ class CloudFileRequest(BaseModel):
     path: str
 
 
+class UploadCloudFileRequest(BaseModel):
+    filename: str = Field(min_length=1, max_length=255)
+    text: str
+    mode: Literal['fail', 'overwrite', 'append'] = 'fail'
+
+
 class RenameCloudFileRequest(BaseModel):
     path: str
     new_name: str = Field(min_length=1, max_length=255)

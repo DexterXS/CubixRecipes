@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -187,6 +187,12 @@ type RecipeUsesModalState = {
   page: number;
   status: 'loading' | 'ready' | 'error';
   error?: string;
+};
+
+type CloudUploadConflictMode = 'overwrite' | 'append' | 'cancel';
+type CloudUploadConflictState = {
+  filename: string;
+  resolve: (mode: CloudUploadConflictMode) => void;
 };
 
 type HotkeyDebugLevel = 'info' | 'success' | 'warning' | 'error';
@@ -1136,6 +1142,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
   const [isCloudSaveModalOpen, setIsCloudSaveModalOpen] = useState(false);
+  const [cloudUploadConflict, setCloudUploadConflict] = useState<CloudUploadConflictState | null>(null);
   const [cloudSaveNameDraft, setCloudSaveNameDraft] = useState('');
   const [cloudSaveError, setCloudSaveError] = useState('');
   const [craftEditorTarget, setCraftEditorTarget] = useState<CraftEditorTarget>(restoredDraft?.craftEditorTarget ?? { kind: 'output' });
@@ -3293,6 +3300,71 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus(`Скачано файлов: ${drafts.length}`);
   }
 
+  function chooseCloudUploadConflict(filename: string): Promise<CloudUploadConflictMode> {
+    return new Promise((resolve) => {
+      setCloudUploadConflict({ filename, resolve });
+    });
+  }
+
+  function resolveCloudUploadConflict(mode: CloudUploadConflictMode) {
+    const resolver = cloudUploadConflict?.resolve;
+    setCloudUploadConflict(null);
+    resolver?.(mode);
+  }
+
+  function getActiveUploadedDraft(): UploadedDraft | null {
+    return uploadedDrafts.find((draft) => draft.id === selectedDraftId) ?? uploadedDrafts[0] ?? null;
+  }
+
+  function getDraftsForFileAction(): UploadedDraft[] {
+    const selected = uploadedDrafts.filter((draft) => selectedUploadedDraftIds[draft.id]);
+    if (selected.length) return selected;
+    const active = getActiveUploadedDraft();
+    return active ? [active] : [];
+  }
+
+  function downloadActiveUploadedDraft() {
+    const draft = getActiveUploadedDraft();
+    if (!draft) return;
+    downloadUploadedDrafts([draft]);
+  }
+
+  async function uploadDraftsToCloud(drafts: UploadedDraft[]) {
+    if (!drafts.length || !canManageCloudFiles) return;
+    let uploadedCount = 0;
+    let cancelledCount = 0;
+    setStatus(`Выгружаю файлы в облако: ${drafts.length}`);
+    for (const draft of drafts) {
+      try {
+        const payload = await uploadZsCloudFile(draft.name, draft.text, 'fail');
+        setCloudFiles(payload.files);
+        uploadedCount += 1;
+      } catch (error) {
+        if (!(error instanceof ApiConflictError)) {
+          setStatus(error instanceof Error ? error.message : String(error));
+          return;
+        }
+        const mode = await chooseCloudUploadConflict(draft.name);
+        if (mode === 'cancel') {
+          cancelledCount += 1;
+          continue;
+        }
+        try {
+          const payload = await uploadZsCloudFile(draft.name, draft.text, mode);
+          setCloudFiles(payload.files);
+          uploadedCount += 1;
+        } catch (retryError) {
+          setStatus(retryError instanceof Error ? retryError.message : String(retryError));
+          return;
+        }
+      }
+    }
+    setStatus(`В облако выгружено: ${uploadedCount}${cancelledCount ? `. Отменено: ${cancelledCount}` : ''}`);
+    if (canManageCloudFiles) {
+      void refreshCloudFiles();
+    }
+  }
+
   function deleteUploadedDrafts(drafts: UploadedDraft[]) {
     if (!drafts.length) return;
     const draftIds = new Set(drafts.map((draft) => draft.id));
@@ -4293,6 +4365,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const selectedUploadedDrafts = uploadedDrafts.filter((draft) => selectedUploadedDraftIds[draft.id]);
     const selectedUploadedDraftCount = selectedUploadedDrafts.length;
     const allUploadedDraftsSelected = uploadedDrafts.length > 0 && selectedUploadedDraftCount === uploadedDrafts.length;
+    const activeUploadedDraft = getActiveUploadedDraft();
+    const fileActionDrafts = getDraftsForFileAction();
     return (
       <div className="workspace-panel-shell panel-recipe-files">
         <Panel title="Файлы рецептов" subtitle="Загрузка, редактирование и скачивание">
@@ -4365,8 +4439,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </div>
           ) : null}
           <div className="file-actions">
-            <button type="button" className="secondary-button" onClick={downloadCurrentRecipe}>Скачать текущий</button>
-            <button type="button" disabled={!canEditRecipes && !canCreateTemplates} onClick={() => void handleSaveAs()}>Выгрузить в Облако</button>
+            <button type="button" className="secondary-button" aria-label="download-active-draft" disabled={!activeUploadedDraft} onClick={downloadActiveUploadedDraft}>Скачать текущий</button>
+            <button type="button" aria-label="upload-drafts-cloud" disabled={!fileActionDrafts.length || !canManageCloudFiles} onClick={() => void uploadDraftsToCloud(fileActionDrafts)}>Выгрузить в Облако</button>
           </div>
           {selectedUploadedDraftCount ? (
             <div className="uploaded-draft-selection-actions">
@@ -4376,6 +4450,39 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </div>
           ) : null}
         </Panel>
+      </div>
+    );
+  }
+
+  function renderCloudUploadConflictModal() {
+    if (!cloudUploadConflict) return null;
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => resolveCloudUploadConflict('cancel')}>
+        <div
+          className="modal cloud-upload-conflict-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="cloud-upload-conflict"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="modal-header">
+            <div>
+              <h2>Файл уже есть в Облаке</h2>
+              <span className="modal-subtitle">Выберите, что сделать с файлом {cloudUploadConflict.filename}.</span>
+            </div>
+          </div>
+          <div className="settings-modal-body">
+            <div className="cloud-save-preview">
+              <span>Файл</span>
+              <strong>{cloudUploadConflict.filename}</strong>
+            </div>
+            <div className="cloud-conflict-actions">
+              <button type="button" aria-label="cloud-upload-overwrite" onClick={() => resolveCloudUploadConflict('overwrite')}>Перезаписать</button>
+              <button type="button" className="secondary-button" aria-label="cloud-upload-append" onClick={() => resolveCloudUploadConflict('append')}>Объединить</button>
+              <button type="button" className="ghost-button" aria-label="cloud-upload-cancel" onClick={() => resolveCloudUploadConflict('cancel')}>Отмена</button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -4907,6 +5014,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderCloudContextMenu()}
       {renderCustomItemModal()}
       {renderRecipeUsesModal()}
+      {renderCloudUploadConflictModal()}
       {renderCloudSaveModal()}
 
       {isLayoutSettingsOpen ? (

@@ -207,6 +207,42 @@ def test_admin_zs_cloud_can_rename_delete_and_keep_root_backup(tmp_path: Path):
     assert list_route()['files'] == []
 
 
+def test_admin_zs_cloud_uploads_raw_files_and_handles_conflicts(tmp_path: Path):
+    app = create_app(str(tmp_path), config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files/upload')
+    list_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/files' and 'GET' in getattr(route, 'methods', set()))
+    backup_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/zs-cloud/backups')
+
+    def request(filename: str, text: str, mode: str = 'fail'):
+        return type('UploadRequest', (), {'filename': filename, 'text': text, 'mode': mode})()
+
+    first_text = 'recipes.addShaped(<minecraft:apple>, []);\n'
+    overwrite_text = 'recipes.addShaped(<minecraft:torch>, []);\n'
+    append_text = 'recipes.addShapeless(<minecraft:stick>, [<minecraft:planks>]);\n'
+
+    uploaded = upload_route(request('bundle.zs', first_text))
+    target = tmp_path / 'bundle.zs'
+
+    with pytest.raises(HTTPException) as conflict:
+        upload_route(request('bundle.zs', overwrite_text))
+
+    overwritten = upload_route(request('bundle.zs', overwrite_text, 'overwrite'))
+    appended = upload_route(request('bundle.zs', append_text, 'append'))
+
+    class RootRequest:
+        state = type('State', (), {'auth_user': {'is_root_admin': True}})()
+
+    backups = backup_route(RootRequest())['backups']
+
+    assert uploaded['path'] == str(target)
+    assert conflict.value.status_code == 409
+    assert overwritten['files'][0]['name'] == 'bundle.zs'
+    assert appended['files'][0]['name'] == 'bundle.zs'
+    assert target.read_text(encoding='utf-8') == overwrite_text.rstrip() + '\n' + append_text
+    assert [item['name'] for item in list_route()['files']] == ['bundle.zs']
+    assert any(item['name'] == 'bundle.zs' for item in backups)
+
+
 
 
 def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):

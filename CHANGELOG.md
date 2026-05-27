@@ -7,6 +7,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Made `Файлы рецептов` download/upload actions operate on uploaded `.zs` files instead of the currently edited recipe, with overwrite/merge/cancel handling for cloud filename conflicts.
 - Optimized held item cursor movement so mouse tracking updates the cursor DOM node with `requestAnimationFrame` instead of re-rendering the whole React app on every pointer move.
 - Connected generated mod icon atlases to itempanel/NEI display matching and removed the admin preview cap so all generated icons are visible.
 - Replaced the browser path prompt for `Выгрузить в Облако` with a controlled filename modal and restricted recipe save-as writes to safe `.zs` filenames inside `scripts_dir`.

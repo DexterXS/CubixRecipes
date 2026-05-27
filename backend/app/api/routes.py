@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest
+from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -452,6 +452,27 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return Response(content=text.encode('utf-8'), media_type='text/plain; charset=utf-8', headers=_attachment_headers(file_path.name))
+
+    @router.post('/admin/zs-cloud/files/upload')
+    def admin_upload_zs_cloud_file(request: UploadCloudFileRequest):
+        try:
+            target = storage.resolve_cloud_file_target(request.filename)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        if target.exists() and request.mode == 'fail':
+            raise HTTPException(status_code=409, detail=f'File already exists: {target.name}')
+        if target.exists():
+            zs_backup_service.backup_file(target)
+        try:
+            saved = storage.upload_cloud_file(request.filename, request.text, request.mode)
+        except FileExistsError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        zs_backup_service.backup_file(saved)
+        debug_service.record_recipe_scan(storage.last_scan_report)
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Admin uploaded .zs file to cloud', {'path': str(saved), 'mode': request.mode})
+        return {'ok': True, 'path': str(saved), 'files': storage.list_managed_zs_files()}
 
     @router.delete('/admin/zs-cloud/files')
     def admin_delete_zs_cloud_file(request: CloudFileRequest):

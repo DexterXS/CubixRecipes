@@ -203,11 +203,12 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .switch-field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .switch-field input { width: 20px; height: 20px; }
 .settings-modal { width: min(860px, 100%); }
-.cloud-save-modal { width: min(520px, 96vw); }
+.cloud-save-modal, .cloud-upload-conflict-modal { width: min(520px, 96vw); }
 .cloud-save-preview { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
 .cloud-save-preview span { color: var(--muted); }
 .cloud-save-preview strong { overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, monospace; }
 .cloud-save-actions { justify-content: flex-end; }
+.cloud-conflict-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .modal-custom-item { width: min(880px, 96vw); max-height: 92vh; overflow: auto; }
 .settings-section { display: grid; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
 .settings-section-title { display: grid; gap: 4px; }

@@ -246,6 +246,26 @@ class ZsStorage:
         latest = max((item for item in self._recipes.values() if item.file_path == str(path)), key=lambda item: item.start_offset)
         return latest.recipe.recipe_uid
 
+    def resolve_cloud_file_target(self, filename: str) -> Path:
+        return self._resolve_cloud_save_path(filename)
+
+    def upload_cloud_file(self, filename: str, text: str, mode: str = 'fail') -> Path:
+        path = self.resolve_cloud_file_target(filename)
+        exists = path.exists()
+        if exists and mode == 'fail':
+            raise FileExistsError(f'File already exists: {path.name}')
+        if mode not in {'fail', 'overwrite', 'append'}:
+            raise ValueError('Unsupported upload mode')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if exists and mode == 'append':
+            current = path.read_text(encoding='utf-8')
+            separator = '\n' if current and text and not current.endswith(('\n', '\r')) else ''
+            path.write_text(current + separator + text, encoding='utf-8')
+        else:
+            path.write_text(text, encoding='utf-8')
+        self._rescan_file(path)
+        return path
+
     def create_file(self, path: str) -> str:
         file_path = self._resolve_writable_path(path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
