@@ -50,6 +50,7 @@ class RecipeSource:
 class Recipe:
     recipe_uid: str
     recipe_type: str
+    binding_mode: BindingMode
     output: ItemRef
     matrix: list[list[RecipeCell]]
     grid_w: int

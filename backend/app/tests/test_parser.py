@@ -1,4 +1,4 @@
-from app.domain.models import MetaMode
+from app.domain.models import BindingMode, MetaMode
 from app.parsers.recipe_parser import RecipeParser
 
 
@@ -47,6 +47,28 @@ def test_editor_matrix_is_trimmed_to_smallest_non_empty_shape():
         ['<minecraft:stick>', '<minecraft:planks>'],
         [None, '<minecraft:string>'],
     ]
+
+
+def test_editor_matrix_keeps_edges_for_strict_binding():
+    parser = RecipeParser()
+    matrix = [
+        [None, None, None],
+        [None, '<minecraft:stick>', '<minecraft:planks>'],
+        [None, None, '<minecraft:string>'],
+    ]
+    normalized = parser.normalize_editor_matrix(matrix, 'ct_shaped', BindingMode.STRICT)
+    assert normalized == matrix
+
+
+def test_parse_shapeless_recipe():
+    parser = RecipeParser()
+    text = 'recipes.addShapeless(<minecraft:torch>, [<minecraft:coal>, <minecraft:stick>]);'
+    recipe = parser.parse(text).recipe
+    assert recipe.recipe_type == 'ct_shapeless'
+    assert recipe.grid_w == 2
+    assert recipe.grid_h == 2
+    assert recipe.matrix[0][0].raw == '<minecraft:coal>'
+    assert recipe.matrix[0][1].raw == '<minecraft:stick>'
 
 
 def test_extreme_recipe_keeps_9x9_grid_when_normalized():

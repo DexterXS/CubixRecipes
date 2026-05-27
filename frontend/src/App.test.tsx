@@ -85,6 +85,7 @@ beforeEach(() => {
   vi.stubGlobal('Image', MockImage);
   Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: vi.fn(() => 'blob:recipe') });
   Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: vi.fn(() => undefined) });
+  vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
 
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
@@ -132,31 +133,33 @@ beforeEach(() => {
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
         json: async () => ({
-          archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+          archives: [{ name: 'examplemod_x32.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
           manifest: {
             updatedAt: '2026-05-26T00:00:00+00:00',
             maxAtlasSize: 4096,
             fallbackAtlasUrl: '/api/itempanel/atlas.png',
-            archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            archives: [{ name: 'examplemod_x32.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
             atlases: [{
+              modid: 'examplemod',
               size: 32,
               page: 1,
-              image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png',
-              file: 'mod-icons-x32-1.png',
+              image_url: '/api/admin/mod-icons/atlases/mod-icons-examplemod-x32-1.png',
+              file: 'mod-icons-examplemod-x32-1.png',
               columns: 1,
               rows: 1,
               tileSize: 32,
-              entries: { examplemod: { modid: 'examplemod', size: 32, page: 1, atlasFile: 'mod-icons-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png', x: 0, y: 0, w: 32, h: 32 } }
+              entries: { 'examplemod/First icon': { key: 'examplemod/First icon', modid: 'examplemod', iconName: 'First icon', size: 32, page: 1, atlasFile: 'mod-icons-examplemod-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-examplemod-x32-1.png', x: 0, y: 0, w: 32, h: 32 } }
             }],
             entries: {
-              x32: { examplemod: { modid: 'examplemod', size: 32, page: 1, atlasFile: 'mod-icons-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-x32-1.png', x: 0, y: 0, w: 32, h: 32 } },
+              x32: { 'examplemod/First icon': { key: 'examplemod/First icon', modid: 'examplemod', iconName: 'First icon', size: 32, page: 1, atlasFile: 'mod-icons-examplemod-x32-1.png', image_url: '/api/admin/mod-icons/atlases/mod-icons-examplemod-x32-1.png', x: 0, y: 0, w: 32, h: 32 } },
               x256: {}
             },
             duplicates: [],
             rejected: [],
-            totalMods: 1
+            totalMods: 1,
+            totalIcons: 1
           },
-          rules: { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.png', 'modid_x256.png'], maxAtlasSize: 4096 }
+          rules: { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.zip', 'modid_x256.zip', 'PNG files inside modid_x32/ or modid_x256/'], maxAtlasSize: 4096 }
         })
       }) as Promise<Response>;
     }
@@ -170,12 +173,13 @@ beforeEach(() => {
             updatedAt: '2026-05-26T00:00:00+00:00',
             maxAtlasSize: 4096,
             fallbackAtlasUrl: '/api/itempanel/atlas.png',
-            archives: [{ name: 'mods.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            archives: [{ name: 'examplemod_x32.zip', size: 1024, modifiedAt: '2026-05-26T00:00:00+00:00' }],
             atlases: [],
             entries: { x32: {}, x256: {} },
             duplicates: [],
             rejected: [],
-            totalMods: 1
+            totalMods: 1,
+            totalIcons: 0
           }
         })
       }) as Promise<Response>;
@@ -218,7 +222,7 @@ beforeEach(() => {
     if (url === '/api/parse') {
       const body = JSON.parse(String(init?.body ?? '{}'));
       const text = String(body.text ?? '');
-      const outputRaw = text.match(/addShaped\(\s*(<[^>]+>)/)?.[1] ?? '<minecraft:torch>';
+      const outputRaw = text.match(/add(?:Shaped|Shapeless)\(\s*(<[^>]+>)/)?.[1] ?? '<minecraft:torch>';
       const outputName = outputRaw === '<minecraft:stick>' ? 'Палка' : outputRaw === '<minecraft:planks>' ? 'Дубовые доски' : 'Факел';
       const outputIcon = outputRaw === '<minecraft:stick>' ? '/api/icons/stick' : outputRaw === '<minecraft:planks>' ? '/api/icons/planks' : '/api/icons/torch';
       return Promise.resolve({
@@ -229,7 +233,8 @@ beforeEach(() => {
           kind: 'recipe',
           recipe: {
             recipe_uid: outputRaw === '<minecraft:stick>' ? 'recipe-stick-draft' : 'recipe-1',
-            recipe_type: 'ct_shaped',
+            recipe_type: text.includes('addShapeless') ? 'ct_shapeless' : 'ct_shaped',
+            binding_mode: 'soft',
             name: null,
             output: { raw: outputRaw },
             output_resolution: { display_name: outputName, icon_url: outputIcon },
@@ -336,8 +341,9 @@ test('admin mod icons tab shows archive and atlas status', async () => {
 
   fireEvent.click(screen.getByRole('button', { name: 'Иконки модов' }));
 
-  expect(await screen.findByText('mods.zip')).toBeTruthy();
-  expect(await screen.findByLabelText('mod-icon-examplemod-x32')).toBeTruthy();
+  expect(await screen.findByText('examplemod_x32.zip')).toBeTruthy();
+  expect(await screen.findByText('Иконок')).toBeTruthy();
+  expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
 });
 
 test('cloud storage shows files and root backup only after Ctrl+B', async () => {
@@ -404,6 +410,36 @@ test('local recipe file import loads the draft into the editor', async () => {
   });
 });
 
+test('local recipe files can be selected for bulk download and deletion', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const firstSource = 'recipes.addShaped(<minecraft:torch>, []);';
+  const secondSource = 'recipes.addShaped(<minecraft:stick>, []);';
+  const firstFile = new File([firstSource], 'torch.zs', { type: 'text/plain' });
+  const secondFile = new File([secondSource], 'stick.zs', { type: 'text/plain' });
+  Object.defineProperty(firstFile, 'text', { value: vi.fn(async () => firstSource) });
+  Object.defineProperty(secondFile, 'text', { value: vi.fn(async () => secondSource) });
+
+  fireEvent.change(fileInput, { target: { files: [firstFile, secondFile] } });
+
+  expect(await screen.findByText('torch.zs')).toBeTruthy();
+  expect(await screen.findByText('stick.zs')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Скачать выбранные' })).toBeFalsy();
+
+  fireEvent.click(screen.getByLabelText('Выбрать torch.zs'));
+  fireEvent.click(screen.getByLabelText('Выбрать stick.zs'));
+
+  expect(screen.getByText('Выбрано: 2')).toBeTruthy();
+  const createObjectUrlCalls = (URL.createObjectURL as unknown as ReturnType<typeof vi.fn>).mock.calls.length;
+  fireEvent.click(screen.getByRole('button', { name: 'Скачать выбранные' }));
+  expect((URL.createObjectURL as unknown as ReturnType<typeof vi.fn>).mock.calls.length).toBe(createObjectUrlCalls + 2);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Удалить выбранные' }));
+  expect(screen.queryByText('torch.zs')).toBeFalsy();
+  expect(screen.queryByText('stick.zs')).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Удалить выбранные' })).toBeFalsy();
+});
+
 test('local user draft survives a reload', async () => {
   const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
   const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
@@ -426,6 +462,30 @@ test('local user draft survives a reload', async () => {
 
   expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
   expect((screen.getByLabelText('nei-search') as HTMLInputElement).value).toBe('planks');
+});
+
+test('recipe builder supports 2x2, shapeless, and strict placement controls', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.change(screen.getByLabelText('recipe-grid-size'), { target: { value: '2' } });
+  expect(screen.getByLabelText('craft-cell-1-1')).toBeTruthy();
+  expect(screen.queryByLabelText('craft-cell-2-2')).toBeFalsy();
+
+  fireEvent.change(screen.getByLabelText('recipe-craft-mode'), { target: { value: 'shapeless' } });
+  expect((screen.getByLabelText('recipe-binding-mode') as HTMLSelectElement).disabled).toBe(true);
+
+  await waitFor(() => {
+    const payload = findLocalDraftPayload();
+    expect(payload?.state?.recipe.recipe_type).toBe('ct_shapeless');
+  });
+
+  fireEvent.change(screen.getByLabelText('recipe-craft-mode'), { target: { value: 'shaped' } });
+  fireEvent.change(screen.getByLabelText('recipe-binding-mode'), { target: { value: 'strict' } });
+
+  await waitFor(() => {
+    const payload = findLocalDraftPayload();
+    expect(payload?.state?.recipe.binding_mode).toBe('strict');
+  });
 });
 
 test('saved recipe draft templates can be browsed, opened, and removed', async () => {

@@ -2,10 +2,14 @@
 
 ## [Unreleased]
 ### Added
+- Added `2x2` recipe editing, `ct_shapeless` recipe parsing/rendering, and a strict placement mode that preserves empty grid borders when admins need exact shaped positioning.
 - Added two admin-only frontend workspaces: `Иконки модов` for `.zip` uploads with strict `modid_x32.png` / `modid_x256.png` validation and per-size atlas generation, and `Облако .zs` for listing, downloading, renaming, and deleting all managed `.zs` files.
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Reworked `Файлы рецептов` uploads with checkbox multi-select actions for downloading/deleting selected `.zs` drafts and renamed the cloud upload action to `Выгрузить в Облако`.
+- Corrected admin mod icon ZIP handling to accept archives named like `modid_x32.zip` / `modid_x256.zip` with PNG files inside, generating per-mod atlas pages from all contained icons.
+- Reworked recipe detail settings and NBT controls with text actions, automatic structured raw syncing, and a wider nested NBT layout.
 - Made Google OAuth start URL construction compatible with the project Python range by removing a Python 3.12-only multiline f-string expression.
 - Reworked the `Черновики` workspace into an item-first draft browser with count sorting, draft-only filtering, purple draft outlines, recipe-preview tooltips, open/delete actions, and separate local/cloud/draft save buttons guarded by output-result validation.
 - Hid the recipe-grid internal raw inputs in view mode so read-only/default users no longer see dark dots over craft slots while editing remains blocked.

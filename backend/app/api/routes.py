@@ -44,6 +44,7 @@ def serialize_recipe(recipe: Recipe) -> dict:
     return {
         'recipe_uid': recipe.recipe_uid,
         'recipe_type': recipe.recipe_type,
+        'binding_mode': recipe.binding_mode.value,
         'name': recipe.name,
         'output': {
             'raw': recipe.output.raw,
@@ -561,7 +562,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except KeyError as exc:
             _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '404', started_at, {'detail': 'Recipe not found'}, level='ERROR')
             raise HTTPException(status_code=404, detail='Recipe not found') from exc
-        recipe = service.update_recipe(existing, request.output_raw, request.matrix, request.name)
+        recipe = service.update_recipe(existing, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
         rendered = service.render_recipe(recipe)
         try:
             updated = storage.save_existing(recipe_uid, rendered)
@@ -579,7 +580,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.post('/recipes/create')
     def create_recipe(request: CreateRecipeRequest):
         started_at = perf_counter()
-        recipe = service.create_recipe(request.templateType, request.output, request.grid)
+        recipe = service.create_recipe(request.templateType, request.output, request.grid, request.bindingMode)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe template created', {'template_type': request.templateType, 'output': request.output, 'grid': request.grid})
         _log_api(log_service, 'POST', '/api/recipes/create', {'templateType': request.templateType, 'grid': request.grid}, '200', started_at, {'recipe_uid': recipe.recipe_uid})
         return serialize_recipe(_resolve_recipe_items(recipe, resolver, debug_service))
@@ -609,11 +610,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         started_at = perf_counter()
         try:
             recipe = storage.get_recipe(request.recipe_uid)
-            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
         except KeyError:
-            recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix))
+            recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix), request.binding_mode)
             recipe.recipe_uid = request.recipe_uid
-            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
         try:
             new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
         except ValueError as exc:
