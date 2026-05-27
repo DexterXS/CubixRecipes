@@ -86,7 +86,7 @@ class ModIconAtlasService:
 
     def generate_atlases(self) -> dict[str, Any]:
         self.atlases_dir.mkdir(parents=True, exist_ok=True)
-        for old_atlas in self.atlases_dir.glob('mod-icons-x*.png'):
+        for old_atlas in self.atlases_dir.glob('mod-icons-*.png'):
             old_atlas.unlink()
 
         sources = self._collect_sources()
@@ -269,7 +269,7 @@ class ModIconAtlasService:
                         'size': size,
                         'page': page_index,
                         'atlasFile': atlas_filename,
-                        'image_url': f"/api/admin/mod-icons/atlases/{quote(atlas_filename)}",
+                        'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
                         'x': x,
                         'y': y,
                         'w': tile_size,
@@ -284,7 +284,7 @@ class ModIconAtlasService:
                         'modid': modid,
                         'size': size,
                         'page': page_index,
-                        'image_url': f"/api/admin/mod-icons/atlases/{quote(atlas_filename)}",
+                        'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
                         'file': atlas_filename,
                         'columns': columns,
                         'rows': rows,

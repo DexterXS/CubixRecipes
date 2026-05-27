@@ -68,6 +68,8 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate')
     atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/atlases/{filename}')
+    public_manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/mod-icons/atlas')
+    public_atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/mod-icons/atlases/{filename}')
 
     class BodyRequest:
         headers = {}
@@ -79,15 +81,21 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     generated = generate_route()
     first_atlas = generated['manifest']['atlases'][0]
     atlas_response = atlas_route(first_atlas['file'])
+    public_manifest = public_manifest_route()
+    public_atlas_response = public_atlas_route(first_atlas['file'])
 
     assert uploaded['archive']['name'] == 'examplemod_x32.zip'
     assert generated['manifest']['totalMods'] == 1
     assert generated['manifest']['totalIcons'] == 2
     assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-examplemod-x32-1.png'
+    assert generated['manifest']['atlases'][0]['image_url'].startswith('/api/mod-icons/atlases/')
     assert generated['manifest']['entries']['x32']['examplemod/First icon']['w'] == 32
     assert generated['manifest']['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
+    assert public_manifest['manifest']['entries']['x32']['examplemod/First icon']['modid'] == 'examplemod'
     assert atlas_response.media_type == 'image/png'
     assert atlas_response.body.startswith(b'\x89PNG')
+    assert public_atlas_response.media_type == 'image/png'
+    assert public_atlas_response.body.startswith(b'\x89PNG')
 
 
 def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):

@@ -281,6 +281,11 @@ export async function getModIconAdminStatus(): Promise<ModIconAdminStatus> {
   return request<ModIconAdminStatus>(apiPath('/admin/mod-icons'));
 }
 
+export async function getModIconAtlasManifest(): Promise<ModIconAtlasManifest | null> {
+  const payload = await request<{ manifest: ModIconAtlasManifest | null }>(apiPath('/mod-icons/atlas'));
+  return payload.manifest;
+}
+
 export async function uploadModIconArchive(file: File, replace = false): Promise<ModIconAdminStatus> {
   const path = apiPath(`/admin/mod-icons/archive?filename=${encodeURIComponent(file.name)}&replace=${replace ? 'true' : 'false'}`);
   const response = await fetch(path, {

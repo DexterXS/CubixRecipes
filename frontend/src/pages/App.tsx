@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getProjectSettings, listCustomItems, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -776,6 +776,90 @@ function buildAtlasIconStyle(atlas: ItemPanelAtlas, entry: ItemPanelAtlasEntry):
   };
 }
 
+function normalizeModIconImageUrl(imageUrl: string): string {
+  const publicUrl = imageUrl.replace('/api/admin/mod-icons/atlases/', '/api/mod-icons/atlases/');
+  return normalizeAtlasImageUrl(publicUrl);
+}
+
+function normalizeModIconLabel(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[_-]+/g, ' ')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function modIconBaseLabel(iconName: string): string {
+  const leaf = iconName.split('/').pop() ?? iconName;
+  return normalizeModIconLabel(leaf.replace(/_\d+$/, ''));
+}
+
+function modIconDuplicateOrder(iconName: string): number {
+  const match = (iconName.split('/').pop() ?? iconName).match(/_(\d+)$/);
+  return match ? Number.parseInt(match[1], 10) : 1;
+}
+
+function buildModIconStyle(manifest: ModIconAtlasManifest | null, entry: ModIconAtlasEntry | undefined): CSSProperties | undefined {
+  if (!manifest || !entry) return undefined;
+  const atlas = manifest.atlases.find((item) => item.file === entry.atlasFile);
+  const scale = 32 / Math.max(entry.w, 1);
+  return {
+    backgroundImage: `url(${normalizeModIconImageUrl(entry.image_url)})`,
+    backgroundPosition: `-${entry.x * scale}px -${entry.y * scale}px`,
+    backgroundSize: `${(atlas?.columns ?? 1) * entry.w * scale}px ${(atlas?.rows ?? 1) * entry.h * scale}px`
+  };
+}
+
+function buildModIconMatches(manifest: ModIconAtlasManifest | null, entries: ItemPanelEntry[]): Map<string, ModIconAtlasEntry> {
+  const result = new Map<string, ModIconAtlasEntry>();
+  if (!manifest) return result;
+  const iconGroups = new Map<string, ModIconAtlasEntry[]>();
+  const x32Icons = Object.values(manifest.entries.x32 ?? {});
+  const x32Keys = new Set(x32Icons.map((icon) => icon.key ?? `${icon.modid}/${icon.iconName ?? ''}`));
+  const x256FallbackIcons = Object.values(manifest.entries.x256 ?? {}).filter((icon) => !x32Keys.has(icon.key ?? `${icon.modid}/${icon.iconName ?? ''}`));
+  const orderedIcons = [...x32Icons, ...x256FallbackIcons]
+    .sort((left, right) => left.size - right.size || modIconDuplicateOrder(left.iconName ?? '') - modIconDuplicateOrder(right.iconName ?? '') || (left.iconName ?? '').localeCompare(right.iconName ?? '', 'ru', { numeric: true }));
+  orderedIcons.forEach((icon) => {
+    const label = modIconBaseLabel(icon.iconName ?? icon.key ?? icon.modid);
+    if (!label) return;
+    const groupKey = `${icon.modid.toLowerCase()}|${label}`;
+    const group = iconGroups.get(groupKey) ?? [];
+    group.push(icon);
+    iconGroups.set(groupKey, group);
+  });
+
+  const occurrenceByLabel = new Map<string, number>();
+  entries.forEach((entry) => {
+    const [modid, itemPath = ''] = entry.key.split(':');
+    if (!modid) return;
+    const labels = [
+      entry.displayRu,
+      entry.displayEn,
+      itemPath.split('/').pop() ?? itemPath,
+      itemPath,
+    ].map(normalizeModIconLabel).filter(Boolean);
+    let icon: ModIconAtlasEntry | undefined;
+    for (const label of labels) {
+      const groupKey = `${modid.toLowerCase()}|${label}`;
+      const group = iconGroups.get(groupKey);
+      if (!group?.length) continue;
+      const occurrence = occurrenceByLabel.get(groupKey) ?? 0;
+      icon = group[Math.min(occurrence, group.length - 1)];
+      occurrenceByLabel.set(groupKey, occurrence + 1);
+      break;
+    }
+    if (!icon) return;
+    const raw = itemPanelRaw(entry);
+    result.set(raw, icon);
+    if (entry.meta === 0) {
+      result.set(`<${entry.key}:0>`, icon);
+    }
+  });
+  return result;
+}
+
 function describeElement(element: Element | null): string {
   if (!element) return 'none';
   const className = element instanceof HTMLElement && typeof element.className === 'string'
@@ -1085,6 +1169,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [neiSearchQuery, setNeiSearchQuery] = useState(restoredDraft?.neiSearchQuery ?? '');
   const [neiPage, setNeiPage] = useState(restoredDraft?.neiPage ?? 0);
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
+  const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
   const [hoveredItemRaw, setHoveredItemRaw] = useState<string | null>(null);
   const [uploadedDrafts, setUploadedDrafts] = useState<UploadedDraft[]>(restoredDraft?.uploadedDrafts ?? []);
@@ -1250,6 +1335,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       const payload = await getModIconAdminStatus();
       setModIconStatus(payload);
+      setModIconManifest(payload.manifest);
       setModIconMessage(`Архивов: ${payload.archives.length}. Атласов: ${payload.manifest?.atlases.length ?? 0}.`);
     } catch (error) {
       setModIconMessage(error instanceof Error ? error.message : String(error));
@@ -1269,6 +1355,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       const payload = await uploadModIconArchive(file, false);
       setModIconStatus(payload);
+      setModIconManifest(payload.manifest);
       setModIconMessage(`Архив загружен: ${file.name}`);
     } catch (error) {
       if (error instanceof ApiConflictError) {
@@ -1277,6 +1364,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           try {
             const payload = await uploadModIconArchive(file, true);
             setModIconStatus(payload);
+            setModIconManifest(payload.manifest);
             setModIconMessage(`Архив заменён: ${file.name}`);
           } catch (replaceError) {
             setModIconMessage(replaceError instanceof Error ? replaceError.message : String(replaceError));
@@ -1298,6 +1386,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setModIconMessage('Генерирую атласы...');
     try {
       const manifest = await generateModIconAtlases();
+      setModIconManifest(manifest);
       setModIconStatus((current) => ({
         archives: manifest.archives,
         manifest,
@@ -1884,6 +1973,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const manifest = await getModIconAtlasManifest();
+        if (!cancelled) {
+          setModIconManifest(manifest);
+        }
+      } catch {
+        if (!cancelled) {
+          setModIconManifest(null);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   function persistUiPreferences(next: UiPreferences) {
     hasLocalUiChangesRef.current = true;
     latestUiPreferencesRef.current = next;
@@ -2069,6 +2177,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
   const neiCatalogEntries = useMemo(() => [...customItemEntries, ...itemPanelTranslations.entries], [customItemEntries, itemPanelTranslations.entries]);
+  const modIconByRaw = useMemo(() => buildModIconMatches(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
@@ -2339,7 +2448,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const suggestions = itemSearchSuggestions.slice(0, 8);
     suggestions.forEach((entry) => {
       const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
-      if (itemSearchIcons[raw] || iconRequestRef.current.has(raw)) {
+      if (modIconByRaw.has(raw) || itemSearchIcons[raw] || iconRequestRef.current.has(raw)) {
         return;
       }
       iconRequestRef.current.add(raw);
@@ -2352,11 +2461,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         }
       })();
     });
-  }, [itemSearchSuggestions, itemSearchIcons]);
+  }, [itemSearchSuggestions, itemSearchIcons, modIconByRaw]);
 
   useEffect(() => {
     let cancelled = false;
-    const missing = visibleNeiRawItems.filter((raw) => !itemPanelAtlas?.entries[raw] && !itemSearchIcons[raw] && !iconRequestRef.current.has(raw));
+    const missing = visibleNeiRawItems.filter((raw) => !modIconByRaw.has(raw) && !itemPanelAtlas?.entries[raw] && !itemSearchIcons[raw] && !iconRequestRef.current.has(raw));
     if (itemPanelAtlas === undefined) {
       return;
     }
@@ -2387,7 +2496,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, [visibleNeiRawItems, itemSearchIcons, itemPanelAtlas]);
+  }, [visibleNeiRawItems, itemSearchIcons, itemPanelAtlas, modIconByRaw]);
 
   useEffect(() => {
     try {
@@ -3442,6 +3551,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderCraftItemIcon(raw: string, iconUrl?: string | null, animated?: boolean, frameTime?: number, title?: string) {
+    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    if (modIconStyle) {
+      return <span className="cell-atlas-icon output-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    }
     const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
     if (atlasStyle) {
@@ -3454,6 +3567,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderHeldItemIcon(raw: string) {
+    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    if (modIconStyle) {
+      return <span className="held-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    }
     const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
     const iconUrl = itemSearchIcons[raw];
@@ -3682,6 +3799,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             {neiItems.map((entry) => {
               const raw = itemPanelRaw(entry);
               const iconUrl = itemSearchIcons[raw];
+              const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
               const availability = getRecipeAvailability(raw);
               const customForRaw = customItems.find((item) => item.item_raw === raw);
@@ -3720,9 +3838,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
                   }}
                 >
-                  <span className={`nei-icon ${atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
-                    {atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
-                    {!atlasStyle && iconUrl ? (
+                  <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
+                    {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
+                    {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
+                    {!modIconStyle && !atlasStyle && iconUrl ? (
                       <img
                         src={iconUrl}
                         alt=""
@@ -3986,7 +4105,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderModIconsPanel() {
-    const manifest = modIconStatus?.manifest ?? null;
+    const manifest = modIconStatus?.manifest ?? modIconManifest;
     const atlasEntries = manifest ? [...Object.values(manifest.entries.x32), ...Object.values(manifest.entries.x256)] : [];
     return (
       <div className="workspace-layout workspace-layout-admin">
@@ -4047,7 +4166,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <div className="inline-status inline-status-warning">Отклонено иконок: {manifest.rejected.length}</div>
               ) : null}
               <div className="mod-icon-preview-grid">
-                {atlasEntries.slice(0, 120).map((entry) => {
+                {atlasEntries.map((entry) => {
                   const atlas = manifest?.atlases.find((item) => item.file === entry.atlasFile);
                   const previewScale = 40 / entry.w;
                   return (
@@ -4056,7 +4175,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                       className="mod-icon-preview"
                       title={`${entry.modid}: ${entry.iconName ?? entry.modid} x${entry.size}`}
                       style={{
-                        backgroundImage: `url(${normalizeAtlasImageUrl(entry.image_url)})`,
+                        backgroundImage: `url(${normalizeModIconImageUrl(entry.image_url)})`,
                         backgroundPosition: `-${entry.x * previewScale}px -${entry.y * previewScale}px`,
                         backgroundSize: `${(atlas?.columns ?? 1) * entry.w * previewScale}px ${(atlas?.rows ?? 1) * entry.h * previewScale}px`
                       }}
@@ -4290,6 +4409,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderDraftCatalogIcon(raw: string) {
+    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    if (modIconStyle) {
+      return <span className="nei-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    }
     const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
     const iconUrl = itemSearchIcons[raw];
@@ -4842,9 +4965,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                         {(() => {
                           const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
                           const iconUrl = itemSearchIcons[raw];
+                          const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
                           return (
                             <span className="suggestion-icon-slot" aria-hidden="true">
-                              {iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
+                              {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
                             </span>
                           );
                         })()}
