@@ -7,6 +7,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Replaced the browser path prompt for `Выгрузить в Облако` with a controlled filename modal and restricted recipe save-as writes to safe `.zs` filenames inside `scripts_dir`.
 - Reworked `Файлы рецептов` uploads with checkbox multi-select actions for downloading/deleting selected `.zs` drafts and renamed the cloud upload action to `Выгрузить в Облако`.
 - Corrected admin mod icon ZIP handling to accept archives named like `modid_x32.zip` / `modid_x256.zip` with PNG files inside, generating per-mod atlas pages from all contained icons.
 - Reworked recipe detail settings and NBT controls with text actions, automatic structured raw syncing, and a wider nested NBT layout.
