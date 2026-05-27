@@ -1212,7 +1212,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isRootBackupOpen, setIsRootBackupOpen] = useState(false);
   const [cloudBackups, setCloudBackups] = useState<ZsCloudBackup[]>([]);
   const [cloudBackupStatus, setCloudBackupStatus] = useState('');
-  const [cursorPoint, setCursorPoint] = useState({ x: 0, y: 0 });
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
       const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
@@ -1239,6 +1238,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const iconRequestRef = useRef<Set<string>>(new Set());
   const neiListRef = useRef<HTMLDivElement | null>(null);
   const cursorPointRef = useRef({ x: 0, y: 0 });
+  const heldCursorRef = useRef<HTMLDivElement | null>(null);
+  const cursorFrameRef = useRef<number | null>(null);
   const hoveredItemRawRef = useRef<string | null>(null);
   const hotkeyDebugCounterRef = useRef(0);
 
@@ -1304,6 +1305,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } else if (previous) {
       logHotkeyDebug('hover cleared', { previous }, 'info');
     }
+  }
+
+  function moveHeldCursor() {
+    const cursor = heldCursorRef.current;
+    if (!cursor) return;
+    const point = cursorPointRef.current;
+    cursor.style.transform = `translate3d(${point.x + 14}px, ${point.y + 14}px, 0)`;
   }
 
   async function refreshAdminUsers() {
@@ -1580,13 +1588,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
-      const nextPoint = { x: event.clientX, y: event.clientY };
-      cursorPointRef.current = nextPoint;
-      setCursorPoint(nextPoint);
+      cursorPointRef.current = { x: event.clientX, y: event.clientY };
+      if (!heldCursorRef.current || cursorFrameRef.current !== null) {
+        return;
+      }
+      cursorFrameRef.current = window.requestAnimationFrame(() => {
+        cursorFrameRef.current = null;
+        moveHeldCursor();
+      });
     };
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    return () => window.removeEventListener('pointermove', handlePointerMove);
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      if (cursorFrameRef.current !== null) {
+        window.cancelAnimationFrame(cursorFrameRef.current);
+        cursorFrameRef.current = null;
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (heldItemRaw) {
+      moveHeldCursor();
+    }
+  }, [heldItemRaw]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -4869,8 +4894,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
       {heldItemRaw ? (
         <div
+          ref={heldCursorRef}
           className="held-item-cursor"
-          style={{ left: cursorPoint.x + 14, top: cursorPoint.y + 14 }}
           aria-hidden="true"
         >
           {renderHeldItemIcon(heldItemRaw)}
