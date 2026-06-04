@@ -9,6 +9,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Centered draft-template item icons and made the saved-template preview frame fixed-size across 2x2, 3x3, and 9x9 recipes while scaling only the inner craft grid.
 - Polished recipe editor/debug UX: clamped custom context menus to the viewport, made right-click release held items without opening the browser menu, removed the redundant output raw field, restyled the craft output slot, scaled 9x9 draft previews to fit, removed the top-bar language caption, and expanded admin debug into a sectioned workspace with category/level filters.
 - Reworked the `Черновики` workspace to show only saved recipe-template outputs by default, removed the draft-only checkbox, and replaced accidental card-open behavior with an inline preview plus explicit `Редактировать рецепт` actions.
 - Made `Файлы рецептов` download/upload actions operate on uploaded `.zs` files instead of the currently edited recipe, with overwrite/merge/cancel handling for cloud filename conflicts.
