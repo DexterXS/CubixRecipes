@@ -714,7 +714,7 @@ test('recipe builder supports 2x2, shapeless, and strict placement controls', as
   });
 });
 
-test('saved recipe draft templates can be browsed, opened, and removed', async () => {
+test('saved recipe draft templates can be browsed, previewed, opened, and removed', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   await screen.findByLabelText('nei-item-<minecraft:planks>');
 
@@ -730,8 +730,14 @@ test('saved recipe draft templates can be browsed, opened, and removed', async (
   const templateList = screen.getByLabelText('draft-template-list');
   const template = within(templateList).getByLabelText(/^draft-template-<minecraft:planks>-/);
   expect(within(template).getByText(adminUser.email)).toBeTruthy();
+  expect(screen.queryByText('Только с черновиками')).toBeFalsy();
+  expect(screen.getByLabelText('draft-template-preview')).toBeTruthy();
 
   fireEvent.click(template);
+  expect(screen.getByLabelText('draft-template-list')).toBeTruthy();
+  expect(screen.getByLabelText('draft-template-preview')).toBeTruthy();
+
+  fireEvent.click(within(template).getByLabelText(/^edit-draft-template-/));
   expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
   expect(screen.queryByLabelText('draft-template-list')).toBeFalsy();
 

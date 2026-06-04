@@ -112,6 +112,13 @@ type UploadedDraftRecipeMatch = {
 
 type DraftItemSortMode = 'name' | 'drafts-desc' | 'drafts-asc';
 
+type DraftItemEntry = {
+  raw: string;
+  draftCount: number;
+  title: string;
+  searchText: string;
+};
+
 type DraftTemplateContextMenuState = {
   draftId: string;
   x: number;
@@ -1175,8 +1182,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
   const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
-  const [showOnlyDraftItems, setShowOnlyDraftItems] = useState(false);
   const [draftItemPage, setDraftItemPage] = useState(0);
+  const [previewDraftTemplateId, setPreviewDraftTemplateId] = useState<string | null>(null);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
   const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
@@ -2379,44 +2386,49 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return [...templates.values()];
   }
 
-  function getRecipeDraftCountForRaw(raw: string): number {
-    return getRecipeDraftTemplatesForRaw(raw).length;
-  }
+  const draftItemEntries = useMemo<DraftItemEntry[]>(() => {
+    const grouped = new Map<string, { raw: string; draftIds: Set<string> }>();
+    recipeDraftTemplates.forEach((template) => {
+      const raw = template.outputRaw;
+      const group = grouped.get(raw) ?? { raw, draftIds: new Set<string>() };
+      group.draftIds.add(template.id);
+      grouped.set(raw, group);
+    });
 
-  const draftItemEntries = useMemo(() => {
     const query = draftItemSearchQuery.trim().toLowerCase();
-    const entries = neiCatalogEntries
-      .filter((entry) => {
-        const raw = itemPanelRaw(entry);
-        const draftCount = getRecipeDraftCountForRaw(raw);
-        if (showOnlyDraftItems && draftCount === 0) return false;
-        if (!query) return true;
-        return (
-          raw.toLowerCase().includes(query)
-          || entry.key.includes(query)
-          || entry.displayRu.toLowerCase().includes(query)
-          || entry.displayEn.toLowerCase().includes(query)
-          || String(entry.legacyId ?? '').includes(query)
-        );
-      });
+    const entries = [...grouped.values()]
+      .map((entry) => {
+        const title = resolveCellTitle(entry.raw);
+        const parsed = parseItemRaw(entry.raw);
+        const panelEntry = parsed
+          ? itemPanelTranslations.byKeyMeta.get(parsed.key)?.get(parsed.meta ?? 0)
+            ?? itemPanelTranslations.entries.find((item) => item.key === parsed.key)
+          : null;
+        return {
+          raw: entry.raw,
+          draftCount: entry.draftIds.size,
+          title,
+          searchText: `${entry.raw} ${title} ${panelEntry?.displayEn ?? ''} ${panelEntry?.legacyId ?? ''}`.toLowerCase()
+        };
+      })
+      .filter((entry) => !query || entry.searchText.includes(query));
+
     return entries.sort((left, right) => {
-      const leftCount = getRecipeDraftCountForRaw(itemPanelRaw(left));
-      const rightCount = getRecipeDraftCountForRaw(itemPanelRaw(right));
       if (draftItemSortMode === 'drafts-desc') {
-        return rightCount - leftCount || (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+        return right.draftCount - left.draftCount || left.title.localeCompare(right.title);
       }
       if (draftItemSortMode === 'drafts-asc') {
-        return leftCount - rightCount || (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+        return left.draftCount - right.draftCount || left.title.localeCompare(right.title);
       }
-      return (left.displayRu || left.key).localeCompare(right.displayRu || right.key);
+      return left.title.localeCompare(right.title);
     });
-  }, [draftItemSearchQuery, draftItemSortMode, neiCatalogEntries, recipeDraftTemplatesByOutputKey, showOnlyDraftItems]);
+  }, [customItems, draftItemSearchQuery, draftItemSortMode, itemPanelTranslations, recipeDraftTemplates]);
   const draftItemPageCount = Math.max(1, Math.ceil(draftItemEntries.length / DRAFT_ITEM_PAGE_SIZE));
   const draftItemsPage = useMemo(() => {
     const safePage = clamp(draftItemPage, 0, draftItemPageCount - 1);
     return draftItemEntries.slice(safePage * DRAFT_ITEM_PAGE_SIZE, safePage * DRAFT_ITEM_PAGE_SIZE + DRAFT_ITEM_PAGE_SIZE);
   }, [draftItemEntries, draftItemPage, draftItemPageCount]);
-  const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => itemPanelRaw(entry)), [draftItemsPage]);
+  const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => entry.raw), [draftItemsPage]);
   const availabilityLookupRaws = useMemo(() => (
     [...new Set([...visibleNeiRawItems, ...visibleDraftRawItems].flatMap(recipeLookupKeysForRaw))].slice(0, 300)
   ), [visibleDraftRawItems, visibleNeiRawItems]);
@@ -2424,6 +2436,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!selectedDraftItemRaw) return [];
     return getRecipeDraftTemplatesForRaw(selectedDraftItemRaw).sort((left, right) => right.updatedAt - left.updatedAt);
   }, [recipeDraftTemplatesByOutputKey, selectedDraftItemRaw]);
+  const activeDraftPreview = useMemo(() => (
+    selectedDraftTemplates.find((draft) => draft.id === previewDraftTemplateId) ?? selectedDraftTemplates[0] ?? null
+  ), [previewDraftTemplateId, selectedDraftTemplates]);
 
   useEffect(() => {
     setNeiPage(0);
@@ -2431,20 +2446,31 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     setDraftItemPage(0);
-  }, [draftItemSearchQuery, draftItemSortMode, showOnlyDraftItems]);
+  }, [draftItemSearchQuery, draftItemSortMode]);
 
   useEffect(() => {
     setDraftItemPage((current) => clamp(current, 0, draftItemPageCount - 1));
   }, [draftItemPageCount]);
 
   useEffect(() => {
-    const visibleRaws = draftItemEntries.map(itemPanelRaw);
+    const visibleRaws = draftItemEntries.map((entry) => entry.raw);
     if (selectedDraftItemRaw && visibleRaws.includes(selectedDraftItemRaw)) {
       return;
     }
-    const firstWithDraft = visibleRaws.find((raw) => getRecipeDraftCountForRaw(raw) > 0);
-    setSelectedDraftItemRaw(firstWithDraft ?? visibleRaws[0] ?? null);
-  }, [draftItemEntries.map(itemPanelRaw).join('|'), recipeDraftTemplatesByOutputKey, selectedDraftItemRaw]);
+    setSelectedDraftItemRaw(visibleRaws[0] ?? null);
+  }, [draftItemEntries, selectedDraftItemRaw]);
+
+  useEffect(() => {
+    if (!selectedDraftTemplates.length) {
+      if (previewDraftTemplateId) {
+        setPreviewDraftTemplateId(null);
+      }
+      return;
+    }
+    if (!previewDraftTemplateId || !selectedDraftTemplates.some((draft) => draft.id === previewDraftTemplateId)) {
+      setPreviewDraftTemplateId(selectedDraftTemplates[0].id);
+    }
+  }, [previewDraftTemplateId, selectedDraftTemplates]);
 
   useEffect(() => {
     const lookupRaws = availabilityLookupRaws;
@@ -4030,7 +4056,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{draft.name}</strong>
-        <button type="button" aria-label="open-draft-template" onClick={() => openRecipeDraftTemplate(draft)}>Открыть</button>
+        <button type="button" aria-label="open-draft-template" onClick={() => openRecipeDraftTemplate(draft)}>Редактировать рецепт</button>
         <button type="button" className="danger-button" aria-label="delete-draft-template" onClick={() => void removeRecipeDraftTemplate(draft.id)}>Удалить шаблон</button>
         <button type="button" className="ghost-button" onClick={() => setDraftTemplateContextMenu(null)}>Закрыть</button>
       </div>
@@ -4599,18 +4625,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderDraftItemsPanel() {
     return (
       <div className="workspace-panel-shell panel-draft-items">
-        <Panel title="Черновики" subtitle="Предметы и сохранённые шаблоны" className="draft-items-panel">
+        <Panel title="Черновики" subtitle="Только предметы с сохранёнными шаблонами" className="draft-items-panel">
           <div className="draft-filter-grid">
-            <input aria-label="draft-item-search" type="search" value={draftItemSearchQuery} onChange={(event) => setDraftItemSearchQuery(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
+            <input aria-label="draft-item-search" type="search" value={draftItemSearchQuery} onChange={(event) => setDraftItemSearchQuery(event.target.value)} placeholder="Поиск шаблона, mod:item или ID" />
             <select aria-label="draft-item-sort" value={draftItemSortMode} onChange={(event) => setDraftItemSortMode(event.target.value as DraftItemSortMode)}>
               <option value="drafts-desc">Сначала больше черновиков</option>
               <option value="drafts-asc">Сначала меньше черновиков</option>
               <option value="name">По названию</option>
             </select>
-            <label className="view-toggle draft-only-toggle">
-              <input type="checkbox" checked={showOnlyDraftItems} onChange={(event) => setShowOnlyDraftItems(event.target.checked)} />
-              <span>Только с черновиками</span>
-            </label>
           </div>
           <div className="nei-pager" aria-label="draft-item-pagination">
             <button type="button" className="ghost-button icon-button" aria-label="draft-items-prev-page" disabled={draftItemPage <= 0} onClick={() => changeDraftItemPage(-1)}>‹</button>
@@ -4619,19 +4641,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           </div>
           <div className="draft-item-list" aria-label="draft-item-list">
             {draftItemsPage.map((entry) => {
-              const raw = itemPanelRaw(entry);
-              const draftCount = getRecipeDraftCountForRaw(raw);
+              const raw = entry.raw;
+              const draftCount = entry.draftCount;
               const availability = getRecipeAvailability(raw);
               const selected = raw === selectedDraftItemRaw;
               const icon = renderDraftCatalogIcon(raw);
               return (
                 <button
-                  key={itemPanelEntryIdentity(entry)}
+                  key={raw}
                   type="button"
                   className={`draft-item-button recipe-${availability} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
                   aria-label={`draft-item-${raw}`}
                   data-item-raw={raw}
-                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}`}
+                  title={`${entry.title} ${raw}`}
                   onMouseEnter={() => updateHoveredItemRaw(raw)}
                   onFocus={() => updateHoveredItemRaw(raw)}
                   onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
@@ -4645,6 +4667,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 </button>
               );
             })}
+            {!draftItemsPage.length ? <div className="draft-empty-state">Нет сохранённых шаблонов.</div> : null}
           </div>
         </Panel>
       </div>
@@ -4653,6 +4676,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderDraftTemplatesPanel() {
     const selectedTitle = selectedDraftItemRaw ? resolveCellTitle(selectedDraftItemRaw) : 'Предмет не выбран';
+    const draftPreviewAtlasUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
     return (
       <div className="workspace-panel-shell panel-draft-templates">
         <Panel title="Шаблоны" subtitle={selectedDraftItemRaw ?? 'Выберите предмет слева'} className="draft-templates-panel">
@@ -4666,41 +4690,74 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </div>
           ) : null}
           {selectedDraftTemplates.length ? (
-            <div className="draft-template-list" aria-label="draft-template-list">
-              {selectedDraftTemplates.map((draft) => (
-                <div
-                  key={draft.id}
-                  className="draft-template-card"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`draft-template-${draft.outputRaw}-${draft.id}`}
-                  onClick={() => openRecipeDraftTemplate(draft)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      openRecipeDraftTemplate(draft);
-                    }
-                  }}
-                  onContextMenu={(event) => {
-                    event.preventDefault();
-                    setDraftTemplateContextMenu({ draftId: draft.id, x: event.clientX, y: event.clientY });
-                  }}
-                >
-                  <div className="draft-template-main">
-                    <strong>{draft.name}</strong>
-                    <span>{new Date(draft.updatedAt).toLocaleString()}</span>
-                    <span>{draft.createdByEmail}</span>
-                  </div>
-                  <div className="draft-template-tooltip" role="tooltip">
-                    <strong>{draft.outputRaw}</strong>
-                    <span>Создал: {draft.createdByEmail}</span>
-                    <div className="draft-template-tooltip-grid">
-                      <RecipeGrid matrix={draft.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+            <>
+              {activeDraftPreview ? (
+                <div className="draft-template-preview" aria-label="draft-template-preview">
+                  <div className="draft-preview-header">
+                    <div className="draft-preview-meta">
+                      <strong>{activeDraftPreview.name}</strong>
+                      <span>{activeDraftPreview.outputRaw}</span>
+                      <small>Создал: {activeDraftPreview.createdByEmail}</small>
+                      <small>Обновлён: {new Date(activeDraftPreview.updatedAt).toLocaleString()}</small>
                     </div>
+                    <button type="button" aria-label="edit-selected-draft-template" onClick={() => openRecipeDraftTemplate(activeDraftPreview)}>Редактировать рецепт</button>
+                  </div>
+                  <div className="draft-preview-grid">
+                    <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
                   </div>
                 </div>
-              ))}
-            </div>
+              ) : null}
+              <div className="draft-template-list" aria-label="draft-template-list">
+                {selectedDraftTemplates.map((draft) => {
+                  const active = draft.id === activeDraftPreview?.id;
+                  return (
+                    <div
+                      key={draft.id}
+                      className={`draft-template-card ${active ? 'active' : ''}`.trim()}
+                      tabIndex={0}
+                      aria-label={`draft-template-${draft.outputRaw}-${draft.id}`}
+                      aria-selected={active}
+                      onMouseEnter={() => setPreviewDraftTemplateId(draft.id)}
+                      onFocus={() => setPreviewDraftTemplateId(draft.id)}
+                      onClick={() => setPreviewDraftTemplateId(draft.id)}
+                      onKeyDown={(event) => {
+                        if (event.target !== event.currentTarget) return;
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          setPreviewDraftTemplateId(draft.id);
+                        }
+                      }}
+                      onContextMenu={(event) => {
+                        event.preventDefault();
+                        setDraftTemplateContextMenu({ draftId: draft.id, x: event.clientX, y: event.clientY });
+                      }}
+                    >
+                      <div className="draft-template-card-head">
+                        <div className="draft-template-main">
+                          <strong>{draft.name}</strong>
+                          <span>{new Date(draft.updatedAt).toLocaleString()}</span>
+                          <span>{draft.createdByEmail}</span>
+                        </div>
+                        <span className="draft-template-status">{active ? 'В превью' : 'Просмотр'}</span>
+                      </div>
+                      <div className="draft-template-actions">
+                        <button
+                          type="button"
+                          className="secondary-button draft-template-edit"
+                          aria-label={`edit-draft-template-${draft.id}`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            openRecipeDraftTemplate(draft);
+                          }}
+                        >
+                          Редактировать рецепт
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           ) : (
             <div className="inline-hint inline-hint-warning">Нет шаблонов для выбранного предмета.</div>
           )}
