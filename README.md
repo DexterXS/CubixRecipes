@@ -54,6 +54,7 @@ FRONTEND_PUBLIC_URL=https://your-frontend.example
 ROOT_ADMIN_EMAIL=root.user76@gmail.com
 AUTH_COOKIE_SAMESITE=none
 AUTH_COOKIE_SECURE=true
+CUBIXRECIPES_DATA_DIR=/data # optional; backend also accepts Railway volume mount env
 ```
 
 If frontend and backend are separate Railway services, set the frontend build variable too:
@@ -62,6 +63,8 @@ VITE_API_BASE=https://your-backend.example/api
 ```
 
 `APP_PUBLIC_URL` must use the same backend host as `VITE_API_BASE`; otherwise Google can complete the callback on one Railway domain while the frontend checks `/api/auth/me` on another domain and the session cookie will not match. `GOOGLE_REDIRECT_URI` can override the callback URL only when that exact host is also the API host used by the frontend.
+
+For Railway persistent backend files, attach a volume to the backend service at `/data`. When `CUBIXRECIPES_DATA_DIR=/data` or Railway exposes a volume mount env, the backend stores `cubixrecipes.config.json`, default `.zs` scripts, `.zs` backups, mod icon uploads/atlases, and shared recipe draft templates under `/data`.
 
 ### Frontend
 ```bash

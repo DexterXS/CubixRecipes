@@ -64,6 +64,13 @@ class CustomItemRequest(BaseModel):
     nbt_raw: Optional[str] = Field(default=None, max_length=8192)
 
 
+class RecipeDraftTemplateRequest(BaseModel):
+    outputRaw: str = Field(min_length=1, max_length=1024)
+    recipe: dict
+    sourceText: str = Field(min_length=1, max_length=180_000)
+    name: str = Field(min_length=1, max_length=255)
+
+
 class IndexScanRequest(BaseModel):
     full: bool = True
     paths: list[str] = Field(default_factory=list)

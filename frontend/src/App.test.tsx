@@ -31,6 +31,8 @@ const defaultUser: AuthUser = {
   is_root_admin: false
 };
 
+let mockRecipeDraftTemplates: any[] = [];
+
 function projectSettings() {
   return {
     scripts_dir: 'scripts',
@@ -76,6 +78,7 @@ function enableHotkeyDebug() {
 
 beforeEach(() => {
   window.localStorage.clear();
+  mockRecipeDraftTemplates = [];
   class MockImage {
     onload: null | (() => void) = null;
     set src(_value: string) {
@@ -312,6 +315,41 @@ beforeEach(() => {
     if (url === '/api/items/custom' && init?.method === 'POST') {
       const body = JSON.parse(String(init.body));
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, item: { id: 10, created_by_email: adminUser.email, owner_email: adminUser.email, created_at: null, updated_at: null, ...body } }) }) as Promise<Response>;
+    }
+    if (url === '/api/recipe-drafts/templates' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ templates: mockRecipeDraftTemplates })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/recipe-drafts/templates' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      const template = {
+        id: `server-draft-${mockRecipeDraftTemplates.length + 1}`,
+        outputRaw: body.outputRaw,
+        recipe: body.recipe,
+        sourceText: body.sourceText,
+        createdByEmail: adminUser.email,
+        createdAt: 1770000000000 + mockRecipeDraftTemplates.length,
+        updatedAt: 1770000000000 + mockRecipeDraftTemplates.length,
+        name: body.name
+      };
+      mockRecipeDraftTemplates = [template, ...mockRecipeDraftTemplates];
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, template })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/recipe-drafts/templates/') && init?.method === 'DELETE') {
+      const draftId = decodeURIComponent(url.split('/').pop() ?? '');
+      mockRecipeDraftTemplates = mockRecipeDraftTemplates.filter((template) => template.id !== draftId);
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true })
+      }) as Promise<Response>;
     }
     if (url === '/api/recipes/search-batch' && init?.method === 'POST') {
       return Promise.resolve({ ok: true, json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0 } }) }) as Promise<Response>;
@@ -682,6 +720,7 @@ test('saved recipe draft templates can be browsed, opened, and removed', async (
 
   fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:planks>' } });
   fireEvent.click(screen.getByLabelText('save-draft-template'));
+  await waitFor(() => expect(mockRecipeDraftTemplates.length).toBe(1));
 
   fireEvent.click(screen.getByRole('button', { name: 'Черновики' }));
   const draftItem = await screen.findByLabelText('draft-item-<minecraft:planks>');
@@ -700,7 +739,38 @@ test('saved recipe draft templates can be browsed, opened, and removed', async (
   const reopenedTemplate = await screen.findByLabelText(/^draft-template-<minecraft:planks>-/);
   fireEvent.contextMenu(reopenedTemplate, { clientX: 120, clientY: 80 });
   fireEvent.click(screen.getByLabelText('delete-draft-template'));
-  expect(screen.queryByLabelText(/^draft-template-<minecraft:planks>-/)).toBeFalsy();
+  await waitFor(() => expect(screen.queryByLabelText(/^draft-template-<minecraft:planks>-/)).toBeFalsy());
+});
+
+test('admin can browse recipe draft templates created by moderators', async () => {
+  mockRecipeDraftTemplates = [{
+    id: 'moderator-template-1',
+    outputRaw: '<minecraft:planks>',
+    recipe: {
+      recipe_uid: 'moderator-template-1',
+      recipe_type: 'ct_shaped',
+      binding_mode: 'soft',
+      name: null,
+      output: { raw: '<minecraft:planks>' },
+      output_resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks' },
+      grid_w: 1,
+      grid_h: 1,
+      source: { kind: 'local_draft', path: 'draft:<minecraft:planks>' },
+      matrix: [[{ raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]]
+    },
+    sourceText: 'recipes.addShaped(<minecraft:planks>, [[<minecraft:stick>]]);',
+    createdByEmail: moderatorUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    name: 'Moderator planks template'
+  }];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+  const template = await screen.findByLabelText('draft-template-<minecraft:planks>-moderator-template-1');
+
+  expect(within(template).getByText(moderatorUser.email)).toBeTruthy();
 });
 
 test('NEI context menu can save a personal custom item', async () => {

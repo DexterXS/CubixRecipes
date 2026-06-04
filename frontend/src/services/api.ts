@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -42,6 +42,13 @@ interface CustomItemPayload {
   item_raw: string;
   display_name: string;
   nbt_raw?: string | null;
+}
+
+interface RecipeDraftTemplatePayload {
+  outputRaw: string;
+  recipe: RecipeView;
+  sourceText: string;
+  name: string;
 }
 
 export class ApiConflictError extends Error {}
@@ -242,6 +249,22 @@ export async function saveCustomItem(payload: CustomItemPayload): Promise<{ ok: 
 
 export async function deleteCustomItem(itemId: number): Promise<{ ok: boolean }> {
   return request<{ ok: boolean }>(apiPath(`/items/custom/${itemId}`), { method: 'DELETE' });
+}
+
+export async function listRecipeDraftTemplates(): Promise<{ templates: RecipeDraftTemplate[] }> {
+  return request<{ templates: RecipeDraftTemplate[] }>(apiPath('/recipe-drafts/templates'));
+}
+
+export async function saveRecipeDraftTemplate(payload: RecipeDraftTemplatePayload): Promise<{ ok: boolean; template: RecipeDraftTemplate }> {
+  return request<{ ok: boolean; template: RecipeDraftTemplate }>(apiPath('/recipe-drafts/templates'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+}
+
+export async function deleteRecipeDraftTemplate(templateId: string): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>(apiPath(`/recipe-drafts/templates/${encodeURIComponent(templateId)}`), { method: 'DELETE' });
 }
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {

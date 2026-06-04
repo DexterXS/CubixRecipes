@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
+
+CONFIG_FILENAME = 'cubixrecipes.config.json'
+DATA_DIR_ENV_KEYS = ('CUBIXRECIPES_DATA_DIR', 'RAILWAY_VOLUME_MOUNT_PATH')
+RAILWAY_ENV_KEYS = ('RAILWAY_ENVIRONMENT', 'RAILWAY_PROJECT_ID', 'RAILWAY_SERVICE_ID')
+RAILWAY_DEFAULT_DATA_DIR = Path('/data')
 
 DEFAULT_PANEL_LAYOUT = [
     {'id': 'hero', 'zone': 'topLeft', 'order': 0, 'visible': True, 'height': 120, 'width_units': 3},
@@ -68,13 +74,19 @@ class ProjectPathsConfig:
 
 class ProjectConfigService:
     def __init__(self, config_path: Optional[Path] = None) -> None:
-        default_path = Path(__file__).resolve().parents[3] / 'cubixrecipes.config.json'
+        self.repo_root = Path(__file__).resolve().parents[3]
+        self.data_dir = self._resolve_data_dir()
+        default_path = self.data_dir / CONFIG_FILENAME if self.data_dir is not None else self.repo_root / CONFIG_FILENAME
         self.config_path = Path(config_path) if config_path is not None else default_path
 
     def load(self) -> ProjectPathsConfig:
         if not self.config_path.exists():
-            config = ProjectPathsConfig(project_config_path=str(self.config_path))
+            config = ProjectPathsConfig(
+                scripts_dir=self._default_scripts_dir(),
+                project_config_path=str(self.config_path),
+            )
             self.save(config)
+            self._ensure_runtime_dirs(config)
             return config
         try:
             payload = json.loads(self.config_path.read_text(encoding='utf-8'))
@@ -150,7 +162,7 @@ class ProjectConfigService:
     def normalize(self, config: ProjectPathsConfig) -> ProjectPathsConfig:
         ui_preferences = self._coerce_ui_preferences(asdict(config.ui_preferences) if isinstance(config.ui_preferences, UiPreferencesConfig) else config.ui_preferences)
         return ProjectPathsConfig(
-            scripts_dir=config.scripts_dir or 'scripts',
+            scripts_dir=config.scripts_dir or self._default_scripts_dir(),
             mods_dir=config.mods_dir or '',
             assets_dir=config.assets_dir or '',
             recipe_db_path=config.recipe_db_path or '',
@@ -162,9 +174,10 @@ class ProjectConfigService:
         )
 
     def _from_payload(self, payload: dict[str, Any]) -> ProjectPathsConfig:
+        default_scripts_dir = self._default_scripts_dir()
         return self.normalize(
             ProjectPathsConfig(
-                scripts_dir=str(payload.get('scripts_dir', 'scripts') or 'scripts'),
+                scripts_dir=str(payload.get('scripts_dir', default_scripts_dir) or default_scripts_dir),
                 mods_dir=str(payload.get('mods_dir', '') or ''),
                 assets_dir=str(payload.get('assets_dir', '') or ''),
                 recipe_db_path=str(payload.get('recipe_db_path', '') or ''),
@@ -175,6 +188,47 @@ class ProjectConfigService:
                 ui_preferences=self._coerce_ui_preferences(payload.get('ui_preferences', {})),
             )
         )
+
+    def _resolve_data_dir(self) -> Optional[Path]:
+        for env_key in DATA_DIR_ENV_KEYS:
+            raw_path = os.environ.get(env_key, '').strip()
+            if raw_path:
+                return Path(raw_path)
+        if any(os.environ.get(env_key, '').strip() for env_key in RAILWAY_ENV_KEYS) and RAILWAY_DEFAULT_DATA_DIR.is_dir():
+            return RAILWAY_DEFAULT_DATA_DIR
+        return None
+
+    def _default_scripts_dir(self) -> str:
+        data_dir = self._data_dir_for_config()
+        if data_dir is not None:
+            return str(data_dir / 'scripts')
+        return 'scripts'
+
+    def _data_dir_for_config(self) -> Optional[Path]:
+        candidates = []
+        if self.data_dir is not None:
+            candidates.append(self.data_dir)
+        if RAILWAY_DEFAULT_DATA_DIR.is_dir():
+            candidates.append(RAILWAY_DEFAULT_DATA_DIR)
+        config_parent = self.config_path.resolve(strict=False).parent
+        for candidate in candidates:
+            try:
+                if config_parent == candidate.resolve(strict=False):
+                    return candidate
+            except OSError:
+                continue
+        return None
+
+    def _ensure_runtime_dirs(self, config: ProjectPathsConfig) -> None:
+        data_dir = self._data_dir_for_config()
+        if data_dir is None:
+            return
+        scripts_path = Path(config.scripts_dir).resolve(strict=False)
+        try:
+            scripts_path.relative_to(data_dir.resolve(strict=False))
+        except ValueError:
+            return
+        scripts_path.mkdir(parents=True, exist_ok=True)
 
     def _coerce_list(self, raw: Any) -> list[str]:
         if isinstance(raw, str):

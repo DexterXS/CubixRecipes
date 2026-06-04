@@ -133,6 +133,17 @@ export interface CustomItem {
   updated_at?: string | null;
 }
 
+export interface RecipeDraftTemplate {
+  id: string;
+  outputRaw: string;
+  recipe: RecipeView;
+  sourceText: string;
+  createdByEmail: string;
+  createdAt: number;
+  updatedAt: number;
+  name: string;
+}
+
 export interface ModIconArchiveInfo {
   name: string;
   size: number;

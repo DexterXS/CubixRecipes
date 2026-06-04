@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -108,17 +108,6 @@ type UploadedDraftRecipeMatch = {
   matchedRaw: string;
   createdByEmail?: string;
   templateId?: string;
-};
-
-type RecipeDraftTemplate = {
-  id: string;
-  outputRaw: string;
-  recipe: RecipeView;
-  sourceText: string;
-  createdByEmail: string;
-  createdAt: number;
-  updatedAt: number;
-  name: string;
 };
 
 type DraftItemSortMode = 'name' | 'drafts-desc' | 'drafts-asc';
@@ -1552,8 +1541,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [authUser.is_root_admin, workspaceTab]);
 
   useEffect(() => {
-    setRecipeDraftTemplates(loadRecipeDraftTemplates(authUser.email));
-  }, [authUser.email]);
+    if (!canCreateTemplates && !canEditRecipes) {
+      setRecipeDraftTemplates([]);
+      return undefined;
+    }
+    let cancelled = false;
+    async function loadSharedRecipeDraftTemplates() {
+      try {
+        const payload = await listRecipeDraftTemplates();
+        if (!cancelled) {
+          setRecipeDraftTemplates(normalizeRecipeDraftTemplates(payload.templates));
+        }
+      } catch (error) {
+        logFrontendEvent({
+          level: 'WARN',
+          category: 'RECIPE_DRAFTS',
+          message: 'Shared recipe draft templates unavailable; using local fallback',
+          details: { error: error instanceof Error ? error.message : String(error) }
+        });
+        if (!cancelled) {
+          setRecipeDraftTemplates(loadRecipeDraftTemplates(authUser.email));
+        }
+      }
+    }
+    void loadSharedRecipeDraftTemplates();
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser.email, canCreateTemplates, canEditRecipes]);
 
   useEffect(() => {
     persistRecipeDraftTemplates(authUser.email, recipeDraftTemplates);
@@ -3570,7 +3585,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     await handleSave();
   }
 
-  function handleSaveDraftTemplate() {
+  async function handleSaveDraftTemplate() {
     const validOutput = requireOutputForSave();
     if (!validOutput) return;
     const sourceText = buildRecipeSource();
@@ -3586,20 +3601,38 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       grid_w: maxGridWidth(matrix)
     };
     const name = `${resolveCellTitle(validOutput) || validOutput} #${recipeDraftTemplates.length + 1}`;
-    const draft: RecipeDraftTemplate = {
-      id: `${now.toString(36)}-${stableHash(`${authUser.email}:${validOutput}:${sourceText}`)}`,
-      outputRaw: validOutput,
-      recipe: draftRecipe,
-      sourceText,
-      createdByEmail: authUser.email,
-      createdAt: now,
-      updatedAt: now,
-      name
-    };
-    setRecipeDraftTemplates((current) => [draft, ...current].slice(0, RECIPE_DRAFT_MAX_TEMPLATES));
-    setSelectedDraftItemRaw(validOutput);
-    setStatus(`Шаблон сохранён в черновики: ${validOutput}`);
-    setSaveStatus(t('values.saved'));
+    try {
+      const saved = await saveRecipeDraftTemplate({
+        outputRaw: validOutput,
+        recipe: draftRecipe,
+        sourceText,
+        name
+      });
+      setRecipeDraftTemplates((current) => [saved.template, ...current.filter((item) => item.id !== saved.template.id)].slice(0, RECIPE_DRAFT_MAX_TEMPLATES));
+      setSelectedDraftItemRaw(validOutput);
+      setStatus(`Шаблон сохранён в черновики: ${validOutput}`);
+      setSaveStatus(t('values.saved'));
+    } catch (error) {
+      const draft: RecipeDraftTemplate = {
+        id: `${now.toString(36)}-${stableHash(`${authUser.email}:${validOutput}:${sourceText}`)}`,
+        outputRaw: validOutput,
+        recipe: draftRecipe,
+        sourceText,
+        createdByEmail: authUser.email,
+        createdAt: now,
+        updatedAt: now,
+        name
+      };
+      setRecipeDraftTemplates((current) => [draft, ...current].slice(0, RECIPE_DRAFT_MAX_TEMPLATES));
+      setSelectedDraftItemRaw(validOutput);
+      setStatus(`Шаблон сохранён локально: ${validOutput}`);
+      logFrontendEvent({
+        level: 'WARN',
+        category: 'RECIPE_DRAFTS',
+        message: 'Recipe draft template saved locally after backend failure',
+        details: { error: error instanceof Error ? error.message : String(error) }
+      });
+    }
   }
 
   function openRecipeDraftTemplate(draft: RecipeDraftTemplate) {
@@ -3611,11 +3644,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setLastParseResult(draft.recipe.recipe_type);
   }
 
-  function removeRecipeDraftTemplate(draftId: string) {
+  async function removeRecipeDraftTemplate(draftId: string) {
     const draft = recipeDraftTemplates.find((item) => item.id === draftId);
-    setRecipeDraftTemplates((current) => current.filter((item) => item.id !== draftId));
-    setDraftTemplateContextMenu(null);
-    setStatus(draft ? `Шаблон удалён: ${draft.outputRaw}` : 'Шаблон удалён.');
+    try {
+      await deleteRecipeDraftTemplate(draftId);
+      setRecipeDraftTemplates((current) => current.filter((item) => item.id !== draftId));
+      setDraftTemplateContextMenu(null);
+      setStatus(draft ? `Шаблон удалён: ${draft.outputRaw}` : 'Шаблон удалён.');
+    } catch (error) {
+      setDraftTemplateContextMenu(null);
+      setStatus(error instanceof Error ? `Ошибка удаления шаблона: ${error.message}` : 'Ошибка удаления шаблона.');
+    }
   }
 
   function resetLayout() {
@@ -3695,7 +3734,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <button type="button" className="ghost-button icon-button" aria-label="recipe-history-forward" title="Следующий открытый рецепт" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>›</button>
               <button type="button" className="secondary-button" aria-label="save-local" disabled={!canSaveActions} onClick={downloadCurrentRecipe}>Сохранить локально</button>
               <button type="button" aria-label="save-cloud" disabled={!canSaveActions} onClick={() => void handleSaveToCloud()}>Сохранить в облако</button>
-              <button type="button" className="secondary-button" aria-label="save-draft-template" disabled={!canSaveActions} onClick={handleSaveDraftTemplate}>Сохранить в черновик</button>
+              <button type="button" className="secondary-button" aria-label="save-draft-template" disabled={!canSaveActions} onClick={() => void handleSaveDraftTemplate()}>Сохранить в черновик</button>
               <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
             </div>
           )}
@@ -3992,7 +4031,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       >
         <strong>{draft.name}</strong>
         <button type="button" aria-label="open-draft-template" onClick={() => openRecipeDraftTemplate(draft)}>Открыть</button>
-        <button type="button" className="danger-button" aria-label="delete-draft-template" onClick={() => removeRecipeDraftTemplate(draft.id)}>Удалить шаблон</button>
+        <button type="button" className="danger-button" aria-label="delete-draft-template" onClick={() => void removeRecipeDraftTemplate(draft.id)}>Удалить шаблон</button>
         <button type="button" className="ghost-button" onClick={() => setDraftTemplateContextMenu(null)}>Закрыть</button>
       </div>
     );

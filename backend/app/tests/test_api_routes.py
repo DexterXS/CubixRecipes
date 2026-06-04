@@ -8,6 +8,7 @@ import zlib
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
+from app.api.schemas import RecipeDraftTemplateRequest
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -241,6 +242,49 @@ def test_admin_zs_cloud_uploads_raw_files_and_handles_conflicts(tmp_path: Path):
     assert target.read_text(encoding='utf-8') == overwrite_text.rstrip() + '\n' + append_text
     assert [item['name'] for item in list_route()['files']] == ['bundle.zs']
     assert any(item['name'] == 'bundle.zs' for item in backups)
+
+
+def test_recipe_draft_templates_are_shared_for_admins_only(tmp_path: Path):
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    list_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipe-drafts/templates' and 'GET' in getattr(route, 'methods', set()))
+    create_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipe-drafts/templates' and 'POST' in getattr(route, 'methods', set()))
+    delete_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipe-drafts/templates/{draft_id}' and 'DELETE' in getattr(route, 'methods', set()))
+
+    def auth_request(email: str, role: str):
+        return type('Request', (), {'state': type('State', (), {'auth_user': {'email': email, 'role': role, 'is_root_admin': False}})()})()
+
+    def payload(output_raw: str):
+        return RecipeDraftTemplateRequest(
+            outputRaw=output_raw,
+            sourceText=f'recipes.addShaped({output_raw}, []);',
+            name=f'Template {output_raw}',
+            recipe={
+                'recipe_uid': 'draft',
+                'recipe_type': 'ct_shaped',
+                'output': {'raw': output_raw},
+                'matrix': [],
+                'grid_w': 0,
+                'grid_h': 0,
+                'source': {'kind': 'local_draft'},
+            },
+        )
+
+    first = create_route(auth_request('moderator-a@example.com', 'moderator'), payload('<minecraft:planks>'))['template']
+    second = create_route(auth_request('moderator-b@example.com', 'moderator'), payload('<minecraft:stick>'))['template']
+
+    moderator_a_templates = list_route(auth_request('moderator-a@example.com', 'moderator'))['templates']
+    admin_templates = list_route(auth_request('admin@example.com', 'admin'))['templates']
+
+    assert [item['id'] for item in moderator_a_templates] == [first['id']]
+    assert {item['id'] for item in admin_templates} == {first['id'], second['id']}
+
+    with pytest.raises(HTTPException) as forbidden:
+        delete_route(second['id'], auth_request('moderator-a@example.com', 'moderator'))
+
+    assert forbidden.value.status_code == 403
+
+    assert delete_route(second['id'], auth_request('admin@example.com', 'admin')) == {'ok': True}
+    assert [item['id'] for item in list_route(auth_request('admin@example.com', 'admin'))['templates']] == [first['id']]
 
 
 

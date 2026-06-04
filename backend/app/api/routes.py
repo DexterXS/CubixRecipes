@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -31,6 +31,7 @@ from app.resolver.item_resolver import ItemResolver
 from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, InvalidModIconArchiveError, ModIconAtlasService
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
+from app.storage.recipe_drafts import RecipeDraftTemplateStore
 from app.storage.zs_storage import ZsStorage
 
 
@@ -256,6 +257,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     storage.excluded_managed_roots = [admin_data_dir]
     mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
     zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
+    recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
     resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
     index_paths = config_service.build_index_paths(config)
     if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
@@ -718,6 +720,31 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             custom_item_service.delete_for_user(item_id, user['email'], can_delete_global)
         except KeyError as exc:
             raise HTTPException(status_code=404, detail='Custom item not found') from exc
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from exc
+        return {'ok': True}
+
+    @router.get('/recipe-drafts/templates')
+    def list_recipe_draft_templates(request: Request):
+        user = request.state.auth_user
+        can_view_all = role_has_permission(user.get('role'), 'templates:edit', user.get('email'))
+        return {'templates': recipe_draft_store.list_for_user(user['email'], can_view_all)}
+
+    @router.post('/recipe-drafts/templates')
+    def create_recipe_draft_template(request: Request, payload: RecipeDraftTemplateRequest):
+        user = request.state.auth_user
+        template = recipe_draft_store.create_for_user(payload.model_dump(), user['email'])
+        log_service.log('BACKEND', 'INFO', 'RECIPES', 'Recipe draft template saved', {'draft_id': template['id'], 'output_raw': template['outputRaw'], 'created_by': user['email']})
+        return {'ok': True, 'template': template}
+
+    @router.delete('/recipe-drafts/templates/{draft_id}')
+    def delete_recipe_draft_template(draft_id: str, request: Request):
+        user = request.state.auth_user
+        can_delete_all = role_has_permission(user.get('role'), 'templates:edit', user.get('email'))
+        try:
+            recipe_draft_store.delete_for_user(draft_id, user['email'], can_delete_all)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail='Draft template not found') from exc
         except PermissionError as exc:
             raise HTTPException(status_code=403, detail=str(exc)) from exc
         return {'ok': True}

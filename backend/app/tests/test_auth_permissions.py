@@ -19,6 +19,8 @@ def test_role_permissions_match_expected_access():
 
 def test_permission_mapping_protects_mutating_routes():
     assert permission_for_request('POST', '/api/recipes/create') == 'templates:create'
+    assert permission_for_request('GET', '/api/recipe-drafts/templates') == 'templates:create'
+    assert permission_for_request('DELETE', '/api/recipe-drafts/templates/abc') == 'templates:create'
     assert permission_for_request('PUT', '/api/recipes/abc') == 'recipes:edit'
     assert permission_for_request('POST', '/api/recipes/save-as') == 'files:add'
     assert permission_for_request('GET', '/api/admin/zs-cloud/files') == 'files:manage'

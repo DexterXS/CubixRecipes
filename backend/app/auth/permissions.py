@@ -60,6 +60,8 @@ def permission_for_request(method: str, path: str) -> str:
         return 'mod-icons:manage'
     if path.startswith('/api/admin/zs-cloud'):
         return 'files:manage'
+    if path.startswith('/api/recipe-drafts/templates'):
+        return 'templates:create'
     if normalized_method == 'GET':
         return 'view'
     if path == '/api/recipes/create' and normalized_method == 'POST':
