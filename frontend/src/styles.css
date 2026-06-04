@@ -153,10 +153,10 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-count-badge { position: absolute; right: -3px; bottom: -3px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; background: #a855f7; color: #fff; border: 1px solid rgba(15, 23, 42, .85); font-size: 10px; line-height: 1; font-weight: 700; }
 .draft-empty-state { grid-column: 1 / -1; min-height: 220px; display: grid; place-items: center; padding: 18px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); text-align: center; }
 .draft-selected-item { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
-.draft-selected-icon { width: 54px; height: 54px; min-width: 54px; border-radius: 6px; overflow: hidden; }
+.draft-selected-icon { position: relative; width: 54px; height: 54px; min-width: 54px; border-radius: 6px; overflow: hidden; }
 .draft-selected-icon img,
 .draft-selected-icon .animated-icon { width: 42px; height: 42px; object-fit: contain; }
-.draft-selected-icon .output-atlas-icon { width: 32px; height: 32px; transform: scale(1.32); transform-origin: center; }
+.draft-selected-icon .output-atlas-icon { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; transform: translate(-50%, -50%); transform-origin: center; }
 .draft-selected-item strong,
 .draft-selected-item span { display: block; overflow-wrap: anywhere; }
 .draft-selected-item span { color: var(--muted); font-size: 12px; margin-top: 3px; }
@@ -169,18 +169,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-preview-meta span,
 .draft-preview-meta small { color: var(--muted); font-size: 12px; }
 .draft-preview-grid { display: grid; place-items: center; height: 272px; min-height: 272px; overflow: hidden; padding: 10px; background: #c8c8c8; border: 1px solid #2f2f2f; box-sizing: border-box; }
-.draft-preview-grid .grid-wrap { --craft-cell: 48px; place-self: center; width: max-content; min-width: 0; }
-.draft-preview-grid .grid-wrap[data-grid-size='2'] { --craft-cell: 50px; }
-.draft-preview-grid .grid-wrap[data-grid-size='3'] { --craft-cell: 48px; }
-.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 24px; }
+.draft-preview-grid .grid-wrap { --craft-cell: 48px; --preview-icon-scale: 0.88; place-self: center; width: max-content; min-width: 0; }
+.draft-preview-grid .grid-wrap[data-grid-size='2'] { --craft-cell: 50px; --preview-icon-scale: 0.88; }
+.draft-preview-grid .grid-wrap[data-grid-size='3'] { --craft-cell: 48px; --preview-icon-scale: 0.88; }
+.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 24px; --preview-icon-scale: 0.58; }
 .draft-preview-grid .cell-visual { display: grid; place-items: center; }
-.draft-preview-grid .cell-icon-slot { display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
+.draft-preview-grid .cell-icon-slot { position: relative; display: block; padding: 0; overflow: hidden; }
 .draft-preview-grid .cell-icon-slot img,
-.draft-preview-grid .cell-icon-slot .animated-icon { width: min(32px, calc(var(--craft-cell) - 8px)); height: min(32px, calc(var(--craft-cell) - 8px)); object-fit: contain; }
-.draft-preview-grid .cell-atlas-icon { flex: 0 0 32px; width: 32px; height: 32px; margin: auto; transform: scale(0.95); transform-origin: center; }
+.draft-preview-grid .cell-icon-slot .animated-icon { position: absolute; left: 50%; top: 50%; width: min(32px, calc(var(--craft-cell) - 8px)); height: min(32px, calc(var(--craft-cell) - 8px)); object-fit: contain; transform: translate(-50%, -50%); }
+.draft-preview-grid .cell-atlas-icon { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: 0; transform: translate(-50%, -50%) scale(var(--preview-icon-scale)); transform-origin: center; }
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot img,
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 20px; height: 20px; }
-.draft-preview-grid .grid-cell.size-9 .cell-atlas-icon { transform: scale(0.62); }
 .draft-template-list { display: grid; gap: 8px; max-height: calc(100vh - 560px); min-height: 150px; overflow: auto; padding-right: 6px; }
 .draft-template-card { position: relative; display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); cursor: pointer; }
 .draft-template-card:hover,
