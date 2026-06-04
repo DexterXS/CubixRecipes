@@ -180,6 +180,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-preview-grid .cell-atlas-icon { display: block; width: 32px; height: 32px; background-repeat: no-repeat; image-rendering: pixelated; transform: scale(var(--preview-icon-scale)); transform-origin: center; }
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot img,
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 20px; height: 20px; }
+.draft-preview-grid .grid-cell.size-9 .cell-atlas-icon { transform: scale(var(--preview-icon-scale)); }
 .draft-template-list { display: grid; gap: 8px; max-height: calc(100vh - 560px); min-height: 150px; overflow: auto; padding-right: 6px; }
 .draft-template-card { position: relative; display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); cursor: pointer; }
 .draft-template-card:hover,
