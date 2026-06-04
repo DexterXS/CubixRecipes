@@ -164,9 +164,26 @@ const LOCAL_DRAFT_MAX_HISTORY = 20;
 const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
 const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
 const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
+const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
+const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
 const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
 const RECIPE_DRAFT_MAX_TEMPLATES = 200;
 const DRAFT_ITEM_PAGE_SIZE = 240;
+const defaultDebugFilters: DebugFilters = { hotkeys: true, ui: true, recipe: true, api: true, storage: true };
+const defaultDebugLevelFilters: DebugLevelFilters = { info: true, success: true, warning: true, error: true };
+const debugCategoryLabels: Record<DebugCategory, string> = {
+  hotkeys: 'R/U и клавиши',
+  ui: 'UI состояния',
+  recipe: 'Рецепт',
+  api: 'API',
+  storage: 'Загрузки/хранилище'
+};
+const debugLevelLabels: Record<HotkeyDebugLevel, string> = {
+  info: 'info',
+  success: 'success',
+  warning: 'warning',
+  error: 'error'
+};
 
 type CraftEditorTarget =
   | { kind: 'output' }
@@ -193,13 +210,18 @@ type CloudUploadConflictState = {
 
 type HotkeyDebugLevel = 'info' | 'success' | 'warning' | 'error';
 type HotkeyDebugDetails = Record<string, string | number | boolean | null | undefined>;
+type DebugCategory = 'hotkeys' | 'ui' | 'recipe' | 'api' | 'storage';
 type HotkeyDebugEvent = {
   id: number;
   timestamp: string;
   level: HotkeyDebugLevel;
+  category: DebugCategory;
   message: string;
   details?: HotkeyDebugDetails;
 };
+type DebugFilters = Record<DebugCategory, boolean>;
+type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
+type DebugSection = 'overview' | 'recipe' | 'runtime' | 'logs' | 'staff' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -547,6 +569,28 @@ function persistRecipeDraftTemplates(email: string, templates: RecipeDraftTempla
     }));
   } catch {
     // Local recipe draft persistence is best-effort.
+  }
+}
+
+function loadBooleanRecord<T extends string>(key: string, defaults: Record<T, boolean>): Record<T, boolean> {
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return { ...defaults };
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isObjectRecord(parsed)) return { ...defaults };
+    return Object.fromEntries(
+      Object.entries(defaults).map(([name, value]) => [name, typeof parsed[name] === 'boolean' ? parsed[name] : value])
+    ) as Record<T, boolean>;
+  } catch {
+    return { ...defaults };
+  }
+}
+
+function persistBooleanRecord<T extends string>(key: string, value: Record<T, boolean>) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Local debug preferences are best-effort only.
   }
 }
 
@@ -1197,6 +1241,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   });
   const [hotkeyDebugEvents, setHotkeyDebugEvents] = useState<HotkeyDebugEvent[]>([]);
+  const [debugFilters, setDebugFilters] = useState<DebugFilters>(() => loadBooleanRecord(DEBUG_FILTERS_STORAGE_KEY, defaultDebugFilters));
+  const [debugLevelFilters, setDebugLevelFilters] = useState<DebugLevelFilters>(() => loadBooleanRecord(DEBUG_LEVEL_FILTERS_STORAGE_KEY, defaultDebugLevelFilters));
+  const [debugSection, setDebugSection] = useState<DebugSection>('overview');
   const [customItems, setCustomItems] = useState<CustomItem[]>([]);
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
@@ -1264,20 +1311,28 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     { id: 'debug' as const, label: uiPreferences.language === 'ru' ? 'Отладка' : 'Debug', visible: canUseDebug }
   ].filter((tab) => tab.visible);
 
-  function logHotkeyDebug(message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
+  function logAppDebug(category: DebugCategory, message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
     if (!isHotkeyDebugActive) {
+      return;
+    }
+    if (!debugFilters[category] || !debugLevelFilters[level]) {
       return;
     }
     const entry: HotkeyDebugEvent = {
       id: hotkeyDebugCounterRef.current + 1,
       timestamp: new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
       level,
+      category,
       message,
       details
     };
     hotkeyDebugCounterRef.current = entry.id;
-    setHotkeyDebugEvents((current) => [entry, ...current].slice(0, 32));
-    console.info('[CubixRecipes R/U debug]', message, details ?? {});
+    setHotkeyDebugEvents((current) => [entry, ...current].slice(0, 80));
+    console.info(`[CubixRecipes debug:${category}]`, message, details ?? {});
+  }
+
+  function logHotkeyDebug(message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
+    logAppDebug('hotkeys', message, details, level);
   }
 
   function setHotkeyDebugEnabledForAdmin(enabled: boolean) {
@@ -1293,6 +1348,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } catch {
       // Local debug preferences are best-effort only.
     }
+  }
+
+  function toggleDebugFilter(category: DebugCategory, enabled: boolean) {
+    if (!canManageSettings) return;
+    setDebugFilters((current) => {
+      const next = { ...current, [category]: enabled };
+      persistBooleanRecord(DEBUG_FILTERS_STORAGE_KEY, next);
+      return next;
+    });
+  }
+
+  function toggleDebugLevel(level: HotkeyDebugLevel, enabled: boolean) {
+    if (!canManageSettings) return;
+    setDebugLevelFilters((current) => {
+      const next = { ...current, [level]: enabled };
+      persistBooleanRecord(DEBUG_LEVEL_FILTERS_STORAGE_KEY, next);
+      return next;
+    });
   }
 
   function updateHoveredItemRaw(next: string | null | ((current: string | null) => string | null)) {
@@ -1739,6 +1812,48 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const iconsResolved = recipe.output_resolution?.icon_url ? 1 : 0;
   const iconTotal = filledCells + (outputRaw ? 1 : 0);
   const inputStatusTone = !backendAvailable || lastApiStatus === t('values.error') || status.includes('Ошибка') || status.includes('Backend unavailable') ? 'warning' : status === t('status.loaded') ? 'success' : 'default';
+
+  useEffect(() => {
+    if (isHotkeyDebugActive) {
+      logAppDebug('ui', 'debug enabled', {
+        categories: Object.entries(debugFilters).filter(([, enabled]) => enabled).map(([category]) => category).join(','),
+        levels: Object.entries(debugLevelFilters).filter(([, enabled]) => enabled).map(([level]) => level).join(',')
+      }, 'success');
+    }
+  }, [isHotkeyDebugActive]);
+
+  useEffect(() => {
+    logAppDebug('ui', 'workspace changed', { tab: workspaceTab }, 'info');
+  }, [workspaceTab]);
+
+  useEffect(() => {
+    logAppDebug('ui', 'held item changed', { raw: heldItemRaw ?? 'none' }, heldItemRaw ? 'info' : 'success');
+  }, [heldItemRaw]);
+
+  useEffect(() => {
+    logAppDebug('recipe', 'recipe state changed', {
+      output: outputRaw,
+      type: recipe.recipe_type,
+      size: summary,
+      filled: filledCells,
+      empty: nullCells
+    }, unresolvedCells ? 'warning' : 'info');
+  }, [filledCells, nullCells, outputRaw, recipe.recipe_type, summary, unresolvedCells]);
+
+  useEffect(() => {
+    logAppDebug('api', 'api status changed', { status: lastApiStatus, parse: lastParseResult, backend: backendAvailable }, backendAvailable ? 'info' : 'warning');
+  }, [backendAvailable, lastApiStatus, lastParseResult]);
+
+  useEffect(() => {
+    logAppDebug('storage', 'texture loader changed', { state: textureLoadState, status: textureLoadStatus || 'idle' }, textureLoadState === 'running' ? 'info' : 'success');
+  }, [textureLoadState, textureLoadStatus]);
+
+  useEffect(() => {
+    if (cloudStatus) {
+      logAppDebug('storage', 'cloud status changed', { status: cloudStatus }, cloudStatus.includes('Ошибка') || cloudStatus.toLowerCase().includes('error') ? 'error' : 'info');
+    }
+  }, [cloudStatus]);
+
   const matrixWithResolution = useMemo(() => {
     const resolutionByRaw = new Map<string, RecipeView['matrix'][number][number]['resolution']>();
     recipe.matrix.forEach((row) => row.forEach((cell) => {
@@ -3196,6 +3311,28 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setHeldItemRaw(null);
   }
 
+  function handleHeldItemContextMenu(event: MouseEvent<HTMLElement>) {
+    if (!heldItemRaw) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    logAppDebug('ui', 'held item cleared by right click', { raw: heldItemRaw }, 'info');
+    setHeldItemRaw(null);
+  }
+
+  function getContextMenuStyle(x: number, y: number, options?: { width?: number; height?: number }): CSSProperties {
+    const width = options?.width ?? 230;
+    const height = options?.height ?? 178;
+    const padding = 8;
+    const viewportWidth = typeof window === 'undefined' ? width + padding * 2 : window.innerWidth;
+    const viewportHeight = typeof window === 'undefined' ? height + padding * 2 : window.innerHeight;
+    return {
+      left: clamp(x, padding, Math.max(padding, viewportWidth - width - padding)),
+      top: clamp(y, padding, Math.max(padding, viewportHeight - height - padding))
+    };
+  }
+
   function changeNeiPage(direction: -1 | 1) {
     setNeiPage((current) => clamp(current + direction, 0, neiPageCount - 1));
   }
@@ -3786,19 +3923,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <option value="strict">Точная</option>
               </select>
             </label>
-            <label className="field-block recipe-output-drop">
-              <span>Результат крафта</span>
-              <input
-                aria-label="output-raw"
-                value={outputRaw}
-                onChange={(event) => handleRecipeItemDrop({ kind: 'output' }, event.target.value)}
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  handleRecipeItemDrop({ kind: 'output' }, event.dataTransfer.getData('text/plain'));
-                }}
-              />
-            </label>
           </div>
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
@@ -3826,6 +3950,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 type="button"
                 className="output-icon-slot output-icon-button craft-output-slot"
                 data-item-raw={outputRaw || undefined}
+                aria-label="craft-output-slot"
                 aria-disabled={!canCreateTemplates && !canEditRecipes}
                 onMouseEnter={() => updateHoveredItemRaw(outputRaw || null)}
                 onMouseLeave={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
@@ -4032,7 +4157,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div
         className="context-menu nei-context-menu"
-        style={{ left: neiContextMenu.x, top: neiContextMenu.y }}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { height: custom ? 250 : 210 })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
@@ -4052,7 +4177,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div
         className="context-menu draft-template-context-menu"
-        style={{ left: draftTemplateContextMenu.x, top: draftTemplateContextMenu.y }}
+        style={getContextMenuStyle(draftTemplateContextMenu.x, draftTemplateContextMenu.y, { height: 150 })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{draft.name}</strong>
@@ -4070,7 +4195,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div
         className="context-menu cloud-file-context-menu"
-        style={{ left: cloudContextMenu.x, top: cloudContextMenu.y }}
+        style={getContextMenuStyle(cloudContextMenu.x, cloudContextMenu.y, { height: 190 })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{file.name}</strong>
@@ -4166,7 +4291,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <aside className="hotkey-debug-panel" aria-label="recipe-hotkey-debug">
         <div className="hotkey-debug-header">
-          <strong>R/U debug</strong>
+          <strong>App debug</strong>
           <button type="button" className="ghost-button" onClick={() => setHotkeyDebugEvents([])}>clear</button>
         </div>
         <ol className="hotkey-debug-list">
@@ -4175,6 +4300,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <div className="hotkey-debug-line">
                 <span>{entry.timestamp}</span>
                 <strong>{entry.message}</strong>
+                <em>{debugCategoryLabels[entry.category]}</em>
               </div>
               {entry.details ? (
                 <dl>
@@ -4865,6 +4991,267 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderDebugEventsList() {
+    if (!hotkeyDebugEvents.length) {
+      return <div className="inline-hint">Debug включен, но событий пока нет. Выполни действие в интерфейсе, чтобы оно появилось здесь.</div>;
+    }
+    return (
+      <ol className="debug-log-list">
+        {hotkeyDebugEvents.map((entry) => (
+          <li key={entry.id} className={`debug-log-event debug-log-${entry.level}`}>
+            <div className="debug-log-event-head">
+              <span>{entry.timestamp}</span>
+              <strong>{entry.message}</strong>
+              <em>{debugCategoryLabels[entry.category]}</em>
+              <code>{entry.level}</code>
+            </div>
+            {entry.details ? (
+              <dl>
+                {Object.entries(entry.details).map(([key, value]) => (
+                  <div key={key}>
+                    <dt>{key}</dt>
+                    <dd>{String(value)}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+    );
+  }
+
+  function renderDebugSectionContent() {
+    const selectedTextureCount = itemPanelModSummaries.filter((summary) => selectedTextureMods[summary.modid] ?? true).length;
+    const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
+    const rawPayload = {
+      recipe,
+      matrix,
+      outputRaw,
+      status,
+      saveStatus,
+      lastApiStatus,
+      lastParseResult,
+      workspaceTab,
+      heldItemRaw,
+      hoveredItemRaw,
+      uiPreferences,
+      debugFilters,
+      debugLevelFilters,
+      backendAvailable,
+      textureLoadState,
+      textureLoadStatus,
+      cloudStatus,
+      buttons: {
+        saveLocal: canSaveActions,
+        saveCloud: canSaveActions,
+        saveDraft: canSaveActions,
+        clear: canCreateTemplates || canEditRecipes,
+        back: recipeBackHistory.length > 0,
+        forward: recipeForwardHistory.length > 0
+      },
+      uploadedDrafts: uploadedDrafts.map((draft) => ({ id: draft.id, name: draft.name, size: draft.size, lastModified: draft.lastModified })),
+      recipeDraftTemplates: recipeDraftTemplates.map((draft) => ({ id: draft.id, outputRaw: draft.outputRaw, name: draft.name, createdByEmail: draft.createdByEmail, updatedAt: draft.updatedAt }))
+    };
+
+    switch (debugSection) {
+      case 'recipe':
+        return (
+          <div className="debug-section-grid">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Рецепт</h3>
+                <span>Состояние текущей сетки и результата.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Тип</span><strong>{recipe.recipe_type}</strong></div>
+                <div><span>Позиция</span><strong>{recipeBindingMode}</strong></div>
+                <div><span>Размер</span><strong>{summary}</strong></div>
+                <div><span>Заполнено</span><strong>{filledCells}</strong></div>
+                <div><span>Пусто</span><strong>{nullCells}</strong></div>
+                <div><span>Проблемных ячеек</span><strong>{unresolvedCells}</strong></div>
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Output</h3>
+                <span>{outputDisplayName ?? outputRaw}</span>
+              </div>
+              <div className="recipe-uses-output">
+                <span className="output-icon-slot">{renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}</span>
+                <div>
+                  <strong>{outputRaw}</strong>
+                  <span>{recipe.output_resolution?.icon_url ? 'Иконка найдена' : 'Иконка не найдена'}</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        );
+      case 'runtime':
+        return (
+          <div className="debug-section-grid">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Интерфейс</h3>
+                <span>Текущие режимы и выбранные состояния.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Вкладка</span><strong>{workspaceTab}</strong></div>
+                <div><span>Тема</span><strong>{uiPreferences.theme_mode}</strong></div>
+                <div><span>Масштаб</span><strong>{Math.round(uiPreferences.ui_scale * 100)}%</strong></div>
+                <div><span>Режим редактора</span><strong>{uiPreferences.editor_mode}</strong></div>
+                <div><span>В мышке</span><strong>{heldItemRaw ?? 'нет'}</strong></div>
+                <div><span>Под курсором</span><strong>{hoveredItemRaw ?? 'нет'}</strong></div>
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Загрузки</h3>
+                <span>API, облако, иконки и локальные данные.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Backend</span><strong>{backendAvailable ? 'online' : 'unavailable'}</strong></div>
+                <div><span>API</span><strong>{lastApiStatus}</strong></div>
+                <div><span>Texture loader</span><strong>{textureLoadState}</strong></div>
+                <div><span>Texture mods</span><strong>{selectedTextureCount}/{itemPanelModSummaries.length}</strong></div>
+                <div><span>Cloud</span><strong>{cloudStatus || 'idle'}</strong></div>
+                <div><span>Шаблонов</span><strong>{recipeDraftTemplates.length}</strong></div>
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Кнопки</h3>
+                <span>Вычисленные состояния основных действий.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Save local</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
+                <div><span>Save cloud</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
+                <div><span>Save draft</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
+                <div><span>Clear</span><strong>{canCreateTemplates || canEditRecipes ? 'enabled' : 'disabled'}</strong></div>
+                <div><span>Back</span><strong>{recipeBackHistory.length ? 'enabled' : 'disabled'}</strong></div>
+                <div><span>Forward</span><strong>{recipeForwardHistory.length ? 'enabled' : 'disabled'}</strong></div>
+              </div>
+            </section>
+          </div>
+        );
+      case 'logs':
+        return (
+          <div className="debug-section-grid">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Фильтры вывода</h3>
+                <span>Эти же настройки доступны в модальном окне настроек.</span>
+              </div>
+              <div className="debug-filter-grid">
+                {Object.entries(debugCategoryLabels).map(([category, label]) => (
+                  <label key={category} className="view-toggle">
+                    <input type="checkbox" checked={debugFilters[category as DebugCategory]} onChange={(event) => toggleDebugFilter(category as DebugCategory, event.target.checked)} />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <div className="debug-filter-grid">
+                {Object.entries(debugLevelLabels).map(([level, label]) => (
+                  <label key={level} className="view-toggle">
+                    <input type="checkbox" checked={debugLevelFilters[level as HotkeyDebugLevel]} onChange={(event) => toggleDebugLevel(level as HotkeyDebugLevel, event.target.checked)} />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Лента событий</h3>
+                <span>{isHotkeyDebugActive ? `Событий: ${hotkeyDebugEvents.length}` : 'Debug выключен в настройках.'}</span>
+              </div>
+              {renderDebugEventsList()}
+            </section>
+          </div>
+        );
+      case 'staff':
+        return (
+          <section className="settings-section">
+            <div className="settings-section-title">
+              <h3>Персонал</h3>
+              <span>Роли и доступ по Google почте.</span>
+            </div>
+            {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+          </section>
+        );
+      case 'raw':
+        return <pre className="raw-block debug-raw-block">{JSON.stringify(rawPayload, null, 2)}</pre>;
+      default:
+        return (
+          <div className="debug-section-grid">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Статус</h3>
+                <span>{status}</span>
+              </div>
+              <StatusBar items={statusItems} />
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Диагностика</h3>
+                <span>Краткая проверка текущего рецепта.</span>
+              </div>
+              <ul className="diagnostics-list">
+                <li>Unresolved cells: {unresolvedCells}</li>
+                <li>Output icon: {recipe.output_resolution?.icon_url ?? 'not found'}</li>
+                <li>Current file: {recipe.source.path ?? 'unsaved'}</li>
+              </ul>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Быстрый debug</h3>
+                <span>Последние ключевые состояния.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Последний API</span><strong>{lastApiStatus}</strong></div>
+                <div><span>Parse result</span><strong>{lastParseResult}</strong></div>
+                <div><span>Иконка output</span><strong>{recipe.output_resolution?.icon_url ? 'найдена' : 'нет'}</strong></div>
+                <div><span>Debug</span><strong>{isHotkeyDebugActive ? 'включен' : 'выключен'}</strong></div>
+              </div>
+            </section>
+          </div>
+        );
+    }
+  }
+
+  function renderDebugWorkspace() {
+    const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
+      { id: 'overview', label: 'Обзор', description: 'Статус и диагностика', visible: true },
+      { id: 'recipe', label: 'Рецепт', description: 'Сетка, output, история', visible: true },
+      { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: true },
+      { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: true },
+      { id: 'staff', label: 'Персонал', description: 'Роли пользователей', visible: canManageRoles },
+      { id: 'raw', label: 'Сырые данные', description: 'JSON snapshot', visible: true }
+    ];
+
+    return (
+      <div className="debug-shell" aria-label="debug-workspace">
+        <aside className="debug-sidebar" aria-label="debug-navigation">
+          <strong>Отладка</strong>
+          {sections.filter((section) => section.visible).map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              className={`debug-nav-button ${debugSection === section.id ? 'active' : ''}`.trim()}
+              aria-label={`debug-section-${section.id}`}
+              onClick={() => setDebugSection(section.id)}
+            >
+              <span>{section.label}</span>
+              <small>{section.description}</small>
+            </button>
+          ))}
+        </aside>
+        <section className="debug-content">
+          {renderDebugSectionContent()}
+        </section>
+      </div>
+    );
+  }
+
   function renderWorkspace() {
     if (workspaceTab === 'recipe') {
       return (
@@ -4881,16 +5268,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return renderCloudStoragePanel();
     }
     if (workspaceTab === 'debug' && canUseDebug) {
-      return (
-        <div className="workspace-layout workspace-layout-debug">
-          {renderColumn([getPanelForTab('statusBar'), getPanelForTab('info')], 'workspace-left')}
-          {renderColumn([getPanelForTab('diagnostics'), getPanelForTab('debug')], 'workspace-center')}
-          <div className="workspace-column workspace-right">
-            {renderAdminUsersPanel()}
-            {renderColumn([getPanelForTab('raw')], '')}
-          </div>
-        </div>
-      );
+      return renderDebugWorkspace();
     }
     return (
       <div className="workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main">
@@ -5071,12 +5449,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   return (
-    <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown}>
+    <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown} onContextMenuCapture={handleHeldItemContextMenu}>
       <div className="utility-bar">
         <strong>CubixRecipes</strong>
         <nav className="main-tabs" aria-label="workspace-tabs">
           {workspaceTabs.map((tab) => (
-            <button key={tab.id} type="button" className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>
+            <button key={tab.id} type="button" data-testid={`workspace-tab-${tab.id}`} className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>
               {tab.label}
             </button>
           ))}
@@ -5087,7 +5465,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <span>{authUser.email}</span>
             <strong>{authUser.role}</strong>
           </div>
-          <label className="language-switch compact-switch"><span>{t('app.language')}</span><select aria-label={t('app.language')} disabled={!canManageSettings} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <label className="language-switch compact-switch"><select aria-label={t('app.language')} disabled={!canManageSettings} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
           {canManageSettings ? <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button> : null}
           <button type="button" className="ghost-button" onClick={() => void onLogout()}>Logout</button>
         </div>
@@ -5134,11 +5512,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </label>
               <section className="settings-section">
                 <div className="settings-section-title">
-                  <h3>R/U debug</h3>
-                  <span>Логи наведения, клавиш и поиска рецепта видны только админам.</span>
+                  <h3>Debug режим</h3>
+                  <span>События интерфейса, рецепта, API и загрузок видны только админам. Фильтры защищают ленту от лишнего шума.</span>
                 </div>
-                <label className="field-block">
-                  <span>Включить отладку R/U</span>
+                <label className="switch-field">
+                  <span>Включить debug</span>
                   <input
                     aria-label="hotkey-debug-enabled"
                     type="checkbox"
@@ -5146,6 +5524,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     onChange={(event) => setHotkeyDebugEnabledForAdmin(event.target.checked)}
                   />
                 </label>
+                <div className="settings-section-title compact">
+                  <h3>Категории</h3>
+                  <span>{Object.values(debugFilters).filter(Boolean).length}/{Object.keys(debugFilters).length}</span>
+                </div>
+                <div className="debug-filter-grid">
+                  {Object.entries(debugCategoryLabels).map(([category, label]) => (
+                    <label key={category} className="view-toggle">
+                      <input type="checkbox" checked={debugFilters[category as DebugCategory]} onChange={(event) => toggleDebugFilter(category as DebugCategory, event.target.checked)} />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+                </div>
+                <div className="settings-section-title compact">
+                  <h3>Уровни</h3>
+                  <span>{Object.values(debugLevelFilters).filter(Boolean).length}/{Object.keys(debugLevelFilters).length}</span>
+                </div>
+                <div className="debug-filter-grid">
+                  {Object.entries(debugLevelLabels).map(([level, label]) => (
+                    <label key={level} className="view-toggle">
+                      <input type="checkbox" checked={debugLevelFilters[level as HotkeyDebugLevel]} onChange={(event) => toggleDebugLevel(level as HotkeyDebugLevel, event.target.checked)} />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+                </div>
               </section>
               <section className="settings-section">
                 <div className="settings-section-title">

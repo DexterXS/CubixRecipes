@@ -76,6 +76,10 @@ function enableHotkeyDebug() {
   fireEvent.click(within(dialog).getByRole('button', { name: 'Закрыть' }));
 }
 
+function craftOutputRaw(): string | null {
+  return screen.getByLabelText('craft-output-slot').getAttribute('data-item-raw');
+}
+
 beforeEach(() => {
   window.localStorage.clear();
   mockRecipeDraftTemplates = [];
@@ -464,7 +468,35 @@ test('renders the cleaned static workspace for admins', async () => {
   expect(screen.getByText('Файлы рецептов')).toBeTruthy();
   expect(screen.getByText('NEI предметы')).toBeTruthy();
 
+  expect(screen.queryByLabelText('output-raw')).toBeFalsy();
+
   await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/admin/users', expect.anything()));
+});
+
+test('debug workspace uses side navigation sections', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-debug'));
+
+  expect(screen.getByLabelText('debug-workspace')).toBeTruthy();
+  expect(screen.getByLabelText('debug-navigation')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('debug-section-logs'));
+  expect(screen.getByText('Фильтры вывода')).toBeTruthy();
+});
+
+test('right click clears a held item before opening context menus again', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.click(item);
+  expect(document.querySelector('.held-item-cursor')).toBeTruthy();
+  fireEvent.contextMenu(screen.getByLabelText('craft-output-slot'));
+
+  expect(document.querySelector('.held-item-cursor')).toBeFalsy();
+  expect(document.querySelector('.nei-context-menu')).toBeFalsy();
+
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  expect(document.querySelector('.nei-context-menu')).toBeTruthy();
 });
 
 test('admin mod icons tab shows archive and atlas status', async () => {
@@ -550,7 +582,7 @@ test('local recipe file import loads the draft into the editor', async () => {
   });
   expect(await screen.findByText('torch.zs')).toBeTruthy();
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 });
 
@@ -622,7 +654,7 @@ test('recipe files panel uploads uploaded file content to cloud instead of curre
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   expect(await screen.findByText('uploaded_file.zs')).toBeTruthy();
-  fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:stone>' } });
+  fireEvent.doubleClick(await screen.findByLabelText('nei-item-<minecraft:planks>'));
 
   const createObjectUrlCalls = (URL.createObjectURL as unknown as ReturnType<typeof vi.fn>).mock.calls.length;
   fireEvent.click(screen.getByLabelText('download-active-draft'));
@@ -686,7 +718,7 @@ test('local user draft survives a reload', async () => {
   cleanup();
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+  expect(craftOutputRaw()).toBe('<minecraft:torch>');
   expect((screen.getByLabelText('nei-search') as HTMLInputElement).value).toBe('planks');
 });
 
@@ -718,7 +750,7 @@ test('saved recipe draft templates can be browsed, previewed, opened, and remove
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   await screen.findByLabelText('nei-item-<minecraft:planks>');
 
-  fireEvent.change(screen.getByLabelText('output-raw'), { target: { value: '<minecraft:planks>' } });
+  fireEvent.doubleClick(screen.getByLabelText('nei-item-<minecraft:planks>'));
   fireEvent.click(screen.getByLabelText('save-draft-template'));
   await waitFor(() => expect(mockRecipeDraftTemplates.length).toBe(1));
 
@@ -738,7 +770,7 @@ test('saved recipe draft templates can be browsed, previewed, opened, and remove
   expect(screen.getByLabelText('draft-template-preview')).toBeTruthy();
 
   fireEvent.click(within(template).getByLabelText(/^edit-draft-template-/));
-  expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+  expect(craftOutputRaw()).toBe('<minecraft:planks>');
   expect(screen.queryByLabelText('draft-template-list')).toBeFalsy();
 
   fireEvent.click(screen.getByRole('button', { name: 'Черновики' }));
@@ -807,7 +839,7 @@ test('R opens a recipe from a hovered craft-grid item and history can return', a
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 
   const firstCell = screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement;
@@ -815,13 +847,13 @@ test('R opens a recipe from a hovered craft-grid item and history can return', a
   fireEvent.keyDown(window, { key: 'r' });
 
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+    expect(craftOutputRaw()).toBe('<minecraft:planks>');
   });
 
   fireEvent.click(screen.getByLabelText('recipe-history-back'));
 
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 });
 
@@ -837,7 +869,7 @@ test('R opens a hovered NEI recipe even when search input keeps focus', async ()
   fireEvent.keyDown(search, { key: 'к', code: 'KeyR' });
 
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:planks>');
+    expect(craftOutputRaw()).toBe('<minecraft:planks>');
   });
   expect(screen.getByLabelText('recipe-hotkey-debug')).toBeTruthy();
   expect(screen.getByText('keydown captured')).toBeTruthy();
@@ -856,7 +888,7 @@ test('R falls back to a local uploaded draft when backend search has no match', 
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 
   const search = screen.getByLabelText('nei-search') as HTMLInputElement;
@@ -866,7 +898,7 @@ test('R falls back to a local uploaded draft when backend search has no match', 
   fireEvent.keyDown(window, { key: 'r', code: 'KeyR' });
 
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:stick>');
+    expect(craftOutputRaw()).toBe('<minecraft:stick>');
   });
   expect(screen.getByText('uploaded draft cache hit')).toBeTruthy();
   expect(screen.getByText('uploaded draft recipe applied')).toBeTruthy();
@@ -881,7 +913,7 @@ test('U opens paged recipe uses for a hovered craft-grid item', async () => {
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 
   const firstCell = screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement;
@@ -907,7 +939,7 @@ test('U includes local uploaded draft uses when backend search has no match', as
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   await waitFor(() => {
-    expect((screen.getByLabelText('output-raw') as HTMLInputElement).value).toBe('<minecraft:torch>');
+    expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
 
   const search = screen.getByLabelText('nei-search') as HTMLInputElement;
