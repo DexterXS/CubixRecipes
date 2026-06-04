@@ -169,15 +169,15 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-preview-meta span,
 .draft-preview-meta small { color: var(--muted); font-size: 12px; }
 .draft-preview-grid { display: grid; place-items: center; height: 272px; min-height: 272px; overflow: hidden; padding: 10px; background: #c8c8c8; border: 1px solid #2f2f2f; box-sizing: border-box; }
-.draft-preview-grid .grid-wrap { --craft-cell: 48px; --preview-icon-scale: 0.88; place-self: center; width: max-content; min-width: 0; }
+.draft-preview-grid .grid-wrap { --craft-cell: 48px; --preview-icon-scale: 0.88; --preview-icon-x: 0px; --preview-icon-y: 0px; place-self: center; width: max-content; min-width: 0; }
 .draft-preview-grid .grid-wrap[data-grid-size='2'] { --craft-cell: 50px; --preview-icon-scale: 0.88; }
 .draft-preview-grid .grid-wrap[data-grid-size='3'] { --craft-cell: 48px; --preview-icon-scale: 0.88; }
-.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 24px; --preview-icon-scale: 0.58; }
+.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 24px; --preview-icon-scale: 0.58; --preview-icon-x: 2px; --preview-icon-y: -2px; }
 .draft-preview-grid .cell-visual { display: grid; place-items: center; }
 .draft-preview-grid .cell-icon-slot { position: relative; display: block; padding: 0; overflow: hidden; }
 .draft-preview-grid .cell-icon-slot img,
 .draft-preview-grid .cell-icon-slot .animated-icon { position: absolute; left: 50%; top: 50%; width: min(32px, calc(var(--craft-cell) - 8px)); height: min(32px, calc(var(--craft-cell) - 8px)); object-fit: contain; transform: translate(-50%, -50%); }
-.draft-preview-grid .cell-atlas-icon { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: 0; transform: translate(-50%, -50%) scale(var(--preview-icon-scale)); transform-origin: center; }
+.draft-preview-grid .cell-atlas-icon { position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; margin: 0; transform: translate(calc(-50% + var(--preview-icon-x)), calc(-50% + var(--preview-icon-y))) scale(var(--preview-icon-scale)); transform-origin: center; }
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot img,
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 20px; height: 20px; }
 .draft-template-list { display: grid; gap: 8px; max-height: calc(100vh - 560px); min-height: 150px; overflow: auto; padding-right: 6px; }
