@@ -184,8 +184,11 @@ class ItemPanelIconCatalog:
                 icon_width, icon_height, icon_rows = self._read_png_rgba(self.icons_dir / entry.icon_file)
             except Exception:
                 continue
-            if icon_width > tile_size or icon_height > tile_size:
-                icon_width, icon_height, icon_rows = self._resize_nearest_rgba(icon_width, icon_height, icon_rows, tile_size)
+            icon_width, icon_height, icon_rows = self._trim_transparent_rgba(icon_width, icon_height, icon_rows)
+            padding = 2
+            target_size = max(1, tile_size - padding * 2)
+            if icon_width > target_size or icon_height > target_size:
+                icon_width, icon_height, icon_rows = self._resize_nearest_rgba(icon_width, icon_height, icon_rows, target_size)
             offset_x = x + (tile_size - icon_width) // 2
             offset_y = y + (tile_size - icon_height) // 2
             self._blit_rgba(atlas, atlas_width, icon_rows, icon_width, icon_height, offset_x, offset_y)
@@ -239,6 +242,24 @@ class ItemPanelIconCatalog:
 
     def _read_png_rgba(self, path: Path) -> tuple[int, int, list[bytes]]:
         return self.read_png_rgba_bytes(path.read_bytes())
+
+    def _trim_transparent_rgba(self, width: int, height: int, rows: list[bytes]) -> tuple[int, int, list[bytes]]:
+        min_x = width
+        min_y = height
+        max_x = -1
+        max_y = -1
+        for y, row in enumerate(rows):
+            for x in range(width):
+                if row[x * 4 + 3] == 0:
+                    continue
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                max_x = max(max_x, x)
+                max_y = max(max_y, y)
+        if max_x < 0:
+            return width, height, rows
+        trimmed_rows = [row[min_x * 4:(max_x + 1) * 4] for row in rows[min_y:max_y + 1]]
+        return max_x - min_x + 1, max_y - min_y + 1, trimmed_rows
 
     def _resize_nearest_rgba(self, width: int, height: int, rows: list[bytes], max_size: int) -> tuple[int, int, list[bytes]]:
         scale = min(max_size / width, max_size / height)

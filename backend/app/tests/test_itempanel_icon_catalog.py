@@ -81,3 +81,30 @@ def test_itempanel_catalog_builds_atlas_without_pillow(tmp_path: Path):
     assert manifest['tile_size'] == 32
     assert atlas_png is not None
     assert atlas_png.startswith(b'\x89PNG\r\n\x1a\n')
+
+
+def test_itempanel_atlas_centers_visible_pixels_instead_of_source_canvas(tmp_path: Path):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text('Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:gem,1,0,false,Gem\n', encoding='utf-8')
+    transparent = (0, 0, 0, 0)
+    cyan = (0, 200, 255, 255)
+    green = (0, 255, 120, 255)
+    yellow = (255, 220, 0, 255)
+    pixels = [transparent] * 16
+    pixels[10] = cyan
+    pixels[11] = green
+    pixels[14] = yellow
+    pixels[15] = cyan
+    _write_rgba_png(icons_dir / 'Gem.png', pixels, width=4)
+
+    catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    catalog.scan()
+    atlas_png = catalog.read_atlas_png()
+
+    assert atlas_png is not None
+    width, height, rows = catalog.read_png_rgba_bytes(atlas_png)
+    assert (width, height) == (32, 32)
+    assert rows[15][15 * 4:15 * 4 + 4] == bytes(cyan)
+    assert rows[31][31 * 4:31 * 4 + 4] == bytes(transparent)

@@ -9,7 +9,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
-- Adjusted visual centering for atlas sprites inside 9x9 draft-template preview cells so Minecraft block icons no longer sit low-left inside slots.
+- Normalized itempanel atlas sprites by trimming transparent PNG padding before centering them in 32x32 tiles, removing manual preview offsets for Minecraft block icons.
 - Centered draft-template item icons and made the saved-template preview frame fixed-size across 2x2, 3x3, and 9x9 recipes while scaling only the inner craft grid.
 - Polished recipe editor/debug UX: clamped custom context menus to the viewport, made right-click release held items without opening the browser menu, removed the redundant output raw field, restyled the craft output slot, scaled 9x9 draft previews to fit, removed the top-bar language caption, and expanded admin debug into a sectioned workspace with category/level filters.
 - Reworked the `Черновики` workspace to show only saved recipe-template outputs by default, removed the draft-only checkbox, and replaced accidental card-open behavior with an inline preview plus explicit `Редактировать рецепт` actions.
