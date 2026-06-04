@@ -73,7 +73,7 @@ For very small tasks (e.g. rename button, change text):
 3. Update `CHANGELOG.md`.
 4. Update `AGENTS.md` if a new durable rule is discovered.
 5. Update or create a skill if the workflow changed.
-6. After every completed task, commit and push the finished changes to GitHub unless the user explicitly says not to push.
+6. After every completed task, commit and push the finished changes directly to the GitHub `main` branch unless the user explicitly says not to push or asks for another branch/PR flow.
 
 ---
 
