@@ -36,6 +36,7 @@ class SaveAsRequest(BaseModel):
     name: Optional[str] = None
     target_path: str
     binding_mode: Literal['soft', 'strict'] = 'soft'
+    remove_template: Optional[str] = Field(default=None, max_length=4096)
 
     @field_validator('matrix')
     @classmethod
@@ -101,6 +102,7 @@ class UpdateRecipeRequest(BaseModel):
     matrix: list[list[Optional[str]]] = Field(min_length=1, max_length=9)
     name: Optional[str] = None
     binding_mode: Literal['soft', 'strict'] = 'soft'
+    remove_template: Optional[str] = Field(default=None, max_length=4096)
 
     @field_validator('matrix')
     @classmethod
@@ -127,6 +129,7 @@ class PanelLayoutItemRequest(BaseModel):
 class WorkspaceLayoutRequest(BaseModel):
     columns: Literal[1, 2, 3] = 3
     compact_header: bool = True
+    extreme_grid_gap: int = Field(default=8, ge=0, le=24)
 
 
 class UiPreferencesRequest(BaseModel):
@@ -155,6 +158,11 @@ class ProjectSettingsRequest(BaseModel):
 
 class RoleUpdateRequest(BaseModel):
     role: Literal['admin', 'moderator', 'default']
+
+
+class AccessControlRequest(BaseModel):
+    whitelist_enabled: bool = False
+    whitelist_emails: list[str] = Field(default_factory=list, max_length=500)
 
 
 class DebugLogEventRequest(BaseModel):

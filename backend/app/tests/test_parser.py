@@ -91,6 +91,15 @@ def test_parse_9x9_extreme_recipe():
     assert recipe.grid_w == 9
 
 
+def test_parse_recipe_with_preceding_remove_statement():
+    parser = RecipeParser()
+    text = 'recipes.remove(<minecraft:glass:*>);\nmods.avaritia.ExtremeCrafting.addShaped(<minecraft:glass>, [[<minecraft:stone>]]);'
+    recipe = parser.parse(text).recipe
+    assert recipe.recipe_type == 'avaritia_extreme_shaped'
+    assert recipe.output.raw == '<minecraft:glass>'
+    assert recipe.remove_template == 'recipes.remove(<minecraft:glass:*>);'
+
+
 def test_parse_meta_exact():
     parser = RecipeParser()
     item = parser.parse_item_ref('<minecraft:planks:2>')

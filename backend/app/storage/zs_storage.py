@@ -37,7 +37,7 @@ class ZsStorage:
             'scan_errors': [],
             'unparsed_fragments': [],
         }
-        self._recipe_pattern = re.compile(r'(?:recipes\.addShaped|recipes\.addShapeless|mods\.avaritia\.ExtremeCrafting\.addShaped)\(.*?\);', re.S)
+        self._recipe_pattern = re.compile(r'(?:recipes\.remove\(.*?\);\s*)?(?:recipes\.addShaped|recipes\.addShapeless|mods\.avaritia\.ExtremeCrafting\.addShaped)\(.*?\);', re.S)
 
     def scan(self, extra_paths: list[Union[str, Path]] = None) -> None:
         self._recipes.clear()

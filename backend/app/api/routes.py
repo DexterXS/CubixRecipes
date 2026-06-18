@@ -16,7 +16,8 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
 from app.config.project_config import ProjectConfigService
@@ -79,6 +80,7 @@ def serialize_recipe(recipe: Recipe) -> dict:
             'start_offset': recipe.source.start_offset,
             'end_offset': recipe.source.end_offset,
         },
+        'remove_template': recipe.remove_template,
         'diagnostics': {'parseWarnings': recipe.diagnostics, 'resolverHints': []},
     }
 
@@ -255,6 +257,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_icon_catalog.scan()
     admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
     storage.excluded_managed_roots = [admin_data_dir]
+    access_control_store = AccessControlStore(admin_data_dir / 'access_control.json')
     mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
     zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
     recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
@@ -295,16 +298,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         session = _get_request_session(request)
         user_id = session.get('user_id')
         if not auth_service.is_configured or not user_id:
-            return {'authenticated': False, 'user': None, **auth_service.public_config()}
+            return {'authenticated': False, 'user': None, 'access_allowed': False, **access_control_store.as_dict(), **auth_service.public_config()}
         try:
             user = auth_service.get_user(int(user_id))
         except Exception:
             session.clear()
-            return {'authenticated': False, 'user': None, **auth_service.public_config()}
+            return {'authenticated': False, 'user': None, 'access_allowed': False, **access_control_store.as_dict(), **auth_service.public_config()}
         if user is None:
             session.clear()
-            return {'authenticated': False, 'user': None, **auth_service.public_config()}
-        return {'authenticated': True, 'user': user.as_dict(), **auth_service.public_config()}
+            return {'authenticated': False, 'user': None, 'access_allowed': False, **access_control_store.as_dict(), **auth_service.public_config()}
+        user_payload = user.as_dict()
+        return {'authenticated': True, 'user': user_payload, 'access_allowed': access_control_store.is_allowed(user_payload), **access_control_store.as_dict(), **auth_service.public_config()}
 
     @router.get('/auth/google/start')
     def google_auth_start(request: Request):
@@ -402,9 +406,34 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return {'ok': True, 'user': user.as_dict()}
 
+    @router.get('/admin/access')
+    def admin_access_control():
+        return access_control_store.as_dict()
+
+    @router.put('/admin/access')
+    def admin_update_access_control(request: AccessControlRequest):
+        updated = access_control_store.save(request.model_dump())
+        log_service.log('BACKEND', 'INFO', 'AUTH', 'Access control updated', access_control_store.as_dict(updated))
+        return {'ok': True, **access_control_store.as_dict(updated)}
+
     @router.get('/admin/mod-icons')
     def admin_mod_icons_status():
         return mod_icon_atlas_service.status()
+
+    @router.post('/admin/itempanel/csv')
+    async def admin_upload_itempanel_csv(request: Request, filename: str = ''):
+        upload_name = filename or request.headers.get('x-itempanel-filename', '')
+        if upload_name and not upload_name.lower().endswith('.csv'):
+            raise HTTPException(status_code=400, detail='Only .csv itempanel files are supported')
+        content = await request.body()
+        if not content.strip():
+            raise HTTPException(status_code=400, detail='CSV file is empty')
+        target = itempanel_icon_catalog.csv_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        itempanel_icon_catalog.scan()
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel CSV uploaded', {'path': str(target), 'scan': itempanel_icon_catalog.last_scan_report})
+        return {'ok': True, 'path': str(target), 'scan': itempanel_icon_catalog.last_scan_report, 'atlas': itempanel_icon_catalog.get_atlas_manifest()}
 
     @router.post('/admin/mod-icons/archive')
     async def admin_upload_mod_icons_archive(request: Request, filename: str = '', replace: bool = False):
@@ -596,8 +625,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except KeyError as exc:
             _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '404', started_at, {'detail': 'Recipe not found'}, level='ERROR')
             raise HTTPException(status_code=404, detail='Recipe not found') from exc
-        recipe = service.update_recipe(existing, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
-        rendered = service.render_recipe(recipe)
+        remove_template = getattr(request, 'remove_template', None)
+        recipe = service.update_recipe(existing, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type, remove_template)
+        try:
+            rendered = service.render_recipe(recipe, remove_template)
+        except ValueError as exc:
+            _log_api(log_service, 'PUT', f'/api/recipes/{recipe_uid}', {'output_raw': request.output_raw}, '400', started_at, {'detail': str(exc)}, level='ERROR')
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
         try:
             updated = storage.save_existing(recipe_uid, rendered)
         except KeyError as exc:
@@ -644,13 +678,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         started_at = perf_counter()
         try:
             recipe = storage.get_recipe(request.recipe_uid)
-            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
+            remove_template = getattr(request, 'remove_template', None)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type, remove_template)
         except KeyError:
             recipe = service.create_recipe(request.recipe_type, request.output_raw, len(request.matrix), request.binding_mode)
             recipe.recipe_uid = request.recipe_uid
-            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type)
+            remove_template = getattr(request, 'remove_template', None)
+            recipe = service.update_recipe(recipe, request.output_raw, request.matrix, request.name, request.binding_mode, request.recipe_type, remove_template)
         try:
-            new_uid = storage.save_as(service.render_recipe(recipe), request.target_path)
+            new_uid = storage.save_as(service.render_recipe(recipe, remove_template), request.target_path)
         except ValueError as exc:
             _log_api(log_service, 'POST', '/api/recipes/save-as', {'target_path': request.target_path}, '400', started_at, {'detail': str(exc)}, level='ERROR')
             raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -951,10 +987,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         if user is None:
             session.clear()
             return JSONResponse({'detail': 'Authentication required'}, status_code=401)
+        user_payload = user.as_dict()
+        if not access_control_store.is_allowed(user_payload):
+            return JSONResponse({'detail': 'Account is not whitelisted', 'whitelist_enabled': True}, status_code=403)
         permission = permission_for_request(request.method, path)
         if not role_has_permission(user.role, permission, user.email):
             return JSONResponse({'detail': 'Forbidden', 'permission': permission}, status_code=403)
-        request.state.auth_user = user.as_dict()
+        request.state.auth_user = user_payload
         return await call_next(request)
 
     if session_secret:

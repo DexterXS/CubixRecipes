@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -29,6 +29,7 @@ interface UpdateRecipePayload {
   matrix: (string | null)[][];
   name?: string | null;
   bindingMode?: 'soft' | 'strict';
+  removeTemplate?: string | null;
 }
 
 interface SaveAsPayload extends UpdateRecipePayload {
@@ -170,7 +171,8 @@ export async function updateRecipe(payload: UpdateRecipePayload): Promise<{ ok: 
       output_raw: payload.outputRaw,
       matrix: payload.matrix,
       name: payload.name ?? null,
-      binding_mode: payload.bindingMode ?? 'soft'
+      binding_mode: payload.bindingMode ?? 'soft',
+      remove_template: payload.removeTemplate ?? null
     })
   });
 }
@@ -210,7 +212,8 @@ export async function saveRecipeAs(payload: SaveAsPayload): Promise<{ ok: boolea
       matrix: payload.matrix,
       name: payload.name ?? null,
       target_path: payload.targetPath,
-      binding_mode: payload.bindingMode ?? 'soft'
+      binding_mode: payload.bindingMode ?? 'soft',
+      remove_template: payload.removeTemplate ?? null
     })
   });
 }
@@ -303,6 +306,18 @@ export async function updateUserRole(userId: number, role: UserRole): Promise<{ 
   });
 }
 
+export async function getAccessControlSettings(): Promise<AccessControlSettings> {
+  return request<AccessControlSettings>(apiPath('/admin/access'));
+}
+
+export async function updateAccessControlSettings(payload: AccessControlSettings): Promise<{ ok: boolean } & AccessControlSettings> {
+  return request<{ ok: boolean } & AccessControlSettings>(apiPath('/admin/access'), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+}
+
 export async function getModIconAdminStatus(): Promise<ModIconAdminStatus> {
   return request<ModIconAdminStatus>(apiPath('/admin/mod-icons'));
 }
@@ -329,6 +344,20 @@ export async function uploadModIconArchive(file: File, replace = false): Promise
   }
   const payload = await response.json() as { status: ModIconAdminStatus };
   return payload.status;
+}
+
+export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas }> {
+  const path = apiPath(`/admin/itempanel/csv?filename=${encodeURIComponent(file.name)}`);
+  const response = await fetch(path, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'text/csv' },
+    body: file
+  });
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
+  }
+  return await response.json() as { ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas };
 }
 
 export async function generateModIconAtlases(): Promise<ModIconAtlasManifest> {

@@ -60,6 +60,7 @@ class Recipe:
     name: Optional[str] = None
     diagnostics: list[str] = field(default_factory=list)
     output_resolution: Optional[dict[str, Any]] = None
+    remove_template: Optional[str] = None
 
 
 @dataclass

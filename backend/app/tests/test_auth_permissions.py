@@ -25,4 +25,6 @@ def test_permission_mapping_protects_mutating_routes():
     assert permission_for_request('POST', '/api/recipes/save-as') == 'files:add'
     assert permission_for_request('GET', '/api/admin/zs-cloud/files') == 'files:manage'
     assert permission_for_request('POST', '/api/admin/mod-icons/generate') == 'mod-icons:manage'
+    assert permission_for_request('POST', '/api/admin/itempanel/csv') == 'mod-icons:manage'
+    assert permission_for_request('PUT', '/api/admin/access') == 'roles:manage'
     assert permission_for_request('GET', '/api/recipes/abc') == 'view'

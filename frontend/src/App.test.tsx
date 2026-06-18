@@ -53,7 +53,7 @@ function projectSettings() {
       language: 'ru',
       active_view_tab: 'editor',
       reset_layout_version: 4,
-      workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260 },
+      workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260, extreme_grid_gap: 8 },
       panel_layout: []
     }
   };
@@ -166,6 +166,21 @@ beforeEach(() => {
     if (url === '/api/admin/users') {
       return Promise.resolve({ ok: true, json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
     }
+    if (url === '/api/admin/access' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ whitelist_enabled: false, whitelist_emails: [] })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/access' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, whitelist_enabled: Boolean(body.whitelist_enabled), whitelist_emails: body.whitelist_emails ?? [] })
+      }) as Promise<Response>;
+    }
     if (url === '/api/admin/users/2/role' && init?.method === 'PATCH') {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true, user: { ...moderatorUser, role: 'admin' } }) }) as Promise<Response>;
     }
@@ -221,6 +236,26 @@ beforeEach(() => {
             rejected: [],
             totalMods: 1,
             totalIcons: 0
+          }
+        })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/itempanel/csv') && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          path: 'itempanel.csv',
+          scan: { rows: 3, matched: 2 },
+          atlas: {
+            image_url: '/itempanel-atlas.png',
+            tile_size: 32,
+            columns: 1,
+            rows: 2,
+            entries: {
+              '<minecraft:planks>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Дубовые доски', item_key: 'minecraft:planks', meta: 0 }
+            }
           }
         })
       }) as Promise<Response>;
@@ -613,6 +648,60 @@ test('cloud save uses a controlled filename modal instead of a path prompt', asy
     expect(body.target_path).toBe('safe_recipe.zs');
   });
   expect(promptSpy).not.toHaveBeenCalled();
+});
+
+test('local save can append current recipe into uploaded site file with remove template', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'local.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('local.zs')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('remove-recipe-enabled'));
+  fireEvent.click(screen.getByLabelText('save-local'));
+
+  const dialog = await screen.findByRole('dialog', { name: 'local-save-choice' });
+  fireEvent.click(within(dialog).getByLabelText('local-save-append'));
+
+  await waitFor(() => {
+    const editor = screen.getByLabelText('local-script-editor') as HTMLTextAreaElement;
+    expect(editor.value).toContain('recipes.remove(<minecraft:torch:*>);');
+    expect(editor.value).toContain('recipes.addShaped(<minecraft:torch>, [\n');
+  });
+});
+
+test('admin can enable whitelist mode', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
+  fireEvent.change(await screen.findByLabelText('whitelist-emails'), { target: { value: 'viewer@example.com' } });
+  fireEvent.click(screen.getByLabelText('whitelist-enabled'));
+
+  await waitFor(() => {
+    const calls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/admin/access' && init?.method === 'PUT');
+    expect(calls.length).toBeGreaterThan(0);
+    const body = JSON.parse(String(calls[calls.length - 1]?.[1]?.body ?? '{}'));
+    expect(body.whitelist_enabled).toBe(true);
+    expect(body.whitelist_emails).toEqual(['viewer@example.com']);
+  });
+});
+
+test('admin can upload itempanel csv from mod icons panel', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-modIcons'));
+  const csvInputs = [...container.querySelectorAll('input[type="file"]')] as HTMLInputElement[];
+  const csvInput = csvInputs.find((input) => input.accept.includes('.csv')) as HTMLInputElement;
+  const file = new File(['Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Камень\n'], 'itempanel.csv', { type: 'text/csv' });
+  fireEvent.change(csvInput, { target: { files: [file] } });
+
+  await waitFor(() => {
+    const call = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url, init]) => String(url).startsWith('/api/admin/itempanel/csv') && init?.method === 'POST');
+    expect(call).toBeTruthy();
+  });
+  expect(await screen.findByText(/CSV загружен/)).toBeTruthy();
 });
 
 test('local recipe files can be selected for bulk download and deletion', async () => {

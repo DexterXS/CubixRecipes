@@ -130,7 +130,9 @@ class RecipeParser:
         return normalized.strip()
 
     def _parse_recipe(self, text: str, source_kind: str) -> Recipe:
-        func, args = self._split_call(text)
+        recipe_call = self._extract_recipe_call(text)
+        remove_template = self._extract_remove_template(text, recipe_call)
+        func, args = self._split_call(recipe_call)
         if 'mods.avaritia.ExtremeCrafting.addShaped' in func:
             recipe_type = 'avaritia_extreme_shaped'
         elif 'recipes.addShapeless' in func:
@@ -164,7 +166,41 @@ class RecipeParser:
         )
         recipe.raw_text = text
         recipe.diagnostics.extend(diagnostics)
+        recipe.remove_template = remove_template
         return recipe
+
+    def _extract_recipe_call(self, text: str) -> str:
+        candidates = [(index, prefix) for prefix in CALL_PREFIXES if (index := text.find(prefix)) >= 0]
+        if not candidates:
+            raise ValueError('Recipe call is missing')
+        call_start, prefix = min(candidates, key=lambda item: item[0])
+        open_index = text.find('(', call_start + len(prefix))
+        if open_index < 0:
+            raise ValueError('Recipe call is missing opening parenthesis')
+        close_index = self._find_matching_paren(text, open_index)
+        if close_index is None:
+            raise ValueError('Recipe call is missing closing parenthesis')
+        end_index = close_index + 1
+        while end_index < len(text) and text[end_index].isspace():
+            end_index += 1
+        if end_index < len(text) and text[end_index] == ';':
+            end_index += 1
+        return text[call_start:end_index].strip()
+
+    def _extract_remove_template(self, text: str, recipe_call: str) -> Optional[str]:
+        call_index = text.find(recipe_call)
+        if call_index <= 0:
+            return None
+        prefix = text[:call_index].strip()
+        if not prefix:
+            return None
+        matches = list(re.finditer(r'recipes\.remove\((?P<body>[\s\S]*?)\)\s*;', prefix))
+        if not matches:
+            return None
+        trailing = prefix[matches[-1].end():].strip()
+        if trailing:
+            return None
+        return matches[-1].group(0).strip()
 
     def _parse_shapeless_body(self, recipe_body: list[str]) -> tuple[list[list[Optional[str]]], list[str]]:
         if not recipe_body:

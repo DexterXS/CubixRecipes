@@ -34,6 +34,7 @@ export interface RecipeView {
     kind: string;
     path?: string | null;
   };
+  remove_template?: string | null;
 }
 
 export interface PanelLayoutItem {
@@ -52,6 +53,7 @@ export interface WorkspaceLayout {
   main_sidebar_ratio?: number;
   top_height?: number;
   bottom_height?: number;
+  extreme_grid_gap?: number;
 }
 
 export interface UiPreferences {
@@ -117,7 +119,15 @@ export interface AuthMeResponse {
   auth_configured: boolean;
   root_admin_email: string;
   configuration_error?: string | null;
+  access_allowed?: boolean;
+  whitelist_enabled?: boolean;
+  whitelist_emails?: string[];
   user: AuthUser | null;
+}
+
+export interface AccessControlSettings {
+  whitelist_enabled: boolean;
+  whitelist_emails: string[];
 }
 
 export interface CustomItem {

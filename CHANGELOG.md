@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### Added
+- Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
+- Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
+- Added admin `itempanel.csv` upload support, refreshing the backend itempanel catalog/atlas from the admin UI.
+- Added admin-managed whitelist mode: when enabled, non-admin accounts outside the whitelist see an access banner instead of the app.
+- Added configurable 9x9 Avaritia visual grouping: every 3x3 block is separated and the gap is saved in UI preferences.
 - Added Railway/backend volume-aware project config defaults: mounted `/data` storage is used for runtime config, default `.zs` scripts, admin backups, generated mod atlases, and shared recipe draft templates.
 - Added backend-backed recipe draft templates so moderators see only their own drafts while admins can browse and remove all saved templates.
 - Added `2x2` recipe editing, `ct_shapeless` recipe parsing/rendering, and a strict placement mode that preserves empty grid borders when admins need exact shaped positioning.
@@ -9,6 +14,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Updated generated shaped/extreme recipe output to place the matrix opening bracket after the output comma and render rows on separate lines, matching the requested 1.7.10 script style.
 - Normalized itempanel atlas sprites by trimming transparent PNG padding before centering them in 32x32 tiles, removing manual preview offsets for Minecraft block icons.
 - Centered draft-template item icons and made the saved-template preview frame fixed-size across 2x2, 3x3, and 9x9 recipes while scaling only the inner craft grid.
 - Polished recipe editor/debug UX: clamped custom context menus to the viewport, made right-click release held items without opening the browser menu, removed the redundant output raw field, restyled the craft output slot, scaled 9x9 draft previews to fit, removed the top-bar language caption, and expanded admin debug into a sectioned workspace with category/level filters.

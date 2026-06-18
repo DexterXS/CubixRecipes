@@ -26,7 +26,7 @@ DEFAULT_PANEL_LAYOUT = [
     {'id': 'preview', 'zone': 'sidebar', 'order': 10, 'visible': False, 'height': 220, 'width_units': 1},
     {'id': 'raw', 'zone': 'sidebar', 'order': 11, 'visible': False, 'height': 260, 'width_units': 1},
 ]
-DEFAULT_WORKSPACE_LAYOUT = {'columns': 3, 'compact_header': True}
+DEFAULT_WORKSPACE_LAYOUT = {'columns': 3, 'compact_header': True, 'extreme_grid_gap': 8}
 
 
 @dataclass
@@ -43,6 +43,7 @@ class PanelLayoutItemConfig:
 class WorkspaceLayoutConfig:
     columns: int = 3
     compact_header: bool = True
+    extreme_grid_gap: int = 8
 
 
 @dataclass
@@ -272,7 +273,11 @@ class ProjectConfigService:
         payload = raw if isinstance(raw, dict) else {}
         columns = self._clamp_columns(payload.get('columns', DEFAULT_WORKSPACE_LAYOUT['columns']))
         compact_header = bool(payload.get('compact_header', DEFAULT_WORKSPACE_LAYOUT['compact_header']))
-        return WorkspaceLayoutConfig(columns=columns, compact_header=compact_header)
+        return WorkspaceLayoutConfig(
+            columns=columns,
+            compact_header=compact_header,
+            extreme_grid_gap=self._clamp_int(payload.get('extreme_grid_gap', DEFAULT_WORKSPACE_LAYOUT['extreme_grid_gap']), 0, 24, 8),
+        )
 
     def _coerce_panel_layout(self, raw: Any) -> list[PanelLayoutItemConfig]:
         if not isinstance(raw, list):
@@ -317,6 +322,13 @@ class ProjectConfigService:
         except (TypeError, ValueError):
             columns = 3
         return max(1, min(columns, 3))
+
+    def _clamp_int(self, value: Any, minimum: int, maximum: int, fallback: int) -> int:
+        try:
+            parsed = int(value)
+        except (TypeError, ValueError):
+            parsed = fallback
+        return max(minimum, min(parsed, maximum))
 
     def _validate_path(self, raw_path: str, expect_file: bool = False) -> dict[str, Any]:
         if not raw_path:

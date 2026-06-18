@@ -1,4 +1,4 @@
-import { type MouseEvent, useEffect, useMemo, useRef } from 'react';
+import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef } from 'react';
 import { AnimatedIcon } from './AnimatedIcon';
 import { CellValue, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ResolutionView } from '../types';
 
@@ -17,6 +17,7 @@ interface Props {
   resolveCellTitle: (raw: string) => string;
   onCellDrop?: (row: number, col: number, value: string) => void;
   onItemHover?: (raw: string | null) => void;
+  extremeGroupGap?: number;
 }
 
 function shortenCellValue(value: string): string {
@@ -50,7 +51,8 @@ export function RecipeGrid({
   onCellContextMenu,
   resolveCellTitle,
   onCellDrop,
-  onItemHover
+  onItemHover,
+  extremeGroupGap = 8
 }: Props) {
   const size = Math.max(matrix.length, matrix[0]?.length ?? 0, 1);
   const cellClass = size >= 9 ? 'grid-cell size-9' : 'grid-cell size-3';
@@ -159,10 +161,14 @@ export function RecipeGrid({
     paintCell(row, col, mode);
   }
 
+  const gridStyle = size >= 9
+    ? ({ '--extreme-grid-gap': `${Math.max(0, Math.min(Math.round(extremeGroupGap), 24))}px` } as CSSProperties)
+    : undefined;
+
   return (
-    <div className="grid-wrap" data-grid-size={size}>
+    <div className="grid-wrap" data-grid-size={size} style={gridStyle}>
       {matrix.map((row, rowIndex) => (
-        <div key={rowIndex} className="grid-row">
+        <div key={rowIndex} className={`grid-row ${size >= 9 && rowIndex > 0 && rowIndex % 3 === 0 ? 'group-row-start' : ''}`.trim()}>
           {row.map((cell, colIndex) => {
             const raw = cell?.raw ?? null;
             const isEmpty = raw === null || raw === '' || raw === 'null';
@@ -189,7 +195,7 @@ export function RecipeGrid({
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`${cellClass} ${isEmpty ? 'is-empty' : 'is-filled'} ${isInvalid ? 'is-invalid' : ''} ${heldItemRaw ? 'has-held-item' : ''} ${editorMode === 'view' ? 'is-view' : 'is-edit'}`.trim()}
+                className={`${cellClass} ${size >= 9 && colIndex > 0 && colIndex % 3 === 0 ? 'group-col-start' : ''} ${isEmpty ? 'is-empty' : 'is-filled'} ${isInvalid ? 'is-invalid' : ''} ${heldItemRaw ? 'has-held-item' : ''} ${editorMode === 'view' ? 'is-view' : 'is-edit'}`.trim()}
                 data-craft-cell="true"
                 data-row={rowIndex}
                 data-col={colIndex}

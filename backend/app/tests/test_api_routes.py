@@ -175,6 +175,33 @@ def test_save_as_accepts_shapeless_recipe(tmp_path: Path):
     assert saved_text == 'recipes.addShapeless(<minecraft:torch>, [<minecraft:coal>, <minecraft:stick>]);'
 
 
+def test_save_as_renders_remove_template_and_multiline_shaped_matrix(tmp_path: Path):
+    app = create_app(str(tmp_path))
+    save_as = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/recipes/save-as')
+
+    response = save_as(
+        type(
+            'Request',
+            (),
+            {
+                'recipe_uid': 'new-recipe',
+                'recipe_type': 'avaritia_extreme_shaped',
+                'output_raw': '<minecraft:glass>',
+                'matrix': [['<minecraft:stone>']],
+                'name': None,
+                'target_path': 'extreme.zs',
+                'binding_mode': 'soft',
+                'remove_template': 'recipes.remove({output_wildcard});',
+            },
+        )()
+    )
+
+    saved_text = (tmp_path / 'extreme.zs').read_text(encoding='utf-8')
+    assert response['ok'] is True
+    assert saved_text.startswith('recipes.remove(<minecraft:glass:*>);\nmods.avaritia.ExtremeCrafting.addShaped(<minecraft:glass>, [\n')
+    assert saved_text.rstrip().endswith(']);')
+
+
 def test_admin_zs_cloud_can_rename_delete_and_keep_root_backup(tmp_path: Path):
     recipe_path = tmp_path / 'cloud.zs'
     recipe_path.write_text('recipes.addShaped(<minecraft:apple>, [[<minecraft:stick>]]);\n', encoding='utf-8')

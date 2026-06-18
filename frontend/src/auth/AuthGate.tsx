@@ -36,6 +36,21 @@ export function AuthGate({ children }: AuthGateProps) {
     return <main className="auth-shell"><div className="auth-panel"><strong>CubixRecipes</strong><span>Checking account...</span></div></main>;
   }
 
+  if (auth?.authenticated && auth.user && auth.access_allowed === false) {
+    return (
+      <main className="auth-shell">
+        <section className="auth-panel">
+          <div>
+            <strong>CubixRecipes</strong>
+            <p>Доступ закрыт: ваш аккаунт не добавлен в whitelist.</p>
+          </div>
+          <div className="inline-hint inline-hint-warning">{auth.user.email}</div>
+          <button type="button" onClick={() => void handleLogout()}>Выйти</button>
+        </section>
+      </main>
+    );
+  }
+
   if (auth?.authenticated && auth.user) {
     return children(auth.user, handleLogout);
   }

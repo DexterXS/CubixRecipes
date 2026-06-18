@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getAccessControlSettings, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -22,7 +22,8 @@ const defaultWorkspaceLayout: WorkspaceLayout = {
   top_split_ratio: 0.68,
   main_sidebar_ratio: 0.76,
   top_height: 560,
-  bottom_height: 260
+  bottom_height: 260,
+  extreme_grid_gap: 8
 };
 
 const defaultPanelLayout: PanelLayoutItem[] = [
@@ -101,6 +102,12 @@ type UploadedDraft = {
   lastModified: number;
 };
 
+type RecipeBlockMatch = {
+  block: string;
+  start: number;
+  end: number;
+};
+
 type UploadedDraftRecipeMatch = {
   sourceId: string;
   sourceName: string;
@@ -137,6 +144,15 @@ type CloudFileContextMenuState = {
   y: number;
 };
 
+type RemoveTemplateOption = {
+  id: string;
+  label: string;
+  template: string;
+  builtin?: boolean;
+};
+
+type LocalSaveMode = 'download' | 'append-uploaded' | 'replace-uploaded';
+
 type CustomItemFormState = {
   id: number | null;
   scope: 'global' | 'user';
@@ -167,8 +183,17 @@ const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
 const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
 const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
 const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
+const REMOVE_TEMPLATE_STORAGE_KEY = 'cubixrecipes:remove-templates:v1';
+const REMOVE_TEMPLATE_SELECTION_STORAGE_KEY = 'cubixrecipes:remove-template-selection:v1';
 const RECIPE_DRAFT_MAX_TEMPLATES = 200;
 const DRAFT_ITEM_PAGE_SIZE = 240;
+const BUILTIN_REMOVE_TEMPLATES: RemoveTemplateOption[] = [
+  { id: 'output-wildcard', label: 'recipes.remove(<item:*>)', template: 'recipes.remove({output_wildcard});', builtin: true },
+  { id: 'output-exact', label: 'recipes.remove(<item>)', template: 'recipes.remove({output});', builtin: true },
+  { id: 'output-meta0', label: 'recipes.remove(<item:0>)', template: 'recipes.remove({output_meta0});', builtin: true },
+  { id: 'shaped-current', label: 'recipes.removeShaped(output, matrix)', template: 'recipes.removeShaped({output}, {matrix});', builtin: true },
+  { id: 'shapeless-current', label: 'recipes.removeShapeless(output, items)', template: 'recipes.removeShapeless({output}, {ingredients});', builtin: true }
+];
 const defaultDebugFilters: DebugFilters = { hotkeys: true, ui: true, recipe: true, api: true, storage: true };
 const defaultDebugLevelFilters: DebugLevelFilters = { info: true, success: true, warning: true, error: true };
 const debugCategoryLabels: Record<DebugCategory, string> = {
@@ -594,6 +619,58 @@ function persistBooleanRecord<T extends string>(key: string, value: Record<T, bo
   }
 }
 
+function normalizeCustomRemoveTemplates(value: unknown): RemoveTemplateOption[] {
+  const rawTemplates = isObjectRecord(value) && Array.isArray(value.templates) ? value.templates : value;
+  if (!Array.isArray(rawTemplates)) return [];
+  return rawTemplates
+    .filter((item): item is RemoveTemplateOption => (
+      isObjectRecord(item)
+      && typeof item.id === 'string'
+      && typeof item.label === 'string'
+      && typeof item.template === 'string'
+      && item.template.trim().startsWith('recipes.remove')
+    ))
+    .slice(0, 40)
+    .map((item) => ({ id: item.id, label: item.label, template: item.template, builtin: false }));
+}
+
+function loadCustomRemoveTemplates(): RemoveTemplateOption[] {
+  try {
+    const raw = window.localStorage.getItem(REMOVE_TEMPLATE_STORAGE_KEY);
+    return raw ? normalizeCustomRemoveTemplates(JSON.parse(raw) as unknown) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistCustomRemoveTemplates(templates: RemoveTemplateOption[]) {
+  try {
+    window.localStorage.setItem(REMOVE_TEMPLATE_STORAGE_KEY, JSON.stringify({ templates: normalizeCustomRemoveTemplates(templates) }));
+  } catch {
+    // Local remove template persistence is best-effort.
+  }
+}
+
+function loadRemoveTemplateSelection(): Record<string, string> {
+  try {
+    const raw = window.localStorage.getItem(REMOVE_TEMPLATE_SELECTION_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) as unknown : {};
+    return isObjectRecord(parsed)
+      ? Object.fromEntries(Object.entries(parsed).filter((entry): entry is [string, string] => typeof entry[1] === 'string'))
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function persistRemoveTemplateSelection(value: Record<string, string>) {
+  try {
+    window.localStorage.setItem(REMOVE_TEMPLATE_SELECTION_STORAGE_KEY, JSON.stringify(value));
+  } catch {
+    // Local remove template selection is best-effort.
+  }
+}
+
 function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
   if (!isObjectRecord(value) || !isRecipeView(value.recipe) || !isCellMatrix(value.matrix)) {
     return null;
@@ -712,7 +789,7 @@ function recipeLookupKeysForRaw(raw: string): string[] {
 
 function collectRecipeOutputRaws(source: string): string[] {
   const outputRaws = new Set<string>();
-  const outputPattern = /(?:addShaped|addShapeless)\s*\(\s*(<[^>]+>(?:\.withTag\([\s\S]*?\))?)/g;
+  const outputPattern = /(?:addShaped|addShapeless)\s*\(\s*(?:"[^"]+"\s*,\s*)?(<[^>]+>(?:\.withTag\([\s\S]*?\))?)/g;
   let match: RegExpExecArray | null;
   while ((match = outputPattern.exec(source)) !== null) {
     outputRaws.add(match[1].trim());
@@ -737,14 +814,18 @@ function collectRecipeIngredientRaws(block: string): string[] {
   return [...ingredientRaws];
 }
 
-function collectRecipeBlocks(source: string): string[] {
-  const blocks: string[] = [];
-  const blockPattern = /(?:recipes\.addShaped|recipes\.addShapeless|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
+function collectRecipeBlockMatches(source: string): RecipeBlockMatch[] {
+  const blocks: RecipeBlockMatch[] = [];
+  const blockPattern = /(?:recipes\.remove\([\s\S]*?\);\s*)?(?:recipes\.addShaped|recipes\.addShapeless|mods\.avaritia\.ExtremeCrafting\.addShaped)\([\s\S]*?\);/g;
   let match: RegExpExecArray | null;
   while ((match = blockPattern.exec(source)) !== null) {
-    blocks.push(match[0]);
+    blocks.push({ block: match[0], start: match.index, end: match.index + match[0].length });
   }
   return blocks;
+}
+
+function collectRecipeBlocks(source: string): string[] {
+  return collectRecipeBlockMatches(source).map((match) => match.block);
 }
 
 function elapsedMs(startedAt: number): number {
@@ -1142,7 +1223,8 @@ function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout
     top_split_ratio: defaultWorkspaceLayout.top_split_ratio,
     main_sidebar_ratio: defaultWorkspaceLayout.main_sidebar_ratio,
     top_height: defaultWorkspaceLayout.top_height,
-    bottom_height: defaultWorkspaceLayout.bottom_height
+    bottom_height: defaultWorkspaceLayout.bottom_height,
+    extreme_grid_gap: clamp(Number(raw?.extreme_grid_gap ?? defaultWorkspaceLayout.extreme_grid_gap ?? 8), 0, 24)
   };
 }
 
@@ -1181,6 +1263,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
+  const [isLocalSaveModalOpen, setIsLocalSaveModalOpen] = useState(false);
   const [isCloudSaveModalOpen, setIsCloudSaveModalOpen] = useState(false);
   const [cloudUploadConflict, setCloudUploadConflict] = useState<CloudUploadConflictState | null>(null);
   const [cloudSaveNameDraft, setCloudSaveNameDraft] = useState('');
@@ -1223,6 +1306,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(restoredDraft?.selectedDraftId ?? null);
   const [selectedUploadedDraftIds, setSelectedUploadedDraftIds] = useState<Record<string, boolean>>({});
   const [recipeDraftTemplates, setRecipeDraftTemplates] = useState<RecipeDraftTemplate[]>(() => loadRecipeDraftTemplates(authUser.email));
+  const [customRemoveTemplates, setCustomRemoveTemplates] = useState<RemoveTemplateOption[]>(() => loadCustomRemoveTemplates());
+  const [removeTemplateSelection, setRemoveTemplateSelection] = useState<Record<string, string>>(() => loadRemoveTemplateSelection());
+  const [removeTemplateDraft, setRemoveTemplateDraft] = useState('recipes.remove({output_wildcard});');
   const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
   const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
@@ -1252,9 +1338,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [wildcardCycleTick, setWildcardCycleTick] = useState(0);
   const [adminUsers, setAdminUsers] = useState<AuthUser[]>([]);
   const [adminUsersStatus, setAdminUsersStatus] = useState('');
+  const [accessControl, setAccessControl] = useState<AccessControlSettings>({ whitelist_enabled: false, whitelist_emails: [] });
+  const [accessWhitelistDraft, setAccessWhitelistDraft] = useState('');
+  const [accessStatus, setAccessStatus] = useState('');
   const [modIconStatus, setModIconStatus] = useState<ModIconAdminStatus | null>(null);
   const [modIconMessage, setModIconMessage] = useState('');
+  const [itemPanelCsvMessage, setItemPanelCsvMessage] = useState('');
   const [modIconUploading, setModIconUploading] = useState(false);
+  const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudStatus, setCloudStatus] = useState('');
@@ -1413,6 +1504,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  async function refreshAccessControl() {
+    if (!canManageRoles) return;
+    setAccessStatus('Загружаю whitelist...');
+    try {
+      const payload = await getAccessControlSettings();
+      setAccessControl(payload);
+      setAccessWhitelistDraft(payload.whitelist_emails.join('\n'));
+      setAccessStatus(payload.whitelist_enabled ? 'Whitelist включен' : 'Whitelist выключен');
+    } catch (error) {
+      setAccessStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function saveAccessControl(nextEnabled = accessControl.whitelist_enabled) {
+    if (!canManageRoles) return;
+    const emails = accessWhitelistDraft.split(/[\n,]/).map((item) => item.trim()).filter(Boolean);
+    setAccessStatus('Сохраняю whitelist...');
+    try {
+      const payload = await updateAccessControlSettings({ whitelist_enabled: nextEnabled, whitelist_emails: emails });
+      setAccessControl(payload);
+      setAccessWhitelistDraft(payload.whitelist_emails.join('\n'));
+      setAccessStatus(payload.whitelist_enabled ? 'Whitelist включен' : 'Whitelist выключен');
+    } catch (error) {
+      setAccessStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
   async function refreshModIconStatus() {
     if (!canManageModIcons) return;
     setModIconMessage('Загружаю статус иконок...');
@@ -1461,6 +1579,32 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
     } finally {
       setModIconUploading(false);
+    }
+  }
+
+  async function handleItemPanelCsvFiles(files: FileList | File[]) {
+    if (!canManageModIcons) return;
+    const file = Array.from(files)[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+      setItemPanelCsvMessage('Можно загрузить только itempanel.csv.');
+      return;
+    }
+    setItemPanelCsvUploading(true);
+    setItemPanelCsvMessage(`Загружаю ${file.name}...`);
+    try {
+      const payload = await uploadItemPanelCsv(file);
+      setItemPanelAtlas(payload.atlas);
+      setItemPanelCsvMessage(`CSV загружен. Строк: ${String(payload.scan.rows ?? 0)}, найдено иконок: ${String(payload.scan.matched ?? 0)}.`);
+      try {
+        window.localStorage.removeItem(ITEMPANEL_CACHE_KEY);
+      } catch {
+        // Cache invalidation is best-effort.
+      }
+    } catch (error) {
+      setItemPanelCsvMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemPanelCsvUploading(false);
     }
   }
 
@@ -1581,9 +1725,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   useEffect(() => {
     if (canManageRoles) {
       void refreshAdminUsers();
+      void refreshAccessControl();
     } else {
       setAdminUsers([]);
       setAdminUsersStatus('');
+      setAccessControl({ whitelist_enabled: false, whitelist_emails: [] });
+      setAccessWhitelistDraft('');
+      setAccessStatus('');
     }
   }, [canManageRoles]);
 
@@ -2045,6 +2193,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   ]);
 
   useEffect(() => {
+    persistCustomRemoveTemplates(customRemoveTemplates);
+  }, [customRemoveTemplates]);
+
+  useEffect(() => {
+    persistRemoveTemplateSelection(removeTemplateSelection);
+  }, [removeTemplateSelection]);
+
+  useEffect(() => {
     let cancelled = false;
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
@@ -2244,6 +2400,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function applyRecipe(nextRecipe: RecipeView, nextInput?: string, options?: { rememberCurrent?: boolean }) {
     if (options?.rememberCurrent) {
       rememberRecipeBeforeNavigation(nextRecipe);
+    }
+    if (nextRecipe.remove_template) {
+      const known = removeTemplateOptions().find((option) => option.template === nextRecipe.remove_template);
+      const key = removeTemplateKeyForRaw(nextRecipe.output.raw);
+      if (known) {
+        setRemoveTemplateSelection((current) => ({ ...current, [key]: known.id }));
+      } else {
+        const id = `custom-${stableHash(nextRecipe.remove_template)}`;
+        setCustomRemoveTemplates((current) => current.some((item) => item.id === id)
+          ? current
+          : [{ id, label: nextRecipe.remove_template ?? id, template: nextRecipe.remove_template ?? '', builtin: false }, ...current].slice(0, 40));
+        setRemoveTemplateSelection((current) => ({ ...current, [key]: id }));
+      }
     }
     setRecipe(nextRecipe);
     setOutputRaw(nextRecipe.output.raw);
@@ -3392,19 +3561,84 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function removeTemplateOptions(): RemoveTemplateOption[] {
+    return [...BUILTIN_REMOVE_TEMPLATES, ...customRemoveTemplates];
+  }
+
+  function removeTemplateKeyForRaw(raw: string): string {
+    const parsed = parseItemRaw(raw);
+    return parsed?.key ?? raw.trim().toLowerCase();
+  }
+
+  function activeRemoveTemplateId(): string {
+    return removeTemplateSelection[removeTemplateKeyForRaw(outputRaw)] ?? 'none';
+  }
+
+  function activeRemoveTemplate(): string | null {
+    const id = activeRemoveTemplateId();
+    if (id === 'none') return null;
+    return removeTemplateOptions().find((option) => option.id === id)?.template ?? BUILTIN_REMOVE_TEMPLATES[0].template;
+  }
+
+  function setActiveRemoveTemplateId(templateId: string) {
+    const key = removeTemplateKeyForRaw(outputRaw);
+    setRemoveTemplateSelection((current) => ({ ...current, [key]: templateId }));
+    setRecipe((current) => ({ ...current, remove_template: templateId === 'none' ? null : removeTemplateOptions().find((option) => option.id === templateId)?.template ?? BUILTIN_REMOVE_TEMPLATES[0].template }));
+    setSaveStatus(t('values.unsavedChanges'));
+  }
+
+  function addCustomRemoveTemplate() {
+    const template = removeTemplateDraft.trim();
+    if (!template.startsWith('recipes.remove')) {
+      setStatus('Шаблон удаления должен начинаться с recipes.remove.');
+      return;
+    }
+    const id = `custom-${stableHash(template)}-${Date.now().toString(36)}`;
+    const label = template.length > 42 ? `${template.slice(0, 39)}...` : template;
+    setCustomRemoveTemplates((current) => [{ id, label, template, builtin: false }, ...current].slice(0, 40));
+    setActiveRemoveTemplateId(id);
+    setRemoveTemplateDraft('recipes.remove({output_wildcard});');
+  }
+
+  function outputRawWithMeta(meta: string): string {
+    const parsed = parseItemRaw(outputRaw);
+    return parsed ? `<${parsed.key}:${meta}>` : outputRaw.trim();
+  }
+
+  function renderSourceMatrix(): string {
+    const sourceMatrix = matrixForRecipeSource(matrix, recipe.recipe_type, recipeBindingMode);
+    const rows = sourceMatrix
+      .map((row, index) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]${index < sourceMatrix.length - 1 ? ',' : ''}`)
+      .join('\n');
+    return `[\n${rows}\n]`;
+  }
+
+  function renderRemoveTemplate(template: string | null | undefined): string {
+    const normalized = (template ?? '').trim();
+    if (!normalized || normalized === 'none') return '';
+    const matrixSource = renderSourceMatrix();
+    const ingredients = `[${matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null')).map((cell) => cell.trim()).join(', ')}]`;
+    const rendered = normalized
+      .replaceAll('{output_wildcard}', outputRawWithMeta('*'))
+      .replaceAll('{output_meta0}', outputRawWithMeta('0'))
+      .replaceAll('{output}', outputRaw.trim())
+      .replaceAll('{matrix}', matrixSource)
+      .replaceAll('{ingredients}', ingredients);
+    return rendered.endsWith(';') ? rendered : `${rendered};`;
+  }
+
   function buildRecipeSource(): string {
+    const removeLine = renderRemoveTemplate(activeRemoveTemplate());
     if (recipe.recipe_type === 'ct_shapeless') {
       const ingredients = matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null'));
-      return `recipes.addShapeless(${outputRaw.trim()}, [${ingredients.join(', ')}]);\n`;
+      const rendered = `recipes.addShapeless(${outputRaw.trim()}, [${ingredients.join(', ')}]);`;
+      return `${removeLine ? `${removeLine}\n` : ''}${rendered}\n`;
     }
     const call = recipe.recipe_type === 'avaritia_extreme_shaped'
       ? 'mods.avaritia.ExtremeCrafting.addShaped'
       : 'recipes.addShaped';
-    const sourceMatrix = matrixForRecipeSource(matrix, recipe.recipe_type, recipeBindingMode);
-    const rows = sourceMatrix
-      .map((row) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]`)
-      .join(',\n');
-    return `${call}(${outputRaw.trim()}, [\n${rows}\n]);\n`;
+    const rendered = `${call}(${outputRaw.trim()}, ${renderSourceMatrix()});`;
+    return `${removeLine ? `${removeLine}\n` : ''}${rendered}\n`;
   }
 
   function getValidOutputRaw(): string | null {
@@ -3441,8 +3675,53 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function downloadCurrentRecipe() {
     if (!requireOutputForSave()) return;
-    downloadTextFile(currentRecipeFilename(), input.trim() ? input : buildRecipeSource());
-    setStatus('Рецепт скачан.');
+    setIsLocalSaveModalOpen(true);
+  }
+
+  function findRecipeBlockInDraft(draft: UploadedDraft): RecipeBlockMatch | null {
+    const activeKeys = new Set(recipeLookupKeysForRaw(outputRaw));
+    return collectRecipeBlockMatches(draft.text).find((match) => collectRecipeOutputRaws(match.block).some((raw) => recipeLookupKeysForRaw(raw).some((key) => activeKeys.has(key)))) ?? null;
+  }
+
+  function updateUploadedDraftText(draftId: string, nextText: string) {
+    setUploadedDrafts((current) => current.map((draft) => draft.id === draftId
+      ? { ...draft, text: nextText.slice(0, LOCAL_DRAFT_MAX_UPLOADED_TEXT), size: nextText.length, lastModified: Date.now() }
+      : draft));
+  }
+
+  function executeLocalSave(mode: LocalSaveMode) {
+    if (!requireOutputForSave()) return;
+    const source = buildRecipeSource();
+    if (mode === 'download') {
+      downloadTextFile(currentRecipeFilename(), source);
+      setStatus('Рецепт скачан.');
+      setIsLocalSaveModalOpen(false);
+      return;
+    }
+    const draft = getActiveUploadedDraft();
+    if (!draft) {
+      setStatus('Нет загруженного локального .zs файла.');
+      return;
+    }
+    if (mode === 'append-uploaded') {
+      const separator = draft.text.trim() ? (draft.text.endsWith('\n') ? '\n' : '\n\n') : '';
+      const nextText = `${draft.text}${separator}${source}`;
+      updateUploadedDraftText(draft.id, nextText);
+      setInput(source);
+      setStatus(`Рецепт добавлен в ${draft.name}.`);
+      setIsLocalSaveModalOpen(false);
+      return;
+    }
+    const match = findRecipeBlockInDraft(draft);
+    if (!match) {
+      setStatus(`В ${draft.name} не найден блок для ${outputRaw}.`);
+      return;
+    }
+    const nextText = `${draft.text.slice(0, match.start)}${source.trim()}${draft.text.slice(match.end)}`;
+    updateUploadedDraftText(draft.id, nextText);
+    setInput(source);
+    setStatus(`Рецепт заменен в ${draft.name}.`);
+    setIsLocalSaveModalOpen(false);
   }
 
   function openCloudSaveModal() {
@@ -3687,7 +3966,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus('Сохраняем...');
     setSaveStatus(t('values.pending'));
     try {
-      const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, bindingMode: recipeBindingMode });
+      const updated = await updateRecipe({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, bindingMode: recipeBindingMode, removeTemplate: activeRemoveTemplate() });
       applyRecipe(updated.updatedRecipe, input);
       setStatus(t('status.saved'));
       setSaveStatus(t('values.saved'));
@@ -3720,10 +3999,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       if (recipe.recipe_uid === 'new-recipe') {
         const created = await createRecipeTemplate({ templateType: recipe.recipe_type, output: outputRaw, grid: matrix.length, bindingMode: recipeBindingMode });
-        const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath, bindingMode: recipeBindingMode });
+        const response = await saveRecipeAs({ recipeUid: created.recipe_uid, recipeType: created.recipe_type, outputRaw, matrix, name: created.name, targetPath, bindingMode: recipeBindingMode, removeTemplate: activeRemoveTemplate() });
         applyRecipe(response.recipe, input);
       } else {
-        const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath, bindingMode: recipeBindingMode });
+        const response = await saveRecipeAs({ recipeUid: recipe.recipe_uid, recipeType: recipe.recipe_type, outputRaw, matrix, name: recipe.name, targetPath, bindingMode: recipeBindingMode, removeTemplate: activeRemoveTemplate() });
         applyRecipe(response.recipe, input);
       }
       setStatus(`${t('status.saved')} → ${targetPath}`);
@@ -3758,6 +4037,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       recipe_uid: `local-draft-${stableHash(`${authUser.email}:${sourceText}:${now}`)}`,
       binding_mode: recipeBindingMode,
       output: { raw: validOutput },
+      remove_template: activeRemoveTemplate(),
       source: { kind: 'local_draft', path: `draft:${validOutput}` },
       matrix: matrixWithResolution,
       grid_h: matrix.length,
@@ -3923,6 +4203,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <option value="strict">Точная</option>
               </select>
             </label>
+            <label className="field-block switch-field">
+              <span>Удаление рецепта</span>
+              <input aria-label="remove-recipe-enabled" type="checkbox" checked={activeRemoveTemplateId() !== 'none'} onChange={(event) => setActiveRemoveTemplateId(event.target.checked ? 'output-wildcard' : 'none')} />
+            </label>
+            <label className="field-block">
+              <span>Шаблон удаления</span>
+              <select aria-label="remove-recipe-template" value={activeRemoveTemplateId()} disabled={activeRemoveTemplateId() === 'none'} onChange={(event) => setActiveRemoveTemplateId(event.target.value)}>
+                <option value="none">Без удаления</option>
+                {removeTemplateOptions().map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+              </select>
+            </label>
+            <label className="field-block remove-template-draft">
+              <span>Новый шаблон</span>
+              <input aria-label="remove-template-draft" value={removeTemplateDraft} onChange={(event) => setRemoveTemplateDraft(event.target.value)} />
+            </label>
+            <button type="button" className="secondary-button" aria-label="add-remove-template" onClick={addCustomRemoveTemplate}>Добавить шаблон</button>
           </div>
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
@@ -3934,6 +4230,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 displayMode={uiPreferences.display_mode}
                 animationsEnabled={areAnimationsEnabled}
                 editorMode={(canCreateTemplates || canEditRecipes) ? uiPreferences.editor_mode : 'view'}
+                extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8}
                 heldItemRaw={heldItemRaw}
                 tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)}
                 resolveCellTitle={resolveCellTitle}
@@ -4263,6 +4560,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     displayMode={uiPreferences.display_mode}
                     animationsEnabled={areAnimationsEnabled}
                     editorMode="view"
+                    extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8}
                     heldItemRaw={null}
                     tooltipsDisabled={false}
                     resolveCellTitle={resolveCellTitle}
@@ -4421,11 +4719,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <strong>Загрузить ZIP архив иконок</strong>
                 <span>Например: energyadditions_x32.zip с папкой energyadditions_x32/ и PNG-файлами внутри</span>
               </label>
+              <label
+                className="file-drop-zone"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void handleItemPanelCsvFiles(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".csv,text/csv"
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      void handleItemPanelCsvFiles(event.target.files);
+                      event.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <strong>Загрузить itempanel.csv</strong>
+                <span>CSV обновляет каталог предметов для поиска и сопоставления иконок.</span>
+              </label>
               <div className="file-actions">
-                <button type="button" disabled={modIconUploading} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
+                <button type="button" disabled={modIconUploading || itemPanelCsvUploading} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
                 <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
               </div>
               {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
+              {itemPanelCsvMessage ? <div className="inline-status inline-status-default">{itemPanelCsvMessage}</div> : null}
               <div className="admin-file-list">
                 {(modIconStatus?.archives ?? []).map((archive) => (
                   <div key={archive.name} className="admin-file-row">
@@ -4629,6 +4949,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               ))}
             </div>
           ) : null}
+          {activeUploadedDraft ? (
+            <label className="field-block local-script-editor">
+              <span>Локальный редактор .zs</span>
+              <textarea
+                aria-label="local-script-editor"
+                value={activeUploadedDraft.text}
+                onChange={(event) => updateUploadedDraftText(activeUploadedDraft.id, event.target.value)}
+              />
+            </label>
+          ) : null}
           <div className="file-actions">
             <button type="button" className="secondary-button" aria-label="download-active-draft" disabled={!activeUploadedDraft} onClick={downloadActiveUploadedDraft}>Скачать текущий</button>
             <button type="button" aria-label="upload-drafts-cloud" disabled={!fileActionDrafts.length || !canManageCloudFiles} onClick={() => void uploadDraftsToCloud(fileActionDrafts)}>Выгрузить в Облако</button>
@@ -4671,6 +5001,42 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <button type="button" aria-label="cloud-upload-overwrite" onClick={() => resolveCloudUploadConflict('overwrite')}>Перезаписать</button>
               <button type="button" className="secondary-button" aria-label="cloud-upload-append" onClick={() => resolveCloudUploadConflict('append')}>Объединить</button>
               <button type="button" className="ghost-button" aria-label="cloud-upload-cancel" onClick={() => resolveCloudUploadConflict('cancel')}>Отмена</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderLocalSaveModal() {
+    if (!isLocalSaveModalOpen) return null;
+    const activeDraft = getActiveUploadedDraft();
+    const canReplace = Boolean(activeDraft && findRecipeBlockInDraft(activeDraft));
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => setIsLocalSaveModalOpen(false)}>
+        <div
+          className="modal cloud-save-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="local-save-choice"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="modal-header">
+            <div>
+              <h2>Сохранить локально</h2>
+              <span className="modal-subtitle">{activeDraft ? activeDraft.name : 'Локальный .zs файл не выбран'}</span>
+            </div>
+            <button type="button" className="ghost-button" onClick={() => setIsLocalSaveModalOpen(false)}>Закрыть</button>
+          </div>
+          <div className="settings-modal-body">
+            <div className="cloud-save-preview">
+              <span>Рецепт</span>
+              <strong>{outputRaw}</strong>
+            </div>
+            <div className="cloud-conflict-actions">
+              <button type="button" aria-label="local-save-download" onClick={() => executeLocalSave('download')}>Скачать .zs</button>
+              <button type="button" className="secondary-button" aria-label="local-save-append" disabled={!activeDraft} onClick={() => executeLocalSave('append-uploaded')}>Добавить в файл</button>
+              <button type="button" className="secondary-button" aria-label="local-save-replace" disabled={!canReplace} onClick={() => executeLocalSave('replace-uploaded')}>Заменить в файле</button>
             </div>
           </div>
         </div>
@@ -4829,7 +5195,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     <button type="button" aria-label="edit-selected-draft-template" onClick={() => openRecipeDraftTemplate(activeDraftPreview)}>Редактировать рецепт</button>
                   </div>
                   <div className="draft-preview-grid">
-                    <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
                   </div>
                 </div>
               ) : null}
@@ -4980,12 +5346,42 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderAccessControlContent() {
+    return (
+      <div className="access-control-panel">
+        <div className="admin-users-toolbar">
+          <button type="button" className="secondary-button" onClick={() => void refreshAccessControl()}>Обновить whitelist</button>
+          <span>{accessStatus}</span>
+        </div>
+        <label className="switch-field">
+          <span>Whitelist режим</span>
+          <input
+            aria-label="whitelist-enabled"
+            type="checkbox"
+            checked={accessControl.whitelist_enabled}
+            onChange={(event) => void saveAccessControl(event.target.checked)}
+          />
+        </label>
+        <label className="field-block">
+          <span>Whitelist email</span>
+          <textarea
+            aria-label="whitelist-emails"
+            value={accessWhitelistDraft}
+            onChange={(event) => setAccessWhitelistDraft(event.target.value)}
+          />
+        </label>
+        <button type="button" className="secondary-button" aria-label="save-whitelist" onClick={() => void saveAccessControl()}>Сохранить whitelist</button>
+      </div>
+    );
+  }
+
   function renderAdminUsersPanel() {
     if (!canManageRoles) return null;
     return (
       <div className="workspace-panel-shell panel-admin-users">
         <Panel title="Персонал" subtitle="Роли и доступ по Google почте">
           {renderAdminUsersContent()}
+          {renderAccessControlContent()}
         </Panel>
       </div>
     );
@@ -5382,7 +5778,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
                   setMatrixCell(row, col, value);
                 }} />
               </div>
@@ -5413,6 +5809,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <label className="field-block switch-field"><span>{t('fields.animations')}</span><input type="checkbox" checked={uiPreferences.animations_enabled} onChange={(event) => patchUiPreferences({ animations_enabled: event.target.checked })} /></label>
                   <label className="field-block"><span>{t('fields.density')}</span><select value={uiPreferences.density_mode} onChange={(event) => patchUiPreferences({ density_mode: event.target.value as DensityMode })}><option value="compact">compact</option><option value="normal">normal</option><option value="wide">wide</option></select></label>
                   <label className="field-block"><span>{t('fields.editorMode')}</span><select value={uiPreferences.editor_mode} onChange={(event) => patchUiPreferences({ editor_mode: event.target.value as EditorMode })}><option value="view">view</option><option value="edit">edit</option></select></label>
+                  <label className="field-block"><span>Зазор 3x3</span><input aria-label="extreme-grid-gap" type="range" min={0} max={24} value={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} onChange={(event) => patchUiPreferences({ workspace_layout: { ...uiPreferences.workspace_layout, extreme_grid_gap: Number(event.target.value) } })} /></label>
                 </div>
               </div>
             </Panel>
@@ -5489,6 +5886,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderCustomItemModal()}
       {renderRecipeUsesModal()}
       {renderCloudUploadConflictModal()}
+      {renderLocalSaveModal()}
       {renderCloudSaveModal()}
 
       {isLayoutSettingsOpen ? (
@@ -5555,6 +5953,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span>Роли выдаются по Google почте</span>
                 </div>
                 {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+                {canManageRoles ? renderAccessControlContent() : null}
               </section>
               <section className="settings-section">
                 <div className="settings-section-title">

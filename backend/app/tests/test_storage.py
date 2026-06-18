@@ -43,6 +43,21 @@ def test_replace_existing_recipe(tmp_path: Path):
     assert len(storage.search_by_output('<minecraft:stick>')) == 0
 
 
+def test_replace_existing_recipe_keeps_remove_statement_bound_to_block(tmp_path: Path):
+    scripts = tmp_path / 'scripts'
+    scripts.mkdir()
+    file_path = scripts / 'sample.zs'
+    file_path.write_text('recipes.remove(<minecraft:stick:*>);\n' + SAMPLE, encoding='utf-8')
+    storage = ZsStorage(scripts)
+    storage.scan()
+    uid = storage.search_by_output('<minecraft:stick>')[0].recipe_uid
+    storage.save_existing(uid, 'recipes.remove(<minecraft:ladder:*>);\nrecipes.addShaped(<minecraft:ladder>, [[<minecraft:stick>]]);')
+    text = file_path.read_text(encoding='utf-8')
+    assert '<minecraft:stick:*>' not in text
+    assert text.count('recipes.remove(') == 1
+    assert len(storage.search_by_output('<minecraft:ladder>')) == 1
+
+
 def test_save_existing_rescans_only_changed_file(tmp_path: Path, monkeypatch):
     scripts = tmp_path / 'scripts'
     scripts.mkdir()
