@@ -59,6 +59,9 @@ For very small tasks (e.g. rename button, change text):
 
 ## Development Workflow
 
+### Local Site Verification
+- Never start frontend dev servers, open localhost, or verify CubixRecipes as a local website unless the user explicitly asks for that in the current task.
+
 ### Before implementing
 1. Read `AGENTS.md`.
 2. Identify task scope (micro / normal / complex).
