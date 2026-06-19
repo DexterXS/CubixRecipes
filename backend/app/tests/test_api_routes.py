@@ -57,6 +57,35 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
 
 
+def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Path):
+    scripts_dir = tmp_path / 'scripts_ht'
+    scripts_dir.mkdir()
+    (scripts_dir / 'Mixed.zs').write_text(
+        'recipes.addShaped(<DraconicEvolution:customSpawner>, [[<appliedenergistics2:item.ItemMultiMaterial:41>]]);\n'
+        'recipes.addShaped(<EnderIO:itemBrokenSpawner>.withTag({mobType: "Skeleton"}), [[<minecraft:stone>]]);',
+        encoding='utf-8',
+    )
+    (tmp_path / 'itempanel.csv').write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'draconicevolution:customspawner,1,0,false,Spawner\n'
+        'minecraft:stone,1,0,false,Stone\n',
+        encoding='utf-8',
+    )
+    app = create_app(str(scripts_dir), config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/generate')
+    read_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases')
+
+    generated = generate_route()['report']
+    loaded = read_route()['report']
+
+    assert generated['summary']['uniqueItemKeys'] == 4
+    assert generated['summary']['matchedItemKeys'] == 2
+    assert generated['summary']['missingItemKeys'] == 2
+    assert generated['itemAliases']['draconicevolution:customspawner'] == 'DraconicEvolution:customSpawner'
+    assert generated['entityAliases']['skeleton'] == 'Skeleton'
+    assert loaded['summary']['uniqueItemKeys'] == generated['summary']['uniqueItemKeys']
+
+
 def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     icon_path = tmp_path / 'icon.png'
     _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])

@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemCaseAliasReport, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -363,6 +363,16 @@ export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; pat
 export async function generateModIconAtlases(): Promise<ModIconAtlasManifest> {
   const payload = await request<{ ok: boolean; manifest: ModIconAtlasManifest }>(apiPath('/admin/mod-icons/generate'), { method: 'POST' });
   return payload.manifest;
+}
+
+export async function getItemCaseAliasReport(): Promise<ItemCaseAliasReport | null> {
+  const payload = await request<{ ok: boolean; report: ItemCaseAliasReport | null }>(apiPath('/admin/item-case-aliases'));
+  return payload.report;
+}
+
+export async function generateItemCaseAliasReport(): Promise<ItemCaseAliasReport> {
+  const payload = await request<{ ok: boolean; report: ItemCaseAliasReport }>(apiPath('/admin/item-case-aliases/generate'), { method: 'POST' });
+  return payload.report;
 }
 
 export async function listZsCloudFiles(): Promise<{ files: ZsCloudFile[] }> {

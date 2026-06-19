@@ -80,6 +80,10 @@ function craftOutputRaw(): string | null {
   return screen.getByLabelText('craft-output-slot').getAttribute('data-item-raw');
 }
 
+function openRecipeActions() {
+  fireEvent.click(screen.getByText('Действия'));
+}
+
 beforeEach(() => {
   window.localStorage.clear();
   mockRecipeDraftTemplates = [];
@@ -236,6 +240,49 @@ beforeEach(() => {
             rejected: [],
             totalMods: 1,
             totalIcons: 0
+          }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/item-case-aliases' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, report: null })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/item-case-aliases/generate' && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          report: {
+            generatedAt: '2026-06-19T00:00:00+00:00',
+            scriptsDir: 'scripts_ht',
+            itempanelCsv: 'itempanel.csv',
+            aliasesPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases.json',
+            reportPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases_report.json',
+            summary: {
+              scriptFiles: 1,
+              scriptItemRefs: 1,
+              uniqueItemKeys: 1,
+              mixedCaseItemAliases: 1,
+              matchedItemKeys: 1,
+              missingItemKeys: 0,
+              itemConflicts: 0,
+              scriptEntityRefs: 0,
+              uniqueEntityKeys: 0,
+              mixedCaseEntityAliases: 0,
+              entityConflicts: 0
+            },
+            itemAliases: [],
+            entityAliases: [],
+            itemConflicts: [],
+            entityConflicts: [],
+            matchedItems: [],
+            missingItems: [],
+            missingByMod: []
           }
         })
       }) as Promise<Response>;
@@ -494,24 +541,27 @@ test('renders the cleaned static workspace for admins', async () => {
 
   expect(screen.getByRole('button', { name: 'Главное меню' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'Иконки модов' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'Облако .zs' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'Отладка' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Техническая панель' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Облако' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Предметы' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Вид' })).toBeFalsy();
   expect(screen.getByText('Создать рецепт')).toBeTruthy();
   expect(screen.getByText('Файлы рецептов')).toBeTruthy();
   expect(screen.getByText('NEI предметы')).toBeTruthy();
+  expect((screen.getByLabelText('recipe-history-back') as HTMLButtonElement).disabled).toBe(true);
+  expect((screen.getByLabelText('recipe-history-forward') as HTMLButtonElement).disabled).toBe(true);
 
   expect(screen.queryByLabelText('output-raw')).toBeFalsy();
 
   await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('/api/admin/users', expect.anything()));
 });
 
-test('debug workspace uses side navigation sections', async () => {
+test('technical workspace uses side navigation sections', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByTestId('workspace-tab-debug'));
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
 
   expect(screen.getByLabelText('debug-workspace')).toBeTruthy();
   expect(screen.getByLabelText('debug-navigation')).toBeTruthy();
@@ -537,7 +587,8 @@ test('right click clears a held item before opening context menus again', async 
 test('admin mod icons tab shows archive and atlas status', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Иконки модов' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Техническая панель' }));
+  fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
 
   expect(await screen.findByText('examplemod_x32.zip')).toBeTruthy();
   expect(await screen.findByText('Иконок')).toBeTruthy();
@@ -560,7 +611,7 @@ test('NEI uses generated mod icon atlas entries matched by itempanel display nam
 test('cloud storage shows files and root backup only after Ctrl+B', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Облако .zs' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Облако' }));
 
   expect(await screen.findByText('test.zs')).toBeTruthy();
   expect(screen.queryByText('ROOT backup')).toBeFalsy();
@@ -573,26 +624,26 @@ test('cloud storage shows files and root backup only after Ctrl+B', async () => 
 test('shows drafts for moderators but keeps debug/admin settings hidden from viewers', () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Облако .zs' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
   cleanup();
 
   render(<App authUser={defaultUser} onLogout={vi.fn()} />);
   expect(screen.queryByRole('button', { name: 'Черновики' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Облако .zs' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Настройки' })).toBeFalsy();
 });
 
-test('settings only keeps ui scale and staff role management', async () => {
+test('settings keeps UI/debug controls separate from technical access', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
   expect(screen.getByRole('dialog', { name: 'Настройки' })).toBeTruthy();
   expect(screen.getByLabelText('ui-scale')).toBeTruthy();
-  expect(screen.getByText('Права персонала')).toBeTruthy();
+  expect(screen.getByText('Debug режим')).toBeTruthy();
+  expect(screen.queryByText('Права персонала')).toBeFalsy();
+  expect(screen.queryByLabelText('whitelist-emails')).toBeFalsy();
   expect(screen.queryByText(/layout/i)).toBeFalsy();
 
   fireEvent.change(screen.getByLabelText('ui-scale'), { target: { value: '1.3' } });
@@ -625,6 +676,7 @@ test('cloud save uses a controlled filename modal instead of a path prompt', asy
   const promptSpy = vi.spyOn(window, 'prompt');
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
+  openRecipeActions();
   fireEvent.click(screen.getByLabelText('save-cloud'));
 
   expect(promptSpy).not.toHaveBeenCalled();
@@ -659,7 +711,11 @@ test('local save can append current recipe into uploaded site file with remove t
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   expect(await screen.findByText('local.zs')).toBeTruthy();
-  fireEvent.click(screen.getByLabelText('remove-recipe-enabled'));
+  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки' }));
+  const craftDialog = await screen.findByRole('dialog', { name: 'Craft editor' });
+  fireEvent.click(within(craftDialog).getByLabelText('remove-recipe-enabled'));
+  fireEvent.click(within(craftDialog).getByRole('button', { name: 'Закрыть' }));
+  openRecipeActions();
   fireEvent.click(screen.getByLabelText('save-local'));
 
   const dialog = await screen.findByRole('dialog', { name: 'local-save-choice' });
@@ -675,7 +731,8 @@ test('local save can append current recipe into uploaded site file with remove t
 test('admin can enable whitelist mode', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Техническая панель' }));
+  fireEvent.click(screen.getByLabelText('debug-section-access'));
   fireEvent.change(await screen.findByLabelText('whitelist-emails'), { target: { value: 'viewer@example.com' } });
   fireEvent.click(screen.getByLabelText('whitelist-enabled'));
 
@@ -691,7 +748,8 @@ test('admin can enable whitelist mode', async () => {
 test('admin can upload itempanel csv from mod icons panel', async () => {
   const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByTestId('workspace-tab-modIcons'));
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
   const csvInputs = [...container.querySelectorAll('input[type="file"]')] as HTMLInputElement[];
   const csvInput = csvInputs.find((input) => input.accept.includes('.csv')) as HTMLInputElement;
   const file = new File(['Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Камень\n'], 'itempanel.csv', { type: 'text/csv' });
@@ -840,6 +898,7 @@ test('saved recipe draft templates can be browsed, previewed, opened, and remove
   await screen.findByLabelText('nei-item-<minecraft:planks>');
 
   fireEvent.doubleClick(screen.getByLabelText('nei-item-<minecraft:planks>'));
+  openRecipeActions();
   fireEvent.click(screen.getByLabelText('save-draft-template'));
   await waitFor(() => expect(mockRecipeDraftTemplates.length).toBe(1));
 

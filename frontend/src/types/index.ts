@@ -208,6 +208,43 @@ export interface ModIconAdminStatus {
   };
 }
 
+export interface ItemCaseAliasEntry {
+  lower_key: string;
+  original: string;
+  modid: string;
+  metas: string[];
+  files: string[];
+}
+
+export interface ItemCaseAliasReport {
+  generatedAt: string;
+  aliasesPath: string;
+  reportPath: string;
+  summary: {
+    generatedAt: string;
+    scriptsDir: string;
+    itempanelCsv: string;
+    scriptFiles: number;
+    scriptItemRefs: number;
+    uniqueItemKeys: number;
+    mixedCaseItemAliases: number;
+    itempanelKeys: number;
+    matchedItemKeys: number;
+    missingItemKeys: number;
+    itemConflicts: number;
+    scriptEntityRefs: number;
+    uniqueEntityKeys: number;
+    entityConflicts: number;
+  };
+  itemAliases: Record<string, string>;
+  entityAliases: Record<string, string>;
+  matchedItems: ItemCaseAliasEntry[];
+  missingItems: ItemCaseAliasEntry[];
+  missingByMod: Array<{ modid: string; count: number }>;
+  itemConflicts: Array<Record<string, unknown>>;
+  entityConflicts: Array<Record<string, unknown>>;
+}
+
 export interface ZsCloudFile {
   path: string;
   name: string;

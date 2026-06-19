@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a `Техническая панель` workspace for admin/operator technical flows: mod icon ZIPs, itempanel CSV/atlas controls, roles, whitelist, debug data, and a temporary lowercase-to-original-case item/entity alias report generated from `scripts_ht`.
 - Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
 - Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
 - Added admin `itempanel.csv` upload support, refreshing the backend itempanel catalog/atlas from the admin UI.
@@ -10,10 +11,11 @@
 - Added Railway/backend volume-aware project config defaults: mounted `/data` storage is used for runtime config, default `.zs` scripts, admin backups, generated mod atlases, and shared recipe draft templates.
 - Added backend-backed recipe draft templates so moderators see only their own drafts while admins can browse and remove all saved templates.
 - Added `2x2` recipe editing, `ct_shapeless` recipe parsing/rendering, and a strict placement mode that preserves empty grid borders when admins need exact shaped positioning.
-- Added two admin-only frontend workspaces: `Иконки модов` for `.zip` uploads with strict `modid_x32.png` / `modid_x256.png` validation and per-size atlas generation, and `Облако .zs` for listing, downloading, renaming, and deleting all managed `.zs` files.
-- Added hidden ROOT-only `Ctrl+B` backup access inside `Облако .zs`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
+- Added admin-only mod icon controls for `.zip` uploads with strict `modid_x32.png` / `modid_x256.png` validation and per-size atlas generation, plus `Облако` for listing, downloading, renaming, and deleting all managed `.zs` files.
+- Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Renamed `Облако .zs` to `Облако`, separated recipe history buttons from similar-recipe navigation, disabled empty history actions, and moved recipe removal/template controls into output detail settings.
 - Updated generated shaped/extreme recipe output to place the matrix opening bracket after the output comma and render rows on separate lines, matching the requested 1.7.10 script style.
 - Normalized itempanel atlas sprites by trimming transparent PNG padding before centering them in 32x32 tiles, removing manual preview offsets for Minecraft block icons.
 - Centered draft-template item icons and made the saved-template preview frame fixed-size across 2x2, 3x3, and 9x9 recipes while scaling only the inner craft grid.

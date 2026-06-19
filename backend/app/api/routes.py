@@ -29,6 +29,7 @@ from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
+from app.services.item_case_alias_service import ItemCaseAliasService
 from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, InvalidModIconArchiveError, ModIconAtlasService
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
@@ -259,6 +260,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     storage.excluded_managed_roots = [admin_data_dir]
     access_control_store = AccessControlStore(admin_data_dir / 'access_control.json')
     mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
+    item_case_alias_service = ItemCaseAliasService(Path(active_scripts_dir), itempanel_icon_catalog.csv_path, admin_data_dir / 'item_case_aliases')
     zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
     recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
     resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
@@ -453,6 +455,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         manifest = mod_icon_atlas_service.generate_atlases()
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon atlases generated', {'atlases': len(manifest.get('atlases', [])), 'totalMods': manifest.get('totalMods')})
         return {'ok': True, 'manifest': manifest}
+
+    @router.get('/admin/item-case-aliases')
+    def admin_item_case_alias_report():
+        report = item_case_alias_service.load_report()
+        return {'ok': True, 'report': report}
+
+    @router.post('/admin/item-case-aliases/generate')
+    def admin_generate_item_case_alias_report():
+        report = item_case_alias_service.build()
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Item case alias report generated', report.get('summary', {}))
+        return {'ok': True, 'report': report}
 
     @router.get('/admin/mod-icons/atlases/{filename}')
     def admin_mod_icon_atlas_png(filename: str):

@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateModIconAtlases, getAccessControlSettings, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -42,7 +42,7 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 ];
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
-type WorkspaceTab = 'editor' | 'recipe' | 'modIcons' | 'cloud' | 'debug';
+type WorkspaceTab = 'editor' | 'recipe' | 'technical' | 'cloud';
 type RecipeType = 'ct_shaped' | 'ct_shapeless' | 'avaritia_extreme_shaped';
 type RecipeCraftMode = 'shaped' | 'shapeless';
 type RecipeBindingMode = 'soft' | 'strict';
@@ -227,6 +227,12 @@ type RecipeUsesModalState = {
   error?: string;
 };
 
+type SimilarRecipeState = {
+  raw: string;
+  matches: RecipeView[];
+  index: number;
+};
+
 type CloudUploadConflictMode = 'overwrite' | 'append' | 'cancel';
 type CloudUploadConflictState = {
   filename: string;
@@ -246,7 +252,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'recipe' | 'runtime' | 'logs' | 'staff' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'recipe' | 'runtime' | 'logs' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -676,7 +682,13 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
     return null;
   }
 
-  const workspaceTab = value.workspaceTab === 'recipe' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'cloud' || value.workspaceTab === 'debug' ? value.workspaceTab : 'editor';
+  const workspaceTab: WorkspaceTab = value.workspaceTab === 'recipe'
+    ? 'recipe'
+    : value.workspaceTab === 'cloud'
+      ? 'cloud'
+      : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
+        ? 'technical'
+        : 'editor';
   const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
   const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
   const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
@@ -1317,6 +1329,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
   const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
+  const [similarRecipes, setSimilarRecipes] = useState<SimilarRecipeState | null>(null);
   const [recipeBackHistory, setRecipeBackHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeBackHistory ?? []);
   const [recipeForwardHistory, setRecipeForwardHistory] = useState<RecipeHistoryEntry[]>(restoredDraft?.recipeForwardHistory ?? []);
   const [isHotkeyDebugEnabled, setIsHotkeyDebugEnabled] = useState(() => {
@@ -1347,6 +1360,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [modIconUploading, setModIconUploading] = useState(false);
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
+  const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
+  const [itemCaseAliasStatus, setItemCaseAliasStatus] = useState('');
+  const [itemCaseAliasGenerating, setItemCaseAliasGenerating] = useState(false);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudStatus, setCloudStatus] = useState('');
   const [cloudContextMenu, setCloudContextMenu] = useState<CloudFileContextMenuState | null>(null);
@@ -1393,13 +1409,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canUseDebug = can(authUser, 'debug:manage');
   const canManageModIcons = can(authUser, 'mod-icons:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
+  const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   const workspaceTabs = [
     { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
     { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
-    { id: 'modIcons' as const, label: uiPreferences.language === 'ru' ? 'Иконки модов' : 'Mod icons', visible: canManageModIcons },
-    { id: 'cloud' as const, label: uiPreferences.language === 'ru' ? 'Облако .zs' : '.zs cloud', visible: canManageCloudFiles },
-    { id: 'debug' as const, label: uiPreferences.language === 'ru' ? 'Отладка' : 'Debug', visible: canUseDebug }
+    { id: 'technical' as const, label: uiPreferences.language === 'ru' ? 'Техническая панель' : 'Technical panel', visible: canUseTechnicalPanel },
+    { id: 'cloud' as const, label: uiPreferences.language === 'ru' ? 'Облако' : 'Cloud', visible: canManageCloudFiles }
   ].filter((tab) => tab.visible);
 
   function logAppDebug(category: DebugCategory, message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
@@ -1628,6 +1644,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  async function refreshItemCaseAliasReport() {
+    if (!canManageModIcons) return;
+    setItemCaseAliasStatus('Загружаю отчет словаря...');
+    try {
+      const report = await getItemCaseAliasReport();
+      setItemCaseAliasReport(report);
+      setItemCaseAliasStatus(report ? `Отчет: ${report.summary.uniqueItemKeys} ключей, не найдено ${report.summary.missingItemKeys}.` : 'Отчет еще не создан.');
+    } catch (error) {
+      setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function handleGenerateItemCaseAliasReport() {
+    if (!canManageModIcons) return;
+    setItemCaseAliasGenerating(true);
+    setItemCaseAliasStatus('Строю словарь регистра из scripts_ht...');
+    try {
+      const report = await generateItemCaseAliasReport();
+      setItemCaseAliasReport(report);
+      setItemCaseAliasStatus(`Готово: совпало ${report.summary.matchedItemKeys}, не найдено ${report.summary.missingItemKeys}, mixed-case ${report.summary.mixedCaseItemAliases}.`);
+    } catch (error) {
+      setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemCaseAliasGenerating(false);
+    }
+  }
+
   async function refreshCloudFiles() {
     if (!canManageCloudFiles) return;
     setCloudStatus('Загружаю список .zs...');
@@ -1736,10 +1779,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [canManageRoles]);
 
   useEffect(() => {
-    if (workspaceTab === 'modIcons' && canManageModIcons) {
+    if (workspaceTab === 'technical' && canManageModIcons) {
       void refreshModIconStatus();
+      void refreshItemCaseAliasReport();
     }
   }, [workspaceTab, canManageModIcons]);
+
+  useEffect(() => {
+    if (workspaceTab === 'technical' && !canUseTechnicalPanel) {
+      setWorkspaceTab('editor');
+    }
+  }, [workspaceTab, canUseTechnicalPanel]);
 
   useEffect(() => {
     if (workspaceTab === 'cloud' && canManageCloudFiles) {
@@ -2428,6 +2478,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     applyRecipe(defaultRecipe, '');
     setRecipeBackHistory([]);
     setRecipeForwardHistory([]);
+    setSimilarRecipes(null);
     setStatus(t('status.cleared'));
     setSaveStatus(t('values.reset'));
     setLastApiStatus(t('values.idle'));
@@ -3268,6 +3319,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       source: { ...result.recipe.source, path: match.sourceName }
     };
     applyRecipe(recipeFromDraft, match.block, { rememberCurrent: true });
+    setSimilarRecipes(null);
     setHeldItemRaw(null);
     setWorkspaceTab('editor');
     setStatus(`Открыт локальный черновик ${recipeFromDraft.output.raw} из ${match.sourceName}.`);
@@ -3336,21 +3388,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         logHotkeyDebug('recipe lookup response', { raw: lookupRaw, requestedRaw: normalizedRaw, matches: result.matches.length, durationMs: elapsedMs(searchStartedAt) }, result.matches.length ? 'success' : 'warning');
         return { lookupRaw, result };
       }));
-      const match = lookupResults.find(({ result }) => Boolean(result.matches[0]))?.result.matches[0];
+      const backendMatches = mergeRecipeMatches(...lookupResults.map(({ result }) => result.matches));
+      const match = backendMatches[0];
       if (!match) {
         logHotkeyDebug('backend lookup empty, checking uploaded drafts', { raw: normalizedRaw, keys: lookupKeys.join(', ') }, 'warning');
         if (await openRecipeFromUploadedDraft(normalizedRaw, draftMatch ?? undefined)) {
           return;
         }
+        setSimilarRecipes(null);
         setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes и локальных черновиках.`);
         setLastApiStatus(t('values.ok'));
         return;
       }
+      setSimilarRecipes(backendMatches.length > 1 ? { raw: normalizedRaw, matches: backendMatches, index: 0 } : null);
       applyRecipe(match, undefined, { rememberCurrent: true });
-      logHotkeyDebug('recipe applied', { requestedRaw: normalizedRaw, outputRaw: match.output.raw, recipeUid: match.recipe_uid, sourcePath: match.source.path ?? 'Recipes' }, 'success');
+      logHotkeyDebug('recipe applied', { requestedRaw: normalizedRaw, outputRaw: match.output.raw, recipeUid: match.recipe_uid, sourcePath: match.source.path ?? 'Recipes', matches: backendMatches.length }, 'success');
       setHeldItemRaw(null);
       setWorkspaceTab('editor');
-      setStatus(`Открыт рецепт ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`);
+      setStatus(backendMatches.length > 1
+        ? `Открыт рецепт 1/${backendMatches.length}: ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`
+        : `Открыт рецепт ${match.output.raw} из ${match.source.path ?? 'Recipes'}.`);
       setLastParseResult(match.recipe_type);
       setLastApiStatus(t('values.ok'));
     } catch (error) {
@@ -3411,6 +3468,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function openRecipeFromUses(recipeToOpen: RecipeView) {
     applyRecipe(recipeToOpen, undefined, { rememberCurrent: true });
+    setSimilarRecipes(null);
     setHeldItemRaw(null);
     setWorkspaceTab('editor');
     setRecipeUsesModal(null);
@@ -3426,6 +3484,20 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     });
   }
 
+  function changeSimilarRecipe(direction: -1 | 1) {
+    if (!similarRecipes) return;
+    const nextIndex = clamp(similarRecipes.index + direction, 0, similarRecipes.matches.length - 1);
+    if (nextIndex === similarRecipes.index) return;
+    const nextRecipe = similarRecipes.matches[nextIndex];
+    setSimilarRecipes({ ...similarRecipes, index: nextIndex });
+    applyRecipe(nextRecipe);
+    setHeldItemRaw(null);
+    setWorkspaceTab('editor');
+    setStatus(`Открыт похожий рецепт ${nextIndex + 1}/${similarRecipes.matches.length}: ${nextRecipe.output.raw} из ${nextRecipe.source.path ?? 'Recipes'}.`);
+    setLastParseResult(nextRecipe.recipe_type);
+    setLastApiStatus(t('values.ok'));
+  }
+
   function restoreRecipeFromHistory(direction: -1 | 1) {
     if (direction === -1) {
       const previous = recipeBackHistory[recipeBackHistory.length - 1];
@@ -3433,6 +3505,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setRecipeBackHistory((current) => current.slice(0, -1));
       setRecipeForwardHistory((current) => [createRecipeHistoryEntry(), ...current].slice(0, 40));
       applyRecipe(previous.recipe, previous.input);
+      setSimilarRecipes(null);
       setWorkspaceTab('editor');
       setStatus(`Открыт предыдущий рецепт ${previous.recipe.output.raw}.`);
       setLastParseResult(previous.recipe.recipe_type);
@@ -3443,6 +3516,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setRecipeForwardHistory((current) => current.slice(1));
     setRecipeBackHistory((current) => [...current, createRecipeHistoryEntry()].slice(-40));
     applyRecipe(next.recipe, next.input);
+    setSimilarRecipes(null);
     setWorkspaceTab('editor');
     setStatus(`Открыт следующий рецепт ${next.recipe.output.raw}.`);
     setLastParseResult(next.recipe.recipe_type);
@@ -3540,6 +3614,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setLastApiStatus(t('values.ok'));
       if (result.recipe) {
         applyRecipe(result.recipe, value);
+        setSimilarRecipes(null);
         setStatus(t('status.loaded'));
         setLastParseResult(result.recipe.recipe_type);
         return;
@@ -4172,13 +4247,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           subtitle="Сетка, входные предметы и результат"
           className="recipe-builder-panel"
           actions={(
-            <div className="inline-actions">
-              <button type="button" className="ghost-button icon-button" aria-label="recipe-history-back" title="Предыдущий открытый рецепт" disabled={!recipeBackHistory.length} onClick={() => restoreRecipeFromHistory(-1)}>‹</button>
-              <button type="button" className="ghost-button icon-button" aria-label="recipe-history-forward" title="Следующий открытый рецепт" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>›</button>
-              <button type="button" className="secondary-button" aria-label="save-local" disabled={!canSaveActions} onClick={downloadCurrentRecipe}>Сохранить локально</button>
-              <button type="button" aria-label="save-cloud" disabled={!canSaveActions} onClick={() => void handleSaveToCloud()}>Сохранить в облако</button>
-              <button type="button" className="secondary-button" aria-label="save-draft-template" disabled={!canSaveActions} onClick={() => void handleSaveDraftTemplate()}>Сохранить в черновик</button>
-              <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
+            <div className="recipe-panel-actions">
+              <div className="history-nav" aria-label="recipe-history-navigation">
+                <button type="button" className="ghost-button history-button" aria-label="recipe-history-back" title="История назад" disabled={!recipeBackHistory.length} onClick={() => restoreRecipeFromHistory(-1)}>← История назад</button>
+                <span className="history-status">История: назад {recipeBackHistory.length}, вперед {recipeForwardHistory.length}</span>
+                <button type="button" className="ghost-button history-button" aria-label="recipe-history-forward" title="История вперед" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>История вперед →</button>
+              </div>
+              <details className="recipe-actions-menu">
+                <summary>Действия</summary>
+                <div className="recipe-actions-popover">
+                  <button type="button" className="secondary-button" aria-label="save-local" disabled={!canSaveActions} onClick={downloadCurrentRecipe}>Сохранить локально</button>
+                  <button type="button" aria-label="save-cloud" disabled={!canSaveActions} onClick={() => void handleSaveToCloud()}>Сохранить в облако</button>
+                  <button type="button" className="secondary-button" aria-label="save-draft-template" disabled={!canSaveActions} onClick={() => void handleSaveDraftTemplate()}>Сохранить в черновик</button>
+                  <button type="button" className="ghost-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={clearEditor}>Очистить</button>
+                </div>
+              </details>
             </div>
           )}
         >
@@ -4203,23 +4286,20 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <option value="strict">Точная</option>
               </select>
             </label>
-            <label className="field-block switch-field">
-              <span>Удаление рецепта</span>
-              <input aria-label="remove-recipe-enabled" type="checkbox" checked={activeRemoveTemplateId() !== 'none'} onChange={(event) => setActiveRemoveTemplateId(event.target.checked ? 'output-wildcard' : 'none')} />
-            </label>
-            <label className="field-block">
-              <span>Шаблон удаления</span>
-              <select aria-label="remove-recipe-template" value={activeRemoveTemplateId()} disabled={activeRemoveTemplateId() === 'none'} onChange={(event) => setActiveRemoveTemplateId(event.target.value)}>
-                <option value="none">Без удаления</option>
-                {removeTemplateOptions().map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
-              </select>
-            </label>
-            <label className="field-block remove-template-draft">
-              <span>Новый шаблон</span>
-              <input aria-label="remove-template-draft" value={removeTemplateDraft} onChange={(event) => setRemoveTemplateDraft(event.target.value)} />
-            </label>
-            <button type="button" className="secondary-button" aria-label="add-remove-template" onClick={addCustomRemoveTemplate}>Добавить шаблон</button>
           </div>
+          {similarRecipes ? (
+            <div className="similar-recipe-nav" aria-label="similar-recipe-navigation">
+              <div>
+                <span>Похожие рецепты</span>
+                <strong>{similarRecipes.index + 1}/{similarRecipes.matches.length}</strong>
+                <small>{similarRecipes.raw}</small>
+              </div>
+              <div className="inline-actions">
+                <button type="button" className="ghost-button" aria-label="similar-recipe-prev" disabled={similarRecipes.matches.length <= 1 || similarRecipes.index <= 0} onClick={() => changeSimilarRecipe(-1)}>← Предыдущий похожий</button>
+                <button type="button" className="ghost-button" aria-label="similar-recipe-next" disabled={similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1} onClick={() => changeSimilarRecipe(1)}>Следующий похожий →</button>
+              </div>
+            </div>
+          ) : null}
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
@@ -5417,6 +5497,75 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderItemCaseAliasPanel() {
+    const report = itemCaseAliasReport;
+    const summary = report?.summary;
+    return (
+      <div className="debug-section-grid">
+        <section className="settings-section">
+          <div className="settings-section-title">
+            <h3>Словарь регистра</h3>
+            <span>Временный lowercase → original-case словарь из scripts_ht и сверка с itempanel.csv.</span>
+          </div>
+          <div className="file-actions">
+            <button type="button" className="secondary-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void handleGenerateItemCaseAliasReport()}>Сгенерировать отчет</button>
+            <button type="button" className="ghost-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void refreshItemCaseAliasReport()}>Обновить статус</button>
+          </div>
+          {itemCaseAliasStatus ? <div className="inline-status inline-status-default">{itemCaseAliasStatus}</div> : null}
+          {summary ? (
+            <div className="kv-grid">
+              <div><span>Файлов .zs</span><strong>{summary.scriptFiles}</strong></div>
+              <div><span>Item refs</span><strong>{summary.scriptItemRefs}</strong></div>
+              <div><span>Уникальных ключей</span><strong>{summary.uniqueItemKeys}</strong></div>
+              <div><span>Mixed-case</span><strong>{summary.mixedCaseItemAliases}</strong></div>
+              <div><span>Совпало с itempanel</span><strong>{summary.matchedItemKeys}</strong></div>
+              <div><span>Не найдено</span><strong>{summary.missingItemKeys}</strong></div>
+              <div><span>Конфликтов item</span><strong>{summary.itemConflicts}</strong></div>
+              <div><span>Мобов/NBT ids</span><strong>{summary.uniqueEntityKeys}</strong></div>
+            </div>
+          ) : (
+            <div className="inline-hint inline-hint-warning">Отчет еще не создан. Нажми генерацию, чтобы собрать словарь и список пропусков.</div>
+          )}
+          {report ? (
+            <div className="case-alias-paths">
+              <span>Словарь: <code>{report.aliasesPath}</code></span>
+              <span>Отчет: <code>{report.reportPath}</code></span>
+            </div>
+          ) : null}
+        </section>
+        <section className="settings-section">
+          <div className="settings-section-title">
+            <h3>Не найдено в itempanel</h3>
+            <span>{summary ? `${summary.missingItemKeys} ключей` : 'Список появится после генерации.'}</span>
+          </div>
+          {report?.missingByMod.length ? (
+            <div className="missing-mod-list">
+              {report.missingByMod.slice(0, 16).map((item) => (
+                <div key={item.modid} className="admin-file-row">
+                  <strong>{item.modid || 'unknown'}</strong>
+                  <span>{item.count}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {report?.missingItems.length ? (
+            <div className="admin-file-list case-alias-missing-list">
+              {report.missingItems.slice(0, 80).map((item) => (
+                <div key={item.lower_key} className="admin-file-row">
+                  <div>
+                    <strong>{item.original}</strong>
+                    <span>{item.lower_key}</span>
+                  </div>
+                  <span>{item.files[0] ?? ''}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      </div>
+    );
+  }
+
   function renderDebugSectionContent() {
     const selectedTextureCount = itemPanelModSummaries.filter((summary) => selectedTextureMods[summary.modid] ?? true).length;
     const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
@@ -5451,6 +5600,40 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
 
     switch (debugSection) {
+      case 'modIcons':
+        return canManageModIcons ? renderModIconsPanel() : <div className="inline-hint inline-hint-warning">Управление иконками доступно только администраторам.</div>;
+      case 'access':
+        return (
+          <div className="debug-section-grid">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Персонал</h3>
+                <span>Роли пользователей и доступ по Google почте.</span>
+              </div>
+              {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Whitelist</h3>
+                <span>Допуск операторов и админов на сайт.</span>
+              </div>
+              {canManageRoles ? renderAccessControlContent() : null}
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>Доступ по ролям</h3>
+                <span>Справочник текущих ролей сайта.</span>
+              </div>
+              <div className="permissions-grid">
+                <div><strong>admin</strong><span>файлы, рецепты, настройки, роли, отладка</span></div>
+                <div><strong>moderator</strong><span>создание шаблонов и черновиков</span></div>
+                <div><strong>default</strong><span>только просмотр</span></div>
+              </div>
+            </section>
+          </div>
+        );
+      case 'caseAliases':
+        return renderItemCaseAliasPanel();
       case 'recipe':
         return (
           <div className="debug-section-grid">
@@ -5564,16 +5747,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
           </div>
         );
-      case 'staff':
-        return (
-          <section className="settings-section">
-            <div className="settings-section-title">
-              <h3>Персонал</h3>
-              <span>Роли и доступ по Google почте.</span>
-            </div>
-            {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
-          </section>
-        );
       case 'raw':
         return <pre className="raw-block debug-raw-block">{JSON.stringify(rawPayload, null, 2)}</pre>;
       default:
@@ -5614,20 +5787,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  function renderDebugWorkspace() {
+  function renderTechnicalWorkspace() {
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
-      { id: 'overview', label: 'Обзор', description: 'Статус и диагностика', visible: true },
-      { id: 'recipe', label: 'Рецепт', description: 'Сетка, output, история', visible: true },
-      { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: true },
-      { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: true },
-      { id: 'staff', label: 'Персонал', description: 'Роли пользователей', visible: canManageRoles },
-      { id: 'raw', label: 'Сырые данные', description: 'JSON snapshot', visible: true }
+      { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
+      { id: 'modIcons', label: 'Иконки и itempanel', description: 'ZIP, CSV, атласы', visible: canManageModIcons },
+      { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
+      { id: 'caseAliases', label: 'Словарь регистра', description: 'scripts_ht → itempanel', visible: canManageModIcons },
+      { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: canUseDebug },
+      { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: canUseDebug },
+      { id: 'recipe', label: 'Текущий рецепт', description: 'Сетка, output, история', visible: canUseDebug },
+      { id: 'raw', label: 'Сырые данные', description: 'JSON snapshot', visible: canUseDebug }
     ];
 
     return (
       <div className="debug-shell" aria-label="debug-workspace">
         <aside className="debug-sidebar" aria-label="debug-navigation">
-          <strong>Отладка</strong>
+          <strong>Техническая панель</strong>
           {sections.filter((section) => section.visible).map((section) => (
             <button
               key={section.id}
@@ -5657,14 +5832,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         </div>
       );
     }
-    if (workspaceTab === 'modIcons' && canManageModIcons) {
-      return renderModIconsPanel();
-    }
     if (workspaceTab === 'cloud' && canManageCloudFiles) {
       return renderCloudStoragePanel();
     }
-    if (workspaceTab === 'debug' && canUseDebug) {
-      return renderDebugWorkspace();
+    if (workspaceTab === 'technical' && canUseTechnicalPanel) {
+      return renderTechnicalWorkspace();
     }
     return (
       <div className="workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main">
@@ -5947,25 +6119,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   ))}
                 </div>
               </section>
-              <section className="settings-section">
-                <div className="settings-section-title">
-                  <h3>Права персонала</h3>
-                  <span>Роли выдаются по Google почте</span>
-                </div>
-                {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
-                {canManageRoles ? renderAccessControlContent() : null}
-              </section>
-              <section className="settings-section">
-                <div className="settings-section-title">
-                  <h3>Доступ по ролям</h3>
-                  <span>Индивидуальные права сверх роли потребуют отдельной схемы хранения в backend.</span>
-                </div>
-                <div className="permissions-grid">
-                  <div><strong>admin</strong><span>файлы, рецепты, настройки, роли, отладка</span></div>
-                  <div><strong>moderator</strong><span>создание шаблонов и черновиков</span></div>
-                  <div><strong>default</strong><span>только просмотр</span></div>
-                </div>
-              </section>
             </div>
           </div>
         </div>
@@ -6047,6 +6200,39 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 </div>
                 <div className="raw-preview-line"><span>Итоговый raw</span><strong>{structuredCraftRaw || '?'}</strong></div>
               </div>
+              {craftEditorTarget.kind === 'output' ? (
+                <section className="settings-section remove-template-settings">
+                  <div className="settings-section-title compact">
+                    <h3>Удаление рецепта</h3>
+                    <span>{activeRemoveTemplateId() === 'none' ? 'выключено' : 'включено'}</span>
+                  </div>
+                  <label className="field-block switch-field">
+                    <span>Добавлять recipes.remove перед рецептом</span>
+                    <input
+                      aria-label="remove-recipe-enabled"
+                      type="checkbox"
+                      checked={activeRemoveTemplateId() !== 'none'}
+                      onChange={(event) => setActiveRemoveTemplateId(event.target.checked ? BUILTIN_REMOVE_TEMPLATES[0].id : 'none')}
+                    />
+                  </label>
+                  <div className="settings-grid">
+                    <label className="field-block">
+                      <span>Шаблон удаления</span>
+                      <select aria-label="remove-recipe-template" value={activeRemoveTemplateId()} onChange={(event) => setActiveRemoveTemplateId(event.target.value)}>
+                        <option value="none">Без удаления</option>
+                        {removeTemplateOptions().map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
+                      </select>
+                    </label>
+                    <label className="field-block">
+                      <span>Новый шаблон</span>
+                      <input aria-label="remove-template-draft" type="text" value={removeTemplateDraft} onChange={(event) => setRemoveTemplateDraft(event.target.value)} />
+                    </label>
+                  </div>
+                  <div className="inline-actions">
+                    <button type="button" className="secondary-button" aria-label="add-remove-template" onClick={addCustomRemoveTemplate}>Добавить шаблон</button>
+                  </div>
+                </section>
+              ) : null}
               <div className="inline-actions">
                 <button type="button" className="ghost-button" aria-label="clear-craft-source" onClick={() => { setCraftSourceMode('raw'); setCraftSourceDraft(''); }}>Очистить raw</button>
                 <button type="button" className="secondary-button" aria-label="copy-craft-source" onClick={() => void handleCraftModalCopy()}>Скопировать</button>

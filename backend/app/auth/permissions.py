@@ -62,6 +62,8 @@ def permission_for_request(method: str, path: str) -> str:
         return 'mod-icons:manage'
     if path.startswith('/api/admin/itempanel'):
         return 'mod-icons:manage'
+    if path.startswith('/api/admin/item-case-aliases'):
+        return 'mod-icons:manage'
     if path.startswith('/api/admin/zs-cloud'):
         return 'files:manage'
     if path.startswith('/api/recipe-drafts/templates'):
