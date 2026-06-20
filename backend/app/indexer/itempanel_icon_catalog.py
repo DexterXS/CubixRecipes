@@ -58,11 +58,11 @@ class ItemPanelIconCatalog:
         matched = 0
         missing = 0
         for row in rows:
-            item_key = str(row.get('Item Name', '')).strip().lower()
-            display_name = str(row.get('Display Name', '')).strip()
+            item_key = self._field(row, 'Item Name', 'key', 'item_name').lower()
+            display_name = self._field(row, 'Display Name', 'display_name', 'display_ru', 'display_name_csv')
             if not item_key or not display_name:
                 continue
-            meta = self._parse_meta(row.get('Item meta'))
+            meta = self._parse_meta(self._field(row, 'Item meta', 'meta', 'item_meta', 'item_meta_csv'))
             icon_file = icon_files.get(self._normalize_name(display_name))
             if icon_file is None:
                 missing += 1
@@ -326,11 +326,29 @@ class ItemPanelIconCatalog:
         for encoding in ('utf-8-sig', 'cp1251', 'windows-1251'):
             try:
                 with self.csv_path.open('r', encoding=encoding, newline='') as handle:
-                    return list(csv.DictReader(handle))
+                    return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
             except UnicodeDecodeError:
                 continue
         with self.csv_path.open('r', encoding='utf-8', errors='replace', newline='') as handle:
-            return list(csv.DictReader(handle))
+            return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
+
+    def _csv_delimiter(self, handle) -> str:
+        sample = handle.read(4096)
+        handle.seek(0)
+        try:
+            return csv.Sniffer().sniff(sample, delimiters=',;\t').delimiter
+        except csv.Error:
+            return ','
+
+    def _field(self, row: dict[str, str], *names: str) -> str:
+        lower = {key.lower(): value for key, value in row.items() if key is not None}
+        for name in names:
+            value = row.get(name)
+            if value is None:
+                value = lower.get(name.lower())
+            if value is not None:
+                return str(value).replace('\r', '').replace('\\n', '').strip()
+        return ''
 
     def _quality_for(self, icon_file: str) -> str:
         cached = self.quality_by_file.get(icon_file)

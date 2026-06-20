@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import csv
+import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
@@ -52,6 +54,7 @@ class ItemCatalogService:
             'entries': 0,
             'csv_rows': 0,
             'csv_entries': 0,
+            'csv_nbt_entries': 0,
             'nbt_items': 0,
             'nbt_entries': 0,
             'nbt_with_tags': 0,
@@ -62,6 +65,7 @@ class ItemCatalogService:
 
     def scan(self, *, raise_on_nbt_error: bool = False) -> dict[str, object]:
         csv_entries, csv_rows = self._read_csv_entries()
+        csv_nbt_entries = sum(1 for entry in csv_entries if entry.nbt_raw)
         by_raw: dict[str, ItemCatalogEntry] = {}
         by_id_meta: dict[tuple[int, int], ItemCatalogEntry] = {}
         by_id: dict[int, list[ItemCatalogEntry]] = {}
@@ -124,8 +128,9 @@ class ItemCatalogService:
             'entries': len(self.entries),
             'csv_rows': csv_rows,
             'csv_entries': len(csv_entries),
+            'csv_nbt_entries': csv_nbt_entries,
             'nbt_items': len(nbt_items),
-            'nbt_entries': nbt_entries,
+            'nbt_entries': nbt_entries + csv_nbt_entries,
             'nbt_with_tags': nbt_with_tags,
             'matched_nbt_items': matched_nbt,
             'unmatched_nbt_items': unmatched_nbt,
@@ -153,18 +158,19 @@ class ItemCatalogService:
         rows = self._read_csv_rows()
         entries: list[ItemCatalogEntry] = []
         for row in rows:
-            key = self._field(row, 'Item Name', 'key').lower()
-            display_ru = self._field(row, 'Display Name', 'display_ru')
+            key = self._field(row, 'Item Name', 'key', 'item_name').lower()
+            display_ru = self._field(row, 'Display Name', 'display_ru', 'display_name', 'display_name_csv')
             display_en = self._field(row, 'Display EN', 'display_en')
             primary_display = display_ru or display_en
             if not key or not primary_display or primary_display.strip() in {'-', '- '}:
                 continue
-            meta = self._parse_int(self._field(row, 'Item meta', 'meta'), default=0)
-            legacy_id = self._parse_int(self._field(row, 'Item ID', 'id'), default=None)
-            has_nbt = self._parse_bool(self._field(row, 'Has NBT', 'has_nbt'))
+            meta = self._parse_int(self._field(row, 'Item meta', 'meta', 'item_meta', 'item_meta_csv'), default=0)
+            legacy_id = self._parse_int(self._field(row, 'Item ID', 'id', 'item_id', 'item_id_csv'), default=None)
+            nbt_raw = self._csv_nbt_raw(row)
+            has_nbt = bool(nbt_raw) or self._parse_bool(self._field(row, 'Has NBT', 'has_nbt', 'has_nbt_csv', 'has_nbt_real'))
             has_icon = self._has_icon(key, meta)
             icon_url = self._icon_url(key, meta)
-            sources = {'csv'} | ({'icon'} if has_icon else set())
+            sources = {'csv'} | ({'icon'} if has_icon else set()) | ({'nbt'} if nbt_raw else set())
             entries.append(ItemCatalogEntry(
                 key=key,
                 legacy_id=legacy_id,
@@ -172,6 +178,8 @@ class ItemCatalogService:
                 has_nbt=has_nbt,
                 display_ru=display_ru or primary_display,
                 display_en=display_en,
+                raw=build_item_raw(key, meta, nbt_raw) if nbt_raw else None,
+                nbt_raw=nbt_raw,
                 has_icon=has_icon,
                 icon_url=icon_url,
                 sources=sources,
@@ -184,11 +192,19 @@ class ItemCatalogService:
         for encoding in ('utf-8-sig', 'cp1251', 'windows-1251'):
             try:
                 with self.csv_path.open('r', encoding=encoding, newline='') as handle:
-                    return list(csv.DictReader(handle))
+                    return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
             except UnicodeDecodeError:
                 continue
         with self.csv_path.open('r', encoding='utf-8', errors='replace', newline='') as handle:
-            return list(csv.DictReader(handle))
+            return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
+
+    def _csv_delimiter(self, handle) -> str:
+        sample = handle.read(4096)
+        handle.seek(0)
+        try:
+            return csv.Sniffer().sniff(sample, delimiters=',;\t').delimiter
+        except csv.Error:
+            return ','
 
     def _merge_entry(self, by_raw: dict[str, ItemCatalogEntry], entry: ItemCatalogEntry) -> None:
         raw = entry.raw or build_item_raw(entry.key, entry.meta, entry.nbt_raw)
@@ -258,6 +274,37 @@ class ItemCatalogService:
 
     def _parse_bool(self, value: str) -> bool:
         return str(value).strip().lower() in {'true', '1', 'yes', 'y'}
+
+    def _csv_nbt_raw(self, row: dict[str, str]) -> Optional[str]:
+        raw = self._field(row, 'NBT Raw', 'nbt_raw', 'raw_tag_json_short')
+        if not raw or raw in {'{}', '{ }'}:
+            return None
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            return raw if raw.startswith('{') and raw.endswith('}') else None
+        if not parsed:
+            return None
+        return self._render_nbt_value(parsed)
+
+    def _render_nbt_value(self, value) -> str:
+        if isinstance(value, dict):
+            return '{' + ', '.join(f'{self._render_nbt_key(key)}: {self._render_nbt_value(child)}' for key, child in value.items()) + '}'
+        if isinstance(value, list):
+            return '[' + ', '.join(self._render_nbt_value(child) for child in value) + ']'
+        if isinstance(value, bool):
+            return 'true' if value else 'false'
+        if value is None:
+            return 'null'
+        if isinstance(value, (int, float)):
+            return str(value)
+        return json.dumps(str(value), ensure_ascii=False)
+
+    def _render_nbt_key(self, key: object) -> str:
+        text = str(key)
+        if re.match(r'^[A-Za-z_][A-Za-z0-9_./-]*$', text):
+            return text
+        return json.dumps(text, ensure_ascii=False)
 
 
 def build_item_raw(key: str, meta: int, nbt_raw: str | None = None) -> str:

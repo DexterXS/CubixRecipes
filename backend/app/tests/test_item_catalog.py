@@ -118,3 +118,33 @@ def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
     assert summary['nbt_items'] == 2
     assert summary['matched_nbt_items'] == 1
     assert summary['unmatched_nbt_items'] == 1
+
+
+def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
+    csv_path = tmp_path / 'super_itempanel.csv'
+    csv_path.write_text(
+        'index;item_name;item_id_csv;item_meta_csv;display_name_csv;has_nbt_csv;has_nbt_real;raw_tag_json_short\n'
+        '465;AdvancedSolarPanel:advanced_solar_helmet;4302;1;Advanced Solar Helmet;true;True;"{""charge"":1000000.0}"\n'
+        '466;AdvancedSolarPanel:advanced_solar_helmet;4302;27;Advanced Solar Helmet;false;False;{}\n',
+        encoding='utf-8-sig',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.nbt', icon_catalog)
+
+    summary = service.scan()
+    payload = service.to_api()
+    entries = {entry['raw']: entry for entry in payload['entries']}
+    nbt_raw = '<advancedsolarpanel:advanced_solar_helmet:1>.withTag({charge: 1000000.0})'
+
+    assert nbt_raw in entries
+    assert '<advancedsolarpanel:advanced_solar_helmet:27>' in entries
+    assert '<advancedsolarpanel:advanced_solar_helmet:1>' not in entries
+    assert entries[nbt_raw]['nbt_raw'] == '{charge: 1000000.0}'
+    assert entries[nbt_raw]['has_nbt'] is True
+    assert entries[nbt_raw]['sources'] == ['csv', 'nbt']
+    assert summary['csv_entries'] == 2
+    assert summary['csv_nbt_entries'] == 1
+    assert summary['nbt_entries'] == 1

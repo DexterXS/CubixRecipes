@@ -48,6 +48,28 @@ def test_itempanel_catalog_resolves_good_icon(tmp_path: Path):
     assert catalog.last_scan_report['matched'] == 1
 
 
+def test_itempanel_catalog_reads_combined_semicolon_csv(tmp_path: Path):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    csv_path = tmp_path / 'super_itempanel.csv'
+    csv_path.write_text(
+        'index;item_name;item_id_csv;item_meta_csv;display_name_csv;has_nbt_csv;raw_tag_json_short\n'
+        '1;AdvancedSolarPanel:advanced_solar_helmet;4302;1;Advanced Solar Helmet;true;"{""charge"":1000000.0}"\n',
+        encoding='utf-8-sig',
+    )
+    _write_rgba_png(icons_dir / 'Advanced Solar Helmet.png', [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+
+    catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    catalog.scan()
+    item = RecipeParser().parse_item_ref('<advancedsolarpanel:advanced_solar_helmet:1>')
+    result = catalog.resolve(item)
+
+    assert result is not None
+    assert result.strategy == 'itempanel_icon_catalog'
+    assert result.icon_url is not None
+    assert catalog.last_scan_report['matched'] == 1
+
+
 def test_itempanel_catalog_marks_missing_texture_as_bad(tmp_path: Path):
     icons_dir = tmp_path / 'itempanel_icons'
     icons_dir.mkdir()
