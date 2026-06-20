@@ -1214,23 +1214,64 @@ test('admin can browse recipe draft templates created by moderators', async () =
   expect(within(template).getByText(moderatorUser.email)).toBeTruthy();
 });
 
-test('NEI context menu can save a personal custom item', async () => {
+test('NEI context menu can save a local custom item with a comment', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
 
   fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
-  fireEvent.click(await screen.findByRole('button', { name: 'Редактировать для себя' }));
+  expect((await screen.findByRole('button', { name: 'Выбрать custom item' }) as HTMLButtonElement).disabled).toBe(true);
+  fireEvent.click(await screen.findByRole('button', { name: 'Локальный custom item' }));
 
   expect(screen.getByRole('dialog', { name: 'Редактор предмета' })).toBeTruthy();
   fireEvent.change(screen.getByLabelText('custom-item-name'), { target: { value: 'Разноцветные доски' } });
   fireEvent.change(screen.getByLabelText('custom-item-raw'), { target: { value: '<minecraft:planks:*>' } });
+  fireEvent.change(screen.getByLabelText('custom-item-comment'), { target: { value: 'Для вариантов досок после вайпа' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Сохранить предмет' }));
+
+  await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Редактор предмета' })).toBeFalsy());
+  expect(window.localStorage.getItem('cubixrecipes:custom-items:v1:3f0a79b2')).toContain('Для вариантов досок после вайпа');
+  const saveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/items/custom' && init?.method === 'POST');
+  expect(saveCalls.length).toBe(0);
+
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  const pickerButton = await screen.findByRole('button', { name: 'Выбрать custom item' }) as HTMLButtonElement;
+  expect(pickerButton.disabled).toBe(false);
+  fireEvent.click(pickerButton);
+  const picker = screen.getByLabelText('custom-item-picker');
+  expect(picker).toBeTruthy();
+  expect(within(picker).getByText('Разноцветные доски')).toBeTruthy();
+});
+
+test('NEI context menu can save a backend custom item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  fireEvent.click(await screen.findByRole('button', { name: 'Backend custom item' }));
+
+  fireEvent.change(screen.getByLabelText('custom-item-name'), { target: { value: 'Backend доски' } });
+  fireEvent.change(screen.getByLabelText('custom-item-comment'), { target: { value: 'Нужно всем после обновления' } });
   fireEvent.click(screen.getByRole('button', { name: 'Сохранить предмет' }));
 
   await waitFor(() => {
     const saveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/items/custom' && init?.method === 'POST');
     expect(saveCalls.length).toBeGreaterThan(0);
-    expect(String(saveCalls[0][1]?.body)).toContain('<minecraft:planks:*>');
+    expect(String(saveCalls[0][1]?.body)).toContain('Нужно всем после обновления');
   });
+});
+
+test('Ctrl right click edits the craft output item without saving a custom item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const output = screen.getByLabelText('craft-output-slot');
+
+  fireEvent.contextMenu(output, { ctrlKey: true, clientX: 120, clientY: 80 });
+  expect(screen.getByRole('dialog', { name: 'Редактор предмета' })).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('custom-item-raw'), { target: { value: '<minecraft:stick>' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Применить к рецепту' }));
+
+  await waitFor(() => expect(craftOutputRaw()).toBe('<minecraft:stick>'));
+  const saveCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/items/custom' && init?.method === 'POST');
+  expect(saveCalls.length).toBe(0);
 });
 
 test('R opens a recipe from a hovered craft-grid item and history can return', async () => {

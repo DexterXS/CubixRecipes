@@ -12,6 +12,7 @@
 - Added configurable 9x9 Avaritia visual grouping: every 3x3 block is separated and the gap is saved in UI preferences.
 - Added Railway/backend volume-aware project config defaults: mounted `/data` storage is used for runtime config, default `.zs` scripts, admin backups, generated mod atlases, and shared recipe draft templates.
 - Added backend-backed recipe draft templates so moderators see only their own drafts while admins can browse and remove all saved templates.
+- Added a redesigned custom item/NBT editor with comment fields, local hash-based custom items, backend custom-item storage under `.cubixrecipes_admin/custom_items`, custom-item selection from the NEI context menu, and `Ctrl+Right Click` editing for NEI, craft-grid cells, and craft output.
 - Added `2x2` recipe editing, `ct_shapeless` recipe parsing/rendering, and a strict placement mode that preserves empty grid borders when admins need exact shaped positioning.
 - Added admin-only mod icon controls for `.zip` uploads with strict `modid_x32.png` / `modid_x256.png` validation and per-size atlas generation, plus `Облако` for listing, downloading, renaming, and deleting all managed `.zs` files.
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.

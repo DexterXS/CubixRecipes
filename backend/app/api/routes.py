@@ -295,7 +295,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     debug_service.record_asset_scan(asset_index.last_scan_report)
     service = RecipeService(storage, parser)
     auth_service = AuthService(root_admin_email=os.environ.get('ROOT_ADMIN_EMAIL', 'root.user76@gmail.com'))
-    custom_item_service = CustomItemService(auth_service.require_session_factory)
+    custom_item_service = CustomItemService(admin_data_dir / 'custom_items')
 
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
         'config_file': config.project_config_path,

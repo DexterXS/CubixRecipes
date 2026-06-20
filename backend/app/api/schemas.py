@@ -63,6 +63,7 @@ class CustomItemRequest(BaseModel):
     item_raw: str = Field(min_length=1, max_length=1024)
     display_name: str = Field(min_length=1, max_length=255)
     nbt_raw: Optional[str] = Field(default=None, max_length=8192)
+    comment: str = Field(default='', max_length=2048)
 
 
 class RecipeDraftTemplateRequest(BaseModel):

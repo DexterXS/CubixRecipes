@@ -152,12 +152,14 @@ export interface AccessControlSettings {
 export interface CustomItem {
   id: number;
   scope: 'global' | 'user';
+  storage?: 'local' | 'backend';
   owner_email?: string | null;
   created_by_email: string;
   source_raw: string;
   item_raw: string;
   display_name: string;
   nbt_raw?: string | null;
+  comment?: string;
   created_at?: string | null;
   updated_at?: string | null;
 }
