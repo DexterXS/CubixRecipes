@@ -3,6 +3,7 @@ import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
+import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
@@ -92,6 +93,8 @@ type ItemPanelEntry = {
   customItemId?: number;
   customScope?: 'global' | 'user';
   customOwnerEmail?: string | null;
+  customStorage?: 'local' | 'backend';
+  customComment?: string;
 };
 
 type ItemPanelModSummary = {
@@ -144,6 +147,7 @@ type NeiContextMenuState = {
   raw: string;
   x: number;
   y: number;
+  customPickerOpen?: boolean;
 };
 
 type CloudFileContextMenuState = {
@@ -162,12 +166,16 @@ type RemoveTemplateOption = {
 type LocalSaveMode = 'download' | 'append-uploaded' | 'replace-uploaded';
 
 type CustomItemFormState = {
+  mode: 'craft' | 'nei';
+  target: CraftEditorTarget | null;
   id: number | null;
   scope: 'global' | 'user';
+  storage: 'local' | 'backend';
   sourceRaw: string;
   itemRaw: string;
   displayName: string;
   nbtRaw: string;
+  comment: string;
 };
 
 type ItemPanelTranslations = {
@@ -191,6 +199,7 @@ const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
 const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
 const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
 const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
+const CUSTOM_ITEMS_STORAGE_PREFIX = 'cubixrecipes:custom-items:v1';
 const REMOVE_TEMPLATE_STORAGE_KEY = 'cubixrecipes:remove-templates:v1';
 const REMOVE_TEMPLATE_SELECTION_STORAGE_KEY = 'cubixrecipes:remove-template-selection:v1';
 const RECIPE_DRAFT_MAX_TEMPLATES = 200;
@@ -307,13 +316,6 @@ type LocalDraftPayload = {
   savedAt: number;
   state: LocalDraftState;
 };
-
-type NbtScalarType = 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'string' | 'byte_array' | 'int_array' | 'long_array';
-type NbtNodeType = NbtScalarType | 'list' | 'compound';
-type NbtScalarNode = { kind: 'scalar'; value: string; scalarType: NbtScalarType };
-type NbtListNode = { kind: 'list'; items: NbtNode[] };
-type NbtCompoundNode = { kind: 'compound'; entries: { key: string; value: NbtNode }[] };
-type NbtNode = NbtScalarNode | NbtListNode | NbtCompoundNode;
 
 interface AppProps {
   authUser?: AuthUser;
@@ -509,6 +511,10 @@ function recipeDraftStorageKey(email: string): string {
   return `${RECIPE_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
 }
 
+function customItemsStorageKey(email: string): string {
+  return `${CUSTOM_ITEMS_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value && typeof value === 'object' && !Array.isArray(value));
 }
@@ -611,6 +617,75 @@ function persistRecipeDraftTemplates(email: string, templates: RecipeDraftTempla
     }));
   } catch {
     // Local recipe draft persistence is best-effort.
+  }
+}
+
+function localCustomItemId(email: string, itemRaw: string): number {
+  return -(Number.parseInt(stableHash(`${email.trim().toLowerCase()}:${itemRaw}`).slice(0, 7), 16) + 1);
+}
+
+function normalizeStoredCustomItems(value: unknown, email: string): CustomItem[] {
+  const rawItems = isObjectRecord(value) && Array.isArray(value.items) ? value.items : value;
+  if (!Array.isArray(rawItems)) return [];
+  const normalizedEmail = email.trim().toLowerCase();
+  return rawItems
+    .filter((item): item is Record<string, unknown> => (
+      isObjectRecord(item)
+      && typeof item.item_raw === 'string'
+      && typeof item.source_raw === 'string'
+      && typeof item.display_name === 'string'
+    ))
+    .map((item) => {
+      const itemRaw = String(item.item_raw);
+      return {
+        id: typeof item.id === 'number' ? item.id : localCustomItemId(normalizedEmail, itemRaw),
+        scope: 'user',
+        storage: 'local',
+        owner_email: normalizedEmail,
+        created_by_email: normalizedEmail,
+        source_raw: String(item.source_raw),
+        item_raw: itemRaw,
+        display_name: String(item.display_name),
+        nbt_raw: typeof item.nbt_raw === 'string' ? item.nbt_raw : null,
+        comment: typeof item.comment === 'string' ? item.comment : '',
+        created_at: typeof item.created_at === 'string' ? item.created_at : null,
+        updated_at: typeof item.updated_at === 'string' ? item.updated_at : null
+      } satisfies CustomItem;
+    })
+    .slice(0, 200);
+}
+
+function loadLocalCustomItems(email: string): CustomItem[] {
+  try {
+    const raw = window.localStorage.getItem(customItemsStorageKey(email));
+    return raw ? normalizeStoredCustomItems(JSON.parse(raw) as unknown, email) : [];
+  } catch {
+    return [];
+  }
+}
+
+function persistLocalCustomItems(email: string, items: CustomItem[]) {
+  try {
+    const localItems = items
+      .filter((item) => item.storage === 'local')
+      .map((item) => ({
+        id: item.id,
+        source_raw: item.source_raw,
+        item_raw: item.item_raw,
+        display_name: item.display_name,
+        nbt_raw: item.nbt_raw ?? null,
+        comment: item.comment ?? '',
+        created_at: item.created_at ?? null,
+        updated_at: item.updated_at ?? null
+      }));
+    window.localStorage.setItem(customItemsStorageKey(email), JSON.stringify({
+      schemaVersion: 1,
+      userHash: localDraftUserHash(email),
+      savedAt: Date.now(),
+      items: localItems
+    }));
+  } catch {
+    // Local custom items are best-effort and can disappear with browser storage.
   }
 }
 
@@ -926,7 +1001,9 @@ function customItemToEntry(item: CustomItem): ItemPanelEntry {
     raw: item.item_raw,
     customItemId: item.id,
     customScope: item.scope,
-    customOwnerEmail: item.owner_email ?? null
+    customOwnerEmail: item.owner_email ?? null,
+    customStorage: item.storage ?? 'backend',
+    customComment: item.comment ?? ''
   };
 }
 
@@ -1087,9 +1164,6 @@ function preloadImage(imageUrl: string): Promise<void> {
   });
 }
 
-const nbtScalarTypes: NbtScalarType[] = ['byte', 'short', 'int', 'long', 'float', 'double', 'string', 'byte_array', 'int_array', 'long_array'];
-const nbtNodeTypeOptions: NbtNodeType[] = [...nbtScalarTypes, 'list', 'compound'];
-
 function splitTopLevel(source: string, delimiter: string): string[] {
   const parts: string[] = [];
   let depthCurly = 0;
@@ -1199,31 +1273,6 @@ function renderNbtNode(node: NbtNode): string {
   }
   const scalarValue = node.scalarType === 'string' ? `"${node.value}"` : node.value.trim();
   return node.scalarType === 'int' ? scalarValue : `${scalarValue} as ${node.scalarType}`;
-}
-
-function defaultNodeForType(type: NbtNodeType): NbtNode {
-  if (type === 'compound') return { kind: 'compound', entries: [] };
-  if (type === 'list') return { kind: 'list', items: [] };
-  return { kind: 'scalar', value: '', scalarType: type };
-}
-
-function nodeType(node: NbtNode): NbtNodeType {
-  if (node.kind === 'compound') return 'compound';
-  if (node.kind === 'list') return 'list';
-  return node.scalarType;
-}
-
-function normalizeNodeTypeChange(nextType: NbtNodeType, current: NbtNode): NbtNode {
-  if (nextType === 'compound') {
-    return current.kind === 'compound' ? current : { kind: 'compound', entries: [] };
-  }
-  if (nextType === 'list') {
-    return current.kind === 'list' ? current : { kind: 'list', items: [] };
-  }
-  if (current.kind === 'scalar') {
-    return { ...current, scalarType: nextType };
-  }
-  return { kind: 'scalar', value: '', scalarType: nextType };
 }
 
 function parseRawForEditor(raw: string): { modid: string; item: string; meta: number; nbtRoot: NbtCompoundNode } {
@@ -1394,7 +1443,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [debugFilters, setDebugFilters] = useState<DebugFilters>(() => loadBooleanRecord(DEBUG_FILTERS_STORAGE_KEY, defaultDebugFilters));
   const [debugLevelFilters, setDebugLevelFilters] = useState<DebugLevelFilters>(() => loadBooleanRecord(DEBUG_LEVEL_FILTERS_STORAGE_KEY, defaultDebugLevelFilters));
   const [debugSection, setDebugSection] = useState<DebugSection>('overview');
-  const [customItems, setCustomItems] = useState<CustomItem[]>([]);
+  const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
   const [customItemForm, setCustomItemForm] = useState<CustomItemFormState | null>(null);
@@ -2061,8 +2110,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       try {
         const payload = await listCustomItems();
         if (!cancelled) {
-          setCustomItems(payload.items);
-          setCustomItemsStatus(`Предметов: ${payload.items.length}`);
+          const backendItems = payload.items.map((item) => ({ ...item, storage: 'backend' as const }));
+          setCustomItems((current) => {
+            const localItems = current.filter((item) => item.storage === 'local');
+            return [...localItems, ...backendItems];
+          });
+          setCustomItemsStatus(`Предметов: ${loadLocalCustomItems(authUser.email).length + backendItems.length}`);
         }
       } catch (error) {
         if (!cancelled) {
@@ -2074,7 +2127,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [authUser.email]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -3248,91 +3301,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setItemSearchQuery(itemPanelRaw(entry));
   }
 
-  function setNbtPathCollapsed(path: string, collapsed: boolean) {
-    setCollapsedNbtPaths((current) => ({ ...current, [path]: collapsed }));
-  }
-
-  function updateRootEntry(index: number, updater: (entry: NbtCompoundNode['entries'][number]) => NbtCompoundNode['entries'][number]) {
-    setNbtRootDraft((current) => ({
-      ...current,
-      entries: current.entries.map((entry, entryIndex) => (entryIndex === index ? updater(entry) : entry))
-    }));
-  }
-
-  function addRootEntry(type: NbtNodeType = 'int') {
-    setNbtRootDraft((current) => ({
-      ...current,
-      entries: [...current.entries, { key: '', value: defaultNodeForType(type) }]
-    }));
-  }
-
-  function renderNbtNodeEditor(node: NbtNode, path: string, onChange: (nextNode: NbtNode) => void): JSX.Element {
-    const currentType = nodeType(node);
-    const isCollapsed = collapsedNbtPaths[path] ?? false;
-    if (node.kind === 'scalar') {
-      return (
-        <div className="nbt-row-grid">
-          <input aria-label={`nbt-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onChange({ ...node, value: event.target.value })} />
-          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-          </select>
-        </div>
-      );
-    }
-    if (node.kind === 'compound') {
-      return (
-        <div className="nbt-node-block">
-          <div className="inline-actions">
-            <button type="button" className="ghost-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
-            <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-              {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-            </select>
-            <button type="button" className="ghost-button" aria-label={`add-nbt-child-${path}`} onClick={() => onChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>Добавить поле</button>
-          </div>
-          {!isCollapsed ? (
-            <div className="nbt-children">
-              {node.entries.map((entry, index) => (
-                <div key={path + index} className="nbt-entry-line">
-                  <input aria-label={`nbt-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
-                  {renderNbtNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onChange({
-                    ...node,
-                    entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
-                  }))}
-                  <button type="button" className="ghost-button" aria-label={`delete-nbt-child-${path}-${index}`} onClick={() => onChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>Удалить</button>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      );
-    }
-    return (
-      <div className="nbt-node-block">
-        <div className="inline-actions">
-          <button type="button" className="ghost-button" aria-label={`toggle-nbt-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
-          <select aria-label={`nbt-type-${path}`} value={currentType} onChange={(event) => onChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-          </select>
-          <button type="button" className="ghost-button" aria-label={`add-nbt-item-${path}`} onClick={() => onChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>Добавить элемент</button>
-        </div>
-        {!isCollapsed ? (
-          <div className="nbt-children">
-            {node.items.map((item, index) => (
-              <div key={path + index} className="nbt-entry-line">
-                <span className="nbt-list-index">[{index}]</span>
-                {renderNbtNodeEditor(item, `${path}.${index}`, (nextNode) => onChange({
-                  ...node,
-                  items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
-                }))}
-                <button type="button" className="ghost-button" aria-label={`delete-nbt-item-${path}-${index}`} onClick={() => onChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
-              </div>
-            ))}
-          </div>
-        ) : null}
-      </div>
-    );
-  }
-
   function renderModalScaleControl(key: ModalScaleKey): JSX.Element {
     const isOpen = activeScaleControl === key;
     return (
@@ -3463,7 +3431,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  function handleCraftCellContextMenu(row: number, col: number) {
+  function handleCraftCellContextMenu(row: number, col: number, event?: MouseEvent) {
+    const currentRaw = matrix[row]?.[col] ?? null;
+    if (event?.ctrlKey && currentRaw) {
+      openCustomItemEditor(String(currentRaw), 'user', 'local', { kind: 'cell', row, col });
+      return;
+    }
     setMatrixCell(row, col, null);
   }
 
@@ -4584,6 +4557,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 onContextMenu={(event) => {
                   event.preventDefault();
                   if (!canCreateTemplates && !canEditRecipes) return;
+                  if (event.ctrlKey && outputRaw) {
+                    openCustomItemEditor(outputRaw, 'user', 'local', { kind: 'output' });
+                    return;
+                  }
                   setCellRaw({ kind: 'output' }, '');
                 }}
                 onDragOver={(event) => {
@@ -4623,22 +4600,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return raw.replace(/\.withTag\([\s\S]*\)\s*$/, '').trim();
   }
 
-  function openCustomItemEditor(raw: string, scope: 'global' | 'user') {
-    const existing = customItems.find((item) => item.item_raw === raw && item.scope === scope);
+  function openCustomItemEditor(raw: string, scope: 'global' | 'user', storage: 'local' | 'backend' = 'local', target: CraftEditorTarget | null = null) {
+    const effectiveStorage = scope === 'global' ? 'backend' : storage;
+    const existing = customItems.find((item) => item.item_raw === raw && item.scope === scope && (item.storage ?? 'backend') === effectiveStorage);
     const sourceRaw = existing?.source_raw ?? raw;
     const itemRaw = existing?.item_raw ?? raw;
     const parsed = parseRawForEditor(itemRaw);
     const nbtRaw = existing?.nbt_raw ?? '';
     setCustomItemNbtRoot(nbtRaw ? (parseNbtNode(nbtRaw).kind === 'compound' ? parseNbtNode(nbtRaw) as NbtCompoundNode : { kind: 'compound', entries: [{ key: 'value', value: parseNbtNode(nbtRaw) }] }) : parsed.nbtRoot);
+    setCollapsedNbtPaths({});
     setCustomItemForm({
+      mode: target ? 'craft' : 'nei',
+      target,
       id: existing?.id ?? null,
       scope,
+      storage: effectiveStorage,
       sourceRaw,
       itemRaw,
       displayName: existing?.display_name ?? resolveCellTitle(raw).replace(/\*$/, '') ?? raw,
-      nbtRaw
+      nbtRaw,
+      comment: existing?.comment ?? ''
     });
     setNeiContextMenu(null);
+    setIsCraftEditorOpen(false);
+    setIsNbtEditorOpen(false);
   }
 
   async function saveCustomItemForm() {
@@ -4646,20 +4631,54 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const nbtRaw = buildNbtRawFromRoot(customItemNbtRoot);
     const itemRawBase = rawWithoutNbt(customItemForm.itemRaw);
     const itemRaw = nbtRaw ? `${itemRawBase}.withTag(${nbtRaw})` : itemRawBase;
+    if (customItemForm.mode === 'craft' && customItemForm.target) {
+      setCellRaw(customItemForm.target, itemRaw);
+      setCustomItemsStatus('Предмет применен к рецепту');
+      setCustomItemForm(null);
+      return;
+    }
+    if (customItemForm.storage === 'local') {
+      const now = new Date().toISOString();
+      const saved: CustomItem = {
+        id: customItemForm.id ?? localCustomItemId(authUser.email, itemRaw),
+        scope: 'user',
+        storage: 'local',
+        owner_email: authUser.email.trim().toLowerCase(),
+        created_by_email: authUser.email.trim().toLowerCase(),
+        source_raw: customItemForm.sourceRaw,
+        item_raw: itemRaw,
+        display_name: customItemForm.displayName.trim() || itemRaw,
+        nbt_raw: nbtRaw || null,
+        comment: customItemForm.comment.trim(),
+        created_at: customItemForm.id ? undefined : now,
+        updated_at: now
+      };
+      setCustomItems((current) => {
+        const withoutSaved = current.filter((item) => item.id !== saved.id && !(item.storage === 'local' && item.item_raw === saved.item_raw));
+        const next = [saved, ...withoutSaved];
+        persistLocalCustomItems(authUser.email, next);
+        return next;
+      });
+      setCustomItemsStatus('Локальный предмет сохранен в кэше браузера');
+      setCustomItemForm(null);
+      return;
+    }
     try {
       const payload = await saveCustomItem({
-        id: customItemForm.id,
+        id: customItemForm.id && customItemForm.id > 0 ? customItemForm.id : null,
         scope: customItemForm.scope,
         source_raw: customItemForm.sourceRaw,
         item_raw: itemRaw,
         display_name: customItemForm.displayName.trim() || itemRaw,
-        nbt_raw: nbtRaw || null
+        nbt_raw: nbtRaw || null,
+        comment: customItemForm.comment.trim()
       });
       setCustomItems((current) => {
-        const withoutSaved = current.filter((item) => item.id !== payload.item.id);
-        return [payload.item, ...withoutSaved];
+        const saved = { ...payload.item, storage: 'backend' as const };
+        const withoutSaved = current.filter((item) => item.id !== saved.id || (item.storage ?? 'backend') !== 'backend');
+        return [saved, ...withoutSaved];
       });
-      setCustomItemsStatus('Предмет сохранен');
+      setCustomItemsStatus('Предмет сохранен в backend custom_items');
       setCustomItemForm(null);
     } catch (error) {
       setCustomItemsStatus(error instanceof Error ? error.message : String(error));
@@ -4667,6 +4686,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function removeCustomItem(item: CustomItem) {
+    if (item.storage === 'local') {
+      setCustomItems((current) => {
+        const next = current.filter((currentItem) => currentItem.id !== item.id);
+        persistLocalCustomItems(authUser.email, next);
+        return next;
+      });
+      setCustomItemsStatus('Локальный предмет удален');
+      setNeiContextMenu(null);
+      return;
+    }
     try {
       await deleteCustomItem(item.id);
       setCustomItems((current) => current.filter((currentItem) => currentItem.id !== item.id));
@@ -4675,17 +4704,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } catch (error) {
       setCustomItemsStatus(error instanceof Error ? error.message : String(error));
     }
-  }
-
-  function addCustomNbtRootEntry(type: NbtNodeType) {
-    setCustomItemNbtRoot((current) => ({ ...current, entries: [...current.entries, { key: '', value: defaultNodeForType(type) }] }));
-  }
-
-  function updateCustomNbtRootEntry(index: number, updater: (entry: { key: string; value: NbtNode }) => { key: string; value: NbtNode }) {
-    setCustomItemNbtRoot((current) => ({
-      ...current,
-      entries: current.entries.map((entry, entryIndex) => entryIndex === index ? updater(entry) : entry)
-    }));
   }
 
   function renderNeiPanel() {
@@ -4745,6 +4763,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, insertRaw)}
                   onContextMenu={(event) => {
                     event.preventDefault();
+                    if (event.ctrlKey) {
+                      openCustomItemEditor(raw, 'user', 'local');
+                      return;
+                    }
                     setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
                   }}
                 >
@@ -4777,16 +4799,46 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!neiContextMenu) return null;
     const raw = neiContextMenu.raw;
     const custom = customItems.find((item) => item.item_raw === raw);
+    const pickerOpen = Boolean(neiContextMenu.customPickerOpen && customItems.length);
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { height: custom ? 250 : 210 })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 320, height: pickerOpen ? 520 : (custom ? 310 : 270) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
-        <button type="button" onClick={() => openCustomItemEditor(raw, 'user')}>Редактировать для себя</button>
-        {canManageSettings ? <button type="button" onClick={() => openCustomItemEditor(raw, 'global')}>Редактировать глобально</button> : null}
-        <button type="button" onClick={() => openCustomItemEditor(raw, 'user')}>NBT редактор</button>
+        <button type="button" onClick={() => openCustomItemEditor(raw, 'user', 'local')}>Локальный custom item</button>
+        <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'user', 'backend')}>Backend custom item</button>
+        {canManageSettings ? <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'global', 'backend')}>Backend для всех</button> : null}
+        <button
+          type="button"
+          className="ghost-button"
+          disabled={!customItems.length}
+          onClick={() => setNeiContextMenu((current) => current ? { ...current, customPickerOpen: !current.customPickerOpen } : current)}
+        >
+          Выбрать custom item
+        </button>
+        {pickerOpen ? (
+          <div className="custom-picker-list" aria-label="custom-item-picker">
+            {customItems.map((item) => (
+              <button
+                key={`${item.storage ?? 'backend'}-${item.id}`}
+                type="button"
+                className="custom-picker-item"
+                onClick={() => {
+                  handleNeiItemPick(item.item_raw);
+                  setStatus(`Выбран custom item: ${item.display_name}`);
+                  setNeiContextMenu(null);
+                }}
+              >
+                <span>{item.storage === 'local' ? 'local' : item.scope === 'global' ? 'backend/global' : 'backend/user'}</span>
+                <strong>{item.display_name}</strong>
+                <code>{item.item_raw}</code>
+                {item.comment ? <small>{item.comment}</small> : null}
+              </button>
+            ))}
+          </div>
+        ) : null}
         {custom ? <button type="button" className="danger-button" onClick={() => void removeCustomItem(custom)}>Удалить созданный предмет</button> : null}
         <button type="button" className="ghost-button" onClick={() => setNeiContextMenu(null)}>Закрыть</button>
       </div>
@@ -4947,68 +4999,119 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderCustomItemModal() {
     if (!customItemForm) return null;
     const canUseGlobalScope = canManageSettings;
+    const isCraftMode = customItemForm.mode === 'craft';
+    const nbtRawPreview = buildNbtRawFromRoot(customItemNbtRoot);
+    const itemRawBase = rawWithoutNbt(customItemForm.itemRaw);
+    const finalRawPreview = nbtRawPreview ? `${itemRawBase}.withTag(${nbtRawPreview})` : itemRawBase;
     return (
       <div className="modal-backdrop" role="presentation" onClick={() => setCustomItemForm(null)}>
         <div className="modal modal-scalable modal-custom-item" role="dialog" aria-modal="true" aria-label="Редактор предмета" onClick={(event) => event.stopPropagation()}>
           <div className="modal-header">
-            <h2>Редактор предмета</h2>
+            <div>
+              <h2>{isCraftMode ? 'Редактор предмета в рецепте' : 'Custom item'}</h2>
+              <span className="modal-subtitle">{isCraftMode ? 'Изменения применятся только к выбранной ячейке или output.' : 'Создание и хранение пользовательского варианта предмета.'}</span>
+            </div>
             <div className="inline-actions">
               <button type="button" onClick={() => setCustomItemForm(null)}>Закрыть</button>
             </div>
           </div>
-          <div className="settings-modal-body">
-            <div className="settings-grid">
+          <div className="settings-modal-body custom-item-editor-body">
+            <section className="custom-item-summary">
+              <div>
+                <span>Исходный raw</span>
+                <code>{customItemForm.sourceRaw}</code>
+              </div>
+              <div>
+                <span>Итоговый raw</span>
+                <code>{finalRawPreview || '?'}</code>
+              </div>
+            </section>
+
+            {!isCraftMode ? (
+              <section className="settings-section custom-save-section">
+                <div className="settings-section-title compact">
+                  <h3>Где сохранить</h3>
+                  <span>{customItemForm.storage === 'local' ? 'local hash' : '.cubixrecipes_admin/custom_items'}</span>
+                </div>
+                <div className="custom-save-options" role="group" aria-label="custom-item-storage">
+                  <label className={`custom-save-option ${customItemForm.storage === 'local' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="custom-item-storage"
+                      checked={customItemForm.storage === 'local'}
+                      onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'local', scope: 'user' } : current)}
+                    />
+                    <strong>Только для меня</strong>
+                    <span>LocalStorage по hash пользователя.</span>
+                  </label>
+                  <label className={`custom-save-option ${customItemForm.storage === 'backend' ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="custom-item-storage"
+                      checked={customItemForm.storage === 'backend'}
+                      onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'backend' } : current)}
+                    />
+                    <strong>Backend</strong>
+                    <span>Отдельная папка custom items, не scripts.</span>
+                  </label>
+                </div>
+                {customItemForm.storage === 'local' ? (
+                  <div className="inline-hint inline-hint-warning">Локальный custom item хранится в кэше браузера. После очистки LocalStorage/кэша он исчезнет.</div>
+                ) : (
+                  <div className="inline-hint">Backend custom items сохраняются отдельно от рецептов: <code>.cubixrecipes_admin/custom_items/items.json</code>.</div>
+                )}
+                {customItemForm.storage === 'backend' ? (
+                  <label className="field-block">
+                    <span>Область backend</span>
+                    <select
+                      aria-label="custom-item-scope"
+                      value={customItemForm.scope}
+                      disabled={!canUseGlobalScope}
+                      onChange={(event) => setCustomItemForm((current) => current ? { ...current, scope: event.target.value as 'global' | 'user' } : current)}
+                    >
+                      <option value="user">Только мой backend-предмет</option>
+                      <option value="global">Для всех</option>
+                    </select>
+                  </label>
+                ) : null}
+              </section>
+            ) : null}
+
+            <section className="settings-section custom-main-section">
+              <div className="settings-grid">
+                <label className="field-block">
+                  <span>Название</span>
+                  <input aria-label="custom-item-name" type="text" value={customItemForm.displayName} onChange={(event) => setCustomItemForm((current) => current ? { ...current, displayName: event.target.value } : current)} />
+                </label>
+                <label className="field-block">
+                  <span>Raw предмета</span>
+                  <input aria-label="custom-item-raw" type="text" value={customItemForm.itemRaw} onChange={(event) => setCustomItemForm((current) => current ? { ...current, itemRaw: event.target.value } : current)} />
+                </label>
+              </div>
               <label className="field-block">
-                <span>Область</span>
-                <select
-                  aria-label="custom-item-scope"
-                  value={customItemForm.scope}
-                  disabled={!canUseGlobalScope}
-                  onChange={(event) => setCustomItemForm((current) => current ? { ...current, scope: event.target.value as 'global' | 'user' } : current)}
-                >
-                  <option value="user">Только для меня</option>
-                  <option value="global">Для всех</option>
-                </select>
+                <span>Комментарий</span>
+                <textarea className="compact-textarea" aria-label="custom-item-comment" value={customItemForm.comment} onChange={(event) => setCustomItemForm((current) => current ? { ...current, comment: event.target.value } : current)} placeholder="Что это за предмет и зачем он нужен" rows={3} />
               </label>
-              <label className="field-block">
-                <span>Название</span>
-                <input aria-label="custom-item-name" type="text" value={customItemForm.displayName} onChange={(event) => setCustomItemForm((current) => current ? { ...current, displayName: event.target.value } : current)} />
-              </label>
-            </div>
-            <label className="field-block">
-              <span>Raw предмета</span>
-              <input aria-label="custom-item-raw" type="text" value={customItemForm.itemRaw} onChange={(event) => setCustomItemForm((current) => current ? { ...current, itemRaw: event.target.value } : current)} />
-              <span className="inline-hint">Для переливающихся вариантов укажите meta `*`, например `&lt;minecraft:wool:*&gt;`.</span>
-            </label>
+              <div className="inline-hint">Для переливающихся вариантов укажите meta `*`, например `&lt;minecraft:wool:*&gt;`.</div>
+            </section>
+
             <div className="settings-section">
               <div className="settings-section-title">
                 <h3>NBT</h3>
-                <span>Эти поля попадут в `.withTag(...)` у созданного предмета.</span>
+                <span>{nbtRawPreview ? nbtRawPreview : 'NBT не задан.'}</span>
               </div>
-              <div className="inline-actions">
-                <button type="button" className="ghost-button" aria-label="custom-add-nbt-field" onClick={() => addCustomNbtRootEntry('int')}>Добавить поле</button>
-                <button type="button" className="ghost-button" aria-label="custom-add-nbt-object" onClick={() => addCustomNbtRootEntry('compound')}>Добавить объект</button>
-                <button type="button" className="ghost-button" aria-label="custom-add-nbt-list" onClick={() => addCustomNbtRootEntry('list')}>Добавить список</button>
-              </div>
-              {customItemNbtRoot.entries.length ? (
-                <div className="suggestions-list nbt-editor-list" aria-label="custom-nbt-editor-list">
-                  {customItemNbtRoot.entries.map((entry, index) => (
-                    <div key={`custom-root-entry-${index}`} className="suggestion-item">
-                      <div className="nbt-entry-line">
-                        <input aria-label={`custom-nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateCustomNbtRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
-                        {renderNbtNodeEditor(entry.value, `custom.${index}`, (nextNode) => updateCustomNbtRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button" aria-label={`delete-custom-nbt-root-${index}`} onClick={() => setCustomItemNbtRoot((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="inline-hint inline-hint-warning">NBT не задан.</div>
-              )}
+              <NbtTreeEditor
+                root={customItemNbtRoot}
+                collapsedPaths={collapsedNbtPaths}
+                labelPrefix="custom-nbt"
+                emptyText="NBT не задан. Добавьте поле, объект или список."
+                onChange={setCustomItemNbtRoot}
+                onCollapsedPathsChange={setCollapsedNbtPaths}
+              />
             </div>
             {customItemsStatus ? <div className="inline-status inline-status-default">{customItemsStatus}</div> : null}
             <div className="inline-actions">
-              <button type="button" className="secondary-button" onClick={() => void saveCustomItemForm()}>Сохранить предмет</button>
+              <button type="button" className="secondary-button" onClick={() => void saveCustomItemForm()}>{isCraftMode ? 'Применить к рецепту' : 'Сохранить предмет'}</button>
               <button type="button" className="ghost-button" onClick={() => setCustomItemForm(null)}>Отмена</button>
             </div>
           </div>
@@ -6740,26 +6843,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </div>
             </div>
             <div className="settings-modal-body">
-              <div className="inline-actions nbt-toolbar">
-                <button type="button" className="secondary-button" aria-label="add-nbt-field" onClick={() => addRootEntry('int')}>Добавить поле</button>
-                <button type="button" className="secondary-button" aria-label="add-nbt-object" onClick={() => addRootEntry('compound')}>Добавить объект</button>
-                <button type="button" className="secondary-button" aria-label="add-nbt-list" onClick={() => addRootEntry('list')}>Добавить список</button>
-              </div>
-              {nbtRootDraft.entries.length ? (
-                <div className="suggestions-list nbt-editor-list" aria-label="nbt-editor-list">
-                  {nbtRootDraft.entries.map((entry, index) => (
-                    <div key={`root-entry-${index}`} className="suggestion-item">
-                      <div className="nbt-entry-line">
-                        <input aria-label={`nbt-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
-                        {renderNbtNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-                        <button type="button" className="ghost-button" aria-label={`delete-nbt-root-${index}`} onClick={() => setNbtRootDraft((current) => ({ ...current, entries: current.entries.filter((_, entryIndex) => entryIndex !== index) }))}>Удалить</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="inline-hint inline-hint-warning">Добавьте NBT поле/объект/список.</div>
-              )}
+              <NbtTreeEditor
+                root={nbtRootDraft}
+                collapsedPaths={collapsedNbtPaths}
+                labelPrefix="nbt"
+                onChange={setNbtRootDraft}
+                onCollapsedPathsChange={setCollapsedNbtPaths}
+              />
             </div>
           </div>
         </div>

@@ -13,7 +13,7 @@ interface Props {
   tooltipsDisabled?: boolean;
   onCellChange: (row: number, col: number, value: string) => void;
   onCellClick: (row: number, col: number) => void;
-  onCellContextMenu: (row: number, col: number) => void;
+  onCellContextMenu: (row: number, col: number, event?: MouseEvent) => void;
   resolveCellTitle: (raw: string) => string;
   resolveIconStyle?: (raw: string) => CSSProperties | undefined;
   onCellDrop?: (row: number, col: number, value: string) => void;
@@ -146,7 +146,7 @@ export function RecipeGrid({
       paintCell(row, col, 'fill');
       return;
     }
-    if (event.button === 2 && !heldItemRaw) {
+    if (event.button === 2 && !heldItemRaw && !event.ctrlKey) {
       event.preventDefault();
       paintModeRef.current = 'clear';
       paintedCellsRef.current.clear();
@@ -222,7 +222,7 @@ export function RecipeGrid({
                 onContextMenu={(event) => {
                   if (editorMode === 'view') return;
                   event.preventDefault();
-                  onCellContextMenu(rowIndex, colIndex);
+                  onCellContextMenu(rowIndex, colIndex, event);
                 }}
                 onDragOver={(event) => {
                   if (editorMode !== 'view' && onCellDrop) {

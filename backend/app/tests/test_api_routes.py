@@ -8,7 +8,7 @@ import zlib
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
-from app.api.schemas import ItemCaseAliasManualRequest, RecipeDraftTemplateRequest
+from app.api.schemas import CustomItemRequest, ItemCaseAliasManualRequest, RecipeDraftTemplateRequest
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -86,6 +86,35 @@ def test_itempanel_catalog_and_json_merge_routes_are_available(tmp_path: Path):
     assert merged['summary']['merged_nbt_rows'] == 1
     assert merged_csv.media_type.startswith('text/csv')
     assert '<mod:charged>.withTag({energy:25})' in raws
+
+
+def test_custom_items_are_saved_in_dedicated_admin_folder_with_comment(tmp_path: Path):
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    list_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/custom' and 'GET' in getattr(route, 'methods', set()))
+    save_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/items/custom' and 'POST' in getattr(route, 'methods', set()))
+
+    class UserRequest:
+        class state:
+            auth_user = {'email': 'player@example.com', 'role': 'default'}
+
+    payload = CustomItemRequest(
+        scope='user',
+        source_raw='<minecraft:planks>',
+        item_raw='<minecraft:planks>.withTag({charge: 1})',
+        display_name='Charged planks',
+        nbt_raw='{charge: 1}',
+        comment='Temporary item for local recipe checks',
+    )
+
+    saved = save_route(UserRequest(), payload)
+    listed = list_route(UserRequest())
+    store_path = tmp_path / '.cubixrecipes_admin' / 'custom_items' / 'items.json'
+
+    assert saved['item']['comment'] == 'Temporary item for local recipe checks'
+    assert saved['item']['storage'] == 'backend'
+    assert listed['items'][0]['item_raw'] == '<minecraft:planks>.withTag({charge: 1})'
+    assert store_path.is_file()
+    assert 'Temporary item for local recipe checks' in store_path.read_text(encoding='utf-8')
 
 
 def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Path):

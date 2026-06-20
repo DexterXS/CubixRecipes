@@ -43,6 +43,7 @@ interface CustomItemPayload {
   item_raw: string;
   display_name: string;
   nbt_raw?: string | null;
+  comment?: string;
 }
 
 interface RecipeDraftTemplatePayload {
