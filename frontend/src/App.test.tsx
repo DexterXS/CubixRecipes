@@ -169,9 +169,10 @@ beforeEach(() => {
             { key: 'minecraft:planks', legacy_id: 5, meta: 0, has_nbt: false, display_ru: 'Р”СѓР±РѕРІС‹Рµ РґРѕСЃРєРё', display_en: 'Oak Planks', raw: '<minecraft:planks>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
             { key: 'minecraft:stick', legacy_id: 280, meta: 0, has_nbt: false, display_ru: 'РџР°Р»РєР°', display_en: 'Stick', raw: '<minecraft:stick>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
             { key: 'examplemod:item', legacy_id: 9000, meta: 0, has_nbt: false, display_ru: 'First icon', display_en: 'First icon', raw: '<examplemod:item>', nbt_raw: null, has_icon: false, sources: ['csv'] },
+            { key: 'examplemod:metaonly', legacy_id: 9002, meta: 1, has_nbt: true, display_ru: 'Meta only item', display_en: 'Meta only item', raw: '<examplemod:metaonly:1>', nbt_raw: null, has_icon: false, sources: ['csv'] },
             { key: 'examplemod:charged', legacy_id: 9001, meta: 1, has_nbt: true, display_ru: 'Charged item', display_en: 'Charged item', raw: '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})', nbt_raw: '{charge: 3.6E7, ea_module_admin: 1}', has_icon: false, sources: ['csv', 'nbt'] }
           ],
-          summary: { entries: 4, csv_entries: 3, nbt_entries: 1, unmatched_nbt_items: 0 }
+          summary: { entries: 5, csv_entries: 4, nbt_entries: 1, unmatched_nbt_items: 0 }
         })
       }) as Promise<Response>;
     }
@@ -533,7 +534,7 @@ beforeEach(() => {
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0, '<examplemod:charged>': 1, '<examplemod:charged:1>': 1, '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})': 1 } })
+        json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0, '<examplemod:metaonly:1>': 0, '<examplemod:charged>': 1, '<examplemod:charged:1>': 1, '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})': 1 } })
       }) as Promise<Response>;
     }
     if (url === '/api/recipes/search' && init?.method === 'POST') {
@@ -736,6 +737,14 @@ test('NEI separates recipe fill color from NBT outline markers', async () => {
     const plainItem = screen.getByLabelText('nei-item-<minecraft:stick>');
     expect(plainItem.className).toContain('recipe-missing');
     expect(plainItem.className).toContain('no-nbt');
+  });
+
+  fireEvent.change(screen.getByLabelText('nei-search'), { target: { value: 'metaonly' } });
+  await screen.findByLabelText('nei-item-<examplemod:metaonly:1>');
+  await waitFor(() => {
+    const metaOnlyItem = screen.getByLabelText('nei-item-<examplemod:metaonly:1>');
+    expect(metaOnlyItem.className).toContain('recipe-missing');
+    expect(metaOnlyItem.className).toContain('no-nbt');
   });
 });
 

@@ -17,6 +17,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Treat NEI NBT outlines as real `.withTag(...)`/`nbt_raw` markers only, so meta-only item variants no longer receive the yellow NBT border.
 - Added independent NEI/draft item markers: recipe availability controls green/red fill, while NBT presence controls yellow/red outline; item search suggestions now preserve `.withTag(...)` values when opening the NBT editor.
 - Made craft grids render generated mod-icon atlas sprites too, so items dragged from NEI no longer turn into `?` in recipe cells when their icon exists only in the uploaded mod atlas layer.
 - Restored the static base itempanel atlas fallback when the backend itempanel atlas is empty, so default NEI icons remain visible while uploaded mod-icon atlases override them where available.

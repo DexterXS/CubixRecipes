@@ -18,8 +18,9 @@
 6. Treat an empty backend itempanel atlas as missing and fall back to the static base `/itempanel-atlas.json`; the mod-icon atlas is an override layer, not a replacement for the default itempanel atlas.
 7. Pass generated mod-icon atlas styles into craft-grid rendering anywhere NEI/held-item rendering uses them, or placed items can show `?` even while the NEI icon is visible.
 8. Preserve `entry.raw` for NBT item suggestions and editor insertion; do not rebuild NBT variants from `key/meta`, because that drops `.withTag(...)`.
-9. Keep the wipe update UI step-based and explicit: CSV, icons, generated atlases, NBT, final catalog check.
-10. Add focused backend tests for catalog merging and API upload, plus frontend tests for the wipe update window.
+9. Treat NBT UI markers as actual `nbt_raw` or `.withTag(...)` only; `meta > 0` and CSV `has_nbt` alone must not create a yellow NBT outline.
+10. Keep the wipe update UI step-based and explicit: CSV, icons, generated atlases, NBT, final catalog check.
+11. Add focused backend tests for catalog merging and API upload, plus frontend tests for the wipe update window.
 
 ## Common mistakes
 - Using the icon catalog as the only item source; it contains only rows with matched icon files.
@@ -30,6 +31,7 @@
 - Accepting an empty `/api/itempanel/atlas` as authoritative; this disables the static base atlas.
 - Rendering generated mod-icon atlas sprites in NEI but not in `RecipeGrid`.
 - Rebuilding an NBT catalog entry as `<mod:item:meta>` inside search suggestions or editors, which makes the NBT tree appear empty.
+- Using CSV `has_nbt` or meta-only variants as proof of real NBT; yellow outlines require `nbt_raw` or `.withTag(...)`.
 
 ## Done criteria
 - The combined catalog includes CSV-only, icon-backed, and NBT-backed items.

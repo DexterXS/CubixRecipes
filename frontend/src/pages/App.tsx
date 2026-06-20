@@ -799,6 +799,14 @@ function itemPanelRaw(entry: ItemPanelEntry): string {
   return entry.raw ?? buildItemRawValue(entry.key, entry.meta);
 }
 
+function rawHasNbtTag(raw: string): boolean {
+  return /\.withTag\(\s*[\s\S]+?\s*\)\s*$/.test(raw.trim());
+}
+
+function itemPanelEntryHasNbtTag(entry: ItemPanelEntry): boolean {
+  return Boolean(entry.nbtRaw?.trim()) || rawHasNbtTag(itemPanelRaw(entry));
+}
+
 function itemCatalogEntryToPanelEntry(entry: ItemCatalogEntry): ItemPanelEntry {
   return {
     key: entry.key,
@@ -2938,7 +2946,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           raw: entry.raw,
           draftCount: entry.draftIds.size,
           title,
-          hasNbt: Boolean(panelEntry?.hasNbt) || entry.raw.includes('.withTag('),
+          hasNbt: rawHasNbtTag(entry.raw),
           searchText: `${entry.raw} ${title} ${panelEntry?.displayEn ?? ''} ${panelEntry?.legacyId ?? ''}`.toLowerCase()
         };
       })
@@ -4685,7 +4693,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
               const availability = getRecipeAvailability(raw);
-              const nbtClass = entry.hasNbt || Boolean(entry.nbtRaw) ? 'has-nbt' : 'no-nbt';
+              const nbtClass = itemPanelEntryHasNbtTag(entry) ? 'has-nbt' : 'no-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
