@@ -130,6 +130,7 @@ type DraftItemEntry = {
   raw: string;
   draftCount: number;
   title: string;
+  hasNbt: boolean;
   searchText: string;
 };
 
@@ -2937,6 +2938,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           raw: entry.raw,
           draftCount: entry.draftIds.size,
           title,
+          hasNbt: Boolean(panelEntry?.hasNbt) || entry.raw.includes('.withTag('),
           searchText: `${entry.raw} ${title} ${panelEntry?.displayEn ?? ''} ${panelEntry?.legacyId ?? ''}`.toLowerCase()
         };
       })
@@ -3208,17 +3210,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function applyItemSearchSuggestion(entry: ItemPanelEntry) {
-    const [modid, ...nameParts] = entry.key.split(':');
-    const itemName = nameParts.join(':');
-    setItemModDraft(modid);
-    setItemNameDraft(itemName);
-    setItemMetaDraft(String(entry.meta));
-    setNbtRootDraft({ kind: 'compound', entries: [] });
+    const nextRaw = applyItemCaseAlias(itemPanelRaw(entry));
+    const parsed = parseRawForEditor(nextRaw);
+    setItemModDraft(parsed.modid);
+    setItemNameDraft(parsed.item);
+    setItemMetaDraft(String(parsed.meta));
+    setNbtRootDraft(parsed.nbtRoot);
     setCollapsedNbtPaths({});
-    const nextRaw = applyItemCaseAlias(buildItemRawValue(entry.key, entry.meta));
     setCraftSourceDraft(nextRaw);
     setCraftSourceMode('structured');
-    setItemSearchQuery(`${entry.key}:${entry.meta}`);
+    setItemSearchQuery(itemPanelRaw(entry));
   }
 
   function setNbtPathCollapsed(path: string, collapsed: boolean) {
@@ -4586,9 +4587,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (keys.some((key) => uploadedDraftOutputKeys.has(key))) {
       return 'available';
     }
-    const known = keys.map((key) => recipeAvailability[key]).find((value) => value !== undefined);
-    if (known === true) return 'available';
-    if (known === false) return 'missing';
+    const knownValues = keys.map((key) => recipeAvailability[key]).filter((value) => value !== undefined);
+    if (knownValues.some((value) => value === true)) return 'available';
+    if (knownValues.some((value) => value === false)) return 'missing';
     return 'unknown';
   }
 
@@ -4684,6 +4685,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
               const availability = getRecipeAvailability(raw);
+              const nbtClass = entry.hasNbt || Boolean(entry.nbtRaw) ? 'has-nbt' : 'no-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
@@ -4696,8 +4698,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <button
                   key={itemPanelEntryIdentity(entry)}
                   type="button"
-                  className={`nei-item recipe-${availability} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
-                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}`}
+                  className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
+                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}${nbtClass === 'has-nbt' ? ' - есть NBT' : ' - NBT нет'}`}
                   aria-label={`nei-item-${raw}`}
                   data-item-raw={raw}
                   draggable
@@ -5581,14 +5583,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const availability = getRecipeAvailability(raw);
               const selected = raw === selectedDraftItemRaw;
               const icon = renderDraftCatalogIcon(raw);
+              const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
               return (
                 <button
                   key={raw}
                   type="button"
-                  className={`draft-item-button recipe-${availability} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
+                  className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
                   aria-label={`draft-item-${raw}`}
                   data-item-raw={raw}
-                  title={`${entry.title} ${raw}`}
+                  title={`${entry.title} ${raw}${nbtClass === 'has-nbt' ? ' - есть NBT' : ' - NBT нет'}`}
                   onMouseEnter={() => updateHoveredItemRaw(raw)}
                   onFocus={() => updateHoveredItemRaw(raw)}
                   onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
@@ -6584,9 +6587,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     {itemSearchSuggestions.map((entry) => (
                       <button key={itemPanelEntryIdentity(entry)} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
                         {(() => {
-                          const raw = `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+                          const raw = itemPanelRaw(entry);
                           const iconUrl = itemSearchIcons[raw];
-                          const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+                          const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
                           return (
                             <span className="suggestion-icon-slot" aria-hidden="true">
                               {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
@@ -6594,7 +6597,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                           );
                         })()}
                         <div className="suggestion-content">
-                          <strong>{`<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`}</strong>
+                          <strong>{itemPanelRaw(entry)}</strong>
                           <span>{entry.displayRu}</span>
                           {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
                         </div>

@@ -168,9 +168,10 @@ beforeEach(() => {
           entries: [
             { key: 'minecraft:planks', legacy_id: 5, meta: 0, has_nbt: false, display_ru: 'Р”СѓР±РѕРІС‹Рµ РґРѕСЃРєРё', display_en: 'Oak Planks', raw: '<minecraft:planks>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
             { key: 'minecraft:stick', legacy_id: 280, meta: 0, has_nbt: false, display_ru: 'РџР°Р»РєР°', display_en: 'Stick', raw: '<minecraft:stick>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
-            { key: 'examplemod:item', legacy_id: 9000, meta: 0, has_nbt: false, display_ru: 'First icon', display_en: 'First icon', raw: '<examplemod:item>', nbt_raw: null, has_icon: false, sources: ['csv'] }
+            { key: 'examplemod:item', legacy_id: 9000, meta: 0, has_nbt: false, display_ru: 'First icon', display_en: 'First icon', raw: '<examplemod:item>', nbt_raw: null, has_icon: false, sources: ['csv'] },
+            { key: 'examplemod:charged', legacy_id: 9001, meta: 1, has_nbt: true, display_ru: 'Charged item', display_en: 'Charged item', raw: '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})', nbt_raw: '{charge: 3.6E7, ea_module_admin: 1}', has_icon: false, sources: ['csv', 'nbt'] }
           ],
-          summary: { entries: 3, csv_entries: 3, nbt_entries: 0, unmatched_nbt_items: 0 }
+          summary: { entries: 4, csv_entries: 3, nbt_entries: 1, unmatched_nbt_items: 0 }
         })
       }) as Promise<Response>;
     }
@@ -529,7 +530,11 @@ beforeEach(() => {
       }) as Promise<Response>;
     }
     if (url === '/api/recipes/search-batch' && init?.method === 'POST') {
-      return Promise.resolve({ ok: true, json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0 } }) }) as Promise<Response>;
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ matches: { '<minecraft:planks>': 1, '<minecraft:stick>': 0, '<examplemod:charged>': 1, '<examplemod:charged:1>': 1, '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})': 1 } })
+      }) as Promise<Response>;
     }
     if (url === '/api/recipes/search' && init?.method === 'POST') {
       const body = JSON.parse(String(init.body));
@@ -712,6 +717,43 @@ test('NEI uses generated mod icon atlas entries matched by itempanel display nam
     expect(icon).toBeTruthy();
     expect(icon?.style.backgroundImage).toContain('mod-icons-examplemod-x32-1.png');
   });
+});
+
+test('NEI separates recipe fill color from NBT outline markers', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'charged' } });
+  await screen.findByLabelText('nei-item-<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})');
+  await waitFor(() => {
+    const nbtItem = screen.getByLabelText('nei-item-<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})');
+    expect(nbtItem.className).toContain('recipe-available');
+    expect(nbtItem.className).toContain('has-nbt');
+  });
+
+  fireEvent.change(screen.getByLabelText('nei-search'), { target: { value: 'stick' } });
+  await screen.findByLabelText('nei-item-<minecraft:stick>');
+  await waitFor(() => {
+    const plainItem = screen.getByLabelText('nei-item-<minecraft:stick>');
+    expect(plainItem.className).toContain('recipe-missing');
+    expect(plainItem.className).toContain('no-nbt');
+  });
+});
+
+test('craft item search suggestions preserve NBT raw values in the NBT editor', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки' }));
+  const craftDialog = await screen.findByRole('dialog', { name: 'Craft editor' });
+  fireEvent.change(within(craftDialog).getByLabelText('item-search'), { target: { value: 'charged' } });
+  fireEvent.click(await within(craftDialog).findByText('<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})'));
+
+  expect((within(craftDialog).getByLabelText('craft-source-modal') as HTMLTextAreaElement).value).toContain('.withTag({charge: 3.6E7, ea_module_admin: 1})');
+
+  fireEvent.click(within(craftDialog).getByLabelText('open-nbt-editor'));
+  const nbtDialog = await screen.findByRole('dialog', { name: 'NBT tree editor' });
+  expect((within(nbtDialog).getByLabelText('nbt-key-0') as HTMLInputElement).value).toBe('charge');
+  expect((within(nbtDialog).getByLabelText('nbt-value-root.0') as HTMLInputElement).value).toBe('3.6E7');
+  expect((within(nbtDialog).getByLabelText('nbt-key-1') as HTMLInputElement).value).toBe('ea_module_admin');
 });
 
 test('craft grid renders generated mod icon atlas entries after placing an NEI item', async () => {

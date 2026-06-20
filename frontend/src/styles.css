@@ -177,6 +177,10 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .nei-list .nei-item.recipe-available:hover { background: color-mix(in srgb, #22c55e 28%, var(--accent) 12%); border-color: #86efac; }
 .nei-list .nei-item.recipe-missing:hover { background: color-mix(in srgb, #ef4444 20%, var(--accent) 10%); border-color: #fca5a5; }
 .nei-list .nei-item.is-custom { outline: 1px solid color-mix(in srgb, var(--accent) 58%, transparent); outline-offset: -3px; }
+.nei-list .nei-item.has-nbt,
+.draft-item-button.has-nbt { box-shadow: inset 0 0 0 2px #facc15; }
+.nei-list .nei-item.no-nbt,
+.draft-item-button.no-nbt { box-shadow: inset 0 0 0 2px #ef4444; }
 .nei-custom-dot { position: absolute; right: 3px; bottom: 3px; width: 5px; height: 5px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8); }
 .nei-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 3px; background: transparent; color: var(--muted); overflow: hidden; }
 .nei-icon.is-loading { opacity: 0.28; }
