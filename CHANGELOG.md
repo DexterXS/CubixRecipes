@@ -17,6 +17,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Restored NEI, draft, and craft-grid item icon display after combined item catalog loading by returning `icon_url` with catalog rows and refreshing stale frontend missing-icon cache entries.
 - Exposed the active cloud `scripts_dir` in the Cloud workspace, warning admins when it points at volatile container storage and adding a one-click switch to `/data/scripts`.
 - Renamed `Облако .zs` to `Облако`, separated recipe history buttons from similar-recipe navigation, disabled empty history actions, and moved recipe removal/template controls into output detail settings.
 - Updated generated shaped/extreme recipe output to place the matrix opening bracket after the output comma and render rows on separate lines, matching the requested 1.7.10 script style.

@@ -86,6 +86,7 @@ type ItemPanelEntry = {
   displayEn: string;
   nbtRaw?: string | null;
   hasIcon?: boolean;
+  iconUrl?: string | null;
   sources?: string[];
   raw?: string;
   customItemId?: number;
@@ -808,6 +809,7 @@ function itemCatalogEntryToPanelEntry(entry: ItemCatalogEntry): ItemPanelEntry {
     raw: entry.raw,
     nbtRaw: entry.nbt_raw ?? null,
     hasIcon: entry.has_icon,
+    iconUrl: entry.icon_url ?? null,
     sources: entry.sources
   };
 }
@@ -1602,6 +1604,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
     const uniqueEntries = dedupeItemPanelEntries(entries);
     setItemPanelTranslations(buildItemPanelTranslationsFromEntries(uniqueEntries, fallbackToFirstMeta));
+    const iconUpdates: Record<string, string> = {};
+    uniqueEntries.forEach((entry) => {
+      if (!entry.iconUrl) return;
+      const raw = itemPanelRaw(entry);
+      iconUpdates[raw] = entry.iconUrl;
+      iconUpdates[buildItemRawValue(entry.key, entry.meta)] = entry.iconUrl;
+    });
+    if (Object.keys(iconUpdates).length > 0) {
+      setItemSearchIcons((current) => ({ ...current, ...iconUpdates }));
+    }
     if (summary) {
       setItemCatalogSummary(summary);
     }

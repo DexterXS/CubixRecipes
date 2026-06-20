@@ -111,6 +111,7 @@ export interface ItemCatalogEntry {
   raw: string;
   nbt_raw?: string | null;
   has_icon: boolean;
+  icon_url?: string | null;
   sources: string[];
 }
 

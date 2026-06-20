@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import gzip
 import struct
+import zlib
 from pathlib import Path
 
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
@@ -63,6 +64,28 @@ def _write_itempanel_nbt(path: Path) -> None:
     path.write_bytes(gzip.compress(root))
 
 
+def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
+    height = len(pixels) // width
+    raw_rows = []
+    for row in range(height):
+        raw = bytearray()
+        for r, g, b, a in pixels[row * width:(row + 1) * width]:
+            raw.extend([r, g, b, a])
+        raw_rows.append(b'\x00' + bytes(raw))
+    payload = zlib.compress(b''.join(raw_rows))
+
+    def chunk(name: bytes, data: bytes) -> bytes:
+        body = name + data
+        return struct.pack('>I', len(data)) + body + struct.pack('>I', zlib.crc32(body) & 0xFFFFFFFF)
+
+    path.write_bytes(
+        b'\x89PNG\r\n\x1a\n'
+        + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0))
+        + chunk(b'IDAT', payload)
+        + chunk(b'IEND', b'')
+    )
+
+
 def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
     csv_path = tmp_path / 'itempanel.csv'
     csv_path.write_text(
@@ -72,6 +95,10 @@ def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
     )
     icons_dir = tmp_path / 'itempanel_icons'
     icons_dir.mkdir()
+    _write_rgba_png(
+        icons_dir / 'Charged Cell.png',
+        [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)],
+    )
     nbt_path = tmp_path / 'itempanel.nbt'
     _write_itempanel_nbt(nbt_path)
     icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
@@ -84,8 +111,10 @@ def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
 
     assert '<mod:charged>' in entries
     assert '<mod:charged>.withTag({energy: 0, mode: "charged"})' in entries
+    assert entries['<mod:charged>']['icon_url']
     assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['has_nbt'] is True
-    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['sources'] == ['csv', 'nbt']
+    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['icon_url'] == entries['<mod:charged>']['icon_url']
+    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['sources'] == ['csv', 'icon', 'nbt']
     assert summary['nbt_items'] == 2
     assert summary['matched_nbt_items'] == 1
     assert summary['unmatched_nbt_items'] == 1

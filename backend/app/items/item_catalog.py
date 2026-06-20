@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from app.domain.models import ItemRef, MetaMode
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.itempanel_nbt import ItemPanelNbtStack, read_itempanel_nbt, read_itempanel_nbt_bytes
 
@@ -20,6 +21,7 @@ class ItemCatalogEntry:
     raw: Optional[str] = None
     nbt_raw: Optional[str] = None
     has_icon: bool = False
+    icon_url: Optional[str] = None
     sources: set[str] = field(default_factory=set)
 
     def to_api(self) -> dict:
@@ -33,6 +35,7 @@ class ItemCatalogEntry:
             'raw': self.raw or build_item_raw(self.key, self.meta, self.nbt_raw),
             'nbt_raw': self.nbt_raw,
             'has_icon': self.has_icon,
+            'icon_url': self.icon_url,
             'sources': sorted(self.sources),
         }
 
@@ -101,6 +104,7 @@ class ItemCatalogService:
                     raw=build_item_raw(csv_entry.key, stack.meta, stack.nbt_raw),
                     nbt_raw=stack.nbt_raw,
                     has_icon=csv_entry.has_icon,
+                    icon_url=csv_entry.icon_url,
                     sources={'csv', 'nbt'} | ({'icon'} if csv_entry.has_icon else set()),
                 )
                 before = len(by_raw)
@@ -159,6 +163,7 @@ class ItemCatalogService:
             legacy_id = self._parse_int(self._field(row, 'Item ID', 'id'), default=None)
             has_nbt = self._parse_bool(self._field(row, 'Has NBT', 'has_nbt'))
             has_icon = self._has_icon(key, meta)
+            icon_url = self._icon_url(key, meta)
             sources = {'csv'} | ({'icon'} if has_icon else set())
             entries.append(ItemCatalogEntry(
                 key=key,
@@ -168,6 +173,7 @@ class ItemCatalogService:
                 display_ru=display_ru or primary_display,
                 display_en=display_en,
                 has_icon=has_icon,
+                icon_url=icon_url,
                 sources=sources,
             ))
         return entries, len(rows)
@@ -194,6 +200,7 @@ class ItemCatalogService:
         current.sources.update(entry.sources)
         current.has_icon = current.has_icon or entry.has_icon
         current.has_nbt = current.has_nbt or entry.has_nbt
+        current.icon_url = current.icon_url or entry.icon_url
         if not current.nbt_raw:
             current.nbt_raw = entry.nbt_raw
 
@@ -218,6 +225,20 @@ class ItemCatalogService:
             or (key, 0) in self.icon_catalog.entries_by_key
             or (key, None) in self.icon_catalog.entries_by_key
         )
+
+    def _icon_url(self, key: str, meta: int) -> Optional[str]:
+        parts = key.split(':', 1)
+        if len(parts) != 2:
+            return None
+        item_ref = ItemRef(
+            raw=build_item_raw(key, meta),
+            modid=parts[0],
+            name=parts[1],
+            meta_mode=MetaMode.EXACT,
+            meta_value=meta,
+        )
+        result = self.icon_catalog.resolve(item_ref)
+        return result.icon_url if result else None
 
     def _field(self, row: dict[str, str], *names: str) -> str:
         lower = {key.lower(): value for key, value in row.items() if key is not None}
