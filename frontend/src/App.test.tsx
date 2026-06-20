@@ -221,11 +221,15 @@ beforeEach(() => {
       return Promise.resolve({ ok: true, json: async () => ({ ok: true }) }) as Promise<Response>;
     }
     if (url === '/api/settings/project' && (!init?.method || init.method === 'GET')) {
-      return Promise.resolve({ ok: true, json: async () => projectSettings() }) as Promise<Response>;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => projectSettings() }) as Promise<Response>;
+    }
+    if (url === '/api/settings/project' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ...projectSettings(), ...body }) }) as Promise<Response>;
     }
     if (url === '/api/settings/project/ui' && init?.method === 'PUT') {
       const ui = JSON.parse(String(init.body));
-      return Promise.resolve({ ok: true, json: async () => ({ ...projectSettings(), ui_preferences: ui }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ...projectSettings(), ui_preferences: ui }) }) as Promise<Response>;
     }
     if (url === '/api/admin/users') {
       return Promise.resolve({ ok: true, json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
@@ -711,6 +715,21 @@ test('cloud storage shows files and root backup only after Ctrl+B', async () => 
 
   expect(await screen.findByText('ROOT backup')).toBeTruthy();
   expect(await screen.findByLabelText('root-backup-files')).toBeTruthy();
+});
+
+test('cloud storage can switch volatile scripts_dir to persistent volume path', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-cloud'));
+  expect(await screen.findByText('scripts')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('use-persistent-scripts-dir'));
+
+  await waitFor(() => {
+    const settingsCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url, init]) => url === '/api/settings/project' && init?.method === 'PUT');
+    expect(settingsCall).toBeTruthy();
+    expect(JSON.parse(String(settingsCall?.[1]?.body ?? '{}')).scripts_dir).toBe('/data/scripts');
+  });
+  expect(await screen.findByText('/data/scripts')).toBeTruthy();
 });
 
 test('shows drafts for moderators but keeps debug/admin settings hidden from viewers', () => {

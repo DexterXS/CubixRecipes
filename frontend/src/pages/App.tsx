@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -42,6 +42,7 @@ const defaultPanelLayout: PanelLayoutItem[] = [
 ];
 
 const EMPTY_ITEM_CASE_ALIASES: Record<string, string> = {};
+const PERSISTENT_SCRIPTS_DIR = '/data/scripts';
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 type WorkspaceTab = 'editor' | 'recipe' | 'technical' | 'cloud';
@@ -801,6 +802,11 @@ function applyItemCaseAliasesToRaw(raw: string, aliases: Record<string, string>)
   return `<${alias}${meta}>${suffix}`;
 }
 
+function isVolatileScriptsDir(path: string): boolean {
+  const normalized = path.trim().replace(/\\/g, '/').replace(/\/+$/, '');
+  return normalized === 'scripts' || normalized === './scripts' || normalized.startsWith('/app/');
+}
+
 function recipeLookupKeysForRaw(raw: string): string[] {
   const parsed = parseItemRaw(raw);
   if (!parsed) return [raw];
@@ -1382,6 +1388,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [manualAliasSaving, setManualAliasSaving] = useState(false);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudStatus, setCloudStatus] = useState('');
+  const [cloudStorageUpdating, setCloudStorageUpdating] = useState(false);
   const [cloudContextMenu, setCloudContextMenu] = useState<CloudFileContextMenuState | null>(null);
   const [isRootBackupOpen, setIsRootBackupOpen] = useState(false);
   const [cloudBackups, setCloudBackups] = useState<ZsCloudBackup[]>([]);
@@ -1752,6 +1759,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setCloudStatus(`Файлов: ${payload.files.length}`);
     } catch (error) {
       setCloudStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function switchCloudStorageToPersistentPath() {
+    if (!canManageSettings || !settings) return;
+    setCloudStorageUpdating(true);
+    setCloudStatus(`Переключаю scripts_dir на ${PERSISTENT_SCRIPTS_DIR}...`);
+    try {
+      const updated = await updateProjectSettings({ ...settings, scripts_dir: PERSISTENT_SCRIPTS_DIR });
+      setSettings(updated);
+      setCloudStatus(`scripts_dir сохранен: ${updated.scripts_dir}`);
+      await refreshCloudFiles();
+    } catch (error) {
+      setCloudStatus(error instanceof Error ? error.message : String(error));
+    } finally {
+      setCloudStorageUpdating(false);
     }
   }
 
@@ -4980,6 +5003,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderCloudStoragePanel() {
+    const currentScriptsDir = settings?.scripts_dir ?? '';
+    const hasVolatileScriptsDir = currentScriptsDir ? isVolatileScriptsDir(currentScriptsDir) : false;
     return (
       <div className="workspace-layout workspace-layout-admin">
         <div className="workspace-column workspace-left">
@@ -4988,6 +5013,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <div className="admin-users-toolbar">
                 <button type="button" className="secondary-button" onClick={() => void refreshCloudFiles()}>Обновить</button>
                 <span>{cloudStatus}</span>
+              </div>
+              <div className={`cloud-storage-path ${hasVolatileScriptsDir ? 'is-warning' : 'is-ok'}`}>
+                <div>
+                  <span>Текущий scripts_dir</span>
+                  <code>{currentScriptsDir || 'загружается...'}</code>
+                </div>
+                <strong>{hasVolatileScriptsDir ? 'Временный путь: файлы могут пропасть после деплоя.' : 'Persistent путь для активных .zs.'}</strong>
+                {canManageSettings && currentScriptsDir !== PERSISTENT_SCRIPTS_DIR ? (
+                  <button type="button" className="secondary-button" aria-label="use-persistent-scripts-dir" disabled={!settings || cloudStorageUpdating} onClick={() => void switchCloudStorageToPersistentPath()}>
+                    Использовать /data/scripts
+                  </button>
+                ) : null}
               </div>
               <div className="admin-file-list" aria-label="cloud-zs-files">
                 {cloudFiles.map((file) => (
