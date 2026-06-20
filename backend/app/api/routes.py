@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -35,6 +35,7 @@ from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, Inval
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
+from app.storage.recipe_tasks import RecipeTaskStore
 from app.storage.zs_storage import ZsStorage
 
 
@@ -270,22 +271,35 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     storage = ZsStorage(active_scripts_dir, log_service=log_service)
     storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(config))
     asset_index = AssetIndex(log_service=log_service)
+    admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
+    itempanel_data_dir = admin_data_dir / 'itempanel'
+    itempanel_csv_storage_path = itempanel_data_dir / 'itempanel.csv'
+    itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
+    itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
     project_root = _project_root_for_catalog(config_service)
-    itempanel_icon_catalog = ItemPanelIconCatalog(project_root / 'itempanel.csv', project_root / 'itempanel_icons')
+    itempanel_csv_path = itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv'
+
+    def _active_itempanel_snbt_path(current_scripts_dir: str) -> Path:
+        if itempanel_snbt_storage_path.is_file():
+            return itempanel_snbt_storage_path
+        return _itempanel_snbt_path_for_catalog(project_root, current_scripts_dir)
+
+    itempanel_icon_catalog = ItemPanelIconCatalog(itempanel_csv_path, project_root / 'itempanel_icons')
     itempanel_icon_catalog.scan()
     item_catalog_service = ItemCatalogService(
         itempanel_icon_catalog.csv_path,
-        _itempanel_snbt_path_for_catalog(project_root, active_scripts_dir),
+        _active_itempanel_snbt_path(active_scripts_dir),
         itempanel_icon_catalog,
+        merged_csv_path=itempanel_merged_csv_path,
     )
     item_catalog_service.scan()
-    admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
     storage.excluded_managed_roots = [admin_data_dir]
     access_control_store = AccessControlStore(admin_data_dir / 'access_control.json')
     mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
     item_case_alias_service = ItemCaseAliasService(Path(active_scripts_dir), itempanel_icon_catalog.csv_path, admin_data_dir / 'item_case_aliases')
     zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
     recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
+    recipe_task_store = RecipeTaskStore(admin_data_dir / 'recipe_tasks.json')
     resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
     index_paths = config_service.build_index_paths(config)
     if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
@@ -442,6 +456,45 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         log_service.log('BACKEND', 'INFO', 'AUTH', 'Access control updated', access_control_store.as_dict(updated))
         return {'ok': True, **access_control_store.as_dict(updated)}
 
+    @router.get('/admin/tasks')
+    def admin_list_recipe_tasks():
+        return recipe_task_store.list_board()
+
+    @router.post('/admin/tasks')
+    def admin_create_recipe_task(request: Request, payload: RecipeTaskRequest):
+        user = request.state.auth_user
+        task = recipe_task_store.create(payload.model_dump(), user['email'])
+        log_service.log('BACKEND', 'INFO', 'TASKS', 'Recipe task created', {'task_id': task['id'], 'item_raw': task['itemRaw'], 'created_by': user['email']})
+        return {'ok': True, 'task': task}
+
+    @router.patch('/admin/tasks/{task_id}')
+    def admin_update_recipe_task(task_id: str, request: Request, payload: RecipeTaskPatchRequest):
+        user = request.state.auth_user
+        try:
+            task = recipe_task_store.update(task_id, payload.model_dump(exclude_unset=True), user['email'])
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail='Task not found') from exc
+        log_service.log('BACKEND', 'INFO', 'TASKS', 'Recipe task updated', {'task_id': task['id'], 'status': task['status'], 'updated_by': user['email']})
+        return {'ok': True, 'task': task}
+
+    @router.put('/admin/tasks/order')
+    def admin_reorder_recipe_tasks(request: Request, payload: RecipeTaskOrderRequest):
+        user = request.state.auth_user
+        tasks = recipe_task_store.reorder([item.model_dump() for item in payload.tasks], user['email'])
+        return {'ok': True, 'tasks': tasks}
+
+    @router.put('/admin/tasks/board')
+    def admin_update_recipe_task_board(payload: RecipeTaskBoardRequest):
+        return {'ok': True, **recipe_task_store.save_board_mode(payload.boardMode)}
+
+    @router.delete('/admin/tasks/{task_id}')
+    def admin_delete_recipe_task(task_id: str):
+        try:
+            recipe_task_store.delete(task_id)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail='Task not found') from exc
+        return {'ok': True}
+
     @router.get('/admin/mod-icons')
     def admin_mod_icons_status():
         return mod_icon_atlas_service.status()
@@ -454,9 +507,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         content = await request.body()
         if not content.strip():
             raise HTTPException(status_code=400, detail='CSV file is empty')
-        target = itempanel_icon_catalog.csv_path
+        target = itempanel_csv_storage_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
+        itempanel_icon_catalog.csv_path = target
+        item_catalog_service.csv_path = target
         item_catalog_service.invalidate_merged()
         itempanel_icon_catalog.scan()
         item_catalog_service.scan()
@@ -480,6 +535,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=400, detail='Only itempanel.json files are supported')
         content = await request.body()
         try:
+            item_catalog_service.snbt_path = itempanel_snbt_storage_path
             summary = item_catalog_service.upload_snbt_json(content)
         except Exception as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -942,7 +998,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         storage.scripts_dir = Path(updated.scripts_dir)
         storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(updated))
         itempanel_icon_catalog.scan()
-        item_catalog_service.snbt_path = _itempanel_snbt_path_for_catalog(project_root, updated.scripts_dir)
+        item_catalog_service.snbt_path = _active_itempanel_snbt_path(updated.scripts_dir)
         item_catalog_service.scan()
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)

@@ -8,7 +8,7 @@ import zlib
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
-from app.api.schemas import CustomItemRequest, ItemCaseAliasManualRequest, RecipeDraftTemplateRequest
+from app.api.schemas import CustomItemRequest, ItemCaseAliasManualRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderItemRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -84,6 +84,9 @@ def test_itempanel_catalog_and_json_merge_routes_are_available(tmp_path: Path):
     assert uploaded['ok'] is True
     assert uploaded['summary']['uploaded_snbt_rows'] == 1
     assert merged['summary']['merged_nbt_rows'] == 1
+    assert '.cubixrecipes_admin' in merged['path']
+    assert Path(merged['path']).name == 'itempanel_merged.csv'
+    assert Path(merged['path']).is_file()
     assert merged_csv.media_type.startswith('text/csv')
     assert '<mod:charged>.withTag({energy:25})' in raws
 
@@ -455,6 +458,57 @@ def test_recipe_draft_templates_are_shared_for_admins_only(tmp_path: Path):
     assert delete_route(second['id'], auth_request('admin@example.com', 'admin')) == {'ok': True}
     assert [item['id'] for item in list_route(auth_request('admin@example.com', 'admin'))['templates']] == [first['id']]
 
+
+def test_admin_recipe_tasks_track_status_order_and_review_audit(tmp_path: Path):
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    list_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks' and 'GET' in getattr(route, 'methods', set()))
+    create_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks' and 'POST' in getattr(route, 'methods', set()))
+    update_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks/{task_id}' and 'PATCH' in getattr(route, 'methods', set()))
+    reorder_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks/order')
+    board_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks/board')
+    delete_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/tasks/{task_id}' and 'DELETE' in getattr(route, 'methods', set()))
+
+    def auth_request(email: str):
+        return type('Request', (), {'state': type('State', (), {'auth_user': {'email': email, 'role': 'admin', 'is_root_admin': False}})()})()
+
+    created = create_route(auth_request('lead@example.com'), RecipeTaskRequest(
+        itemRaw='<minecraft:planks>',
+        itemTitle='Доски',
+        title='Сделать рецепт досок',
+        priority='high',
+        estimatedDays=3,
+        deadlineDate='2026-06-30',
+        assigneeEmail='',
+        helperEmails=['helper@example.com'],
+    ))['task']
+
+    assert created['createdByEmail'] == 'lead@example.com'
+    assert created['status'] == 'planned'
+    assert created['priority'] == 'high'
+    assert created['helperEmails'] == ['helper@example.com']
+
+    in_progress = update_route(created['id'], auth_request('worker@example.com'), RecipeTaskPatchRequest(status='in_progress'))['task']
+    assert in_progress['status'] == 'in_progress'
+    assert in_progress['assigneeEmail'] == 'worker@example.com'
+
+    reordered = reorder_route(auth_request('worker@example.com'), RecipeTaskOrderRequest(tasks=[
+        RecipeTaskOrderItemRequest(id=created['id'], status='review', sortOrder=1000),
+    ]))['tasks']
+    review_task = next(item for item in reordered if item['id'] == created['id'])
+    assert review_task['status'] == 'review'
+    assert review_task['submittedByEmail'] == 'worker@example.com'
+    assert review_task['submittedAt'] > 0
+
+    done = update_route(created['id'], auth_request('admin@example.com'), RecipeTaskPatchRequest(status='done'))['task']
+    assert done['reviewedByEmail'] == 'admin@example.com'
+    assert done['approvedAt'] > 0
+
+    board = board_route(RecipeTaskBoardRequest(boardMode='deadline'))
+    assert board['boardMode'] == 'deadline'
+    assert list_route()['tasks'][0]['id'] == created['id']
+
+    assert delete_route(created['id']) == {'ok': True}
+    assert list_route()['tasks'] == []
 
 
 

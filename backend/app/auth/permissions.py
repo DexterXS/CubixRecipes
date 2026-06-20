@@ -20,6 +20,7 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         'recipes:edit',
         'templates:create',
         'templates:edit',
+        'tasks:manage',
         'roles:manage',
         'settings:manage',
         'debug:manage',
@@ -58,6 +59,8 @@ def permission_for_request(method: str, path: str) -> str:
         return 'roles:manage'
     if path.startswith('/api/admin/access'):
         return 'roles:manage'
+    if path.startswith('/api/admin/tasks'):
+        return 'tasks:manage'
     if path.startswith('/api/admin/mod-icons'):
         return 'mod-icons:manage'
     if path.startswith('/api/admin/itempanel'):

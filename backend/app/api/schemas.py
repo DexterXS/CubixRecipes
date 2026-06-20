@@ -73,6 +73,48 @@ class RecipeDraftTemplateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=255)
 
 
+class RecipeTaskRequest(BaseModel):
+    itemRaw: str = Field(default='', max_length=1024)
+    itemTitle: str = Field(default='', max_length=255)
+    title: str = Field(min_length=1, max_length=255)
+    description: str = Field(default='', max_length=8192)
+    status: Literal['planned', 'in_progress', 'review', 'done'] = 'planned'
+    priority: Literal['low', 'normal', 'high', 'urgent'] = 'normal'
+    estimatedDays: int = Field(default=1, ge=1, le=365)
+    deadlineDate: str = Field(default='', max_length=10)
+    assigneeEmail: str = Field(default='', max_length=255)
+    helperEmails: list[str] = Field(default_factory=list, max_length=12)
+    sortOrder: int = Field(default=0, ge=0)
+
+
+class RecipeTaskPatchRequest(BaseModel):
+    itemRaw: Optional[str] = Field(default=None, max_length=1024)
+    itemTitle: Optional[str] = Field(default=None, max_length=255)
+    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
+    description: Optional[str] = Field(default=None, max_length=8192)
+    status: Optional[Literal['planned', 'in_progress', 'review', 'done']] = None
+    priority: Optional[Literal['low', 'normal', 'high', 'urgent']] = None
+    estimatedDays: Optional[int] = Field(default=None, ge=1, le=365)
+    deadlineDate: Optional[str] = Field(default=None, max_length=10)
+    assigneeEmail: Optional[str] = Field(default=None, max_length=255)
+    helperEmails: Optional[list[str]] = Field(default=None, max_length=12)
+    sortOrder: Optional[int] = Field(default=None, ge=0)
+
+
+class RecipeTaskOrderItemRequest(BaseModel):
+    id: str = Field(min_length=1, max_length=64)
+    status: Literal['planned', 'in_progress', 'review', 'done']
+    sortOrder: int = Field(ge=0)
+
+
+class RecipeTaskOrderRequest(BaseModel):
+    tasks: list[RecipeTaskOrderItemRequest] = Field(default_factory=list, max_length=2000)
+
+
+class RecipeTaskBoardRequest(BaseModel):
+    boardMode: Literal['free', 'priority', 'deadline', 'created'] = 'free'
+
+
 class IndexScanRequest(BaseModel):
     full: bool = True
     paths: list[str] = Field(default_factory=list)
