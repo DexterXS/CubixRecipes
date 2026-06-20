@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemCaseAliasReport, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemCaseAliasReport, ItemCatalogResponse, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -288,14 +288,44 @@ export async function deleteRecipeDraftTemplate(templateId: string): Promise<{ o
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
   try {
-    const response = await fetch('/itempanel-atlas.json');
-    if (response.ok) {
-      return await response.json() as ItemPanelAtlas;
-    }
+    return await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
   } catch {
-    // Fall back to backend-generated atlas below.
+    // Fall back to the generated static atlas for offline/dev snapshots.
   }
-  return request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
+  const response = await fetch('/itempanel-atlas.json');
+  if (response.ok) {
+    return await response.json() as ItemPanelAtlas;
+  }
+  return {
+    image_url: '/itempanel-atlas.png',
+    tile_size: 32,
+    columns: 0,
+    rows: 0,
+    entries: {}
+  };
+}
+
+export async function getItemCatalog(): Promise<ItemCatalogResponse> {
+  return request<ItemCatalogResponse>(apiPath('/itempanel/catalog'));
+}
+
+async function uploadRawItemPanelFile(file: File, endpoint: string, contentType: string): Promise<Response> {
+  const path = apiPath(`${endpoint}?filename=${encodeURIComponent(file.name)}`);
+  const response = await fetch(path, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': contentType },
+    body: file
+  });
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
+  }
+  return response;
+}
+
+export async function uploadItemPanelNbt(file: File): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {
+  const response = await uploadRawItemPanelFile(file, '/admin/itempanel/nbt', 'application/octet-stream');
+  return await response.json() as { ok: boolean; path: string; summary: Record<string, unknown> };
 }
 
 export async function getCurrentUser(): Promise<AuthMeResponse> {
@@ -363,16 +393,7 @@ export async function uploadModIconArchive(file: File, replace = false): Promise
 }
 
 export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas }> {
-  const path = apiPath(`/admin/itempanel/csv?filename=${encodeURIComponent(file.name)}`);
-  const response = await fetch(path, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'text/csv' },
-    body: file
-  });
-  if (!response.ok) {
-    throw new Error(await readErrorMessage(response));
-  }
+  const response = await uploadRawItemPanelFile(file, '/admin/itempanel/csv', 'text/csv');
   return await response.json() as { ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas };
 }
 

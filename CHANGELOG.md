@@ -6,6 +6,8 @@
 - Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
 - Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
 - Added admin `itempanel.csv` upload support, refreshing the backend itempanel catalog/atlas from the admin UI.
+- Added a step-by-step `Обновление вайпа` admin window for uploading itempanel CSV, mod icon ZIPs, regenerating atlases, uploading `itempanel.nbt`, and checking the combined item catalog.
+- Added a backend combined item catalog that merges `itempanel.csv`, itempanel icon availability, and gzip/binary `itempanel.nbt` stacks so NBT variants can appear in NEI as `.withTag(...)` entries.
 - Added admin-managed whitelist mode: when enabled, non-admin accounts outside the whitelist see an access banner instead of the app.
 - Added configurable 9x9 Avaritia visual grouping: every 3x3 block is separated and the gap is saved in UI preferences.
 - Added Railway/backend volume-aware project config defaults: mounted `/data` storage is used for runtime config, default `.zs` scripts, admin backups, generated mod atlases, and shared recipe draft templates.
@@ -25,6 +27,7 @@
 - Made `Файлы рецептов` download/upload actions operate on uploaded `.zs` files instead of the currently edited recipe, with overwrite/merge/cancel handling for cloud filename conflicts.
 - Optimized held item cursor movement so mouse tracking updates the cursor DOM node with `requestAnimationFrame` instead of re-rendering the whole React app on every pointer move.
 - Connected generated mod icon atlases to itempanel/NEI display matching and removed the admin preview cap so all generated icons are visible.
+- Packed uploaded mod icon ZIPs into shared per-size atlas pages, filling one atlas before creating the next instead of generating separate underfilled atlases per mod.
 - Replaced the browser path prompt for `Выгрузить в Облако` with a controlled filename modal and restricted recipe save-as writes to safe `.zs` filenames inside `scripts_dir`.
 - Reworked `Файлы рецептов` uploads with checkbox multi-select actions for downloading/deleting selected `.zs` drafts and renamed the cloud upload action to `Выгрузить в Облако`.
 - Corrected admin mod icon ZIP handling to accept archives named like `modid_x32.zip` / `modid_x256.zip` with PNG files inside, generating per-mod atlas pages from all contained icons.

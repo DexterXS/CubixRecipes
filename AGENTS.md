@@ -262,6 +262,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Added NEI/itempanel icon catalog as the primary icon resolver source and filtered bad dump icons before UI display.
 - Frontend workspace now uses task tabs and a theme toggle; texture-cache actions live in the items tab instead of the global header.
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.
+- Added a wipe-update workflow, backend combined item catalog from itempanel CSV/NBT/icon data, and shared per-size mod icon atlas packing.
 
 ### Known Issues
 - Resolver heuristics not fully implemented.

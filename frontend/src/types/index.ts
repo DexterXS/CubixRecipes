@@ -101,6 +101,24 @@ export interface ItemPanelAtlas {
   entries: Record<string, ItemPanelAtlasEntry>;
 }
 
+export interface ItemCatalogEntry {
+  key: string;
+  legacy_id: number | null;
+  meta: number;
+  has_nbt: boolean;
+  display_ru: string;
+  display_en: string;
+  raw: string;
+  nbt_raw?: string | null;
+  has_icon: boolean;
+  sources: string[];
+}
+
+export interface ItemCatalogResponse {
+  entries: ItemCatalogEntry[];
+  summary: Record<string, unknown>;
+}
+
 export type UserRole = 'admin' | 'moderator' | 'default';
 
 export interface AuthUser {

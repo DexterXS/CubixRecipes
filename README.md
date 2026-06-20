@@ -6,6 +6,8 @@ CubixRecipes — локальное русскоязычное веб-прило
 - Парсинг `recipes.addShaped(...)` и `mods.avaritia.ExtremeCrafting.addShaped(...)`, включая как матрицу `[[...]]`, так и строковый pattern+key синтаксис.
 - Поддержка `null`, meta, wildcard `*`, legacy и 1.12 name-синтаксиса.
 - Clipboard/parser now also normalizes literal escaped whitespace sequences like `\n` and `\t`, so recipes pasted from chats/forums parse correctly.
+- The technical panel includes a step-by-step wipe update window for itempanel CSV, mod icon ZIPs, atlas generation, and `itempanel.nbt` upload.
+- NEI now prefers a backend combined item catalog built from `itempanel.csv`, icon availability, and gzip/binary `itempanel.nbt` stacks; NBT variants are exposed as `.withTag(...)` item entries.
 - Входное поле теперь автоматически парсит вставленный или вручную введённый `addShaped(...)` текст, а отдельная кнопка `Парсить` запускает тот же сценарий вручную.
 - При редактировании и сохранении обычных shaped-рецептов backend автоматически обрезает пустую рамку, пересчитывает размер сетки и сохраняет только реально используемые клетки; extreme-рецепты стабильно остаются 9×9.
 - Если backend недоступен, поле ввода показывает явное inline-сообщение с двумя адресами: локальный `/api` frontend и текущий `VITE_BACKEND_TARGET` для dev proxy, чтобы не путались frontend-port и backend-port.

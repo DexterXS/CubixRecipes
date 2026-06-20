@@ -160,6 +160,36 @@ beforeEach(() => {
 
   global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
+    if (url === '/api/itempanel/catalog') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          entries: [
+            { key: 'minecraft:planks', legacy_id: 5, meta: 0, has_nbt: false, display_ru: 'Р”СѓР±РѕРІС‹Рµ РґРѕСЃРєРё', display_en: 'Oak Planks', raw: '<minecraft:planks>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
+            { key: 'minecraft:stick', legacy_id: 280, meta: 0, has_nbt: false, display_ru: 'РџР°Р»РєР°', display_en: 'Stick', raw: '<minecraft:stick>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
+            { key: 'examplemod:item', legacy_id: 9000, meta: 0, has_nbt: false, display_ru: 'First icon', display_en: 'First icon', raw: '<examplemod:item>', nbt_raw: null, has_icon: false, sources: ['csv'] }
+          ],
+          summary: { entries: 3, csv_entries: 3, nbt_entries: 0, unmatched_nbt_items: 0 }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/itempanel/atlas') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          image_url: '/api/itempanel/atlas.png',
+          tile_size: 32,
+          columns: 1,
+          rows: 2,
+          entries: {
+            '<minecraft:planks>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Р”СѓР±РѕРІС‹Рµ РґРѕСЃРєРё', item_key: 'minecraft:planks', meta: 0 },
+            '<minecraft:stick>': { x: 0, y: 32, w: 32, h: 32, display_name: 'РџР°Р»РєР°', item_key: 'minecraft:stick', meta: 0 }
+          }
+        })
+      }) as Promise<Response>;
+    }
     if (url === '/itempanel.csv') {
       const csv = [
         'key,id,meta,has_nbt,display_ru,display_en',
@@ -354,6 +384,17 @@ beforeEach(() => {
               '<minecraft:planks>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Дубовые доски', item_key: 'minecraft:planks', meta: 0 }
             }
           }
+        })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/itempanel/nbt') && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          path: 'itempanel.nbt',
+          summary: { entries: 4, csv_entries: 3, nbt_items: 1, nbt_entries: 1, unmatched_nbt_items: 0 }
         })
       }) as Promise<Response>;
     }
@@ -643,6 +684,21 @@ test('admin mod icons tab shows archive and atlas status', async () => {
   expect(await screen.findByText('examplemod_x32.zip')).toBeTruthy();
   expect(await screen.findByText('Иконок')).toBeTruthy();
   expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
+});
+
+test('wipe update modal exposes csv icons atlas and nbt steps', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
+
+  const dialog = screen.getByRole('dialog', { name: 'Обновление вайпа' });
+  expect(within(dialog).getByText('1. itempanel.csv')).toBeTruthy();
+  expect(within(dialog).getByText('2. Иконки')).toBeTruthy();
+  expect(within(dialog).getByText('3. Атласы')).toBeTruthy();
+  expect(within(dialog).getByText('4. itempanel.nbt')).toBeTruthy();
+  expect(within(dialog).getByText('5. Проверка каталога')).toBeTruthy();
 });
 
 test('NEI uses generated mod icon atlas entries matched by itempanel display name', async () => {

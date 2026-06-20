@@ -1,4 +1,5 @@
 import asyncio
+import gzip
 import json
 from pathlib import Path
 from zipfile import ZipFile
@@ -33,6 +34,29 @@ def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: 
     )
 
 
+def _nbt_name(value: str) -> bytes:
+    raw = value.encode('utf-8')
+    return struct.pack('>H', len(raw)) + raw
+
+
+def _nbt_tag(tag_type: int, name: str, payload: bytes) -> bytes:
+    return bytes([tag_type]) + _nbt_name(name) + payload
+
+
+def _itempanel_nbt_bytes() -> bytes:
+    item_tag = _nbt_tag(3, 'energy', struct.pack('>i', 25)) + b'\x00'
+    stack = (
+        _nbt_tag(2, 'id', struct.pack('>h', 475))
+        + _nbt_tag(1, 'Count', struct.pack('>b', 1))
+        + _nbt_tag(2, 'Damage', struct.pack('>h', 0))
+        + _nbt_tag(10, 'tag', item_tag)
+        + b'\x00'
+    )
+    list_payload = bytes([10]) + struct.pack('>i', 1) + stack
+    root = bytes([10]) + _nbt_name('') + _nbt_tag(9, 'list', list_payload) + b'\x00'
+    return gzip.compress(root)
+
+
 def test_health_endpoint_is_available(tmp_path: Path):
     app = create_app(str(tmp_path))
     health_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/health')
@@ -55,6 +79,31 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     assert '<minecraft:stone>' in manifest['entries']
     assert png_response.media_type == 'image/png'
     assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
+
+
+def test_itempanel_catalog_and_nbt_upload_routes_are_available(tmp_path: Path):
+    (tmp_path / 'itempanel.csv').write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'mod:charged,475,0,false,Charged Cell\n',
+        encoding='utf-8',
+    )
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/nbt')
+    catalog_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/catalog')
+
+    class BodyRequest:
+        headers = {}
+
+        async def body(self):
+            return _itempanel_nbt_bytes()
+
+    uploaded = asyncio.run(upload_route(BodyRequest(), filename='itempanel.nbt'))
+    catalog = catalog_route()
+    raws = {entry['raw'] for entry in catalog['entries']}
+
+    assert uploaded['ok'] is True
+    assert uploaded['summary']['nbt_items'] == 1
+    assert '<mod:charged>.withTag({energy: 25})' in raws
 
 
 def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Path):
@@ -136,7 +185,7 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     assert uploaded['archive']['name'] == 'examplemod_x32.zip'
     assert generated['manifest']['totalMods'] == 1
     assert generated['manifest']['totalIcons'] == 2
-    assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-examplemod-x32-1.png'
+    assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-x32-1.png'
     assert generated['manifest']['atlases'][0]['image_url'].startswith('/api/mod-icons/atlases/')
     assert generated['manifest']['entries']['x32']['examplemod/First icon']['w'] == 32
     assert generated['manifest']['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
@@ -145,6 +194,40 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     assert atlas_response.body.startswith(b'\x89PNG')
     assert public_atlas_response.media_type == 'image/png'
     assert public_atlas_response.body.startswith(b'\x89PNG')
+
+
+def test_admin_mod_icon_atlas_packs_multiple_mods_into_one_page(tmp_path: Path):
+    icon_path = tmp_path / 'icon.png'
+    _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    first_archive = tmp_path / 'firstmod_x32.zip'
+    second_archive = tmp_path / 'secondmod_x32.zip'
+    with ZipFile(first_archive, 'w') as archive:
+        archive.write(icon_path, 'firstmod_x32/First icon.png')
+    with ZipFile(second_archive, 'w') as archive:
+        archive.write(icon_path, 'secondmod_x32/Second icon.png')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
+    generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate')
+
+    class BodyRequest:
+        headers = {}
+
+        def __init__(self, path: Path) -> None:
+            self.path = path
+
+        async def body(self):
+            return self.path.read_bytes()
+
+    asyncio.run(upload_route(BodyRequest(first_archive), filename='firstmod_x32.zip', replace=False))
+    asyncio.run(upload_route(BodyRequest(second_archive), filename='secondmod_x32.zip', replace=False))
+    generated = generate_route()['manifest']
+
+    assert generated['totalMods'] == 2
+    assert len(generated['atlases']) == 1
+    assert generated['atlases'][0]['file'] == 'mod-icons-x32-1.png'
+    assert generated['entries']['x32']['firstmod/First icon']['atlasFile'] == 'mod-icons-x32-1.png'
+    assert generated['entries']['x32']['secondmod/Second icon']['atlasFile'] == 'mod-icons-x32-1.png'
 
 
 def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):

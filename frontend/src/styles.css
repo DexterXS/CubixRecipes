@@ -69,6 +69,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .file-drop-zone input { display: none; }
 .file-drop-zone strong { font-size: 16px; }
 .file-drop-zone span { color: var(--muted); font-size: 12px; }
+.compact-drop-zone { min-height: 96px; padding: 14px; }
 .uploaded-drafts-list { display: grid; gap: 6px; max-height: 210px; overflow: auto; }
 .uploaded-draft-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; padding: 2px 4px; }
 .uploaded-draft-select-all { display: inline-flex; align-items: center; gap: 8px; color: var(--text); cursor: pointer; }
@@ -410,6 +411,8 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .compact-header .panel-header { padding-top: 10px; }
 .compact-header .panel-body { padding-top: 10px; padding-bottom: 10px; }
 .modal-backdrop { position: fixed; inset: 0; z-index: 3000; background: rgba(2, 6, 23, 0.74); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.wipe-update-modal { width: min(980px, 96vw); max-height: min(900px, 94vh); overflow: auto; }
+.wipe-update-steps { grid-template-columns: repeat(2, minmax(280px, 1fr)); align-items: start; }
 .modal { position: relative; z-index: 3001; width: min(720px, 100%); background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
 .modal-scalable { zoom: var(--modal-scale, 1); max-height: min(92vh, calc(96vh / var(--modal-scale, 1))); overflow: auto; resize: both; min-width: 420px; min-height: 220px; }
 .craft-editor-modal { width: min(860px, 96vw); }
@@ -455,7 +458,7 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .nbt-node-block { display: grid; gap: 8px; width: 100%; padding: 8px; border: 1px solid color-mix(in srgb, var(--border) 80%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 64%, transparent); }
 .nbt-children { display: grid; gap: 8px; padding-left: 14px; border-left: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); }
 .nbt-list-index { font-size: 12px; color: var(--muted); align-self: center; }
-@media (max-width: 1280px) { .workspace-layout, .debug-shell { grid-template-columns: minmax(0, 1fr); } .workspace-right, .debug-sidebar { position: static; grid-column: auto; } .recipe-builder-controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); } .nbt-entry-line { grid-template-columns: 1fr; } .modal-nbt-tree { min-width: 420px; width: min(96vw, 96vw); } }
+@media (max-width: 1280px) { .workspace-layout, .debug-shell, .wipe-update-steps { grid-template-columns: minmax(0, 1fr); } .workspace-right, .debug-sidebar { position: static; grid-column: auto; } .recipe-builder-controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); } .nbt-entry-line { grid-template-columns: 1fr; } .modal-nbt-tree { min-width: 420px; width: min(96vw, 96vw); } }
 @media (max-width: 900px) { .workspace-layout, .debug-shell { grid-template-columns: 1fr; } .workspace-right { grid-column: auto; } .cloud-storage-path, .recipe-builder-controls, .draft-filter-grid, .draft-preview-header, .draft-template-card-head, .debug-log-event-head, .case-alias-log-upload, .case-alias-manual-form, .case-alias-missing-list .admin-file-row { grid-template-columns: 1fr; } .recipe-panel-actions, .history-nav, .similar-recipe-nav, .similar-recipe-nav .inline-actions { width: 100%; justify-content: stretch; } .history-button, .similar-recipe-nav button { flex: 1; min-width: 0; } .recipe-actions-menu, .recipe-actions-menu summary { width: 100%; } .recipe-actions-popover { position: static; width: 100%; margin-top: 8px; } .utility-bar, .field-header, .output-title-row { flex-direction: column; align-items: stretch; } .main-tabs, .utility-actions { width: 100%; flex-wrap: wrap; } .main-tabs { justify-content: stretch; } .main-tab-button { flex: 1; } .output-card { grid-template-columns: 1fr; } }
 
 .inline-status { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(15, 23, 42, .7); }

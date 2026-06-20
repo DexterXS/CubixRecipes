@@ -26,6 +26,7 @@ from app.debug.log_service import DebugLogService
 from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
+from app.items.item_catalog import ItemCatalogService
 from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
@@ -114,6 +115,22 @@ def _project_root_for_catalog(config_service: ProjectConfigService) -> Path:
     if (config_root / 'itempanel.csv').is_file() or (config_root / 'itempanel_icons').is_dir():
         return config_root
     return Path(__file__).resolve().parents[3]
+
+
+def _itempanel_nbt_path_for_catalog(project_root: Path, active_scripts_dir: str) -> Path:
+    scripts_path = Path(active_scripts_dir).expanduser().resolve(strict=False)
+    scripts_dump = scripts_path.parent / 'dumps' / 'itempanel.nbt'
+    candidates = [
+        scripts_dump,
+        project_root / 'dumps' / 'itempanel.nbt',
+        project_root / 'itempanel.nbt',
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    if active_scripts_dir != 'scripts':
+        return scripts_dump
+    return project_root / 'itempanel.nbt'
 
 
 def _has_itempanel_icon_catalog(catalog: ItemPanelIconCatalog) -> bool:
@@ -256,6 +273,12 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     project_root = _project_root_for_catalog(config_service)
     itempanel_icon_catalog = ItemPanelIconCatalog(project_root / 'itempanel.csv', project_root / 'itempanel_icons')
     itempanel_icon_catalog.scan()
+    item_catalog_service = ItemCatalogService(
+        itempanel_icon_catalog.csv_path,
+        _itempanel_nbt_path_for_catalog(project_root, active_scripts_dir),
+        itempanel_icon_catalog,
+    )
+    item_catalog_service.scan()
     admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
     storage.excluded_managed_roots = [admin_data_dir]
     access_control_store = AccessControlStore(admin_data_dir / 'access_control.json')
@@ -283,6 +306,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         'scripts_dir': active_scripts_dir,
         'verbose_debug_logging': config.verbose_debug_logging,
         'itempanel_icon_catalog': itempanel_icon_catalog.last_scan_report,
+        'item_catalog': item_catalog_service.last_scan_report,
     })
 
     router = APIRouter(prefix='/api')
@@ -434,8 +458,32 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
         itempanel_icon_catalog.scan()
-        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel CSV uploaded', {'path': str(target), 'scan': itempanel_icon_catalog.last_scan_report})
-        return {'ok': True, 'path': str(target), 'scan': itempanel_icon_catalog.last_scan_report, 'atlas': itempanel_icon_catalog.get_atlas_manifest()}
+        item_catalog_service.scan()
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel CSV uploaded', {
+            'path': str(target),
+            'scan': itempanel_icon_catalog.last_scan_report,
+            'catalog': item_catalog_service.last_scan_report,
+        })
+        return {
+            'ok': True,
+            'path': str(target),
+            'scan': itempanel_icon_catalog.last_scan_report,
+            'catalog_summary': item_catalog_service.last_scan_report,
+            'atlas': itempanel_icon_catalog.get_atlas_manifest(),
+        }
+
+    @router.post('/admin/itempanel/nbt')
+    async def admin_upload_itempanel_nbt(request: Request, filename: str = ''):
+        upload_name = filename or request.headers.get('x-itempanel-filename', '')
+        if upload_name and not upload_name.lower().endswith('.nbt'):
+            raise HTTPException(status_code=400, detail='Only .nbt itempanel files are supported')
+        content = await request.body()
+        try:
+            summary = item_catalog_service.upload_nbt(content)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel NBT uploaded', {'path': str(item_catalog_service.nbt_path), 'catalog': summary})
+        return {'ok': True, 'path': str(item_catalog_service.nbt_path), 'summary': summary}
 
     @router.post('/admin/mod-icons/archive')
     async def admin_upload_mod_icons_archive(request: Request, filename: str = '', replace: bool = False):
@@ -843,6 +891,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=403, detail=str(exc)) from exc
         return {'ok': True}
 
+    @router.get('/itempanel/catalog')
+    def itempanel_catalog():
+        return item_catalog_service.to_api()
+
     @router.get('/itempanel/atlas')
     def itempanel_atlas_manifest():
         return itempanel_icon_catalog.get_atlas_manifest()
@@ -867,6 +919,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         log_service.set_verbose(updated.verbose_debug_logging)
         storage.scripts_dir = Path(updated.scripts_dir)
         storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(updated))
+        itempanel_icon_catalog.scan()
+        item_catalog_service.nbt_path = _itempanel_nbt_path_for_catalog(project_root, updated.scripts_dir)
+        item_catalog_service.scan()
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)
         if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):

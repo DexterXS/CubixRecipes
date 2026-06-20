@@ -223,74 +223,68 @@ class ModIconAtlasService:
         atlases: list[dict[str, Any]] = []
         manifest_entries: dict[str, Any] = {}
         rejected: list[dict[str, str]] = []
-        by_mod: dict[str, list[ModIconSource]] = {}
-        for source in sources:
-            by_mod.setdefault(source.modid, []).append(source)
+        ordered_sources = sorted(sources, key=lambda item: (item.modid, item.icon_name.lower(), item.entry_name.lower()))
+        for page_index, start in enumerate(range(0, len(ordered_sources), capacity), start=1):
+            page_sources = ordered_sources[start:start + capacity]
+            columns = max_columns
+            rows = max(1, math.ceil(len(page_sources) / columns))
+            atlas_width = columns * tile_size
+            atlas_height = rows * tile_size
+            atlas = bytearray(atlas_width * atlas_height * 4)
+            atlas_filename = f'mod-icons-x{size}-{page_index}.png'
+            atlas_entries: dict[str, Any] = {}
 
-        for modid in sorted(by_mod):
-            ordered_sources = sorted(by_mod[modid], key=lambda item: item.icon_name.lower())
-            for page_index, start in enumerate(range(0, len(ordered_sources), capacity), start=1):
-                page_sources = ordered_sources[start:start + capacity]
-                columns = min(max_columns, max(1, math.ceil(math.sqrt(len(page_sources)))))
-                rows = max(1, math.ceil(len(page_sources) / columns))
-                atlas_width = columns * tile_size
-                atlas_height = rows * tile_size
-                atlas = bytearray(atlas_width * atlas_height * 4)
-                atlas_filename = f'mod-icons-{modid}-x{size}-{page_index}.png'
-                atlas_entries: dict[str, Any] = {}
-
-                for index, source in enumerate(page_sources):
-                    x = (index % columns) * tile_size
-                    y = (index // columns) * tile_size
-                    try:
-                        icon_width, icon_height, icon_rows = self._png_tools.read_png_rgba_bytes(source.content)
-                        if icon_width > tile_size or icon_height > tile_size:
-                            icon_width, icon_height, icon_rows = self._png_tools._resize_nearest_rgba(icon_width, icon_height, icon_rows, tile_size)
-                        offset_x = x + (tile_size - icon_width) // 2
-                        offset_y = y + (tile_size - icon_height) // 2
-                        self._png_tools._blit_rgba(atlas, atlas_width, icon_rows, icon_width, icon_height, offset_x, offset_y)
-                    except Exception as exc:
-                        rejected.append({
-                            'key': source.key,
-                            'modid': source.modid,
-                            'iconName': source.icon_name,
-                            'size': f'x{size}',
-                            'archive': source.archive_name,
-                            'entry': source.entry_name,
-                            'reason': f'{exc.__class__.__name__}: {exc}',
-                        })
-                        continue
-
-                    entry = {
+            for index, source in enumerate(page_sources):
+                x = (index % columns) * tile_size
+                y = (index // columns) * tile_size
+                try:
+                    icon_width, icon_height, icon_rows = self._png_tools.read_png_rgba_bytes(source.content)
+                    if icon_width > tile_size or icon_height > tile_size:
+                        icon_width, icon_height, icon_rows = self._png_tools._resize_nearest_rgba(icon_width, icon_height, icon_rows, tile_size)
+                    offset_x = x + (tile_size - icon_width) // 2
+                    offset_y = y + (tile_size - icon_height) // 2
+                    self._png_tools._blit_rgba(atlas, atlas_width, icon_rows, icon_width, icon_height, offset_x, offset_y)
+                except Exception as exc:
+                    rejected.append({
                         'key': source.key,
                         'modid': source.modid,
                         'iconName': source.icon_name,
-                        'entryName': source.entry_name,
-                        'size': size,
-                        'page': page_index,
-                        'atlasFile': atlas_filename,
-                        'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
-                        'x': x,
-                        'y': y,
-                        'w': tile_size,
-                        'h': tile_size,
-                    }
-                    atlas_entries[source.key] = entry
-                    manifest_entries[source.key] = entry
-
-                if atlas_entries:
-                    (self.atlases_dir / atlas_filename).write_bytes(self._png_tools._encode_rgba_png(atlas_width, atlas_height, atlas))
-                    atlases.append({
-                        'modid': modid,
-                        'size': size,
-                        'page': page_index,
-                        'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
-                        'file': atlas_filename,
-                        'columns': columns,
-                        'rows': rows,
-                        'tileSize': tile_size,
-                        'entries': atlas_entries,
+                        'size': f'x{size}',
+                        'archive': source.archive_name,
+                        'entry': source.entry_name,
+                        'reason': f'{exc.__class__.__name__}: {exc}',
                     })
+                    continue
+
+                entry = {
+                    'key': source.key,
+                    'modid': source.modid,
+                    'iconName': source.icon_name,
+                    'entryName': source.entry_name,
+                    'size': size,
+                    'page': page_index,
+                    'atlasFile': atlas_filename,
+                    'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
+                    'x': x,
+                    'y': y,
+                    'w': tile_size,
+                    'h': tile_size,
+                }
+                atlas_entries[source.key] = entry
+                manifest_entries[source.key] = entry
+
+            if atlas_entries:
+                (self.atlases_dir / atlas_filename).write_bytes(self._png_tools._encode_rgba_png(atlas_width, atlas_height, atlas))
+                atlases.append({
+                    'size': size,
+                    'page': page_index,
+                    'image_url': f"/api/mod-icons/atlases/{quote(atlas_filename)}",
+                    'file': atlas_filename,
+                    'columns': columns,
+                    'rows': rows,
+                    'tileSize': tile_size,
+                    'entries': atlas_entries,
+                })
 
         return atlases, manifest_entries, rejected
 

@@ -5,10 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelNbt, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -84,6 +84,9 @@ type ItemPanelEntry = {
   hasNbt: boolean;
   displayRu: string;
   displayEn: string;
+  nbtRaw?: string | null;
+  hasIcon?: boolean;
+  sources?: string[];
   raw?: string;
   customItemId?: number;
   customScope?: 'global' | 'user';
@@ -327,6 +330,9 @@ const fallbackAuthUser: AuthUser = {
 function itemPanelEntryIdentity(entry: ItemPanelEntry): string {
   if (entry.customItemId !== undefined) {
     return `custom:${entry.customItemId}:${entry.raw ?? ''}`;
+  }
+  if (entry.raw && entry.nbtRaw) {
+    return `raw:${entry.raw}`;
   }
   return `${entry.key}:${entry.meta}`;
 }
@@ -789,6 +795,21 @@ function buildItemRawValue(key: string, meta: number, nbtRaw?: string): string {
 
 function itemPanelRaw(entry: ItemPanelEntry): string {
   return entry.raw ?? buildItemRawValue(entry.key, entry.meta);
+}
+
+function itemCatalogEntryToPanelEntry(entry: ItemCatalogEntry): ItemPanelEntry {
+  return {
+    key: entry.key,
+    legacyId: entry.legacy_id,
+    meta: entry.meta,
+    hasNbt: entry.has_nbt,
+    displayRu: entry.display_ru,
+    displayEn: entry.display_en,
+    raw: entry.raw,
+    nbtRaw: entry.nbt_raw ?? null,
+    hasIcon: entry.has_icon,
+    sources: entry.sources
+  };
 }
 
 function applyItemCaseAliasesToRaw(raw: string, aliases: Record<string, string>): string {
@@ -1376,9 +1397,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [modIconStatus, setModIconStatus] = useState<ModIconAdminStatus | null>(null);
   const [modIconMessage, setModIconMessage] = useState('');
   const [itemPanelCsvMessage, setItemPanelCsvMessage] = useState('');
+  const [itemPanelNbtMessage, setItemPanelNbtMessage] = useState('');
+  const [itemCatalogSummary, setItemCatalogSummary] = useState<Record<string, unknown> | null>(null);
   const [modIconUploading, setModIconUploading] = useState(false);
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
+  const [itemPanelNbtUploading, setItemPanelNbtUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
+  const [isWipeUpdateOpen, setIsWipeUpdateOpen] = useState(false);
   const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
   const [itemCaseAliasStatus, setItemCaseAliasStatus] = useState('');
   const [itemCaseAliasGenerating, setItemCaseAliasGenerating] = useState(false);
@@ -1573,6 +1598,27 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function applyItemPanelEntries(entries: ItemPanelEntry[], summary?: Record<string, unknown>) {
+    const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
+    const uniqueEntries = dedupeItemPanelEntries(entries);
+    setItemPanelTranslations(buildItemPanelTranslationsFromEntries(uniqueEntries, fallbackToFirstMeta));
+    if (summary) {
+      setItemCatalogSummary(summary);
+    }
+    try {
+      window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries: uniqueEntries, summary: summary ?? null }));
+    } catch {
+      // Cache persistence is best-effort.
+    }
+  }
+
+  async function refreshItemCatalogTranslations(): Promise<Record<string, unknown>> {
+    const payload = await getItemCatalog();
+    const entries = payload.entries.map(itemCatalogEntryToPanelEntry);
+    applyItemPanelEntries(entries, payload.summary);
+    return payload.summary;
+  }
+
   async function refreshModIconStatus() {
     if (!canManageModIcons) return;
     setModIconMessage('Загружаю статус иконок...');
@@ -1637,16 +1683,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       const payload = await uploadItemPanelCsv(file);
       setItemPanelAtlas(payload.atlas);
-      setItemPanelCsvMessage(`CSV загружен. Строк: ${String(payload.scan.rows ?? 0)}, найдено иконок: ${String(payload.scan.matched ?? 0)}.`);
-      try {
-        window.localStorage.removeItem(ITEMPANEL_CACHE_KEY);
-      } catch {
-        // Cache invalidation is best-effort.
-      }
+      const summary = await refreshItemCatalogTranslations();
+      setItemPanelCsvMessage(`CSV загружен. Строк: ${String(payload.scan.rows ?? 0)}, найдено иконок: ${String(payload.scan.matched ?? 0)}, каталог: ${String(summary.entries ?? 0)}.`);
     } catch (error) {
       setItemPanelCsvMessage(error instanceof Error ? error.message : String(error));
     } finally {
       setItemPanelCsvUploading(false);
+    }
+  }
+
+  async function handleItemPanelNbtFiles(files: FileList | File[]) {
+    if (!canManageModIcons) return;
+    const file = Array.from(files)[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.nbt')) {
+      setItemPanelNbtMessage('Можно загрузить только itempanel.nbt.');
+      return;
+    }
+    setItemPanelNbtUploading(true);
+    setItemPanelNbtMessage(`Загружаю ${file.name}...`);
+    try {
+      const payload = await uploadItemPanelNbt(file);
+      const summary = await refreshItemCatalogTranslations();
+      setItemPanelNbtMessage(`NBT загружен. Stack-ов: ${String(payload.summary.nbt_items ?? summary.nbt_items ?? 0)}, NBT-вариантов: ${String(summary.nbt_entries ?? 0)}, каталог: ${String(summary.entries ?? 0)}.`);
+    } catch (error) {
+      setItemPanelNbtMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemPanelNbtUploading(false);
     }
   }
 
@@ -2359,13 +2422,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       try {
         const cached = window.localStorage.getItem(ITEMPANEL_CACHE_KEY);
         if (cached) {
-          const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[] };
-          if (Array.isArray(parsed.entries) && parsed.entries.length) {
+          const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
+          if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
             setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
+            setItemCatalogSummary(parsed.summary ?? null);
           }
         }
       } catch {
         // ignore corrupted cache
+      }
+      try {
+        const payload = await getItemCatalog();
+        if (!cancelled && payload.entries.length) {
+          applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
+          return;
+        }
+      } catch {
+        // Fall back to static itempanel.csv below.
       }
       try {
         const response = await fetch('/itempanel.csv');
@@ -2408,13 +2481,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           entries.push(entry);
         });
         if (!cancelled) {
-          const uniqueEntries = dedupeItemPanelEntries(entries);
-          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(uniqueEntries, fallbackToFirstMeta));
-          try {
-            window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries: uniqueEntries }));
-          } catch {
-            // ignore cache persistence errors
-          }
+          applyItemPanelEntries(entries);
         }
       } catch {
         // optional source
@@ -4893,6 +4960,134 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderWipeUpdateModal() {
+    if (!isWipeUpdateOpen) return null;
+    const summary = itemCatalogSummary ?? {};
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => setIsWipeUpdateOpen(false)}>
+        <div className="modal wipe-update-modal" role="dialog" aria-modal="true" aria-label="Обновление вайпа" onClick={(event) => event.stopPropagation()}>
+          <div className="modal-header">
+            <div>
+              <h2>Обновление вайпа</h2>
+              <span className="modal-subtitle">CSV, иконки, атласы и itempanel NBT в один общий каталог</span>
+            </div>
+            <div className="inline-actions">
+              <button type="button" onClick={() => setIsWipeUpdateOpen(false)}>Закрыть</button>
+            </div>
+          </div>
+          <div className="settings-modal-body wipe-update-steps">
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>1. itempanel.csv</h3>
+                <span>Список предметов, legacy ID, meta и локализованные названия.</span>
+              </div>
+              <label
+                className="file-drop-zone compact-drop-zone"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void handleItemPanelCsvFiles(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".csv,text/csv"
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      void handleItemPanelCsvFiles(event.target.files);
+                      event.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <strong>Загрузить itempanel.csv</strong>
+                <span>{itemPanelCsvUploading ? 'Загрузка...' : itemPanelCsvMessage || 'Ожидает CSV из NEI dump.'}</span>
+              </label>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>2. Иконки</h3>
+                <span>ZIP архивы modid_x32.zip или modid_x256.zip с PNG.</span>
+              </div>
+              <label
+                className="file-drop-zone compact-drop-zone"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void handleModIconArchiveFiles(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".zip,application/zip"
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      void handleModIconArchiveFiles(event.target.files);
+                      event.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <strong>Загрузить ZIP иконок</strong>
+                <span>{modIconUploading ? 'Загрузка...' : modIconMessage || 'Можно загрузить несколько архивов по очереди.'}</span>
+              </label>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>3. Атласы</h3>
+                <span>После загрузки ZIP пересоберите атласы для отображения иконок.</span>
+              </div>
+              <div className="inline-actions">
+                <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
+                <span>{modIconGenerating ? 'Генерация...' : `Атласов: ${modIconManifest?.atlases.length ?? modIconStatus?.manifest?.atlases.length ?? 0}`}</span>
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>4. itempanel.nbt</h3>
+                <span>NBT stack-и добавляются в NEI как отдельные raw-варианты с .withTag(...).</span>
+              </div>
+              <label
+                className="file-drop-zone compact-drop-zone"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void handleItemPanelNbtFiles(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".nbt,application/octet-stream"
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      void handleItemPanelNbtFiles(event.target.files);
+                      event.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <strong>Загрузить itempanel.nbt</strong>
+                <span>{itemPanelNbtUploading ? 'Загрузка...' : itemPanelNbtMessage || 'Файл из dumps/itempanel.nbt.'}</span>
+              </label>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>5. Проверка каталога</h3>
+                <span>NEI использует эти данные без перезагрузки страницы.</span>
+              </div>
+              <div className="kv-grid">
+                <div><span>Всего</span><strong>{String(summary.entries ?? itemPanelTranslations.entries.length)}</strong></div>
+                <div><span>CSV</span><strong>{String(summary.csv_entries ?? 0)}</strong></div>
+                <div><span>NBT варианты</span><strong>{String(summary.nbt_entries ?? 0)}</strong></div>
+                <div><span>Не сопоставлено NBT</span><strong>{String(summary.unmatched_nbt_items ?? 0)}</strong></div>
+              </div>
+              <div className="inline-actions">
+                <button type="button" className="ghost-button" onClick={() => void refreshItemCatalogTranslations()}>Обновить каталог</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function renderModIconsPanel() {
     const manifest = modIconStatus?.manifest ?? modIconManifest;
     const atlasEntries = manifest ? [...Object.values(manifest.entries.x32), ...Object.values(manifest.entries.x256)] : [];
@@ -4944,11 +5139,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <span>CSV обновляет каталог предметов для поиска и сопоставления иконок.</span>
               </label>
               <div className="file-actions">
+                <button type="button" className="secondary-button" onClick={() => setIsWipeUpdateOpen(true)}>Обновление вайпа</button>
                 <button type="button" disabled={modIconUploading || itemPanelCsvUploading} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
                 <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
               </div>
               {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
               {itemPanelCsvMessage ? <div className="inline-status inline-status-default">{itemPanelCsvMessage}</div> : null}
+              {itemPanelNbtMessage ? <div className="inline-status inline-status-default">{itemPanelNbtMessage}</div> : null}
               <div className="admin-file-list">
                 {(modIconStatus?.archives ?? []).map((archive) => (
                   <div key={archive.name} className="admin-file-row">
@@ -6267,6 +6464,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderDraftTemplateContextMenu()}
       {renderCloudContextMenu()}
       {renderCustomItemModal()}
+      {renderWipeUpdateModal()}
       {renderRecipeUsesModal()}
       {renderCloudUploadConflictModal()}
       {renderLocalSaveModal()}
