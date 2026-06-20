@@ -143,6 +143,13 @@ function craftOutputRaw(): string | null {
   return screen.getByLabelText('craft-output-slot').getAttribute('data-item-raw');
 }
 
+function todayInputValue(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function openRecipeActions() {
   fireEvent.click(screen.getByText('Действия'));
 }
@@ -970,8 +977,13 @@ test('admin can create compact expandable recipe task cards', async () => {
   const taskPanel = within(panel);
 
   fireEvent.click(taskPanel.getByRole('button', { name: 'Новая задача' }));
-  fireEvent.change(taskPanel.getByLabelText('Предмет'), { target: { value: '<minecraft:planks>' } });
-  fireEvent.change(taskPanel.getByLabelText('Название'), { target: { value: 'Проверить доски' } });
+  expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).value).toBe(todayInputValue());
+  expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).min).toBe(todayInputValue());
+  fireEvent.change(taskPanel.getByLabelText('Предмет'), { target: { value: 'First icon' } });
+  const suggestions = await taskPanel.findByLabelText('task-item-suggestions');
+  fireEvent.mouseDown(within(suggestions).getByText('<examplemod:item>').closest('button') as HTMLElement);
+  expect((taskPanel.getByLabelText('Предмет') as HTMLInputElement).value).toBe('First icon');
+  fireEvent.change(taskPanel.getByLabelText('Название'), { target: { value: 'Проверить предмет' } });
   fireEvent.change(taskPanel.getByLabelText('Приоритет'), { target: { value: 'urgent' } });
   fireEvent.change(taskPanel.getByLabelText('Ответственный'), { target: { value: moderatorUser.email } });
   fireEvent.change(taskPanel.getByLabelText('Дедлайн'), { target: { value: '2026-06-30' } });
@@ -983,6 +995,27 @@ test('admin can create compact expandable recipe task cards', async () => {
 
   fireEvent.click(card);
   expect(await taskPanel.findByText(adminUser.email)).toBeTruthy();
+});
+
+test('admin can start a recipe task from the NEI context menu', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<examplemod:item>');
+
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  fireEvent.click(await screen.findByRole('button', { name: 'Добавить в задачу' }));
+
+  const board = await screen.findByLabelText('recipe-tasks-board');
+  const panel = board.closest('.panel') as HTMLElement;
+  const taskPanel = within(panel);
+  expect((taskPanel.getByLabelText('Предмет') as HTMLInputElement).value).toBe('First icon');
+  expect((taskPanel.getByLabelText('Название') as HTMLInputElement).value).toBe('First icon');
+  expect(taskPanel.getByText('<ExampleMod:Item>')).toBeTruthy();
+
+  fireEvent.click(taskPanel.getByRole('button', { name: 'Создать' }));
+
+  await waitFor(() => expect(mockRecipeTasks.length).toBe(1));
+  expect(mockRecipeTasks[0].itemRaw).toBe('<ExampleMod:Item>');
+  expect(mockRecipeTasks[0].title).toBe('First icon');
 });
 
 test('settings keeps UI/debug controls separate from technical access', async () => {

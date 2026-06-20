@@ -167,6 +167,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .task-form { display: grid; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 78%, transparent); }
 .task-form-grid { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 10px; align-items: end; }
 .task-form textarea { min-height: 86px; resize: vertical; }
+.task-item-field { position: relative; }
+.task-item-picker { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 7px; align-items: center; }
+.task-item-picker input { min-width: 0; }
+.task-item-picker-icon { width: 32px; height: 32px; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; background: var(--field-bg); color: var(--muted); }
+.task-item-picker-icon:empty::before { content: "?"; font-size: 12px; }
+.task-item-picker-icon img,
+.task-item-picker-icon .animated-icon,
+.task-item-picker-icon .output-atlas-icon,
+.task-item-picker-icon .output-mod-atlas-icon { width: 32px; height: 32px; transform: none; object-fit: contain; image-rendering: pixelated; }
+.task-selected-item-raw { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.task-item-suggestions { position: absolute; left: 0; right: 0; top: calc(100% + 5px); z-index: 20; max-height: 280px; overflow: auto; box-shadow: 0 16px 32px var(--shadow); }
 .task-empty-column { min-height: 72px; display: grid; place-items: center; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; }
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
@@ -501,7 +512,10 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .suggestion-item-with-icon { grid-template-columns: 28px minmax(0, 1fr); align-items: center; column-gap: 8px; }
 .suggestion-content { display: grid; gap: 2px; min-width: 0; }
 .suggestion-icon-slot { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); display: grid; place-items: center; font-size: 12px; color: var(--muted); overflow: hidden; }
-.suggestion-icon-slot img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.suggestion-icon-slot img,
+.suggestion-icon-slot .animated-icon,
+.suggestion-icon-slot .output-atlas-icon,
+.suggestion-icon-slot .output-mod-atlas-icon { width: 100%; height: 100%; transform: none; object-fit: contain; image-rendering: pixelated; }
 .suggestion-item strong { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 12px; }
 .suggestion-item span { font-size: 12px; color: var(--muted); }
 .suggestion-item:hover { border-color: #3b82f6; background: rgba(30, 64, 175, 0.28); }
