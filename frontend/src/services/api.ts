@@ -288,7 +288,10 @@ export async function deleteRecipeDraftTemplate(templateId: string): Promise<{ o
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
   try {
-    return await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
+    const backendAtlas = await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
+    if (Object.keys(backendAtlas.entries ?? {}).length > 0) {
+      return backendAtlas;
+    }
   } catch {
     // Fall back to the generated static atlas for offline/dev snapshots.
   }

@@ -4406,7 +4406,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderCraftItemIcon(raw: string, iconUrl?: string | null, animated?: boolean, frameTime?: number, title?: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
     if (modIconStyle) {
       return <span className="cell-atlas-icon output-atlas-icon" style={modIconStyle} aria-hidden="true" />;
     }
@@ -4422,7 +4422,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderHeldItemIcon(raw: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
     if (modIconStyle) {
       return <span className="held-atlas-icon" style={modIconStyle} aria-hidden="true" />;
     }
@@ -4436,6 +4436,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return <img src={iconUrl} alt="" />;
     }
     return <span>?</span>;
+  }
+
+  function getModIconEntryForRaw(raw: string): ModIconAtlasEntry | undefined {
+    const direct = modIconByRaw.get(raw);
+    if (direct) return direct;
+    const parsed = parseItemRaw(raw);
+    if (!parsed) return undefined;
+    const exactRaw = `<${parsed.key}${parsed.meta !== null && parsed.meta > 0 ? `:${parsed.meta}` : ''}>`;
+    return modIconByRaw.get(exactRaw)
+      ?? modIconByRaw.get(`<${parsed.key}>`)
+      ?? modIconByRaw.get(`<${parsed.key}:0>`);
+  }
+
+  function resolveRecipeGridIconStyle(raw: string): CSSProperties | undefined {
+    return buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
   }
 
   function renderRecipeBuilderPanel() {
@@ -4515,6 +4530,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 heldItemRaw={heldItemRaw}
                 tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)}
                 resolveCellTitle={resolveCellTitle}
+                resolveIconStyle={resolveRecipeGridIconStyle}
                 onItemHover={updateHoveredItemRaw}
                 onCellClick={handleCraftCellClick}
                 onCellContextMenu={handleCraftCellContextMenu}
@@ -4846,6 +4862,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     heldItemRaw={null}
                     tooltipsDisabled={false}
                     resolveCellTitle={resolveCellTitle}
+                    resolveIconStyle={resolveRecipeGridIconStyle}
                     onItemHover={updateHoveredItemRaw}
                     onCellClick={() => undefined}
                     onCellContextMenu={() => undefined}
@@ -5524,7 +5541,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderDraftCatalogIcon(raw: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
+    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
     if (modIconStyle) {
       return <span className="nei-atlas-icon" style={modIconStyle} aria-hidden="true" />;
     }
@@ -5621,7 +5638,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     <button type="button" aria-label="edit-selected-draft-template" onClick={() => openRecipeDraftTemplate(activeDraftPreview)}>Редактировать рецепт</button>
                   </div>
                   <div className="draft-preview-grid">
-                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
                   </div>
                 </div>
               ) : null}
@@ -6370,7 +6387,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
                   setMatrixCell(row, col, value);
                 }} />
               </div>

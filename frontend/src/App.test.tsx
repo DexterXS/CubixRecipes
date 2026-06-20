@@ -714,6 +714,25 @@ test('NEI uses generated mod icon atlas entries matched by itempanel display nam
   });
 });
 
+test('craft grid renders generated mod icon atlas entries after placing an NEI item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'examplemod' } });
+  const item = await screen.findByLabelText('nei-item-<examplemod:item>');
+  await waitFor(() => expect(item.querySelector('.nei-atlas-icon')).toBeTruthy());
+
+  fireEvent.click(item);
+  await waitFor(() => expect(document.querySelector('.held-item-cursor')).toBeTruthy());
+  fireEvent.click(screen.getByLabelText('craft-cell-0-0'));
+
+  await waitFor(() => {
+    const slot = screen.getByLabelText('craft-cell-0-0');
+    const icon = slot.querySelector('.cell-atlas-icon') as HTMLElement | null;
+    expect(icon).toBeTruthy();
+    expect(icon?.style.backgroundImage).toContain('mod-icons-examplemod-x32-1.png');
+  });
+});
+
 test('technical panel shows item case aliases and saves manual values', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 

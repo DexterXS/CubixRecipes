@@ -15,6 +15,7 @@ interface Props {
   onCellClick: (row: number, col: number) => void;
   onCellContextMenu: (row: number, col: number) => void;
   resolveCellTitle: (raw: string) => string;
+  resolveIconStyle?: (raw: string) => CSSProperties | undefined;
   onCellDrop?: (row: number, col: number, value: string) => void;
   onItemHover?: (raw: string | null) => void;
   extremeGroupGap?: number;
@@ -50,6 +51,7 @@ export function RecipeGrid({
   onCellClick,
   onCellContextMenu,
   resolveCellTitle,
+  resolveIconStyle,
   onCellDrop,
   onItemHover,
   extremeGroupGap = 8
@@ -175,8 +177,9 @@ export function RecipeGrid({
             const isInvalid = !isEmpty && !String(raw).startsWith('<');
             const value = isEmpty ? '' : String(raw);
             const iconUrl = cell?.resolution?.icon_url ?? null;
+            const externalAtlasStyle = value ? resolveIconStyle?.(value) : undefined;
             const atlasEntry = value ? resolveAtlasEntry(value) : undefined;
-            const atlasStyle = atlas && atlasEntry && atlasImageUrl
+            const atlasStyle = !externalAtlasStyle && atlas && atlasEntry && atlasImageUrl
               ? {
                 backgroundImage: `url(${atlasImageUrl})`,
                 backgroundPosition: `-${atlasEntry.x}px -${atlasEntry.y}px`,
@@ -237,11 +240,12 @@ export function RecipeGrid({
               >
                 <div className="cell-visual">
                   <div className="cell-icon-slot" aria-label={`craft-cell-${rowIndex}-${colIndex}`} title={tooltipsDisabled ? undefined : title}>
+                    {externalAtlasStyle ? <span className="cell-atlas-icon" style={externalAtlasStyle} aria-hidden="true" /> : null}
                     {atlasStyle ? <span className="cell-atlas-icon" style={atlasStyle} aria-hidden="true" /> : null}
-                    {!atlasStyle && iconUrl
+                    {!externalAtlasStyle && !atlasStyle && iconUrl
                       ? <AnimatedIcon iconUrl={iconUrl} alt={title} animated={Boolean(cell.resolution?.animated)} frameTime={cell.resolution?.animation_meta?.frametime ?? 1} animationsEnabled={animationsEnabled} />
                       : null}
-                    {!atlasStyle && !iconUrl ? <span aria-hidden="true">{isEmpty ? '' : '?'}</span> : null}
+                    {!externalAtlasStyle && !atlasStyle && !iconUrl ? <span aria-hidden="true">{isEmpty ? '' : '?'}</span> : null}
                   </div>
                 </div>
                 <input
