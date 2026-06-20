@@ -165,6 +165,11 @@ class AccessControlRequest(BaseModel):
     whitelist_emails: list[str] = Field(default_factory=list, max_length=500)
 
 
+class ItemCaseAliasManualRequest(BaseModel):
+    lower_key: str = Field(min_length=1, max_length=255)
+    original: str = Field(min_length=1, max_length=255)
+
+
 class DebugLogEventRequest(BaseModel):
     source: str = 'FRONTEND'
     level: str = 'INFO'

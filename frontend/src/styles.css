@@ -93,6 +93,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .admin-file-button:hover { filter: none; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--field-bg)); }
 .case-alias-paths { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }
 .case-alias-paths code { color: var(--text); overflow-wrap: anywhere; }
+.case-alias-manual-form { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) auto; gap: 10px; align-items: end; }
+.case-alias-table-wrap { max-height: 360px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
+.case-alias-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.case-alias-table th,
+.case-alias-table td { padding: 8px 10px; border-bottom: 1px solid color-mix(in srgb, var(--border) 78%, transparent); text-align: left; vertical-align: top; }
+.case-alias-table th { position: sticky; top: 0; z-index: 1; background: var(--panel); color: var(--muted); font-weight: 700; }
+.case-alias-table td { overflow-wrap: anywhere; }
+.case-alias-table code { color: var(--text); }
+.case-alias-source { display: inline-flex; align-items: center; min-height: 22px; padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; font-size: 11px; line-height: 1; }
+.case-alias-source-auto { color: #bfdbfe; background: color-mix(in srgb, #2563eb 18%, transparent); border-color: color-mix(in srgb, #60a5fa 42%, var(--border)); }
+.case-alias-source-manual { color: #bbf7d0; background: color-mix(in srgb, #16a34a 18%, transparent); border-color: color-mix(in srgb, #22c55e 42%, var(--border)); }
 .missing-mod-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
 .case-alias-missing-list .admin-file-row { grid-template-columns: minmax(0, 1fr) minmax(120px, 220px); }
 .case-alias-missing-list strong,
@@ -434,7 +445,7 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .nbt-children { display: grid; gap: 8px; padding-left: 14px; border-left: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); }
 .nbt-list-index { font-size: 12px; color: var(--muted); align-self: center; }
 @media (max-width: 1280px) { .workspace-layout, .debug-shell { grid-template-columns: minmax(0, 1fr); } .workspace-right, .debug-sidebar { position: static; grid-column: auto; } .recipe-builder-controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); } .nbt-entry-line { grid-template-columns: 1fr; } .modal-nbt-tree { min-width: 420px; width: min(96vw, 96vw); } }
-@media (max-width: 900px) { .workspace-layout, .debug-shell { grid-template-columns: 1fr; } .workspace-right { grid-column: auto; } .recipe-builder-controls, .draft-filter-grid, .draft-preview-header, .draft-template-card-head, .debug-log-event-head, .case-alias-missing-list .admin-file-row { grid-template-columns: 1fr; } .recipe-panel-actions, .history-nav, .similar-recipe-nav, .similar-recipe-nav .inline-actions { width: 100%; justify-content: stretch; } .history-button, .similar-recipe-nav button { flex: 1; min-width: 0; } .recipe-actions-menu, .recipe-actions-menu summary { width: 100%; } .recipe-actions-popover { position: static; width: 100%; margin-top: 8px; } .utility-bar, .field-header, .output-title-row { flex-direction: column; align-items: stretch; } .main-tabs, .utility-actions { width: 100%; flex-wrap: wrap; } .main-tabs { justify-content: stretch; } .main-tab-button { flex: 1; } .output-card { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .workspace-layout, .debug-shell { grid-template-columns: 1fr; } .workspace-right { grid-column: auto; } .recipe-builder-controls, .draft-filter-grid, .draft-preview-header, .draft-template-card-head, .debug-log-event-head, .case-alias-manual-form, .case-alias-missing-list .admin-file-row { grid-template-columns: 1fr; } .recipe-panel-actions, .history-nav, .similar-recipe-nav, .similar-recipe-nav .inline-actions { width: 100%; justify-content: stretch; } .history-button, .similar-recipe-nav button { flex: 1; min-width: 0; } .recipe-actions-menu, .recipe-actions-menu summary { width: 100%; } .recipe-actions-popover { position: static; width: 100%; margin-top: 8px; } .utility-bar, .field-header, .output-title-row { flex-direction: column; align-items: stretch; } .main-tabs, .utility-actions { width: 100%; flex-wrap: wrap; } .main-tabs { justify-content: stretch; } .main-tab-button { flex: 1; } .output-card { grid-template-columns: 1fr; } }
 
 .inline-status { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(15, 23, 42, .7); }
 .inline-status strong { white-space: nowrap; }

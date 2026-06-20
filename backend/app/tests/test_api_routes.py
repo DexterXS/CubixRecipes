@@ -8,7 +8,7 @@ import zlib
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
-from app.api.schemas import RecipeDraftTemplateRequest
+from app.api.schemas import ItemCaseAliasManualRequest, RecipeDraftTemplateRequest
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -74,16 +74,24 @@ def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Pat
     app = create_app(str(scripts_dir), config_path=str(tmp_path / 'cubixrecipes.config.json'))
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/generate')
     read_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases')
+    public_read_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/item-case-aliases')
+    manual_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/manual')
 
     generated = generate_route()['report']
     loaded = read_route()['report']
+    public_loaded = public_read_route()['report']
+    manual = manual_route(ItemCaseAliasManualRequest(lower_key='minecraft:cwantgenerator', original='Minecraft:CwantGenerator'))['report']
 
+    assert generated['sourceLabel'] == 'Облако'
     assert generated['summary']['uniqueItemKeys'] == 4
     assert generated['summary']['matchedItemKeys'] == 2
     assert generated['summary']['missingItemKeys'] == 2
     assert generated['itemAliases']['draconicevolution:customspawner'] == 'DraconicEvolution:customSpawner'
     assert generated['entityAliases']['skeleton'] == 'Skeleton'
     assert loaded['summary']['uniqueItemKeys'] == generated['summary']['uniqueItemKeys']
+    assert public_loaded['itemAliases']['draconicevolution:customspawner'] == 'DraconicEvolution:customSpawner'
+    assert manual['manualItemAliases']['minecraft:cwantgenerator'] == 'Minecraft:CwantGenerator'
+    assert manual['itemAliases']['minecraft:cwantgenerator'] == 'Minecraft:CwantGenerator'
 
 
 def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):

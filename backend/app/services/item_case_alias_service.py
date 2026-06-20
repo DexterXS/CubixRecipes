@@ -7,11 +7,13 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 
 ITEM_REF_RE = re.compile(r'<([A-Za-z0-9_.-]+):([A-Za-z0-9_./-]+)(?::([0-9*]+))?>')
+ITEM_KEY_RE = re.compile(r'<?([A-Za-z0-9_.-]+:[A-Za-z0-9_./-]+)(?::[0-9*]+)?>?')
 ENTITY_TAG_RE = re.compile(r'\b(?:mobType|entityId|EntityId|EntityName|entityName)\s*:\s*"([^"]+)"')
+ITEMPANEL_KEY_COLUMNS = ('Item Name', 'item name', 'key', 'item', 'item_key', 'itemKey')
 
 
 @dataclass
@@ -29,6 +31,7 @@ class ItemCaseAliasService:
         self.output_dir = output_dir
         self.aliases_path = output_dir / 'item_case_aliases.json'
         self.report_path = output_dir / 'item_case_aliases_report.json'
+        self.manual_aliases_path = output_dir / 'manual_item_case_aliases.json'
 
     def load_report(self) -> Optional[dict[str, Any]]:
         if not self.report_path.is_file():
@@ -38,12 +41,16 @@ class ItemCaseAliasService:
         except (OSError, json.JSONDecodeError):
             return None
 
-    def build(self) -> dict[str, Any]:
-        item_candidates, total_item_refs, scanned_files = self._collect_item_candidates()
-        entity_candidates, total_entity_refs = self._collect_entity_candidates()
+    def build(self, sources: Optional[Iterable[tuple[str, str]]] = None, source_label: Optional[str] = None) -> dict[str, Any]:
+        source_documents = list(sources) if sources is not None else self._load_path_sources()
+        active_source_label = source_label or str(self.scripts_dir)
+        item_candidates, total_item_refs = self._collect_item_candidates(source_documents)
+        entity_candidates, total_entity_refs = self._collect_entity_candidates(source_documents)
         itempanel_keys = self._read_itempanel_keys()
 
-        item_aliases, item_conflicts = self._build_aliases(item_candidates)
+        auto_item_aliases, item_conflicts = self._build_aliases(item_candidates)
+        manual_item_aliases = self.load_manual_item_aliases()
+        item_aliases = {**auto_item_aliases, **manual_item_aliases}
         entity_aliases, entity_conflicts = self._build_aliases(entity_candidates)
         matched_items: list[dict[str, Any]] = []
         missing_items: list[dict[str, Any]] = []
@@ -64,15 +71,17 @@ class ItemCaseAliasService:
         generated_at = datetime.now(timezone.utc).isoformat()
         summary = {
             'generatedAt': generated_at,
-            'scriptsDir': str(self.scripts_dir),
+            'scriptsDir': active_source_label,
+            'sourceLabel': active_source_label,
             'itempanelCsv': str(self.itempanel_csv),
-            'scriptFiles': scanned_files,
+            'scriptFiles': len(source_documents),
             'scriptItemRefs': total_item_refs,
             'uniqueItemKeys': len(item_candidates),
             'mixedCaseItemAliases': sum(1 for candidate in item_candidates.values() if candidate.original != candidate.lower_key),
             'itempanelKeys': len(itempanel_keys),
             'matchedItemKeys': len(matched_items),
             'missingItemKeys': len(missing_items),
+            'manualItemAliases': len(manual_item_aliases),
             'itemConflicts': len(item_conflicts),
             'scriptEntityRefs': total_entity_refs,
             'uniqueEntityKeys': len(entity_candidates),
@@ -81,10 +90,14 @@ class ItemCaseAliasService:
         report = {
             'ok': True,
             'generatedAt': generated_at,
+            'sourceLabel': active_source_label,
             'aliasesPath': str(self.aliases_path),
             'reportPath': str(self.report_path),
+            'manualAliasesPath': str(self.manual_aliases_path),
             'summary': summary,
             'itemAliases': item_aliases,
+            'autoItemAliases': auto_item_aliases,
+            'manualItemAliases': manual_item_aliases,
             'entityAliases': entity_aliases,
             'matchedItems': matched_items,
             'missingItems': missing_items,
@@ -94,9 +107,11 @@ class ItemCaseAliasService:
         }
         aliases = {
             'generatedAt': generated_at,
-            'sourceScriptsDir': str(self.scripts_dir),
+            'sourceScriptsDir': active_source_label,
             'sourceItempanelCsv': str(self.itempanel_csv),
             'items': item_aliases,
+            'autoItems': auto_item_aliases,
+            'manualItems': manual_item_aliases,
             'entities': entity_aliases,
         }
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -104,13 +119,10 @@ class ItemCaseAliasService:
         self.report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
         return report
 
-    def _collect_item_candidates(self) -> tuple[dict[str, _AliasCandidate], int, int]:
+    def _collect_item_candidates(self, sources: list[tuple[str, str]]) -> tuple[dict[str, _AliasCandidate], int]:
         candidates: dict[str, _AliasCandidate] = {}
         total_refs = 0
-        scanned_files = 0
-        for path in self._iter_zs_files():
-            scanned_files += 1
-            text = self._read_text(path)
+        for source_name, text in sources:
             for match in ITEM_REF_RE.finditer(text):
                 total_refs += 1
                 original = f'{match.group(1)}:{match.group(2)}'
@@ -119,15 +131,14 @@ class ItemCaseAliasService:
                 if candidate is None:
                     candidate = _AliasCandidate(lower_key=lower_key, original=original, files=set(), metas=set())
                     candidates[lower_key] = candidate
-                candidate.files.add(self._script_relative_path(path))
+                candidate.files.add(source_name)
                 candidate.metas.add(match.group(3) if match.group(3) else '0-or-none')
-        return candidates, total_refs, scanned_files
+        return candidates, total_refs
 
-    def _collect_entity_candidates(self) -> tuple[dict[str, _AliasCandidate], int]:
+    def _collect_entity_candidates(self, sources: list[tuple[str, str]]) -> tuple[dict[str, _AliasCandidate], int]:
         candidates: dict[str, _AliasCandidate] = {}
         total_refs = 0
-        for path in self._iter_zs_files():
-            text = self._read_text(path)
+        for source_name, text in sources:
             for match in ENTITY_TAG_RE.finditer(text):
                 original = match.group(1).strip()
                 if not original:
@@ -138,7 +149,7 @@ class ItemCaseAliasService:
                 if candidate is None:
                     candidate = _AliasCandidate(lower_key=lower_key, original=original, files=set(), metas=set())
                     candidates[lower_key] = candidate
-                candidate.files.add(self._script_relative_path(path))
+                candidate.files.add(source_name)
         return candidates, total_refs
 
     def _build_aliases(self, candidates: dict[str, _AliasCandidate]) -> tuple[dict[str, str], list[dict[str, Any]]]:
@@ -175,20 +186,86 @@ class ItemCaseAliasService:
             return set()
         for encoding in ('utf-8-sig', 'cp1251', 'windows-1251'):
             try:
-                with self.itempanel_csv.open('r', encoding=encoding, newline='') as handle:
-                    return {
-                        str(row.get('Item Name', '')).strip().lower()
-                        for row in csv.DictReader(handle)
-                        if str(row.get('Item Name', '')).strip()
-                    }
+                return self._read_itempanel_keys_with_encoding(encoding)
             except UnicodeDecodeError:
                 continue
-        with self.itempanel_csv.open('r', encoding='utf-8', errors='replace', newline='') as handle:
-            return {
-                str(row.get('Item Name', '')).strip().lower()
-                for row in csv.DictReader(handle)
-                if str(row.get('Item Name', '')).strip()
-            }
+        return self._read_itempanel_keys_with_encoding('utf-8', errors='replace')
+
+    def _read_itempanel_keys_with_encoding(self, encoding: str, errors: Optional[str] = None) -> set[str]:
+        keys: set[str] = set()
+        open_kwargs: dict[str, Any] = {'encoding': encoding, 'newline': ''}
+        if errors is not None:
+            open_kwargs['errors'] = errors
+        with self.itempanel_csv.open('r', **open_kwargs) as handle:
+            reader = csv.DictReader(handle)
+            fieldnames = reader.fieldnames or []
+            first_column = fieldnames[0] if fieldnames else None
+            for row in reader:
+                values = [str(row.get(column, '') or '') for column in ITEMPANEL_KEY_COLUMNS]
+                if first_column:
+                    values.append(str(row.get(first_column, '') or ''))
+                for value in values:
+                    normalized = self._normalize_item_key(value)
+                    if normalized:
+                        keys.add(normalized)
+                        break
+        return keys
+
+    def load_manual_item_aliases(self) -> dict[str, str]:
+        if not self.manual_aliases_path.is_file():
+            return {}
+        try:
+            payload = json.loads(self.manual_aliases_path.read_text(encoding='utf-8'))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        raw_items = payload.get('items', payload) if isinstance(payload, dict) else {}
+        if not isinstance(raw_items, dict):
+            return {}
+        aliases: dict[str, str] = {}
+        for raw_key, raw_value in raw_items.items():
+            lower_key = self._normalize_item_key(str(raw_key))
+            original = self._extract_original_item_key(str(raw_value))
+            if lower_key and original and original.lower() == lower_key:
+                aliases[lower_key] = original
+        return dict(sorted(aliases.items()))
+
+    def save_manual_item_alias(self, lower_key: str, original: str) -> dict[str, str]:
+        normalized_key = self._normalize_item_key(lower_key)
+        original_key = self._extract_original_item_key(original)
+        if not normalized_key:
+            raise ValueError('Alias key must look like mod:item')
+        if not original_key:
+            raise ValueError('Alias value must look like Mod:Item')
+        if original_key.lower() != normalized_key:
+            raise ValueError('Alias key and value must refer to the same mod:item ignoring case')
+        aliases = self.load_manual_item_aliases()
+        aliases[normalized_key] = original_key
+        self._write_manual_item_aliases(aliases)
+        return aliases
+
+    def _write_manual_item_aliases(self, aliases: dict[str, str]) -> None:
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        payload = {
+            'updatedAt': datetime.now(timezone.utc).isoformat(),
+            'items': dict(sorted(aliases.items())),
+        }
+        self.manual_aliases_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+
+    def _normalize_item_key(self, value: str) -> Optional[str]:
+        original = self._extract_original_item_key(value)
+        return original.lower() if original else None
+
+    def _extract_original_item_key(self, value: str) -> Optional[str]:
+        match = ITEM_KEY_RE.search(value.strip())
+        if not match:
+            return None
+        return match.group(1)
+
+    def _load_path_sources(self) -> list[tuple[str, str]]:
+        return [
+            (self._script_relative_path(path), self._read_text(path))
+            for path in self._iter_zs_files()
+        ]
 
     def _iter_zs_files(self) -> list[Path]:
         if self.scripts_dir.is_file() and self.scripts_dir.suffix.lower() == '.zs':

@@ -59,6 +59,52 @@ function projectSettings() {
   };
 }
 
+function itemCaseAliasReport(extraManualAliases: Record<string, string> = {}) {
+  const autoItemAliases = { 'examplemod:item': 'ExampleMod:Item' };
+  const manualItemAliases = { ...extraManualAliases };
+  const itemAliases = { ...autoItemAliases, ...manualItemAliases };
+  return {
+    generatedAt: '2026-06-19T00:00:00+00:00',
+    sourceLabel: 'Облако',
+    aliasesPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases.json',
+    reportPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases_report.json',
+    manualAliasesPath: '.cubixrecipes_admin/item_case_aliases/manual_item_case_aliases.json',
+    summary: {
+      generatedAt: '2026-06-19T00:00:00+00:00',
+      scriptsDir: 'Облако',
+      sourceLabel: 'Облако',
+      itempanelCsv: 'itempanel.csv',
+      scriptFiles: 1,
+      scriptItemRefs: 1,
+      uniqueItemKeys: 1,
+      mixedCaseItemAliases: 1,
+      itempanelKeys: 3,
+      matchedItemKeys: 1,
+      missingItemKeys: 0,
+      manualItemAliases: Object.keys(manualItemAliases).length,
+      itemConflicts: 0,
+      scriptEntityRefs: 0,
+      uniqueEntityKeys: 0,
+      entityConflicts: 0
+    },
+    itemAliases,
+    autoItemAliases,
+    manualItemAliases,
+    entityAliases: {},
+    itemConflicts: [],
+    entityConflicts: [],
+    matchedItems: [{
+      lower_key: 'examplemod:item',
+      original: 'ExampleMod:Item',
+      modid: 'examplemod',
+      metas: ['0-or-none'],
+      files: ['test.zs']
+    }],
+    missingItems: [],
+    missingByMod: []
+  };
+}
+
 function findLocalDraftPayload() {
   for (let index = 0; index < window.localStorage.length; index += 1) {
     const key = window.localStorage.key(index);
@@ -244,47 +290,26 @@ beforeEach(() => {
         })
       }) as Promise<Response>;
     }
-    if (url === '/api/admin/item-case-aliases' && (!init?.method || init.method === 'GET')) {
+    if ((url === '/api/item-case-aliases' || url === '/api/admin/item-case-aliases') && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        json: async () => ({ ok: true, report: null })
+        json: async () => ({ ok: true, report: itemCaseAliasReport() })
       }) as Promise<Response>;
     }
     if (url === '/api/admin/item-case-aliases/generate' && init?.method === 'POST') {
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        json: async () => ({
-          ok: true,
-          report: {
-            generatedAt: '2026-06-19T00:00:00+00:00',
-            scriptsDir: 'scripts_ht',
-            itempanelCsv: 'itempanel.csv',
-            aliasesPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases.json',
-            reportPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases_report.json',
-            summary: {
-              scriptFiles: 1,
-              scriptItemRefs: 1,
-              uniqueItemKeys: 1,
-              mixedCaseItemAliases: 1,
-              matchedItemKeys: 1,
-              missingItemKeys: 0,
-              itemConflicts: 0,
-              scriptEntityRefs: 0,
-              uniqueEntityKeys: 0,
-              mixedCaseEntityAliases: 0,
-              entityConflicts: 0
-            },
-            itemAliases: [],
-            entityAliases: [],
-            itemConflicts: [],
-            entityConflicts: [],
-            matchedItems: [],
-            missingItems: [],
-            missingByMod: []
-          }
-        })
+        json: async () => ({ ok: true, report: itemCaseAliasReport() })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/item-case-aliases/manual' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, report: itemCaseAliasReport({ [String(body.lower_key).toLowerCase()]: String(body.original) }) })
       }) as Promise<Response>;
     }
     if (url.startsWith('/api/admin/itempanel/csv') && init?.method === 'POST') {
@@ -605,6 +630,41 @@ test('NEI uses generated mod icon atlas entries matched by itempanel display nam
     const icon = item.querySelector('.nei-atlas-icon') as HTMLElement | null;
     expect(icon).toBeTruthy();
     expect(icon?.style.backgroundImage).toContain('mod-icons-examplemod-x32-1.png');
+  });
+});
+
+test('technical panel shows item case aliases and saves manual values', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-caseAliases'));
+
+  expect(await screen.findByText('ExampleMod:Item')).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('manual-alias-key'), { target: { value: 'minecraft:cwantgenerator' } });
+  fireEvent.change(screen.getByLabelText('manual-alias-value'), { target: { value: 'Minecraft:CwantGenerator' } });
+  fireEvent.click(screen.getByLabelText('save-manual-alias'));
+
+  await waitFor(() => {
+    const manualCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url, init]) => url === '/api/admin/item-case-aliases/manual' && init?.method === 'POST');
+    expect(manualCall).toBeTruthy();
+    expect(String(manualCall?.[1]?.body)).toContain('Minecraft:CwantGenerator');
+  });
+  expect(await screen.findByText('Minecraft:CwantGenerator')).toBeTruthy();
+});
+
+test('NEI insertion applies item case aliases before writing the recipe output', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-caseAliases'));
+  expect(await screen.findByText('ExampleMod:Item')).toBeTruthy();
+  fireEvent.click(screen.getByTestId('workspace-tab-editor'));
+
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'examplemod' } });
+  fireEvent.doubleClick(await screen.findByLabelText('nei-item-<examplemod:item>'));
+
+  await waitFor(() => {
+    expect(craftOutputRaw()).toBe('<ExampleMod:Item>');
   });
 });
 

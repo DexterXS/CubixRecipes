@@ -218,11 +218,14 @@ export interface ItemCaseAliasEntry {
 
 export interface ItemCaseAliasReport {
   generatedAt: string;
+  sourceLabel?: string;
   aliasesPath: string;
   reportPath: string;
+  manualAliasesPath?: string;
   summary: {
     generatedAt: string;
     scriptsDir: string;
+    sourceLabel?: string;
     itempanelCsv: string;
     scriptFiles: number;
     scriptItemRefs: number;
@@ -231,12 +234,15 @@ export interface ItemCaseAliasReport {
     itempanelKeys: number;
     matchedItemKeys: number;
     missingItemKeys: number;
+    manualItemAliases?: number;
     itemConflicts: number;
     scriptEntityRefs: number;
     uniqueEntityKeys: number;
     entityConflicts: number;
   };
   itemAliases: Record<string, string>;
+  autoItemAliases?: Record<string, string>;
+  manualItemAliases?: Record<string, string>;
   entityAliases: Record<string, string>;
   matchedItems: ItemCaseAliasEntry[];
   missingItems: ItemCaseAliasEntry[];

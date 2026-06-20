@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -40,6 +40,8 @@ const defaultPanelLayout: PanelLayoutItem[] = [
   { id: 'preview', zone: 'sidebar', order: 10, visible: false, height: 220, width_units: 1 },
   { id: 'raw', zone: 'sidebar', order: 11, visible: false, height: 260, width_units: 1 }
 ];
+
+const EMPTY_ITEM_CASE_ALIASES: Record<string, string> = {};
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 type WorkspaceTab = 'editor' | 'recipe' | 'technical' | 'cloud';
@@ -788,6 +790,17 @@ function itemPanelRaw(entry: ItemPanelEntry): string {
   return entry.raw ?? buildItemRawValue(entry.key, entry.meta);
 }
 
+function applyItemCaseAliasesToRaw(raw: string, aliases: Record<string, string>): string {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>([\s\S]*)$/);
+  if (!match) return trimmed;
+  const alias = aliases[match[1].toLowerCase()];
+  if (!alias) return trimmed;
+  const meta = match[2] ? `:${match[2]}` : '';
+  const suffix = match[3] ?? '';
+  return `<${alias}${meta}>${suffix}`;
+}
+
 function recipeLookupKeysForRaw(raw: string): string[] {
   const parsed = parseItemRaw(raw);
   if (!parsed) return [raw];
@@ -1363,6 +1376,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
   const [itemCaseAliasStatus, setItemCaseAliasStatus] = useState('');
   const [itemCaseAliasGenerating, setItemCaseAliasGenerating] = useState(false);
+  const [manualAliasKey, setManualAliasKey] = useState('');
+  const [manualAliasValue, setManualAliasValue] = useState('');
+  const [manualAliasSaving, setManualAliasSaving] = useState(false);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudStatus, setCloudStatus] = useState('');
   const [cloudContextMenu, setCloudContextMenu] = useState<CloudFileContextMenuState | null>(null);
@@ -1410,6 +1426,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canManageModIcons = can(authUser, 'mod-icons:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
   const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
+  const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
+  const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   const workspaceTabs = [
     { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
@@ -1644,22 +1662,28 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  async function refreshItemCaseAliasReport() {
-    if (!canManageModIcons) return;
-    setItemCaseAliasStatus('Загружаю отчет словаря...');
+  async function refreshItemCaseAliasReport(options?: { silent?: boolean }) {
+    if (!canUseItemCaseAliases) return;
+    if (!options?.silent) {
+      setItemCaseAliasStatus('Загружаю отчет словаря...');
+    }
     try {
       const report = await getItemCaseAliasReport();
       setItemCaseAliasReport(report);
-      setItemCaseAliasStatus(report ? `Отчет: ${report.summary.uniqueItemKeys} ключей, не найдено ${report.summary.missingItemKeys}.` : 'Отчет еще не создан.');
+      if (!options?.silent) {
+        setItemCaseAliasStatus(report ? `Отчет: ${report.summary.uniqueItemKeys} ключей, не найдено ${report.summary.missingItemKeys}.` : 'Отчет еще не создан.');
+      }
     } catch (error) {
-      setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+      if (!options?.silent) {
+        setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+      }
     }
   }
 
   async function handleGenerateItemCaseAliasReport() {
     if (!canManageModIcons) return;
     setItemCaseAliasGenerating(true);
-    setItemCaseAliasStatus('Строю словарь регистра из scripts_ht...');
+    setItemCaseAliasStatus('Строю словарь регистра из файлов Облака...');
     try {
       const report = await generateItemCaseAliasReport();
       setItemCaseAliasReport(report);
@@ -1668,6 +1692,29 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
     } finally {
       setItemCaseAliasGenerating(false);
+    }
+  }
+
+  async function handleSaveManualItemCaseAlias() {
+    if (!canManageModIcons) return;
+    const lowerKey = manualAliasKey.trim();
+    const original = manualAliasValue.trim();
+    if (!lowerKey || !original) {
+      setItemCaseAliasStatus('Заполни ключ и значение ручного алиаса.');
+      return;
+    }
+    setManualAliasSaving(true);
+    setItemCaseAliasStatus('Сохраняю ручной алиас...');
+    try {
+      const report = await saveManualItemCaseAlias(lowerKey, original);
+      setItemCaseAliasReport(report);
+      setManualAliasKey('');
+      setManualAliasValue('');
+      setItemCaseAliasStatus(`Ручной алиас сохранен. Всего в словаре: ${Object.keys(report.itemAliases).length}.`);
+    } catch (error) {
+      setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+    } finally {
+      setManualAliasSaving(false);
     }
   }
 
@@ -1784,6 +1831,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       void refreshItemCaseAliasReport();
     }
   }, [workspaceTab, canManageModIcons]);
+
+  useEffect(() => {
+    if (canUseItemCaseAliases) {
+      void refreshItemCaseAliasReport({ silent: true });
+    }
+  }, [canUseItemCaseAliases]);
 
   useEffect(() => {
     if (workspaceTab === 'technical' && !canUseTechnicalPanel) {
@@ -2000,8 +2053,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const recipeCraftMode = craftModeFromRecipeType(recipe.recipe_type);
   const recipeBindingMode: RecipeBindingMode = strictBinding ? 'strict' : 'soft';
   const structuredCraftRaw = useMemo(
-    () => buildStructuredItemRaw(itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft),
-    [itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft]
+    () => applyItemCaseAliasesToRaw(buildStructuredItemRaw(itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft), itemCaseAliases),
+    [itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft, itemCaseAliases]
   );
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
@@ -2065,7 +2118,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return matrix.map((row, rowIndex) => row.map((cell, colIndex) => {
       const parsedCell = recipe.matrix[rowIndex]?.[colIndex];
       const directResolution = parsedCell?.raw === cell ? (parsedCell?.resolution ?? null) : null;
-      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? (itemSearchIcons[cell] ? { item_raw: cell, icon_url: itemSearchIcons[cell], display_name: resolveCellTitle(cell), strategy: 'itempanel_cache' } : null)) : null;
+      const cachedIconUrl = typeof cell === 'string' ? getCachedItemIconUrl(cell) : null;
+      const fallbackResolution = typeof cell === 'string' ? (resolutionByRaw.get(cell) ?? (cachedIconUrl ? { item_raw: cell, icon_url: cachedIconUrl, display_name: resolveCellTitle(cell), strategy: 'itempanel_cache' } : null)) : null;
       return {
         raw: cell,
         resolution: directResolution ?? fallbackResolution
@@ -2516,6 +2570,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return raw;
     }
     return parsed.wildcardMeta ? `${display}*` : display;
+  }
+
+  function getCachedItemIconUrl(raw: string): string | null | undefined {
+    const direct = itemSearchIcons[raw];
+    if (direct !== undefined) {
+      return direct;
+    }
+    const parsed = parseItemRaw(raw);
+    if (!parsed) {
+      return undefined;
+    }
+    const metaSuffix = parsed.wildcardMeta ? ':*' : parsed.meta && parsed.meta > 0 ? `:${parsed.meta}` : '';
+    return itemSearchIcons[`<${parsed.key}${metaSuffix}>`];
   }
 
   const outputDisplayName = useMemo(() => {
@@ -3021,7 +3088,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setItemMetaDraft(String(entry.meta));
     setNbtRootDraft({ kind: 'compound', entries: [] });
     setCollapsedNbtPaths({});
-    const nextRaw = buildItemRawValue(entry.key, entry.meta);
+    const nextRaw = applyItemCaseAlias(buildItemRawValue(entry.key, entry.meta));
     setCraftSourceDraft(nextRaw);
     setCraftSourceMode('structured');
     setItemSearchQuery(`${entry.key}:${entry.meta}`);
@@ -3136,20 +3203,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return matrix[target.row]?.[target.col] ?? '';
   }
 
+  function applyItemCaseAlias(raw: string): string {
+    return applyItemCaseAliasesToRaw(raw, itemCaseAliases);
+  }
+
   function setCellRaw(target: CraftEditorTarget, raw: string) {
+    const nextValue = applyItemCaseAlias(raw);
     if (target.kind === 'output') {
-      setOutputRaw(raw);
+      const cachedIconUrl = getCachedItemIconUrl(nextValue) ?? getCachedItemIconUrl(raw);
+      setOutputRaw(nextValue);
       setRecipe((current) => ({
         ...current,
-        output: { ...current.output, raw },
-        output_resolution: itemSearchIcons[raw]
-          ? { item_raw: raw, icon_url: itemSearchIcons[raw], display_name: resolveCellTitle(raw), strategy: 'itempanel_cache' }
+        output: { ...current.output, raw: nextValue },
+        output_resolution: cachedIconUrl
+          ? { item_raw: nextValue, icon_url: cachedIconUrl, display_name: resolveCellTitle(nextValue), strategy: 'itempanel_cache' }
           : current.output_resolution
       }));
       setSaveStatus(t('values.unsavedChanges'));
       return;
     }
-    setMatrixCell(target.row, target.col, raw);
+    setMatrixCell(target.row, target.col, nextValue);
   }
 
   function setGridSize(size: number) {
@@ -3209,7 +3282,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function setMatrixCell(row: number, col: number, raw: string | null) {
-    const nextRaw = raw === null || raw === '' || raw === 'null' ? null : raw;
+    const nextRaw = raw === null || raw === '' || raw === 'null' ? null : applyItemCaseAlias(raw);
     setMatrix((current) => current.map((line, rowIndex) => line.map((cell, colIndex) => (
       rowIndex === row && colIndex === col ? nextRaw : cell
     ))));
@@ -3248,7 +3321,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function handleNeiItemPick(raw: string) {
-    setHeldItemRaw((current) => (current === raw ? null : raw));
+    const nextRaw = applyItemCaseAlias(raw);
+    setHeldItemRaw((current) => (current === nextRaw ? null : nextRaw));
   }
 
   function findUploadedDraftRecipeBlock(raw: string): UploadedDraftRecipeMatch | null {
@@ -4462,6 +4536,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           >
             {neiItems.map((entry) => {
               const raw = itemPanelRaw(entry);
+              const insertRaw = applyItemCaseAlias(raw);
               const iconUrl = itemSearchIcons[raw];
               const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
@@ -4478,25 +4553,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <button
                   key={itemPanelEntryIdentity(entry)}
                   type="button"
-                  className={`nei-item recipe-${availability} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+                  className={`nei-item recipe-${availability} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
                   title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}`}
                   aria-label={`nei-item-${raw}`}
                   data-item-raw={raw}
                   draggable
                   onDragStart={(event) => {
-                    event.dataTransfer.setData('text/plain', raw);
+                    event.dataTransfer.setData('text/plain', insertRaw);
                     event.dataTransfer.effectAllowed = 'copy';
-                    setHeldItemRaw(raw);
+                    setHeldItemRaw(insertRaw);
                   }}
                   onDragEnd={() => {
-                    setHeldItemRaw((current) => (current === raw ? null : current));
+                    setHeldItemRaw((current) => (current === insertRaw ? null : current));
                   }}
                   onMouseEnter={() => updateHoveredItemRaw(raw)}
                   onFocus={() => updateHoveredItemRaw(raw)}
                   onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
                   onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onClick={() => handleNeiItemPick(raw)}
-                  onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
+                  onClick={() => handleNeiItemPick(insertRaw)}
+                  onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, insertRaw)}
                   onContextMenu={(event) => {
                     event.preventDefault();
                     setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
@@ -5500,12 +5575,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderItemCaseAliasPanel() {
     const report = itemCaseAliasReport;
     const summary = report?.summary;
+    const manualAliases = report?.manualItemAliases ?? {};
+    const matchedByKey = new Map((report?.matchedItems ?? []).map((item) => [item.lower_key, item]));
+    const missingByKey = new Map((report?.missingItems ?? []).map((item) => [item.lower_key, item]));
+    const aliasRows = report
+      ? Object.entries(report.itemAliases)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([lowerKey, original]) => ({
+          lowerKey,
+          original,
+          source: manualAliases[lowerKey] ? 'manual' : 'auto',
+          item: matchedByKey.get(lowerKey) ?? missingByKey.get(lowerKey) ?? null
+        }))
+      : [];
     return (
       <div className="debug-section-grid">
         <section className="settings-section">
           <div className="settings-section-title">
             <h3>Словарь регистра</h3>
-            <span>Временный lowercase → original-case словарь из scripts_ht и сверка с itempanel.csv.</span>
+            <span>Временный lowercase → original-case словарь из загруженных в Облако .zs и сверка с itempanel.csv.</span>
           </div>
           <div className="file-actions">
             <button type="button" className="secondary-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void handleGenerateItemCaseAliasReport()}>Сгенерировать отчет</button>
@@ -5520,6 +5608,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <div><span>Mixed-case</span><strong>{summary.mixedCaseItemAliases}</strong></div>
               <div><span>Совпало с itempanel</span><strong>{summary.matchedItemKeys}</strong></div>
               <div><span>Не найдено</span><strong>{summary.missingItemKeys}</strong></div>
+              <div><span>Ручных значений</span><strong>{summary.manualItemAliases ?? Object.keys(manualAliases).length}</strong></div>
               <div><span>Конфликтов item</span><strong>{summary.itemConflicts}</strong></div>
               <div><span>Мобов/NBT ids</span><strong>{summary.uniqueEntityKeys}</strong></div>
             </div>
@@ -5528,8 +5617,57 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           )}
           {report ? (
             <div className="case-alias-paths">
+              <span>Источник: <code>{report.sourceLabel ?? summary?.sourceLabel ?? summary?.scriptsDir ?? 'Облако'}</code></span>
               <span>Словарь: <code>{report.aliasesPath}</code></span>
               <span>Отчет: <code>{report.reportPath}</code></span>
+              {report.manualAliasesPath ? <span>Ручные значения: <code>{report.manualAliasesPath}</code></span> : null}
+            </div>
+          ) : null}
+        </section>
+        <section className="settings-section">
+          <div className="settings-section-title">
+            <h3>Добавить вручную</h3>
+            <span>Ключ хранится в нижнем регистре, значение сохраняет оригинальный регистр из рецепта.</span>
+          </div>
+          <div className="case-alias-manual-form">
+            <label className="field-block">
+              <span>Ключ lowercase</span>
+              <input aria-label="manual-alias-key" type="text" value={manualAliasKey} onChange={(event) => setManualAliasKey(event.target.value)} placeholder="draconicevolution:customspawner" />
+            </label>
+            <label className="field-block">
+              <span>Значение original-case</span>
+              <input aria-label="manual-alias-value" type="text" value={manualAliasValue} onChange={(event) => setManualAliasValue(event.target.value)} placeholder="DraconicEvolution:customSpawner" />
+            </label>
+            <button type="button" className="secondary-button" aria-label="save-manual-alias" disabled={!canManageModIcons || manualAliasSaving} onClick={() => void handleSaveManualItemCaseAlias()}>Добавить в словарь</button>
+          </div>
+        </section>
+        <section className="settings-section">
+          <div className="settings-section-title">
+            <h3>Таблица словаря</h3>
+            <span>{aliasRows.length ? `${aliasRows.length} значений` : 'Словарь появится после генерации или ручного добавления.'}</span>
+          </div>
+          {aliasRows.length ? (
+            <div className="case-alias-table-wrap">
+              <table className="case-alias-table">
+                <thead>
+                  <tr>
+                    <th>lowercase key</th>
+                    <th>original-case</th>
+                    <th>Источник</th>
+                    <th>Файлы</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {aliasRows.map((row) => (
+                    <tr key={row.lowerKey}>
+                      <td><code>{row.lowerKey}</code></td>
+                      <td><code>{row.original}</code></td>
+                      <td><span className={`case-alias-source case-alias-source-${row.source}`}>{row.source === 'manual' ? 'ручной' : 'авто'}</span></td>
+                      <td>{row.item?.files.slice(0, 3).join(', ') ?? '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ) : null}
         </section>
@@ -5792,7 +5930,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Иконки и itempanel', description: 'ZIP, CSV, атласы', visible: canManageModIcons },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
-      { id: 'caseAliases', label: 'Словарь регистра', description: 'scripts_ht → itempanel', visible: canManageModIcons },
+      { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
       { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: canUseDebug },
       { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: canUseDebug },
       { id: 'recipe', label: 'Текущий рецепт', description: 'Сетка, output, история', visible: canUseDebug },

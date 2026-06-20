@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -461,10 +461,38 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         report = item_case_alias_service.load_report()
         return {'ok': True, 'report': report}
 
+    @router.get('/item-case-aliases')
+    def item_case_alias_report():
+        report = item_case_alias_service.load_report()
+        return {'ok': True, 'report': report}
+
+    def _item_case_alias_sources() -> list[tuple[str, str]]:
+        sources: list[tuple[str, str]] = []
+        for item in storage.list_managed_zs_files():
+            raw_path = str(item.get('path', ''))
+            if not raw_path:
+                continue
+            try:
+                file_path, text = storage.read_zs_file(raw_path)
+            except ValueError:
+                continue
+            sources.append((file_path.name, text))
+        return sources
+
     @router.post('/admin/item-case-aliases/generate')
     def admin_generate_item_case_alias_report():
-        report = item_case_alias_service.build()
+        report = item_case_alias_service.build(_item_case_alias_sources(), source_label='\u041e\u0431\u043b\u0430\u043a\u043e')
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Item case alias report generated', report.get('summary', {}))
+        return {'ok': True, 'report': report}
+
+    @router.post('/admin/item-case-aliases/manual')
+    def admin_save_item_case_manual_alias(request: ItemCaseAliasManualRequest):
+        try:
+            item_case_alias_service.save_manual_item_alias(request.lower_key, request.original)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        report = item_case_alias_service.build(_item_case_alias_sources(), source_label='\u041e\u0431\u043b\u0430\u043a\u043e')
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Manual item case alias saved', {'lower_key': request.lower_key, 'original': request.original})
         return {'ok': True, 'report': report}
 
     @router.get('/admin/mod-icons/atlases/{filename}')

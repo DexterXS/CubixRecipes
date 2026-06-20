@@ -366,12 +366,21 @@ export async function generateModIconAtlases(): Promise<ModIconAtlasManifest> {
 }
 
 export async function getItemCaseAliasReport(): Promise<ItemCaseAliasReport | null> {
-  const payload = await request<{ ok: boolean; report: ItemCaseAliasReport | null }>(apiPath('/admin/item-case-aliases'));
+  const payload = await request<{ ok: boolean; report: ItemCaseAliasReport | null }>(apiPath('/item-case-aliases'));
   return payload.report;
 }
 
 export async function generateItemCaseAliasReport(): Promise<ItemCaseAliasReport> {
   const payload = await request<{ ok: boolean; report: ItemCaseAliasReport }>(apiPath('/admin/item-case-aliases/generate'), { method: 'POST' });
+  return payload.report;
+}
+
+export async function saveManualItemCaseAlias(lowerKey: string, original: string): Promise<ItemCaseAliasReport> {
+  const payload = await request<{ ok: boolean; report: ItemCaseAliasReport }>(apiPath('/admin/item-case-aliases/manual'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lower_key: lowerKey, original })
+  });
   return payload.report;
 }
 
