@@ -42,6 +42,7 @@ class ItemPanelNbtStack:
     meta: int
     count: int
     nbt_raw: str | None
+    tag_json: Any | None = None
 
 
 class _NbtReader:
@@ -168,6 +169,7 @@ def _extract_item_stacks(root: NbtValue) -> list[ItemPanelNbtStack]:
             meta=meta,
             count=count,
             nbt_raw=serialize_nbt(tag) if tag is not None else None,
+            tag_json=to_plain_nbt(tag) if tag is not None else None,
         ))
     return stacks
 
@@ -205,6 +207,16 @@ def serialize_nbt(value: NbtValue | None) -> str:
     if value.tag_type == TAG_DOUBLE:
         return f'{_format_float(value.value)} as double'
     return str(value.value)
+
+
+def to_plain_nbt(value: NbtValue | None) -> Any:
+    if value is None:
+        return None
+    if value.tag_type == TAG_COMPOUND and isinstance(value.value, dict):
+        return {key: to_plain_nbt(child) for key, child in value.value.items()}
+    if value.tag_type == TAG_LIST and isinstance(value.value, NbtList):
+        return [to_plain_nbt(child) for child in value.value.values]
+    return value.value
 
 
 def _format_key(value: str) -> str:

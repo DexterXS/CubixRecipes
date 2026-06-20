@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import csv
 import struct
 import zlib
 from pathlib import Path
@@ -109,15 +110,25 @@ def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
     payload = service.to_api()
     entries = {entry['raw']: entry for entry in payload['entries']}
 
-    assert '<mod:charged>' in entries
     assert '<mod:charged>.withTag({energy: 0, mode: "charged"})' in entries
-    assert entries['<mod:charged>']['icon_url']
+    assert '<mod:charged>' not in entries
     assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['has_nbt'] is True
-    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['icon_url'] == entries['<mod:charged>']['icon_url']
+    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['icon_url']
     assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['sources'] == ['csv', 'icon', 'nbt']
     assert summary['nbt_items'] == 2
+    assert summary['nbt_entries'] == 1
     assert summary['matched_nbt_items'] == 1
     assert summary['unmatched_nbt_items'] == 1
+    assert summary['super_csv_written'] is True
+    assert summary['super_csv_nbt_rows'] == 1
+
+    super_csv = tmp_path / 'super_itempanel.csv'
+    assert super_csv.is_file()
+    with super_csv.open('r', encoding='utf-8-sig', newline='') as handle:
+        rows = list(csv.DictReader(handle, delimiter=';'))
+    assert rows[0]['item_name'] == 'mod:charged'
+    assert rows[0]['has_nbt_real'] == 'True'
+    assert rows[0]['raw_tag_json_short'] == '{"energy":0,"mode":"charged"}'
 
 
 def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
