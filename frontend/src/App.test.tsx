@@ -172,7 +172,7 @@ beforeEach(() => {
             { key: 'examplemod:metaonly', legacy_id: 9002, meta: 1, has_nbt: true, display_ru: 'Meta only item', display_en: 'Meta only item', raw: '<examplemod:metaonly:1>', nbt_raw: null, has_icon: false, sources: ['csv'] },
             { key: 'examplemod:charged', legacy_id: 9001, meta: 1, has_nbt: true, display_ru: 'Charged item', display_en: 'Charged item', raw: '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})', nbt_raw: '{charge: 3.6E7, ea_module_admin: 1}', has_icon: false, sources: ['csv', 'nbt'] }
           ],
-          summary: { entries: 5, csv_entries: 4, nbt_entries: 1, unmatched_nbt_items: 0 }
+          summary: { entries: 5, csv_entries: 4, snbt_rows: 3, nbt_entries: 1, merged_csv_exists: true }
         })
       }) as Promise<Response>;
     }
@@ -389,14 +389,30 @@ beforeEach(() => {
         })
       }) as Promise<Response>;
     }
-    if (url.startsWith('/api/admin/itempanel/nbt') && init?.method === 'POST') {
+    if (url.startsWith('/api/admin/itempanel/json') && init?.method === 'POST') {
       return Promise.resolve({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
         json: async () => ({
           ok: true,
-          path: 'itempanel.nbt',
-          summary: { entries: 4, csv_entries: 3, nbt_items: 1, nbt_entries: 1, unmatched_nbt_items: 0 }
+          path: 'itempanel.json',
+          summary: { entries: 3, csv_entries: 3, snbt_rows: 3, uploaded_snbt_rows: 3, nbt_entries: 0 }
+        })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/itempanel/merge' && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          path: 'itempanel_merged.csv',
+          summary: {
+            merged_rows: 3,
+            merged_nbt_rows: 1,
+            merged_csv_written: true,
+            catalog: { entries: 4, csv_entries: 3, snbt_rows: 3, nbt_entries: 1, merged_csv_exists: true }
+          }
         })
       }) as Promise<Response>;
     }
@@ -692,7 +708,7 @@ test('admin mod icons tab shows archive and atlas status', async () => {
   expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
 });
 
-test('wipe update modal exposes csv icons atlas and nbt steps', async () => {
+test('wipe update modal exposes csv icons atlas json and merge steps', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   fireEvent.click(screen.getByTestId('workspace-tab-technical'));
@@ -703,8 +719,10 @@ test('wipe update modal exposes csv icons atlas and nbt steps', async () => {
   expect(within(dialog).getByText('1. itempanel.csv')).toBeTruthy();
   expect(within(dialog).getByText('2. Иконки')).toBeTruthy();
   expect(within(dialog).getByText('3. Атласы')).toBeTruthy();
-  expect(within(dialog).getByText('4. itempanel.nbt')).toBeTruthy();
-  expect(within(dialog).getByText('5. Проверка каталога')).toBeTruthy();
+  expect(within(dialog).getByText('4. itempanel.json')).toBeTruthy();
+  expect(within(dialog).getByText('5. Объединение и проверка')).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Объединить файлы' })).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Открыть объединенный файл' })).toBeTruthy();
 });
 
 test('NEI uses generated mod icon atlas entries matched by itempanel display name', async () => {

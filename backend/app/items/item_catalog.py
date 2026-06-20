@@ -9,7 +9,12 @@ from typing import Optional
 
 from app.domain.models import ItemRef, MetaMode
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
-from app.items.itempanel_nbt import ItemPanelNbtStack, read_itempanel_nbt, read_itempanel_nbt_bytes
+from app.items.itempanel_merge import (
+    extract_tag_snbt,
+    merge_itempanel_csv_with_snbt,
+    read_snbt_lines,
+    read_snbt_lines_from_text,
+)
 
 
 @dataclass
@@ -43,123 +48,88 @@ class ItemCatalogEntry:
 
 
 class ItemCatalogService:
-    def __init__(self, csv_path: Path, nbt_path: Path, icon_catalog: ItemPanelIconCatalog, super_csv_path: Optional[Path] = None) -> None:
+    def __init__(self, csv_path: Path, snbt_path: Path, icon_catalog: ItemPanelIconCatalog, merged_csv_path: Optional[Path] = None) -> None:
         self.csv_path = csv_path
-        self.nbt_path = nbt_path
-        self.super_csv_path = super_csv_path or csv_path.with_name('super_itempanel.csv')
+        self.snbt_path = snbt_path
+        self.merged_csv_path = merged_csv_path or csv_path.with_name('itempanel_merged.csv')
         self.icon_catalog = icon_catalog
         self.entries: list[ItemCatalogEntry] = []
         self.last_scan_report: dict[str, object] = {
             'csv_path': str(csv_path),
-            'nbt_path': str(nbt_path),
-            'super_csv_path': str(self.super_csv_path),
-            'super_csv_written': False,
-            'super_csv_rows': 0,
-            'super_csv_nbt_rows': 0,
+            'snbt_path': str(snbt_path),
+            'merged_csv_path': str(self.merged_csv_path),
+            'merged_csv_exists': False,
+            'merged_csv_written': False,
+            'merged_rows': 0,
+            'merged_nbt_rows': 0,
             'entries': 0,
             'csv_rows': 0,
+            'snbt_rows': 0,
             'csv_entries': 0,
             'csv_nbt_entries': 0,
-            'nbt_items': 0,
             'nbt_entries': 0,
-            'nbt_with_tags': 0,
-            'matched_nbt_items': 0,
-            'unmatched_nbt_items': 0,
             'enabled': False,
         }
 
-    def scan(self, *, raise_on_nbt_error: bool = False) -> dict[str, object]:
-        csv_rows_data = self._read_csv_rows()
+    def scan(self) -> dict[str, object]:
+        source_csv_path = self._catalog_csv_path()
+        csv_rows_data = self._read_csv_rows(source_csv_path)
         csv_entries = self._csv_entries_from_rows(csv_rows_data)
         csv_rows = len(csv_rows_data)
         csv_nbt_entries = sum(1 for entry in csv_entries if entry.nbt_raw)
         by_raw: dict[str, ItemCatalogEntry] = {}
-        by_id_meta: dict[tuple[int, int], ItemCatalogEntry] = {}
-        by_id: dict[int, list[ItemCatalogEntry]] = {}
 
         for entry in csv_entries:
             self._merge_entry(by_raw, entry)
-            if entry.legacy_id is not None:
-                by_id_meta[(entry.legacy_id, entry.meta)] = entry
-                by_id.setdefault(entry.legacy_id, []).append(entry)
 
-        nbt_items: list[ItemPanelNbtStack] = []
-        nbt_error: Optional[str] = None
-        try:
-            nbt_items = read_itempanel_nbt(self.nbt_path)
-        except Exception as exc:
-            nbt_error = str(exc)
-            if raise_on_nbt_error:
-                raise
-
-        matched_nbt = 0
-        unmatched_nbt = 0
-        nbt_entries = 0
-        nbt_with_tags = 0
-
-        for stack in nbt_items:
-            exact_entry = by_id_meta.get((stack.legacy_id, stack.meta))
-            csv_entry = exact_entry or self._match_nbt_stack(stack, by_id_meta, by_id)
-            if csv_entry is None:
-                unmatched_nbt += 1
-                continue
-            matched_nbt += 1
-            if stack.nbt_raw:
-                nbt_with_tags += 1
-                nbt_entry = ItemCatalogEntry(
-                    key=csv_entry.key,
-                    legacy_id=stack.legacy_id,
-                    meta=stack.meta,
-                    has_nbt=True,
-                    display_ru=csv_entry.display_ru,
-                    display_en=csv_entry.display_en,
-                    raw=build_item_raw(csv_entry.key, stack.meta, stack.nbt_raw),
-                    nbt_raw=stack.nbt_raw,
-                    has_icon=csv_entry.has_icon,
-                    icon_url=csv_entry.icon_url,
-                    sources={'csv', 'nbt'} | ({'icon'} if csv_entry.has_icon else set()),
-                )
-                already_present = nbt_entry.raw in by_raw
-                if exact_entry is not None:
-                    by_raw.pop(build_item_raw(csv_entry.key, stack.meta), None)
-                self._merge_entry(by_raw, nbt_entry)
-                if not already_present:
-                    nbt_entries += 1
-                continue
-            base_raw = build_item_raw(csv_entry.key, stack.meta)
-            base_entry = by_raw.get(base_raw)
-            if base_entry is not None:
-                base_entry.sources.add('nbt')
-
-        super_csv_report = self._write_super_itempanel_csv(csv_rows_data, nbt_items)
+        snbt_rows = self._count_snbt_rows()
         self.entries = sorted(by_raw.values(), key=lambda item: (item.key, item.meta, item.raw or ''))
         self.last_scan_report = {
             'csv_path': str(self.csv_path),
-            'nbt_path': str(self.nbt_path),
-            'super_csv_path': str(self.super_csv_path),
-            **super_csv_report,
+            'snbt_path': str(self.snbt_path),
+            'merged_csv_path': str(self.merged_csv_path),
+            'catalog_csv_path': str(source_csv_path),
+            'merged_csv_exists': self.merged_csv_path.is_file(),
+            'merged_csv_written': False,
+            'merged_rows': csv_rows if source_csv_path == self.merged_csv_path else 0,
+            'merged_nbt_rows': csv_nbt_entries if source_csv_path == self.merged_csv_path else 0,
             'entries': len(self.entries),
             'csv_rows': csv_rows,
+            'snbt_rows': snbt_rows,
             'csv_entries': len(csv_entries),
             'csv_nbt_entries': csv_nbt_entries,
-            'nbt_items': len(nbt_items),
-            'nbt_entries': nbt_entries + csv_nbt_entries,
-            'nbt_with_tags': nbt_with_tags,
-            'matched_nbt_items': matched_nbt,
-            'unmatched_nbt_items': unmatched_nbt,
-            'enabled': self.csv_path.is_file() or self.nbt_path.is_file(),
+            'nbt_entries': csv_nbt_entries,
+            'enabled': self.csv_path.is_file() or self.merged_csv_path.is_file(),
         }
-        if nbt_error:
-            self.last_scan_report['nbt_error'] = nbt_error
         return self.last_scan_report
 
-    def upload_nbt(self, content: bytes) -> dict[str, object]:
+    def upload_snbt_json(self, content: bytes) -> dict[str, object]:
         if not content.strip():
-            raise ValueError('NBT file is empty')
-        read_itempanel_nbt_bytes(content)
-        self.nbt_path.parent.mkdir(parents=True, exist_ok=True)
-        self.nbt_path.write_bytes(content)
-        return self.scan(raise_on_nbt_error=True)
+            raise ValueError('itempanel.json is empty')
+        text = content.decode('utf-8-sig', errors='replace')
+        lines = read_snbt_lines_from_text(text)
+        if not lines:
+            raise ValueError('itempanel.json does not contain SNBT lines')
+        self.snbt_path.parent.mkdir(parents=True, exist_ok=True)
+        self.snbt_path.write_text('\n'.join(lines) + '\n', encoding='utf-8-sig')
+        self.invalidate_merged()
+        summary = self.scan()
+        summary['uploaded_snbt_rows'] = len(lines)
+        return summary
+
+    def merge_csv_and_snbt(self) -> dict[str, object]:
+        merge_report = merge_itempanel_csv_with_snbt(self.csv_path, self.snbt_path, self.merged_csv_path)
+        catalog_summary = self.scan()
+        return {**merge_report, 'catalog': catalog_summary}
+
+    def read_merged_csv_bytes(self) -> bytes:
+        if not self.merged_csv_path.is_file():
+            raise FileNotFoundError('itempanel_merged.csv is not generated')
+        return self.merged_csv_path.read_bytes()
+
+    def invalidate_merged(self) -> None:
+        if self.merged_csv_path.is_file():
+            self.merged_csv_path.unlink()
 
     def to_api(self) -> dict:
         return {
@@ -168,7 +138,7 @@ class ItemCatalogService:
         }
 
     def _read_csv_entries(self) -> tuple[list[ItemCatalogEntry], int]:
-        rows = self._read_csv_rows()
+        rows = self._read_csv_rows(self._catalog_csv_path())
         return self._csv_entries_from_rows(rows), len(rows)
 
     def _csv_entries_from_rows(self, rows: list[dict[str, str]]) -> list[ItemCatalogEntry]:
@@ -183,7 +153,7 @@ class ItemCatalogService:
             meta = self._parse_int(self._field(row, 'Item meta', 'meta', 'item_meta', 'item_meta_csv'), default=0)
             legacy_id = self._parse_int(self._field(row, 'Item ID', 'id', 'item_id', 'item_id_csv'), default=None)
             nbt_raw = self._csv_nbt_raw(row)
-            has_nbt = bool(nbt_raw) or self._parse_bool(self._field(row, 'Has NBT', 'has_nbt', 'has_nbt_csv', 'has_nbt_real'))
+            has_nbt = bool(nbt_raw)
             has_icon = self._has_icon(key, meta)
             icon_url = self._icon_url(key, meta)
             sources = {'csv'} | ({'icon'} if has_icon else set()) | ({'nbt'} if nbt_raw else set())
@@ -202,117 +172,26 @@ class ItemCatalogService:
             ))
         return entries
 
-    def _write_super_itempanel_csv(self, rows: list[dict[str, str]], nbt_items: list[ItemPanelNbtStack]) -> dict[str, object]:
-        report: dict[str, object] = {
-            'super_csv_written': False,
-            'super_csv_rows': 0,
-            'super_csv_nbt_rows': 0,
-        }
-        if not rows or not nbt_items:
-            return report
-        fieldnames = [
-            'index',
-            'item_name',
-            'item_id_csv',
-            'item_meta_csv',
-            'display_name_csv',
-            'has_nbt_csv',
-            'nbt_id',
-            'nbt_damage',
-            'meta_match',
-            'count',
-            'has_nbt_real',
-            'tag_keys',
-            'tag_modid',
-            'tag_itemname',
-            'tag_meta',
-            'nbt_display_name',
-            'fluid_name',
-            'fluid_amount',
-            'energy',
-            'charge',
-            'ench_count',
-            'has_genome',
-            'has_infitool',
-            'raw_tag_json_short',
-        ]
-        try:
-            self.super_csv_path.parent.mkdir(parents=True, exist_ok=True)
-            nbt_rows = 0
-            with self.super_csv_path.open('w', encoding='utf-8-sig', newline='') as handle:
-                writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter=';')
-                writer.writeheader()
-                for index, row in enumerate(rows, start=1):
-                    stack = nbt_items[index - 1] if index - 1 < len(nbt_items) else None
-                    nbt_info = self._super_nbt_info(stack)
-                    if nbt_info['has_nbt_real']:
-                        nbt_rows += 1
-                    csv_id = self._field(row, 'Item ID', 'id', 'item_id', 'item_id_csv')
-                    csv_meta = self._field(row, 'Item meta', 'meta', 'item_meta', 'item_meta_csv')
-                    nbt_id = str(nbt_info['nbt_id'])
-                    nbt_damage = str(nbt_info['nbt_damage'])
-                    writer.writerow({
-                        'index': index,
-                        'item_name': self._field(row, 'Item Name', 'key', 'item_name'),
-                        'item_id_csv': csv_id,
-                        'item_meta_csv': csv_meta,
-                        'display_name_csv': self._field(row, 'Display Name', 'display_ru', 'display_name', 'display_name_csv'),
-                        'has_nbt_csv': self._field(row, 'Has NBT', 'has_nbt', 'has_nbt_csv'),
-                        **nbt_info,
-                        'meta_match': bool(csv_id and csv_meta and csv_id == nbt_id and csv_meta == nbt_damage),
-                    })
-            report.update({
-                'super_csv_written': True,
-                'super_csv_rows': len(rows),
-                'super_csv_nbt_rows': nbt_rows,
-            })
-        except Exception as exc:
-            report['super_csv_error'] = str(exc)
-        return report
+    def _catalog_csv_path(self) -> Path:
+        return self.merged_csv_path if self.merged_csv_path.is_file() else self.csv_path
 
-    def _super_nbt_info(self, stack: ItemPanelNbtStack | None) -> dict[str, object]:
-        tag = stack.tag_json if stack is not None and isinstance(stack.tag_json, dict) else {}
-        fluid = tag.get('Fluid') if isinstance(tag.get('Fluid'), dict) else {}
-        display = tag.get('display') if isinstance(tag.get('display'), dict) else {}
-        return {
-            'nbt_id': stack.legacy_id if stack else '',
-            'nbt_damage': stack.meta if stack else '',
-            'count': stack.count if stack else '',
-            'has_nbt_real': bool(tag),
-            'tag_keys': ';'.join(sorted(str(key) for key in tag.keys())),
-            'tag_modid': tag.get('modid', ''),
-            'tag_itemname': tag.get('itemname', ''),
-            'tag_meta': tag.get('meta', ''),
-            'nbt_display_name': display.get('Name', ''),
-            'fluid_name': fluid.get('FluidName', fluid.get('Name', '')),
-            'fluid_amount': fluid.get('Amount', ''),
-            'energy': tag.get('energy', tag.get('Energy', '')),
-            'charge': tag.get('charge', ''),
-            'ench_count': len(tag.get('ench', [])) if isinstance(tag.get('ench'), list) else '',
-            'has_genome': 'Genome' in tag or 'genes' in tag or 'gene' in tag,
-            'has_infitool': 'InfiTool' in tag,
-            'raw_tag_json_short': self._short_json(tag),
-        }
-
-    def _short_json(self, value: object, *, limit: int = 1000) -> str:
-        if value in (None, ''):
-            return ''
-        text = json.dumps(value, ensure_ascii=False, separators=(',', ':'))
-        if len(text) > limit:
-            return text[:limit] + '...'
-        return text
-
-    def _read_csv_rows(self) -> list[dict[str, str]]:
-        if not self.csv_path.is_file():
+    def _read_csv_rows(self, path: Path) -> list[dict[str, str]]:
+        if not path.is_file():
             return []
         for encoding in ('utf-8-sig', 'cp1251', 'windows-1251'):
             try:
-                with self.csv_path.open('r', encoding=encoding, newline='') as handle:
+                with path.open('r', encoding=encoding, newline='') as handle:
                     return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
             except UnicodeDecodeError:
                 continue
-        with self.csv_path.open('r', encoding='utf-8', errors='replace', newline='') as handle:
+        with path.open('r', encoding='utf-8', errors='replace', newline='') as handle:
             return list(csv.DictReader(handle, delimiter=self._csv_delimiter(handle)))
+
+    def _count_snbt_rows(self) -> int:
+        try:
+            return len(read_snbt_lines(self.snbt_path))
+        except Exception:
+            return 0
 
     def _csv_delimiter(self, handle) -> str:
         sample = handle.read(4096)
@@ -335,21 +214,6 @@ class ItemCatalogService:
         current.icon_url = current.icon_url or entry.icon_url
         if not current.nbt_raw:
             current.nbt_raw = entry.nbt_raw
-
-    def _match_nbt_stack(
-        self,
-        stack: ItemPanelNbtStack,
-        by_id_meta: dict[tuple[int, int], ItemCatalogEntry],
-        by_id: dict[int, list[ItemCatalogEntry]],
-    ) -> ItemCatalogEntry | None:
-        exact = by_id_meta.get((stack.legacy_id, stack.meta))
-        if exact is not None:
-            return exact
-        zero = by_id_meta.get((stack.legacy_id, 0))
-        if zero is not None:
-            return zero
-        candidates = by_id.get(stack.legacy_id)
-        return candidates[0] if candidates else None
 
     def _has_icon(self, key: str, meta: int) -> bool:
         return (
@@ -388,13 +252,13 @@ class ItemCatalogService:
         except (TypeError, ValueError):
             return default
 
-    def _parse_bool(self, value: str) -> bool:
-        return str(value).strip().lower() in {'true', '1', 'yes', 'y'}
-
     def _csv_nbt_raw(self, row: dict[str, str]) -> Optional[str]:
         raw = self._field(row, 'NBT Raw', 'nbt_raw', 'raw_tag_json_short')
         if not raw or raw in {'{}', '{ }'}:
-            return None
+            snbt = self._field(row, 'SNBT', 'snbt')
+            if not snbt:
+                return None
+            return extract_tag_snbt(snbt)
         try:
             parsed = json.loads(raw)
         except json.JSONDecodeError:

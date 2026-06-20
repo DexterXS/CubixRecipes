@@ -326,9 +326,17 @@ async function uploadRawItemPanelFile(file: File, endpoint: string, contentType:
   return response;
 }
 
-export async function uploadItemPanelNbt(file: File): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {
-  const response = await uploadRawItemPanelFile(file, '/admin/itempanel/nbt', 'application/octet-stream');
+export async function uploadItemPanelJson(file: File): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {
+  const response = await uploadRawItemPanelFile(file, '/admin/itempanel/json', 'application/json');
   return await response.json() as { ok: boolean; path: string; summary: Record<string, unknown> };
+}
+
+export async function mergeItemPanelFiles(): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {
+  return request<{ ok: boolean; path: string; summary: Record<string, unknown> }>(apiPath('/admin/itempanel/merge'), { method: 'POST' });
+}
+
+export function getItemPanelMergedCsvUrl(): string {
+  return apiPath('/admin/itempanel/merged');
 }
 
 export async function getCurrentUser(): Promise<AuthMeResponse> {

@@ -1,68 +1,12 @@
 from __future__ import annotations
 
-import gzip
 import csv
 import struct
 import zlib
 from pathlib import Path
 
-from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.item_catalog import ItemCatalogService
-
-
-def _name(value: str) -> bytes:
-    raw = value.encode('utf-8')
-    return struct.pack('>H', len(raw)) + raw
-
-
-def _tag(tag_type: int, name: str, payload: bytes) -> bytes:
-    return bytes([tag_type]) + _name(name) + payload
-
-
-def _short(value: int) -> bytes:
-    return struct.pack('>h', value)
-
-
-def _int(value: int) -> bytes:
-    return struct.pack('>i', value)
-
-
-def _byte(value: int) -> bytes:
-    return struct.pack('>b', value)
-
-
-def _string(value: str) -> bytes:
-    raw = value.encode('utf-8')
-    return struct.pack('>H', len(raw)) + raw
-
-
-def _compound(tags: list[bytes]) -> bytes:
-    return b''.join(tags) + b'\x00'
-
-
-def _item_stack(legacy_id: int, damage: int, tag_payload: bytes | None = None) -> bytes:
-    tags = [
-        _tag(2, 'id', _short(legacy_id)),
-        _tag(1, 'Count', _byte(1)),
-        _tag(2, 'Damage', _short(damage)),
-    ]
-    if tag_payload is not None:
-        tags.append(_tag(10, 'tag', tag_payload))
-    return _compound(tags)
-
-
-def _write_itempanel_nbt(path: Path) -> None:
-    item_tag = _compound([
-        _tag(3, 'energy', _int(0)),
-        _tag(8, 'mode', _string('charged')),
-    ])
-    stacks = [
-        _item_stack(475, 0, item_tag),
-        _item_stack(999, 0, None),
-    ]
-    list_payload = bytes([10]) + struct.pack('>i', len(stacks)) + b''.join(stacks)
-    root = bytes([10]) + _name('') + _tag(9, 'list', list_payload) + b'\x00'
-    path.write_bytes(gzip.compress(root))
+from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -87,7 +31,7 @@ def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: 
     )
 
 
-def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
+def test_item_catalog_merges_csv_and_itempanel_json_snbt(tmp_path: Path):
     csv_path = tmp_path / 'itempanel.csv'
     csv_path.write_text(
         'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
@@ -100,35 +44,38 @@ def test_item_catalog_merges_csv_and_itempanel_nbt(tmp_path: Path):
         icons_dir / 'Charged Cell.png',
         [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)],
     )
-    nbt_path = tmp_path / 'itempanel.nbt'
-    _write_itempanel_nbt(nbt_path)
+    snbt_path = tmp_path / 'itempanel.json'
+    snbt_path.write_text('{id:475s,Count:1b,tag:{energy:0,mode:"charged"},Damage:0s}\n', encoding='utf-8-sig')
     icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     icon_catalog.scan()
-    service = ItemCatalogService(csv_path, nbt_path, icon_catalog)
+    service = ItemCatalogService(csv_path, snbt_path, icon_catalog)
 
-    summary = service.scan()
+    before_merge = service.scan()
+    assert before_merge['nbt_entries'] == 0
+
+    merge_summary = service.merge_csv_and_snbt()
     payload = service.to_api()
     entries = {entry['raw']: entry for entry in payload['entries']}
 
-    assert '<mod:charged>.withTag({energy: 0, mode: "charged"})' in entries
+    nbt_raw = '<mod:charged>.withTag({energy:0,mode:"charged"})'
+    assert nbt_raw in entries
     assert '<mod:charged>' not in entries
-    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['has_nbt'] is True
-    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['icon_url']
-    assert entries['<mod:charged>.withTag({energy: 0, mode: "charged"})']['sources'] == ['csv', 'icon', 'nbt']
-    assert summary['nbt_items'] == 2
-    assert summary['nbt_entries'] == 1
-    assert summary['matched_nbt_items'] == 1
-    assert summary['unmatched_nbt_items'] == 1
-    assert summary['super_csv_written'] is True
-    assert summary['super_csv_nbt_rows'] == 1
+    assert entries[nbt_raw]['has_nbt'] is True
+    assert entries[nbt_raw]['nbt_raw'] == '{energy:0,mode:"charged"}'
+    assert entries[nbt_raw]['icon_url']
+    assert entries[nbt_raw]['sources'] == ['csv', 'icon', 'nbt']
+    assert merge_summary['merged_rows'] == 1
+    assert merge_summary['merged_nbt_rows'] == 1
+    assert merge_summary['catalog']['nbt_entries'] == 1
 
-    super_csv = tmp_path / 'super_itempanel.csv'
-    assert super_csv.is_file()
-    with super_csv.open('r', encoding='utf-8-sig', newline='') as handle:
-        rows = list(csv.DictReader(handle, delimiter=';'))
-    assert rows[0]['item_name'] == 'mod:charged'
-    assert rows[0]['has_nbt_real'] == 'True'
-    assert rows[0]['raw_tag_json_short'] == '{"energy":0,"mode":"charged"}'
+    merged_csv = tmp_path / 'itempanel_merged.csv'
+    assert merged_csv.is_file()
+    with merged_csv.open('r', encoding='utf-8-sig', newline='') as handle:
+        rows = list(csv.DictReader(handle))
+    assert rows[0]['Item Name'] == 'mod:charged'
+    assert rows[0]['SNBT Has NBT'] == 'true'
+    assert rows[0]['ID Match'] == 'true'
+    assert rows[0]['Meta Match'] == 'true'
 
 
 def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
@@ -143,7 +90,7 @@ def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
     icons_dir.mkdir()
     icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     icon_catalog.scan()
-    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.nbt', icon_catalog)
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.json', icon_catalog)
 
     summary = service.scan()
     payload = service.to_api()
@@ -159,3 +106,26 @@ def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
     assert summary['csv_entries'] == 2
     assert summary['csv_nbt_entries'] == 1
     assert summary['nbt_entries'] == 1
+
+
+def test_item_catalog_does_not_treat_csv_has_nbt_flag_as_real_nbt(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'mod:meta_only,475,1,true,Meta Only\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.json', icon_catalog)
+
+    summary = service.scan()
+    payload = service.to_api()
+    entry = payload['entries'][0]
+
+    assert summary['nbt_entries'] == 0
+    assert entry['raw'] == '<mod:meta_only:1>'
+    assert entry['nbt_raw'] is None
+    assert entry['has_nbt'] is False

@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelNbt, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1408,11 +1408,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [modIconStatus, setModIconStatus] = useState<ModIconAdminStatus | null>(null);
   const [modIconMessage, setModIconMessage] = useState('');
   const [itemPanelCsvMessage, setItemPanelCsvMessage] = useState('');
-  const [itemPanelNbtMessage, setItemPanelNbtMessage] = useState('');
+  const [itemPanelJsonMessage, setItemPanelJsonMessage] = useState('');
   const [itemCatalogSummary, setItemCatalogSummary] = useState<Record<string, unknown> | null>(null);
   const [modIconUploading, setModIconUploading] = useState(false);
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
-  const [itemPanelNbtUploading, setItemPanelNbtUploading] = useState(false);
+  const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
+  const [itemPanelMerging, setItemPanelMerging] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
   const [isWipeUpdateOpen, setIsWipeUpdateOpen] = useState(false);
   const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
@@ -1713,24 +1714,41 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  async function handleItemPanelNbtFiles(files: FileList | File[]) {
+  async function handleItemPanelJsonFiles(files: FileList | File[]) {
     if (!canManageModIcons) return;
     const file = Array.from(files)[0];
     if (!file) return;
-    if (!file.name.toLowerCase().endsWith('.nbt')) {
-      setItemPanelNbtMessage('Можно загрузить только itempanel.nbt.');
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      setItemPanelJsonMessage('Можно загрузить только itempanel.json.');
       return;
     }
-    setItemPanelNbtUploading(true);
-    setItemPanelNbtMessage(`Загружаю ${file.name}...`);
+    setItemPanelJsonUploading(true);
+    setItemPanelJsonMessage(`Загружаю ${file.name}...`);
     try {
-      const payload = await uploadItemPanelNbt(file);
+      const payload = await uploadItemPanelJson(file);
       const summary = await refreshItemCatalogTranslations();
-      setItemPanelNbtMessage(`NBT загружен. Stack-ов: ${String(payload.summary.nbt_items ?? summary.nbt_items ?? 0)}, NBT-вариантов: ${String(summary.nbt_entries ?? 0)}, каталог: ${String(summary.entries ?? 0)}.`);
+      setItemPanelJsonMessage(`JSON загружен. SNBT строк: ${String(payload.summary.uploaded_snbt_rows ?? summary.snbt_rows ?? 0)}. Для применения нажмите "Объединить файлы".`);
     } catch (error) {
-      setItemPanelNbtMessage(error instanceof Error ? error.message : String(error));
+      setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
     } finally {
-      setItemPanelNbtUploading(false);
+      setItemPanelJsonUploading(false);
+    }
+  }
+
+  async function handleMergeItemPanelFiles() {
+    if (!canManageModIcons) return;
+    setItemPanelMerging(true);
+    setItemPanelJsonMessage('Объединяю itempanel.csv и itempanel.json...');
+    try {
+      const payload = await mergeItemPanelFiles();
+      const catalogSummary = await refreshItemCatalogTranslations();
+      const summary = payload.summary;
+      const catalog = (summary.catalog && typeof summary.catalog === 'object') ? summary.catalog as Record<string, unknown> : catalogSummary;
+      setItemPanelJsonMessage(`Файлы объединены. Строк: ${String(summary.merged_rows ?? 0)}, с NBT: ${String(summary.merged_nbt_rows ?? 0)}, каталог: ${String(catalog.entries ?? catalogSummary.entries ?? 0)}.`);
+    } catch (error) {
+      setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemPanelMerging(false);
     }
   }
 
@@ -5008,7 +5026,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div className="modal-header">
             <div>
               <h2>Обновление вайпа</h2>
-              <span className="modal-subtitle">CSV, иконки, атласы и itempanel NBT в один общий каталог</span>
+              <span className="modal-subtitle">CSV, иконки, атласы и построчный itempanel.json в один общий каталог</span>
             </div>
             <div className="inline-actions">
               <button type="button" onClick={() => setIsWipeUpdateOpen(false)}>Закрыть</button>
@@ -5081,44 +5099,47 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>4. itempanel.nbt</h3>
-                <span>NBT stack-и добавляются в NEI как отдельные raw-варианты с .withTag(...).</span>
+                <h3>4. itempanel.json</h3>
+                <span>Построчный SNBT файл должен совпадать с itempanel.csv по количеству строк и порядку.</span>
               </div>
               <label
                 className="file-drop-zone compact-drop-zone"
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.preventDefault();
-                  void handleItemPanelNbtFiles(event.dataTransfer.files);
+                  void handleItemPanelJsonFiles(event.dataTransfer.files);
                 }}
               >
                 <input
                   type="file"
-                  accept=".nbt,application/octet-stream"
+                  accept=".json,application/json,text/plain"
                   onChange={(event) => {
                     if (event.target.files) {
-                      void handleItemPanelNbtFiles(event.target.files);
+                      void handleItemPanelJsonFiles(event.target.files);
                       event.currentTarget.value = '';
                     }
                   }}
                 />
-                <strong>Загрузить itempanel.nbt</strong>
-                <span>{itemPanelNbtUploading ? 'Загрузка...' : itemPanelNbtMessage || 'Файл из dumps/itempanel.nbt.'}</span>
+                <strong>Загрузить itempanel.json</strong>
+                <span>{itemPanelJsonUploading ? 'Загрузка...' : itemPanelJsonMessage || 'Файл с SNBT строками из NEI dump.'}</span>
               </label>
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>5. Проверка каталога</h3>
-                <span>NEI использует эти данные без перезагрузки страницы.</span>
+                <h3>5. Объединение и проверка</h3>
+                <span>После объединения NEI получает raw-варианты с .withTag(...), а редактор строит дерево NBT.</span>
               </div>
               <div className="kv-grid">
                 <div><span>Всего</span><strong>{String(summary.entries ?? itemPanelTranslations.entries.length)}</strong></div>
                 <div><span>CSV</span><strong>{String(summary.csv_entries ?? 0)}</strong></div>
+                <div><span>SNBT строк</span><strong>{String(summary.snbt_rows ?? 0)}</strong></div>
                 <div><span>NBT варианты</span><strong>{String(summary.nbt_entries ?? 0)}</strong></div>
-                <div><span>Не сопоставлено NBT</span><strong>{String(summary.unmatched_nbt_items ?? 0)}</strong></div>
+                <div><span>Merged CSV</span><strong>{summary.merged_csv_exists ? 'создан' : 'нет'}</strong></div>
               </div>
               <div className="inline-actions">
+                <button type="button" className="secondary-button" disabled={itemPanelMerging} onClick={() => void handleMergeItemPanelFiles()}>{itemPanelMerging ? 'Объединение...' : 'Объединить файлы'}</button>
                 <button type="button" className="ghost-button" onClick={() => void refreshItemCatalogTranslations()}>Обновить каталог</button>
+                <button type="button" className="ghost-button" disabled={!summary.merged_csv_exists} onClick={() => window.open(getItemPanelMergedCsvUrl(), '_blank', 'noopener,noreferrer')}>Открыть объединенный файл</button>
               </div>
             </section>
           </div>
@@ -5179,12 +5200,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </label>
               <div className="file-actions">
                 <button type="button" className="secondary-button" onClick={() => setIsWipeUpdateOpen(true)}>Обновление вайпа</button>
-                <button type="button" disabled={modIconUploading || itemPanelCsvUploading} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
+                <button type="button" disabled={modIconUploading || itemPanelCsvUploading || itemPanelJsonUploading || itemPanelMerging} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
                 <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
               </div>
               {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
               {itemPanelCsvMessage ? <div className="inline-status inline-status-default">{itemPanelCsvMessage}</div> : null}
-              {itemPanelNbtMessage ? <div className="inline-status inline-status-default">{itemPanelNbtMessage}</div> : null}
+              {itemPanelJsonMessage ? <div className="inline-status inline-status-default">{itemPanelJsonMessage}</div> : null}
               <div className="admin-file-list">
                 {(modIconStatus?.archives ?? []).map((archive) => (
                   <div key={archive.name} className="admin-file-row">

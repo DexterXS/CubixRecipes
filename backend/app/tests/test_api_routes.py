@@ -1,5 +1,4 @@
 import asyncio
-import gzip
 import json
 from pathlib import Path
 from zipfile import ZipFile
@@ -34,29 +33,6 @@ def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: 
     )
 
 
-def _nbt_name(value: str) -> bytes:
-    raw = value.encode('utf-8')
-    return struct.pack('>H', len(raw)) + raw
-
-
-def _nbt_tag(tag_type: int, name: str, payload: bytes) -> bytes:
-    return bytes([tag_type]) + _nbt_name(name) + payload
-
-
-def _itempanel_nbt_bytes() -> bytes:
-    item_tag = _nbt_tag(3, 'energy', struct.pack('>i', 25)) + b'\x00'
-    stack = (
-        _nbt_tag(2, 'id', struct.pack('>h', 475))
-        + _nbt_tag(1, 'Count', struct.pack('>b', 1))
-        + _nbt_tag(2, 'Damage', struct.pack('>h', 0))
-        + _nbt_tag(10, 'tag', item_tag)
-        + b'\x00'
-    )
-    list_payload = bytes([10]) + struct.pack('>i', 1) + stack
-    root = bytes([10]) + _nbt_name('') + _nbt_tag(9, 'list', list_payload) + b'\x00'
-    return gzip.compress(root)
-
-
 def test_health_endpoint_is_available(tmp_path: Path):
     app = create_app(str(tmp_path))
     health_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/health')
@@ -81,29 +57,35 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
 
 
-def test_itempanel_catalog_and_nbt_upload_routes_are_available(tmp_path: Path):
+def test_itempanel_catalog_and_json_merge_routes_are_available(tmp_path: Path):
     (tmp_path / 'itempanel.csv').write_text(
         'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
         'mod:charged,475,0,false,Charged Cell\n',
         encoding='utf-8',
     )
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
-    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/nbt')
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/json')
+    merge_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/merge')
+    merged_csv_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/merged')
     catalog_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/catalog')
 
     class BodyRequest:
         headers = {}
 
         async def body(self):
-            return _itempanel_nbt_bytes()
+            return b'{id:475s,Count:1b,tag:{energy:25},Damage:0s}\n'
 
-    uploaded = asyncio.run(upload_route(BodyRequest(), filename='itempanel.nbt'))
+    uploaded = asyncio.run(upload_route(BodyRequest(), filename='itempanel.json'))
+    merged = merge_route()
+    merged_csv = merged_csv_route()
     catalog = catalog_route()
     raws = {entry['raw'] for entry in catalog['entries']}
 
     assert uploaded['ok'] is True
-    assert uploaded['summary']['nbt_items'] == 1
-    assert '<mod:charged>.withTag({energy: 25})' in raws
+    assert uploaded['summary']['uploaded_snbt_rows'] == 1
+    assert merged['summary']['merged_nbt_rows'] == 1
+    assert merged_csv.media_type.startswith('text/csv')
+    assert '<mod:charged>.withTag({energy:25})' in raws
 
 
 def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Path):

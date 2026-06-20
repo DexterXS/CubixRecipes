@@ -6,8 +6,8 @@
 - Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
 - Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
 - Added admin `itempanel.csv` upload support, refreshing the backend itempanel catalog/atlas from the admin UI.
-- Added a step-by-step `Обновление вайпа` admin window for uploading itempanel CSV, mod icon ZIPs, regenerating atlases, uploading `itempanel.nbt`, and checking the combined item catalog.
-- Added a backend combined item catalog that merges `itempanel.csv`, itempanel icon availability, and gzip/binary `itempanel.nbt` stacks so NBT variants can appear in NEI as `.withTag(...)` entries.
+- Added a step-by-step `Обновление вайпа` admin window for uploading itempanel CSV, post-line `itempanel.json` SNBT data, mod icon ZIPs, regenerating atlases, explicitly merging files, opening `itempanel_merged.csv`, and checking the combined item catalog.
+- Added a backend combined item catalog that merges `itempanel.csv`, `itempanel.json` SNBT tags, and itempanel icon availability so NBT variants can appear in NEI as `.withTag(...)` entries and open as populated NBT trees.
 - Added admin-managed whitelist mode: when enabled, non-admin accounts outside the whitelist see an access banner instead of the app.
 - Added configurable 9x9 Avaritia visual grouping: every 3x3 block is separated and the gap is saved in UI preferences.
 - Added Railway/backend volume-aware project config defaults: mounted `/data` storage is used for runtime config, default `.zs` scripts, admin backups, generated mod atlases, and shared recipe draft templates.
@@ -17,8 +17,8 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
-- Embedded the itempanel CSV + itempanel NBT merge workflow in the backend: uploads now generate `super_itempanel.csv` automatically and exact NBT stacks replace their base `item:meta` NEI entries.
-- Added backend support for combined `super_itempanel.csv`-style files with semicolon delimiters and `raw_tag_json_short`, so CSV-embedded NBT is imported as `.withTag(...)` variants.
+- Replaced the old binary itempanel NBT merge path with explicit backend CSV + line-based `itempanel.json` SNBT merging that writes `itempanel_merged.csv` only after the admin clicks `Объединить файлы`.
+- Added backend support for importing SNBT `tag:{...}` data from `itempanel_merged.csv`, so CSV-embedded NBT is imported as `.withTag(...)` variants while CSV/meta-only rows no longer count as real NBT.
 - Treat NEI NBT outlines as real `.withTag(...)`/`nbt_raw` markers only, so meta-only item variants no longer receive the yellow NBT border.
 - Added independent NEI/draft item markers: recipe availability controls green/red fill, while NBT presence controls yellow/red outline; item search suggestions now preserve `.withTag(...)` values when opening the NBT editor.
 - Made craft grids render generated mod-icon atlas sprites too, so items dragged from NEI no longer turn into `?` in recipe cells when their icon exists only in the uploaded mod atlas layer.

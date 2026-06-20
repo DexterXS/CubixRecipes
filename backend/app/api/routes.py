@@ -117,20 +117,20 @@ def _project_root_for_catalog(config_service: ProjectConfigService) -> Path:
     return Path(__file__).resolve().parents[3]
 
 
-def _itempanel_nbt_path_for_catalog(project_root: Path, active_scripts_dir: str) -> Path:
+def _itempanel_snbt_path_for_catalog(project_root: Path, active_scripts_dir: str) -> Path:
     scripts_path = Path(active_scripts_dir).expanduser().resolve(strict=False)
-    scripts_dump = scripts_path.parent / 'dumps' / 'itempanel.nbt'
+    scripts_dump = scripts_path.parent / 'dumps' / 'itempanel.json'
     candidates = [
         scripts_dump,
-        project_root / 'dumps' / 'itempanel.nbt',
-        project_root / 'itempanel.nbt',
+        project_root / 'dumps' / 'itempanel.json',
+        project_root / 'itempanel.json',
     ]
     for candidate in candidates:
         if candidate.is_file():
             return candidate
     if active_scripts_dir != 'scripts':
         return scripts_dump
-    return project_root / 'itempanel.nbt'
+    return project_root / 'itempanel.json'
 
 
 def _has_itempanel_icon_catalog(catalog: ItemPanelIconCatalog) -> bool:
@@ -275,7 +275,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_icon_catalog.scan()
     item_catalog_service = ItemCatalogService(
         itempanel_icon_catalog.csv_path,
-        _itempanel_nbt_path_for_catalog(project_root, active_scripts_dir),
+        _itempanel_snbt_path_for_catalog(project_root, active_scripts_dir),
         itempanel_icon_catalog,
     )
     item_catalog_service.scan()
@@ -457,6 +457,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         target = itempanel_icon_catalog.csv_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
+        item_catalog_service.invalidate_merged()
         itempanel_icon_catalog.scan()
         item_catalog_service.scan()
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel CSV uploaded', {
@@ -472,18 +473,39 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'atlas': itempanel_icon_catalog.get_atlas_manifest(),
         }
 
-    @router.post('/admin/itempanel/nbt')
-    async def admin_upload_itempanel_nbt(request: Request, filename: str = ''):
+    @router.post('/admin/itempanel/json')
+    async def admin_upload_itempanel_json(request: Request, filename: str = ''):
         upload_name = filename or request.headers.get('x-itempanel-filename', '')
-        if upload_name and not upload_name.lower().endswith('.nbt'):
-            raise HTTPException(status_code=400, detail='Only .nbt itempanel files are supported')
+        if upload_name and not upload_name.lower().endswith('.json'):
+            raise HTTPException(status_code=400, detail='Only itempanel.json files are supported')
         content = await request.body()
         try:
-            summary = item_catalog_service.upload_nbt(content)
+            summary = item_catalog_service.upload_snbt_json(content)
         except Exception as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
-        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel NBT uploaded', {'path': str(item_catalog_service.nbt_path), 'catalog': summary})
-        return {'ok': True, 'path': str(item_catalog_service.nbt_path), 'summary': summary}
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel JSON/SNBT uploaded', {'path': str(item_catalog_service.snbt_path), 'catalog': summary})
+        return {'ok': True, 'path': str(item_catalog_service.snbt_path), 'summary': summary}
+
+    @router.post('/admin/itempanel/merge')
+    def admin_merge_itempanel_files():
+        try:
+            summary = item_catalog_service.merge_csv_and_snbt()
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel CSV and JSON/SNBT merged', {
+            'path': str(item_catalog_service.merged_csv_path),
+            'catalog': summary,
+        })
+        return {'ok': True, 'path': str(item_catalog_service.merged_csv_path), 'summary': summary}
+
+    @router.get('/admin/itempanel/merged')
+    def admin_itempanel_merged_csv():
+        try:
+            content = item_catalog_service.read_merged_csv_bytes()
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        headers = {'Content-Disposition': "inline; filename*=UTF-8''itempanel_merged.csv"}
+        return Response(content=content, media_type='text/csv; charset=utf-8', headers=headers)
 
     @router.post('/admin/mod-icons/archive')
     async def admin_upload_mod_icons_archive(request: Request, filename: str = '', replace: bool = False):
@@ -920,7 +942,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         storage.scripts_dir = Path(updated.scripts_dir)
         storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(updated))
         itempanel_icon_catalog.scan()
-        item_catalog_service.nbt_path = _itempanel_nbt_path_for_catalog(project_root, updated.scripts_dir)
+        item_catalog_service.snbt_path = _itempanel_snbt_path_for_catalog(project_root, updated.scripts_dir)
         item_catalog_service.scan()
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)
