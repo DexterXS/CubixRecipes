@@ -18,6 +18,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Made the custom item editor wider and reordered it into an NBT-first layout with compact save/details panels.
 - Replaced the old binary itempanel NBT merge path with explicit backend CSV + line-based `itempanel.json` SNBT merging that writes `itempanel_merged.csv` only after the admin clicks `Объединить файлы`.
 - Added backend support for importing SNBT `tag:{...}` data from `itempanel_merged.csv`, so CSV-embedded NBT is imported as `.withTag(...)` variants while CSV/meta-only rows no longer count as real NBT.
 - Treat NEI NBT outlines as real `.withTag(...)`/`nbt_raw` markers only, so meta-only item variants no longer receive the yellow NBT border.

@@ -5027,75 +5027,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </div>
             </section>
 
-            {!isCraftMode ? (
-              <section className="settings-section custom-save-section">
-                <div className="settings-section-title compact">
-                  <h3>Где сохранить</h3>
-                  <span>{customItemForm.storage === 'local' ? 'local hash' : '.cubixrecipes_admin/custom_items'}</span>
-                </div>
-                <div className="custom-save-options" role="group" aria-label="custom-item-storage">
-                  <label className={`custom-save-option ${customItemForm.storage === 'local' ? 'active' : ''}`}>
-                    <input
-                      type="radio"
-                      name="custom-item-storage"
-                      checked={customItemForm.storage === 'local'}
-                      onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'local', scope: 'user' } : current)}
-                    />
-                    <strong>Только для меня</strong>
-                    <span>LocalStorage по hash пользователя.</span>
-                  </label>
-                  <label className={`custom-save-option ${customItemForm.storage === 'backend' ? 'active' : ''}`}>
-                    <input
-                      type="radio"
-                      name="custom-item-storage"
-                      checked={customItemForm.storage === 'backend'}
-                      onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'backend' } : current)}
-                    />
-                    <strong>Backend</strong>
-                    <span>Отдельная папка custom items, не scripts.</span>
-                  </label>
-                </div>
-                {customItemForm.storage === 'local' ? (
-                  <div className="inline-hint inline-hint-warning">Локальный custom item хранится в кэше браузера. После очистки LocalStorage/кэша он исчезнет.</div>
-                ) : (
-                  <div className="inline-hint">Backend custom items сохраняются отдельно от рецептов: <code>.cubixrecipes_admin/custom_items/items.json</code>.</div>
-                )}
-                {customItemForm.storage === 'backend' ? (
-                  <label className="field-block">
-                    <span>Область backend</span>
-                    <select
-                      aria-label="custom-item-scope"
-                      value={customItemForm.scope}
-                      disabled={!canUseGlobalScope}
-                      onChange={(event) => setCustomItemForm((current) => current ? { ...current, scope: event.target.value as 'global' | 'user' } : current)}
-                    >
-                      <option value="user">Только мой backend-предмет</option>
-                      <option value="global">Для всех</option>
-                    </select>
-                  </label>
-                ) : null}
-              </section>
-            ) : null}
-
-            <section className="settings-section custom-main-section">
-              <div className="settings-grid">
-                <label className="field-block">
-                  <span>Название</span>
-                  <input aria-label="custom-item-name" type="text" value={customItemForm.displayName} onChange={(event) => setCustomItemForm((current) => current ? { ...current, displayName: event.target.value } : current)} />
-                </label>
-                <label className="field-block">
-                  <span>Raw предмета</span>
-                  <input aria-label="custom-item-raw" type="text" value={customItemForm.itemRaw} onChange={(event) => setCustomItemForm((current) => current ? { ...current, itemRaw: event.target.value } : current)} />
-                </label>
-              </div>
-              <label className="field-block">
-                <span>Комментарий</span>
-                <textarea className="compact-textarea" aria-label="custom-item-comment" value={customItemForm.comment} onChange={(event) => setCustomItemForm((current) => current ? { ...current, comment: event.target.value } : current)} placeholder="Что это за предмет и зачем он нужен" rows={3} />
-              </label>
-              <div className="inline-hint">Для переливающихся вариантов укажите meta `*`, например `&lt;minecraft:wool:*&gt;`.</div>
-            </section>
-
-            <div className="settings-section">
+            <section className="settings-section custom-nbt-section">
               <div className="settings-section-title">
                 <h3>NBT</h3>
                 <span>{nbtRawPreview ? nbtRawPreview : 'NBT не задан.'}</span>
@@ -5108,6 +5040,80 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 onChange={setCustomItemNbtRoot}
                 onCollapsedPathsChange={setCollapsedNbtPaths}
               />
+            </section>
+
+            <div className={`custom-item-config-grid ${isCraftMode ? 'is-craft-mode' : ''}`}>
+              <section className="settings-section custom-main-section">
+                <div className="settings-section-title compact">
+                  <h3>Описание предмета</h3>
+                  <span>{isCraftMode ? 'Только для текущего рецепта' : 'Название, raw и заметка'}</span>
+                </div>
+                <div className="settings-grid">
+                  <label className="field-block">
+                    <span>Название</span>
+                    <input aria-label="custom-item-name" type="text" value={customItemForm.displayName} onChange={(event) => setCustomItemForm((current) => current ? { ...current, displayName: event.target.value } : current)} />
+                  </label>
+                  <label className="field-block">
+                    <span>Raw предмета</span>
+                    <input aria-label="custom-item-raw" type="text" value={customItemForm.itemRaw} onChange={(event) => setCustomItemForm((current) => current ? { ...current, itemRaw: event.target.value } : current)} />
+                  </label>
+                </div>
+                <label className="field-block">
+                  <span>Комментарий</span>
+                  <textarea className="compact-textarea" aria-label="custom-item-comment" value={customItemForm.comment} onChange={(event) => setCustomItemForm((current) => current ? { ...current, comment: event.target.value } : current)} placeholder="Что это за предмет и зачем он нужен" rows={3} />
+                </label>
+                <div className="inline-hint">Для переливающихся вариантов укажите meta `*`, например `&lt;minecraft:wool:*&gt;`.</div>
+              </section>
+
+              {!isCraftMode ? (
+                <section className="settings-section custom-save-section">
+                  <div className="settings-section-title compact">
+                    <h3>Где сохранить</h3>
+                    <span>{customItemForm.storage === 'local' ? 'local hash' : '.cubixrecipes_admin/custom_items'}</span>
+                  </div>
+                  <div className="custom-save-options" role="group" aria-label="custom-item-storage">
+                    <label className={`custom-save-option ${customItemForm.storage === 'local' ? 'active' : ''}`}>
+                      <input
+                        type="radio"
+                        name="custom-item-storage"
+                        checked={customItemForm.storage === 'local'}
+                        onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'local', scope: 'user' } : current)}
+                      />
+                      <strong>Только для меня</strong>
+                      <span>LocalStorage по hash пользователя.</span>
+                    </label>
+                    <label className={`custom-save-option ${customItemForm.storage === 'backend' ? 'active' : ''}`}>
+                      <input
+                        type="radio"
+                        name="custom-item-storage"
+                        checked={customItemForm.storage === 'backend'}
+                        onChange={() => setCustomItemForm((current) => current ? { ...current, storage: 'backend' } : current)}
+                      />
+                      <strong>Backend</strong>
+                      <span>Отдельная папка custom items, не scripts.</span>
+                    </label>
+                  </div>
+                  {customItemForm.storage === 'local' ? (
+                    <div className="inline-hint inline-hint-warning">Локальный custom item хранится в кэше браузера. После очистки LocalStorage/кэша он исчезнет.</div>
+                  ) : (
+                    <div className="inline-hint">Backend custom items сохраняются отдельно от рецептов: <code>.cubixrecipes_admin/custom_items/items.json</code>.</div>
+                  )}
+                  {customItemForm.storage === 'backend' ? (
+                    <label className="field-block">
+                      <span>Область backend</span>
+                      <select
+                        aria-label="custom-item-scope"
+                        value={customItemForm.scope}
+                        disabled={!canUseGlobalScope}
+                        onChange={(event) => setCustomItemForm((current) => current ? { ...current, scope: event.target.value as 'global' | 'user' } : current)}
+                      >
+                        <option value="user">Только мой backend-предмет</option>
+                        <option value="global">Для всех</option>
+                      </select>
+                    </label>
+                  ) : null}
+                </section>
+              ) : null}
             </div>
             {customItemsStatus ? <div className="inline-status inline-status-default">{customItemsStatus}</div> : null}
             <div className="inline-actions">
