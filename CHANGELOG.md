@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Added
+- Added an admin-only `Задачи` workspace with four kanban columns, compact expandable item task cards, drag-and-drop status movement, free/sorted board modes, priorities, deadlines, estimated days, assignees, helpers, and backend-backed shared task storage.
+- Added persistent `/data`-backed itempanel merge storage under `.cubixrecipes_admin/itempanel`, so uploaded itempanel data and generated `itempanel_merged.csv` survive deploys when the project config is on the Railway volume.
 - Added a `Техническая панель` workspace for admin/operator technical flows: mod icon ZIPs, itempanel CSV/atlas controls, roles, whitelist, debug data, and a temporary lowercase-to-original-case item/entity alias report generated from uploaded cloud `.zs` files or `fml-client-latest.log`, with an editable on-site alias table used when inserting recipe items.
 - Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
 - Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
@@ -18,6 +20,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Moved `Обновление вайпа` into the left technical sidebar so the wipe workflow is separated from regular mod-icon upload actions.
 - Made the custom item editor wider and reordered it into an NBT-first layout with compact save/details panels.
 - Replaced the old binary itempanel NBT merge path with explicit backend CSV + line-based `itempanel.json` SNBT merging that writes `itempanel_merged.csv` only after the admin clicks `Объединить файлы`.
 - Added backend support for importing SNBT `tag:{...}` data from `itempanel_merged.csv`, so CSV-embedded NBT is imported as `.withTag(...)` variants while CSV/meta-only rows no longer count as real NBT.

@@ -32,6 +32,9 @@ const defaultUser: AuthUser = {
 };
 
 let mockRecipeDraftTemplates: any[] = [];
+let mockRecipeTasks: any[] = [];
+let mockRecipeTaskBoardMode = 'free';
+let mockRecipeTaskCounter = 1;
 
 function projectSettings() {
   return {
@@ -147,6 +150,9 @@ function openRecipeActions() {
 beforeEach(() => {
   window.localStorage.clear();
   mockRecipeDraftTemplates = [];
+  mockRecipeTasks = [];
+  mockRecipeTaskBoardMode = 'free';
+  mockRecipeTaskCounter = 1;
   class MockImage {
     onload: null | (() => void) = null;
     set src(_value: string) {
@@ -264,7 +270,70 @@ beforeEach(() => {
       return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ...projectSettings(), ui_preferences: ui }) }) as Promise<Response>;
     }
     if (url === '/api/admin/users') {
-      return Promise.resolve({ ok: true, json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/tasks' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ boardMode: mockRecipeTaskBoardMode, tasks: mockRecipeTasks })
+      }) as Promise<Response>;
+    }
+    if (url === '/api/admin/tasks' && init?.method === 'POST') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      const task = {
+        id: `task-${mockRecipeTaskCounter++}`,
+        itemRaw: body.itemRaw,
+        itemTitle: body.itemTitle,
+        title: body.title,
+        description: body.description,
+        status: body.status,
+        priority: body.priority,
+        estimatedDays: body.estimatedDays,
+        deadlineDate: body.deadlineDate,
+        assigneeEmail: body.assigneeEmail,
+        helperEmails: body.helperEmails ?? [],
+        createdByEmail: adminUser.email,
+        createdAt: 1770000000000,
+        updatedAt: 1770000000000,
+        submittedByEmail: '',
+        submittedAt: 0,
+        reviewedByEmail: '',
+        approvedAt: 0,
+        sortOrder: mockRecipeTaskCounter * 1000
+      };
+      mockRecipeTasks = [task, ...mockRecipeTasks];
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, task }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/tasks/order' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      const updates = new Map((body.tasks ?? []).map((item: any) => [item.id, item]));
+      mockRecipeTasks = mockRecipeTasks.map((task) => {
+        const update = updates.get(task.id) as any;
+        return update ? { ...task, status: update.status, sortOrder: update.sortOrder } : task;
+      });
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, tasks: mockRecipeTasks }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/tasks/board' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      mockRecipeTaskBoardMode = body.boardMode ?? 'free';
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, boardMode: mockRecipeTaskBoardMode, tasks: mockRecipeTasks }) }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/tasks/') && init?.method === 'PATCH') {
+      const taskId = decodeURIComponent(url.split('/').pop() ?? '');
+      const body = JSON.parse(String(init.body ?? '{}'));
+      let updatedTask: any = null;
+      mockRecipeTasks = mockRecipeTasks.map((task) => {
+        if (task.id !== taskId) return task;
+        updatedTask = { ...task, ...body, updatedAt: 1770000001000 };
+        return updatedTask;
+      });
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, task: updatedTask }) }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/tasks/') && init?.method === 'DELETE') {
+      const taskId = decodeURIComponent(url.split('/').pop() ?? '');
+      mockRecipeTasks = mockRecipeTasks.filter((task) => task.id !== taskId);
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true }) }) as Promise<Response>;
     }
     if (url === '/api/admin/access' && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
@@ -282,7 +351,7 @@ beforeEach(() => {
       }) as Promise<Response>;
     }
     if (url === '/api/admin/users/2/role' && init?.method === 'PATCH') {
-      return Promise.resolve({ ok: true, json: async () => ({ ok: true, user: { ...moderatorUser, role: 'admin' } }) }) as Promise<Response>;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, user: { ...moderatorUser, role: 'admin' } }) }) as Promise<Response>;
     }
     if (url === '/api/admin/mod-icons') {
       return Promise.resolve({
@@ -879,15 +948,41 @@ test('cloud storage can switch volatile scripts_dir to persistent volume path', 
 test('shows drafts for moderators but keeps debug/admin settings hidden from viewers', () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Задачи' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
   cleanup();
 
   render(<App authUser={defaultUser} onLogout={vi.fn()} />);
   expect(screen.queryByRole('button', { name: 'Черновики' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Задачи' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Настройки' })).toBeFalsy();
+});
+
+test('admin can create compact expandable recipe task cards', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Задачи' }));
+  const board = await screen.findByLabelText('recipe-tasks-board');
+  const panel = board.closest('.panel') as HTMLElement;
+  const taskPanel = within(panel);
+
+  fireEvent.click(taskPanel.getByRole('button', { name: 'Новая задача' }));
+  fireEvent.change(taskPanel.getByLabelText('Предмет'), { target: { value: '<minecraft:planks>' } });
+  fireEvent.change(taskPanel.getByLabelText('Название'), { target: { value: 'Проверить доски' } });
+  fireEvent.change(taskPanel.getByLabelText('Приоритет'), { target: { value: 'urgent' } });
+  fireEvent.change(taskPanel.getByLabelText('Ответственный'), { target: { value: moderatorUser.email } });
+  fireEvent.change(taskPanel.getByLabelText('Дедлайн'), { target: { value: '2026-06-30' } });
+  fireEvent.click(taskPanel.getByRole('button', { name: 'Создать' }));
+
+  const card = await screen.findByLabelText('task-card-task-1');
+  expect(within(card).getByText('Срочный')).toBeTruthy();
+  expect(within(card).getByText(moderatorUser.email)).toBeTruthy();
+
+  fireEvent.click(card);
+  expect(await taskPanel.findByText(adminUser.email)).toBeTruthy();
 });
 
 test('settings keeps UI/debug controls separate from technical access', async () => {

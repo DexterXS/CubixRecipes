@@ -4,6 +4,7 @@ import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
+import { RecipeTasksBoard } from '../features/tasks/RecipeTasksBoard';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
@@ -46,7 +47,7 @@ const EMPTY_ITEM_CASE_ALIASES: Record<string, string> = {};
 const PERSISTENT_SCRIPTS_DIR = '/data/scripts';
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
-type WorkspaceTab = 'editor' | 'recipe' | 'technical' | 'cloud';
+type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
 type RecipeType = 'ct_shaped' | 'ct_shapeless' | 'avaritia_extreme_shaped';
 type RecipeCraftMode = 'shaped' | 'shapeless';
 type RecipeBindingMode = 'soft' | 'strict';
@@ -770,11 +771,13 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
 
   const workspaceTab: WorkspaceTab = value.workspaceTab === 'recipe'
     ? 'recipe'
-    : value.workspaceTab === 'cloud'
-      ? 'cloud'
-      : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
-        ? 'technical'
-        : 'editor';
+    : value.workspaceTab === 'tasks'
+      ? 'tasks'
+      : value.workspaceTab === 'cloud'
+        ? 'cloud'
+        : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
+          ? 'technical'
+          : 'editor';
   const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
   const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
   const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
@@ -1519,6 +1522,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canUseDebug = can(authUser, 'debug:manage');
   const canManageModIcons = can(authUser, 'mod-icons:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
+  const canManageTasks = can(authUser, 'tasks:manage');
   const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
   const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
   const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
@@ -1526,6 +1530,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const workspaceTabs = [
     { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
     { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
+    { id: 'tasks' as const, label: uiPreferences.language === 'ru' ? 'Задачи' : 'Tasks', visible: canManageTasks },
     { id: 'technical' as const, label: uiPreferences.language === 'ru' ? 'Техническая панель' : 'Technical panel', visible: canUseTechnicalPanel },
     { id: 'cloud' as const, label: uiPreferences.language === 'ru' ? 'Облако' : 'Cloud', visible: canManageCloudFiles }
   ].filter((tab) => tab.visible);
@@ -2140,7 +2145,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!workspaceTabs.some((tab) => tab.id === workspaceTab)) {
       setWorkspaceTab('editor');
     }
-  }, [workspaceTab, canCreateTemplates, canEditRecipes, canManageModIcons, canManageCloudFiles, canUseDebug]);
+  }, [workspaceTab, canCreateTemplates, canEditRecipes, canManageModIcons, canManageCloudFiles, canManageTasks, canUseDebug]);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -5308,7 +5313,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <span>CSV обновляет каталог предметов для поиска и сопоставления иконок.</span>
               </label>
               <div className="file-actions">
-                <button type="button" className="secondary-button" onClick={() => setIsWipeUpdateOpen(true)}>Обновление вайпа</button>
                 <button type="button" disabled={modIconUploading || itemPanelCsvUploading || itemPanelJsonUploading || itemPanelMerging} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
                 <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
               </div>
@@ -6393,6 +6397,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <small>{section.description}</small>
             </button>
           ))}
+          {canManageModIcons ? (
+            <button type="button" className="debug-nav-button debug-nav-action" aria-label="Обновление вайпа" onClick={() => setIsWipeUpdateOpen(true)}>
+              <span>Обновление вайпа</span>
+              <small>CSV, SNBT, атласы</small>
+            </button>
+          ) : null}
         </aside>
         <section className="debug-content">
           {renderDebugSectionContent()}
@@ -6408,6 +6418,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div className="workspace-column workspace-left">{renderDraftItemsPanel()}</div>
           <div className="workspace-column workspace-right">{renderDraftTemplatesPanel()}</div>
         </div>
+      );
+    }
+    if (workspaceTab === 'tasks' && canManageTasks) {
+      return (
+        <RecipeTasksBoard
+          authUser={authUser}
+          currentItemRaw={outputRaw}
+          currentItemTitle={outputRaw ? (outputDisplayName ?? resolveCellTitle(outputRaw)) : ''}
+          renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
+          resolveItemTitle={resolveCellTitle}
+        />
       );
     }
     if (workspaceTab === 'cloud' && canManageCloudFiles) {

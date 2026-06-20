@@ -121,6 +121,9 @@ export interface ItemCatalogResponse {
 }
 
 export type UserRole = 'admin' | 'moderator' | 'default';
+export type RecipeTaskStatus = 'planned' | 'in_progress' | 'review' | 'done';
+export type RecipeTaskPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type RecipeTaskBoardMode = 'free' | 'priority' | 'deadline' | 'created';
 
 export interface AuthUser {
   id: number;
@@ -173,6 +176,33 @@ export interface RecipeDraftTemplate {
   createdAt: number;
   updatedAt: number;
   name: string;
+}
+
+export interface RecipeTask {
+  id: string;
+  itemRaw: string;
+  itemTitle: string;
+  title: string;
+  description: string;
+  status: RecipeTaskStatus;
+  priority: RecipeTaskPriority;
+  estimatedDays: number;
+  deadlineDate: string;
+  assigneeEmail: string;
+  helperEmails: string[];
+  createdByEmail: string;
+  createdAt: number;
+  updatedAt: number;
+  submittedByEmail: string;
+  submittedAt: number;
+  reviewedByEmail: string;
+  approvedAt: number;
+  sortOrder: number;
+}
+
+export interface RecipeTaskBoard {
+  boardMode: RecipeTaskBoardMode;
+  tasks: RecipeTask[];
 }
 
 export interface ModIconArchiveInfo {
