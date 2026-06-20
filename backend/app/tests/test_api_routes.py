@@ -75,11 +75,19 @@ def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Pat
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/generate')
     read_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases')
     public_read_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/item-case-aliases')
+    fml_log_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/fml-log')
     manual_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/item-case-aliases/manual')
+
+    class LogRequest:
+        headers = {}
+
+        async def body(self):
+            return b'[10:03:44] [Netty Client IO #5/DEBUG] [FML/cubix_custom_ai]: Fixed block id mismatch magicalcrops:GhastCrop: 2209 (init) -> 2206 (map).\n'
 
     generated = generate_route()['report']
     loaded = read_route()['report']
     public_loaded = public_read_route()['report']
+    fml_loaded = asyncio.run(fml_log_route(LogRequest(), filename='fml-client-latest.log'))['report']
     manual = manual_route(ItemCaseAliasManualRequest(lower_key='minecraft:cwantgenerator', original='Minecraft:CwantGenerator'))['report']
 
     assert generated['sourceLabel'] == 'Облако'
@@ -90,8 +98,11 @@ def test_admin_item_case_alias_report_matches_scripts_to_itempanel(tmp_path: Pat
     assert generated['entityAliases']['skeleton'] == 'Skeleton'
     assert loaded['summary']['uniqueItemKeys'] == generated['summary']['uniqueItemKeys']
     assert public_loaded['itemAliases']['draconicevolution:customspawner'] == 'DraconicEvolution:customSpawner'
+    assert fml_loaded['logItemAliases']['magicalcrops:ghastcrop'] == 'magicalcrops:GhastCrop'
+    assert fml_loaded['itemAliases']['magicalcrops:ghastcrop'] == 'magicalcrops:GhastCrop'
     assert manual['manualItemAliases']['minecraft:cwantgenerator'] == 'Minecraft:CwantGenerator'
     assert manual['itemAliases']['minecraft:cwantgenerator'] == 'Minecraft:CwantGenerator'
+    assert manual['itemAliases']['magicalcrops:ghastcrop'] == 'magicalcrops:GhastCrop'
 
 
 def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):

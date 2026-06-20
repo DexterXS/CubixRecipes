@@ -12,8 +12,10 @@ from typing import Any, Iterable, Optional
 
 ITEM_REF_RE = re.compile(r'<([A-Za-z0-9_.-]+):([A-Za-z0-9_./-]+)(?::([0-9*]+))?>')
 ITEM_KEY_RE = re.compile(r'<?([A-Za-z0-9_.-]+:[A-Za-z0-9_./-]+)(?::[0-9*]+)?>?')
+FML_ID_MISMATCH_RE = re.compile(r'Fixed\s+(block|item)\s+id mismatch\s+([A-Za-z0-9_.-]+:[A-Za-z0-9_./-]+):\s+\d+\s+\(init\)\s+->\s+\d+\s+\(map\)', re.IGNORECASE)
 ENTITY_TAG_RE = re.compile(r'\b(?:mobType|entityId|EntityId|EntityName|entityName)\s*:\s*"([^"]+)"')
 ITEMPANEL_KEY_COLUMNS = ('Item Name', 'item name', 'key', 'item', 'item_key', 'itemKey')
+FML_LOG_DEFAULT_NAME = 'fml-client-latest.log'
 
 
 @dataclass
@@ -32,6 +34,7 @@ class ItemCaseAliasService:
         self.aliases_path = output_dir / 'item_case_aliases.json'
         self.report_path = output_dir / 'item_case_aliases_report.json'
         self.manual_aliases_path = output_dir / 'manual_item_case_aliases.json'
+        self.fml_log_aliases_path = output_dir / 'fml_log_item_case_aliases.json'
 
     def load_report(self) -> Optional[dict[str, Any]]:
         if not self.report_path.is_file():
@@ -49,8 +52,10 @@ class ItemCaseAliasService:
         itempanel_keys = self._read_itempanel_keys()
 
         auto_item_aliases, item_conflicts = self._build_aliases(item_candidates)
+        log_item_aliases = self.load_fml_log_item_aliases()
+        fml_log_summary = self.load_fml_log_summary()
         manual_item_aliases = self.load_manual_item_aliases()
-        item_aliases = {**auto_item_aliases, **manual_item_aliases}
+        item_aliases = {**auto_item_aliases, **log_item_aliases, **manual_item_aliases}
         entity_aliases, entity_conflicts = self._build_aliases(entity_candidates)
         matched_items: list[dict[str, Any]] = []
         missing_items: list[dict[str, Any]] = []
@@ -81,6 +86,7 @@ class ItemCaseAliasService:
             'itempanelKeys': len(itempanel_keys),
             'matchedItemKeys': len(matched_items),
             'missingItemKeys': len(missing_items),
+            'logItemAliases': len(log_item_aliases),
             'manualItemAliases': len(manual_item_aliases),
             'itemConflicts': len(item_conflicts),
             'scriptEntityRefs': total_entity_refs,
@@ -94,10 +100,13 @@ class ItemCaseAliasService:
             'aliasesPath': str(self.aliases_path),
             'reportPath': str(self.report_path),
             'manualAliasesPath': str(self.manual_aliases_path),
+            'fmlLogAliasesPath': str(self.fml_log_aliases_path),
             'summary': summary,
             'itemAliases': item_aliases,
             'autoItemAliases': auto_item_aliases,
+            'logItemAliases': log_item_aliases,
             'manualItemAliases': manual_item_aliases,
+            'fmlLogSummary': fml_log_summary,
             'entityAliases': entity_aliases,
             'matchedItems': matched_items,
             'missingItems': missing_items,
@@ -111,6 +120,7 @@ class ItemCaseAliasService:
             'sourceItempanelCsv': str(self.itempanel_csv),
             'items': item_aliases,
             'autoItems': auto_item_aliases,
+            'logItems': log_item_aliases,
             'manualItems': manual_item_aliases,
             'entities': entity_aliases,
         }
@@ -250,6 +260,92 @@ class ItemCaseAliasService:
             'items': dict(sorted(aliases.items())),
         }
         self.manual_aliases_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+
+    def save_fml_log_aliases(self, filename: str, content: bytes) -> dict[str, Any]:
+        text = self._decode_text_bytes(content)
+        source_name = Path(filename or FML_LOG_DEFAULT_NAME).name or FML_LOG_DEFAULT_NAME
+        candidates, total_matches, item_matches, block_matches = self._collect_fml_log_candidates(text, source_name)
+        aliases, conflicts = self._build_aliases(candidates)
+        updated_at = datetime.now(timezone.utc).isoformat()
+        payload = {
+            'updatedAt': updated_at,
+            'sourceFilename': source_name,
+            'totalMatches': total_matches,
+            'itemMatches': item_matches,
+            'blockMatches': block_matches,
+            'aliases': len(aliases),
+            'conflicts': conflicts,
+            'items': aliases,
+        }
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.fml_log_aliases_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+        return payload
+
+    def load_fml_log_item_aliases(self) -> dict[str, str]:
+        payload = self._load_fml_log_payload()
+        raw_items = payload.get('items', {}) if isinstance(payload, dict) else {}
+        if not isinstance(raw_items, dict):
+            return {}
+        aliases: dict[str, str] = {}
+        for raw_key, raw_value in raw_items.items():
+            lower_key = self._normalize_item_key(str(raw_key))
+            original = self._extract_original_item_key(str(raw_value))
+            if lower_key and original and original.lower() == lower_key:
+                aliases[lower_key] = original
+        return dict(sorted(aliases.items()))
+
+    def load_fml_log_summary(self) -> Optional[dict[str, Any]]:
+        payload = self._load_fml_log_payload()
+        if not payload:
+            return None
+        return {
+            'updatedAt': payload.get('updatedAt'),
+            'sourceFilename': payload.get('sourceFilename'),
+            'totalMatches': int(payload.get('totalMatches', 0) or 0),
+            'itemMatches': int(payload.get('itemMatches', 0) or 0),
+            'blockMatches': int(payload.get('blockMatches', 0) or 0),
+            'aliases': len(self.load_fml_log_item_aliases()),
+            'conflicts': payload.get('conflicts', []),
+        }
+
+    def _load_fml_log_payload(self) -> dict[str, Any]:
+        if not self.fml_log_aliases_path.is_file():
+            return {}
+        try:
+            payload = json.loads(self.fml_log_aliases_path.read_text(encoding='utf-8'))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        return payload if isinstance(payload, dict) else {}
+
+    def _collect_fml_log_candidates(self, text: str, source_name: str) -> tuple[dict[str, _AliasCandidate], int, int, int]:
+        candidates: dict[str, _AliasCandidate] = {}
+        total_matches = 0
+        item_matches = 0
+        block_matches = 0
+        for match in FML_ID_MISMATCH_RE.finditer(text):
+            kind = match.group(1).lower()
+            original = match.group(2)
+            lower_key = original.lower()
+            total_matches += 1
+            if kind == 'item':
+                item_matches += 1
+            else:
+                block_matches += 1
+            candidate = candidates.get(lower_key)
+            if candidate is None:
+                candidate = _AliasCandidate(lower_key=lower_key, original=original, files=set(), metas=set())
+                candidates[lower_key] = candidate
+            candidate.files.add(f'{source_name}:{kind}')
+            candidate.metas.add(kind)
+        return candidates, total_matches, item_matches, block_matches
+
+    def _decode_text_bytes(self, content: bytes) -> str:
+        for encoding in ('utf-8-sig', 'utf-8', 'cp1251', 'windows-1251'):
+            try:
+                return content.decode(encoding)
+            except UnicodeDecodeError:
+                continue
+        return content.decode('utf-8', errors='replace')
 
     def _normalize_item_key(self, value: str) -> Optional[str]:
         original = self._extract_original_item_key(value)

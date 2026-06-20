@@ -59,16 +59,19 @@ function projectSettings() {
   };
 }
 
-function itemCaseAliasReport(extraManualAliases: Record<string, string> = {}) {
+function itemCaseAliasReport(extraManualAliases: Record<string, string> = {}, extraLogAliases: Record<string, string> = {}) {
   const autoItemAliases = { 'examplemod:item': 'ExampleMod:Item' };
+  const logItemAliases = { ...extraLogAliases };
   const manualItemAliases = { ...extraManualAliases };
-  const itemAliases = { ...autoItemAliases, ...manualItemAliases };
+  const itemAliases = { ...autoItemAliases, ...logItemAliases, ...manualItemAliases };
+  const hasLogAliases = Object.keys(logItemAliases).length > 0;
   return {
     generatedAt: '2026-06-19T00:00:00+00:00',
     sourceLabel: 'Облако',
     aliasesPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases.json',
     reportPath: '.cubixrecipes_admin/item_case_aliases/item_case_aliases_report.json',
     manualAliasesPath: '.cubixrecipes_admin/item_case_aliases/manual_item_case_aliases.json',
+    fmlLogAliasesPath: '.cubixrecipes_admin/item_case_aliases/fml_log_item_case_aliases.json',
     summary: {
       generatedAt: '2026-06-19T00:00:00+00:00',
       scriptsDir: 'Облако',
@@ -81,6 +84,7 @@ function itemCaseAliasReport(extraManualAliases: Record<string, string> = {}) {
       itempanelKeys: 3,
       matchedItemKeys: 1,
       missingItemKeys: 0,
+      logItemAliases: Object.keys(logItemAliases).length,
       manualItemAliases: Object.keys(manualItemAliases).length,
       itemConflicts: 0,
       scriptEntityRefs: 0,
@@ -89,7 +93,17 @@ function itemCaseAliasReport(extraManualAliases: Record<string, string> = {}) {
     },
     itemAliases,
     autoItemAliases,
+    logItemAliases,
     manualItemAliases,
+    fmlLogSummary: hasLogAliases ? {
+      updatedAt: '2026-06-19T00:00:00+00:00',
+      sourceFilename: 'fml-client-latest.log',
+      totalMatches: 2,
+      itemMatches: 1,
+      blockMatches: 1,
+      aliases: Object.keys(logItemAliases).length,
+      conflicts: []
+    } : null,
     entityAliases: {},
     itemConflicts: [],
     entityConflicts: [],
@@ -310,6 +324,13 @@ beforeEach(() => {
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
         json: async () => ({ ok: true, report: itemCaseAliasReport({ [String(body.lower_key).toLowerCase()]: String(body.original) }) })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/item-case-aliases/fml-log') && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ ok: true, report: itemCaseAliasReport({}, { 'magicalcrops:ghastcrop': 'magicalcrops:GhastCrop' }) })
       }) as Promise<Response>;
     }
     if (url.startsWith('/api/admin/itempanel/csv') && init?.method === 'POST') {
@@ -640,6 +661,17 @@ test('technical panel shows item case aliases and saves manual values', async ()
   fireEvent.click(screen.getByLabelText('debug-section-caseAliases'));
 
   expect(await screen.findByText('ExampleMod:Item')).toBeTruthy();
+  const logFile = new File([
+    '[10:03:44] [Netty Client IO #5/DEBUG] [FML/cubix_custom_ai]: Fixed block id mismatch magicalcrops:GhastCrop: 2209 (init) -> 2206 (map).\n'
+  ], 'fml-client-latest.log', { type: 'text/plain' });
+  fireEvent.change(screen.getByLabelText('item-case-alias-fml-log'), { target: { files: [logFile] } });
+
+  await waitFor(() => {
+    const logCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url, init]) => String(url).startsWith('/api/admin/item-case-aliases/fml-log') && init?.method === 'POST');
+    expect(logCall).toBeTruthy();
+  });
+  expect(await screen.findByText('magicalcrops:GhastCrop')).toBeTruthy();
+
   fireEvent.change(screen.getByLabelText('manual-alias-key'), { target: { value: 'minecraft:cwantgenerator' } });
   fireEvent.change(screen.getByLabelText('manual-alias-value'), { target: { value: 'Minecraft:CwantGenerator' } });
   fireEvent.click(screen.getByLabelText('save-manual-alias'));

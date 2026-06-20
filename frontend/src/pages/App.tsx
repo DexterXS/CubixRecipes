@@ -5,7 +5,7 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemPanelAtlas, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1376,6 +1376,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
   const [itemCaseAliasStatus, setItemCaseAliasStatus] = useState('');
   const [itemCaseAliasGenerating, setItemCaseAliasGenerating] = useState(false);
+  const [itemCaseAliasLogUploading, setItemCaseAliasLogUploading] = useState(false);
   const [manualAliasKey, setManualAliasKey] = useState('');
   const [manualAliasValue, setManualAliasValue] = useState('');
   const [manualAliasSaving, setManualAliasSaving] = useState(false);
@@ -1692,6 +1693,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
     } finally {
       setItemCaseAliasGenerating(false);
+    }
+  }
+
+  async function handleItemCaseAliasLogFiles(files: FileList | File[]) {
+    if (!canManageModIcons) return;
+    const file = Array.from(files)[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.log')) {
+      setItemCaseAliasStatus('Можно загрузить только fml-client-latest.log или другой .log файл.');
+      return;
+    }
+    setItemCaseAliasLogUploading(true);
+    setItemCaseAliasStatus(`Читаю FML log: ${file.name}...`);
+    try {
+      const report = await uploadItemCaseAliasFmlLog(file);
+      setItemCaseAliasReport(report);
+      const logSummary = report.fmlLogSummary;
+      setItemCaseAliasStatus(logSummary
+        ? `FML log разобран: строк ${logSummary.totalMatches}, block ${logSummary.blockMatches}, item ${logSummary.itemMatches}, alias ${logSummary.aliases}.`
+        : 'FML log загружен, словарь обновлен.');
+    } catch (error) {
+      setItemCaseAliasStatus(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemCaseAliasLogUploading(false);
     }
   }
 
@@ -5576,6 +5601,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const report = itemCaseAliasReport;
     const summary = report?.summary;
     const manualAliases = report?.manualItemAliases ?? {};
+    const logAliases = report?.logItemAliases ?? {};
     const matchedByKey = new Map((report?.matchedItems ?? []).map((item) => [item.lower_key, item]));
     const missingByKey = new Map((report?.missingItems ?? []).map((item) => [item.lower_key, item]));
     const aliasRows = report
@@ -5584,7 +5610,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         .map(([lowerKey, original]) => ({
           lowerKey,
           original,
-          source: manualAliases[lowerKey] ? 'manual' : 'auto',
+          source: manualAliases[lowerKey] ? 'manual' : logAliases[lowerKey] ? 'log' : 'auto',
           item: matchedByKey.get(lowerKey) ?? missingByKey.get(lowerKey) ?? null
         }))
       : [];
@@ -5599,6 +5625,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <button type="button" className="secondary-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void handleGenerateItemCaseAliasReport()}>Сгенерировать отчет</button>
             <button type="button" className="ghost-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void refreshItemCaseAliasReport()}>Обновить статус</button>
           </div>
+          <label className="case-alias-log-upload">
+            <span>fml-client-latest.log</span>
+            <input aria-label="item-case-alias-fml-log" type="file" accept=".log,text/plain" disabled={!canManageModIcons || itemCaseAliasLogUploading} onChange={(event) => {
+              void handleItemCaseAliasLogFiles(event.target.files ?? []);
+              event.target.value = '';
+            }} />
+          </label>
           {itemCaseAliasStatus ? <div className="inline-status inline-status-default">{itemCaseAliasStatus}</div> : null}
           {summary ? (
             <div className="kv-grid">
@@ -5608,6 +5641,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <div><span>Mixed-case</span><strong>{summary.mixedCaseItemAliases}</strong></div>
               <div><span>Совпало с itempanel</span><strong>{summary.matchedItemKeys}</strong></div>
               <div><span>Не найдено</span><strong>{summary.missingItemKeys}</strong></div>
+              <div><span>Из FML log</span><strong>{summary.logItemAliases ?? Object.keys(logAliases).length}</strong></div>
               <div><span>Ручных значений</span><strong>{summary.manualItemAliases ?? Object.keys(manualAliases).length}</strong></div>
               <div><span>Конфликтов item</span><strong>{summary.itemConflicts}</strong></div>
               <div><span>Мобов/NBT ids</span><strong>{summary.uniqueEntityKeys}</strong></div>
@@ -5620,6 +5654,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               <span>Источник: <code>{report.sourceLabel ?? summary?.sourceLabel ?? summary?.scriptsDir ?? 'Облако'}</code></span>
               <span>Словарь: <code>{report.aliasesPath}</code></span>
               <span>Отчет: <code>{report.reportPath}</code></span>
+              {report.fmlLogAliasesPath ? <span>FML log: <code>{report.fmlLogAliasesPath}</code></span> : null}
+              {report.fmlLogSummary ? <span>FML source: <code>{report.fmlLogSummary.sourceFilename ?? 'fml-client-latest.log'} ({report.fmlLogSummary.totalMatches} строк)</code></span> : null}
               {report.manualAliasesPath ? <span>Ручные значения: <code>{report.manualAliasesPath}</code></span> : null}
             </div>
           ) : null}
@@ -5662,8 +5698,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     <tr key={row.lowerKey}>
                       <td><code>{row.lowerKey}</code></td>
                       <td><code>{row.original}</code></td>
-                      <td><span className={`case-alias-source case-alias-source-${row.source}`}>{row.source === 'manual' ? 'ручной' : 'авто'}</span></td>
-                      <td>{row.item?.files.slice(0, 3).join(', ') ?? '-'}</td>
+                      <td><span className={`case-alias-source case-alias-source-${row.source}`}>{row.source === 'manual' ? 'ручной' : row.source === 'log' ? 'log' : 'cloud'}</span></td>
+                      <td>{row.item?.files.slice(0, 3).join(', ') ?? (row.source === 'log' ? report.fmlLogSummary?.sourceFilename ?? 'fml-client-latest.log' : '-')}</td>
                     </tr>
                   ))}
                 </tbody>

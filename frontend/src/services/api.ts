@@ -384,6 +384,21 @@ export async function saveManualItemCaseAlias(lowerKey: string, original: string
   return payload.report;
 }
 
+export async function uploadItemCaseAliasFmlLog(file: File): Promise<ItemCaseAliasReport> {
+  const path = apiPath(`/admin/item-case-aliases/fml-log?filename=${encodeURIComponent(file.name)}`);
+  const response = await fetch(path, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'text/plain' },
+    body: file
+  });
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
+  }
+  const payload = await response.json() as { ok: boolean; report: ItemCaseAliasReport };
+  return payload.report;
+}
+
 export async function listZsCloudFiles(): Promise<{ files: ZsCloudFile[] }> {
   return request<{ files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files'));
 }

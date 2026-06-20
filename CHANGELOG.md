@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Added
-- Added a `Техническая панель` workspace for admin/operator technical flows: mod icon ZIPs, itempanel CSV/atlas controls, roles, whitelist, debug data, and a temporary lowercase-to-original-case item/entity alias report generated from uploaded cloud `.zs` files, with an editable on-site alias table used when inserting recipe items.
+- Added a `Техническая панель` workspace for admin/operator technical flows: mod icon ZIPs, itempanel CSV/atlas controls, roles, whitelist, debug data, and a temporary lowercase-to-original-case item/entity alias report generated from uploaded cloud `.zs` files or `fml-client-latest.log`, with an editable on-site alias table used when inserting recipe items.
 - Added per-output recipe removal templates for Minecraft 1.7.10 style scripts, including `recipes.remove({output_wildcard})`, exact/meta-0 removal, shaped/shapeless removal templates, and custom local template storage.
 - Added a local `.zs` editor/save chooser so edited recipes can be downloaded, appended to a loaded site-local file, or replace the matching block in that loaded file without using cloud storage.
 - Added admin `itempanel.csv` upload support, refreshing the backend itempanel catalog/atlas from the admin UI.

@@ -222,6 +222,7 @@ export interface ItemCaseAliasReport {
   aliasesPath: string;
   reportPath: string;
   manualAliasesPath?: string;
+  fmlLogAliasesPath?: string;
   summary: {
     generatedAt: string;
     scriptsDir: string;
@@ -234,6 +235,7 @@ export interface ItemCaseAliasReport {
     itempanelKeys: number;
     matchedItemKeys: number;
     missingItemKeys: number;
+    logItemAliases?: number;
     manualItemAliases?: number;
     itemConflicts: number;
     scriptEntityRefs: number;
@@ -242,7 +244,17 @@ export interface ItemCaseAliasReport {
   };
   itemAliases: Record<string, string>;
   autoItemAliases?: Record<string, string>;
+  logItemAliases?: Record<string, string>;
   manualItemAliases?: Record<string, string>;
+  fmlLogSummary?: {
+    updatedAt?: string | null;
+    sourceFilename?: string | null;
+    totalMatches: number;
+    itemMatches: number;
+    blockMatches: number;
+    aliases: number;
+    conflicts: Array<Record<string, unknown>>;
+  } | null;
   entityAliases: Record<string, string>;
   matchedItems: ItemCaseAliasEntry[];
   missingItems: ItemCaseAliasEntry[];

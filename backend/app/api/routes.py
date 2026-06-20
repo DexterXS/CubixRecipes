@@ -495,6 +495,23 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Manual item case alias saved', {'lower_key': request.lower_key, 'original': request.original})
         return {'ok': True, 'report': report}
 
+    @router.post('/admin/item-case-aliases/fml-log')
+    async def admin_upload_item_case_fml_log(request: Request, filename: str = ''):
+        upload_name = filename or request.headers.get('x-fml-log-filename', '')
+        if upload_name and not upload_name.lower().endswith('.log'):
+            raise HTTPException(status_code=400, detail='Only .log files are supported')
+        content = await request.body()
+        if not content.strip():
+            raise HTTPException(status_code=400, detail='Log file is empty')
+        log_aliases = item_case_alias_service.save_fml_log_aliases(upload_name or 'fml-client-latest.log', content)
+        report = item_case_alias_service.build(_item_case_alias_sources(), source_label='\u041e\u0431\u043b\u0430\u043a\u043e')
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'FML item case alias log uploaded', {
+            'filename': log_aliases.get('sourceFilename'),
+            'totalMatches': log_aliases.get('totalMatches'),
+            'aliases': log_aliases.get('aliases'),
+        })
+        return {'ok': True, 'report': report, 'log': log_aliases}
+
     @router.get('/admin/mod-icons/atlases/{filename}')
     def admin_mod_icon_atlas_png(filename: str):
         content = mod_icon_atlas_service.read_atlas_png(filename)
