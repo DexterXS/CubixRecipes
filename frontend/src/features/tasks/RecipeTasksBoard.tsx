@@ -476,8 +476,8 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
                   >
                     <span className="suggestion-icon-slot" aria-hidden="true">{renderItemIcon(option.raw)}</span>
                     <div className="suggestion-content">
-                      <strong>{option.raw}</strong>
-                      <span>{option.title}</span>
+                      <strong>{option.title}</strong>
+                      <span>{option.raw}</span>
                     </div>
                   </button>
                 ))}
