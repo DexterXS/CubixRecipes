@@ -232,13 +232,16 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .craft-output-slot img,
 .craft-output-slot .animated-icon,
 .craft-output-slot .output-atlas-icon { width: 32px; height: 32px; transform: none; }
+.panel.nei-panel { overflow: visible; }
 .nei-panel .panel-body { gap: 10px; }
 .nei-pager { display: grid; grid-template-columns: 32px 1fr 32px; align-items: center; gap: 8px; }
 .nei-pager strong { text-align: center; font-size: 15px; font-variant-numeric: tabular-nums; }
 .nei-pager .icon-button { width: 32px; height: 32px; padding: 0; border-radius: 4px; font-size: 20px; line-height: 1; }
 .nei-pager .icon-button:disabled { opacity: 0.35; cursor: default; }
-.nei-list { display: grid; grid-template-columns: repeat(auto-fill, 34px); justify-content: start; align-content: start; gap: 5px; max-height: calc(100vh - 240px); overflow: hidden; padding-right: 4px; overscroll-behavior: contain; }
+.nei-list { display: grid; grid-template-columns: repeat(auto-fill, 34px); justify-content: start; align-content: start; gap: 5px; max-height: calc(100vh - 240px); overflow: visible; padding-right: 4px; overscroll-behavior: contain; }
 .nei-list .nei-item { position: relative; width: 34px; height: 34px; min-width: 34px; display: grid; place-items: center; padding: 0; border-radius: 4px; background: transparent; border: 1px solid transparent; color: var(--text); box-shadow: none; }
+.nei-list .nei-item:hover,
+.nei-list .nei-item:focus-visible { z-index: 30; }
 .nei-list .nei-item:hover, .nei-list .nei-item.is-held { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); filter: none; }
 .nei-list .nei-item.recipe-available { background: color-mix(in srgb, #22c55e 18%, transparent); border-color: color-mix(in srgb, #22c55e 62%, transparent); box-shadow: inset 0 0 0 1px rgba(187, 247, 208, 0.1); }
 .nei-list .nei-item.recipe-missing { background: color-mix(in srgb, #ef4444 13%, transparent); border-color: color-mix(in srgb, #ef4444 42%, transparent); }
@@ -256,6 +259,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .nei-icon img,
 .nei-atlas-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
 .nei-atlas-icon { display: block; background-repeat: no-repeat; transform: scale(0.875); transform-origin: center; width: 32px; height: 32px; }
+.nei-tooltip { position: absolute; left: calc(100% + 8px); top: 50%; z-index: 40; display: none; min-width: 260px; max-width: min(360px, calc(100vw - 80px)); transform: translateY(-50%); padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 4px; background: rgba(15, 23, 42, 0.96); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.42); color: #e5eefc; text-align: left; pointer-events: none; white-space: normal; }
+.nei-list .nei-item:hover .nei-tooltip,
+.nei-list .nei-item:focus-visible .nei-tooltip { display: grid; gap: 5px; }
+.nei-tooltip-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: #fef3c7; font-size: 14px; font-weight: 800; line-height: 1.15; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55); }
+.nei-tooltip-title > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.nei-tooltip-id { flex: none; color: #facc15; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13px; }
+.nei-tooltip-row { display: flex; justify-content: space-between; gap: 12px; color: #cbd5e1; font-size: 12px; line-height: 1.2; }
+.nei-tooltip-row > span { color: #94a3b8; }
+.nei-tooltip-row strong { font-weight: 800; overflow-wrap: anywhere; text-align: right; }
+.nei-tooltip-row .is-yes { color: #22c55e; }
+.nei-tooltip-row .is-no { color: #ef4444; }
 .nei-name,
 .nei-raw { display: none; }
 .draft-filter-grid { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(180px, 240px); gap: 8px; align-items: center; }
