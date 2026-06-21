@@ -131,6 +131,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .task-column-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 2px 6px; }
 .task-column-head h3 { margin: 0; font-size: 14px; }
 .task-column-head span { min-width: 24px; text-align: center; padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: 12px; }
+.task-clear-done-button { min-height: 24px; padding: 3px 7px; font-size: 11px; line-height: 1.1; }
 .task-column-list { display: grid; align-content: start; gap: 7px; min-height: 180px; }
 .task-card { display: grid; gap: 0; border: 1px solid var(--border); border-left-width: 4px; border-radius: 8px; background: color-mix(in srgb, var(--panel) 86%, transparent); overflow: hidden; }
 .task-card.is-dragging { opacity: 0.55; }
@@ -177,8 +178,12 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .task-item-picker-icon .output-atlas-icon,
 .task-item-picker-icon .output-mod-atlas-icon { width: 32px; height: 32px; transform: none; object-fit: contain; image-rendering: pixelated; }
 .task-selected-item-raw { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
-.task-item-suggestions { position: absolute; left: 0; right: 0; top: calc(100% + 5px); z-index: 20; max-height: 280px; overflow: auto; box-shadow: 0 16px 32px var(--shadow); }
+.task-item-suggestions { position: absolute; left: 0; right: auto; top: calc(100% + 5px); z-index: 20; width: min(560px, calc(100vw - 80px)); max-height: 340px; overflow: auto; box-shadow: 0 16px 32px var(--shadow); }
+.task-item-suggestions .suggestion-item { min-height: 44px; }
+.task-item-suggestions .suggestion-item-with-icon { grid-template-columns: 42px minmax(0, 1fr); }
+.task-item-suggestions .suggestion-icon-slot { width: 36px; height: 36px; }
 .task-empty-column { min-height: 72px; display: grid; place-items: center; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; }
+.task-edit-modal { width: min(980px, 96vw); max-height: min(92vh, 900px); overflow: auto; }
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
 .main-tab-button.active { background: var(--accent-strong); color: #fff; }
