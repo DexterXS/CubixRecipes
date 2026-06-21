@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added wider task edit dialogs with computed deadline-day counters, searchable user pickers for assignees/helpers, and an `Open recipe` task action.
 - Added task-card deletion controls, modal task editing with status changes, and a `Готово` column cleanup action for the admin `Задачи` board.
 - Added task item search/prefill for the admin `Задачи` board, including icon-backed item selection, automatic title filling, today-default deadlines, and a NEI context-menu action to start a task from an item.
 - Added an admin-only `Задачи` workspace with four kanban columns, compact expandable item task cards, drag-and-drop status movement, free/sorted board modes, priorities, deadlines, estimated days, assignees, helpers, and backend-backed shared task storage.

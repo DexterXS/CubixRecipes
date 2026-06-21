@@ -980,25 +980,33 @@ test('admin can create compact expandable recipe task cards', async () => {
   expect((taskPanel.getByLabelText('Предмет') as HTMLInputElement).value).toBe('');
   expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).value).toBe(todayInputValue());
   expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).min).toBe(todayInputValue());
+  expect(taskPanel.getByLabelText('Дней').textContent).toBe('0');
   fireEvent.change(taskPanel.getByLabelText('Предмет'), { target: { value: 'First icon' } });
   const suggestions = await taskPanel.findByLabelText('task-item-suggestions');
   fireEvent.mouseDown(within(suggestions).getByText('<examplemod:item>').closest('button') as HTMLElement);
   expect((taskPanel.getByLabelText('Предмет') as HTMLInputElement).value).toBe('First icon');
   fireEvent.change(taskPanel.getByLabelText('Название'), { target: { value: 'Проверить предмет' } });
   fireEvent.change(taskPanel.getByLabelText('Приоритет'), { target: { value: 'urgent' } });
-  fireEvent.change(taskPanel.getByLabelText('Ответственный'), { target: { value: moderatorUser.email } });
+  fireEvent.change(taskPanel.getByLabelText('Ответственный'), { target: { value: 'moder' } });
+  const assigneeSuggestions = await taskPanel.findByLabelText('task-assignee-suggestions');
+  fireEvent.mouseDown(within(assigneeSuggestions).getByText(moderatorUser.email).closest('button') as HTMLElement);
+  fireEvent.change(taskPanel.getByLabelText('Помощники'), { target: { value: 'viewer' } });
+  const helperSuggestions = await taskPanel.findByLabelText('task-helper-suggestions');
+  fireEvent.mouseDown(within(helperSuggestions).getByText(defaultUser.email).closest('button') as HTMLElement);
   fireEvent.change(taskPanel.getByLabelText('Дедлайн'), { target: { value: '2026-06-30' } });
   fireEvent.click(taskPanel.getByRole('button', { name: 'Создать' }));
 
   const card = await screen.findByLabelText('task-card-task-1');
   expect(within(card).getByText('Срочный')).toBeTruthy();
   expect(within(card).getByText(moderatorUser.email)).toBeTruthy();
+  expect(mockRecipeTasks[0].helperEmails).toContain(defaultUser.email);
 
   fireEvent.click(card);
   expect(await taskPanel.findByText(adminUser.email)).toBeTruthy();
   const cardShell = card.closest('.task-card') as HTMLElement;
   expect(within(cardShell).queryByRole('button', { name: 'На проверку' })).toBeFalsy();
   expect(within(cardShell).queryByRole('button', { name: 'Готово' })).toBeFalsy();
+  expect(within(cardShell).getByRole('button', { name: 'Открыть рецепт' })).toBeTruthy();
 
   fireEvent.click(within(cardShell).getByRole('button', { name: 'Редактировать' }));
   const dialog = await screen.findByRole('dialog', { name: 'Редактирование задачи' });

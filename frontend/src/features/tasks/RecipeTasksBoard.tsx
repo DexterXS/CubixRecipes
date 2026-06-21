@@ -25,6 +25,7 @@ const priorityRank: Record<RecipeTaskPriority, number> = {
 };
 
 const DEFAULT_TASK_TITLE = 'Новая задача';
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface RecipeTaskItemOption {
   raw: string;
@@ -52,10 +53,17 @@ interface TaskFormState {
   helperEmailsText: string;
 }
 
+interface TaskUserOption {
+  email: string;
+  label: string;
+  searchText: string;
+}
+
 interface RecipeTasksBoardProps {
   authUser: AuthUser;
   itemOptions: RecipeTaskItemOption[];
   prefillItem?: RecipeTaskPrefillItem | null;
+  onOpenRecipe?: (raw: string) => void;
   renderItemIcon: (raw: string) => ReactNode;
   resolveItemTitle: (raw: string) => string;
 }
@@ -65,6 +73,18 @@ function todayDateInputValue(date = new Date()): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+function daysUntilDeadline(deadlineDate: string, now = new Date()): number {
+  if (!deadlineDate) return 0;
+  const today = new Date(`${todayDateInputValue(now)}T00:00:00`);
+  const deadline = new Date(`${deadlineDate}T00:00:00`);
+  if (!Number.isFinite(today.getTime()) || !Number.isFinite(deadline.getTime())) return 0;
+  return Math.max(0, Math.ceil((deadline.getTime() - today.getTime()) / DAY_MS));
+}
+
+function estimatedDaysForPayload(deadlineDate: string): number {
+  return Math.max(1, Math.min(365, daysUntilDeadline(deadlineDate) || 1));
 }
 
 function emptyForm(currentItemRaw = '', currentItemTitle = '', authEmail = ''): TaskFormState {
@@ -123,7 +143,7 @@ function payloadFromForm(form: TaskFormState) {
     description: form.description.trim(),
     status: form.status,
     priority: form.priority,
-    estimatedDays: Math.max(1, Math.min(365, Number(form.estimatedDays) || 1)),
+    estimatedDays: estimatedDaysForPayload(form.deadlineDate),
     deadlineDate: form.deadlineDate,
     assigneeEmail: form.assigneeEmail.trim().toLowerCase(),
     helperEmails: helperEmailsFromText(form.helperEmailsText)
@@ -149,7 +169,7 @@ function shouldAutoReplaceTitle(form: TaskFormState): boolean {
   return !title || title === DEFAULT_TASK_TITLE || title === form.itemRaw || title === form.itemTitle;
 }
 
-export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
+export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRecipe, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
   const [tasks, setTasks] = useState<RecipeTask[]>([]);
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [boardMode, setBoardMode] = useState<RecipeTaskBoardMode>('free');
@@ -161,6 +181,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [activeItemPickerKey, setActiveItemPickerKey] = useState<string | null>(null);
+  const [activeUserPickerKey, setActiveUserPickerKey] = useState<string | null>(null);
 
   const normalizedItemOptions = useMemo(() => {
     const unique = new Map<string, RecipeTaskItemOption>();
@@ -177,11 +198,22 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
     return [...unique.values()];
   }, [itemOptions]);
 
-  const userEmails = useMemo(() => {
-    const emails = new Set<string>([authUser.email]);
-    users.forEach((user) => emails.add(user.email));
-    return [...emails].sort();
-  }, [authUser.email, users]);
+  const userOptions = useMemo<TaskUserOption[]>(() => {
+    const byEmail = new Map<string, TaskUserOption>();
+    const pushUser = (user: AuthUser) => {
+      const email = user.email.trim().toLowerCase();
+      if (!email || byEmail.has(email)) return;
+      const label = user.name && user.name !== user.email ? `${user.name} (${email})` : email;
+      byEmail.set(email, {
+        email,
+        label,
+        searchText: `${email} ${user.name ?? ''}`.toLowerCase()
+      });
+    };
+    pushUser(authUser);
+    users.forEach(pushUser);
+    return [...byEmail.values()].sort((left, right) => left.email.localeCompare(right.email));
+  }, [authUser, users]);
 
   useEffect(() => {
     let cancelled = false;
@@ -437,9 +469,44 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
     return result.slice(0, 16);
   }
 
+  function getUserSuggestions(query: string, excludedEmails: string[] = []): TaskUserOption[] {
+    const normalizedQuery = query.trim().toLowerCase();
+    const excluded = new Set(excludedEmails.map((email) => email.trim().toLowerCase()).filter(Boolean));
+    return userOptions
+      .filter((option) => !excluded.has(option.email))
+      .filter((option) => !normalizedQuery || option.searchText.includes(normalizedQuery))
+      .slice(0, 12);
+  }
+
+  function helperSearchTerm(value: string): string {
+    const parts = value.replace(/\n/g, ',').split(',');
+    return (parts[parts.length - 1] ?? '').trim();
+  }
+
+  function helperEmailsWithSelection(value: string, email: string): string {
+    const normalizedEmail = email.trim().toLowerCase();
+    const parts = value.replace(/\n/g, ',').split(',');
+    parts[parts.length - 1] = normalizedEmail;
+    const seen = new Set<string>();
+    return parts
+      .map((part) => part.trim().toLowerCase())
+      .filter((part) => {
+        if (!part || seen.has(part)) return false;
+        seen.add(part);
+        return true;
+      })
+      .join(', ');
+  }
+
   function renderTaskForm(form: TaskFormState, pickerKey: string, onChange: (patch: Partial<TaskFormState>) => void, onSubmit: (event: FormEvent) => void, submitLabel: string, extraActions?: ReactNode) {
     const suggestions = activeItemPickerKey === pickerKey ? getTaskItemSuggestions(form) : [];
     const selectedItemTitle = form.itemTitle || (form.itemRaw ? resolveItemTitle(form.itemRaw) : '');
+    const assigneePickerKey = `${pickerKey}-assignee`;
+    const helpersPickerKey = `${pickerKey}-helpers`;
+    const helperEmails = helperEmailsFromText(form.helperEmailsText);
+    const assigneeSuggestions = activeUserPickerKey === assigneePickerKey ? getUserSuggestions(form.assigneeEmail) : [];
+    const helperSuggestions = activeUserPickerKey === helpersPickerKey ? getUserSuggestions(helperSearchTerm(form.helperEmailsText), helperEmails) : [];
+    const deadlineDays = daysUntilDeadline(form.deadlineDate);
     return (
       <form className="task-form" onSubmit={onSubmit}>
         <div className="task-form-grid">
@@ -487,9 +554,71 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
           <label className="field-block"><span>Название</span><input value={form.title} onChange={(event) => onChange({ title: event.target.value })} /></label>
           <label className="field-block"><span>Приоритет</span><select value={form.priority} onChange={(event) => onChange({ priority: event.target.value as RecipeTaskPriority })}>{Object.entries(priorityLabels).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
           <label className="field-block"><span>Статус</span><select value={form.status} onChange={(event) => onChange({ status: event.target.value as RecipeTaskStatus })}>{statuses.map((status) => <option key={status.id} value={status.id}>{status.label}</option>)}</select></label>
-          <label className="field-block"><span>Ответственный</span><input list="recipe-task-users" value={form.assigneeEmail} onChange={(event) => onChange({ assigneeEmail: event.target.value })} /></label>
-          <label className="field-block"><span>Помощники</span><input value={form.helperEmailsText} onChange={(event) => onChange({ helperEmailsText: event.target.value })} placeholder="email, email" /></label>
-          <label className="field-block"><span>Дней</span><input type="number" min={1} max={365} value={form.estimatedDays} onChange={(event) => onChange({ estimatedDays: Number(event.target.value) })} /></label>
+          <label className="field-block task-user-field">
+            <span>Ответственный</span>
+            <input
+              aria-label="Ответственный"
+              value={form.assigneeEmail}
+              onFocus={() => setActiveUserPickerKey(assigneePickerKey)}
+              onChange={(event) => {
+                setActiveUserPickerKey(assigneePickerKey);
+                onChange({ assigneeEmail: event.target.value });
+              }}
+              placeholder="email или имя"
+            />
+            {assigneeSuggestions.length ? (
+              <div className="suggestions-list task-user-suggestions" role="listbox" aria-label="task-assignee-suggestions">
+                {assigneeSuggestions.map((option) => (
+                  <button
+                    key={option.email}
+                    type="button"
+                    className="suggestion-item"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      onChange({ assigneeEmail: option.email });
+                      setActiveUserPickerKey(null);
+                    }}
+                  >
+                    <strong>{option.label}</strong>
+                    <span>{option.email}</span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </label>
+          <label className="field-block task-user-field">
+            <span>Помощники</span>
+            <input
+              aria-label="Помощники"
+              value={form.helperEmailsText}
+              onFocus={() => setActiveUserPickerKey(helpersPickerKey)}
+              onChange={(event) => {
+                setActiveUserPickerKey(helpersPickerKey);
+                onChange({ helperEmailsText: event.target.value });
+              }}
+              placeholder="имя или email"
+            />
+            {helperSuggestions.length ? (
+              <div className="suggestions-list task-user-suggestions" role="listbox" aria-label="task-helper-suggestions">
+                {helperSuggestions.map((option) => (
+                  <button
+                    key={option.email}
+                    type="button"
+                    className="suggestion-item"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      onChange({ helperEmailsText: helperEmailsWithSelection(form.helperEmailsText, option.email) });
+                      setActiveUserPickerKey(null);
+                    }}
+                  >
+                    <strong>{option.label}</strong>
+                    <span>{option.email}</span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </label>
+          <div className="field-block"><span>Дней</span><output aria-label="Дней" className="task-days-counter">{deadlineDays}</output></div>
           <label className="field-block"><span>Дедлайн</span><input type="date" min={todayDateInputValue()} value={form.deadlineDate} onChange={(event) => onChange({ deadlineDate: event.target.value })} /></label>
         </div>
         <label className="field-block"><span>Описание</span><textarea value={form.description} onChange={(event) => onChange({ description: event.target.value })} /></label>
@@ -540,6 +669,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
               <div><span>Утверждено</span><strong>{formatDateTime(task.approvedAt)}</strong></div>
             </div>
             <div className="inline-actions">
+              <button type="button" className="secondary-button" disabled={!task.itemRaw} onClick={() => onOpenRecipe?.(task.itemRaw)}>Открыть рецепт</button>
               <button type="button" className="secondary-button" onClick={() => beginEditTask(task)}>Редактировать</button>
               <button type="button" className="ghost-button danger-lite-button" onClick={() => void removeTask(task)}>Удалить</button>
             </div>
@@ -577,6 +707,11 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
                   setEditingTaskId(null);
                   setEditForm(null);
                 }}>Отмена</button>
+                <button type="button" className="secondary-button" disabled={!task.itemRaw} onClick={() => {
+                  setEditingTaskId(null);
+                  setEditForm(null);
+                  onOpenRecipe?.(task.itemRaw);
+                }}>Открыть рецепт</button>
                 <button type="button" className="ghost-button danger-lite-button" onClick={() => void removeTask(task)}>Удалить</button>
               </>
             ))}
@@ -589,9 +724,6 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderIte
   return (
     <div className="tasks-workspace">
       <Panel title="Задачи" subtitle={statusText} className="tasks-panel">
-        <datalist id="recipe-task-users">
-          {userEmails.map((email) => <option key={email} value={email} />)}
-        </datalist>
         <div className="tasks-toolbar">
           <div className="inline-actions">
             <button type="button" onClick={() => {

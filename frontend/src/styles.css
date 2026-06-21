@@ -182,8 +182,12 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .task-item-suggestions .suggestion-item { min-height: 44px; }
 .task-item-suggestions .suggestion-item-with-icon { grid-template-columns: 42px minmax(0, 1fr); }
 .task-item-suggestions .suggestion-icon-slot { width: 36px; height: 36px; }
+.task-user-field { position: relative; }
+.task-user-suggestions { position: absolute; left: 0; right: 0; top: calc(100% + 5px); z-index: 20; max-height: 260px; overflow: auto; box-shadow: 0 16px 32px var(--shadow); }
+.task-user-suggestions .suggestion-item strong { font-family: inherit; }
+.task-days-counter { min-height: 42px; display: flex; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--field-bg) 86%, transparent); color: var(--text); font-weight: 700; }
 .task-empty-column { min-height: 72px; display: grid; place-items: center; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; }
-.task-edit-modal { width: min(980px, 96vw); max-height: min(92vh, 900px); overflow: auto; }
+.task-edit-modal { width: min(1240px, calc(100vw - 48px)); max-height: min(92vh, 900px); overflow: auto; }
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
 .main-tab-button.active { background: var(--accent-strong); color: #fff; }

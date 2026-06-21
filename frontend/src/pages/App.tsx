@@ -6451,6 +6451,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           authUser={authUser}
           itemOptions={taskItemOptions}
           prefillItem={taskPrefillItem}
+          onOpenRecipe={(raw) => void openRecipeForItem(raw)}
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
           resolveItemTitle={resolveCellTitle}
         />
