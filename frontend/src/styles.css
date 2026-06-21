@@ -98,6 +98,8 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .admin-file-row strong,
 .admin-file-row span { display: block; overflow-wrap: anywhere; }
 .admin-file-row span { color: var(--muted); font-size: 12px; }
+.admin-file-actions { display: grid; gap: 6px; justify-items: end; }
+.admin-file-actions .inline-actions { justify-content: flex-end; }
 .admin-file-button { cursor: pointer; }
 .admin-file-button:hover { filter: none; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--field-bg)); }
 .case-alias-paths { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }

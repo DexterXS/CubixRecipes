@@ -416,6 +416,36 @@ beforeEach(() => {
         })
       }) as Promise<Response>;
     }
+    if (url.startsWith('/api/admin/mod-icons/archive/clean') && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          cleanup: { name: 'examplemod_x32.zip', size: 900, kept: 1, removed: 2, removedEntries: ['othermod_x32/Other icon.png', 'notes.txt'] },
+          status: {
+            archives: [{ name: 'examplemod_x32.zip', size: 900, modifiedAt: '2026-05-26T00:00:00+00:00' }],
+            manifest: null,
+            rules: { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.zip', 'modid_x256.zip'], maxAtlasSize: 4096 }
+          }
+        })
+      }) as Promise<Response>;
+    }
+    if (url.startsWith('/api/admin/mod-icons/archive') && init?.method === 'DELETE') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          archive: { name: 'examplemod_x32.zip', size: 1024, deleted: true },
+          status: {
+            archives: [],
+            manifest: null,
+            rules: { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.zip', 'modid_x256.zip'], maxAtlasSize: 4096 }
+          }
+        })
+      }) as Promise<Response>;
+    }
     if ((url === '/api/item-case-aliases' || url === '/api/admin/item-case-aliases') && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
         ok: true,
@@ -779,7 +809,12 @@ test('admin mod icons tab shows archive and atlas status', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Техническая панель' }));
   fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
 
+  expect(screen.getAllByText('Атласы').length).toBeGreaterThan(0);
+  expect(screen.queryByText('Загрузить itempanel.csv')).toBeFalsy();
   expect(await screen.findByText('examplemod_x32.zip')).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Скачать' })).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Очистить лишнее' })).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Удалить' })).toBeTruthy();
   expect(await screen.findByText('Иконок')).toBeTruthy();
   expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
 });
@@ -1192,11 +1227,11 @@ test('admin can enable whitelist mode', async () => {
   });
 });
 
-test('admin can upload itempanel csv from mod icons panel', async () => {
+test('admin can upload itempanel csv from wipe update modal', async () => {
   const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   fireEvent.click(screen.getByTestId('workspace-tab-technical'));
-  fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
   const csvInputs = [...container.querySelectorAll('input[type="file"]')] as HTMLInputElement[];
   const csvInput = csvInputs.find((input) => input.accept.includes('.csv')) as HTMLInputElement;
   const file = new File(['Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Камень\n'], 'itempanel.csv', { type: 'text/csv' });

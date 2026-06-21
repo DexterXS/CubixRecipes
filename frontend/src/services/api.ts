@@ -460,6 +460,26 @@ export async function uploadModIconArchive(file: File, replace = false): Promise
   return payload.status;
 }
 
+export function getModIconArchiveDownloadUrl(filename: string): string {
+  return apiPath(`/admin/mod-icons/archive?filename=${encodeURIComponent(filename)}`);
+}
+
+export async function deleteModIconArchive(filename: string): Promise<ModIconAdminStatus> {
+  const payload = await request<{ ok: boolean; status: ModIconAdminStatus }>(
+    apiPath(`/admin/mod-icons/archive?filename=${encodeURIComponent(filename)}`),
+    { method: 'DELETE' }
+  );
+  return payload.status;
+}
+
+export async function cleanModIconArchive(filename: string): Promise<{ status: ModIconAdminStatus; cleanup: { name: string; size: number; kept: number; removed: number; removedEntries: string[] } }> {
+  const payload = await request<{ ok: boolean; status: ModIconAdminStatus; cleanup: { name: string; size: number; kept: number; removed: number; removedEntries: string[] } }>(
+    apiPath(`/admin/mod-icons/archive/clean?filename=${encodeURIComponent(filename)}`),
+    { method: 'POST' }
+  );
+  return { status: payload.status, cleanup: payload.cleanup };
+}
+
 export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas }> {
   const response = await uploadRawItemPanelFile(file, '/admin/itempanel/csv', 'text/csv');
   return await response.json() as { ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas };

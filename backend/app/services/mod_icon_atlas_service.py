@@ -22,6 +22,10 @@ class ArchiveAlreadyExistsError(ValueError):
     pass
 
 
+class ArchiveNotFoundError(ValueError):
+    pass
+
+
 class InvalidModIconArchiveError(ValueError):
     pass
 
@@ -78,10 +82,78 @@ class ModIconAtlasService:
         if existed and not replace:
             raise ArchiveAlreadyExistsError(f'Archive already exists: {filename}')
         target.write_bytes(content)
+        self.invalidate_atlases()
         return {
             'name': filename,
             'size': len(content),
             'replaced': replace and existed,
+        }
+
+    def read_archive(self, raw_filename: str) -> bytes:
+        path = self._archive_path(raw_filename)
+        return path.read_bytes()
+
+    def delete_archive(self, raw_filename: str) -> dict[str, Any]:
+        path = self._archive_path(raw_filename)
+        stat = path.stat()
+        path.unlink()
+        self.invalidate_atlases()
+        return {
+            'name': path.name,
+            'size': stat.st_size,
+            'deleted': True,
+        }
+
+    def clean_archive(self, raw_filename: str) -> dict[str, Any]:
+        path = self._archive_path(raw_filename)
+        _modid, _size, expected_root = self._parse_archive_name(path.name)
+        kept_entries: list[tuple[Any, bytes]] = []
+        removed_entries: list[str] = []
+        try:
+            with ZipFile(path) as archive:
+                bad_file = archive.testzip()
+                if bad_file:
+                    raise InvalidModIconArchiveError(f'Archive has a corrupted entry: {bad_file}')
+                for entry in archive.infolist():
+                    if entry.is_dir():
+                        continue
+                    if self._entry_is_supported_icon_path(entry.filename, expected_root):
+                        kept_entries.append((entry, archive.read(entry)))
+                    else:
+                        removed_entries.append(entry.filename)
+        except BadZipFile as exc:
+            raise InvalidModIconArchiveError('Stored file is not a valid .zip archive') from exc
+
+        if not kept_entries:
+            raise InvalidModIconArchiveError('Archive cleanup would remove all icon files')
+        if not removed_entries:
+            stat = path.stat()
+            return {
+                'name': path.name,
+                'size': stat.st_size,
+                'kept': len(kept_entries),
+                'removed': 0,
+                'removedEntries': [],
+            }
+
+        temp_path = path.with_suffix(path.suffix + '.tmp')
+        try:
+            with ZipFile(temp_path, 'w') as output:
+                for entry, content in kept_entries:
+                    output.writestr(entry, content)
+            temp_path.replace(path)
+            self.invalidate_atlases()
+        finally:
+            if temp_path.exists():
+                temp_path.unlink()
+
+        stat = path.stat()
+        return {
+            'name': path.name,
+            'size': stat.st_size,
+            'kept': len(kept_entries),
+            'removed': len(removed_entries),
+            'removedEntries': removed_entries[:25],
         }
 
     def generate_atlases(self) -> dict[str, Any]:
@@ -130,6 +202,15 @@ class ModIconAtlasService:
         (self.atlases_dir / 'mod-icons-atlas.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         return manifest
 
+    def invalidate_atlases(self) -> None:
+        if not self.atlases_dir.is_dir():
+            return
+        for old_atlas in self.atlases_dir.glob('mod-icons-*.png'):
+            old_atlas.unlink()
+        manifest_path = self.atlases_dir / 'mod-icons-atlas.json'
+        if manifest_path.is_file():
+            manifest_path.unlink()
+
     def read_manifest(self) -> dict[str, Any] | None:
         path = self.atlases_dir / 'mod-icons-atlas.json'
         if not path.is_file():
@@ -160,6 +241,17 @@ class ModIconAtlasService:
             raise InvalidModIconArchiveError('Archive name must match modid_x32.zip or modid_x256.zip')
         return filename
 
+    def _archive_path(self, raw_filename: str) -> Path:
+        filename = self._safe_archive_name(raw_filename)
+        path = (self.archives_dir / filename).resolve(strict=False)
+        try:
+            path.relative_to(self.archives_dir.resolve(strict=False))
+        except ValueError as exc:
+            raise InvalidModIconArchiveError('Archive path is outside storage') from exc
+        if not path.is_file():
+            raise ArchiveNotFoundError(f'Archive not found: {filename}')
+        return path
+
     def _parse_archive_name(self, archive_name: str) -> tuple[str, int, str]:
         match = VALID_ARCHIVE_NAME.match(Path(archive_name).name)
         if not match:
@@ -173,15 +265,9 @@ class ModIconAtlasService:
                 entries = [entry for entry in archive.infolist() if not entry.is_dir()]
                 if not entries:
                     raise InvalidModIconArchiveError('Archive does not contain icon files')
-                invalid: list[str] = []
-                for entry in entries:
-                    if not self._entry_is_supported_icon_path(entry.filename, expected_root):
-                        invalid.append(entry.filename)
-                if invalid:
-                    sample = ', '.join(invalid[:5])
-                    raise InvalidModIconArchiveError(
-                        f'Archive contains unsupported files: {sample}. Only .png files at root or under {expected_root}/ are accepted.'
-                    )
+                supported = [entry for entry in entries if self._entry_is_supported_icon_path(entry.filename, expected_root)]
+                if not supported:
+                    raise InvalidModIconArchiveError(f'Archive does not contain PNG icon files at root or under {expected_root}/')
                 bad_file = archive.testzip()
                 if bad_file:
                     raise InvalidModIconArchiveError(f'Archive has a corrupted entry: {bad_file}')

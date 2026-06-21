@@ -48,3 +48,28 @@ def test_mod_icon_atlas_packs_multiple_mods_into_shared_page(tmp_path: Path):
     assert manifest['atlases'][0]['file'] == 'mod-icons-x32-1.png'
     assert manifest['entries']['x32']['firstmod/First icon']['atlasFile'] == 'mod-icons-x32-1.png'
     assert manifest['entries']['x32']['secondmod/Second icon']['atlasFile'] == 'mod-icons-x32-1.png'
+
+
+def test_mod_icon_archive_cleanup_removes_non_matching_entries(tmp_path: Path):
+    source_icon = tmp_path / 'icon.png'
+    _write_rgba_png(source_icon, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    archives_dir = tmp_path / 'archives'
+    atlases_dir = tmp_path / 'atlases'
+    archives_dir.mkdir()
+    archive_path = archives_dir / 'examplemod_x32.zip'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.write(source_icon, 'examplemod_x32/Own icon.png')
+        archive.write(source_icon, 'Root icon.png')
+        archive.write(source_icon, 'othermod_x32/Other icon.png')
+        archive.writestr('notes.txt', 'not an icon')
+
+    cleanup = ModIconAtlasService(archives_dir, atlases_dir).clean_archive('examplemod_x32.zip')
+
+    with ZipFile(archive_path) as archive:
+        names = set(archive.namelist())
+    assert cleanup['removed'] == 2
+    assert cleanup['kept'] == 2
+    assert 'examplemod_x32/Own icon.png' in names
+    assert 'Root icon.png' in names
+    assert 'othermod_x32/Other icon.png' not in names
+    assert 'notes.txt' not in names
