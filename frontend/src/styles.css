@@ -412,7 +412,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .cloud-save-preview strong { overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, monospace; }
 .cloud-save-actions { justify-content: flex-end; }
 .cloud-conflict-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.modal-custom-item { width: min(1360px, calc(100vw - 48px)); max-height: min(94vh, 980px); overflow: auto; padding: 18px; border-radius: 12px; background: color-mix(in srgb, var(--panel) 92%, #020617); box-shadow: 0 24px 80px rgba(0, 0, 0, .48); }
+.modal.modal-custom-item { width: min(1500px, calc(100vw - 40px)); max-height: min(94vh, 980px); overflow: auto; padding: 18px; border-radius: 12px; background: color-mix(in srgb, var(--panel) 92%, #020617); box-shadow: 0 24px 80px rgba(0, 0, 0, .48); }
 .settings-section { display: grid; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
 .settings-section-title { display: grid; gap: 4px; }
 .settings-section-title h3 { margin: 0; font-size: 16px; }
@@ -596,25 +596,34 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .compact-textarea { min-height: 78px; resize: vertical; }
 .nbt-editor-shell { display: grid; gap: 10px; min-width: 0; }
 .nbt-toolbar { display: flex; justify-content: flex-start; gap: 8px; flex-wrap: wrap; }
-.nbt-tree-list { display: grid; gap: 8px; max-height: min(42vh, 460px); overflow: auto; padding: 8px; border: 1px solid color-mix(in srgb, var(--border) 82%, transparent); border-radius: 8px; background: color-mix(in srgb, #020617 18%, var(--field-bg)); }
-.nbt-tree-row { display: grid; grid-template-columns: minmax(170px, 260px) minmax(0, 1fr) auto; gap: 8px; align-items: start; min-width: 0; }
-.nbt-list-row { grid-template-columns: minmax(42px, auto) minmax(0, 1fr) auto; }
-.nbt-root-row { padding: 8px; border: 1px solid color-mix(in srgb, var(--border) 86%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--panel) 62%, transparent); }
-.nbt-scalar-row { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(120px, 170px); gap: 8px; min-width: 0; }
-.nbt-tree-row input,
-.nbt-tree-row select,
-.nbt-scalar-row input,
-.nbt-scalar-row select { min-width: 0; width: 100%; }
-.nbt-node-card { display: grid; gap: 8px; min-width: 0; padding: 8px; border: 1px solid color-mix(in srgb, var(--border) 78%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
+.nbt-tree-list { display: grid; gap: 10px; max-height: min(48vh, 560px); overflow: auto; padding: 8px; border: 1px solid color-mix(in srgb, var(--border) 82%, transparent); border-radius: 8px; background: color-mix(in srgb, #020617 18%, var(--field-bg)); }
+.nbt-root-row,
+.nbt-child-entry { min-width: 0; }
+.nbt-entry-card { display: grid; gap: 8px; min-width: 0; padding: 10px; border: 1px solid color-mix(in srgb, var(--border) 86%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--panel) 58%, transparent); }
+.nbt-entry-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; min-width: 0; }
+.nbt-entry-head > button { align-self: end; min-height: 36px; }
+.nbt-entry-body { min-width: 0; }
+.nbt-key-field,
+.nbt-value-field,
+.nbt-type-field { display: grid; gap: 5px; min-width: 0; }
+.nbt-key-field span,
+.nbt-value-field span,
+.nbt-type-field span { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0; }
+.nbt-key-field input,
+.nbt-value-field input,
+.nbt-type-field select { min-width: 0; width: 100%; }
+.nbt-scalar-card { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(140px, 220px); gap: 8px; min-width: 0; }
+.nbt-node-card { display: grid; gap: 10px; min-width: 0; padding: 10px; border: 1px solid color-mix(in srgb, var(--border) 78%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 70%, transparent); }
 .nbt-node-compound { border-left: 3px solid color-mix(in srgb, #60a5fa 72%, var(--border)); }
 .nbt-node-list { border-left: 3px solid color-mix(in srgb, #f59e0b 76%, var(--border)); }
-.nbt-node-head { display: grid; grid-template-columns: auto minmax(120px, 180px) repeat(3, minmax(72px, auto)); gap: 8px; align-items: center; }
+.nbt-node-head { display: grid; grid-template-columns: auto minmax(150px, 220px) minmax(0, 1fr); gap: 8px; align-items: end; }
 .nbt-node-head button { min-height: 36px; padding: 6px 10px; border-radius: 8px; }
 .nbt-collapse-button { min-width: 96px; }
+.nbt-add-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
 .nbt-children { display: grid; gap: 8px; padding-left: 14px; border-left: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border)); }
 .nbt-list-index { font-size: 12px; color: var(--muted); align-self: center; font-family: ui-monospace, SFMono-Regular, monospace; }
 .nbt-empty-state { padding: 14px; border: 1px dashed color-mix(in srgb, var(--border) 78%, transparent); border-radius: 8px; color: var(--muted); background: color-mix(in srgb, var(--field-bg) 62%, transparent); }
-@media (max-width: 1280px) { .workspace-layout, .debug-shell, .wipe-update-steps { grid-template-columns: minmax(0, 1fr); } .workspace-right, .debug-sidebar { position: static; grid-column: auto; } .recipe-builder-controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); } .nbt-tree-row, .nbt-list-row, .nbt-node-head, .nbt-scalar-row, .custom-item-summary, .custom-item-config-grid, .custom-save-options { grid-template-columns: 1fr; } .modal-nbt-tree { min-width: 420px; width: min(96vw, 96vw); } .modal-custom-item { width: min(96vw, 96vw); } .custom-nbt-section .settings-section-title span { max-width: 100%; } }
+@media (max-width: 1280px) { .workspace-layout, .debug-shell, .wipe-update-steps { grid-template-columns: minmax(0, 1fr); } .workspace-right, .debug-sidebar { position: static; grid-column: auto; } .recipe-builder-controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); } .nbt-entry-head, .nbt-node-head, .nbt-scalar-card, .custom-item-summary, .custom-item-config-grid, .custom-save-options { grid-template-columns: 1fr; } .nbt-add-actions { justify-content: flex-start; } .modal-nbt-tree { min-width: 420px; width: min(96vw, 96vw); } .modal.modal-custom-item { width: min(96vw, 96vw); } .custom-nbt-section .settings-section-title span { max-width: 100%; } }
 @media (max-width: 900px) { .workspace-layout, .debug-shell { grid-template-columns: 1fr; } .workspace-right { grid-column: auto; } .cloud-storage-path, .recipe-builder-controls, .draft-filter-grid, .draft-preview-header, .draft-template-card-head, .debug-log-event-head, .case-alias-log-upload, .case-alias-manual-form, .case-alias-missing-list .admin-file-row { grid-template-columns: 1fr; } .recipe-panel-actions, .history-nav, .similar-recipe-nav, .similar-recipe-nav .inline-actions { width: 100%; justify-content: stretch; } .history-button, .similar-recipe-nav button { flex: 1; min-width: 0; } .recipe-actions-menu, .recipe-actions-menu summary { width: 100%; } .recipe-actions-popover { position: static; width: 100%; margin-top: 8px; } .utility-bar, .field-header, .output-title-row { flex-direction: column; align-items: stretch; } .main-tabs, .utility-actions { width: 100%; flex-wrap: wrap; } .main-tabs { justify-content: stretch; } .main-tab-button { flex: 1; } .output-card { grid-template-columns: 1fr; } }
 @media (max-width: 1280px) { .task-board { grid-template-columns: repeat(2, minmax(230px, 1fr)); } .task-form-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); } }
 @media (max-width: 900px) { .task-board, .task-form-grid, .task-card-summary, .task-meta-grid { grid-template-columns: 1fr; } .task-priority, .task-deadline { justify-self: start; } }

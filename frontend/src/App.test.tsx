@@ -803,6 +803,30 @@ test('right click clears a held item before opening context menus again', async 
   expect(document.querySelector('.nei-context-menu')).toBeTruthy();
 });
 
+test('dropdown menus close after actions and outside clicks', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  const craftMenu = document.querySelector('.craft-board-menu') as HTMLDetailsElement;
+  expect(craftMenu).toBeTruthy();
+  fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
+  expect(craftMenu.open).toBe(true);
+  fireEvent.click(within(craftMenu).getAllByRole('button')[1]);
+  await waitFor(() => expect(craftMenu.open).toBe(false));
+
+  fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
+  expect(craftMenu.open).toBe(true);
+  fireEvent.pointerDown(document.body);
+  await waitFor(() => expect(craftMenu.open).toBe(false));
+
+  const actionsMenu = document.querySelector('.recipe-actions-menu') as HTMLDetailsElement;
+  expect(actionsMenu).toBeTruthy();
+  fireEvent.click(actionsMenu.querySelector('summary') as HTMLElement);
+  expect(actionsMenu.open).toBe(true);
+  const actionButtons = within(actionsMenu).getAllByRole('button');
+  fireEvent.click(actionButtons[actionButtons.length - 1]);
+  await waitFor(() => expect(actionsMenu.open).toBe(false));
+});
+
 test('admin mod icons tab shows archive and atlas status', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 

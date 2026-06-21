@@ -2108,6 +2108,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function downloadCloudFile(path: string) {
+    setCloudContextMenu(null);
     try {
       const payload = await downloadZsCloudFile(path);
       downloadBlobFile(payload.filename, payload.blob);
@@ -2118,6 +2119,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function renameCloudFile(path: string) {
+    setCloudContextMenu(null);
     const currentName = path.split(/[\\/]/).pop() ?? 'recipe.zs';
     const newName = window.prompt('Новое имя .zs файла', currentName);
     if (!newName) return;
@@ -2133,6 +2135,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   async function deleteCloudFile(path: string) {
+    setCloudContextMenu(null);
     const name = path.split(/[\\/]/).pop() ?? path;
     if (!window.confirm(`Удалить ${name}? Секретный backup, если он есть, останется только у ROOT.`)) return;
     setCloudStatus('Удаляю файл...');
@@ -2417,6 +2420,38 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       moveHeldCursor();
     }
   }, [heldItemRaw]);
+
+  useEffect(() => {
+    const closeDetailsOnOutsidePointer = (event: Event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      document.querySelectorAll<HTMLDetailsElement>('details[data-close-on-select][open]').forEach((details) => {
+        if (!target || !details.contains(target)) {
+          details.open = false;
+        }
+      });
+    };
+    const closeDetailsAfterAction = (event: Event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const action = target?.closest('button, a, [role="menuitem"]');
+      if (!action || action.closest('[data-keep-menu-open]')) {
+        return;
+      }
+      const details = action.closest<HTMLDetailsElement>('details[data-close-on-select]');
+      if (!details) {
+        return;
+      }
+      window.setTimeout(() => {
+        details.open = false;
+      }, 0);
+    };
+
+    document.addEventListener('pointerdown', closeDetailsOnOutsidePointer);
+    document.addEventListener('click', closeDetailsAfterAction);
+    return () => {
+      document.removeEventListener('pointerdown', closeDetailsOnOutsidePointer);
+      document.removeEventListener('click', closeDetailsAfterAction);
+    };
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -4866,7 +4901,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <span className="history-status">История: назад {recipeBackHistory.length}, вперед {recipeForwardHistory.length}</span>
                 <button type="button" className="ghost-button history-button" aria-label="recipe-history-forward" title="История вперед" disabled={!recipeForwardHistory.length} onClick={() => restoreRecipeFromHistory(1)}>История вперед →</button>
               </div>
-              <details className="recipe-actions-menu">
+              <details className="recipe-actions-menu" data-close-on-select>
                 <summary>Действия</summary>
                 <div className="recipe-actions-popover">
                   <button type="button" className="secondary-button" aria-label="save-local" disabled={!canSaveActions} onClick={downloadCurrentRecipe}>Сохранить локально</button>
@@ -4916,7 +4951,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
-              <details className="craft-board-menu">
+              <details className="craft-board-menu" data-close-on-select>
                 <summary aria-label="craft-board-menu">...</summary>
                 <div className="craft-board-menu-popover">
                   <button type="button" className="secondary-button" onClick={() => openCraftEditorModal({ kind: 'output' })} disabled={!canCreateTemplates && !canEditRecipes}>Детальные настройки output</button>

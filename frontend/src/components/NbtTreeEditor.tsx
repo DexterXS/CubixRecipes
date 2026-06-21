@@ -69,17 +69,53 @@ export function NbtTreeEditor({
     });
   }
 
+  function renderTypeSelect(path: string, currentType: NbtNodeType, currentNode: NbtNode, onNodeChange: (nextNode: NbtNode) => void) {
+    return (
+      <label className="nbt-type-field">
+        <span>Тип</span>
+        <select aria-label={`${labelPrefix}-type-${path}`} value={currentType} onChange={(event) => onNodeChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, currentNode))}>
+          {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+        </select>
+      </label>
+    );
+  }
+
+  function renderEntryCard(
+    path: string,
+    entry: NbtCompoundNode['entries'][number],
+    onKeyChange: (key: string) => void,
+    onValueChange: (value: NbtNode) => void,
+    onDelete: () => void,
+    valuePath = path
+  ) {
+    return (
+      <div className="nbt-entry-card">
+        <div className="nbt-entry-head">
+          <label className="nbt-key-field">
+            <span>Ключ</span>
+            <input aria-label={`${labelPrefix}-key-${path}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onKeyChange(event.target.value)} />
+          </label>
+          <button type="button" className="ghost-button danger-lite-button" aria-label={`delete-${labelPrefix}-${path}`} onClick={onDelete}>Удалить</button>
+        </div>
+        <div className="nbt-entry-body">
+          {renderNodeEditor(entry.value, valuePath, onValueChange)}
+        </div>
+      </div>
+    );
+  }
+
   function renderNodeEditor(node: NbtNode, path: string, onNodeChange: (nextNode: NbtNode) => void) {
     const currentType = nodeType(node);
     const isCollapsed = collapsedPaths[path] ?? false;
 
     if (node.kind === 'scalar') {
       return (
-        <div className="nbt-scalar-row">
-          <input aria-label={`${labelPrefix}-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onNodeChange({ ...node, value: event.target.value })} />
-          <select aria-label={`${labelPrefix}-type-${path}`} value={currentType} onChange={(event) => onNodeChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-          </select>
+        <div className="nbt-scalar-card">
+          <label className="nbt-value-field">
+            <span>Значение</span>
+            <input aria-label={`${labelPrefix}-value-${path}`} type="text" value={node.value} placeholder="значение" onChange={(event) => onNodeChange({ ...node, value: event.target.value })} />
+          </label>
+          {renderTypeSelect(path, currentType, node, onNodeChange)}
         </div>
       );
     }
@@ -89,23 +125,25 @@ export function NbtTreeEditor({
         <div className="nbt-node-card nbt-node-compound">
           <div className="nbt-node-head">
             <button type="button" className="ghost-button nbt-collapse-button" aria-label={`toggle-${labelPrefix}-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
-            <select aria-label={`${labelPrefix}-type-${path}`} value={currentType} onChange={(event) => onNodeChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-              {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-            </select>
-            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-child-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>Поле</button>
-            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-object-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('compound') }] })}>Объект</button>
-            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-list-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('list') }] })}>Список</button>
+            {renderTypeSelect(path, currentType, node, onNodeChange)}
+            <div className="nbt-add-actions">
+              <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-child-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('int') }] })}>Поле</button>
+              <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-object-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('compound') }] })}>Объект</button>
+              <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-list-${path}`} onClick={() => onNodeChange({ ...node, entries: [...node.entries, { key: '', value: defaultNodeForType('list') }] })}>Список</button>
+            </div>
           </div>
           {!isCollapsed ? (
             <div className="nbt-children">
               {node.entries.map((entry, index) => (
-                <div key={`${path}.${index}`} className="nbt-tree-row">
-                  <input aria-label={`${labelPrefix}-key-${path}-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => onNodeChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key: event.target.value } : nodeEntry) })} />
-                  {renderNodeEditor(entry.value, `${path}.${index}`, (nextValue) => onNodeChange({
-                    ...node,
-                    entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value: nextValue } : nodeEntry)
-                  }))}
-                  <button type="button" className="ghost-button danger-lite-button" aria-label={`delete-${labelPrefix}-child-${path}-${index}`} onClick={() => onNodeChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) })}>Удалить</button>
+                <div key={`${path}.${index}`} className="nbt-child-entry">
+                  {renderEntryCard(
+                    `${path}-${index}`,
+                    entry,
+                    (key) => onNodeChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, key } : nodeEntry) }),
+                    (value) => onNodeChange({ ...node, entries: node.entries.map((nodeEntry, nodeIndex) => nodeIndex === index ? { ...nodeEntry, value } : nodeEntry) }),
+                    () => onNodeChange({ ...node, entries: node.entries.filter((_, nodeIndex) => nodeIndex !== index) }),
+                    `${path}.${index}`
+                  )}
                 </div>
               ))}
             </div>
@@ -118,23 +156,27 @@ export function NbtTreeEditor({
       <div className="nbt-node-card nbt-node-list">
         <div className="nbt-node-head">
           <button type="button" className="ghost-button nbt-collapse-button" aria-label={`toggle-${labelPrefix}-${path}`} onClick={() => setNbtPathCollapsed(path, !isCollapsed)}>{isCollapsed ? 'Развернуть' : 'Свернуть'}</button>
-          <select aria-label={`${labelPrefix}-type-${path}`} value={currentType} onChange={(event) => onNodeChange(normalizeNodeTypeChange(event.target.value as NbtNodeType, node))}>
-            {nbtNodeTypeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
-          </select>
-          <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>Элемент</button>
-          <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-object-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('compound')] })}>Объект</button>
-          <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-list-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('list')] })}>Список</button>
+          {renderTypeSelect(path, currentType, node, onNodeChange)}
+          <div className="nbt-add-actions">
+            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('int')] })}>Элемент</button>
+            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-object-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('compound')] })}>Объект</button>
+            <button type="button" className="ghost-button" aria-label={`add-${labelPrefix}-list-item-${path}`} onClick={() => onNodeChange({ ...node, items: [...node.items, defaultNodeForType('list')] })}>Список</button>
+          </div>
         </div>
         {!isCollapsed ? (
           <div className="nbt-children">
             {node.items.map((item, index) => (
-              <div key={`${path}.${index}`} className="nbt-tree-row nbt-list-row">
-                <span className="nbt-list-index">[{index}]</span>
-                {renderNodeEditor(item, `${path}.${index}`, (nextNode) => onNodeChange({
-                  ...node,
-                  items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
-                }))}
-                <button type="button" className="ghost-button danger-lite-button" aria-label={`delete-${labelPrefix}-item-${path}-${index}`} onClick={() => onNodeChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
+              <div key={`${path}.${index}`} className="nbt-entry-card nbt-list-entry-card">
+                <div className="nbt-entry-head">
+                  <span className="nbt-list-index">[{index}]</span>
+                  <button type="button" className="ghost-button danger-lite-button" aria-label={`delete-${labelPrefix}-item-${path}-${index}`} onClick={() => onNodeChange({ ...node, items: node.items.filter((_, valueIndex) => valueIndex !== index) })}>Удалить</button>
+                </div>
+                <div className="nbt-entry-body">
+                  {renderNodeEditor(item, `${path}.${index}`, (nextNode) => onNodeChange({
+                    ...node,
+                    items: node.items.map((value, valueIndex) => valueIndex === index ? nextNode : value)
+                  }))}
+                </div>
               </div>
             ))}
           </div>
@@ -153,10 +195,15 @@ export function NbtTreeEditor({
       {root.entries.length ? (
         <div className="nbt-tree-list" aria-label={`${labelPrefix}-editor-list`}>
           {root.entries.map((entry, index) => (
-            <div key={`root-entry-${index}`} className="nbt-tree-row nbt-root-row">
-              <input aria-label={`${labelPrefix}-key-${index}`} type="text" value={entry.key} placeholder="ключ" onChange={(event) => updateRootEntry(index, (current) => ({ ...current, key: event.target.value }))} />
-              {renderNodeEditor(entry.value, `root.${index}`, (nextNode) => updateRootEntry(index, (current) => ({ ...current, value: nextNode })))}
-              <button type="button" className="ghost-button danger-lite-button" aria-label={`delete-${labelPrefix}-root-${index}`} onClick={() => onChange({ ...root, entries: root.entries.filter((_, entryIndex) => entryIndex !== index) })}>Удалить</button>
+            <div key={`root-entry-${index}`} className="nbt-root-row">
+              {renderEntryCard(
+                `${index}`,
+                entry,
+                (key) => updateRootEntry(index, (current) => ({ ...current, key })),
+                (value) => updateRootEntry(index, (current) => ({ ...current, value })),
+                () => onChange({ ...root, entries: root.entries.filter((_, entryIndex) => entryIndex !== index) }),
+                `root.${index}`
+              )}
             </div>
           ))}
         </div>
