@@ -6449,8 +6449,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return (
         <RecipeTasksBoard
           authUser={authUser}
-          currentItemRaw={outputRaw}
-          currentItemTitle={outputRaw ? (outputDisplayName ?? resolveCellTitle(outputRaw)) : ''}
           itemOptions={taskItemOptions}
           prefillItem={taskPrefillItem}
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}

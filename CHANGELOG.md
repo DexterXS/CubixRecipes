@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added task-card deletion controls, modal task editing with status changes, and a `Готово` column cleanup action for the admin `Задачи` board.
 - Added task item search/prefill for the admin `Задачи` board, including icon-backed item selection, automatic title filling, today-default deadlines, and a NEI context-menu action to start a task from an item.
 - Added an admin-only `Задачи` workspace with four kanban columns, compact expandable item task cards, drag-and-drop status movement, free/sorted board modes, priorities, deadlines, estimated days, assignees, helpers, and backend-backed shared task storage.
 - Added persistent `/data`-backed itempanel merge storage under `.cubixrecipes_admin/itempanel`, so uploaded itempanel data and generated `itempanel_merged.csv` survive deploys when the project config is on the Railway volume.

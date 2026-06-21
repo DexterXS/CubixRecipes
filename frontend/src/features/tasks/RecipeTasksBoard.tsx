@@ -54,8 +54,6 @@ interface TaskFormState {
 
 interface RecipeTasksBoardProps {
   authUser: AuthUser;
-  currentItemRaw: string;
-  currentItemTitle: string;
   itemOptions: RecipeTaskItemOption[];
   prefillItem?: RecipeTaskPrefillItem | null;
   renderItemIcon: (raw: string) => ReactNode;
@@ -151,14 +149,15 @@ function shouldAutoReplaceTitle(form: TaskFormState): boolean {
   return !title || title === DEFAULT_TASK_TITLE || title === form.itemRaw || title === form.itemTitle;
 }
 
-export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, itemOptions, prefillItem, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
+export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
   const [tasks, setTasks] = useState<RecipeTask[]>([]);
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [boardMode, setBoardMode] = useState<RecipeTaskBoardMode>('free');
   const [statusText, setStatusText] = useState('Загрузка...');
   const [isCreating, setIsCreating] = useState(false);
-  const [createForm, setCreateForm] = useState<TaskFormState>(() => emptyForm(currentItemRaw, currentItemTitle, authUser.email));
-  const [editForms, setEditForms] = useState<Record<string, TaskFormState>>({});
+  const [createForm, setCreateForm] = useState<TaskFormState>(() => emptyForm('', '', authUser.email));
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<TaskFormState | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [activeItemPickerKey, setActiveItemPickerKey] = useState<string | null>(null);
@@ -211,9 +210,9 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
   useEffect(() => {
     setCreateForm((current) => {
       if (current.itemRaw || current.title) return current;
-      return emptyForm(currentItemRaw, currentItemTitle, authUser.email);
+      return emptyForm('', '', authUser.email);
     });
-  }, [authUser.email, currentItemRaw, currentItemTitle]);
+  }, [authUser.email]);
 
   useEffect(() => {
     if (!prefillItem?.raw) return;
@@ -267,7 +266,7 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
     try {
       const payload = await createRecipeTask(payloadFromForm(createForm));
       setTasks((current) => [payload.task, ...current]);
-      setCreateForm(emptyForm(currentItemRaw, currentItemTitle, authUser.email));
+      setCreateForm(emptyForm('', '', authUser.email));
       setIsCreating(false);
       setStatusText('Задача создана');
     } catch (error) {
@@ -277,7 +276,7 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
 
   async function submitEdit(task: RecipeTask, event: FormEvent) {
     event.preventDefault();
-    const form = editForms[task.id] ?? formFromTask(task);
+    const form = editForm ?? formFromTask(task);
     if (!form.itemRaw.trim()) {
       setStatusText('Выберите предмет для задачи');
       return;
@@ -285,11 +284,8 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
     try {
       const payload = await updateRecipeTask(task.id, payloadFromForm(form));
       setTasks((current) => current.map((item) => item.id === payload.task.id ? payload.task : item));
-      setEditForms((current) => {
-        const next = { ...current };
-        delete next[task.id];
-        return next;
-      });
+      setEditingTaskId(null);
+      setEditForm(null);
       setStatusText('Задача обновлена');
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : String(error));
@@ -300,7 +296,27 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
     try {
       await deleteRecipeTask(task.id);
       setTasks((current) => current.filter((item) => item.id !== task.id));
+      if (editingTaskId === task.id) {
+        setEditingTaskId(null);
+        setEditForm(null);
+      }
       setStatusText('Задача удалена');
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function clearDoneTasks(doneTasks: RecipeTask[]) {
+    if (!doneTasks.length) return;
+    try {
+      await Promise.all(doneTasks.map((task) => deleteRecipeTask(task.id)));
+      const doneIds = new Set(doneTasks.map((task) => task.id));
+      setTasks((current) => current.filter((task) => !doneIds.has(task.id)));
+      if (editingTaskId && doneIds.has(editingTaskId)) {
+        setEditingTaskId(null);
+        setEditForm(null);
+      }
+      setStatusText(`Готовые задачи очищены: ${doneTasks.length}`);
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : String(error));
     }
@@ -362,8 +378,14 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
     setCreateForm((current) => ({ ...current, ...patch }));
   }
 
-  function updateEditForm(task: RecipeTask, patch: Partial<TaskFormState>) {
-    setEditForms((current) => ({ ...current, [task.id]: { ...(current[task.id] ?? formFromTask(task)), ...patch } }));
+  function updateEditForm(patch: Partial<TaskFormState>) {
+    setEditForm((current) => current ? { ...current, ...patch } : current);
+  }
+
+  function beginEditTask(task: RecipeTask) {
+    setEditForm(formFromTask(task));
+    setEditingTaskId(task.id);
+    setActiveItemPickerKey(null);
   }
 
   function itemPatchFromSelection(form: TaskFormState, raw: string, title: string): Partial<TaskFormState> {
@@ -482,7 +504,6 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
   function renderTaskCard(task: RecipeTask) {
     const title = task.itemTitle || task.title || (task.itemRaw ? resolveItemTitle(task.itemRaw) : 'Задача');
     const expandedCard = Boolean(expanded[task.id]);
-    const editForm = editForms[task.id];
     return (
       <article
         key={task.id}
@@ -509,38 +530,59 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
         </button>
         {expandedCard ? (
           <div className="task-card-details">
-            {editForm ? (
-              renderTaskForm(editForm, `edit-${task.id}`, (patch) => updateEditForm(task, patch), (event) => void submitEdit(task, event), 'Сохранить', (
-                <>
-                  <button type="button" className="ghost-button" onClick={() => setEditForms((current) => {
-                    const next = { ...current };
-                    delete next[task.id];
-                    return next;
-                  })}>Отмена</button>
-                  <button type="button" className="ghost-button danger-lite-button" onClick={() => void removeTask(task)}>Удалить</button>
-                </>
-              ))
-            ) : (
-              <>
-                <p>{task.description || 'Описание не заполнено.'}</p>
-                <div className="task-meta-grid">
-                  <div><span>Поставил</span><strong>{task.createdByEmail}</strong></div>
-                  <div><span>Создано</span><strong>{formatDateTime(task.createdAt)}</strong></div>
-                  <div><span>Помощники</span><strong>{task.helperEmails.length ? task.helperEmails.join(', ') : '-'}</strong></div>
-                  <div><span>На проверку</span><strong>{task.submittedByEmail || '-'}</strong></div>
-                  <div><span>Проверил</span><strong>{task.reviewedByEmail || '-'}</strong></div>
-                  <div><span>Утверждено</span><strong>{formatDateTime(task.approvedAt)}</strong></div>
-                </div>
-                <div className="inline-actions">
-                  <button type="button" className="secondary-button" onClick={() => setEditForms((current) => ({ ...current, [task.id]: formFromTask(task) }))}>Редактировать</button>
-                  <button type="button" className="ghost-button" onClick={() => void updateRecipeTask(task.id, { status: 'review' }).then((payload) => setTasks((current) => current.map((item) => item.id === payload.task.id ? payload.task : item))).catch((error) => setStatusText(error instanceof Error ? error.message : String(error)))}>На проверку</button>
-                  <button type="button" className="ghost-button" onClick={() => void updateRecipeTask(task.id, { status: 'done' }).then((payload) => setTasks((current) => current.map((item) => item.id === payload.task.id ? payload.task : item))).catch((error) => setStatusText(error instanceof Error ? error.message : String(error)))}>Готово</button>
-                </div>
-              </>
-            )}
+            <p>{task.description || 'Описание не заполнено.'}</p>
+            <div className="task-meta-grid">
+              <div><span>Поставил</span><strong>{task.createdByEmail}</strong></div>
+              <div><span>Создано</span><strong>{formatDateTime(task.createdAt)}</strong></div>
+              <div><span>Помощники</span><strong>{task.helperEmails.length ? task.helperEmails.join(', ') : '-'}</strong></div>
+              <div><span>На проверку</span><strong>{task.submittedByEmail || '-'}</strong></div>
+              <div><span>Проверил</span><strong>{task.reviewedByEmail || '-'}</strong></div>
+              <div><span>Утверждено</span><strong>{formatDateTime(task.approvedAt)}</strong></div>
+            </div>
+            <div className="inline-actions">
+              <button type="button" className="secondary-button" onClick={() => beginEditTask(task)}>Редактировать</button>
+              <button type="button" className="ghost-button danger-lite-button" onClick={() => void removeTask(task)}>Удалить</button>
+            </div>
           </div>
         ) : null}
       </article>
+    );
+  }
+
+  function renderEditModal() {
+    if (!editingTaskId || !editForm) return null;
+    const task = tasks.find((item) => item.id === editingTaskId);
+    if (!task) return null;
+    const title = task.itemTitle || task.title || (task.itemRaw ? resolveItemTitle(task.itemRaw) : 'Задача');
+    return (
+      <div className="modal-backdrop" onMouseDown={() => {
+        setEditingTaskId(null);
+        setEditForm(null);
+      }}>
+        <div className="modal task-edit-modal" role="dialog" aria-modal="true" aria-label="Редактирование задачи" onMouseDown={(event) => event.stopPropagation()}>
+          <div className="modal-header">
+            <div>
+              <h2>Редактирование задачи</h2>
+              <span className="modal-subtitle">{title}</span>
+            </div>
+            <button type="button" className="ghost-button" onClick={() => {
+              setEditingTaskId(null);
+              setEditForm(null);
+            }}>Закрыть</button>
+          </div>
+          <div className="settings-modal-body">
+            {renderTaskForm(editForm, `edit-${task.id}`, updateEditForm, (event) => void submitEdit(task, event), 'Сохранить', (
+              <>
+                <button type="button" className="ghost-button" onClick={() => {
+                  setEditingTaskId(null);
+                  setEditForm(null);
+                }}>Отмена</button>
+                <button type="button" className="ghost-button danger-lite-button" onClick={() => void removeTask(task)}>Удалить</button>
+              </>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -553,7 +595,8 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
         <div className="tasks-toolbar">
           <div className="inline-actions">
             <button type="button" onClick={() => {
-              setCreateForm(emptyForm(currentItemRaw, currentItemTitle, authUser.email));
+              setCreateForm(emptyForm('', '', authUser.email));
+              setActiveItemPickerKey(null);
               setIsCreating((value) => !value);
             }}>Новая задача</button>
             <button type="button" className="secondary-button" onClick={() => void refreshBoard()}>Обновить</button>
@@ -579,6 +622,9 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
               }}>
                 <div className="task-column-head">
                   <h3>{status.label}</h3>
+                  {status.id === 'done' ? (
+                    <button type="button" className="ghost-button task-clear-done-button" disabled={!columnTasks.length} onClick={() => void clearDoneTasks(columnTasks)}>Очистить все задачи</button>
+                  ) : null}
                   <span>{columnTasks.length}</span>
                 </div>
                 <div className="task-column-list">
@@ -589,6 +635,7 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, i
             );
           })}
         </div>
+        {renderEditModal()}
       </Panel>
     </div>
   );

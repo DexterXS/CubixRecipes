@@ -977,6 +977,7 @@ test('admin can create compact expandable recipe task cards', async () => {
   const taskPanel = within(panel);
 
   fireEvent.click(taskPanel.getByRole('button', { name: 'Новая задача' }));
+  expect((taskPanel.getByLabelText('Предмет') as HTMLInputElement).value).toBe('');
   expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).value).toBe(todayInputValue());
   expect((taskPanel.getByLabelText('Дедлайн') as HTMLInputElement).min).toBe(todayInputValue());
   fireEvent.change(taskPanel.getByLabelText('Предмет'), { target: { value: 'First icon' } });
@@ -995,6 +996,26 @@ test('admin can create compact expandable recipe task cards', async () => {
 
   fireEvent.click(card);
   expect(await taskPanel.findByText(adminUser.email)).toBeTruthy();
+  const cardShell = card.closest('.task-card') as HTMLElement;
+  expect(within(cardShell).queryByRole('button', { name: 'На проверку' })).toBeFalsy();
+  expect(within(cardShell).queryByRole('button', { name: 'Готово' })).toBeFalsy();
+
+  fireEvent.click(within(cardShell).getByRole('button', { name: 'Редактировать' }));
+  const dialog = await screen.findByRole('dialog', { name: 'Редактирование задачи' });
+  fireEvent.change(within(dialog).getByLabelText('Статус'), { target: { value: 'done' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Сохранить' }));
+
+  await waitFor(() => expect(mockRecipeTasks[0].status).toBe('done'));
+  expect(screen.queryByRole('dialog', { name: 'Редактирование задачи' })).toBeFalsy();
+
+  const doneCard = await screen.findByLabelText('task-card-task-1');
+  const doneCardShell = doneCard.closest('.task-card') as HTMLElement;
+  if (!within(doneCardShell).queryByRole('button', { name: 'Удалить' })) {
+    fireEvent.click(doneCard);
+  }
+  await waitFor(() => expect(within(doneCardShell).getByRole('button', { name: 'Удалить' })).toBeTruthy());
+  fireEvent.click(within(doneCardShell).getByRole('button', { name: 'Удалить' }));
+  await waitFor(() => expect(screen.queryByLabelText('task-card-task-1')).toBeFalsy());
 });
 
 test('admin can start a recipe task from the NEI context menu', async () => {
@@ -1016,6 +1037,41 @@ test('admin can start a recipe task from the NEI context menu', async () => {
   await waitFor(() => expect(mockRecipeTasks.length).toBe(1));
   expect(mockRecipeTasks[0].itemRaw).toBe('<ExampleMod:Item>');
   expect(mockRecipeTasks[0].title).toBe('First icon');
+});
+
+test('admin can clear all done recipe tasks from the done column', async () => {
+  mockRecipeTasks = [{
+    id: 'task-done-1',
+    itemRaw: '<minecraft:stick>',
+    itemTitle: 'Палка',
+    title: 'Палка',
+    description: '',
+    status: 'done',
+    priority: 'normal',
+    estimatedDays: 1,
+    deadlineDate: todayInputValue(),
+    assigneeEmail: adminUser.email,
+    helperEmails: [],
+    createdByEmail: adminUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    submittedByEmail: '',
+    submittedAt: 0,
+    reviewedByEmail: '',
+    approvedAt: 0,
+    sortOrder: 1000
+  }];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Задачи' }));
+  expect(await screen.findByLabelText('task-card-task-done-1')).toBeTruthy();
+
+  const doneColumn = screen.getByLabelText('task-column-done');
+  fireEvent.click(within(doneColumn).getByRole('button', { name: 'Очистить все задачи' }));
+
+  await waitFor(() => expect(mockRecipeTasks.length).toBe(0));
+  expect(screen.queryByLabelText('task-card-task-done-1')).toBeFalsy();
 });
 
 test('settings keeps UI/debug controls separate from technical access', async () => {
