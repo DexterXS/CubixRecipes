@@ -53,7 +53,7 @@ interface RecipeDraftTemplatePayload {
   name: string;
 }
 
-interface RecipeTaskPayload {
+export interface RecipeTaskPayload {
   itemRaw: string;
   itemTitle: string;
   title: string;

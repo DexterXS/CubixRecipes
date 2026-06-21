@@ -880,7 +880,8 @@ test('NEI separates recipe fill color from NBT outline markers', async () => {
 test('craft item search suggestions preserve NBT raw values in the NBT editor', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки' }));
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки output' }));
   const craftDialog = await screen.findByRole('dialog', { name: 'Craft editor' });
   fireEvent.change(within(craftDialog).getByLabelText('item-search'), { target: { value: 'charged' } });
   fireEvent.click(await within(craftDialog).findByText('<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})'));
@@ -1082,6 +1083,61 @@ test('admin can start a recipe task from the NEI context menu', async () => {
   expect(mockRecipeTasks[0].title).toBe('First icon');
 });
 
+test('admin can create a recipe task from the NEI default template without leaving the editor', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-tasks'));
+  const board = await screen.findByLabelText('recipe-tasks-board');
+  const taskPanel = within(board.closest('.panel') as HTMLElement);
+  fireEvent.click(taskPanel.getByRole('button', { name: 'Шаблон задач' }));
+  fireEvent.click(taskPanel.getByLabelText('Ставить задачи по умолчанию'));
+  fireEvent.click(taskPanel.getByRole('button', { name: 'Сохранить шаблон' }));
+
+  fireEvent.click(screen.getByTestId('workspace-tab-editor'));
+  const item = await screen.findByLabelText('nei-item-<examplemod:item>');
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 80 });
+  fireEvent.click(await screen.findByRole('button', { name: 'Добавить задачу по шаблону' }));
+
+  await waitFor(() => expect(mockRecipeTasks.length).toBe(1));
+  expect(mockRecipeTasks[0].itemRaw).toBe('<ExampleMod:Item>');
+  expect(mockRecipeTasks[0].title).toBe('First icon');
+  expect(screen.getByLabelText('nei-items')).toBeTruthy();
+});
+
+test('opening a missing task recipe starts a blank craft with the task item as output', async () => {
+  mockRecipeTasks = [{
+    id: 'task-missing-recipe',
+    itemRaw: '<examplemod:item>',
+    itemTitle: 'First icon',
+    title: 'First icon',
+    description: '',
+    status: 'planned',
+    priority: 'normal',
+    estimatedDays: 1,
+    deadlineDate: todayInputValue(),
+    assigneeEmail: adminUser.email,
+    helperEmails: [],
+    createdByEmail: adminUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    submittedByEmail: '',
+    submittedAt: 0,
+    reviewedByEmail: '',
+    approvedAt: 0,
+    sortOrder: 1000
+  }];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Задачи' }));
+  const card = await screen.findByLabelText('task-card-task-missing-recipe');
+  fireEvent.click(card);
+  fireEvent.click(await screen.findByRole('button', { name: 'Открыть рецепт' }));
+
+  await waitFor(() => expect(craftOutputRaw()?.toLowerCase()).toBe('<examplemod:item>'));
+  expect(screen.getByLabelText('recipe-grid-size')).toBeTruthy();
+  expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBeUndefined();
+});
+
 test('admin can clear all done recipe tasks from the done column', async () => {
   mockRecipeTasks = [{
     id: 'task-done-1',
@@ -1129,9 +1185,11 @@ test('settings keeps UI/debug controls separate from technical access', async ()
   expect(screen.queryByText(/layout/i)).toBeFalsy();
 
   fireEvent.change(screen.getByLabelText('ui-scale'), { target: { value: '1.3' } });
+  fireEvent.change(screen.getByLabelText('nei-page-size'), { target: { value: '64' } });
   await waitFor(() => {
     const putCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/settings/project/ui' && init?.method === 'PUT');
     expect(putCalls.length).toBeGreaterThan(0);
+    expect(putCalls.some(([, init]) => JSON.parse(String(init?.body ?? '{}')).nei_page_size === 64)).toBe(true);
   });
 });
 
@@ -1193,7 +1251,8 @@ test('local save can append current recipe into uploaded site file with remove t
 
   fireEvent.change(fileInput, { target: { files: [file] } });
   expect(await screen.findByText('local.zs')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки' }));
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки output' }));
   const craftDialog = await screen.findByRole('dialog', { name: 'Craft editor' });
   fireEvent.click(within(craftDialog).getByLabelText('remove-recipe-enabled'));
   fireEvent.click(within(craftDialog).getByRole('button', { name: 'Закрыть' }));
@@ -1509,6 +1568,7 @@ test('R opens a recipe from a hovered craft-grid item and history can return', a
   Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
 
   fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('torch.zs')).toBeTruthy();
   await waitFor(() => {
     expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
@@ -1546,6 +1606,31 @@ test('R opens a hovered NEI recipe even when search input keeps focus', async ()
   expect(screen.getByText('keydown captured')).toBeTruthy();
 });
 
+test('craft board menu copies and pastes the craft body without replacing output', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const planksItem = await screen.findByLabelText('nei-item-<minecraft:planks>');
+  fireEvent.mouseEnter(planksItem);
+  fireEvent.keyDown(window, { key: 'r', code: 'KeyR' });
+
+  await waitFor(() => expect(craftOutputRaw()).toBe('<minecraft:planks>'));
+  expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');
+
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Скопировать текущее тело крафта' }));
+
+  const exampleItem = await screen.findByLabelText('nei-item-<examplemod:item>');
+  fireEvent.mouseEnter(exampleItem);
+  fireEvent.keyDown(window, { key: 'r', code: 'KeyR' });
+  await waitFor(() => expect(craftOutputRaw()?.toLowerCase()).toBe('<examplemod:item>'));
+  expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBeUndefined();
+
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Вставить тело крафта' }));
+
+  await waitFor(() => expect(craftOutputRaw()?.toLowerCase()).toBe('<examplemod:item>'));
+  expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');
+});
+
 test('R falls back to a local uploaded draft when backend search has no match', async () => {
   const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
   enableHotkeyDebug();
@@ -1558,6 +1643,7 @@ test('R falls back to a local uploaded draft when backend search has no match', 
   Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
 
   fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('local-drafts.zs')).toBeTruthy();
   await waitFor(() => {
     expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
@@ -1583,6 +1669,7 @@ test('U opens paged recipe uses for a hovered craft-grid item', async () => {
   Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
 
   fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('torch.zs')).toBeTruthy();
   await waitFor(() => {
     expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });
@@ -1609,6 +1696,7 @@ test('U includes local uploaded draft uses when backend search has no match', as
   Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
 
   fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('local-uses.zs')).toBeTruthy();
   await waitFor(() => {
     expect(craftOutputRaw()).toBe('<minecraft:torch>');
   });

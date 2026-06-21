@@ -2,6 +2,7 @@ import { type DragEvent, type FormEvent, type ReactNode, useEffect, useMemo, use
 import { Panel } from '../../components/Panel';
 import { createRecipeTask, deleteRecipeTask, listRecipeTasks, listUsers, reorderRecipeTasks, updateRecipeTask, updateRecipeTaskBoardMode } from '../../services/api';
 import { AuthUser, RecipeTask, RecipeTaskBoardMode, RecipeTaskPriority, RecipeTaskStatus } from '../../types';
+import { applyTaskTextTemplate, defaultTaskTemplate, loadTaskDefaultTemplate, RecipeTaskDefaultTemplate, saveTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from './taskDefaults';
 
 const statuses: Array<{ id: RecipeTaskStatus; label: string }> = [
   { id: 'planned', label: 'Запланировано' },
@@ -65,6 +66,7 @@ interface RecipeTasksBoardProps {
   prefillItem?: RecipeTaskPrefillItem | null;
   onOpenRecipe?: (raw: string) => void;
   renderItemIcon: (raw: string) => ReactNode;
+  renderItemTooltip?: (raw: string) => ReactNode;
   resolveItemTitle: (raw: string) => string;
 }
 
@@ -101,6 +103,22 @@ function emptyForm(currentItemRaw = '', currentItemTitle = '', authEmail = ''): 
     deadlineDate: todayDateInputValue(),
     assigneeEmail: authEmail,
     helperEmailsText: ''
+  };
+}
+
+function formWithTaskDefaults(template: RecipeTaskDefaultTemplate, currentItemRaw = '', currentItemTitle = '', authEmail = ''): TaskFormState {
+  const base = emptyForm(currentItemRaw, currentItemTitle, authEmail);
+  if (!template.enabled) return base;
+  const itemTitle = currentItemTitle || currentItemRaw;
+  return {
+    ...base,
+    title: applyTaskTextTemplate(template.titleTemplate, itemTitle, currentItemRaw) || base.title,
+    description: applyTaskTextTemplate(template.descriptionTemplate, itemTitle, currentItemRaw),
+    status: template.status,
+    priority: template.priority,
+    deadlineDate: taskTemplateDateInputValue(template.deadlineDays),
+    assigneeEmail: template.assigneeEmail || authEmail,
+    helperEmailsText: taskTemplateEmails(template.helperEmailsText).join(', ')
   };
 }
 
@@ -169,13 +187,15 @@ function shouldAutoReplaceTitle(form: TaskFormState): boolean {
   return !title || title === DEFAULT_TASK_TITLE || title === form.itemRaw || title === form.itemTitle;
 }
 
-export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRecipe, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
+export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRecipe, renderItemIcon, renderItemTooltip, resolveItemTitle }: RecipeTasksBoardProps) {
   const [tasks, setTasks] = useState<RecipeTask[]>([]);
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [boardMode, setBoardMode] = useState<RecipeTaskBoardMode>('free');
   const [statusText, setStatusText] = useState('Загрузка...');
   const [isCreating, setIsCreating] = useState(false);
   const [createForm, setCreateForm] = useState<TaskFormState>(() => emptyForm('', '', authUser.email));
+  const [isTaskDefaultsOpen, setIsTaskDefaultsOpen] = useState(false);
+  const [taskDefaultTemplate, setTaskDefaultTemplate] = useState<RecipeTaskDefaultTemplate>(() => loadTaskDefaultTemplate());
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<TaskFormState | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -242,9 +262,9 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
   useEffect(() => {
     setCreateForm((current) => {
       if (current.itemRaw || current.title) return current;
-      return emptyForm('', '', authUser.email);
+      return formWithTaskDefaults(taskDefaultTemplate, '', '', authUser.email);
     });
-  }, [authUser.email]);
+  }, [authUser.email, taskDefaultTemplate]);
 
   useEffect(() => {
     if (!prefillItem?.raw) return;
@@ -410,6 +430,16 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
     setCreateForm((current) => ({ ...current, ...patch }));
   }
 
+  function updateTaskDefaultTemplate(patch: Partial<RecipeTaskDefaultTemplate>) {
+    setTaskDefaultTemplate((current) => ({ ...current, ...patch }));
+  }
+
+  function persistTaskDefaultTemplate() {
+    const normalized = saveTaskDefaultTemplate(taskDefaultTemplate);
+    setTaskDefaultTemplate(normalized);
+    setStatusText(normalized.enabled ? 'Шаблон задач по умолчанию сохранен' : 'Шаблон задач по умолчанию выключен');
+  }
+
   function updateEditForm(patch: Partial<TaskFormState>) {
     setEditForm((current) => current ? { ...current, ...patch } : current);
   }
@@ -546,6 +576,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
                       <strong>{option.title}</strong>
                       <span>{option.raw}</span>
                     </div>
+                    {renderItemTooltip?.(option.raw)}
                   </button>
                 ))}
               </div>
@@ -656,6 +687,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
           </span>
           <span className={`task-priority priority-${task.priority}`}>{priorityLabels[task.priority]}</span>
           <span className={`task-deadline ${isOverdue(task) ? 'is-overdue' : ''}`}>{task.deadlineDate || `${task.estimatedDays} дн.`}</span>
+          {task.itemRaw ? renderItemTooltip?.(task.itemRaw) : null}
         </button>
         {expandedCard ? (
           <div className="task-card-details">
@@ -727,11 +759,12 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
         <div className="tasks-toolbar">
           <div className="inline-actions">
             <button type="button" onClick={() => {
-              setCreateForm(emptyForm('', '', authUser.email));
+              setCreateForm(formWithTaskDefaults(taskDefaultTemplate, '', '', authUser.email));
               setActiveItemPickerKey(null);
               setIsCreating((value) => !value);
             }}>Новая задача</button>
             <button type="button" className="secondary-button" onClick={() => void refreshBoard()}>Обновить</button>
+            <button type="button" className="ghost-button" onClick={() => setIsTaskDefaultsOpen((value) => !value)}>Шаблон задач</button>
           </div>
           <label className="field-block task-mode-field">
             <span>Режим</span>
@@ -743,6 +776,56 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
             </select>
           </label>
         </div>
+        {isTaskDefaultsOpen ? (
+          <div className="task-defaults-panel">
+            <label className="task-default-toggle">
+              <input
+                type="checkbox"
+                checked={taskDefaultTemplate.enabled}
+                onChange={(event) => updateTaskDefaultTemplate({ enabled: event.target.checked })}
+              />
+              <span>Ставить задачи по умолчанию</span>
+            </label>
+            <div className="task-form-grid">
+              <label className="field-block">
+                <span>Шаблон названия</span>
+                <input value={taskDefaultTemplate.titleTemplate} onChange={(event) => updateTaskDefaultTemplate({ titleTemplate: event.target.value })} placeholder="{item}" />
+              </label>
+              <label className="field-block">
+                <span>Приоритет</span>
+                <select value={taskDefaultTemplate.priority} onChange={(event) => updateTaskDefaultTemplate({ priority: event.target.value as RecipeTaskPriority })}>
+                  {Object.entries(priorityLabels).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+                </select>
+              </label>
+              <label className="field-block">
+                <span>Статус</span>
+                <select value={taskDefaultTemplate.status} onChange={(event) => updateTaskDefaultTemplate({ status: event.target.value as RecipeTaskStatus })}>
+                  {statuses.map((status) => <option key={status.id} value={status.id}>{status.label}</option>)}
+                </select>
+              </label>
+              <label className="field-block">
+                <span>Срок, дней</span>
+                <input type="number" min={1} max={365} value={taskDefaultTemplate.deadlineDays} onChange={(event) => updateTaskDefaultTemplate({ deadlineDays: Number(event.target.value) })} />
+              </label>
+              <label className="field-block">
+                <span>Ответственный</span>
+                <input value={taskDefaultTemplate.assigneeEmail} onChange={(event) => updateTaskDefaultTemplate({ assigneeEmail: event.target.value })} placeholder={authUser.email} />
+              </label>
+              <label className="field-block">
+                <span>Помощники</span>
+                <input value={taskDefaultTemplate.helperEmailsText} onChange={(event) => updateTaskDefaultTemplate({ helperEmailsText: event.target.value })} placeholder="email, email" />
+              </label>
+            </div>
+            <label className="field-block">
+              <span>Шаблон описания</span>
+              <textarea value={taskDefaultTemplate.descriptionTemplate} onChange={(event) => updateTaskDefaultTemplate({ descriptionTemplate: event.target.value })} placeholder="Доступны: {item}, {raw}, {mod}" />
+            </label>
+            <div className="inline-actions">
+              <button type="button" onClick={persistTaskDefaultTemplate}>Сохранить шаблон</button>
+              <button type="button" className="ghost-button" onClick={() => setTaskDefaultTemplate(defaultTaskTemplate)}>Сбросить</button>
+            </div>
+          </div>
+        ) : null}
         {isCreating ? renderTaskForm(createForm, 'create', updateCreateForm, submitCreate, 'Создать', <button type="button" className="ghost-button" onClick={() => setIsCreating(false)}>Отмена</button>) : null}
         <div className="task-board" aria-label="recipe-tasks-board">
           {statuses.map((status) => {

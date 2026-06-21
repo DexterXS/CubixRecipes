@@ -5,9 +5,10 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
+import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -51,6 +52,15 @@ type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
 type RecipeType = 'ct_shaped' | 'ct_shapeless' | 'avaritia_extreme_shaped';
 type RecipeCraftMode = 'shaped' | 'shapeless';
 type RecipeBindingMode = 'soft' | 'strict';
+type CraftBodyTemplate = {
+  schemaVersion: 1;
+  recipeType: string;
+  bindingMode: RecipeBindingMode;
+  matrix: CellValue[][];
+  copiedAt: number;
+};
+
+const CRAFT_BODY_TEMPLATE_STORAGE_KEY = 'cubixrecipes:craft-body-template:v1';
 
 const defaultUiPreferences: UiPreferences = {
   display_mode: 'text',
@@ -59,6 +69,7 @@ const defaultUiPreferences: UiPreferences = {
   editor_mode: 'edit',
   theme_mode: 'dark',
   ui_scale: 1.15,
+  nei_page_size: 128,
   language: 'ru',
   active_view_tab: 'editor',
   reset_layout_version: 4,
@@ -189,7 +200,8 @@ type ItemPanelTranslations = {
 };
 const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
-const NEI_PAGE_SIZE = 240;
+const NEI_VISIBLE_ROWS = 16;
+const NEI_FALLBACK_COLUMNS = 8;
 const LOCAL_DRAFT_SCHEMA_VERSION = 1;
 const LOCAL_DRAFT_STORAGE_PREFIX = 'cubixrecipes:local-draft:v1';
 const LOCAL_DRAFT_SAVE_DELAY_MS = 250;
@@ -524,6 +536,36 @@ function isCellMatrix(value: unknown): value is CellValue[][] {
   return Array.isArray(value) && value.every((row) => (
     Array.isArray(row) && row.every((cell) => cell === null || typeof cell === 'string')
   ));
+}
+
+function normalizeCraftBodyTemplate(value: unknown): CraftBodyTemplate | null {
+  if (!isObjectRecord(value) || value.schemaVersion !== 1 || !isCellMatrix(value.matrix)) {
+    return null;
+  }
+  const size = normalizeGridSize(Math.max(value.matrix.length, maxGridWidth(value.matrix), 3));
+  const recipeType = typeof value.recipeType === 'string' ? value.recipeType : 'ct_shaped';
+  const bindingMode: RecipeBindingMode = value.bindingMode === 'strict' ? 'strict' : 'soft';
+  return {
+    schemaVersion: 1,
+    recipeType,
+    bindingMode,
+    matrix: resizeMatrix(value.matrix, size),
+    copiedAt: Number(value.copiedAt) || Date.now()
+  };
+}
+
+function loadCraftBodyTemplate(): CraftBodyTemplate | null {
+  try {
+    return normalizeCraftBodyTemplate(JSON.parse(window.localStorage.getItem(CRAFT_BODY_TEMPLATE_STORAGE_KEY) ?? 'null'));
+  } catch {
+    return null;
+  }
+}
+
+function saveCraftBodyTemplate(template: CraftBodyTemplate): CraftBodyTemplate {
+  const normalized = normalizeCraftBodyTemplate(template) ?? template;
+  window.localStorage.setItem(CRAFT_BODY_TEMPLATE_STORAGE_KEY, JSON.stringify(normalized));
+  return normalized;
 }
 
 function isRecipeView(value: unknown): value is RecipeView {
@@ -1353,6 +1395,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
     theme_mode: (source?.theme_mode ?? 'dark') as ThemeMode,
     ui_scale: ([1, 1.15, 1.3, 1.5].includes(normalizedScale) ? normalizedScale : 1.15) as UiScale,
+    nei_page_size: clamp(Math.floor(Number(source?.nei_page_size ?? 128) || 128), 16, 512),
     language: (source?.language ?? 'ru') as UiLanguage,
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
     reset_layout_version: source?.reset_layout_version ?? 4,
@@ -1375,6 +1418,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [metaMode, setMetaMode] = useState(restoredDraft?.metaMode ?? 'strict');
   const [recipe, setRecipe] = useState<RecipeView>(restoredDraft?.recipe ?? defaultRecipe);
   const [outputRaw, setOutputRaw] = useState(restoredDraft?.outputRaw ?? defaultRecipe.output.raw);
+  const [craftBodyTemplate, setCraftBodyTemplate] = useState<CraftBodyTemplate | null>(() => loadCraftBodyTemplate());
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isCraftEditorOpen, setIsCraftEditorOpen] = useState(false);
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
@@ -1413,6 +1457,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemSearchQuery, setItemSearchQuery] = useState(restoredDraft?.itemSearchQuery ?? '');
   const [neiSearchQuery, setNeiSearchQuery] = useState(restoredDraft?.neiSearchQuery ?? '');
   const [neiPage, setNeiPage] = useState(restoredDraft?.neiPage ?? 0);
+  const [neiColumnCount, setNeiColumnCount] = useState(NEI_FALLBACK_COLUMNS);
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
   const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
@@ -1449,6 +1494,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [taskRawLookup, setTaskRawLookup] = useState<Set<string>>(() => new Set());
+  const [taskLookupStatus, setTaskLookupStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const [taskPrefillItem, setTaskPrefillItem] = useState<RecipeTaskPrefillItem | null>(null);
   const [customItemForm, setCustomItemForm] = useState<CustomItemFormState | null>(null);
   const [customItemNbtRoot, setCustomItemNbtRoot] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
@@ -1670,6 +1717,71 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setAccessStatus(payload.whitelist_enabled ? 'Whitelist включен' : 'Whitelist выключен');
     } catch (error) {
       setAccessStatus(error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  async function refreshTaskRawLookup() {
+    if (!canManageTasks) return new Set<string>();
+    setTaskLookupStatus('loading');
+    try {
+      const board = await listRecipeTasks();
+      const next = new Set<string>();
+      board.tasks.forEach((task) => {
+        if (task.itemRaw) next.add(task.itemRaw);
+      });
+      setTaskRawLookup(next);
+      setTaskLookupStatus('ready');
+      return next;
+    } catch (error) {
+      setTaskLookupStatus('error');
+      return taskRawLookup;
+    }
+  }
+
+  function rawHasTask(raw: string): boolean {
+    if (taskRawLookup.has(raw)) return true;
+    const targetKeys = new Set(recipeLookupKeysForRaw(raw));
+    for (const taskRaw of taskRawLookup) {
+      if (recipeLookupKeysForRaw(taskRaw).some((key) => targetKeys.has(key))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function buildTaskPayloadFromDefaultTemplate(raw: string): RecipeTaskPayload | null {
+    const template = loadTaskDefaultTemplate();
+    if (!template.enabled) return null;
+    const itemRaw = applyItemCaseAlias(raw);
+    const itemTitle = resolveCellTitle(itemRaw) || resolveCellTitle(raw) || itemRaw;
+    return {
+      itemRaw,
+      itemTitle,
+      title: applyTaskTextTemplate(template.titleTemplate, itemTitle, itemRaw) || itemTitle || itemRaw,
+      description: applyTaskTextTemplate(template.descriptionTemplate, itemTitle, itemRaw),
+      status: template.status,
+      priority: template.priority,
+      estimatedDays: template.deadlineDays,
+      deadlineDate: taskTemplateDateInputValue(template.deadlineDays),
+      assigneeEmail: template.assigneeEmail || authUser.email,
+      helperEmails: taskTemplateEmails(template.helperEmailsText)
+    };
+  }
+
+  async function handleNeiItemTemplateTask(raw: string) {
+    const payload = buildTaskPayloadFromDefaultTemplate(raw);
+    if (!payload) {
+      setStatus('Включите шаблон задач в настройках вкладки "Задачи".');
+      return;
+    }
+    try {
+      const result = await createRecipeTask(payload);
+      setTaskRawLookup((current) => new Set([...current, result.task.itemRaw]));
+      setTaskLookupStatus('ready');
+      setNeiContextMenu(null);
+      setStatus(`Задача по шаблону создана: ${result.task.title}`);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : String(error));
     }
   }
 
@@ -2185,6 +2297,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [authUser.email]);
 
   useEffect(() => {
+    if (canManageTasks) {
+      void refreshTaskRawLookup();
+    }
+  }, [canManageTasks]);
+
+  useEffect(() => {
+    if (canManageTasks && neiContextMenu?.raw) {
+      void refreshTaskRawLookup();
+    }
+  }, [canManageTasks, neiContextMenu?.raw]);
+
+  useEffect(() => {
     const timer = window.setInterval(() => {
       setWildcardCycleTick((current) => current + 1);
     }, 1000);
@@ -2262,6 +2386,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       list.removeEventListener('focusin', handleFocusIn);
       list.removeEventListener('focusout', handleFocusOut);
     };
+  }, []);
+
+  useEffect(() => {
+    const element = neiListRef.current;
+    if (!element) return undefined;
+
+    const updateColumnCount = () => {
+      const columns = window.getComputedStyle(element).gridTemplateColumns
+        .split(' ')
+        .filter((part) => part && part !== 'none').length;
+      setNeiColumnCount((current) => {
+        const next = Math.max(1, columns || NEI_FALLBACK_COLUMNS);
+        return current === next ? current : next;
+      });
+    };
+
+    updateColumnCount();
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(updateColumnCount);
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+    window.addEventListener('resize', updateColumnCount);
+    return () => window.removeEventListener('resize', updateColumnCount);
   }, []);
 
   useEffect(() => {
@@ -2351,7 +2499,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hoveredItemRaw, heldItemRaw]);
+  }, [hoveredItemRaw, heldItemRaw, recipeAvailability, recipeDraftTemplates, uploadedDrafts]);
 
   const summary = useMemo(() => `${matrix.length}x${matrix[0]?.length ?? 0}`, [matrix]);
   const recipeCraftMode = craftModeFromRecipeType(recipe.recipe_type);
@@ -2940,7 +3088,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [itemPanelModSummaries]);
 
   const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
-  const neiCatalogEntries = useMemo(() => [...customItemEntries, ...itemPanelTranslations.entries], [customItemEntries, itemPanelTranslations.entries]);
+  const neiCatalogEntries = useMemo(() => [...itemPanelTranslations.entries, ...customItemEntries], [customItemEntries, itemPanelTranslations.entries]);
+  const itemPanelEntryByRaw = useMemo(() => {
+    const byRaw = new Map<string, ItemPanelEntry>();
+    neiCatalogEntries.forEach((entry) => {
+      byRaw.set(itemPanelRaw(entry), entry);
+    });
+    return byRaw;
+  }, [neiCatalogEntries]);
   const taskItemOptions = useMemo<RecipeTaskItemOption[]>(() => {
     const unique = new Map<string, RecipeTaskItemOption>();
     neiCatalogEntries.forEach((entry) => {
@@ -3021,12 +3176,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       : neiCatalogEntries;
   }, [neiSearchQuery, neiCatalogEntries]);
 
-  const neiPageCount = Math.max(1, Math.ceil(filteredNeiItems.length / NEI_PAGE_SIZE));
+  const neiPageSize = clamp(Math.floor(Number(uiPreferences.nei_page_size) || neiColumnCount * NEI_VISIBLE_ROWS), 16, 512);
+  const neiPageCount = Math.max(1, Math.ceil(filteredNeiItems.length / neiPageSize));
   const neiItems = useMemo(() => {
     const safePage = clamp(neiPage, 0, neiPageCount - 1);
-    const start = safePage * NEI_PAGE_SIZE;
-    return filteredNeiItems.slice(start, start + NEI_PAGE_SIZE);
-  }, [filteredNeiItems, neiPage, neiPageCount]);
+    const start = safePage * neiPageSize;
+    return filteredNeiItems.slice(start, start + neiPageSize);
+  }, [filteredNeiItems, neiPage, neiPageCount, neiPageSize]);
 
   const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => itemPanelRaw(entry)), [neiItems]);
   const uploadedDraftRecipeIndexes = useMemo(() => {
@@ -3512,6 +3668,43 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setSaveStatus(t('values.unsavedChanges'));
   }
 
+  function copyCurrentCraftBody() {
+    const template = saveCraftBodyTemplate({
+      schemaVersion: 1,
+      recipeType: recipe.recipe_type,
+      bindingMode: recipeBindingMode,
+      matrix: cloneMatrix(matrix),
+      copiedAt: Date.now()
+    });
+    setCraftBodyTemplate(template);
+    setStatus(`Тело крафта скопировано: ${template.matrix.length}x${maxGridWidth(template.matrix)}.`);
+  }
+
+  function pasteCraftBody() {
+    const template = craftBodyTemplate ?? loadCraftBodyTemplate();
+    if (!template) {
+      setStatus('Сначала скопируйте тело крафта.');
+      return;
+    }
+    const size = normalizeGridSize(Math.max(template.matrix.length, maxGridWidth(template.matrix), 3));
+    const nextMatrix = resizeMatrix(template.matrix, size);
+    const nextRecipeType = template.recipeType === 'ct_shapeless' && size === 9 ? 'ct_shaped' : template.recipeType;
+    const nextBindingMode: RecipeBindingMode = nextRecipeType === 'ct_shapeless' ? 'soft' : template.bindingMode;
+    setCraftBodyTemplate(template);
+    setMatrix(nextMatrix);
+    setStrictBinding(nextBindingMode === 'strict');
+    setRecipe((current) => ({
+      ...current,
+      recipe_type: nextRecipeType,
+      binding_mode: nextBindingMode,
+      grid_w: size,
+      grid_h: size,
+      matrix: nextMatrix.map((row) => row.map((raw) => ({ raw })))
+    }));
+    setSaveStatus(t('values.unsavedChanges'));
+    setStatus(`Тело крафта вставлено, output оставлен: ${outputRaw}.`);
+  }
+
   function handleRecipeItemDrop(target: CraftEditorTarget, raw: string) {
     const normalized = raw.trim();
     if (!normalized) return;
@@ -3576,12 +3769,37 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setStatus(`Предмет добавлен в новую задачу: ${title}`);
   }
 
+  function createBlankRecipeForOutput(raw: string): RecipeView {
+    const nextRaw = applyItemCaseAlias(raw);
+    const iconUrl = getCachedItemIconUrl(nextRaw) ?? getCachedItemIconUrl(raw);
+    return {
+      ...defaultRecipe,
+      output: { raw: nextRaw },
+      output_resolution: iconUrl
+        ? { item_raw: nextRaw, icon_url: iconUrl, display_name: resolveCellTitle(nextRaw), strategy: 'itempanel_cache' }
+        : null,
+      matrix: defaultMatrix.map((row) => row.map((cell) => ({ raw: cell }))),
+      source: { kind: 'generated', path: null }
+    };
+  }
+
+  function openBlankRecipeForItem(raw: string) {
+    const nextRecipe = createBlankRecipeForOutput(raw);
+    applyRecipe(nextRecipe, '', { rememberCurrent: true });
+    setSimilarRecipes(null);
+    setHeldItemRaw(null);
+    setWorkspaceTab('editor');
+    setStatus(`Рецепт для ${nextRecipe.output.raw} не найден. Открыт пустой крафт с этим output.`);
+    setLastParseResult(nextRecipe.recipe_type);
+    setLastApiStatus(t('values.ok'));
+  }
+
   function findUploadedDraftRecipeBlock(raw: string): UploadedDraftRecipeMatch | null {
     for (const key of recipeLookupKeysForRaw(raw)) {
       const match = uploadedDraftRecipeIndex.get(key);
       if (match) return match;
     }
-    return null;
+    return collectLoadedDraftRecipeMatches(raw, 'output')[0] ?? null;
   }
 
   function findUploadedDraftRecipeUses(raw: string): UploadedDraftRecipeMatch[] {
@@ -3596,6 +3814,59 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         matches.push(match);
       });
     }
+    collectLoadedDraftRecipeMatches(raw, 'ingredient').forEach((match) => {
+      const matchKey = `${match.sourceId}:${match.block}`;
+      if (seen.has(matchKey)) return;
+      seen.add(matchKey);
+      matches.push(match);
+    });
+    return matches;
+  }
+
+  function collectLoadedDraftRecipeMatches(raw: string, kind: 'output' | 'ingredient'): UploadedDraftRecipeMatch[] {
+    const activeKeys = new Set(recipeLookupKeysForRaw(raw));
+    const matches: UploadedDraftRecipeMatch[] = [];
+    const seen = new Set<string>();
+    const pushMatches = (
+      sourceId: string,
+      sourceName: string,
+      block: string,
+      candidateRaws: string[],
+      extras?: Pick<UploadedDraftRecipeMatch, 'createdByEmail' | 'templateId'>
+    ) => {
+      candidateRaws.forEach((candidateRaw) => {
+        const isMatch = recipeLookupKeysForRaw(candidateRaw).some((key) => activeKeys.has(key));
+        if (!isMatch) return;
+        const matchKey = `${sourceId}:${kind}:${block}:${candidateRaw}`;
+        if (seen.has(matchKey)) return;
+        seen.add(matchKey);
+        matches.push({ sourceId, sourceName, block, matchedRaw: candidateRaw, ...extras });
+      });
+    };
+
+    recipeDraftTemplates.forEach((template) => {
+      pushMatches(
+        template.id,
+        template.name,
+        template.sourceText,
+        kind === 'output'
+          ? collectRecipeOutputRaws(template.sourceText)
+          : collectRecipeIngredientRaws(template.sourceText),
+        { createdByEmail: template.createdByEmail, templateId: template.id }
+      );
+    });
+    uploadedDrafts.forEach((draft) => {
+      collectRecipeBlocks(draft.text).forEach((block) => {
+        pushMatches(
+          draft.id,
+          draft.name,
+          block,
+          kind === 'output'
+            ? collectRecipeOutputRaws(block)
+            : collectRecipeIngredientRaws(block)
+        );
+      });
+    });
     return matches;
   }
 
@@ -3720,6 +3991,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         if (await openRecipeFromUploadedDraft(normalizedRaw, draftMatch ?? undefined)) {
           return;
         }
+        openBlankRecipeForItem(normalizedRaw);
+        return;
         setSimilarRecipes(null);
         setStatus(`Рецепт для ${normalizedRaw} не найден в Recipes и локальных черновиках.`);
         setLastApiStatus(t('values.ok'));
@@ -4643,6 +4916,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
+              <details className="craft-board-menu">
+                <summary aria-label="craft-board-menu">...</summary>
+                <div className="craft-board-menu-popover">
+                  <button type="button" className="secondary-button" onClick={() => openCraftEditorModal({ kind: 'output' })} disabled={!canCreateTemplates && !canEditRecipes}>Детальные настройки output</button>
+                  <button type="button" className="secondary-button" onClick={copyCurrentCraftBody}>Скопировать текущее тело крафта</button>
+                  <button type="button" disabled={!craftBodyTemplate || (!canCreateTemplates && !canEditRecipes)} onClick={pasteCraftBody}>Вставить тело крафта</button>
+                </div>
+              </details>
               <RecipeGrid
                 matrix={matrixWithResolution}
                 atlas={itemPanelAtlas}
@@ -4655,6 +4936,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)}
                 resolveCellTitle={resolveCellTitle}
                 resolveIconStyle={resolveRecipeGridIconStyle}
+                renderItemTooltip={renderItemTooltip}
                 onItemHover={updateHoveredItemRaw}
                 onCellClick={handleCraftCellClick}
                 onCellContextMenu={handleCraftCellContextMenu}
@@ -4697,11 +4979,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   if (!canCreateTemplates && !canEditRecipes) return;
                   handleRecipeItemDrop({ kind: 'output' }, event.dataTransfer.getData('text/plain'));
                 }}
-                title={outputDisplayName ?? outputRaw}
               >
                 {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
+                {outputRaw ? renderItemTooltip(outputRaw) : null}
               </button>
-              <button type="button" className="secondary-button craft-detail-button" disabled={!canCreateTemplates && !canEditRecipes} onClick={() => openCraftEditorModal({ kind: 'output' })}>Детальные настройки</button>
             </div>
           </div>
         </Panel>
@@ -4727,6 +5008,52 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function getItemPanelModName(raw: string, fallbackKey: string): string {
     const parsed = parseItemRaw(rawWithoutNbt(raw));
     return (parsed?.key ?? fallbackKey).split(':')[0] || 'unknown';
+  }
+
+  function findItemPanelEntryForRaw(raw: string): ItemPanelEntry | null {
+    const direct = itemPanelEntryByRaw.get(raw);
+    if (direct) return direct;
+    const parsed = parseItemRaw(rawWithoutNbt(raw));
+    if (!parsed) return null;
+    const metaMap = itemPanelTranslations.byKeyMeta.get(parsed.key);
+    if (parsed.meta !== null) {
+      const exact = metaMap?.get(parsed.meta);
+      if (exact) return exact;
+    }
+    if (metaMap?.size) {
+      const firstMeta = [...metaMap.keys()].sort((left, right) => left - right)[0];
+      return metaMap.get(firstMeta) ?? null;
+    }
+    return itemPanelTranslations.entries.find((entry) => entry.key === parsed.key) ?? null;
+  }
+
+  function renderItemTooltip(raw: string, entryOverride?: ItemPanelEntry | null) {
+    const entry = entryOverride ?? findItemPanelEntryForRaw(raw);
+    const title = entry?.displayRu || entry?.displayEn || resolveCellTitle(raw).replace(/\*$/, '') || raw;
+    const itemIdLabel = entry?.legacyId != null ? `${entry.legacyId}:${entry.meta}` : rawWithoutNbt(raw);
+    const modName = getItemPanelModName(raw, entry?.key ?? rawWithoutNbt(raw));
+    const hasRecipe = getRecipeAvailability(raw) === 'available';
+    const hasNbtTag = entry ? itemPanelEntryHasNbtTag(entry) || rawHasNbtTag(raw) : rawHasNbtTag(raw);
+    return (
+      <span className="item-tooltip nei-tooltip" aria-hidden="true">
+        <span className="nei-tooltip-title">
+          <span>{title}</span>
+          <span className="nei-tooltip-id">{itemIdLabel}</span>
+        </span>
+        <span className="nei-tooltip-row">
+          <span>Мод</span>
+          <strong>{modName}</strong>
+        </span>
+        <span className="nei-tooltip-row">
+          <span>Рецепт</span>
+          <strong className={hasRecipe ? 'is-yes' : 'is-no'}>{hasRecipe ? 'да' : 'нет'}</strong>
+        </span>
+        <span className="nei-tooltip-row">
+          <span>NBT</span>
+          <strong className={hasNbtTag ? 'is-yes' : 'is-no'}>{hasNbtTag ? 'да' : 'нет'}</strong>
+        </span>
+      </span>
+    );
   }
 
   function openCustomItemEditor(raw: string, scope: 'global' | 'user', storage: 'local' | 'backend' = 'local', target: CraftEditorTarget | null = null) {
@@ -4859,11 +5186,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
               const availability = getRecipeAvailability(raw);
               const nbtClass = itemPanelEntryHasNbtTag(entry) ? 'has-nbt' : 'no-nbt';
-              const itemTitle = entry.displayRu || entry.displayEn || entry.key;
-              const itemIdLabel = entry.legacyId != null ? `${entry.legacyId}:${entry.meta}` : rawWithoutNbt(raw);
-              const modName = getItemPanelModName(raw, entry.key);
-              const hasRecipe = availability === 'available';
-              const hasNbtTag = nbtClass === 'has-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
@@ -4914,24 +5236,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   </span>
                   <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
-                  <span className="nei-tooltip" aria-hidden="true">
-                    <span className="nei-tooltip-title">
-                      <span>{itemTitle}</span>
-                      <span className="nei-tooltip-id">{itemIdLabel}</span>
-                    </span>
-                    <span className="nei-tooltip-row">
-                      <span>Мод</span>
-                      <strong>{modName}</strong>
-                    </span>
-                    <span className="nei-tooltip-row">
-                      <span>Рецепт</span>
-                      <strong className={hasRecipe ? 'is-yes' : 'is-no'}>{hasRecipe ? 'да' : 'нет'}</strong>
-                    </span>
-                    <span className="nei-tooltip-row">
-                      <span>NBT</span>
-                      <strong className={hasNbtTag ? 'is-yes' : 'is-no'}>{hasNbtTag ? 'да' : 'нет'}</strong>
-                    </span>
-                  </span>
+                  {renderItemTooltip(raw, entry)}
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
                 </button>
               );
@@ -4947,14 +5252,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const raw = neiContextMenu.raw;
     const custom = customItems.find((item) => item.item_raw === raw);
     const pickerOpen = Boolean(neiContextMenu.customPickerOpen && customItems.length);
+    const addedToTask = rawHasTask(raw);
+    const taskStatusText = taskLookupStatus === 'loading' ? 'проверяю' : addedToTask ? 'да' : 'нет';
+    const templateEnabled = loadTaskDefaultTemplate().enabled;
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 320, height: pickerOpen ? 560 : (custom ? 350 : 310) })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 620 : (custom ? 430 : 390) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
+        {canManageTasks ? (
+          <div className="context-menu-status">
+            <span>Добавлено в задачу</span>
+            <strong className={addedToTask ? 'is-yes' : 'is-no'}>{taskStatusText}</strong>
+          </div>
+        ) : null}
         {canManageTasks ? <button type="button" onClick={() => handleNeiItemTaskPrefill(raw)}>Добавить в задачу</button> : null}
+        {canManageTasks ? (
+          <button
+            type="button"
+            className="secondary-button"
+            disabled={!templateEnabled}
+            onClick={() => void handleNeiItemTemplateTask(raw)}
+          >
+            Добавить задачу по шаблону
+          </button>
+        ) : null}
         <button type="button" onClick={() => openCustomItemEditor(raw, 'user', 'local')}>Локальный custom item</button>
         <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'user', 'backend')}>Backend custom item</button>
         {canManageSettings ? <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'global', 'backend')}>Backend для всех</button> : null}
@@ -5068,9 +5392,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     onFocus={() => updateHoveredItemRaw(selectedRecipe.output.raw)}
                     onBlur={() => updateHoveredItemRaw((current) => (current === selectedRecipe.output.raw ? null : current))}
                     onClick={() => openRecipeFromUses(selectedRecipe)}
-                    title={selectedTitle}
                   >
                     {renderCraftItemIcon(selectedRecipe.output.raw, selectedRecipe.output_resolution?.icon_url, selectedRecipe.output_resolution?.animated, selectedRecipe.output_resolution?.animation_meta?.frametime, selectedTitle)}
+                    {renderItemTooltip(selectedRecipe.output.raw)}
                   </button>
                   <div>
                     <strong>{selectedTitle}</strong>
@@ -5091,6 +5415,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     tooltipsDisabled={false}
                     resolveCellTitle={resolveCellTitle}
                     resolveIconStyle={resolveRecipeGridIconStyle}
+                    renderItemTooltip={renderItemTooltip}
                     onItemHover={updateHoveredItemRaw}
                     onCellClick={() => undefined}
                     onCellContextMenu={() => undefined}
@@ -5864,7 +6189,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
                   aria-label={`draft-item-${raw}`}
                   data-item-raw={raw}
-                  title={`${entry.title} ${raw}${nbtClass === 'has-nbt' ? ' - есть NBT' : ' - NBT нет'}`}
                   onMouseEnter={() => updateHoveredItemRaw(raw)}
                   onFocus={() => updateHoveredItemRaw(raw)}
                   onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
@@ -5875,6 +6199,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     {icon}
                   </span>
                   {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
+                  {renderItemTooltip(raw)}
                 </button>
               );
             })}
@@ -5914,7 +6239,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                     <button type="button" aria-label="edit-selected-draft-template" onClick={() => openRecipeDraftTemplate(activeDraftPreview)}>Редактировать рецепт</button>
                   </div>
                   <div className="draft-preview-grid">
-                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} tooltipsDisabled resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} renderItemTooltip={renderItemTooltip} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
                   </div>
                 </div>
               ) : null}
@@ -6559,6 +6884,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           prefillItem={taskPrefillItem}
           onOpenRecipe={(raw) => void openRecipeForItem(raw)}
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
+          renderItemTooltip={renderItemTooltip}
           resolveItemTitle={resolveCellTitle}
         />
       );
@@ -6653,9 +6979,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   onFocus={() => updateHoveredItemRaw(outputRaw || null)}
                   onBlur={() => updateHoveredItemRaw((current) => (current === outputRaw ? null : current))}
                   onClick={() => openCraftEditorModal({ kind: 'output' })}
-                  title={t('panel.output')}
                 >
                   {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
+                  {outputRaw ? renderItemTooltip(outputRaw) : null}
                 </button>
                 <div className="output-details">
                   <div className="output-title-row"><h3>{outputDisplayName ?? t('values.unresolved')}</h3><span className={`badge ${recipe.output_resolution?.icon_url ? 'badge-success' : 'badge-warning'}`}>{recipe.output_resolution?.icon_url ? 'icon' : t('values.placeholder')}</span></div>
@@ -6681,7 +7007,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <Panel title={getPanelLabel(uiPreferences.language, panelId)} subtitle={`${t('status.size')}: ${summary}`} {...common} className="grid-panel">
               <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
               <div className="grid-scroll-zone">
-                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
+                <RecipeGrid matrix={matrixWithResolution} atlas={itemPanelAtlas} atlasImageUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode={uiPreferences.editor_mode} extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={heldItemRaw} tooltipsDisabled={isLayoutSettingsOpen || isCraftEditorOpen || isNbtEditorOpen || Boolean(customItemForm)} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} renderItemTooltip={renderItemTooltip} onItemHover={updateHoveredItemRaw} onCellClick={handleCraftCellClick} onCellContextMenu={handleCraftCellContextMenu} onCellDrop={(row, col, value) => handleRecipeItemDrop({ kind: 'cell', row, col }, value)} onCellChange={(row, col, value) => {
                   setMatrixCell(row, col, value);
                 }} />
               </div>
@@ -6812,6 +7138,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <option value={1.5}>150%</option>
                 </select>
               </label>
+              <label className="field-block">
+                <span>Иконок NEI на страницу</span>
+                <input
+                  aria-label="nei-page-size"
+                  type="number"
+                  min={16}
+                  max={512}
+                  step={8}
+                  value={uiPreferences.nei_page_size}
+                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 128), 16, 512) })}
+                />
+              </label>
               <section className="settings-section">
                 <div className="settings-section-title">
                   <h3>Debug режим</h3>
@@ -6892,6 +7230,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                           <span>{entry.displayRu}</span>
                           {entry.displayEn && entry.displayEn !== entry.displayRu ? <span>{entry.displayEn}</span> : null}
                         </div>
+                        {renderItemTooltip(itemPanelRaw(entry), entry)}
                       </button>
                     ))}
                   </div>

@@ -63,6 +63,7 @@ export interface UiPreferences {
   editor_mode: EditorMode;
   theme_mode: ThemeMode;
   ui_scale: UiScale;
+  nei_page_size: number;
   language: UiLanguage;
   active_view_tab: AppTab;
   reset_layout_version: number;

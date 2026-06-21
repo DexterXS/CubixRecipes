@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef } from 'react';
+import { type CSSProperties, type MouseEvent, type ReactNode, useEffect, useMemo, useRef } from 'react';
 import { AnimatedIcon } from './AnimatedIcon';
 import { CellValue, DisplayMode, EditorMode, ItemPanelAtlas, ItemPanelAtlasEntry, ResolutionView } from '../types';
 
@@ -16,6 +16,7 @@ interface Props {
   onCellContextMenu: (row: number, col: number, event?: MouseEvent) => void;
   resolveCellTitle: (raw: string) => string;
   resolveIconStyle?: (raw: string) => CSSProperties | undefined;
+  renderItemTooltip?: (raw: string) => ReactNode;
   onCellDrop?: (row: number, col: number, value: string) => void;
   onItemHover?: (raw: string | null) => void;
   extremeGroupGap?: number;
@@ -52,6 +53,7 @@ export function RecipeGrid({
   onCellContextMenu,
   resolveCellTitle,
   resolveIconStyle,
+  renderItemTooltip,
   onCellDrop,
   onItemHover,
   extremeGroupGap = 8
@@ -194,6 +196,8 @@ export function RecipeGrid({
                 ? localizedTitle
                 : (atlasTitle || (resolverTitle && resolverTitle !== value && !resolverTitle.startsWith('<') ? resolverTitle : value)))
               : 'Пустая ячейка';
+            const visualTooltip = value && !tooltipsDisabled && renderItemTooltip ? renderItemTooltip(value) : null;
+            const nativeTitle = visualTooltip || tooltipsDisabled ? undefined : title;
 
             return (
               <div
@@ -203,7 +207,7 @@ export function RecipeGrid({
                 data-row={rowIndex}
                 data-col={colIndex}
                 data-item-raw={value || undefined}
-                title={tooltipsDisabled ? undefined : title}
+                title={nativeTitle}
                 onMouseDown={(event) => startCellPaint(event, rowIndex, colIndex)}
                 onMouseEnter={() => {
                   onItemHover?.(value || null);
@@ -239,7 +243,7 @@ export function RecipeGrid({
                 }}
               >
                 <div className="cell-visual">
-                  <div className="cell-icon-slot" aria-label={`craft-cell-${rowIndex}-${colIndex}`} title={tooltipsDisabled ? undefined : title}>
+                  <div className="cell-icon-slot" aria-label={`craft-cell-${rowIndex}-${colIndex}`} title={nativeTitle}>
                     {externalAtlasStyle ? <span className="cell-atlas-icon" style={externalAtlasStyle} aria-hidden="true" /> : null}
                     {atlasStyle ? <span className="cell-atlas-icon" style={atlasStyle} aria-hidden="true" /> : null}
                     {!externalAtlasStyle && !atlasStyle && iconUrl
@@ -252,11 +256,12 @@ export function RecipeGrid({
                   className="cell-raw-input"
                   aria-label={`cell-${rowIndex}-${colIndex}`}
                   value={value}
-                  title={tooltipsDisabled ? undefined : title}
+                  title={nativeTitle}
                   readOnly={editorMode === 'view'}
                   onChange={(event) => onCellChange(rowIndex, colIndex, event.target.value)}
                 />
-                <span className="cell-preview" title={tooltipsDisabled ? undefined : title}>{value ? shortenCellValue(value) : ''}</span>
+                <span className="cell-preview" title={nativeTitle}>{value ? shortenCellValue(value) : ''}</span>
+                {visualTooltip}
               </div>
             );
           })}

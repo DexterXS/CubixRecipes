@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Added
+- Added a configurable NEI page size setting, reusable item tooltips across NEI/grids/tasks, and NEI context-menu task status.
+- Added task default templates with a one-click NEI "add task by template" action that keeps the current workspace open.
+- Added a craft-board overflow menu for output details plus copy/paste of the current craft body while preserving each recipe output.
 - Added archive download/delete/cleanup actions to the admin atlas panel and moved itempanel CSV upload out of that panel.
 - Added wider task edit dialogs with computed deadline-day counters, searchable user pickers for assignees/helpers, and an `Open recipe` task action.
 - Added task-card deletion controls, modal task editing with status changes, and a `Готово` column cleanup action for the admin `Задачи` board.
@@ -24,6 +27,8 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Made task "Open recipe" create an editable blank recipe with the task item as output when no existing recipe is found.
+- Kept local uploaded draft recipe lookups fresh for R/U hotkeys after importing `.zs` files.
 - Moved `Обновление вайпа` into the left technical sidebar so the wipe workflow is separated from regular mod-icon upload actions.
 - Made the custom item editor wider and reordered it into an NBT-first layout with compact save/details panels.
 - Replaced the old binary itempanel NBT merge path with explicit backend CSV + line-based `itempanel.json` SNBT merging that writes `itempanel_merged.csv` only after the admin clicks `Объединить файлы`.
