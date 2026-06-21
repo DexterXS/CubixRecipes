@@ -4671,6 +4671,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return raw.replace(/\.withTag\([\s\S]*\)\s*$/, '').trim();
   }
 
+  function getItemPanelModName(raw: string, fallbackKey: string): string {
+    const parsed = parseItemRaw(rawWithoutNbt(raw));
+    return (parsed?.key ?? fallbackKey).split(':')[0] || 'unknown';
+  }
+
   function openCustomItemEditor(raw: string, scope: 'global' | 'user', storage: 'local' | 'backend' = 'local', target: CraftEditorTarget | null = null) {
     const effectiveStorage = scope === 'global' ? 'backend' : storage;
     const existing = customItems.find((item) => item.item_raw === raw && item.scope === scope && (item.storage ?? 'backend') === effectiveStorage);
@@ -4801,6 +4806,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
               const availability = getRecipeAvailability(raw);
               const nbtClass = itemPanelEntryHasNbtTag(entry) ? 'has-nbt' : 'no-nbt';
+              const itemTitle = entry.displayRu || entry.displayEn || entry.key;
+              const itemIdLabel = entry.legacyId != null ? `${entry.legacyId}:${entry.meta}` : rawWithoutNbt(raw);
+              const modName = getItemPanelModName(raw, entry.key);
+              const hasRecipe = availability === 'available';
+              const hasNbtTag = nbtClass === 'has-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
@@ -4814,7 +4824,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   key={itemPanelEntryIdentity(entry)}
                   type="button"
                   className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
-                  title={`${entry.displayRu || entry.displayEn || entry.key} ${raw}${availability === 'available' ? ' - рецепт найден' : availability === 'missing' ? ' - рецепта нет' : ''}${nbtClass === 'has-nbt' ? ' - есть NBT' : ' - NBT нет'}`}
                   aria-label={`nei-item-${raw}`}
                   data-item-raw={raw}
                   draggable
@@ -4856,6 +4865,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   </span>
                   <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
+                  <span className="nei-tooltip" aria-hidden="true">
+                    <span className="nei-tooltip-title">
+                      <span>{itemTitle}</span>
+                      <span className="nei-tooltip-id">{itemIdLabel}</span>
+                    </span>
+                    <span className="nei-tooltip-row">
+                      <span>Мод</span>
+                      <strong>{modName}</strong>
+                    </span>
+                    <span className="nei-tooltip-row">
+                      <span>Рецепт</span>
+                      <strong className={hasRecipe ? 'is-yes' : 'is-no'}>{hasRecipe ? 'да' : 'нет'}</strong>
+                    </span>
+                    <span className="nei-tooltip-row">
+                      <span>NBT</span>
+                      <strong className={hasNbtTag ? 'is-yes' : 'is-no'}>{hasNbtTag ? 'да' : 'нет'}</strong>
+                    </span>
+                  </span>
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
                 </button>
               );
