@@ -259,9 +259,9 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .nei-icon img,
 .nei-atlas-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; }
 .nei-atlas-icon { display: block; background-repeat: no-repeat; transform: scale(0.875); transform-origin: center; width: 32px; height: 32px; }
-.nei-tooltip { position: absolute; left: calc(100% + 8px); top: 50%; z-index: 40; display: grid; gap: 5px; visibility: hidden; opacity: 0; min-width: 260px; max-width: min(360px, calc(100vw - 80px)); transform: translateY(-50%); padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 4px; background: rgba(15, 23, 42, 0.96); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.42); color: #e5eefc; text-align: left; pointer-events: none; white-space: normal; transition: none; transition-delay: 0s; animation: none; will-change: opacity; }
+.nei-tooltip { position: absolute; left: calc(100% + 8px); top: 50%; z-index: 40; display: none; min-width: 260px; max-width: min(360px, calc(100vw - 80px)); transform: translateY(-50%); padding: 8px 10px; border: 1px solid #f59e0b; border-radius: 4px; background: rgba(15, 23, 42, 0.96); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.42); color: #e5eefc; text-align: left; pointer-events: none; white-space: normal; transition: none; transition-delay: 0s; animation: none; contain: layout paint style; }
 .nei-list .nei-item:hover .nei-tooltip,
-.nei-list .nei-item:focus-visible .nei-tooltip { visibility: visible; opacity: 1; }
+.nei-list .nei-item:focus-visible .nei-tooltip { display: grid; gap: 5px; }
 .nei-tooltip-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; color: #fef3c7; font-size: 14px; font-weight: 800; line-height: 1.15; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55); }
 .nei-tooltip-title > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .nei-tooltip-id { flex: none; color: #facc15; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13px; }

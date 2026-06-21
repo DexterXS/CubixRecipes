@@ -1513,6 +1513,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const heldCursorRef = useRef<HTMLDivElement | null>(null);
   const cursorFrameRef = useRef<number | null>(null);
   const hoveredItemRawRef = useRef<string | null>(null);
+  const hotkeyDebugActiveRef = useRef(false);
   const hotkeyDebugCounterRef = useRef(0);
 
   const t = createTranslator(uiPreferences.language);
@@ -1529,6 +1530,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
   const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
+  hotkeyDebugActiveRef.current = isHotkeyDebugActive;
   const workspaceTabs = [
     { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
     { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
@@ -1538,7 +1540,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   ].filter((tab) => tab.visible);
 
   function logAppDebug(category: DebugCategory, message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
-    if (!isHotkeyDebugActive) {
+    if (!hotkeyDebugActiveRef.current) {
       return;
     }
     if (!debugFilters[category] || !debugLevelFilters[level]) {
@@ -1565,6 +1567,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!canManageSettings) {
       return;
     }
+    hotkeyDebugActiveRef.current = enabled;
     setIsHotkeyDebugEnabled(enabled);
     if (!enabled) {
       setHotkeyDebugEvents([]);
@@ -1607,6 +1610,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } else if (previous) {
       logHotkeyDebug('hover cleared', { previous }, 'info');
     }
+  }
+
+  function updateHoveredItemRawFast(next: string | null | ((current: string | null) => string | null)) {
+    hoveredItemRawRef.current = typeof next === 'function' ? next(hoveredItemRawRef.current) : next;
   }
 
   function moveHeldCursor() {
@@ -2208,6 +2215,52 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         window.cancelAnimationFrame(cursorFrameRef.current);
         cursorFrameRef.current = null;
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const list = neiListRef.current;
+    if (!list) return;
+
+    const findItemElement = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return null;
+      return target.closest<HTMLElement>('[data-item-raw]');
+    };
+    const findItemRaw = (target: EventTarget | null) => {
+      return findItemElement(target)?.dataset.itemRaw ?? null;
+    };
+    const setFromTarget = (target: EventTarget | null) => {
+      updateHoveredItemRawFast(findItemRaw(target));
+    };
+    const clearFromTarget = (target: EventTarget | null, relatedTarget: EventTarget | null) => {
+      const item = findItemElement(target);
+      const raw = item?.dataset.itemRaw ?? null;
+      if (!raw) return;
+      if (relatedTarget instanceof Element && item?.contains(relatedTarget)) {
+        return;
+      }
+      updateHoveredItemRawFast((current) => (current === raw ? null : current));
+    };
+    const handlePointerOver = (event: PointerEvent) => setFromTarget(event.target);
+    const handlePointerOut = (event: PointerEvent) => clearFromTarget(event.target, event.relatedTarget);
+    const handleMouseOver = (event: MouseEvent) => setFromTarget(event.target);
+    const handleMouseOut = (event: MouseEvent) => clearFromTarget(event.target, event.relatedTarget);
+    const handleFocusIn = (event: FocusEvent) => setFromTarget(event.target);
+    const handleFocusOut = (event: FocusEvent) => clearFromTarget(event.target, event.relatedTarget);
+
+    list.addEventListener('pointerover', handlePointerOver, { passive: true });
+    list.addEventListener('pointerout', handlePointerOut, { passive: true });
+    list.addEventListener('mouseover', handleMouseOver, { passive: true });
+    list.addEventListener('mouseout', handleMouseOut, { passive: true });
+    list.addEventListener('focusin', handleFocusIn);
+    list.addEventListener('focusout', handleFocusOut);
+    return () => {
+      list.removeEventListener('pointerover', handlePointerOver);
+      list.removeEventListener('pointerout', handlePointerOut);
+      list.removeEventListener('mouseover', handleMouseOver);
+      list.removeEventListener('mouseout', handleMouseOut);
+      list.removeEventListener('focusin', handleFocusIn);
+      list.removeEventListener('focusout', handleFocusOut);
     };
   }, []);
 
@@ -4835,10 +4888,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   onDragEnd={() => {
                     setHeldItemRaw((current) => (current === insertRaw ? null : current));
                   }}
-                  onMouseEnter={() => updateHoveredItemRaw(raw)}
-                  onFocus={() => updateHoveredItemRaw(raw)}
-                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
                   onClick={() => handleNeiItemPick(insertRaw)}
                   onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, insertRaw)}
                   onContextMenu={(event) => {
