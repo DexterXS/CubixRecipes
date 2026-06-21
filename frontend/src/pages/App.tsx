@@ -4,7 +4,7 @@ import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
-import { RecipeTasksBoard } from '../features/tasks/RecipeTasksBoard';
+import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
@@ -1449,6 +1449,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [taskPrefillItem, setTaskPrefillItem] = useState<RecipeTaskPrefillItem | null>(null);
   const [customItemForm, setCustomItemForm] = useState<CustomItemFormState | null>(null);
   const [customItemNbtRoot, setCustomItemNbtRoot] = useState<NbtCompoundNode>({ kind: 'compound', entries: [] });
   const [wildcardCycleTick, setWildcardCycleTick] = useState(0);
@@ -2845,6 +2846,20 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
   const neiCatalogEntries = useMemo(() => [...customItemEntries, ...itemPanelTranslations.entries], [customItemEntries, itemPanelTranslations.entries]);
+  const taskItemOptions = useMemo<RecipeTaskItemOption[]>(() => {
+    const unique = new Map<string, RecipeTaskItemOption>();
+    neiCatalogEntries.forEach((entry) => {
+      const raw = itemPanelRaw(entry);
+      if (!raw || unique.has(raw)) return;
+      const title = entry.displayRu || entry.displayEn || entry.key || raw;
+      unique.set(raw, {
+        raw,
+        title,
+        searchText: `${raw} ${entry.key} ${entry.displayRu} ${entry.displayEn} ${entry.legacyId ?? ''}`.toLowerCase()
+      });
+    });
+    return [...unique.values()];
+  }, [neiCatalogEntries]);
   const modIconByRaw = useMemo(() => buildModIconMatches(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
 
   const itemSearchSuggestions = useMemo(() => {
@@ -3455,6 +3470,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function handleNeiItemPick(raw: string) {
     const nextRaw = applyItemCaseAlias(raw);
     setHeldItemRaw((current) => (current === nextRaw ? null : nextRaw));
+  }
+
+  function handleNeiItemTaskPrefill(raw: string) {
+    const nextRaw = applyItemCaseAlias(raw);
+    const title = resolveCellTitle(nextRaw) || resolveCellTitle(raw) || nextRaw;
+    setTaskPrefillItem({ raw: nextRaw, title, nonce: Date.now() });
+    setWorkspaceTab('tasks');
+    setNeiContextMenu(null);
+    setStatus(`Предмет добавлен в новую задачу: ${title}`);
   }
 
   function findUploadedDraftRecipeBlock(raw: string): UploadedDraftRecipeMatch | null {
@@ -4808,10 +4832,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 320, height: pickerOpen ? 520 : (custom ? 310 : 270) })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 320, height: pickerOpen ? 560 : (custom ? 350 : 310) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
+        {canManageTasks ? <button type="button" onClick={() => handleNeiItemTaskPrefill(raw)}>Добавить в задачу</button> : null}
         <button type="button" onClick={() => openCustomItemEditor(raw, 'user', 'local')}>Локальный custom item</button>
         <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'user', 'backend')}>Backend custom item</button>
         {canManageSettings ? <button type="button" className="secondary-button" onClick={() => openCustomItemEditor(raw, 'global', 'backend')}>Backend для всех</button> : null}
@@ -6426,6 +6451,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           authUser={authUser}
           currentItemRaw={outputRaw}
           currentItemTitle={outputRaw ? (outputDisplayName ?? resolveCellTitle(outputRaw)) : ''}
+          itemOptions={taskItemOptions}
+          prefillItem={taskPrefillItem}
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
           resolveItemTitle={resolveCellTitle}
         />

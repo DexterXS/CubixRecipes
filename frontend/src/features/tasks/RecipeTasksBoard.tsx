@@ -24,9 +24,24 @@ const priorityRank: Record<RecipeTaskPriority, number> = {
   low: 3
 };
 
+const DEFAULT_TASK_TITLE = 'Новая задача';
+
+export interface RecipeTaskItemOption {
+  raw: string;
+  title: string;
+  searchText: string;
+}
+
+export interface RecipeTaskPrefillItem {
+  raw: string;
+  title: string;
+  nonce: number;
+}
+
 interface TaskFormState {
   itemRaw: string;
   itemTitle: string;
+  itemSearchText: string;
   title: string;
   description: string;
   status: RecipeTaskStatus;
@@ -41,20 +56,31 @@ interface RecipeTasksBoardProps {
   authUser: AuthUser;
   currentItemRaw: string;
   currentItemTitle: string;
+  itemOptions: RecipeTaskItemOption[];
+  prefillItem?: RecipeTaskPrefillItem | null;
   renderItemIcon: (raw: string) => ReactNode;
   resolveItemTitle: (raw: string) => string;
 }
 
+function todayDateInputValue(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function emptyForm(currentItemRaw = '', currentItemTitle = '', authEmail = ''): TaskFormState {
+  const itemTitle = currentItemTitle || currentItemRaw;
   return {
     itemRaw: currentItemRaw,
-    itemTitle: currentItemTitle,
-    title: currentItemTitle || currentItemRaw || 'Новая задача',
+    itemTitle,
+    itemSearchText: itemTitle || currentItemRaw,
+    title: itemTitle || currentItemRaw || '',
     description: '',
     status: 'planned',
     priority: 'normal',
     estimatedDays: 1,
-    deadlineDate: '',
+    deadlineDate: todayDateInputValue(),
     assigneeEmail: authEmail,
     helperEmailsText: ''
   };
@@ -64,6 +90,7 @@ function formFromTask(task: RecipeTask): TaskFormState {
   return {
     itemRaw: task.itemRaw,
     itemTitle: task.itemTitle,
+    itemSearchText: task.itemTitle || task.itemRaw,
     title: task.title,
     description: task.description,
     status: task.status,
@@ -89,10 +116,12 @@ function helperEmailsFromText(value: string): string[] {
 }
 
 function payloadFromForm(form: TaskFormState) {
+  const itemRaw = form.itemRaw.trim();
+  const itemTitle = form.itemTitle.trim() || itemRaw;
   return {
-    itemRaw: form.itemRaw.trim(),
-    itemTitle: form.itemTitle.trim(),
-    title: form.title.trim() || form.itemRaw.trim() || 'Задача',
+    itemRaw,
+    itemTitle,
+    title: form.title.trim() || itemTitle || itemRaw || 'Задача',
     description: form.description.trim(),
     status: form.status,
     priority: form.priority,
@@ -113,7 +142,16 @@ function isOverdue(task: RecipeTask): boolean {
   return Number.isFinite(deadline.getTime()) && deadline.getTime() < Date.now();
 }
 
-export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
+function looksLikeRawItem(value: string): boolean {
+  return /^<[^>]+>(?:\.withTag\([\s\S]*\))?$/.test(value.trim());
+}
+
+function shouldAutoReplaceTitle(form: TaskFormState): boolean {
+  const title = form.title.trim();
+  return !title || title === DEFAULT_TASK_TITLE || title === form.itemRaw || title === form.itemTitle;
+}
+
+export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, itemOptions, prefillItem, renderItemIcon, resolveItemTitle }: RecipeTasksBoardProps) {
   const [tasks, setTasks] = useState<RecipeTask[]>([]);
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [boardMode, setBoardMode] = useState<RecipeTaskBoardMode>('free');
@@ -123,6 +161,22 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
   const [editForms, setEditForms] = useState<Record<string, TaskFormState>>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [activeItemPickerKey, setActiveItemPickerKey] = useState<string | null>(null);
+
+  const normalizedItemOptions = useMemo(() => {
+    const unique = new Map<string, RecipeTaskItemOption>();
+    itemOptions.forEach((option) => {
+      const raw = option.raw.trim();
+      if (!raw || unique.has(raw)) return;
+      const title = option.title.trim() || raw;
+      unique.set(raw, {
+        raw,
+        title,
+        searchText: `${option.searchText} ${raw} ${title}`.toLowerCase()
+      });
+    });
+    return [...unique.values()];
+  }, [itemOptions]);
 
   const userEmails = useMemo(() => {
     const emails = new Set<string>([authUser.email]);
@@ -156,10 +210,17 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
 
   useEffect(() => {
     setCreateForm((current) => {
-      if (current.itemRaw || current.title !== 'Новая задача') return current;
+      if (current.itemRaw || current.title) return current;
       return emptyForm(currentItemRaw, currentItemTitle, authUser.email);
     });
   }, [authUser.email, currentItemRaw, currentItemTitle]);
+
+  useEffect(() => {
+    if (!prefillItem?.raw) return;
+    setCreateForm(emptyForm(prefillItem.raw, prefillItem.title, authUser.email));
+    setActiveItemPickerKey(null);
+    setIsCreating(true);
+  }, [authUser.email, prefillItem?.nonce, prefillItem?.raw, prefillItem?.title]);
 
   function sortedTasksForStatus(status: RecipeTaskStatus): RecipeTask[] {
     const statusTasks = tasks.filter((task) => task.status === status);
@@ -199,6 +260,10 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
 
   async function submitCreate(event: FormEvent) {
     event.preventDefault();
+    if (!createForm.itemRaw.trim()) {
+      setStatusText('Выберите предмет для задачи');
+      return;
+    }
     try {
       const payload = await createRecipeTask(payloadFromForm(createForm));
       setTasks((current) => [payload.task, ...current]);
@@ -213,6 +278,10 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
   async function submitEdit(task: RecipeTask, event: FormEvent) {
     event.preventDefault();
     const form = editForms[task.id] ?? formFromTask(task);
+    if (!form.itemRaw.trim()) {
+      setStatusText('Выберите предмет для задачи');
+      return;
+    }
     try {
       const payload = await updateRecipeTask(task.id, payloadFromForm(form));
       setTasks((current) => current.map((item) => item.id === payload.task.id ? payload.task : item));
@@ -297,25 +366,113 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
     setEditForms((current) => ({ ...current, [task.id]: { ...(current[task.id] ?? formFromTask(task)), ...patch } }));
   }
 
-  function renderTaskForm(form: TaskFormState, onChange: (patch: Partial<TaskFormState>) => void, onSubmit: (event: FormEvent) => void, submitLabel: string, extraActions?: ReactNode) {
+  function itemPatchFromSelection(form: TaskFormState, raw: string, title: string): Partial<TaskFormState> {
+    const itemRaw = raw.trim();
+    const itemTitle = (title || resolveItemTitle(itemRaw) || itemRaw).trim();
+    return {
+      itemRaw,
+      itemTitle,
+      itemSearchText: itemTitle || itemRaw,
+      ...(shouldAutoReplaceTitle(form) ? { title: itemTitle || itemRaw } : {})
+    };
+  }
+
+  function itemPatchFromSearchInput(form: TaskFormState, value: string): Partial<TaskFormState> {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return {
+        itemRaw: '',
+        itemTitle: '',
+        itemSearchText: value,
+        ...(shouldAutoReplaceTitle(form) ? { title: '' } : {})
+      };
+    }
+    if (looksLikeRawItem(trimmed)) {
+      return {
+        ...itemPatchFromSelection(form, trimmed, resolveItemTitle(trimmed)),
+        itemSearchText: value
+      };
+    }
+    return {
+      itemRaw: '',
+      itemTitle: '',
+      itemSearchText: value,
+      ...(shouldAutoReplaceTitle(form) ? { title: '' } : {})
+    };
+  }
+
+  function getTaskItemSuggestions(form: TaskFormState): RecipeTaskItemOption[] {
+    const query = form.itemSearchText.trim().toLowerCase();
+    if (!query) return [];
+    const result = normalizedItemOptions
+      .filter((option) => option.searchText.includes(query))
+      .sort((left, right) => {
+        const leftExact = left.raw.toLowerCase() === query || left.title.toLowerCase() === query;
+        const rightExact = right.raw.toLowerCase() === query || right.title.toLowerCase() === query;
+        if (leftExact !== rightExact) return leftExact ? -1 : 1;
+        return left.title.localeCompare(right.title);
+      });
+    return result.slice(0, 16);
+  }
+
+  function renderTaskForm(form: TaskFormState, pickerKey: string, onChange: (patch: Partial<TaskFormState>) => void, onSubmit: (event: FormEvent) => void, submitLabel: string, extraActions?: ReactNode) {
+    const suggestions = activeItemPickerKey === pickerKey ? getTaskItemSuggestions(form) : [];
+    const selectedItemTitle = form.itemTitle || (form.itemRaw ? resolveItemTitle(form.itemRaw) : '');
     return (
       <form className="task-form" onSubmit={onSubmit}>
         <div className="task-form-grid">
-          <label className="field-block"><span>Предмет</span><input value={form.itemRaw} onChange={(event) => {
-            const raw = event.target.value;
-            onChange({ itemRaw: raw, itemTitle: raw ? resolveItemTitle(raw) : '' });
-          }} placeholder="<mod:item:0>" /></label>
+          <label className="field-block task-item-field">
+            <span>Предмет</span>
+            <div className={`task-item-picker ${form.itemRaw ? 'has-item' : ''}`.trim()}>
+              <span className="task-item-picker-icon" aria-hidden="true">{form.itemRaw ? renderItemIcon(form.itemRaw) : null}</span>
+              <input
+                aria-label="Предмет"
+                value={form.itemSearchText}
+                onFocus={() => setActiveItemPickerKey(pickerKey)}
+                onChange={(event) => {
+                  setActiveItemPickerKey(pickerKey);
+                  onChange(itemPatchFromSearchInput(form, event.target.value));
+                }}
+                placeholder="Название, ID или <mod:item>"
+                required
+              />
+            </div>
+            {form.itemRaw ? <code className="task-selected-item-raw">{form.itemRaw}</code> : null}
+            {selectedItemTitle && selectedItemTitle !== form.itemSearchText ? <small>{selectedItemTitle}</small> : null}
+            {suggestions.length ? (
+              <div className="suggestions-list task-item-suggestions" role="listbox" aria-label="task-item-suggestions">
+                {suggestions.map((option) => (
+                  <button
+                    key={option.raw}
+                    type="button"
+                    className="suggestion-item suggestion-item-with-icon"
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      onChange(itemPatchFromSelection(form, option.raw, option.title));
+                      setActiveItemPickerKey(null);
+                    }}
+                  >
+                    <span className="suggestion-icon-slot" aria-hidden="true">{renderItemIcon(option.raw)}</span>
+                    <div className="suggestion-content">
+                      <strong>{option.raw}</strong>
+                      <span>{option.title}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </label>
           <label className="field-block"><span>Название</span><input value={form.title} onChange={(event) => onChange({ title: event.target.value })} /></label>
           <label className="field-block"><span>Приоритет</span><select value={form.priority} onChange={(event) => onChange({ priority: event.target.value as RecipeTaskPriority })}>{Object.entries(priorityLabels).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
           <label className="field-block"><span>Статус</span><select value={form.status} onChange={(event) => onChange({ status: event.target.value as RecipeTaskStatus })}>{statuses.map((status) => <option key={status.id} value={status.id}>{status.label}</option>)}</select></label>
           <label className="field-block"><span>Ответственный</span><input list="recipe-task-users" value={form.assigneeEmail} onChange={(event) => onChange({ assigneeEmail: event.target.value })} /></label>
           <label className="field-block"><span>Помощники</span><input value={form.helperEmailsText} onChange={(event) => onChange({ helperEmailsText: event.target.value })} placeholder="email, email" /></label>
           <label className="field-block"><span>Дней</span><input type="number" min={1} max={365} value={form.estimatedDays} onChange={(event) => onChange({ estimatedDays: Number(event.target.value) })} /></label>
-          <label className="field-block"><span>Дедлайн</span><input type="date" value={form.deadlineDate} onChange={(event) => onChange({ deadlineDate: event.target.value })} /></label>
+          <label className="field-block"><span>Дедлайн</span><input type="date" min={todayDateInputValue()} value={form.deadlineDate} onChange={(event) => onChange({ deadlineDate: event.target.value })} /></label>
         </div>
         <label className="field-block"><span>Описание</span><textarea value={form.description} onChange={(event) => onChange({ description: event.target.value })} /></label>
         <div className="inline-actions">
-          <button type="submit">{submitLabel}</button>
+          <button type="submit" disabled={!form.itemRaw.trim()}>{submitLabel}</button>
           {extraActions}
         </div>
       </form>
@@ -353,7 +510,7 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
         {expandedCard ? (
           <div className="task-card-details">
             {editForm ? (
-              renderTaskForm(editForm, (patch) => updateEditForm(task, patch), (event) => void submitEdit(task, event), 'Сохранить', (
+              renderTaskForm(editForm, `edit-${task.id}`, (patch) => updateEditForm(task, patch), (event) => void submitEdit(task, event), 'Сохранить', (
                 <>
                   <button type="button" className="ghost-button" onClick={() => setEditForms((current) => {
                     const next = { ...current };
@@ -411,7 +568,7 @@ export function RecipeTasksBoard({ authUser, currentItemRaw, currentItemTitle, r
             </select>
           </label>
         </div>
-        {isCreating ? renderTaskForm(createForm, updateCreateForm, submitCreate, 'Создать', <button type="button" className="ghost-button" onClick={() => setIsCreating(false)}>Отмена</button>) : null}
+        {isCreating ? renderTaskForm(createForm, 'create', updateCreateForm, submitCreate, 'Создать', <button type="button" className="ghost-button" onClick={() => setIsCreating(false)}>Отмена</button>) : null}
         <div className="task-board" aria-label="recipe-tasks-board">
           {statuses.map((status) => {
             const columnTasks = sortedTasksForStatus(status.id);
