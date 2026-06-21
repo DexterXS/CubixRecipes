@@ -7,7 +7,7 @@ import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, createRecipeTemplate, deleteCustomItem, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1468,6 +1468,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
   const [itemPanelMerging, setItemPanelMerging] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
+  const [modIconArchiveAction, setModIconArchiveAction] = useState('');
   const [isWipeUpdateOpen, setIsWipeUpdateOpen] = useState(false);
   const [itemCaseAliasReport, setItemCaseAliasReport] = useState<ItemCaseAliasReport | null>(null);
   const [itemCaseAliasStatus, setItemCaseAliasStatus] = useState('');
@@ -1744,6 +1745,47 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
     } finally {
       setModIconUploading(false);
+    }
+  }
+
+  function handleDownloadModIconArchive(filename: string) {
+    if (!canManageModIcons) return;
+    window.open(getModIconArchiveDownloadUrl(filename), '_blank', 'noopener,noreferrer');
+  }
+
+  async function handleCleanModIconArchive(filename: string) {
+    if (!canManageModIcons || modIconArchiveAction) return;
+    setModIconArchiveAction(`clean:${filename}`);
+    setModIconMessage(`Очищаю ${filename}...`);
+    try {
+      const payload = await cleanModIconArchive(filename);
+      setModIconStatus(payload.status);
+      setModIconManifest(payload.status.manifest);
+      setModIconMessage(payload.cleanup.removed
+        ? `Из ${filename} удалено лишних файлов: ${payload.cleanup.removed}. Пересоберите атласы.`
+        : `${filename}: лишних файлов не найдено.`);
+    } catch (error) {
+      setModIconMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setModIconArchiveAction('');
+    }
+  }
+
+  async function handleDeleteModIconArchive(filename: string) {
+    if (!canManageModIcons || modIconArchiveAction) return;
+    const confirmed = window.confirm(`Удалить архив ${filename}?`);
+    if (!confirmed) return;
+    setModIconArchiveAction(`delete:${filename}`);
+    setModIconMessage(`Удаляю ${filename}...`);
+    try {
+      const payload = await deleteModIconArchive(filename);
+      setModIconStatus(payload);
+      setModIconManifest(payload.manifest);
+      setModIconMessage(`Архив удалён: ${filename}. Пересоберите атласы.`);
+    } catch (error) {
+      setModIconMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setModIconArchiveAction('');
     }
   }
 
@@ -5294,7 +5336,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       <div className="workspace-layout workspace-layout-admin">
         <div className="workspace-column workspace-left">
           <div className="workspace-panel-shell panel-admin-mod-icons">
-            <Panel title="Иконки модов" subtitle="ZIP архивы формата modid_x32.zip или modid_x256.zip с PNG внутри">
+            <Panel title="Атласы" subtitle="ZIP архивы формата modid_x32.zip или modid_x256.zip с PNG внутри">
               <label
                 className="file-drop-zone"
                 onDragOver={(event) => event.preventDefault()}
@@ -5316,34 +5358,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <strong>Загрузить ZIP архив иконок</strong>
                 <span>Например: energyadditions_x32.zip с папкой energyadditions_x32/ и PNG-файлами внутри</span>
               </label>
-              <label
-                className="file-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleItemPanelCsvFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".csv,text/csv"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleItemPanelCsvFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить itempanel.csv</strong>
-                <span>CSV обновляет каталог предметов для поиска и сопоставления иконок.</span>
-              </label>
               <div className="file-actions">
-                <button type="button" disabled={modIconUploading || itemPanelCsvUploading || itemPanelJsonUploading || itemPanelMerging} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
-                <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
+                <button type="button" disabled={modIconUploading || Boolean(modIconArchiveAction)} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
+                <button type="button" className="secondary-button" disabled={modIconGenerating || Boolean(modIconArchiveAction) || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
               </div>
               {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
-              {itemPanelCsvMessage ? <div className="inline-status inline-status-default">{itemPanelCsvMessage}</div> : null}
-              {itemPanelJsonMessage ? <div className="inline-status inline-status-default">{itemPanelJsonMessage}</div> : null}
               <div className="admin-file-list">
                 {(modIconStatus?.archives ?? []).map((archive) => (
                   <div key={archive.name} className="admin-file-row">
@@ -5351,7 +5370,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                       <strong>{archive.name}</strong>
                       <span>{formatFileSize(archive.size)}</span>
                     </div>
-                    <span>{archive.modifiedAt ? new Date(archive.modifiedAt).toLocaleString() : '-'}</span>
+                    <div className="admin-file-actions">
+                      <span>{archive.modifiedAt ? new Date(archive.modifiedAt).toLocaleString() : '-'}</span>
+                      <div className="inline-actions">
+                        <button type="button" className="ghost-button" onClick={() => handleDownloadModIconArchive(archive.name)}>Скачать</button>
+                        <button type="button" className="secondary-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleCleanModIconArchive(archive.name)}>
+                          {modIconArchiveAction === `clean:${archive.name}` ? 'Очистка...' : 'Очистить лишнее'}
+                        </button>
+                        <button type="button" className="ghost-button danger-lite-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleDeleteModIconArchive(archive.name)}>
+                          {modIconArchiveAction === `delete:${archive.name}` ? 'Удаление...' : 'Удалить'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
                 {modIconStatus && !modIconStatus.archives.length ? <div className="inline-hint inline-hint-warning">Архивы ещё не загружены.</div> : null}
@@ -6397,7 +6427,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderTechnicalWorkspace() {
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
-      { id: 'modIcons', label: 'Иконки и itempanel', description: 'ZIP, CSV, атласы', visible: canManageModIcons },
+      { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
       { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: canUseDebug },

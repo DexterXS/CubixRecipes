@@ -264,7 +264,42 @@ def test_admin_mod_icon_archive_rejects_unsupported_names(tmp_path: Path):
         asyncio.run(upload_route(BodyRequest(), filename='examplemod_x32.zip', replace=False))
 
     assert exc_info.value.status_code == 400
-    assert 'unsupported files' in exc_info.value.detail
+    assert 'does not contain PNG icon files' in exc_info.value.detail
+
+
+def test_admin_mod_icon_archive_download_clean_and_delete(tmp_path: Path):
+    icon_path = tmp_path / 'icon.png'
+    _write_rgba_png(icon_path, [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    archive_path = tmp_path / 'examplemod_x32.zip'
+    with ZipFile(archive_path, 'w') as archive:
+        archive.write(icon_path, 'examplemod_x32/Own icon.png')
+        archive.write(icon_path, 'othermod_x32/Other icon.png')
+        archive.writestr('readme.txt', 'extra')
+
+    app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
+    upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive' and 'POST' in getattr(route, 'methods', set()))
+    download_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive' and 'GET' in getattr(route, 'methods', set()))
+    delete_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive' and 'DELETE' in getattr(route, 'methods', set()))
+    clean_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive/clean')
+
+    class BodyRequest:
+        headers = {}
+
+        async def body(self):
+            return archive_path.read_bytes()
+
+    uploaded = asyncio.run(upload_route(BodyRequest(), filename='examplemod_x32.zip', replace=False))
+    downloaded = download_route(filename='examplemod_x32.zip')
+    cleaned = clean_route(filename='examplemod_x32.zip')
+    deleted = delete_route(filename='examplemod_x32.zip')
+
+    assert uploaded['archive']['name'] == 'examplemod_x32.zip'
+    assert downloaded.media_type == 'application/zip'
+    assert downloaded.body.startswith(b'PK')
+    assert cleaned['cleanup']['removed'] == 2
+    assert cleaned['cleanup']['kept'] == 1
+    assert deleted['archive']['deleted'] is True
+    assert deleted['status']['archives'] == []
 
 
 def test_save_as_accepts_generated_recipe(tmp_path: Path):

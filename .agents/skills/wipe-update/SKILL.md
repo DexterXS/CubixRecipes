@@ -23,7 +23,8 @@
 10. Preserve `entry.raw` for NBT item suggestions and editor insertion; do not rebuild NBT variants from `key/meta`, because that drops `.withTag(...)` and leaves the NBT tree empty.
 11. Treat NBT UI markers as actual `nbt_raw` or `.withTag(...)` only; `meta > 0` and CSV `has_nbt` alone must not create a yellow NBT outline.
 12. Keep the wipe update UI step-based and explicit: CSV, icons, generated atlases, JSON/SNBT, merge button, open merged CSV, final catalog check.
-13. Add focused backend tests for catalog merging and API upload/merge, plus frontend tests for the wipe update window.
+13. For mod icon archives, allow mixed ZIPs when at least one valid icon exists, but provide an explicit cleanup action that rewrites the archive to keep only root PNGs or PNGs under the matching `modid_x32/` / `modid_x256/` folder; archive changes must invalidate generated atlas files.
+14. Add focused backend tests for catalog merging, archive cleanup, and API upload/merge, plus frontend tests for the wipe update window and atlas panel.
 
 ## Common mistakes
 - Using the icon catalog as the only item source; it contains only rows with matched icon files.
@@ -33,6 +34,8 @@
 - Returning only `has_icon` from the combined catalog; the frontend also needs `icon_url` to overwrite stale missing-icon cache values.
 - Accepting an empty `/api/itempanel/atlas` as authoritative; this disables the static base atlas.
 - Rendering generated mod-icon atlas sprites in NEI but not in `RecipeGrid`.
+- Rejecting mixed mod icon ZIPs that contain valid icons; admins need to upload them first and then use the cleanup action to remove unrelated entries.
+- Keeping stale generated atlas manifests after uploading, deleting, or cleaning an archive.
 - Rebuilding an NBT catalog entry as `<mod:item:meta>` inside search suggestions or editors, which makes the NBT tree appear empty.
 - Using CSV `has_nbt` or meta-only variants as proof of real NBT; yellow outlines require `nbt_raw` or `.withTag(...)`.
 - Hiding the merged output; admins need an `Открыть объединенный файл` action to inspect `itempanel_merged.csv`.

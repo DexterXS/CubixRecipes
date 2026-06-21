@@ -31,7 +31,7 @@ from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
 from app.services.item_case_alias_service import ItemCaseAliasService
-from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, InvalidModIconArchiveError, ModIconAtlasService
+from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, ArchiveNotFoundError, InvalidModIconArchiveError, ModIconAtlasService
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
@@ -575,6 +575,44 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon archive uploaded', uploaded)
         return {'ok': True, 'archive': uploaded, 'status': mod_icon_atlas_service.status()}
+
+    @router.get('/admin/mod-icons/archive')
+    def admin_download_mod_icons_archive(filename: str = ''):
+        try:
+            content = mod_icon_atlas_service.read_archive(filename)
+        except ArchiveNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except InvalidModIconArchiveError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        safe_name = Path(filename).name
+        headers = {'Content-Disposition': f"attachment; filename*=UTF-8''{quote(safe_name)}"}
+        return Response(content=content, media_type='application/zip', headers=headers)
+
+    @router.delete('/admin/mod-icons/archive')
+    def admin_delete_mod_icons_archive(filename: str = ''):
+        try:
+            deleted = mod_icon_atlas_service.delete_archive(filename)
+        except ArchiveNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except InvalidModIconArchiveError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon archive deleted', deleted)
+        return {'ok': True, 'archive': deleted, 'status': mod_icon_atlas_service.status()}
+
+    @router.post('/admin/mod-icons/archive/clean')
+    def admin_clean_mod_icons_archive(filename: str = ''):
+        try:
+            cleaned = mod_icon_atlas_service.clean_archive(filename)
+        except ArchiveNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except InvalidModIconArchiveError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon archive cleaned', {
+            'name': cleaned.get('name'),
+            'removed': cleaned.get('removed'),
+            'kept': cleaned.get('kept'),
+        })
+        return {'ok': True, 'cleanup': cleaned, 'status': mod_icon_atlas_service.status()}
 
     @router.post('/admin/mod-icons/generate')
     def admin_generate_mod_icon_atlases():
