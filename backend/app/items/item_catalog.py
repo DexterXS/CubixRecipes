@@ -83,7 +83,7 @@ class ItemCatalogService:
             self._merge_entry(by_raw, entry)
 
         snbt_rows = self._count_snbt_rows()
-        self.entries = sorted(by_raw.values(), key=lambda item: (item.key, item.meta, item.raw or ''))
+        self.entries = list(by_raw.values())
         self.last_scan_report = {
             'csv_path': str(self.csv_path),
             'snbt_path': str(self.snbt_path),

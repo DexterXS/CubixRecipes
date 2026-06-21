@@ -108,6 +108,26 @@ def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
     assert summary['nbt_entries'] == 1
 
 
+def test_item_catalog_preserves_itempanel_csv_order(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'zzz:last_in_sort,200,0,false,First In Panel\n'
+        'aaa:first_in_sort,100,0,false,Second In Panel\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.json', icon_catalog)
+
+    service.scan()
+    raws = [entry['raw'] for entry in service.to_api()['entries']]
+
+    assert raws == ['<zzz:last_in_sort>', '<aaa:first_in_sort>']
+
+
 def test_item_catalog_does_not_treat_csv_has_nbt_flag_as_real_nbt(tmp_path: Path):
     csv_path = tmp_path / 'itempanel.csv'
     csv_path.write_text(

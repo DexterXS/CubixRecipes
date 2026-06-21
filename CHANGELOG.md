@@ -27,6 +27,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Preserved itempanel CSV order in the backend item catalog so NEI follows the same ordering as the itempanel source.
 - Made task "Open recipe" create an editable blank recipe with the task item as output when no existing recipe is found.
 - Kept local uploaded draft recipe lookups fresh for R/U hotkeys after importing `.zs` files.
 - Moved `Обновление вайпа` into the left technical sidebar so the wipe workflow is separated from regular mod-icon upload actions.
