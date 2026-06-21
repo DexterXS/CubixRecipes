@@ -206,6 +206,24 @@ export interface RecipeTaskBoard {
   tasks: RecipeTask[];
 }
 
+export interface NeiFavoriteItem {
+  raw: string;
+  addedAt: number;
+}
+
+export interface NeiFavoriteTab {
+  id: string;
+  name: string;
+  items: NeiFavoriteItem[];
+}
+
+export interface NeiFavoritesProfile {
+  activeTabId: string;
+  favoriteHotkey: string;
+  hiddenPatterns: string[];
+  tabs: NeiFavoriteTab[];
+}
+
 export interface ModIconArchiveInfo {
   name: string;
   size: number;

@@ -1,5 +1,5 @@
 import { apiPath, buildBackendUnavailableMessage } from '../config/runtime';
-import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemCaseAliasReport, ItemCatalogResponse, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, ProjectSettings, RecipeDraftTemplate, RecipeTask, RecipeTaskBoard, RecipeTaskBoardMode, RecipeTaskPriority, RecipeTaskStatus, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AuthMeResponse, AuthUser, CustomItem, ItemCaseAliasReport, ItemCatalogResponse, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, NeiFavoritesProfile, ProjectSettings, RecipeDraftTemplate, RecipeTask, RecipeTaskBoard, RecipeTaskBoardMode, RecipeTaskPriority, RecipeTaskStatus, RecipeView, UiPreferences, UserRole, ZsCloudBackup, ZsCloudFile } from '../types';
 import { logFrontendEvent } from './debugLog';
 
 interface ParseResponse {
@@ -430,6 +430,18 @@ export async function updateRecipeTaskBoardMode(boardMode: RecipeTaskBoardMode):
 
 export async function deleteRecipeTask(taskId: string): Promise<{ ok: boolean }> {
   return request<{ ok: boolean }>(apiPath(`/admin/tasks/${encodeURIComponent(taskId)}`), { method: 'DELETE' });
+}
+
+export async function getNeiFavorites(): Promise<NeiFavoritesProfile> {
+  return request<NeiFavoritesProfile>(apiPath('/nei/favorites'));
+}
+
+export async function saveNeiFavorites(profile: NeiFavoritesProfile): Promise<{ ok: boolean } & NeiFavoritesProfile> {
+  return request<{ ok: boolean } & NeiFavoritesProfile>(apiPath('/nei/favorites'), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(profile)
+  });
 }
 
 export async function getModIconAdminStatus(): Promise<ModIconAdminStatus> {

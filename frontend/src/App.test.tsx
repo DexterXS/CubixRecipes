@@ -35,6 +35,7 @@ let mockRecipeDraftTemplates: any[] = [];
 let mockRecipeTasks: any[] = [];
 let mockRecipeTaskBoardMode = 'free';
 let mockRecipeTaskCounter = 1;
+let mockNeiFavorites: any;
 
 function projectSettings() {
   return {
@@ -160,6 +161,12 @@ beforeEach(() => {
   mockRecipeTasks = [];
   mockRecipeTaskBoardMode = 'free';
   mockRecipeTaskCounter = 1;
+  mockNeiFavorites = {
+    activeTabId: 'default',
+    favoriteHotkey: 'A',
+    hiddenPatterns: [],
+    tabs: [{ id: 'default', name: 'Основное', items: [] }]
+  };
   class MockImage {
     onload: null | (() => void) = null;
     set src(_value: string) {
@@ -341,6 +348,13 @@ beforeEach(() => {
       const taskId = decodeURIComponent(url.split('/').pop() ?? '');
       mockRecipeTasks = mockRecipeTasks.filter((task) => task.id !== taskId);
       return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true }) }) as Promise<Response>;
+    }
+    if (url === '/api/nei/favorites' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => mockNeiFavorites }) as Promise<Response>;
+    }
+    if (url === '/api/nei/favorites' && init?.method === 'PUT') {
+      mockNeiFavorites = JSON.parse(String(init.body ?? '{}'));
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, ...mockNeiFavorites }) }) as Promise<Response>;
     }
     if (url === '/api/admin/access' && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
@@ -1026,6 +1040,35 @@ test('shows drafts for moderators but keeps debug/admin settings hidden from vie
   expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Настройки' })).toBeFalsy();
+});
+
+test('moderator can toggle NEI favorites with the configured hotkey', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  expect(await screen.findByText('Избранное NEI')).toBeTruthy();
+  const item = await screen.findByLabelText('nei-item-<minecraft:stick>');
+
+  fireEvent.mouseOver(item);
+  fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+
+  await waitFor(() => expect(mockNeiFavorites.tabs[0].items[0].raw).toBe('<minecraft:stick>'));
+  expect(await screen.findByLabelText('favorite-item-<minecraft:stick>')).toBeTruthy();
+
+  fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+
+  await waitFor(() => expect(mockNeiFavorites.tabs[0].items).toHaveLength(0));
+});
+
+test('moderator NEI hidden patterns remove matching item variants from the panel', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  expect(await screen.findByLabelText('nei-item-<examplemod:item>')).toBeTruthy();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
+  fireEvent.change(screen.getByLabelText('nei-hidden-patterns'), { target: { value: '<examplemod:item>' } });
+
+  await waitFor(() => {
+    expect(screen.queryByLabelText('nei-item-<examplemod:item>')).toBeFalsy();
+    expect(mockNeiFavorites.hiddenPatterns).toEqual(['<examplemod:item>']);
+  });
 });
 
 test('admin can create compact expandable recipe task cards', async () => {

@@ -20,12 +20,13 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         'recipes:edit',
         'templates:create',
         'templates:edit',
+        'nei-favorites:manage',
         'tasks:manage',
         'roles:manage',
         'settings:manage',
         'debug:manage',
     },
-    ROLE_MODERATOR: {'view', 'templates:create'},
+    ROLE_MODERATOR: {'view', 'templates:create', 'nei-favorites:manage'},
     ROLE_DEFAULT: {'view'},
 }
 
@@ -69,6 +70,8 @@ def permission_for_request(method: str, path: str) -> str:
         return 'mod-icons:manage'
     if path.startswith('/api/admin/zs-cloud'):
         return 'files:manage'
+    if path.startswith('/api/nei/favorites'):
+        return 'nei-favorites:manage'
     if path.startswith('/api/recipe-drafts/templates'):
         return 'templates:create'
     if normalized_method == 'GET':

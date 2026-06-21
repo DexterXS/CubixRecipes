@@ -115,6 +115,24 @@ class RecipeTaskBoardRequest(BaseModel):
     boardMode: Literal['free', 'priority', 'deadline', 'created'] = 'free'
 
 
+class NeiFavoriteItemRequest(BaseModel):
+    raw: str = Field(min_length=1, max_length=4096)
+    addedAt: int = Field(default=0, ge=0)
+
+
+class NeiFavoriteTabRequest(BaseModel):
+    id: str = Field(default='', max_length=64)
+    name: str = Field(default='Основное', max_length=64)
+    items: list[NeiFavoriteItemRequest] = Field(default_factory=list, max_length=512)
+
+
+class NeiFavoritesRequest(BaseModel):
+    activeTabId: str = Field(default='', max_length=64)
+    favoriteHotkey: str = Field(default='A', max_length=32)
+    hiddenPatterns: list[str] = Field(default_factory=list, max_length=200)
+    tabs: list[NeiFavoriteTabRequest] = Field(default_factory=list, max_length=32)
+
+
 class IndexScanRequest(BaseModel):
     full: bool = True
     paths: list[str] = Field(default_factory=list)

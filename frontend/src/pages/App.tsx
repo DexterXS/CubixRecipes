@@ -8,10 +8,10 @@ import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -75,6 +75,13 @@ const defaultUiPreferences: UiPreferences = {
   reset_layout_version: 4,
   panel_layout: defaultPanelLayout,
   workspace_layout: defaultWorkspaceLayout
+};
+
+const defaultNeiFavoritesProfile: NeiFavoritesProfile = {
+  activeTabId: 'default',
+  favoriteHotkey: 'A',
+  hiddenPatterns: [],
+  tabs: [{ id: 'default', name: 'Основное', items: [] }]
 };
 
 const defaultRecipe: RecipeView = {
@@ -208,6 +215,7 @@ const LOCAL_DRAFT_SAVE_DELAY_MS = 250;
 const LOCAL_DRAFT_MAX_HISTORY = 20;
 const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
 const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
+const NEI_FAVORITES_SAVE_DELAY_MS = 250;
 const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
 const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
 const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
@@ -1404,6 +1412,122 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
   };
 }
 
+function normalizeNeiFavoritesProfile(profile?: Partial<NeiFavoritesProfile> | null): NeiFavoritesProfile {
+  const tabs = Array.isArray(profile?.tabs) ? profile.tabs : [];
+  const normalizedTabs = tabs
+    .map((tab, index) => ({
+      id: String(tab?.id || `tab-${index + 1}`).trim() || `tab-${index + 1}`,
+      name: String(tab?.name || `Вкладка ${index + 1}`).trim().slice(0, 64) || `Вкладка ${index + 1}`,
+      items: Array.isArray(tab?.items)
+        ? tab.items
+          .map((item) => ({
+            raw: String(item?.raw || '').trim(),
+            addedAt: Number(item?.addedAt) || 0
+          }))
+          .filter((item, itemIndex, allItems) => item.raw && allItems.findIndex((candidate) => candidate.raw === item.raw) === itemIndex)
+          .slice(0, 512)
+        : []
+    }))
+    .filter((tab, index, allTabs) => tab.id && allTabs.findIndex((candidate) => candidate.id === tab.id) === index)
+    .slice(0, 32);
+  const safeTabs = normalizedTabs.length ? normalizedTabs : defaultNeiFavoritesProfile.tabs;
+  const activeTabId = safeTabs.some((tab) => tab.id === profile?.activeTabId) ? String(profile?.activeTabId) : safeTabs[0].id;
+  return {
+    activeTabId,
+    favoriteHotkey: String(profile?.favoriteHotkey || defaultNeiFavoritesProfile.favoriteHotkey).trim().slice(0, 32) || defaultNeiFavoritesProfile.favoriteHotkey,
+    hiddenPatterns: normalizeNeiHiddenPatterns(profile?.hiddenPatterns ?? []),
+    tabs: safeTabs
+  };
+}
+
+function normalizeNeiHiddenPatterns(value: string[] | string): string[] {
+  const rawValues = Array.isArray(value) ? value : value.replace(/,/g, '\n').split(/\r?\n/);
+  const seen = new Set<string>();
+  const patterns: string[] = [];
+  rawValues.forEach((raw) => {
+    const pattern = String(raw || '').trim().slice(0, 256);
+    if (!pattern || seen.has(pattern)) return;
+    seen.add(pattern);
+    patterns.push(pattern);
+  });
+  return patterns.slice(0, 200);
+}
+
+function rawBaseWithoutNbt(raw: string): string {
+  return raw.replace(/\.withTag\([\s\S]*\)\s*$/, '').trim();
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function wildcardPatternMatches(pattern: string, value: string): boolean {
+  const normalizedPattern = pattern.trim().toLowerCase();
+  if (!normalizedPattern) return false;
+  const normalizedValue = value.trim().toLowerCase();
+  const expression = `^${normalizedPattern.split('*').map(escapeRegExp).join('[\\s\\S]*')}$`;
+  return new RegExp(expression).test(normalizedValue);
+}
+
+function entryMatchesHiddenPattern(entry: ItemPanelEntry, pattern: string): boolean {
+  const raw = itemPanelRaw(entry);
+  const rawBase = rawBaseWithoutNbt(raw);
+  return wildcardPatternMatches(pattern, raw)
+    || wildcardPatternMatches(pattern, rawBase)
+    || wildcardPatternMatches(pattern, `<${entry.key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`)
+    || wildcardPatternMatches(pattern, entry.key)
+    || wildcardPatternMatches(pattern, entry.displayRu)
+    || wildcardPatternMatches(pattern, entry.displayEn);
+}
+
+type FavoriteHotkeySpec = {
+  code: string;
+  key: string;
+  ctrlKey: boolean;
+  altKey: boolean;
+  shiftKey: boolean;
+  metaKey: boolean;
+};
+
+function parseFavoriteHotkey(value: string): FavoriteHotkeySpec {
+  const tokens = String(value || defaultNeiFavoritesProfile.favoriteHotkey)
+    .split('+')
+    .map((token) => token.trim())
+    .filter(Boolean);
+  const keyToken = tokens[tokens.length - 1] || defaultNeiFavoritesProfile.favoriteHotkey;
+  const modifiers = new Set(tokens.slice(0, -1).map((token) => token.toLowerCase()));
+  const upperKey = keyToken.length === 1 ? keyToken.toUpperCase() : keyToken;
+  const code = /^Key[A-Z]$/.test(upperKey)
+    ? upperKey
+    : /^[A-Z]$/.test(upperKey)
+      ? `Key${upperKey}`
+      : /^Digit[0-9]$/.test(upperKey)
+        ? upperKey
+        : /^[0-9]$/.test(upperKey)
+          ? `Digit${upperKey}`
+          : upperKey;
+  return {
+    code,
+    key: keyToken.toLowerCase(),
+    ctrlKey: modifiers.has('ctrl') || modifiers.has('control'),
+    altKey: modifiers.has('alt'),
+    shiftKey: modifiers.has('shift'),
+    metaKey: modifiers.has('meta') || modifiers.has('cmd') || modifiers.has('win')
+  };
+}
+
+function favoriteHotkeyMatches(event: KeyboardEvent, hotkey: string): boolean {
+  const spec = parseFavoriteHotkey(hotkey);
+  if (event.ctrlKey !== spec.ctrlKey || event.altKey !== spec.altKey || event.shiftKey !== spec.shiftKey || event.metaKey !== spec.metaKey) {
+    return false;
+  }
+  return event.code === spec.code || event.key.toLowerCase() === spec.key;
+}
+
+function nextFavoriteTabId(): string {
+  return `tab-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
 export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined }: AppProps) {
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
@@ -1494,6 +1618,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [neiFavorites, setNeiFavorites] = useState<NeiFavoritesProfile>(defaultNeiFavoritesProfile);
+  const [neiFavoritesStatus, setNeiFavoritesStatus] = useState('');
+  const [newFavoriteTabName, setNewFavoriteTabName] = useState('');
+  const [neiHiddenPatternsDraft, setNeiHiddenPatternsDraft] = useState('');
   const [taskRawLookup, setTaskRawLookup] = useState<Set<string>>(() => new Set());
   const [taskLookupStatus, setTaskLookupStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const [taskPrefillItem, setTaskPrefillItem] = useState<RecipeTaskPrefillItem | null>(null);
@@ -1549,6 +1677,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const lastLocalDraftHashRef = useRef(localDraftRef.current?.craftHash ?? '');
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
+  const neiFavoritesSaveTimerRef = useRef<number | null>(null);
+  const neiFavoritesRef = useRef<NeiFavoritesProfile>(defaultNeiFavoritesProfile);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -1571,10 +1701,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canManageRoles = can(authUser, 'roles:manage');
   const canUseDebug = can(authUser, 'debug:manage');
   const canManageModIcons = can(authUser, 'mod-icons:manage');
+  const canUseNeiFavorites = can(authUser, 'nei-favorites:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
   const canManageTasks = can(authUser, 'tasks:manage');
   const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
   const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
+  const canOpenSettings = canManageSettings || canUseNeiFavorites;
   const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   hotkeyDebugActiveRef.current = isHotkeyDebugActive;
@@ -2465,7 +2597,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const action = recipeHotkeyAction(event);
+      const action = canUseNeiFavorites && favoriteHotkeyMatches(event, neiFavoritesRef.current.favoriteHotkey)
+        ? 'favorite'
+        : recipeHotkeyAction(event);
       if (!action) {
         return;
       }
@@ -2475,7 +2609,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
       const target = event.target instanceof HTMLElement ? event.target : null;
       const inspection = inspectActiveItemRaw();
-      const raw = inspection.raw;
+      const raw = action === 'favorite' && inspection.source === 'held' ? null : inspection.raw;
       logHotkeyDebug('keydown captured', {
         action,
         key: event.key,
@@ -2526,7 +2660,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
       event.preventDefault();
       logHotkeyDebug('hotkey accepted', { action, raw, source: inspection.source }, 'success');
-      if (action === 'recipe') {
+      if (action === 'favorite') {
+        toggleNeiFavorite(raw);
+      } else if (action === 'recipe') {
         void openRecipeForItem(raw);
       } else {
         void openRecipeUsesForItem(raw);
@@ -2534,7 +2670,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hoveredItemRaw, heldItemRaw, recipeAvailability, recipeDraftTemplates, uploadedDrafts]);
+  }, [hoveredItemRaw, heldItemRaw, recipeAvailability, recipeDraftTemplates, uploadedDrafts, canUseNeiFavorites]);
 
   const summary = useMemo(() => `${matrix.length}x${matrix[0]?.length ?? 0}`, [matrix]);
   const recipeCraftMode = craftModeFromRecipeType(recipe.recipe_type);
@@ -2680,6 +2816,39 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    if (!canUseNeiFavorites) {
+      neiFavoritesRef.current = defaultNeiFavoritesProfile;
+      setNeiFavorites(defaultNeiFavoritesProfile);
+      setNeiHiddenPatternsDraft('');
+      setNeiFavoritesStatus('');
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    async function loadFavorites() {
+      setNeiFavoritesStatus('Загружаю избранное...');
+      try {
+        const profile = normalizeNeiFavoritesProfile(await getNeiFavorites());
+        if (cancelled) return;
+        neiFavoritesRef.current = profile;
+        setNeiFavorites(profile);
+        setNeiHiddenPatternsDraft(profile.hiddenPatterns.join('\n'));
+        setNeiFavoritesStatus('Избранное загружено');
+      } catch (error) {
+        if (cancelled) return;
+        setNeiFavoritesStatus(error instanceof Error ? error.message : String(error));
+      }
+    }
+
+    void loadFavorites();
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser.email, canUseNeiFavorites]);
+
   useEffect(() => () => {
     if (persistTimerRef.current !== null) {
       window.clearTimeout(persistTimerRef.current);
@@ -2692,6 +2861,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
     if (settingsRetryTimerRef.current !== null) {
       window.clearTimeout(settingsRetryTimerRef.current);
+    }
+    if (neiFavoritesSaveTimerRef.current !== null) {
+      window.clearTimeout(neiFavoritesSaveTimerRef.current);
     }
   }, []);
 
@@ -2951,6 +3123,106 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     persistUiPreferences({ ...latestUiPreferencesRef.current, panel_layout: normalizePanelLayout(nextLayout) });
   }
 
+  function persistNeiFavoritesProfile(nextProfile: NeiFavoritesProfile) {
+    const normalized = normalizeNeiFavoritesProfile(nextProfile);
+    neiFavoritesRef.current = normalized;
+    setNeiFavorites(normalized);
+    if (!canUseNeiFavorites) {
+      return;
+    }
+    if (neiFavoritesSaveTimerRef.current !== null) {
+      window.clearTimeout(neiFavoritesSaveTimerRef.current);
+    }
+    neiFavoritesSaveTimerRef.current = window.setTimeout(() => {
+      neiFavoritesSaveTimerRef.current = null;
+      void saveNeiFavorites(neiFavoritesRef.current)
+        .then((saved) => {
+          const normalizedSaved = normalizeNeiFavoritesProfile(saved);
+          neiFavoritesRef.current = normalizedSaved;
+          setNeiFavorites(normalizedSaved);
+          setNeiHiddenPatternsDraft(normalizedSaved.hiddenPatterns.join('\n'));
+          setNeiFavoritesStatus('Избранное сохранено');
+        })
+        .catch((error) => {
+          setNeiFavoritesStatus(error instanceof Error ? error.message : String(error));
+        });
+    }, NEI_FAVORITES_SAVE_DELAY_MS);
+  }
+
+  function updateNeiFavoritesProfile(updater: (current: NeiFavoritesProfile) => NeiFavoritesProfile) {
+    persistNeiFavoritesProfile(updater(neiFavoritesRef.current));
+  }
+
+  function activeNeiFavoriteTab(profile = neiFavorites): NeiFavoritesProfile['tabs'][number] {
+    return profile.tabs.find((tab) => tab.id === profile.activeTabId) ?? profile.tabs[0] ?? defaultNeiFavoritesProfile.tabs[0];
+  }
+
+  function setActiveFavoriteTab(tabId: string) {
+    updateNeiFavoritesProfile((current) => ({ ...current, activeTabId: tabId }));
+  }
+
+  function renameActiveFavoriteTab(name: string) {
+    updateNeiFavoritesProfile((current) => ({
+      ...current,
+      tabs: current.tabs.map((tab) => tab.id === current.activeTabId ? { ...tab, name: name.slice(0, 64) } : tab)
+    }));
+  }
+
+  function addFavoriteTab() {
+    const name = newFavoriteTabName.trim().slice(0, 64) || `Вкладка ${neiFavoritesRef.current.tabs.length + 1}`;
+    const tab = { id: nextFavoriteTabId(), name, items: [] };
+    setNewFavoriteTabName('');
+    updateNeiFavoritesProfile((current) => ({
+      ...current,
+      activeTabId: tab.id,
+      tabs: [...current.tabs, tab].slice(0, 32)
+    }));
+  }
+
+  function deleteActiveFavoriteTab() {
+    updateNeiFavoritesProfile((current) => {
+      if (current.tabs.length <= 1) {
+        return current;
+      }
+      const tabs = current.tabs.filter((tab) => tab.id !== current.activeTabId);
+      return {
+        ...current,
+        activeTabId: tabs[0]?.id ?? defaultNeiFavoritesProfile.activeTabId,
+        tabs: tabs.length ? tabs : defaultNeiFavoritesProfile.tabs
+      };
+    });
+  }
+
+  function toggleNeiFavorite(raw: string) {
+    const favoriteRaw = applyItemCaseAlias(raw);
+    updateNeiFavoritesProfile((current) => {
+      const activeTab = activeNeiFavoriteTab(current);
+      const hasItem = activeTab.items.some((item) => item.raw === favoriteRaw);
+      return {
+        ...current,
+        tabs: current.tabs.map((tab) => {
+          if (tab.id !== activeTab.id) return tab;
+          return {
+            ...tab,
+            items: hasItem
+              ? tab.items.filter((item) => item.raw !== favoriteRaw)
+              : [{ raw: favoriteRaw, addedAt: Date.now() }, ...tab.items].slice(0, 512)
+          };
+        })
+      };
+    });
+    setStatus(`Избранное: ${resolveCellTitle(favoriteRaw) || favoriteRaw}`);
+  }
+
+  function updateFavoriteHotkey(value: string) {
+    updateNeiFavoritesProfile((current) => ({ ...current, favoriteHotkey: value.slice(0, 32) }));
+  }
+
+  function updateNeiHiddenPatterns(value: string) {
+    setNeiHiddenPatternsDraft(value);
+    updateNeiFavoritesProfile((current) => ({ ...current, hiddenPatterns: normalizeNeiHiddenPatterns(value) }));
+  }
+
   async function saveCurrentWindowLayout() {
     const nextPreferences: UiPreferences = {
       ...latestUiPreferencesRef.current,
@@ -3199,17 +3471,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return [...unique.values()].slice(0, 20);
   }, [itemSearchQuery, itemPanelTranslations, neiCatalogEntries]);
 
+  const hiddenNeiPatterns = canUseNeiFavorites ? neiFavorites.hiddenPatterns : [];
+  const visibleNeiCatalogEntries = useMemo(() => {
+    if (!hiddenNeiPatterns.length) {
+      return neiCatalogEntries;
+    }
+    return neiCatalogEntries.filter((entry) => !hiddenNeiPatterns.some((pattern) => entryMatchesHiddenPattern(entry, pattern)));
+  }, [neiCatalogEntries, hiddenNeiPatterns]);
+
   const filteredNeiItems = useMemo(() => {
     const query = neiSearchQuery.trim().toLowerCase();
     return query
-      ? neiCatalogEntries.filter((entry) => (
+      ? visibleNeiCatalogEntries.filter((entry) => (
         entry.key.includes(query)
         || entry.displayRu.toLowerCase().includes(query)
         || entry.displayEn.toLowerCase().includes(query)
         || String(entry.legacyId ?? '').includes(query)
       ))
-      : neiCatalogEntries;
-  }, [neiSearchQuery, neiCatalogEntries]);
+      : visibleNeiCatalogEntries;
+  }, [neiSearchQuery, visibleNeiCatalogEntries]);
 
   const neiPageSize = clamp(Math.floor(Number(uiPreferences.nei_page_size) || neiColumnCount * NEI_VISIBLE_ROWS), 16, 512);
   const neiPageCount = Math.max(1, Math.ceil(filteredNeiItems.length / neiPageSize));
@@ -3220,6 +3500,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [filteredNeiItems, neiPage, neiPageCount, neiPageSize]);
 
   const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => itemPanelRaw(entry)), [neiItems]);
+  const activeFavoriteRawSet = useMemo(() => {
+    const tab = activeNeiFavoriteTab();
+    return new Set(tab.items.map((item) => item.raw));
+  }, [neiFavorites]);
   const uploadedDraftRecipeIndexes = useMemo(() => {
     const byOutput = new Map<string, UploadedDraftRecipeMatch>();
     const byIngredient = new Map<string, UploadedDraftRecipeMatch[]>();
@@ -5197,6 +5481,99 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function renderNeiFavoriteItem(raw: string) {
+    const title = resolveCellTitle(raw) || raw;
+    const availability = getRecipeAvailability(raw);
+    return (
+      <button
+        key={raw}
+        type="button"
+        className={`favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'}`}
+        aria-label={`favorite-item-${raw}`}
+        data-item-raw={raw}
+        draggable
+        onMouseEnter={() => updateHoveredItemRaw(raw)}
+        onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+        onFocus={() => updateHoveredItemRaw(raw)}
+        onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+        onDragStart={(event) => {
+          event.dataTransfer.setData('text/plain', raw);
+          event.dataTransfer.effectAllowed = 'copy';
+          setHeldItemRaw(raw);
+        }}
+        onDragEnd={() => {
+          setHeldItemRaw((current) => (current === raw ? null : current));
+        }}
+        onClick={() => handleNeiItemPick(raw)}
+        onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
+        onContextMenu={(event) => {
+          event.preventDefault();
+          setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
+        }}
+      >
+        <span className="favorite-icon" aria-hidden="true">
+          {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
+        </span>
+        <span className="favorite-title">{title}</span>
+        <span className="favorite-raw">{raw}</span>
+        {renderItemTooltip(raw)}
+      </button>
+    );
+  }
+
+  function renderNeiFavoritesPanel() {
+    if (!canUseNeiFavorites) {
+      return null;
+    }
+    const activeTab = activeNeiFavoriteTab();
+    return (
+      <div className="workspace-panel-shell panel-nei-favorites">
+        <Panel title="Избранное NEI" subtitle={`Хоткей: ${neiFavorites.favoriteHotkey || 'A'}`} className="nei-favorites-panel">
+          <div className="favorite-tabs" role="tablist" aria-label="favorite-tabs">
+            {neiFavorites.tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={tab.id === neiFavorites.activeTabId}
+                className={`favorite-tab ${tab.id === neiFavorites.activeTabId ? 'active' : ''}`}
+                onClick={() => setActiveFavoriteTab(tab.id)}
+              >
+                <span>{tab.name}</span>
+                <strong>{tab.items.length}</strong>
+              </button>
+            ))}
+          </div>
+          <label className="field-block">
+            <span>Название вкладки</span>
+            <input aria-label="favorite-active-tab-name" type="text" value={activeTab.name} onChange={(event) => renameActiveFavoriteTab(event.target.value)} />
+          </label>
+          <div className="favorite-tab-actions">
+            <input
+              aria-label="favorite-new-tab-name"
+              type="text"
+              value={newFavoriteTabName}
+              onChange={(event) => setNewFavoriteTabName(event.target.value)}
+              placeholder="Новая вкладка"
+            />
+            <button type="button" className="secondary-button" aria-label="favorite-add-tab" onClick={addFavoriteTab}>Создать</button>
+            <button type="button" className="ghost-button danger-lite-button" aria-label="favorite-delete-tab" disabled={neiFavorites.tabs.length <= 1} onClick={deleteActiveFavoriteTab}>Удалить</button>
+          </div>
+          <div className="favorite-help-line">
+            <span>Наведи на предмет и нажми {neiFavorites.favoriteHotkey || 'A'}</span>
+            <strong>{activeTab.items.length}</strong>
+          </div>
+          <div className="favorite-items" aria-label="nei-favorites-items">
+            {activeTab.items.length ? activeTab.items.map((item) => renderNeiFavoriteItem(item.raw)) : (
+              <div className="favorite-empty">Пока пусто</div>
+            )}
+          </div>
+          {neiFavoritesStatus ? <div className="inline-status inline-status-default">{neiFavoritesStatus}</div> : null}
+        </Panel>
+      </div>
+    );
+  }
+
   function renderNeiPanel() {
     const atlasImageUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
     return (
@@ -5222,6 +5599,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const availability = getRecipeAvailability(raw);
               const nbtClass = itemPanelEntryHasNbtTag(entry) ? 'has-nbt' : 'no-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
+              const isFavorite = activeFavoriteRawSet.has(insertRaw) || activeFavoriteRawSet.has(raw);
               const atlasStyle = itemPanelAtlas && atlasEntry
                 ? {
                   backgroundImage: `url(${atlasImageUrl})`,
@@ -5233,7 +5611,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <button
                   key={itemPanelEntryIdentity(entry)}
                   type="button"
-                  className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
+                  className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${isFavorite ? 'is-favorite' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
                   aria-label={`nei-item-${raw}`}
                   data-item-raw={raw}
                   draggable
@@ -5273,6 +5651,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
                   {renderItemTooltip(raw, entry)}
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
+                  {isFavorite ? <span className="nei-favorite-dot" aria-hidden="true">A</span> : null}
                 </button>
               );
             })}
@@ -6931,7 +7310,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return renderTechnicalWorkspace();
     }
     return (
-      <div className="workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main">
+      <div className={`workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main ${canUseNeiFavorites ? 'has-nei-favorites' : ''}`.trim()}>
+        {canUseNeiFavorites ? <div className="workspace-column workspace-favorites">{renderNeiFavoritesPanel()}</div> : null}
         <div className="workspace-column workspace-center">
           {renderRecipeBuilderPanel()}
           {renderRecipeFilesPanel()}
@@ -7127,7 +7507,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <strong>{authUser.role}</strong>
           </div>
           <label className="language-switch compact-switch"><select aria-label={t('app.language')} disabled={!canManageSettings} value={uiPreferences.language} onChange={(event) => patchUiPreferences({ language: event.target.value as UiLanguage })}><option value="ru">Русский</option><option value="en">English</option></select></label>
-          {canManageSettings ? <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button> : null}
+          {canOpenSettings ? <button type="button" className="secondary-button" onClick={() => setIsLayoutSettingsOpen(true)}>{t('app.settings')}</button> : null}
           <button type="button" className="ghost-button" onClick={() => void onLogout()}>Logout</button>
         </div>
       </div>
@@ -7164,6 +7544,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </div>
             </div>
             <div className="settings-modal-body">
+              {canManageSettings ? (
+                <>
               <label className="field-block settings-scale-control">
                 <span>Масштаб интерфейса</span>
                 <select aria-label="ui-scale" value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}>
@@ -7224,6 +7606,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   ))}
                 </div>
               </section>
+                </>
+              ) : null}
+              {canUseNeiFavorites ? (
+                <section className="settings-section">
+                  <div className="settings-section-title">
+                    <h3>NEI избранное и фильтр</h3>
+                    <span>Сохраняется на backend в data по email пользователя.</span>
+                  </div>
+                  <label className="field-block">
+                    <span>Клавиша избранного</span>
+                    <input aria-label="nei-favorite-hotkey" type="text" value={neiFavorites.favoriteHotkey} onChange={(event) => updateFavoriteHotkey(event.target.value)} placeholder="A или Ctrl+A" />
+                  </label>
+                  <label className="field-block">
+                    <span>Скрывать из NEI</span>
+                    <textarea
+                      aria-label="nei-hidden-patterns"
+                      className="compact-textarea"
+                      value={neiHiddenPatternsDraft}
+                      onChange={(event) => updateNeiHiddenPatterns(event.target.value)}
+                      placeholder={'<botany:pigment:*>\n<mod:item:*>'}
+                    />
+                  </label>
+                  <div className="inline-status inline-status-default">
+                    <span>Фильтров: {neiFavorites.hiddenPatterns.length}. Вкладок: {neiFavorites.tabs.length}.</span>
+                  </div>
+                </section>
+              ) : null}
             </div>
           </div>
         </div>

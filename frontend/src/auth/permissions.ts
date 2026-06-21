@@ -1,8 +1,8 @@
 import { AuthUser } from '../types';
 
 const rolePermissions: Record<AuthUser['role'], Set<string>> = {
-  admin: new Set(['view', 'files:add', 'files:download', 'files:manage', 'mod-icons:manage', 'recipes:edit', 'templates:create', 'templates:edit', 'tasks:manage', 'roles:manage', 'settings:manage', 'debug:manage']),
-  moderator: new Set(['view', 'templates:create']),
+  admin: new Set(['view', 'files:add', 'files:download', 'files:manage', 'mod-icons:manage', 'recipes:edit', 'templates:create', 'templates:edit', 'nei-favorites:manage', 'tasks:manage', 'roles:manage', 'settings:manage', 'debug:manage']),
+  moderator: new Set(['view', 'templates:create', 'nei-favorites:manage']),
   default: new Set(['view'])
 };
 

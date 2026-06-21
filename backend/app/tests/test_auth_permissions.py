@@ -12,11 +12,14 @@ def test_role_permissions_match_expected_access():
     assert role_has_permission('admin', 'files:manage')
     assert role_has_permission('admin', 'mod-icons:manage')
     assert role_has_permission('admin', 'tasks:manage')
+    assert role_has_permission('admin', 'nei-favorites:manage')
     assert role_has_permission('moderator', 'templates:create')
+    assert role_has_permission('moderator', 'nei-favorites:manage')
     assert not role_has_permission('moderator', 'tasks:manage')
     assert not role_has_permission('moderator', 'recipes:edit')
     assert role_has_permission('default', 'view')
     assert not role_has_permission('default', 'templates:create')
+    assert not role_has_permission('default', 'nei-favorites:manage')
 
 
 def test_permission_mapping_protects_mutating_routes():
@@ -29,5 +32,6 @@ def test_permission_mapping_protects_mutating_routes():
     assert permission_for_request('POST', '/api/admin/mod-icons/generate') == 'mod-icons:manage'
     assert permission_for_request('POST', '/api/admin/itempanel/csv') == 'mod-icons:manage'
     assert permission_for_request('PUT', '/api/admin/tasks/order') == 'tasks:manage'
+    assert permission_for_request('PUT', '/api/nei/favorites') == 'nei-favorites:manage'
     assert permission_for_request('PUT', '/api/admin/access') == 'roles:manage'
     assert permission_for_request('GET', '/api/recipes/abc') == 'view'

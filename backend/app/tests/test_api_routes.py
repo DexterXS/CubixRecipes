@@ -8,7 +8,7 @@ import zlib
 import pytest
 from fastapi import HTTPException
 from app.api.routes import create_app
-from app.api.schemas import CustomItemRequest, ItemCaseAliasManualRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderItemRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest
+from app.api.schemas import CustomItemRequest, ItemCaseAliasManualRequest, NeiFavoritesRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderItemRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest
 
 
 def _write_rgba_png(path: Path, pixels: list[tuple[int, int, int, int]], width: int = 2) -> None:
@@ -545,6 +545,36 @@ def test_admin_recipe_tasks_track_status_order_and_review_audit(tmp_path: Path):
     assert delete_route(created['id']) == {'ok': True}
     assert list_route()['tasks'] == []
 
+
+def test_nei_favorites_are_saved_per_moderator_under_data(tmp_path: Path):
+    config_path = tmp_path / 'cubixrecipes.config.json'
+    app = create_app(config_path=str(config_path))
+    get_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/nei/favorites' and 'GET' in getattr(route, 'methods', set()))
+    put_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/nei/favorites' and 'PUT' in getattr(route, 'methods', set()))
+
+    def auth_request(email: str):
+        return type('Request', (), {'state': type('State', (), {'auth_user': {'email': email, 'role': 'moderator', 'is_root_admin': False}})()})()
+
+    initial = get_route(auth_request('moderator@example.com'))
+    assert initial['tabs'][0]['name'] == 'Основное'
+
+    saved = put_route(auth_request('moderator@example.com'), NeiFavoritesRequest(
+        activeTabId='main',
+        favoriteHotkey='Ctrl+A',
+        hiddenPatterns=['<botany:pigment:*>'],
+        tabs=[{
+            'id': 'main',
+            'name': 'Botany',
+            'items': [{'raw': '<botany:pigment:4>.withTag({color: 1})', 'addedAt': 1770000000000}],
+        }],
+    ))
+
+    assert saved['ok'] is True
+    assert saved['activeTabId'] == 'main'
+    assert saved['tabs'][0]['items'][0]['raw'] == '<botany:pigment:4>.withTag({color: 1})'
+    stored = json.loads((tmp_path / 'data' / 'nei_favorites.json').read_text(encoding='utf-8'))
+    assert stored['users']['moderator@example.com']['hiddenPatterns'] == ['<botany:pigment:*>']
+    assert get_route(auth_request('other@example.com'))['tabs'][0]['items'] == []
 
 
 def test_save_as_trims_empty_recipe_border_for_simple_recipes(tmp_path: Path):

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added moderator/admin NEI favorites stored in `data/nei_favorites.json`, with named tabs, hover+hotkey toggling, configurable favorite hotkey, and per-user NEI hidden-pattern filters.
 - Added a configurable NEI page size setting, reusable item tooltips across NEI/grids/tasks, and NEI context-menu task status.
 - Added task default templates with a one-click NEI "add task by template" action that keeps the current workspace open.
 - Added a craft-board overflow menu for output details plus copy/paste of the current craft body while preserving each recipe output.

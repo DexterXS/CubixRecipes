@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -34,6 +34,7 @@ from app.services.item_case_alias_service import ItemCaseAliasService
 from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, ArchiveNotFoundError, InvalidModIconArchiveError, ModIconAtlasService
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
+from app.storage.nei_favorites import NeiFavoritesStore
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
 from app.storage.recipe_tasks import RecipeTaskStore
 from app.storage.zs_storage import ZsStorage
@@ -277,6 +278,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
     itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
     project_root = _project_root_for_catalog(config_service)
+    runtime_data_dir = config_service.data_dir if config_service.data_dir is not None else config_service.config_path.resolve(strict=False).parent / 'data'
     itempanel_csv_path = itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv'
 
     def _active_itempanel_snbt_path(current_scripts_dir: str) -> Path:
@@ -300,6 +302,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
     recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
     recipe_task_store = RecipeTaskStore(admin_data_dir / 'recipe_tasks.json')
+    nei_favorites_store = NeiFavoritesStore(runtime_data_dir / 'nei_favorites.json')
     resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
     index_paths = config_service.build_index_paths(config)
     if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
@@ -494,6 +497,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except KeyError as exc:
             raise HTTPException(status_code=404, detail='Task not found') from exc
         return {'ok': True}
+
+    @router.get('/nei/favorites')
+    def get_nei_favorites(request: Request):
+        user = request.state.auth_user
+        return nei_favorites_store.get_board(user['email'])
+
+    @router.put('/nei/favorites')
+    def update_nei_favorites(request: Request, payload: NeiFavoritesRequest):
+        user = request.state.auth_user
+        board = nei_favorites_store.save_board(user['email'], payload.model_dump())
+        return {'ok': True, **board}
 
     @router.get('/admin/mod-icons')
     def admin_mod_icons_status():
