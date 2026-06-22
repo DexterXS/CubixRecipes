@@ -5314,19 +5314,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </select>
             </label>
           </div>
-          {similarRecipes ? (
-            <div className="similar-recipe-nav" aria-label="similar-recipe-navigation">
-              <div>
-                <span>Похожие рецепты</span>
-                <strong>{similarRecipes.index + 1}/{similarRecipes.matches.length}</strong>
-                <small>{similarRecipes.raw}</small>
-              </div>
-              <div className="inline-actions">
-                <button type="button" className="ghost-button" aria-label="similar-recipe-prev" disabled={similarRecipes.matches.length <= 1 || similarRecipes.index <= 0} onClick={() => changeSimilarRecipe(-1)}>← Предыдущий похожий</button>
-                <button type="button" className="ghost-button" aria-label="similar-recipe-next" disabled={similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1} onClick={() => changeSimilarRecipe(1)}>Следующий похожий →</button>
-              </div>
-            </div>
-          ) : null}
+
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
@@ -5398,6 +5386,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 {outputRaw ? renderItemTooltip(outputRaw) : null}
               </button>
             </div>
+          </div>
+          <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
+            <button
+              type="button"
+              className="craft-nav-arrow"
+              aria-label="similar-recipe-prev"
+              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index <= 0}
+              onClick={() => changeSimilarRecipe(-1)}
+            >◀</button>
+            <span className="craft-nav-counter">
+              {similarRecipes ? `${similarRecipes.index + 1}/${similarRecipes.matches.length}` : '1/1'}
+            </span>
+            <button
+              type="button"
+              className="craft-nav-arrow"
+              aria-label="similar-recipe-next"
+              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1}
+              onClick={() => changeSimilarRecipe(1)}
+            >▶</button>
           </div>
         </Panel>
       </div>

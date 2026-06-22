@@ -1263,6 +1263,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             allow_credentials=True,
             allow_methods=['*'],
             allow_headers=['*'],
+            expose_headers=['Content-Disposition'],
         )
 
     @app.get('/health')

@@ -222,6 +222,11 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .similar-recipe-nav span { color: var(--muted); font-size: 12px; }
 .similar-recipe-nav strong { font-variant-numeric: tabular-nums; }
 .similar-recipe-nav small { color: var(--muted); overflow-wrap: anywhere; }
+.craft-recipe-nav { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 6px 14px; background: #b0b0b0; border-top: 2px solid #9a9a9a; }
+.craft-nav-arrow { width: 28px; height: 28px; min-width: 28px; padding: 0; border-radius: 4px; background: #a3a3a3; border: 1px solid #737373; color: #111827; font-size: 13px; line-height: 1; display: inline-grid; place-items: center; transition: background 0.12s; }
+.craft-nav-arrow:hover:not(:disabled) { background: #d4d4d4; filter: none; }
+.craft-nav-arrow:disabled { opacity: 0.38; cursor: default; background: #a3a3a3; filter: none; }
+.craft-nav-counter { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 700; color: #111827; min-width: 40px; text-align: center; }
 .recipe-builder-output { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
 .recipe-builder-output .output-icon-slot { width: 72px; border-radius: 12px; }
 .recipe-builder-output strong,
