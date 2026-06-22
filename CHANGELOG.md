@@ -28,6 +28,7 @@
 - Added hidden ROOT-only `Ctrl+B` backup access inside `Облако`; `.zs` backups are written under `.cubixrecipes_admin`, excluded from normal cloud listings and recipe scans, and remain isolated when admins delete files.
 
 ### Fixed
+- Добавлено окно разрешения конфликтов сохранения рецептов: перед записью рецепта в облако фронтенд проверяет, существует ли рецепт для данного предмета в файлах проекта, и предлагает пользователю перезаписать существующий рецепт, сохранить его как дополнительный или записать в отдельный файл, перечисляя все файлы, в которых рецепт найден.
 - Made dropdown-style action menus close after selecting an action or clicking outside, and widened the Custom item editor with a card-based NBT tree layout.
 - Preserved itempanel CSV order in the backend item catalog so NEI follows the same ordering as the itempanel source.
 - Made task "Open recipe" create an editable blank recipe with the task item as output when no existing recipe is found.
