@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Added
+- Added recipe navigation arrows (◀ N/M ▶) at the bottom of the craft board, always visible; arrows are active when multiple recipes exist for the same output, showing 1/1 when there is only one.
+- Fixed cloud file download filename: exposed `Content-Disposition` header via CORS `expose_headers` so the browser now receives and uses the actual filename from the server instead of falling back to `download.zs`.
+
 - Added moderator/admin NEI favorites stored in `data/nei_favorites.json`, with named tabs, hover+hotkey toggling, configurable favorite hotkey, and per-user NEI hidden-pattern filters.
 - Added a configurable NEI page size setting, reusable item tooltips across NEI/grids/tasks, and NEI context-menu task status.
 - Added task default templates with a one-click NEI "add task by template" action that keeps the current workspace open.
