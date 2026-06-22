@@ -1548,6 +1548,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [isNbtEditorOpen, setIsNbtEditorOpen] = useState(false);
   const [isLocalSaveModalOpen, setIsLocalSaveModalOpen] = useState(false);
   const [isCloudSaveModalOpen, setIsCloudSaveModalOpen] = useState(false);
+  const [isSaveConflictModalOpen, setIsSaveConflictModalOpen] = useState(false);
+  const [saveConflictMatches, setSaveConflictMatches] = useState<RecipeView[]>([]);
   const [cloudUploadConflict, setCloudUploadConflict] = useState<CloudUploadConflictState | null>(null);
   const [cloudSaveNameDraft, setCloudSaveNameDraft] = useState('');
   const [cloudSaveError, setCloudSaveError] = useState('');
@@ -5010,13 +5012,106 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  async function handleSaveToCloud() {
+  async function executeConflictSaveOverwrite(match: RecipeView) {
     if (!requireOutputForSave()) return;
-    if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
-      await handleSaveAs();
-      return;
+    const filePath = match.source.path || 'Неизвестный файл';
+    const fileName = filePath.split(/[\\/]/).pop() || filePath;
+    setStatus(`Перезаписываем рецепт в ${fileName}...`);
+    setSaveStatus(t('values.pending'));
+    setIsSaveConflictModalOpen(false);
+    try {
+      const updated = await updateRecipe({
+        recipeUid: match.recipe_uid,
+        recipeType: recipe.recipe_type,
+        outputRaw,
+        matrix,
+        name: recipe.name,
+        bindingMode: recipeBindingMode,
+        removeTemplate: activeRemoveTemplate()
+      });
+      applyRecipe(updated.updatedRecipe, input);
+      setStatus(`Рецепт успешно перезаписан в ${fileName}`);
+      setSaveStatus(t('values.saved'));
+      setLastApiStatus(t('values.ok'));
+      if (canManageCloudFiles) {
+        void refreshCloudFiles();
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`Ошибка при перезаписи рецепта: ${message}`);
+      setSaveStatus(t('values.error'));
+      setLastApiStatus(t('values.error'));
+      setIsSaveConflictModalOpen(true);
     }
-    await handleSave();
+  }
+
+  async function executeConflictSaveAdditional(filePath: string) {
+    if (!requireOutputForSave()) return;
+    const fileName = filePath.split(/[\\/]/).pop() || filePath;
+    setStatus(`Добавляем рецепт как дополнительный в ${fileName}...`);
+    setSaveStatus(t('values.pending'));
+    setIsSaveConflictModalOpen(false);
+    try {
+      let uidToUse = recipe.recipe_uid;
+      let typeToUse = recipe.recipe_type;
+      let nameToUse = recipe.name;
+      if (recipe.recipe_uid === 'new-recipe') {
+        const created = await createRecipeTemplate({
+          templateType: recipe.recipe_type,
+          output: outputRaw,
+          grid: matrix.length,
+          bindingMode: recipeBindingMode
+        });
+        uidToUse = created.recipe_uid;
+        typeToUse = created.recipe_type;
+        nameToUse = created.name;
+      }
+      const response = await saveRecipeAs({
+        recipeUid: uidToUse,
+        recipeType: typeToUse,
+        outputRaw,
+        matrix,
+        name: nameToUse,
+        targetPath: fileName,
+        bindingMode: recipeBindingMode,
+        removeTemplate: activeRemoveTemplate()
+      });
+      applyRecipe(response.recipe, input);
+      setStatus(`Рецепт успешно добавлен в ${fileName}`);
+      setSaveStatus(t('values.saved'));
+      if (canManageCloudFiles) {
+        void refreshCloudFiles();
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`Ошибка при добавлении рецепта: ${message}`);
+      setSaveStatus(t('values.error'));
+      setIsSaveConflictModalOpen(true);
+    }
+  }
+
+  async function handleSaveToCloud() {
+    const validOutput = requireOutputForSave();
+    if (!validOutput) return;
+    setStatus('Поиск существующих рецептов...');
+    try {
+      const { matches } = await searchRecipesByOutput(validOutput);
+      if (matches.length > 0) {
+        setSaveConflictMatches(matches);
+        setIsSaveConflictModalOpen(true);
+        setStatus('Найдены существующие рецепты.');
+      } else {
+        await handleSaveAs();
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setStatus(`Не удалось выполнить поиск рецептов: ${message}`);
+      if (recipe.source.kind === 'generated' || recipe.recipe_uid === 'new-recipe') {
+        await handleSaveAs();
+      } else {
+        await handleSave();
+      }
+    }
   }
 
   async function handleSaveDraftTemplate() {
@@ -6554,6 +6649,88 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderSaveConflictModal() {
+    if (!isSaveConflictModalOpen) return null;
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={() => setIsSaveConflictModalOpen(false)}>
+        <div
+          className="modal save-conflict-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Выбор способа сохранения рецепта"
+          onClick={(event) => event.stopPropagation()}
+          style={{ maxWidth: '600px', width: '100%' }}
+        >
+          <div className="modal-header">
+            <div>
+              <h2>Сохранение рецепта</h2>
+              <span className="modal-subtitle">
+                Рецепт для предмета {outputRaw} уже существует в файлах проекта.
+              </span>
+            </div>
+            <button type="button" className="ghost-button" onClick={() => setIsSaveConflictModalOpen(false)}>Закрыть</button>
+          </div>
+          <div className="settings-modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+            <div className="conflict-files-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+              {saveConflictMatches.map((match) => {
+                const filePath = match.source.path || 'Неизвестный файл';
+                const fileName = filePath.split(/[\\/]/).pop() || filePath;
+                return (
+                  <div key={match.recipe_uid} className="conflict-file-item" style={{
+                    border: '1px solid var(--border-color, #3f3f46)',
+                    borderRadius: '6px',
+                    padding: '12px',
+                    background: 'var(--bg-secondary, #18181b)'
+                  }}>
+                    <div style={{ marginBottom: '12px', wordBreak: 'break-all' }}>
+                      <strong style={{ display: 'block', fontSize: '1.1em', marginBottom: '4px' }}>{fileName}</strong>
+                      <span style={{ fontSize: '0.85em', color: 'var(--text-muted, #a1a1aa)' }}>{filePath}</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="primary-button"
+                        onClick={() => void executeConflictSaveOverwrite(match)}
+                      >
+                        Перезаписать рецепт
+                      </button>
+                      <button
+                        type="button"
+                        className="secondary-button"
+                        onClick={() => void executeConflictSaveAdditional(filePath)}
+                      >
+                        Сохранить как дополнительный
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="inline-actions" style={{ borderTop: '1px solid var(--border-color, #3f3f46)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => {
+                  setIsSaveConflictModalOpen(false);
+                  openCloudSaveModal();
+                }}
+              >
+                Сохранить в отдельный файл
+              </button>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => setIsSaveConflictModalOpen(false)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function renderDraftCatalogIcon(raw: string) {
     const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
     if (modIconStyle) {
@@ -7533,6 +7710,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderCloudUploadConflictModal()}
       {renderLocalSaveModal()}
       {renderCloudSaveModal()}
+      {renderSaveConflictModal()}
 
       {isLayoutSettingsOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
