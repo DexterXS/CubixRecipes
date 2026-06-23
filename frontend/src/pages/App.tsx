@@ -1608,6 +1608,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
   const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
   const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>('none');
+  const [collapsedDraftGroups, setCollapsedDraftGroups] = useState<Record<string, boolean>>({});
   const [draftItemPage, setDraftItemPage] = useState(0);
   const [previewDraftTemplateId, setPreviewDraftTemplateId] = useState<string | null>(null);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
@@ -2297,8 +2298,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setCloudContextMenu(null);
     try {
       const payload = await downloadZsCloudFile(path);
-      downloadBlobFile(payload.filename, payload.blob);
-      setCloudStatus(`Файл скачан: ${payload.filename}`);
+      const expectedFilename = path.split(/[\\/]/).pop() ?? 'recipe.zs';
+      const finalFilename = payload.filename === 'download.zs' ? expectedFilename : payload.filename;
+      downloadBlobFile(finalFilename, payload.blob);
+      setCloudStatus(`Файл скачан: ${finalFilename}`);
     } catch (error) {
       setCloudStatus(error instanceof Error ? error.message : String(error));
     }
@@ -6946,52 +6949,94 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <button type="button" className="ghost-button icon-button" aria-label="draft-items-next-page" disabled={draftItemPage >= draftItemPageCount - 1} onClick={() => changeDraftItemPage(1)}>›</button>
           </div>
           <div className="draft-item-list" aria-label="draft-item-list">
-            {draftItemsPage.map((entry) => {
-              const raw = entry.raw;
-              const draftCount = entry.draftCount;
-              const availability = getRecipeAvailability(raw);
-              const selected = raw === selectedDraftItemRaw;
-              const icon = renderDraftCatalogIcon(raw);
-              const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
-              
-              let groupHeader: React.ReactNode = null;
-              if (draftItemGroupMode !== 'none') {
-                let entryGroupValue = '';
-                if (draftItemGroupMode === 'mod') entryGroupValue = entry.modid;
-                else if (draftItemGroupMode === 'author') entryGroupValue = [...entry.authors].join(', ') || 'Неизвестно';
-                else if (draftItemGroupMode === 'grid-size') entryGroupValue = [...entry.gridSizes].join(', ') || 'Неизвестно';
-                else if (draftItemGroupMode === 'date') entryGroupValue = new Date(entry.maxUpdatedAt).toLocaleDateString();
-
-                if (entryGroupValue !== currentGroupValue) {
-                  currentGroupValue = entryGroupValue;
-                  groupHeader = <div className="draft-group-header" key={`group-${currentGroupValue}`}>{currentGroupValue}</div>;
-                }
+            {(() => {
+              if (!draftItemsPage.length) {
+                return <div className="draft-empty-state">Нет сохранённых шаблонов.</div>;
               }
 
-              const itemNode = (
-                <button
-                  key={raw}
-                  type="button"
-                  className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
-                  aria-label={`draft-item-${raw}`}
-                  data-item-raw={raw}
-                  onMouseEnter={() => updateHoveredItemRaw(raw)}
-                  onFocus={() => updateHoveredItemRaw(raw)}
-                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onClick={() => setSelectedDraftItemRaw(raw)}
-                >
-                  <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
-                    {icon}
-                  </span>
-                  {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
-                  {renderItemTooltip(raw)}
-                </button>
-              );
+              // Build groups
+              const groups: Array<{ name: string; items: typeof draftItemsPage }> = [];
+              let currentGroupItems: typeof draftItemsPage = [];
+              let currentGroupName = '';
 
-              return groupHeader ? <>{groupHeader}{itemNode}</> : itemNode;
-            })}
-            {!draftItemsPage.length ? <div className="draft-empty-state">Нет сохранённых шаблонов.</div> : null}
+              draftItemsPage.forEach((entry) => {
+                let entryGroupValue = '';
+                if (draftItemGroupMode !== 'none') {
+                  if (draftItemGroupMode === 'mod') entryGroupValue = entry.modid;
+                  else if (draftItemGroupMode === 'author') entryGroupValue = [...entry.authors].join(', ') || 'Неизвестно';
+                  else if (draftItemGroupMode === 'grid-size') entryGroupValue = [...entry.gridSizes].join(', ') || 'Неизвестно';
+                  else if (draftItemGroupMode === 'date') entryGroupValue = new Date(entry.maxUpdatedAt).toLocaleDateString();
+                } else {
+                  entryGroupValue = 'Все предметы';
+                }
+
+                if (entryGroupValue !== currentGroupName) {
+                  if (currentGroupName !== '') {
+                    groups.push({ name: currentGroupName, items: currentGroupItems });
+                  }
+                  currentGroupName = entryGroupValue;
+                  currentGroupItems = [entry];
+                } else {
+                  currentGroupItems.push(entry);
+                }
+              });
+              
+              if (currentGroupItems.length > 0) {
+                groups.push({ name: currentGroupName, items: currentGroupItems });
+              }
+
+              return groups.map((group) => {
+                const isCollapsed = collapsedDraftGroups[group.name];
+                return (
+                  <div key={`group-${group.name}`} className="draft-item-group" style={{ width: '100%' }}>
+                    {draftItemGroupMode !== 'none' && (
+                      <button 
+                        type="button" 
+                        className="draft-group-header" 
+                        onClick={() => setCollapsedDraftGroups(curr => ({ ...curr, [group.name]: !isCollapsed }))}
+                        style={{ display: 'flex', width: '100%', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', fontSize: '13px', fontWeight: 'bold', color: 'var(--text-muted)' }}
+                      >
+                        <span style={{ marginRight: '6px', transform: isCollapsed ? 'rotate(-90deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>▼</span>
+                        {group.name}
+                      </button>
+                    )}
+                    {!isCollapsed && (
+                      <div className="draft-group-items" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', paddingTop: draftItemGroupMode !== 'none' ? '4px' : '0' }}>
+                        {group.items.map((entry) => {
+                          const raw = entry.raw;
+                          const draftCount = entry.draftCount;
+                          const availability = getRecipeAvailability(raw);
+                          const selected = raw === selectedDraftItemRaw;
+                          const icon = renderDraftCatalogIcon(raw);
+                          const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
+
+                          return (
+                            <button
+                              key={raw}
+                              type="button"
+                              className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
+                              aria-label={`draft-item-${raw}`}
+                              data-item-raw={raw}
+                              onMouseEnter={() => updateHoveredItemRaw(raw)}
+                              onFocus={() => updateHoveredItemRaw(raw)}
+                              onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                              onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                              onClick={() => setSelectedDraftItemRaw(raw)}
+                            >
+                              <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
+                                {icon}
+                              </span>
+                              {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
+                              {renderItemTooltip(raw)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
         </Panel>
       </div>
@@ -7877,7 +7922,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span>{recipe.recipe_type}</span>
                 </div>
                 <div className="settings-grid">
-                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={recipe.grid_w} onChange={(event) => applyRecipePatch({ grid_w: Number(event.target.value), grid_h: Number(event.target.value) })}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
+                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={recipe.grid_w} onChange={(event) => setGridSize(Number(event.target.value))}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
                   <label className="field-block"><span>Тип</span><select aria-label="settings-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}><option value="shaped">Форменный</option><option value="shapeless" disabled={recipe.grid_w >= 9}>Бесформенный</option></select></label>
                   <label className="field-block"><span>Позиция</span><select aria-label="settings-binding-mode" value={recipeBindingMode} disabled={recipe.recipe_type === 'ct_shapeless'} onChange={(event) => setRecipeBindingMode(event.target.value as RecipeBindingMode)}><option value="soft">Свободная</option><option value="strict">Точная</option></select></label>
                   <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
