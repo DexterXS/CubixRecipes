@@ -8,10 +8,10 @@ import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
-import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -146,7 +146,9 @@ type UploadedDraftRecipeMatch = {
   templateId?: string;
 };
 
-type DraftItemSortMode = 'name' | 'drafts-desc' | 'drafts-asc';
+type DraftItemSortMode = 'name' | 'drafts-desc' | 'drafts-asc' | 'date-desc' | 'date-asc';
+
+type DraftItemGroupMode = 'none' | 'mod' | 'author' | 'date' | 'grid-size';
 
 type DraftItemEntry = {
   raw: string;
@@ -154,6 +156,10 @@ type DraftItemEntry = {
   title: string;
   hasNbt: boolean;
   searchText: string;
+  modid: string;
+  maxUpdatedAt: number;
+  authors: Set<string>;
+  gridSizes: Set<string>;
 };
 
 type DraftTemplateContextMenuState = {
@@ -216,7 +222,10 @@ const LOCAL_DRAFT_MAX_HISTORY = 20;
 const LOCAL_DRAFT_MAX_UPLOADED_DRAFTS = 8;
 const LOCAL_DRAFT_MAX_UPLOADED_TEXT = 180_000;
 const NEI_FAVORITES_SAVE_DELAY_MS = 250;
-const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes:hotkey-debug-enabled:v1';
+const HOTKEY_DEBUG_EVENTS_STORAGE_KEY = 'cubixrecipes_hotkey_debug_events';
+const HOTKEY_DEBUG_ENABLED_STORAGE_KEY = 'cubixrecipes_hotkey_debug_enabled';
+const OREDICT_OVERRIDES_STORAGE_KEY = 'cubixrecipes_oredict_overrides';
+const OREDICT_ICON_PRIORITY_STORAGE_KEY = 'cubixrecipes_oredict_icon_priority';
 const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
 const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
 const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
@@ -290,7 +299,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'oreDictPriority' | 'recipe' | 'runtime' | 'logs' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -1598,6 +1607,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
   const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
+  const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>('none');
   const [draftItemPage, setDraftItemPage] = useState(0);
   const [previewDraftTemplateId, setPreviewDraftTemplateId] = useState<string | null>(null);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
@@ -1620,6 +1630,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [oreDictGroups, setOreDictGroups] = useState<Record<string, string[]>>({});
+  const [oreDictOverrides, setOreDictOverrides] = useState<Record<string, string | null>>(() => {
+    try {
+      const data = window.localStorage.getItem(OREDICT_OVERRIDES_STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [oreDictIconPriority, setOreDictIconPriority] = useState<Record<string, string>>(() => {
+    try {
+      const data = window.localStorage.getItem(OREDICT_ICON_PRIORITY_STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch {
+      return {};
+    }
+  });
   const [neiFavorites, setNeiFavorites] = useState<NeiFavoritesProfile>(defaultNeiFavoritesProfile);
   const [neiFavoritesStatus, setNeiFavoritesStatus] = useState('');
   const [newFavoriteTabName, setNewFavoriteTabName] = useState('');
@@ -1640,10 +1667,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemPanelCsvMessage, setItemPanelCsvMessage] = useState('');
   const [itemPanelJsonMessage, setItemPanelJsonMessage] = useState('');
   const [itemCatalogSummary, setItemCatalogSummary] = useState<Record<string, unknown> | null>(null);
-  const [modIconUploading, setModIconUploading] = useState(false);
+  const [oreDictUploading, setOreDictUploading] = useState(false);
+  const [oreDictMessage, setOreDictMessage] = useState('');
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
   const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
   const [itemPanelMerging, setItemPanelMerging] = useState(false);
+  const [modIconUploading, setModIconUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
   const [modIconArchiveAction, setModIconArchiveAction] = useState('');
   const [isWipeUpdateOpen, setIsWipeUpdateOpen] = useState(false);
@@ -2082,6 +2111,29 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
     } finally {
       setItemPanelJsonUploading(false);
+    }
+  }
+
+  async function handleOreDictFile(files: FileList | File[]) {
+    const file = Array.from(files)[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.txt')) {
+      setOreDictMessage('Только oredict.txt поддерживается.');
+      return;
+    }
+    setOreDictUploading(true);
+    setOreDictMessage(`Загружаю ${file.name}...`);
+    try {
+      const text = await file.text();
+      const payload = await uploadOreDictFile(text);
+      setOreDictMessage(`Успех: ${payload.groups} групп, ${payload.reverse_keys} предметов.`);
+      void getOreDictGroups().then(resp => {
+        if (resp.available) setOreDictGroups(resp.groups);
+      });
+    } catch (error) {
+      setOreDictMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setOreDictUploading(false);
     }
   }
 
@@ -2966,6 +3018,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [removeTemplateSelection]);
 
   useEffect(() => {
+    try {
+      window.localStorage.setItem(OREDICT_OVERRIDES_STORAGE_KEY, JSON.stringify(oreDictOverrides));
+    } catch {
+      // Ignored
+    }
+  }, [oreDictOverrides]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(OREDICT_ICON_PRIORITY_STORAGE_KEY, JSON.stringify(oreDictIconPriority));
+    } catch {
+      // Ignored
+    }
+  }, [oreDictIconPriority]);
+
+  useEffect(() => {
     let cancelled = false;
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
@@ -3588,11 +3656,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   const draftItemEntries = useMemo<DraftItemEntry[]>(() => {
-    const grouped = new Map<string, { raw: string; draftIds: Set<string> }>();
+    const grouped = new Map<string, { raw: string; draftIds: Set<string>; maxUpdatedAt: number; authors: Set<string>; gridSizes: Set<string> }>();
     recipeDraftTemplates.forEach((template) => {
       const raw = template.outputRaw;
-      const group = grouped.get(raw) ?? { raw, draftIds: new Set<string>() };
+      const group = grouped.get(raw) ?? { raw, draftIds: new Set<string>(), maxUpdatedAt: 0, authors: new Set<string>(), gridSizes: new Set<string>() };
       group.draftIds.add(template.id);
+      group.maxUpdatedAt = Math.max(group.maxUpdatedAt, template.updatedAt);
+      if (template.createdByEmail) group.authors.add(template.createdByEmail);
+      if (template.recipe) {
+        group.gridSizes.add(`${template.recipe.grid_w}x${template.recipe.grid_h}`);
+      }
       grouped.set(raw, group);
     });
 
@@ -3610,7 +3683,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           draftCount: entry.draftIds.size,
           title,
           hasNbt: rawHasNbtTag(entry.raw),
-          searchText: `${entry.raw} ${title} ${panelEntry?.displayEn ?? ''} ${panelEntry?.legacyId ?? ''}`.toLowerCase()
+          searchText: `${entry.raw} ${title} ${panelEntry?.displayEn ?? ''} ${panelEntry?.legacyId ?? ''}`.toLowerCase(),
+          modid: parsed?.key.split(':')[0] || 'unknown',
+          maxUpdatedAt: entry.maxUpdatedAt,
+          authors: entry.authors,
+          gridSizes: entry.gridSizes
         };
       })
       .filter((entry) => !query || entry.searchText.includes(query));
@@ -3621,6 +3698,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
       if (draftItemSortMode === 'drafts-asc') {
         return left.draftCount - right.draftCount || left.title.localeCompare(right.title);
+      }
+      if (draftItemSortMode === 'date-desc') {
+        return right.maxUpdatedAt - left.maxUpdatedAt || left.title.localeCompare(right.title);
+      }
+      if (draftItemSortMode === 'date-asc') {
+        return left.maxUpdatedAt - right.maxUpdatedAt || left.title.localeCompare(right.title);
       }
       return left.title.localeCompare(right.title);
     });
@@ -3648,7 +3731,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     setDraftItemPage(0);
-  }, [draftItemSearchQuery, draftItemSortMode]);
+  }, [draftItemSearchQuery, draftItemSortMode, draftItemGroupMode]);
 
   useEffect(() => {
     setDraftItemPage((current) => clamp(current, 0, draftItemPageCount - 1));
@@ -5694,7 +5777,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           >
             {neiItems.map((entry) => {
               const raw = itemPanelRaw(entry);
-              const insertRaw = applyItemCaseAlias(raw);
+              let insertRaw = applyItemCaseAlias(raw);
+              const overrideGroup = oreDictOverrides[raw];
+              if (overrideGroup) {
+                insertRaw = `<${overrideGroup}>`;
+              }
               const iconUrl = itemSearchIcons[raw];
               const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
               const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
@@ -5753,6 +5840,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
                   {renderItemTooltip(raw, entry)}
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
+                  {overrideGroup ? <span className="nei-oredict-dot" aria-hidden="true">⊕</span> : null}
                   {isFavorite ? <span className="nei-favorite-dot" aria-hidden="true">A</span> : null}
                 </button>
               );
@@ -5784,6 +5872,37 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <strong className={addedToTask ? 'is-yes' : 'is-no'}>{taskStatusText}</strong>
           </div>
         ) : null}
+        
+        {(() => {
+          const rawKey = parseItemRaw(raw)?.key.toLowerCase() ?? raw.toLowerCase();
+          const groups = oreDictGroups[rawKey] || [];
+          if (!groups.length) return null;
+          return (
+            <div className="context-menu-section" style={{ padding: '8px', background: 'var(--surface-sunken)', borderRadius: '4px', margin: '8px 0' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>OreDict группы:</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {groups.map(group => {
+                  const isActive = oreDictOverrides[raw] === group;
+                  return (
+                    <button 
+                      key={group}
+                      type="button" 
+                      className={isActive ? 'primary-button' : 'ghost-button'}
+                      style={{ textAlign: 'left', padding: '4px 8px', fontSize: '13px' }}
+                      onClick={() => {
+                        setOreDictOverrides(curr => ({ ...curr, [raw]: isActive ? null : group }));
+                        setNeiContextMenu(null);
+                      }}
+                    >
+                      {isActive ? '✓ ' : ''}&lt;ore:{group}&gt;
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+
         {canManageTasks ? <button type="button" onClick={() => handleNeiItemTaskPrefill(raw)}>Добавить в задачу</button> : null}
         {canManageTasks ? (
           <button
@@ -6224,7 +6343,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>5. Объединение и проверка</h3>
+                <h3>5. oredict.txt (опционально)</h3>
+                <span>Экспорт Forge Ore Dictionary, используется для замен &lt;ore:group&gt;.</span>
+              </div>
+              <label
+                className="file-drop-zone compact-drop-zone"
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  void handleOreDictFile(event.dataTransfer.files);
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".txt,text/plain"
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      void handleOreDictFile(event.target.files);
+                      event.currentTarget.value = '';
+                    }
+                  }}
+                />
+                <strong>Загрузить oredict.txt</strong>
+                <span>{oreDictUploading ? 'Загрузка...' : oreDictMessage || 'Ожидает файл oredict.txt.'}</span>
+              </label>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>6. Объединение и проверка</h3>
                 <span>После объединения NEI получает raw-варианты с .withTag(...), а редактор строит дерево NBT.</span>
               </div>
               <div className="kv-grid">
@@ -6739,32 +6885,59 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderDraftCatalogIcon(raw: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
+    let resolvedRaw = raw;
+    if (raw.startsWith('<ore:') && raw.endsWith('>')) {
+      const group = raw.slice(5, -1);
+      const items = oreDictGroups[group.toLowerCase()] || [];
+      if (items.length > 0) {
+        const priorityMod = oreDictIconPriority[group];
+        if (priorityMod) {
+          const matched = items.find(item => item.toLowerCase().includes(priorityMod.toLowerCase()));
+          if (matched) resolvedRaw = matched;
+          else resolvedRaw = items[0];
+        } else {
+          resolvedRaw = items[0];
+        }
+      }
+    }
+
+    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(resolvedRaw));
     if (modIconStyle) {
       return <span className="nei-atlas-icon" style={modIconStyle} aria-hidden="true" />;
     }
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
+    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, resolvedRaw, wildcardCycleTick);
     const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
-    const iconUrl = itemSearchIcons[raw];
+    const iconUrl = itemSearchIcons[resolvedRaw];
     if (atlasStyle) {
       return <span className="nei-atlas-icon" style={atlasStyle} aria-hidden="true" />;
     }
     if (iconUrl) {
-      return <img src={iconUrl} alt="" onError={() => setItemSearchIcons((current) => ({ ...current, [raw]: null }))} />;
+      return <img src={iconUrl} alt="" onError={() => setItemSearchIcons((current) => ({ ...current, [resolvedRaw]: null }))} />;
     }
     return null;
   }
 
   function renderDraftItemsPanel() {
+    let currentGroupValue = '';
+
     return (
       <div className="workspace-panel-shell panel-draft-items">
         <Panel title="Черновики" subtitle="Только предметы с сохранёнными шаблонами" className="draft-items-panel">
           <div className="draft-filter-grid">
             <input aria-label="draft-item-search" type="search" value={draftItemSearchQuery} onChange={(event) => setDraftItemSearchQuery(event.target.value)} placeholder="Поиск шаблона, mod:item или ID" />
             <select aria-label="draft-item-sort" value={draftItemSortMode} onChange={(event) => setDraftItemSortMode(event.target.value as DraftItemSortMode)}>
+              <option value="date-desc">Сначала новые</option>
+              <option value="date-asc">Сначала старые</option>
               <option value="drafts-desc">Сначала больше черновиков</option>
               <option value="drafts-asc">Сначала меньше черновиков</option>
               <option value="name">По названию</option>
+            </select>
+            <select aria-label="draft-item-group" value={draftItemGroupMode} onChange={(event) => setDraftItemGroupMode(event.target.value as DraftItemGroupMode)}>
+              <option value="none">Без группировки</option>
+              <option value="mod">По моду</option>
+              <option value="author">По персоналу</option>
+              <option value="date">По дате</option>
+              <option value="grid-size">По типу сетки</option>
             </select>
           </div>
           <div className="nei-pager" aria-label="draft-item-pagination">
@@ -6780,7 +6953,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               const selected = raw === selectedDraftItemRaw;
               const icon = renderDraftCatalogIcon(raw);
               const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
-              return (
+              
+              let groupHeader: React.ReactNode = null;
+              if (draftItemGroupMode !== 'none') {
+                let entryGroupValue = '';
+                if (draftItemGroupMode === 'mod') entryGroupValue = entry.modid;
+                else if (draftItemGroupMode === 'author') entryGroupValue = [...entry.authors].join(', ') || 'Неизвестно';
+                else if (draftItemGroupMode === 'grid-size') entryGroupValue = [...entry.gridSizes].join(', ') || 'Неизвестно';
+                else if (draftItemGroupMode === 'date') entryGroupValue = new Date(entry.maxUpdatedAt).toLocaleDateString();
+
+                if (entryGroupValue !== currentGroupValue) {
+                  currentGroupValue = entryGroupValue;
+                  groupHeader = <div className="draft-group-header" key={`group-${currentGroupValue}`}>{currentGroupValue}</div>;
+                }
+              }
+
+              const itemNode = (
                 <button
                   key={raw}
                   type="button"
@@ -6800,6 +6988,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   {renderItemTooltip(raw)}
                 </button>
               );
+
+              return groupHeader ? <>{groupHeader}{itemNode}</> : itemNode;
             })}
             {!draftItemsPage.length ? <div className="draft-empty-state">Нет сохранённых шаблонов.</div> : null}
           </div>
@@ -7174,7 +7364,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <h3>Не найдено в itempanel</h3>
             <span>{summary ? `${summary.missingItemKeys} ключей` : 'Список появится после генерации.'}</span>
           </div>
-          {report?.missingByMod.length ? (
+          {report?.missingByMod && report.missingByMod.length ? (
             <div className="missing-mod-list">
               {report.missingByMod.slice(0, 16).map((item) => (
                 <div key={item.modid} className="admin-file-row">
@@ -7184,7 +7374,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               ))}
             </div>
           ) : null}
-          {report?.missingItems.length ? (
+          {report?.missingItems && report.missingItems.length ? (
             <div className="admin-file-list case-alias-missing-list">
               {report.missingItems.slice(0, 80).map((item) => (
                 <div key={item.lower_key} className="admin-file-row">
@@ -7270,6 +7460,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         );
       case 'caseAliases':
         return renderItemCaseAliasPanel();
+      case 'oreDictPriority':
+        return renderOreDictPriorityPanel();
       case 'recipe':
         return (
           <div className="debug-section-grid">
@@ -7423,12 +7615,74 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function renderOreDictPriorityPanel() {
+    const groupsWithMultipleMods = Object.entries(oreDictGroups).filter(([, items]) => {
+      const mods = new Set(items.map(item => parseItemRaw(item)?.key.split(':')[0] || 'unknown'));
+      return mods.size > 1;
+    }).sort((a, b) => a[0].localeCompare(b[0]));
+
+    return (
+      <div className="workspace-layout workspace-layout-admin">
+        <div className="workspace-column workspace-left">
+          <div className="workspace-panel-shell panel-admin-mod-icons">
+            <Panel title="Приоритет модов OreDict" subtitle="Выбор мода по умолчанию для отображения иконки группы">
+              <section className="settings-section">
+                <div className="settings-section-title">
+                  <h3>Группы с несколькими вариантами</h3>
+                  <span>Настройка сохраняется локально в браузере.</span>
+                </div>
+                {groupsWithMultipleMods.length === 0 ? (
+                  <div className="inline-hint">Нет групп с предметами из разных модов (или словарь не загружен).</div>
+                ) : (
+                  <div className="case-alias-table-wrap">
+                    <table className="case-alias-table">
+                      <thead>
+                        <tr>
+                          <th>Группа</th>
+                          <th>Доступные моды</th>
+                          <th>Приоритет</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {groupsWithMultipleMods.map(([group, items]) => {
+                          const mods = Array.from(new Set(items.map(item => parseItemRaw(item)?.key.split(':')[0] || 'unknown')));
+                          const currentPriority = oreDictIconPriority[group] || '';
+                          return (
+                            <tr key={group}>
+                              <td><code>ore:{group}</code></td>
+                              <td>{mods.join(', ')}</td>
+                              <td>
+                                <select 
+                                  value={currentPriority}
+                                  onChange={(e) => setOreDictIconPriority(curr => ({ ...curr, [group]: e.target.value }))}
+                                  style={{ width: '100%', padding: '4px', background: 'var(--surface-sunken)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '4px' }}
+                                >
+                                  <option value="">(первый попавшийся)</option>
+                                  {mods.map(mod => <option key={mod} value={mod}>{mod}</option>)}
+                                </select>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </section>
+            </Panel>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function renderTechnicalWorkspace() {
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
+      { id: 'oreDictPriority', label: 'OreDict иконки', description: 'Приоритет модов', visible: canManageModIcons },
       { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: canUseDebug },
       { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: canUseDebug },
       { id: 'recipe', label: 'Текущий рецепт', description: 'Сетка, output, история', visible: canUseDebug },
@@ -7623,8 +7877,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span>{recipe.recipe_type}</span>
                 </div>
                 <div className="settings-grid">
-                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={gridSize} onChange={(event) => setGridSize(Number(event.target.value))}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
-                  <label className="field-block"><span>Тип</span><select aria-label="settings-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}><option value="shaped">Форменный</option><option value="shapeless" disabled={gridSize === 9}>Бесформенный</option></select></label>
+                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={recipe.grid_w} onChange={(event) => applyRecipePatch({ grid_w: Number(event.target.value), grid_h: Number(event.target.value) })}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
+                  <label className="field-block"><span>Тип</span><select aria-label="settings-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}><option value="shaped">Форменный</option><option value="shapeless" disabled={recipe.grid_w >= 9}>Бесформенный</option></select></label>
                   <label className="field-block"><span>Позиция</span><select aria-label="settings-binding-mode" value={recipeBindingMode} disabled={recipe.recipe_type === 'ct_shapeless'} onChange={(event) => setRecipeBindingMode(event.target.value as RecipeBindingMode)}><option value="soft">Свободная</option><option value="strict">Точная</option></select></label>
                   <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
                 </div>
