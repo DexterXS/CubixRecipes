@@ -114,6 +114,12 @@ export interface ItemCatalogEntry {
   has_icon: boolean;
   icon_url?: string | null;
   sources: string[];
+  ore_groups?: string[];
+}
+
+export interface OreDictGroupsResponse {
+  groups: Record<string, string[]>;
+  available: boolean;
 }
 
 export interface ItemCatalogResponse {

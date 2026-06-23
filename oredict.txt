@@ -1,0 +1,2895 @@
+Ore entries for <ore:logWood> :
+    <minecraft:log:*>
+    <minecraft:log2:*>
+    <BiomesOPlenty:logs1:*>
+    <BiomesOPlenty:logs2:*>
+    <BiomesOPlenty:logs3:*>
+    <BiomesOPlenty:logs4:*>
+    <Forestry:logs:*>
+    <Forestry:logsFireproof:*>
+    <ExtraTrees:log>.withTag({meta: 0})
+    <ExtraTrees:log:1>.withTag({meta: 1})
+    <ExtraTrees:log:2>.withTag({meta: 2})
+    <ExtraTrees:log:3>.withTag({meta: 3})
+    <ExtraTrees:log:4>.withTag({meta: 4})
+    <ExtraTrees:log:5>.withTag({meta: 5})
+    <ExtraTrees:log:6>.withTag({meta: 6})
+    <ExtraTrees:log:7>.withTag({meta: 7})
+    <ExtraTrees:log:8>.withTag({meta: 8})
+    <ExtraTrees:log:9>.withTag({meta: 9})
+    <ExtraTrees:log:10>.withTag({meta: 10})
+    <ExtraTrees:log:11>.withTag({meta: 11})
+    <ExtraTrees:log:12>.withTag({meta: 12})
+    <ExtraTrees:log:13>.withTag({meta: 13})
+    <ExtraTrees:log:14>.withTag({meta: 14})
+    <ExtraTrees:log:15>.withTag({meta: 15})
+    <ExtraTrees:log:16>.withTag({meta: 16})
+    <ExtraTrees:log:17>.withTag({meta: 17})
+    <ExtraTrees:log:18>.withTag({meta: 18})
+    <ExtraTrees:log:19>.withTag({meta: 19})
+    <ExtraTrees:log:20>.withTag({meta: 20})
+    <ExtraTrees:log:21>.withTag({meta: 21})
+    <ExtraTrees:log:22>.withTag({meta: 22})
+    <ExtraTrees:log:23>.withTag({meta: 23})
+    <ExtraTrees:log:24>.withTag({meta: 24})
+    <ExtraTrees:log:25>.withTag({meta: 25})
+    <ExtraTrees:log:26>.withTag({meta: 26})
+    <ExtraTrees:log:27>.withTag({meta: 27})
+    <ExtraTrees:log:28>.withTag({meta: 28})
+    <ExtraTrees:log:29>.withTag({meta: 29})
+    <ExtraTrees:log:30>.withTag({meta: 30})
+    <ExtraTrees:log:31>.withTag({meta: 31})
+    <ExtraTrees:log:32>.withTag({meta: 32})
+    <ExtraTrees:log:33>.withTag({meta: 33})
+    <ExtraTrees:log:34>.withTag({meta: 34})
+    <ExtraTrees:log:35>.withTag({meta: 35})
+    <ExtraTrees:log:36>.withTag({meta: 36})
+    <ExtraTrees:log:37>.withTag({meta: 37})
+    <ExtraTrees:log:38>.withTag({meta: 38})
+    <ExtraTrees:log:39>.withTag({meta: 39})
+    <netherlicious:Stem:*>
+    <netherlicious:FullWood:*>
+    <netherlicious:Stem2:*>
+Ore entries for <ore:plankWood> :
+    <minecraft:planks:*>
+    <BiomesOPlenty:planks:*>
+    <Forestry:planks:*>
+    <Forestry:planksFireproof:*>
+    <ExtraTrees:planks>.withTag({meta: 0})
+    <ExtraTrees:planks:1>.withTag({meta: 1})
+    <ExtraTrees:planks:2>.withTag({meta: 2})
+    <ExtraTrees:planks:3>.withTag({meta: 3})
+    <ExtraTrees:planks:4>.withTag({meta: 4})
+    <ExtraTrees:planks:5>.withTag({meta: 5})
+    <ExtraTrees:planks:6>.withTag({meta: 6})
+    <ExtraTrees:planks:7>.withTag({meta: 7})
+    <ExtraTrees:planks:8>.withTag({meta: 8})
+    <ExtraTrees:planks:9>.withTag({meta: 9})
+    <ExtraTrees:planks:10>.withTag({meta: 10})
+    <ExtraTrees:planks:11>.withTag({meta: 11})
+    <ExtraTrees:planks:12>.withTag({meta: 12})
+    <ExtraTrees:planks:13>.withTag({meta: 13})
+    <ExtraTrees:planks:14>.withTag({meta: 14})
+    <ExtraTrees:planks:15>.withTag({meta: 15})
+    <ExtraTrees:planks:16>.withTag({meta: 16})
+    <ExtraTrees:planks:17>.withTag({meta: 17})
+    <ExtraTrees:planks:18>.withTag({meta: 18})
+    <ExtraTrees:planks:19>.withTag({meta: 19})
+    <ExtraTrees:planks:20>.withTag({meta: 20})
+    <ExtraTrees:planks:21>.withTag({meta: 21})
+    <ExtraTrees:planks:22>.withTag({meta: 22})
+    <ExtraTrees:planks:23>.withTag({meta: 23})
+    <ExtraTrees:planks:24>.withTag({meta: 24})
+    <ExtraTrees:planks:25>.withTag({meta: 25})
+    <ExtraTrees:planks:26>.withTag({meta: 26})
+    <ExtraTrees:planks:27>.withTag({meta: 27})
+    <ExtraTrees:planks:28>.withTag({meta: 28})
+    <ExtraTrees:planks:29>.withTag({meta: 29})
+    <ExtraTrees:planks:30>.withTag({meta: 30})
+    <ExtraTrees:planks:31>.withTag({meta: 31})
+    <ExtraTrees:planks:32>.withTag({meta: 32})
+    <ExtraTrees:planks:33>.withTag({meta: 33})
+    <ExtraTrees:planks:34>.withTag({meta: 34})
+    <ExtraUtilities:colorWoodPlanks>
+    <ExtraUtilities:colorWoodPlanks:1>
+    <ExtraUtilities:colorWoodPlanks:2>
+    <ExtraUtilities:colorWoodPlanks:3>
+    <ExtraUtilities:colorWoodPlanks:4>
+    <ExtraUtilities:colorWoodPlanks:5>
+    <ExtraUtilities:colorWoodPlanks:6>
+    <ExtraUtilities:colorWoodPlanks:7>
+    <ExtraUtilities:colorWoodPlanks:8>
+    <ExtraUtilities:colorWoodPlanks:9>
+    <ExtraUtilities:colorWoodPlanks:10>
+    <ExtraUtilities:colorWoodPlanks:11>
+    <ExtraUtilities:colorWoodPlanks:12>
+    <ExtraUtilities:colorWoodPlanks:13>
+    <ExtraUtilities:colorWoodPlanks:14>
+    <ExtraUtilities:colorWoodPlanks:15>
+    <netherlicious:Planks:*>
+Ore entries for <ore:slabWood> :
+    <minecraft:wooden_slab:*>
+    <BiomesOPlenty:woodenSingleSlab1:*>
+    <BiomesOPlenty:woodenSingleSlab2:*>
+    <Forestry:slabs:*>
+    <Forestry:slabsFireproof:*>
+Ore entries for <ore:stairWood> :
+    <minecraft:oak_stairs>
+    <minecraft:spruce_stairs>
+    <minecraft:birch_stairs>
+    <minecraft:jungle_stairs>
+    <minecraft:acacia_stairs>
+    <minecraft:dark_oak_stairs>
+    <BiomesOPlenty:redwoodStairs>
+    <BiomesOPlenty:willowStairs>
+    <BiomesOPlenty:sacredoakStairs>
+    <BiomesOPlenty:firStairs>
+    <BiomesOPlenty:cherryStairs>
+    <BiomesOPlenty:darkStairs>
+    <BiomesOPlenty:magicStairs>
+    <BiomesOPlenty:palmStairs>
+    <BiomesOPlenty:mangroveStairs>
+    <BiomesOPlenty:etherealStairs>
+    <BiomesOPlenty:pineStairs>
+    <BiomesOPlenty:hellBarkStairs>
+    <BiomesOPlenty:jacarandaStairs>
+    <BiomesOPlenty:mahoganyStairs>
+    <Forestry:stairs:*>
+    <Forestry:stairsFireproof:*>
+    <netherlicious:CrimsonStairs>
+    <netherlicious:WarpedStairs>
+    <netherlicious:FoxfireStairs>
+Ore entries for <ore:stickWood> :
+    <minecraft:stick>
+    <BiomesOPlenty:bamboo>
+    <BiomesOPlenty:plants:8>
+Ore entries for <ore:treeSapling> :
+    <minecraft:sapling:*>
+    <IC2:blockRubSapling:*>
+    <BiomesOPlenty:saplings:*>
+    <BiomesOPlenty:colorizedSaplings:*>
+    <Forestry:sapling:*>
+    <Forestry:saplingGE:*>
+Ore entries for <ore:treeLeaves> :
+    <minecraft:leaves:*>
+    <minecraft:leaves2:*>
+    <IC2:blockRubLeaves:*>
+    <BiomesOPlenty:colorizedLeaves1:*>
+    <BiomesOPlenty:colorizedLeaves2:*>
+    <BiomesOPlenty:leaves1:*>
+    <BiomesOPlenty:leaves2:*>
+    <BiomesOPlenty:leaves3:*>
+    <BiomesOPlenty:leaves4:*>
+    <BiomesOPlenty:appleLeaves:*>
+    <BiomesOPlenty:persimmonLeaves:*>
+    <Forestry:leaves:*>
+Ore entries for <ore:oreGold> :
+    <minecraft:gold_ore>
+    <TConstruct:GravelOre:1>
+    <netherlicious:NetherGoldOre>
+Ore entries for <ore:oreIron> :
+    <minecraft:iron_ore>
+    <TConstruct:GravelOre>
+    <netherlicious:NetherIronOre>
+Ore entries for <ore:oreLapis> :
+    <minecraft:lapis_ore>
+Ore entries for <ore:oreDiamond> :
+    <minecraft:diamond_ore>
+Ore entries for <ore:oreRedstone> :
+    <minecraft:redstone_ore>
+Ore entries for <ore:oreEmerald> :
+    <minecraft:emerald_ore>
+Ore entries for <ore:oreQuartz> :
+    <minecraft:quartz_ore>
+Ore entries for <ore:oreCoal> :
+    <minecraft:coal_ore>
+Ore entries for <ore:blockGold> :
+    <minecraft:gold_block>
+Ore entries for <ore:blockIron> :
+    <minecraft:iron_block>
+Ore entries for <ore:blockLapis> :
+    <minecraft:lapis_block>
+    <ExtraUtilities:color_blockLapis>
+    <ExtraUtilities:color_blockLapis:1>
+    <ExtraUtilities:color_blockLapis:2>
+    <ExtraUtilities:color_blockLapis:3>
+    <ExtraUtilities:color_blockLapis:4>
+    <ExtraUtilities:color_blockLapis:5>
+    <ExtraUtilities:color_blockLapis:6>
+    <ExtraUtilities:color_blockLapis:7>
+    <ExtraUtilities:color_blockLapis:8>
+    <ExtraUtilities:color_blockLapis:9>
+    <ExtraUtilities:color_blockLapis:10>
+    <ExtraUtilities:color_blockLapis:11>
+    <ExtraUtilities:color_blockLapis:12>
+    <ExtraUtilities:color_blockLapis:13>
+    <ExtraUtilities:color_blockLapis:14>
+    <ExtraUtilities:color_blockLapis:15>
+Ore entries for <ore:blockDiamond> :
+    <minecraft:diamond_block>
+Ore entries for <ore:blockRedstone> :
+    <minecraft:redstone_block>
+    <ExtraUtilities:color_blockRedstone>
+    <ExtraUtilities:color_blockRedstone:1>
+    <ExtraUtilities:color_blockRedstone:2>
+    <ExtraUtilities:color_blockRedstone:3>
+    <ExtraUtilities:color_blockRedstone:4>
+    <ExtraUtilities:color_blockRedstone:5>
+    <ExtraUtilities:color_blockRedstone:6>
+    <ExtraUtilities:color_blockRedstone:7>
+    <ExtraUtilities:color_blockRedstone:8>
+    <ExtraUtilities:color_blockRedstone:9>
+    <ExtraUtilities:color_blockRedstone:10>
+    <ExtraUtilities:color_blockRedstone:11>
+    <ExtraUtilities:color_blockRedstone:12>
+    <ExtraUtilities:color_blockRedstone:13>
+    <ExtraUtilities:color_blockRedstone:14>
+    <ExtraUtilities:color_blockRedstone:15>
+Ore entries for <ore:blockEmerald> :
+    <minecraft:emerald_block>
+Ore entries for <ore:blockQuartz> :
+    <minecraft:quartz_block>
+    <netherlicious:QuartzBricks:*>
+    <netherlicious:QuartzPillar:*>
+Ore entries for <ore:blockCoal> :
+    <minecraft:coal_block>
+    <ExtraUtilities:color_blockCoal>
+    <ExtraUtilities:color_blockCoal:1>
+    <ExtraUtilities:color_blockCoal:2>
+    <ExtraUtilities:color_blockCoal:3>
+    <ExtraUtilities:color_blockCoal:4>
+    <ExtraUtilities:color_blockCoal:5>
+    <ExtraUtilities:color_blockCoal:6>
+    <ExtraUtilities:color_blockCoal:7>
+    <ExtraUtilities:color_blockCoal:8>
+    <ExtraUtilities:color_blockCoal:9>
+    <ExtraUtilities:color_blockCoal:10>
+    <ExtraUtilities:color_blockCoal:11>
+    <ExtraUtilities:color_blockCoal:12>
+    <ExtraUtilities:color_blockCoal:13>
+    <ExtraUtilities:color_blockCoal:14>
+    <ExtraUtilities:color_blockCoal:15>
+Ore entries for <ore:blockGlassColorless> :
+    <minecraft:glass>
+Ore entries for <ore:blockGlass> :
+    <minecraft:glass>
+    <minecraft:stained_glass:*>
+    <ExtraUtilities:decorativeBlock2>
+    <ExtraUtilities:decorativeBlock2:1>
+    <ExtraUtilities:decorativeBlock2:2>
+    <ExtraUtilities:decorativeBlock2:3>
+    <ExtraUtilities:decorativeBlock2:6>
+    <ExtraUtilities:decorativeBlock2:9>
+    <TConstruct:GlassBlock>
+    <EnderIO:blockFusedQuartz:1>
+Ore entries for <ore:paneGlassColorless> :
+    <minecraft:glass_pane>
+Ore entries for <ore:paneGlass> :
+    <minecraft:glass_pane>
+    <minecraft:stained_glass_pane:*>
+Ore entries for <ore:ingotIron> :
+    <minecraft:iron_ingot>
+Ore entries for <ore:ingotGold> :
+    <minecraft:gold_ingot>
+Ore entries for <ore:ingotBrick> :
+    <minecraft:brick>
+Ore entries for <ore:ingotBrickNether> :
+    <minecraft:netherbrick>
+Ore entries for <ore:nuggetGold> :
+    <minecraft:gold_nugget>
+Ore entries for <ore:gemDiamond> :
+    <minecraft:diamond>
+    <IC2:itemPartIndustrialDiamond>
+Ore entries for <ore:gemEmerald> :
+    <minecraft:emerald>
+Ore entries for <ore:gemQuartz> :
+    <minecraft:quartz>
+    <netherlicious:VoidQuartzItem>
+Ore entries for <ore:dustRedstone> :
+    <minecraft:redstone>
+Ore entries for <ore:dustGlowstone> :
+    <minecraft:glowstone_dust>
+Ore entries for <ore:gemLapis> :
+    <minecraft:dye:4>
+Ore entries for <ore:slimeball> :
+    <minecraft:slime_ball>
+    <TConstruct:strangeFood>
+    <TConstruct:strangeFood:1>
+    <TConstruct:materials:36>
+Ore entries for <ore:glowstone> :
+    <minecraft:glowstone>
+    <ExtraUtilities:color_lightgem>
+    <ExtraUtilities:color_lightgem:1>
+    <ExtraUtilities:color_lightgem:2>
+    <ExtraUtilities:color_lightgem:3>
+    <ExtraUtilities:color_lightgem:4>
+    <ExtraUtilities:color_lightgem:5>
+    <ExtraUtilities:color_lightgem:6>
+    <ExtraUtilities:color_lightgem:7>
+    <ExtraUtilities:color_lightgem:8>
+    <ExtraUtilities:color_lightgem:9>
+    <ExtraUtilities:color_lightgem:10>
+    <ExtraUtilities:color_lightgem:11>
+    <ExtraUtilities:color_lightgem:12>
+    <ExtraUtilities:color_lightgem:13>
+    <ExtraUtilities:color_lightgem:14>
+    <ExtraUtilities:color_lightgem:15>
+Ore entries for <ore:cropWheat> :
+    <minecraft:wheat>
+Ore entries for <ore:cropPotato> :
+    <minecraft:potato>
+Ore entries for <ore:cropCarrot> :
+    <minecraft:carrot>
+Ore entries for <ore:stone> :
+    <minecraft:stone>
+    <ExtraUtilities:color_stone>
+    <ExtraUtilities:color_stone:1>
+    <ExtraUtilities:color_stone:2>
+    <ExtraUtilities:color_stone:3>
+    <ExtraUtilities:color_stone:4>
+    <ExtraUtilities:color_stone:5>
+    <ExtraUtilities:color_stone:6>
+    <ExtraUtilities:color_stone:7>
+    <ExtraUtilities:color_stone:8>
+    <ExtraUtilities:color_stone:9>
+    <ExtraUtilities:color_stone:10>
+    <ExtraUtilities:color_stone:11>
+    <ExtraUtilities:color_stone:12>
+    <ExtraUtilities:color_stone:13>
+    <ExtraUtilities:color_stone:14>
+    <ExtraUtilities:color_stone:15>
+Ore entries for <ore:cobblestone> :
+    <minecraft:cobblestone>
+    <ExtraUtilities:color_stonebrick>
+    <ExtraUtilities:color_stonebrick:1>
+    <ExtraUtilities:color_stonebrick:2>
+    <ExtraUtilities:color_stonebrick:3>
+    <ExtraUtilities:color_stonebrick:4>
+    <ExtraUtilities:color_stonebrick:5>
+    <ExtraUtilities:color_stonebrick:6>
+    <ExtraUtilities:color_stonebrick:7>
+    <ExtraUtilities:color_stonebrick:8>
+    <ExtraUtilities:color_stonebrick:9>
+    <ExtraUtilities:color_stonebrick:10>
+    <ExtraUtilities:color_stonebrick:11>
+    <ExtraUtilities:color_stonebrick:12>
+    <ExtraUtilities:color_stonebrick:13>
+    <ExtraUtilities:color_stonebrick:14>
+    <ExtraUtilities:color_stonebrick:15>
+    <netherlicious:Blackstone>
+Ore entries for <ore:sandstone> :
+    <minecraft:sandstone:*>
+Ore entries for <ore:sand> :
+    <minecraft:sand:*>
+    <minecraft:sand>
+Ore entries for <ore:dye> :
+    <minecraft:dye:*>
+Ore entries for <ore:record> :
+    <minecraft:record_13>
+    <minecraft:record_cat>
+    <minecraft:record_blocks>
+    <minecraft:record_chirp>
+    <minecraft:record_far>
+    <minecraft:record_mall>
+    <minecraft:record_mellohi>
+    <minecraft:record_stal>
+    <minecraft:record_strad>
+    <minecraft:record_ward>
+    <minecraft:record_11>
+    <minecraft:record_wait>
+    <netherlicious:Pigstep>
+    <netherlicious:Rubedo>
+    <netherlicious:Chrisopoeia>
+    <netherlicious:SoBelow>
+    <netherlicious:InfiniteAmethyst>
+Ore entries for <ore:dyeBlack> :
+    <minecraft:dye>
+    <BiomesOPlenty:misc:9>
+    <ThermalFoundation:material:2>
+    <ThermalFoundation:material:3>
+    <ExtraBees:misc:24>
+    <netherlicious:dye>
+    <gendustry:HoneyDrop:10>
+Ore entries for <ore:blockGlassBlack> :
+    <minecraft:stained_glass:15>
+Ore entries for <ore:paneGlassBlack> :
+    <minecraft:stained_glass_pane:15>
+Ore entries for <ore:dyeRed> :
+    <minecraft:dye:1>
+    <ExtraBees:misc:19>
+    <gendustry:HoneyDrop:11>
+Ore entries for <ore:blockGlassRed> :
+    <minecraft:stained_glass:14>
+Ore entries for <ore:paneGlassRed> :
+    <minecraft:stained_glass_pane:14>
+Ore entries for <ore:dyeGreen> :
+    <minecraft:dye:2>
+    <BiomesOPlenty:misc:7>
+    <ExtraBees:misc:22>
+    <gendustry:HoneyDrop:12>
+Ore entries for <ore:blockGlassGreen> :
+    <minecraft:stained_glass:13>
+Ore entries for <ore:paneGlassGreen> :
+    <minecraft:stained_glass_pane:13>
+Ore entries for <ore:dyeBrown> :
+    <minecraft:dye:3>
+    <BiomesOPlenty:misc:6>
+    <ExtraBees:misc:25>
+    <gendustry:HoneyDrop:13>
+Ore entries for <ore:blockGlassBrown> :
+    <minecraft:stained_glass:12>
+Ore entries for <ore:paneGlassBrown> :
+    <minecraft:stained_glass_pane:12>
+Ore entries for <ore:dyeBlue> :
+    <minecraft:dye:4>
+    <BiomesOPlenty:misc:5>
+    <ExtraBees:misc:21>
+    <netherlicious:dye:1>
+    <gendustry:HoneyDrop:14>
+Ore entries for <ore:blockGlassBlue> :
+    <minecraft:stained_glass:11>
+Ore entries for <ore:paneGlassBlue> :
+    <minecraft:stained_glass_pane:11>
+Ore entries for <ore:dyePurple> :
+    <minecraft:dye:5>
+    <gendustry:HoneyDrop:15>
+Ore entries for <ore:blockGlassPurple> :
+    <minecraft:stained_glass:10>
+Ore entries for <ore:paneGlassPurple> :
+    <minecraft:stained_glass_pane:10>
+Ore entries for <ore:dyeCyan> :
+    <minecraft:dye:6>
+    <gendustry:HoneyDrop:16>
+Ore entries for <ore:blockGlassCyan> :
+    <minecraft:stained_glass:9>
+Ore entries for <ore:paneGlassCyan> :
+    <minecraft:stained_glass_pane:9>
+Ore entries for <ore:dyeLightGray> :
+    <minecraft:dye:7>
+    <gendustry:HoneyDrop:17>
+Ore entries for <ore:blockGlassLightGray> :
+    <minecraft:stained_glass:8>
+Ore entries for <ore:paneGlassLightGray> :
+    <minecraft:stained_glass_pane:8>
+Ore entries for <ore:dyeGray> :
+    <minecraft:dye:8>
+    <gendustry:HoneyDrop:18>
+Ore entries for <ore:blockGlassGray> :
+    <minecraft:stained_glass:7>
+Ore entries for <ore:paneGlassGray> :
+    <minecraft:stained_glass_pane:7>
+Ore entries for <ore:dyePink> :
+    <minecraft:dye:9>
+    <gendustry:HoneyDrop:19>
+Ore entries for <ore:blockGlassPink> :
+    <minecraft:stained_glass:6>
+Ore entries for <ore:paneGlassPink> :
+    <minecraft:stained_glass_pane:6>
+Ore entries for <ore:dyeLime> :
+    <minecraft:dye:10>
+    <gendustry:HoneyDrop:20>
+Ore entries for <ore:blockGlassLime> :
+    <minecraft:stained_glass:5>
+Ore entries for <ore:paneGlassLime> :
+    <minecraft:stained_glass_pane:5>
+Ore entries for <ore:dyeYellow> :
+    <minecraft:dye:11>
+    <ThermalFoundation:material:16>
+    <ExtraBees:misc:20>
+    <gendustry:HoneyDrop:21>
+Ore entries for <ore:blockGlassYellow> :
+    <minecraft:stained_glass:4>
+Ore entries for <ore:paneGlassYellow> :
+    <minecraft:stained_glass_pane:4>
+Ore entries for <ore:dyeLightBlue> :
+    <minecraft:dye:12>
+    <gendustry:HoneyDrop:22>
+Ore entries for <ore:blockGlassLightBlue> :
+    <minecraft:stained_glass:3>
+Ore entries for <ore:paneGlassLightBlue> :
+    <minecraft:stained_glass_pane:3>
+Ore entries for <ore:dyeMagenta> :
+    <minecraft:dye:13>
+    <gendustry:HoneyDrop:23>
+Ore entries for <ore:blockGlassMagenta> :
+    <minecraft:stained_glass:2>
+Ore entries for <ore:paneGlassMagenta> :
+    <minecraft:stained_glass_pane:2>
+Ore entries for <ore:dyeOrange> :
+    <minecraft:dye:14>
+    <gendustry:HoneyDrop:24>
+Ore entries for <ore:blockGlassOrange> :
+    <minecraft:stained_glass:1>
+Ore entries for <ore:paneGlassOrange> :
+    <minecraft:stained_glass_pane:1>
+Ore entries for <ore:dyeWhite> :
+    <minecraft:dye:15>
+    <BiomesOPlenty:misc:8>
+    <ExtraBees:misc:23>
+    <netherlicious:dye:2>
+    <gendustry:HoneyDrop:25>
+Ore entries for <ore:blockGlassWhite> :
+    <minecraft:stained_glass>
+Ore entries for <ore:paneGlassWhite> :
+    <minecraft:stained_glass_pane>
+Ore entries for <ore:nuggetIron> :
+    <ThermalFoundation:material:8>
+    <TConstruct:materials:19>
+    <ImmersiveEngineering:metal:21>
+    <netherlicious:Nugget>
+Ore entries for <ore:dustLapis> :
+    <IC2:itemDust:12>
+Ore entries for <ore:oreCopper> :
+    <ThermalFoundation:Ore>
+    <IC2:blockOreCopper>
+    <TConstruct:SearedBrick:3>
+    <TConstruct:GravelOre:2>
+    <Forestry:resources:1>
+    <ImmersiveEngineering:ore>
+Ore entries for <ore:oreTin> :
+    <ThermalFoundation:Ore:1>
+    <IC2:blockOreTin>
+    <TConstruct:SearedBrick:4>
+    <TConstruct:GravelOre:3>
+    <Forestry:resources:2>
+Ore entries for <ore:oreUranium> :
+    <IC2:blockOreUran>
+Ore entries for <ore:oreLead> :
+    <ThermalFoundation:Ore:3>
+    <IC2:blockOreLead>
+    <ImmersiveEngineering:ore:2>
+Ore entries for <ore:woodRubber> :
+    <IC2:blockRubWood:*>
+Ore entries for <ore:dustStone> :
+    <IC2:itemDust:9>
+Ore entries for <ore:dustBronze> :
+    <ThermalFoundation:material:41>
+    <IC2:itemDust>
+Ore entries for <ore:dustClay> :
+    <IC2:itemDust:1>
+Ore entries for <ore:dustCoal> :
+    <IC2:itemDust:2>
+    <ThermalFoundation:material:2>
+    <EnderIO:itemPowderIngot>
+Ore entries for <ore:dustCopper> :
+    <ThermalFoundation:material:32>
+    <IC2:itemDust:3>
+    <ImmersiveEngineering:metal:10>
+    <EnderIO:itemPowderIngot:3>
+Ore entries for <ore:dustGold> :
+    <ThermalFoundation:material:1>
+    <IC2:itemDust:4>
+    <ImmersiveEngineering:metal:9>
+    <EnderIO:itemPowderIngot:2>
+Ore entries for <ore:dustIron> :
+    <ThermalFoundation:material>
+    <IC2:itemDust:5>
+    <ImmersiveEngineering:metal:8>
+    <EnderIO:itemPowderIngot:1>
+Ore entries for <ore:dustSilver> :
+    <ThermalFoundation:material:34>
+    <IC2:itemDust:6>
+    <ImmersiveEngineering:metal:13>
+Ore entries for <ore:dustTin> :
+    <ThermalFoundation:material:33>
+    <IC2:itemDust:7>
+    <EnderIO:itemPowderIngot:4>
+Ore entries for <ore:dustLead> :
+    <ThermalFoundation:material:35>
+    <IC2:itemDust:10>
+    <ImmersiveEngineering:metal:12>
+Ore entries for <ore:dustObsidian> :
+    <ThermalFoundation:material:4>
+    <IC2:itemDust:11>
+    <EnderIO:itemPowderIngot:7>
+Ore entries for <ore:dustSulfur> :
+    <IC2:itemDust:13>
+    <ThermalFoundation:material:16>
+Ore entries for <ore:dustLithium> :
+    <IC2:itemDust:14>
+Ore entries for <ore:dustDiamond> :
+    <IC2:itemDust2:1>
+Ore entries for <ore:dustSiliconDioxide> :
+    <IC2:itemDust2>
+Ore entries for <ore:dustHydratedCoal> :
+    <IC2:itemDust:8>
+Ore entries for <ore:dustAshes> :
+    <IC2:itemDust2:3>
+Ore entries for <ore:dustTinyCopper> :
+    <IC2:itemDustSmall:1>
+Ore entries for <ore:dustTinyGold> :
+    <IC2:itemDustSmall:2>
+Ore entries for <ore:dustTinyIron> :
+    <IC2:itemDustSmall>
+Ore entries for <ore:dustTinySilver> :
+    <IC2:itemDustSmall:4>
+Ore entries for <ore:dustTinyTin> :
+    <IC2:itemDustSmall:3>
+Ore entries for <ore:dustTinyLead> :
+    <IC2:itemDustSmall:5>
+Ore entries for <ore:dustTinySulfur> :
+    <IC2:itemDustSmall:6>
+Ore entries for <ore:dustTinyLithium> :
+    <IC2:itemDustSmall:7>
+Ore entries for <ore:dustTinyBronze> :
+    <IC2:itemDustSmall:8>
+Ore entries for <ore:dustTinyLapis> :
+    <IC2:itemDustSmall:9>
+Ore entries for <ore:dustTinyObsidian> :
+    <IC2:itemDustSmall:10>
+Ore entries for <ore:itemRubber> :
+    <IC2:itemRubber>
+Ore entries for <ore:ingotBronze> :
+    <ThermalFoundation:material:73>
+    <IC2:itemIngot:2>
+    <TConstruct:materials:13>
+    <Forestry:ingotBronze>
+    <customnpcs:npcBronzeIngot>
+Ore entries for <ore:ingotCopper> :
+    <ThermalFoundation:material:64>
+    <IC2:itemIngot>
+    <TConstruct:materials:9>
+    <Forestry:ingotCopper>
+    <ImmersiveEngineering:metal>
+Ore entries for <ore:ingotSteel> :
+    <IC2:itemIngot:3>
+    <TConstruct:materials:16>
+    <ImmersiveEngineering:metal:7>
+Ore entries for <ore:ingotLead> :
+    <ThermalFoundation:material:67>
+    <IC2:itemIngot:5>
+    <ImmersiveEngineering:metal:2>
+Ore entries for <ore:ingotTin> :
+    <ThermalFoundation:material:65>
+    <IC2:itemIngot:1>
+    <TConstruct:materials:10>
+    <Forestry:ingotTin>
+Ore entries for <ore:ingotSilver> :
+    <ThermalFoundation:material:66>
+    <IC2:itemIngot:6>
+    <ImmersiveEngineering:metal:3>
+Ore entries for <ore:plateIron> :
+    <IC2:itemPlates:4>
+    <ImmersiveEngineering:metal:30>
+Ore entries for <ore:plateGold> :
+    <IC2:itemPlates:3>
+Ore entries for <ore:plateCopper> :
+    <IC2:itemPlates>
+    <ImmersiveEngineering:metal:31>
+Ore entries for <ore:plateTin> :
+    <IC2:itemPlates:1>
+Ore entries for <ore:plateLead> :
+    <IC2:itemPlates:6>
+    <ImmersiveEngineering:metal:33>
+Ore entries for <ore:plateLapis> :
+    <IC2:itemPlates:8>
+Ore entries for <ore:plateObsidian> :
+    <IC2:itemPlates:7>
+Ore entries for <ore:plateBronze> :
+    <IC2:itemPlates:2>
+Ore entries for <ore:plateSteel> :
+    <IC2:itemPlates:5>
+    <ImmersiveEngineering:metal:38>
+Ore entries for <ore:plateDenseSteel> :
+    <IC2:itemDensePlates:5>
+Ore entries for <ore:plateDenseIron> :
+    <IC2:itemDensePlates:4>
+Ore entries for <ore:plateDenseGold> :
+    <IC2:itemDensePlates:3>
+Ore entries for <ore:plateDenseCopper> :
+    <IC2:itemDensePlates>
+Ore entries for <ore:plateDenseTin> :
+    <IC2:itemDensePlates:1>
+Ore entries for <ore:plateDenseLead> :
+    <IC2:itemDensePlates:6>
+Ore entries for <ore:plateDenseLapis> :
+    <IC2:itemDensePlates:8>
+Ore entries for <ore:plateDenseObsidian> :
+    <IC2:itemDensePlates:7>
+Ore entries for <ore:plateDenseBronze> :
+    <IC2:itemDensePlates:2>
+Ore entries for <ore:crushedIron> :
+    <IC2:itemCrushedOre>
+Ore entries for <ore:crushedGold> :
+    <IC2:itemCrushedOre:2>
+Ore entries for <ore:crushedSilver> :
+    <IC2:itemCrushedOre:5>
+Ore entries for <ore:crushedLead> :
+    <IC2:itemCrushedOre:6>
+Ore entries for <ore:crushedCopper> :
+    <IC2:itemCrushedOre:1>
+Ore entries for <ore:crushedTin> :
+    <IC2:itemCrushedOre:3>
+Ore entries for <ore:crushedUranium> :
+    <IC2:itemCrushedOre:4>
+Ore entries for <ore:crushedPurifiedIron> :
+    <IC2:itemPurifiedCrushedOre>
+Ore entries for <ore:crushedPurifiedGold> :
+    <IC2:itemPurifiedCrushedOre:2>
+Ore entries for <ore:crushedPurifiedSilver> :
+    <IC2:itemPurifiedCrushedOre:5>
+Ore entries for <ore:crushedPurifiedLead> :
+    <IC2:itemPurifiedCrushedOre:6>
+Ore entries for <ore:crushedPurifiedCopper> :
+    <IC2:itemPurifiedCrushedOre:1>
+Ore entries for <ore:crushedPurifiedTin> :
+    <IC2:itemPurifiedCrushedOre:3>
+Ore entries for <ore:crushedPurifiedUranium> :
+    <IC2:itemPurifiedCrushedOre:4>
+Ore entries for <ore:blockBronze> :
+    <ThermalFoundation:Storage:9>
+    <IC2:blockMetal:2>
+    <TConstruct:MetalBlock:4>
+    <Forestry:resourceStorage:3>
+Ore entries for <ore:blockCopper> :
+    <ThermalFoundation:Storage>
+    <IC2:blockMetal>
+    <TConstruct:MetalBlock:3>
+    <Forestry:resourceStorage:1>
+    <ImmersiveEngineering:storage>
+Ore entries for <ore:blockTin> :
+    <ThermalFoundation:Storage:1>
+    <IC2:blockMetal:1>
+    <TConstruct:MetalBlock:5>
+    <Forestry:resourceStorage:2>
+Ore entries for <ore:blockUranium> :
+    <IC2:blockMetal:3>
+Ore entries for <ore:blockLead> :
+    <ThermalFoundation:Storage:3>
+    <IC2:blockMetal:4>
+    <ImmersiveEngineering:storage:2>
+Ore entries for <ore:blockSteel> :
+    <IC2:blockMetal:5>
+    <TConstruct:MetalBlock:9>
+    <ImmersiveEngineering:storage:7>
+Ore entries for <ore:circuitBasic> :
+    <IC2:itemPartCircuit>
+Ore entries for <ore:circuitAdvanced> :
+    <IC2:itemPartCircuitAdv>
+Ore entries for <ore:craftingToolForgeHammer> :
+    <IC2:itemToolForgeHammer:*>
+Ore entries for <ore:craftingToolWireCutter> :
+    <IC2:itemToolCutter:*>
+Ore entries for <ore:ingotUranium> :
+    <AdvancedSolarPanel:asp_crafting_items:11>
+    <BigReactors:BRIngot>
+Ore entries for <ore:ingotIridium> :
+    <AdvancedSolarPanel:asp_crafting_items:10>
+Ore entries for <ore:craftingSolarPanelHV> :
+    <AdvancedSolarPanel:BlockAdvSolarPanel:2>
+Ore entries for <ore:craftingSunnariumPart> :
+    <AdvancedSolarPanel:asp_crafting_items:9>
+Ore entries for <ore:craftingSunnarium> :
+    <AdvancedSolarPanel:asp_crafting_items>
+Ore entries for <ore:craftingMTCore> :
+    <AdvancedSolarPanel:asp_crafting_items:12>
+Ore entries for <ore:craftingMolecularTransformer> :
+    <AdvancedSolarPanel:BlockMolecularTransformer>
+Ore entries for <ore:blockCloth> :
+    <minecraft:wool:*>
+Ore entries for <ore:coal> :
+    <minecraft:coal>
+Ore entries for <ore:charcoal> :
+    <minecraft:coal:1>
+Ore entries for <ore:blockMeatRaw> :
+    <BiomesOPlenty:flesh>
+Ore entries for <ore:foodMushroompowder> :
+    <BiomesOPlenty:food:1>
+Ore entries for <ore:foodFruitsalad> :
+    <BiomesOPlenty:food:4>
+Ore entries for <ore:foodVeggiesalad> :
+    <BiomesOPlenty:food:5>
+Ore entries for <ore:foodMushroomsalad> :
+    <BiomesOPlenty:food:6>
+Ore entries for <ore:foodFilledhoneycomb> :
+    <BiomesOPlenty:food:9>
+Ore entries for <ore:foodAmbrosia> :
+    <BiomesOPlenty:food:10>
+Ore entries for <ore:foodBowlofrice> :
+    <BiomesOPlenty:food:13>
+Ore entries for <ore:cropWildcarrots> :
+    <BiomesOPlenty:food:2>
+Ore entries for <ore:cropPeach> :
+    <BiomesOPlenty:food:3>
+    <ExtraTrees:food:12>
+    <ExtraTrees:food:19>
+Ore entries for <ore:cropPersimmon> :
+    <BiomesOPlenty:food:8>
+Ore entries for <ore:cropTurnip> :
+    <BiomesOPlenty:food:11>
+Ore entries for <ore:cropPear> :
+    <BiomesOPlenty:food:12>
+    <ExtraTrees:food:22>
+Ore entries for <ore:listAllfruit> :
+    <BiomesOPlenty:food:3>
+    <BiomesOPlenty:food:8>
+    <BiomesOPlenty:food:12>
+    <netherlicious:HellderBerryItem>
+Ore entries for <ore:listAllrootveggie> :
+    <BiomesOPlenty:food:11>
+Ore entries for <ore:listAllveggie> :
+    <BiomesOPlenty:food:11>
+    <netherlicious:GhastlyGourd>
+    <netherlicious:DevilishMaizeItem>
+Ore entries for <ore:seedTurnip> :
+    <BiomesOPlenty:turnipSeeds>
+Ore entries for <ore:listAllseed> :
+    <BiomesOPlenty:turnipSeeds>
+    <netherlicious:GhastlyGourdSeeds:*>
+    <netherlicious:DevilishMaizeSeeds:*>
+    <netherlicious:HellderBerrySeeds:*>
+    <netherlicious:AbyssalOatSeeds:*>
+Ore entries for <ore:gemRuby> :
+    <BiomesOPlenty:gems:1>
+    <customnpcs:npcRuby>
+Ore entries for <ore:gemPeridot> :
+    <BiomesOPlenty:gems:2>
+Ore entries for <ore:gemTopaz> :
+    <BiomesOPlenty:gems:3>
+Ore entries for <ore:gemTanzanite> :
+    <BiomesOPlenty:gems:4>
+Ore entries for <ore:gemMalachite> :
+    <BiomesOPlenty:gems:5>
+Ore entries for <ore:gemSapphire> :
+    <BiomesOPlenty:gems:6>
+Ore entries for <ore:gemAmber> :
+    <BiomesOPlenty:gems:7>
+Ore entries for <ore:oreRuby> :
+    <BiomesOPlenty:gemOre:2>
+Ore entries for <ore:oreTopaz> :
+    <BiomesOPlenty:gemOre:6>
+Ore entries for <ore:orePeridot> :
+    <BiomesOPlenty:gemOre:4>
+Ore entries for <ore:oreTanzanite> :
+    <BiomesOPlenty:gemOre:8>
+Ore entries for <ore:oreMalachite> :
+    <BiomesOPlenty:gemOre:10>
+Ore entries for <ore:oreSapphire> :
+    <BiomesOPlenty:gemOre:12>
+Ore entries for <ore:oreAmber> :
+    <BiomesOPlenty:gemOre:14>
+Ore entries for <ore:blockRuby> :
+    <BiomesOPlenty:gemOre:3>
+Ore entries for <ore:blockTopaz> :
+    <BiomesOPlenty:gemOre:7>
+Ore entries for <ore:blockPeridot> :
+    <BiomesOPlenty:gemOre:5>
+Ore entries for <ore:blockTanzanite> :
+    <BiomesOPlenty:gemOre:9>
+Ore entries for <ore:blockMalachite> :
+    <BiomesOPlenty:gemOre:11>
+Ore entries for <ore:blockSapphire> :
+    <BiomesOPlenty:gemOre:13>
+Ore entries for <ore:blockAmber> :
+    <BiomesOPlenty:gemOre:15>
+Ore entries for <ore:gemApatite> :
+    <Forestry:apatite>
+Ore entries for <ore:brickPeat> :
+    <Forestry:peat>
+Ore entries for <ore:dustAsh> :
+    <Forestry:ash>
+Ore entries for <ore:gearBronze> :
+    <ThermalFoundation:material:137>
+    <Forestry:gearBronze>
+Ore entries for <ore:gearCopper> :
+    <ThermalFoundation:material:128>
+    <Forestry:gearCopper>
+Ore entries for <ore:gearTin> :
+    <ThermalFoundation:material:129>
+    <Forestry:gearTin>
+Ore entries for <ore:pulpWood> :
+    <Forestry:woodPulp>
+    <ExtraTrees:misc:1>
+Ore entries for <ore:itemBeeswax> :
+    <Forestry:beeswax>
+Ore entries for <ore:cropCherry> :
+    <Forestry:fruits>
+    <ExtraTrees:food:4>
+    <ExtraTrees:food:5>
+    <ExtraTrees:food:6>
+Ore entries for <ore:cropWalnut> :
+    <Forestry:fruits:1>
+    <ExtraTrees:food:25>
+Ore entries for <ore:cropChestnut> :
+    <Forestry:fruits:2>
+Ore entries for <ore:cropLemon> :
+    <Forestry:fruits:3>
+Ore entries for <ore:cropPlum> :
+    <Forestry:fruits:4>
+    <ExtraTrees:food:8>
+Ore entries for <ore:cropDate> :
+    <Forestry:fruits:5>
+Ore entries for <ore:cropPapaya> :
+    <Forestry:fruits:6>
+Ore entries for <ore:oreApatite> :
+    <Forestry:resources>
+Ore entries for <ore:blockApatite> :
+    <Forestry:resourceStorage>
+Ore entries for <ore:chestWood> :
+    <minecraft:chest>
+Ore entries for <ore:craftingTableWood> :
+    <minecraft:crafting_table>
+Ore entries for <ore:dropHoney> :
+    <Forestry:honeyDrop>
+    <gendustry:HoneyDrop:*>
+Ore entries for <ore:itemPollen> :
+    <Forestry:pollen>
+Ore entries for <ore:dropHoneydew> :
+    <Forestry:honeydew>
+Ore entries for <ore:dropRoyalJelly> :
+    <Forestry:royalJelly>
+Ore entries for <ore:beeComb> :
+    <Forestry:beeCombs:*>
+    <ExtraBees:honeyComb:*>
+    <gendustry:HoneyComb:*>
+Ore entries for <ore:fenceWood> :
+    <Forestry:fences:*>
+    <Forestry:fencesFireproof:*>
+    <netherlicious:CrimsonFence>
+    <netherlicious:WarpedFence>
+    <netherlicious:FoxfireFence>
+Ore entries for <ore:bucketRedstone> :
+    <ThermalFoundation:bucket>
+Ore entries for <ore:bucketGlowstone> :
+    <ThermalFoundation:bucket:1>
+Ore entries for <ore:bucketEnder> :
+    <ThermalFoundation:bucket:2>
+Ore entries for <ore:bucketPyrotheum> :
+    <ThermalFoundation:bucket:3>
+Ore entries for <ore:bucketCryotheum> :
+    <ThermalFoundation:bucket:4>
+Ore entries for <ore:bucketAerotheum> :
+    <ThermalFoundation:bucket:7>
+Ore entries for <ore:bucketPetrotheum> :
+    <ThermalFoundation:bucket:8>
+Ore entries for <ore:bucketCoal> :
+    <ThermalFoundation:bucket:6>
+Ore entries for <ore:dustCharcoal> :
+    <ThermalFoundation:material:3>
+Ore entries for <ore:dustSaltpeter> :
+    <ThermalFoundation:material:17>
+Ore entries for <ore:crystalCinnabar> :
+    <ThermalFoundation:material:20>
+Ore entries for <ore:dustNickel> :
+    <ThermalFoundation:material:36>
+    <ImmersiveEngineering:metal:14>
+Ore entries for <ore:dustPlatinum> :
+    <ThermalFoundation:material:37>
+Ore entries for <ore:dustMithril> :
+    <ThermalFoundation:material:38>
+Ore entries for <ore:dustElectrum> :
+    <ThermalFoundation:material:39>
+    <ImmersiveEngineering:metal:16>
+Ore entries for <ore:dustInvar> :
+    <ThermalFoundation:material:40>
+Ore entries for <ore:dustSignalum> :
+    <ThermalFoundation:material:42>
+Ore entries for <ore:dustLumium> :
+    <ThermalFoundation:material:43>
+Ore entries for <ore:dustEnderium> :
+    <ThermalFoundation:material:44>
+Ore entries for <ore:ingotNickel> :
+    <ThermalFoundation:material:68>
+    <ImmersiveEngineering:metal:4>
+Ore entries for <ore:ingotPlatinum> :
+    <ThermalFoundation:material:69>
+Ore entries for <ore:ingotMithril> :
+    <ThermalFoundation:material:70>
+    <customnpcs:npcMithrilIngot>
+Ore entries for <ore:ingotElectrum> :
+    <ThermalFoundation:material:71>
+    <ImmersiveEngineering:metal:6>
+Ore entries for <ore:ingotInvar> :
+    <ThermalFoundation:material:72>
+Ore entries for <ore:ingotSignalum> :
+    <ThermalFoundation:material:74>
+Ore entries for <ore:ingotLumium> :
+    <ThermalFoundation:material:75>
+Ore entries for <ore:ingotEnderium> :
+    <ThermalFoundation:material:76>
+Ore entries for <ore:nuggetCopper> :
+    <ThermalFoundation:material:96>
+    <TConstruct:materials:20>
+    <ImmersiveEngineering:metal:22>
+Ore entries for <ore:nuggetTin> :
+    <ThermalFoundation:material:97>
+    <TConstruct:materials:21>
+Ore entries for <ore:nuggetSilver> :
+    <ThermalFoundation:material:98>
+    <ImmersiveEngineering:metal:25>
+Ore entries for <ore:nuggetLead> :
+    <ThermalFoundation:material:99>
+    <ImmersiveEngineering:metal:24>
+Ore entries for <ore:nuggetNickel> :
+    <ThermalFoundation:material:100>
+    <ImmersiveEngineering:metal:26>
+Ore entries for <ore:nuggetPlatinum> :
+    <ThermalFoundation:material:101>
+Ore entries for <ore:nuggetMithril> :
+    <ThermalFoundation:material:102>
+Ore entries for <ore:nuggetElectrum> :
+    <ThermalFoundation:material:103>
+    <ImmersiveEngineering:metal:28>
+Ore entries for <ore:nuggetInvar> :
+    <ThermalFoundation:material:104>
+Ore entries for <ore:nuggetBronze> :
+    <ThermalFoundation:material:105>
+    <TConstruct:materials:31>
+Ore entries for <ore:nuggetSignalum> :
+    <ThermalFoundation:material:106>
+Ore entries for <ore:nuggetLumium> :
+    <ThermalFoundation:material:107>
+Ore entries for <ore:nuggetEnderium> :
+    <ThermalFoundation:material:108>
+Ore entries for <ore:gearIron> :
+    <ThermalFoundation:material:12>
+Ore entries for <ore:gearGold> :
+    <ThermalFoundation:material:13>
+Ore entries for <ore:gearSilver> :
+    <ThermalFoundation:material:130>
+Ore entries for <ore:gearLead> :
+    <ThermalFoundation:material:131>
+Ore entries for <ore:gearNickel> :
+    <ThermalFoundation:material:132>
+Ore entries for <ore:gearPlatinum> :
+    <ThermalFoundation:material:133>
+Ore entries for <ore:gearMithril> :
+    <ThermalFoundation:material:134>
+Ore entries for <ore:gearElectrum> :
+    <ThermalFoundation:material:135>
+Ore entries for <ore:gearInvar> :
+    <ThermalFoundation:material:136>
+Ore entries for <ore:gearSignalum> :
+    <ThermalFoundation:material:138>
+Ore entries for <ore:gearLumium> :
+    <ThermalFoundation:material:139>
+Ore entries for <ore:gearEnderium> :
+    <ThermalFoundation:material:140>
+Ore entries for <ore:dustPyrotheum> :
+    <ThermalFoundation:material:512>
+Ore entries for <ore:dustCryotheum> :
+    <ThermalFoundation:material:513>
+Ore entries for <ore:dustAerotheum> :
+    <ThermalFoundation:material:514>
+Ore entries for <ore:dustPetrotheum> :
+    <ThermalFoundation:material:515>
+Ore entries for <ore:rodBlizz> :
+    <ThermalFoundation:material:1024>
+Ore entries for <ore:dustBlizz> :
+    <ThermalFoundation:material:1025>
+Ore entries for <ore:rodBlitz> :
+    <ThermalFoundation:material:1026>
+Ore entries for <ore:dustBlitz> :
+    <ThermalFoundation:material:1027>
+Ore entries for <ore:rodBasalz> :
+    <ThermalFoundation:material:1028>
+Ore entries for <ore:dustBasalz> :
+    <ThermalFoundation:material:1029>
+Ore entries for <ore:oreSilver> :
+    <ThermalFoundation:Ore:2>
+    <ImmersiveEngineering:ore:3>
+Ore entries for <ore:oreNickel> :
+    <ThermalFoundation:Ore:4>
+    <ImmersiveEngineering:ore:4>
+Ore entries for <ore:orePlatinum> :
+    <ThermalFoundation:Ore:5>
+Ore entries for <ore:oreMithril> :
+    <ThermalFoundation:Ore:6>
+Ore entries for <ore:blockSilver> :
+    <ThermalFoundation:Storage:2>
+    <ImmersiveEngineering:storage:3>
+Ore entries for <ore:blockNickel> :
+    <ThermalFoundation:Storage:4>
+    <ImmersiveEngineering:storage:4>
+Ore entries for <ore:blockPlatinum> :
+    <ThermalFoundation:Storage:5>
+Ore entries for <ore:blockMithril> :
+    <ThermalFoundation:Storage:6>
+Ore entries for <ore:blockElectrum> :
+    <ThermalFoundation:Storage:7>
+    <ImmersiveEngineering:storage:6>
+Ore entries for <ore:blockInvar> :
+    <ThermalFoundation:Storage:8>
+Ore entries for <ore:blockSignalum> :
+    <ThermalFoundation:Storage:10>
+Ore entries for <ore:blockLumium> :
+    <ThermalFoundation:Storage:11>
+Ore entries for <ore:blockEnderium> :
+    <ThermalFoundation:Storage:12>
+Ore entries for <ore:oreYellorite> :
+    <BigReactors:YelloriteOre>
+Ore entries for <ore:oreYellorium> :
+    <BigReactors:YelloriteOre>
+Ore entries for <ore:blockYellorium> :
+    <BigReactors:BRMetalBlock>
+Ore entries for <ore:blockCyanite> :
+    <BigReactors:BRMetalBlock:1>
+Ore entries for <ore:blockGraphite> :
+    <BigReactors:BRMetalBlock:2>
+Ore entries for <ore:blockBlutonium> :
+    <BigReactors:BRMetalBlock:3>
+Ore entries for <ore:blockLudicrite> :
+    <BigReactors:BRMetalBlock:4>
+Ore entries for <ore:ingotYellorium> :
+    <BigReactors:BRIngot>
+Ore entries for <ore:ingotCyanite> :
+    <BigReactors:BRIngot:1>
+Ore entries for <ore:ingotGraphite> :
+    <BigReactors:BRIngot:2>
+Ore entries for <ore:ingotBlutonium> :
+    <BigReactors:BRIngot:3>
+Ore entries for <ore:dustYellorium> :
+    <BigReactors:BRIngot:4>
+Ore entries for <ore:dustCyanite> :
+    <BigReactors:BRIngot:5>
+Ore entries for <ore:dustGraphite> :
+    <BigReactors:BRIngot:6>
+Ore entries for <ore:dustBlutonium> :
+    <BigReactors:BRIngot:7>
+Ore entries for <ore:ingotLudicrite> :
+    <BigReactors:BRIngot:8>
+Ore entries for <ore:dustLudicrite> :
+    <BigReactors:BRIngot:9>
+Ore entries for <ore:ingotPlutonium> :
+    <BigReactors:BRIngot:3>
+Ore entries for <ore:dustUranium> :
+    <BigReactors:BRIngot:4>
+Ore entries for <ore:dustPlutonium> :
+    <BigReactors:BRIngot:7>
+Ore entries for <ore:reactorCasing> :
+    <BigReactors:BRReactorPart>
+Ore entries for <ore:reactorController> :
+    <BigReactors:BRReactorPart:1>
+Ore entries for <ore:reactorPowerTap> :
+    <BigReactors:BRReactorPart:3>
+Ore entries for <ore:reactorRedNetPort> :
+    <BigReactors:BRReactorPart:6>
+Ore entries for <ore:reactorComputerPort> :
+    <BigReactors:BRReactorPart:7>
+Ore entries for <ore:reactorCoolantPort> :
+    <BigReactors:BRReactorPart:5>
+Ore entries for <ore:reactorControlRod> :
+    <BigReactors:BRReactorPart:2>
+Ore entries for <ore:glassReactor> :
+    <BigReactors:BRMultiblockGlass>
+Ore entries for <ore:glassTurbine> :
+    <BigReactors:BRMultiblockGlass:1>
+Ore entries for <ore:reactorRedstonePort> :
+    <BigReactors:BRReactorRedstonePort>
+Ore entries for <ore:turbineHousing> :
+    <BigReactors:BRTurbinePart>
+Ore entries for <ore:turbineController> :
+    <BigReactors:BRTurbinePart:1>
+Ore entries for <ore:turbinePowerTap> :
+    <BigReactors:BRTurbinePart:2>
+Ore entries for <ore:turbineFluidPort> :
+    <BigReactors:BRTurbinePart:3>
+Ore entries for <ore:turbineBearing> :
+    <BigReactors:BRTurbinePart:4>
+Ore entries for <ore:turbineRotorShaft> :
+    <BigReactors:BRTurbineRotorPart>
+Ore entries for <ore:turbineRotorBlade> :
+    <BigReactors:BRTurbineRotorPart:1>
+Ore entries for <ore:brDeviceCyaniteProcessor> :
+    <BigReactors:BRDevice>
+Ore entries for <ore:blockAndesite> :
+    <chisel:andesite>
+Ore entries for <ore:stoneAndesite> :
+    <chisel:andesite>
+Ore entries for <ore:antiBlock> :
+    <chisel:antiBlock>
+Ore entries for <ore:blockCarpet> :
+    <chisel:carpet_block>
+Ore entries for <ore:carpet> :
+    <chisel:carpet>
+Ore entries for <ore:cloud> :
+    <chisel:cloud>
+Ore entries for <ore:concrete> :
+    <chisel:concrete>
+    <ImmersiveEngineering:stoneDecoration:4>
+    <ImmersiveEngineering:stoneDecoration:5>
+Ore entries for <ore:blockDiorite> :
+    <chisel:diorite>
+Ore entries for <ore:stoneDiorite> :
+    <chisel:diorite>
+Ore entries for <ore:dirt> :
+    <chisel:dirt>
+    <minecraft:dirt>
+Ore entries for <ore:blockEndstone> :
+    <chisel:end_Stone>
+Ore entries for <ore:stainedGlassWhite> :
+    <minecraft:stained_glass>
+Ore entries for <ore:stainedGlassOrange> :
+    <minecraft:stained_glass:1>
+Ore entries for <ore:stainedGlassMagenta> :
+    <minecraft:stained_glass:2>
+Ore entries for <ore:stainedGlassLightBlue> :
+    <minecraft:stained_glass:3>
+Ore entries for <ore:stainedGlassYellow> :
+    <minecraft:stained_glass:4>
+Ore entries for <ore:stainedGlassLime> :
+    <minecraft:stained_glass:5>
+Ore entries for <ore:stainedGlassPink> :
+    <minecraft:stained_glass:6>
+Ore entries for <ore:stainedGlassGray> :
+    <minecraft:stained_glass:7>
+Ore entries for <ore:stainedGlassLightGray> :
+    <minecraft:stained_glass:8>
+Ore entries for <ore:stainedGlassCyan> :
+    <minecraft:stained_glass:9>
+Ore entries for <ore:stainedGlassPurple> :
+    <minecraft:stained_glass:10>
+Ore entries for <ore:stainedGlassBlue> :
+    <minecraft:stained_glass:11>
+Ore entries for <ore:stainedGlassBrown> :
+    <minecraft:stained_glass:12>
+Ore entries for <ore:stainedGlassGreen> :
+    <minecraft:stained_glass:13>
+Ore entries for <ore:stainedGlassRed> :
+    <minecraft:stained_glass:14>
+Ore entries for <ore:stainedGlassBlack> :
+    <minecraft:stained_glass:15>
+Ore entries for <ore:stainedGlassPaneWhite> :
+    <minecraft:stained_glass_pane>
+Ore entries for <ore:stainedGlassPaneOrange> :
+    <minecraft:stained_glass_pane:1>
+Ore entries for <ore:stainedGlassPaneMagenta> :
+    <minecraft:stained_glass_pane:2>
+Ore entries for <ore:stainedGlassPaneLightBlue> :
+    <minecraft:stained_glass_pane:3>
+Ore entries for <ore:stainedGlassPaneYellow> :
+    <minecraft:stained_glass_pane:4>
+Ore entries for <ore:stainedGlassPaneLime> :
+    <minecraft:stained_glass_pane:5>
+Ore entries for <ore:stainedGlassPanePink> :
+    <minecraft:stained_glass_pane:6>
+Ore entries for <ore:stainedGlassPaneGray> :
+    <minecraft:stained_glass_pane:7>
+Ore entries for <ore:stainedGlassPaneLightGray> :
+    <minecraft:stained_glass_pane:8>
+Ore entries for <ore:stainedGlassPaneCyan> :
+    <minecraft:stained_glass_pane:9>
+Ore entries for <ore:stainedGlassPanePurple> :
+    <minecraft:stained_glass_pane:10>
+Ore entries for <ore:stainedGlassPaneBlue> :
+    <minecraft:stained_glass_pane:11>
+Ore entries for <ore:stainedGlassPaneBrown> :
+    <minecraft:stained_glass_pane:12>
+Ore entries for <ore:stainedGlassPaneGreen> :
+    <minecraft:stained_glass_pane:13>
+Ore entries for <ore:stainedGlassPaneRed> :
+    <minecraft:stained_glass_pane:14>
+Ore entries for <ore:stainedGlassPaneBlack> :
+    <minecraft:stained_glass_pane:15>
+Ore entries for <ore:glotek> :
+    <chisel:glotek>
+Ore entries for <ore:blockGranite> :
+    <chisel:granite>
+Ore entries for <ore:stoneGranite> :
+    <chisel:granite>
+Ore entries for <ore:holystone> :
+    <chisel:holystone>
+Ore entries for <ore:hempcretesand> :
+    <chisel:hempcretesand>
+Ore entries for <ore:lavastone> :
+    <chisel:lavastone>
+Ore entries for <ore:limestone> :
+    <chisel:limestone>
+Ore entries for <ore:marble> :
+    <chisel:marble>
+Ore entries for <ore:blockMarble> :
+    <chisel:marble>
+Ore entries for <ore:neonite> :
+    <chisel:neonite>
+Ore entries for <ore:tyrian> :
+    <chisel:tyrian>
+Ore entries for <ore:blockWaterstone> :
+    <chisel:waterstone>
+Ore entries for <ore:bricksGravel> :
+    <ExtraUtilities:decorativeBlock1:6>
+Ore entries for <ore:blockEnderObsidian> :
+    <ExtraUtilities:decorativeBlock1:1>
+Ore entries for <ore:burntQuartz> :
+    <ExtraUtilities:decorativeBlock1:2>
+Ore entries for <ore:blockIcestone> :
+    <ExtraUtilities:decorativeBlock1:3>
+Ore entries for <ore:blockUnstable> :
+    <ExtraUtilities:decorativeBlock1:5>
+Ore entries for <ore:blockMagicWood> :
+    <ExtraUtilities:decorativeBlock1:7>
+Ore entries for <ore:blockEnderCore> :
+    <ExtraUtilities:decorativeBlock1:11>
+Ore entries for <ore:blockGlassSandy> :
+    <ExtraUtilities:decorativeBlock1:9>
+Ore entries for <ore:compressedCobblestone1x> :
+    <ExtraUtilities:cobblestone_compressed>
+Ore entries for <ore:compressedCobblestone2x> :
+    <ExtraUtilities:cobblestone_compressed:1>
+Ore entries for <ore:compressedCobblestone3x> :
+    <ExtraUtilities:cobblestone_compressed:2>
+Ore entries for <ore:compressedCobblestone4x> :
+    <ExtraUtilities:cobblestone_compressed:3>
+Ore entries for <ore:compressedCobblestone5x> :
+    <ExtraUtilities:cobblestone_compressed:4>
+Ore entries for <ore:compressedCobblestone6x> :
+    <ExtraUtilities:cobblestone_compressed:5>
+Ore entries for <ore:compressedCobblestone7x> :
+    <ExtraUtilities:cobblestone_compressed:6>
+Ore entries for <ore:compressedCobblestone8x> :
+    <ExtraUtilities:cobblestone_compressed:7>
+Ore entries for <ore:compressedDirt1x> :
+    <ExtraUtilities:cobblestone_compressed:8>
+Ore entries for <ore:compressedDirt2x> :
+    <ExtraUtilities:cobblestone_compressed:9>
+Ore entries for <ore:compressedDirt3x> :
+    <ExtraUtilities:cobblestone_compressed:10>
+Ore entries for <ore:compressedDirt4x> :
+    <ExtraUtilities:cobblestone_compressed:11>
+Ore entries for <ore:compressedGravel1x> :
+    <ExtraUtilities:cobblestone_compressed:12>
+Ore entries for <ore:compressedGravel2x> :
+    <ExtraUtilities:cobblestone_compressed:13>
+Ore entries for <ore:compressedSand1x> :
+    <ExtraUtilities:cobblestone_compressed:14>
+Ore entries for <ore:compressedSand2x> :
+    <ExtraUtilities:cobblestone_compressed:15>
+Ore entries for <ore:ingotUnstable> :
+    <ExtraUtilities:unstableingot>
+    <ExtraUtilities:unstableingot:2>.withTag({isNEI: 1 as byte})
+Ore entries for <ore:nuggetUnstable> :
+    <ExtraUtilities:unstableingot:1>
+Ore entries for <ore:bricksStone> :
+    <ExtraUtilities:colorStoneBrick>
+    <ExtraUtilities:colorStoneBrick:1>
+    <ExtraUtilities:colorStoneBrick:2>
+    <ExtraUtilities:colorStoneBrick:3>
+    <ExtraUtilities:colorStoneBrick:4>
+    <ExtraUtilities:colorStoneBrick:5>
+    <ExtraUtilities:colorStoneBrick:6>
+    <ExtraUtilities:colorStoneBrick:7>
+    <ExtraUtilities:colorStoneBrick:8>
+    <ExtraUtilities:colorStoneBrick:9>
+    <ExtraUtilities:colorStoneBrick:10>
+    <ExtraUtilities:colorStoneBrick:11>
+    <ExtraUtilities:colorStoneBrick:12>
+    <ExtraUtilities:colorStoneBrick:13>
+    <ExtraUtilities:colorStoneBrick:14>
+    <ExtraUtilities:colorStoneBrick:15>
+    <minecraft:stonebrick>
+Ore entries for <ore:bricksStoneBlack> :
+    <ExtraUtilities:colorStoneBrick>
+Ore entries for <ore:bricksStoneRed> :
+    <ExtraUtilities:colorStoneBrick:1>
+Ore entries for <ore:bricksStoneGreen> :
+    <ExtraUtilities:colorStoneBrick:2>
+Ore entries for <ore:bricksStoneBrown> :
+    <ExtraUtilities:colorStoneBrick:3>
+Ore entries for <ore:bricksStoneBlue> :
+    <ExtraUtilities:colorStoneBrick:4>
+Ore entries for <ore:bricksStonePurple> :
+    <ExtraUtilities:colorStoneBrick:5>
+Ore entries for <ore:bricksStoneCyan> :
+    <ExtraUtilities:colorStoneBrick:6>
+Ore entries for <ore:bricksStoneLightGray> :
+    <ExtraUtilities:colorStoneBrick:7>
+Ore entries for <ore:bricksStoneGray> :
+    <ExtraUtilities:colorStoneBrick:8>
+Ore entries for <ore:bricksStonePink> :
+    <ExtraUtilities:colorStoneBrick:9>
+Ore entries for <ore:bricksStoneLime> :
+    <ExtraUtilities:colorStoneBrick:10>
+Ore entries for <ore:bricksStoneYellow> :
+    <ExtraUtilities:colorStoneBrick:11>
+Ore entries for <ore:bricksStoneLightBlue> :
+    <ExtraUtilities:colorStoneBrick:12>
+Ore entries for <ore:bricksStoneMagenta> :
+    <ExtraUtilities:colorStoneBrick:13>
+Ore entries for <ore:bricksStoneOrange> :
+    <ExtraUtilities:colorStoneBrick:14>
+Ore entries for <ore:bricksStoneWhite> :
+    <ExtraUtilities:colorStoneBrick:15>
+Ore entries for <ore:plankWoodBlack> :
+    <ExtraUtilities:colorWoodPlanks>
+Ore entries for <ore:plankWoodRed> :
+    <ExtraUtilities:colorWoodPlanks:1>
+Ore entries for <ore:plankWoodGreen> :
+    <ExtraUtilities:colorWoodPlanks:2>
+Ore entries for <ore:plankWoodBrown> :
+    <ExtraUtilities:colorWoodPlanks:3>
+Ore entries for <ore:plankWoodBlue> :
+    <ExtraUtilities:colorWoodPlanks:4>
+Ore entries for <ore:plankWoodPurple> :
+    <ExtraUtilities:colorWoodPlanks:5>
+Ore entries for <ore:plankWoodCyan> :
+    <ExtraUtilities:colorWoodPlanks:6>
+Ore entries for <ore:plankWoodLightGray> :
+    <ExtraUtilities:colorWoodPlanks:7>
+Ore entries for <ore:plankWoodGray> :
+    <ExtraUtilities:colorWoodPlanks:8>
+Ore entries for <ore:plankWoodPink> :
+    <ExtraUtilities:colorWoodPlanks:9>
+Ore entries for <ore:plankWoodLime> :
+    <ExtraUtilities:colorWoodPlanks:10>
+Ore entries for <ore:plankWoodYellow> :
+    <ExtraUtilities:colorWoodPlanks:11>
+Ore entries for <ore:plankWoodLightBlue> :
+    <ExtraUtilities:colorWoodPlanks:12>
+Ore entries for <ore:plankWoodMagenta> :
+    <ExtraUtilities:colorWoodPlanks:13>
+Ore entries for <ore:plankWoodOrange> :
+    <ExtraUtilities:colorWoodPlanks:14>
+Ore entries for <ore:plankWoodWhite> :
+    <ExtraUtilities:colorWoodPlanks:15>
+Ore entries for <ore:glowstoneBlack> :
+    <ExtraUtilities:color_lightgem>
+Ore entries for <ore:glowstoneRed> :
+    <ExtraUtilities:color_lightgem:1>
+Ore entries for <ore:glowstoneGreen> :
+    <ExtraUtilities:color_lightgem:2>
+Ore entries for <ore:glowstoneBrown> :
+    <ExtraUtilities:color_lightgem:3>
+Ore entries for <ore:glowstoneBlue> :
+    <ExtraUtilities:color_lightgem:4>
+Ore entries for <ore:glowstonePurple> :
+    <ExtraUtilities:color_lightgem:5>
+Ore entries for <ore:glowstoneCyan> :
+    <ExtraUtilities:color_lightgem:6>
+Ore entries for <ore:glowstoneLightGray> :
+    <ExtraUtilities:color_lightgem:7>
+Ore entries for <ore:glowstoneGray> :
+    <ExtraUtilities:color_lightgem:8>
+Ore entries for <ore:glowstonePink> :
+    <ExtraUtilities:color_lightgem:9>
+Ore entries for <ore:glowstoneLime> :
+    <ExtraUtilities:color_lightgem:10>
+Ore entries for <ore:glowstoneYellow> :
+    <ExtraUtilities:color_lightgem:11>
+Ore entries for <ore:glowstoneLightBlue> :
+    <ExtraUtilities:color_lightgem:12>
+Ore entries for <ore:glowstoneMagenta> :
+    <ExtraUtilities:color_lightgem:13>
+Ore entries for <ore:glowstoneOrange> :
+    <ExtraUtilities:color_lightgem:14>
+Ore entries for <ore:glowstoneWhite> :
+    <ExtraUtilities:color_lightgem:15>
+Ore entries for <ore:stoneBlack> :
+    <ExtraUtilities:color_stone>
+Ore entries for <ore:stoneRed> :
+    <ExtraUtilities:color_stone:1>
+Ore entries for <ore:stoneGreen> :
+    <ExtraUtilities:color_stone:2>
+Ore entries for <ore:stoneBrown> :
+    <ExtraUtilities:color_stone:3>
+Ore entries for <ore:stoneBlue> :
+    <ExtraUtilities:color_stone:4>
+Ore entries for <ore:stonePurple> :
+    <ExtraUtilities:color_stone:5>
+Ore entries for <ore:stoneCyan> :
+    <ExtraUtilities:color_stone:6>
+Ore entries for <ore:stoneLightGray> :
+    <ExtraUtilities:color_stone:7>
+Ore entries for <ore:stoneGray> :
+    <ExtraUtilities:color_stone:8>
+Ore entries for <ore:stonePink> :
+    <ExtraUtilities:color_stone:9>
+Ore entries for <ore:stoneLime> :
+    <ExtraUtilities:color_stone:10>
+Ore entries for <ore:stoneYellow> :
+    <ExtraUtilities:color_stone:11>
+Ore entries for <ore:stoneLightBlue> :
+    <ExtraUtilities:color_stone:12>
+Ore entries for <ore:stoneMagenta> :
+    <ExtraUtilities:color_stone:13>
+Ore entries for <ore:stoneOrange> :
+    <ExtraUtilities:color_stone:14>
+Ore entries for <ore:stoneWhite> :
+    <ExtraUtilities:color_stone:15>
+Ore entries for <ore:soulsand> :
+    <ExtraUtilities:color_hellsand>
+    <ExtraUtilities:color_hellsand:1>
+    <ExtraUtilities:color_hellsand:2>
+    <ExtraUtilities:color_hellsand:3>
+    <ExtraUtilities:color_hellsand:4>
+    <ExtraUtilities:color_hellsand:5>
+    <ExtraUtilities:color_hellsand:6>
+    <ExtraUtilities:color_hellsand:7>
+    <ExtraUtilities:color_hellsand:8>
+    <ExtraUtilities:color_hellsand:9>
+    <ExtraUtilities:color_hellsand:10>
+    <ExtraUtilities:color_hellsand:11>
+    <ExtraUtilities:color_hellsand:12>
+    <ExtraUtilities:color_hellsand:13>
+    <ExtraUtilities:color_hellsand:14>
+    <ExtraUtilities:color_hellsand:15>
+Ore entries for <ore:soulsandBlack> :
+    <ExtraUtilities:color_hellsand>
+Ore entries for <ore:soulsandRed> :
+    <ExtraUtilities:color_hellsand:1>
+Ore entries for <ore:soulsandGreen> :
+    <ExtraUtilities:color_hellsand:2>
+Ore entries for <ore:soulsandBrown> :
+    <ExtraUtilities:color_hellsand:3>
+Ore entries for <ore:soulsandBlue> :
+    <ExtraUtilities:color_hellsand:4>
+Ore entries for <ore:soulsandPurple> :
+    <ExtraUtilities:color_hellsand:5>
+Ore entries for <ore:soulsandCyan> :
+    <ExtraUtilities:color_hellsand:6>
+Ore entries for <ore:soulsandLightGray> :
+    <ExtraUtilities:color_hellsand:7>
+Ore entries for <ore:soulsandGray> :
+    <ExtraUtilities:color_hellsand:8>
+Ore entries for <ore:soulsandPink> :
+    <ExtraUtilities:color_hellsand:9>
+Ore entries for <ore:soulsandLime> :
+    <ExtraUtilities:color_hellsand:10>
+Ore entries for <ore:soulsandYellow> :
+    <ExtraUtilities:color_hellsand:11>
+Ore entries for <ore:soulsandLightBlue> :
+    <ExtraUtilities:color_hellsand:12>
+Ore entries for <ore:soulsandMagenta> :
+    <ExtraUtilities:color_hellsand:13>
+Ore entries for <ore:soulsandOrange> :
+    <ExtraUtilities:color_hellsand:14>
+Ore entries for <ore:soulsandWhite> :
+    <ExtraUtilities:color_hellsand:15>
+Ore entries for <ore:bricksClay> :
+    <ExtraUtilities:color_brick>
+    <ExtraUtilities:color_brick:1>
+    <ExtraUtilities:color_brick:2>
+    <ExtraUtilities:color_brick:3>
+    <ExtraUtilities:color_brick:4>
+    <ExtraUtilities:color_brick:5>
+    <ExtraUtilities:color_brick:6>
+    <ExtraUtilities:color_brick:7>
+    <ExtraUtilities:color_brick:8>
+    <ExtraUtilities:color_brick:9>
+    <ExtraUtilities:color_brick:10>
+    <ExtraUtilities:color_brick:11>
+    <ExtraUtilities:color_brick:12>
+    <ExtraUtilities:color_brick:13>
+    <ExtraUtilities:color_brick:14>
+    <ExtraUtilities:color_brick:15>
+Ore entries for <ore:bricksClayBlack> :
+    <ExtraUtilities:color_brick>
+Ore entries for <ore:bricksClayRed> :
+    <ExtraUtilities:color_brick:1>
+Ore entries for <ore:bricksClayGreen> :
+    <ExtraUtilities:color_brick:2>
+Ore entries for <ore:bricksClayBrown> :
+    <ExtraUtilities:color_brick:3>
+Ore entries for <ore:bricksClayBlue> :
+    <ExtraUtilities:color_brick:4>
+Ore entries for <ore:bricksClayPurple> :
+    <ExtraUtilities:color_brick:5>
+Ore entries for <ore:bricksClayCyan> :
+    <ExtraUtilities:color_brick:6>
+Ore entries for <ore:bricksClayLightGray> :
+    <ExtraUtilities:color_brick:7>
+Ore entries for <ore:bricksClayGray> :
+    <ExtraUtilities:color_brick:8>
+Ore entries for <ore:bricksClayPink> :
+    <ExtraUtilities:color_brick:9>
+Ore entries for <ore:bricksClayLime> :
+    <ExtraUtilities:color_brick:10>
+Ore entries for <ore:bricksClayYellow> :
+    <ExtraUtilities:color_brick:11>
+Ore entries for <ore:bricksClayLightBlue> :
+    <ExtraUtilities:color_brick:12>
+Ore entries for <ore:bricksClayMagenta> :
+    <ExtraUtilities:color_brick:13>
+Ore entries for <ore:bricksClayOrange> :
+    <ExtraUtilities:color_brick:14>
+Ore entries for <ore:bricksClayWhite> :
+    <ExtraUtilities:color_brick:15>
+Ore entries for <ore:cobblestoneBlack> :
+    <ExtraUtilities:color_stonebrick>
+Ore entries for <ore:cobblestoneRed> :
+    <ExtraUtilities:color_stonebrick:1>
+Ore entries for <ore:cobblestoneGreen> :
+    <ExtraUtilities:color_stonebrick:2>
+Ore entries for <ore:cobblestoneBrown> :
+    <ExtraUtilities:color_stonebrick:3>
+Ore entries for <ore:cobblestoneBlue> :
+    <ExtraUtilities:color_stonebrick:4>
+Ore entries for <ore:cobblestonePurple> :
+    <ExtraUtilities:color_stonebrick:5>
+Ore entries for <ore:cobblestoneCyan> :
+    <ExtraUtilities:color_stonebrick:6>
+Ore entries for <ore:cobblestoneLightGray> :
+    <ExtraUtilities:color_stonebrick:7>
+Ore entries for <ore:cobblestoneGray> :
+    <ExtraUtilities:color_stonebrick:8>
+Ore entries for <ore:cobblestonePink> :
+    <ExtraUtilities:color_stonebrick:9>
+Ore entries for <ore:cobblestoneLime> :
+    <ExtraUtilities:color_stonebrick:10>
+Ore entries for <ore:cobblestoneYellow> :
+    <ExtraUtilities:color_stonebrick:11>
+Ore entries for <ore:cobblestoneLightBlue> :
+    <ExtraUtilities:color_stonebrick:12>
+Ore entries for <ore:cobblestoneMagenta> :
+    <ExtraUtilities:color_stonebrick:13>
+Ore entries for <ore:cobblestoneOrange> :
+    <ExtraUtilities:color_stonebrick:14>
+Ore entries for <ore:cobblestoneWhite> :
+    <ExtraUtilities:color_stonebrick:15>
+Ore entries for <ore:blockLapisBlack> :
+    <ExtraUtilities:color_blockLapis>
+Ore entries for <ore:blockLapisRed> :
+    <ExtraUtilities:color_blockLapis:1>
+Ore entries for <ore:blockLapisGreen> :
+    <ExtraUtilities:color_blockLapis:2>
+Ore entries for <ore:blockLapisBrown> :
+    <ExtraUtilities:color_blockLapis:3>
+Ore entries for <ore:blockLapisBlue> :
+    <ExtraUtilities:color_blockLapis:4>
+Ore entries for <ore:blockLapisPurple> :
+    <ExtraUtilities:color_blockLapis:5>
+Ore entries for <ore:blockLapisCyan> :
+    <ExtraUtilities:color_blockLapis:6>
+Ore entries for <ore:blockLapisLightGray> :
+    <ExtraUtilities:color_blockLapis:7>
+Ore entries for <ore:blockLapisGray> :
+    <ExtraUtilities:color_blockLapis:8>
+Ore entries for <ore:blockLapisPink> :
+    <ExtraUtilities:color_blockLapis:9>
+Ore entries for <ore:blockLapisLime> :
+    <ExtraUtilities:color_blockLapis:10>
+Ore entries for <ore:blockLapisYellow> :
+    <ExtraUtilities:color_blockLapis:11>
+Ore entries for <ore:blockLapisLightBlue> :
+    <ExtraUtilities:color_blockLapis:12>
+Ore entries for <ore:blockLapisMagenta> :
+    <ExtraUtilities:color_blockLapis:13>
+Ore entries for <ore:blockLapisOrange> :
+    <ExtraUtilities:color_blockLapis:14>
+Ore entries for <ore:blockLapisWhite> :
+    <ExtraUtilities:color_blockLapis:15>
+Ore entries for <ore:obsidian> :
+    <ExtraUtilities:color_obsidian>
+    <ExtraUtilities:color_obsidian:1>
+    <ExtraUtilities:color_obsidian:2>
+    <ExtraUtilities:color_obsidian:3>
+    <ExtraUtilities:color_obsidian:4>
+    <ExtraUtilities:color_obsidian:5>
+    <ExtraUtilities:color_obsidian:6>
+    <ExtraUtilities:color_obsidian:7>
+    <ExtraUtilities:color_obsidian:8>
+    <ExtraUtilities:color_obsidian:9>
+    <ExtraUtilities:color_obsidian:10>
+    <ExtraUtilities:color_obsidian:11>
+    <ExtraUtilities:color_obsidian:12>
+    <ExtraUtilities:color_obsidian:13>
+    <ExtraUtilities:color_obsidian:14>
+    <ExtraUtilities:color_obsidian:15>
+Ore entries for <ore:obsidianBlack> :
+    <ExtraUtilities:color_obsidian>
+Ore entries for <ore:obsidianRed> :
+    <ExtraUtilities:color_obsidian:1>
+Ore entries for <ore:obsidianGreen> :
+    <ExtraUtilities:color_obsidian:2>
+Ore entries for <ore:obsidianBrown> :
+    <ExtraUtilities:color_obsidian:3>
+Ore entries for <ore:obsidianBlue> :
+    <ExtraUtilities:color_obsidian:4>
+Ore entries for <ore:obsidianPurple> :
+    <ExtraUtilities:color_obsidian:5>
+Ore entries for <ore:obsidianCyan> :
+    <ExtraUtilities:color_obsidian:6>
+Ore entries for <ore:obsidianLightGray> :
+    <ExtraUtilities:color_obsidian:7>
+Ore entries for <ore:obsidianGray> :
+    <ExtraUtilities:color_obsidian:8>
+Ore entries for <ore:obsidianPink> :
+    <ExtraUtilities:color_obsidian:9>
+Ore entries for <ore:obsidianLime> :
+    <ExtraUtilities:color_obsidian:10>
+Ore entries for <ore:obsidianYellow> :
+    <ExtraUtilities:color_obsidian:11>
+Ore entries for <ore:obsidianLightBlue> :
+    <ExtraUtilities:color_obsidian:12>
+Ore entries for <ore:obsidianMagenta> :
+    <ExtraUtilities:color_obsidian:13>
+Ore entries for <ore:obsidianOrange> :
+    <ExtraUtilities:color_obsidian:14>
+Ore entries for <ore:obsidianWhite> :
+    <ExtraUtilities:color_obsidian:15>
+Ore entries for <ore:blockRedstoneBlack> :
+    <ExtraUtilities:color_blockRedstone>
+Ore entries for <ore:blockRedstoneRed> :
+    <ExtraUtilities:color_blockRedstone:1>
+Ore entries for <ore:blockRedstoneGreen> :
+    <ExtraUtilities:color_blockRedstone:2>
+Ore entries for <ore:blockRedstoneBrown> :
+    <ExtraUtilities:color_blockRedstone:3>
+Ore entries for <ore:blockRedstoneBlue> :
+    <ExtraUtilities:color_blockRedstone:4>
+Ore entries for <ore:blockRedstonePurple> :
+    <ExtraUtilities:color_blockRedstone:5>
+Ore entries for <ore:blockRedstoneCyan> :
+    <ExtraUtilities:color_blockRedstone:6>
+Ore entries for <ore:blockRedstoneLightGray> :
+    <ExtraUtilities:color_blockRedstone:7>
+Ore entries for <ore:blockRedstoneGray> :
+    <ExtraUtilities:color_blockRedstone:8>
+Ore entries for <ore:blockRedstonePink> :
+    <ExtraUtilities:color_blockRedstone:9>
+Ore entries for <ore:blockRedstoneLime> :
+    <ExtraUtilities:color_blockRedstone:10>
+Ore entries for <ore:blockRedstoneYellow> :
+    <ExtraUtilities:color_blockRedstone:11>
+Ore entries for <ore:blockRedstoneLightBlue> :
+    <ExtraUtilities:color_blockRedstone:12>
+Ore entries for <ore:blockRedstoneMagenta> :
+    <ExtraUtilities:color_blockRedstone:13>
+Ore entries for <ore:blockRedstoneOrange> :
+    <ExtraUtilities:color_blockRedstone:14>
+Ore entries for <ore:blockRedstoneWhite> :
+    <ExtraUtilities:color_blockRedstone:15>
+Ore entries for <ore:blockCoalBlack> :
+    <ExtraUtilities:color_blockCoal>
+Ore entries for <ore:blockCoalRed> :
+    <ExtraUtilities:color_blockCoal:1>
+Ore entries for <ore:blockCoalGreen> :
+    <ExtraUtilities:color_blockCoal:2>
+Ore entries for <ore:blockCoalBrown> :
+    <ExtraUtilities:color_blockCoal:3>
+Ore entries for <ore:blockCoalBlue> :
+    <ExtraUtilities:color_blockCoal:4>
+Ore entries for <ore:blockCoalPurple> :
+    <ExtraUtilities:color_blockCoal:5>
+Ore entries for <ore:blockCoalCyan> :
+    <ExtraUtilities:color_blockCoal:6>
+Ore entries for <ore:blockCoalLightGray> :
+    <ExtraUtilities:color_blockCoal:7>
+Ore entries for <ore:blockCoalGray> :
+    <ExtraUtilities:color_blockCoal:8>
+Ore entries for <ore:blockCoalPink> :
+    <ExtraUtilities:color_blockCoal:9>
+Ore entries for <ore:blockCoalLime> :
+    <ExtraUtilities:color_blockCoal:10>
+Ore entries for <ore:blockCoalYellow> :
+    <ExtraUtilities:color_blockCoal:11>
+Ore entries for <ore:blockCoalLightBlue> :
+    <ExtraUtilities:color_blockCoal:12>
+Ore entries for <ore:blockCoalMagenta> :
+    <ExtraUtilities:color_blockCoal:13>
+Ore entries for <ore:blockCoalOrange> :
+    <ExtraUtilities:color_blockCoal:14>
+Ore entries for <ore:blockCoalWhite> :
+    <ExtraUtilities:color_blockCoal:15>
+Ore entries for <ore:gravel> :
+    <minecraft:gravel>
+Ore entries for <ore:oreAluminum> :
+    <TConstruct:SearedBrick:5>
+    <TConstruct:GravelOre:4>
+    <ImmersiveEngineering:ore:1>
+Ore entries for <ore:blockAluminum> :
+    <TConstruct:MetalBlock:6>
+    <ImmersiveEngineering:storage:1>
+Ore entries for <ore:blockConstantan> :
+    <ImmersiveEngineering:storage:5>
+Ore entries for <ore:slabCopper> :
+    <ImmersiveEngineering:storageSlab>
+Ore entries for <ore:slabAluminum> :
+    <ImmersiveEngineering:storageSlab:1>
+Ore entries for <ore:slabLead> :
+    <ImmersiveEngineering:storageSlab:2>
+Ore entries for <ore:slabSilver> :
+    <ImmersiveEngineering:storageSlab:3>
+Ore entries for <ore:slabNickel> :
+    <ImmersiveEngineering:storageSlab:4>
+Ore entries for <ore:slabConstantan> :
+    <ImmersiveEngineering:storageSlab:5>
+Ore entries for <ore:slabElectrum> :
+    <ImmersiveEngineering:storageSlab:6>
+Ore entries for <ore:slabSteel> :
+    <ImmersiveEngineering:storageSlab:7>
+Ore entries for <ore:ingotAluminum> :
+    <TConstruct:materials:11>
+    <ImmersiveEngineering:metal:1>
+Ore entries for <ore:ingotConstantan> :
+    <ImmersiveEngineering:metal:5>
+Ore entries for <ore:dustAluminum> :
+    <TConstruct:materials:40>
+    <ImmersiveEngineering:metal:11>
+Ore entries for <ore:dustConstantan> :
+    <ImmersiveEngineering:metal:15>
+Ore entries for <ore:dustCoke> :
+    <ImmersiveEngineering:metal:17>
+Ore entries for <ore:dustQuartz> :
+    <ImmersiveEngineering:metal:18>
+Ore entries for <ore:dustHOPGraphite> :
+    <ImmersiveEngineering:metal:19>
+Ore entries for <ore:ingotHOPGraphite> :
+    <ImmersiveEngineering:metal:20>
+Ore entries for <ore:nuggetAluminum> :
+    <TConstruct:materials:22>
+    <ImmersiveEngineering:metal:23>
+Ore entries for <ore:nuggetConstantan> :
+    <ImmersiveEngineering:metal:27>
+Ore entries for <ore:nuggetSteel> :
+    <TConstruct:materials:33>
+    <ImmersiveEngineering:metal:29>
+Ore entries for <ore:plateAluminum> :
+    <ImmersiveEngineering:metal:32>
+Ore entries for <ore:plateSilver> :
+    <ImmersiveEngineering:metal:34>
+Ore entries for <ore:plateNickel> :
+    <ImmersiveEngineering:metal:35>
+Ore entries for <ore:plateConstantan> :
+    <ImmersiveEngineering:metal:36>
+Ore entries for <ore:plateElectrum> :
+    <ImmersiveEngineering:metal:37>
+Ore entries for <ore:ingotCupronickel> :
+    <ImmersiveEngineering:metal:5>
+Ore entries for <ore:dustCupronickel> :
+    <ImmersiveEngineering:metal:15>
+Ore entries for <ore:blockCupronickel> :
+    <ImmersiveEngineering:storage:5>
+Ore entries for <ore:nuggetCupronickel> :
+    <ImmersiveEngineering:metal:27>
+Ore entries for <ore:seedIndustrialHemp> :
+    <ImmersiveEngineering:seed>
+Ore entries for <ore:treatedStick> :
+    <ImmersiveEngineering:material>
+Ore entries for <ore:fabricHemp> :
+    <ImmersiveEngineering:material:4>
+Ore entries for <ore:fuelCoke> :
+    <ImmersiveEngineering:material:6>
+Ore entries for <ore:plankTreatedWood> :
+    <ImmersiveEngineering:treatedWood:*>
+Ore entries for <ore:slabTreatedWood> :
+    <ImmersiveEngineering:woodenDecoration:2>
+Ore entries for <ore:blockFuelCoke> :
+    <ImmersiveEngineering:stoneDevice:3>
+    <ImmersiveEngineering:stoneDecoration:3>
+Ore entries for <ore:fenceSteel> :
+    <ImmersiveEngineering:metalDecoration>
+Ore entries for <ore:fenceAluminum> :
+    <ImmersiveEngineering:metalDecoration:12>
+Ore entries for <ore:itemSlag> :
+    <ImmersiveEngineering:material:13>
+Ore entries for <ore:stickIron> :
+    <ImmersiveEngineering:material:14>
+Ore entries for <ore:stickSteel> :
+    <ImmersiveEngineering:material:15>
+Ore entries for <ore:stickAluminum> :
+    <ImmersiveEngineering:material:16>
+Ore entries for <ore:blockIce> :
+    <minecraft:ice>
+Ore entries for <ore:blockPackedIce> :
+    <minecraft:packed_ice>
+Ore entries for <ore:rodBlaze> :
+    <minecraft:blaze_rod>
+Ore entries for <ore:hambone> :
+    <TConstruct:MeatBlock>
+Ore entries for <ore:oreCobalt> :
+    <TConstruct:SearedBrick:1>
+    <TConstruct:GravelOre:5>
+Ore entries for <ore:oreArdite> :
+    <TConstruct:SearedBrick:2>
+Ore entries for <ore:oreAluminium> :
+    <TConstruct:SearedBrick:5>
+    <TConstruct:GravelOre:4>
+Ore entries for <ore:blockCobalt> :
+    <TConstruct:MetalBlock>
+Ore entries for <ore:blockArdite> :
+    <TConstruct:MetalBlock:1>
+Ore entries for <ore:blockManyullyn> :
+    <TConstruct:MetalBlock:2>
+Ore entries for <ore:blockAluminium> :
+    <TConstruct:MetalBlock:6>
+Ore entries for <ore:blockAluminumBrass> :
+    <TConstruct:MetalBlock:7>
+Ore entries for <ore:blockAluminiumBrass> :
+    <TConstruct:MetalBlock:7>
+Ore entries for <ore:blockAlumite> :
+    <TConstruct:MetalBlock:8>
+Ore entries for <ore:blockEnder> :
+    <TConstruct:MetalBlock:10>
+Ore entries for <ore:nuggetAluminium> :
+    <TConstruct:materials:22>
+Ore entries for <ore:oreberryIron> :
+    <TConstruct:oreBerries>
+Ore entries for <ore:oreberryCopper> :
+    <TConstruct:oreBerries:2>
+Ore entries for <ore:oreberryTin> :
+    <TConstruct:oreBerries:3>
+Ore entries for <ore:oreberryAluminum> :
+    <TConstruct:oreBerries:4>
+Ore entries for <ore:oreberryGold> :
+    <TConstruct:oreBerries:1>
+Ore entries for <ore:orebushIron> :
+    <TConstruct:ore.berries.one>
+Ore entries for <ore:orebushGold> :
+    <TConstruct:ore.berries.one:1>
+Ore entries for <ore:orebushCopper> :
+    <TConstruct:ore.berries.one:2>
+Ore entries for <ore:orebushTin> :
+    <TConstruct:ore.berries.one:3>
+Ore entries for <ore:orebushAluminum> :
+    <TConstruct:ore.berries.two>
+Ore entries for <ore:orebushAluminium> :
+    <TConstruct:ore.berries.two>
+Ore entries for <ore:orebushEssence> :
+    <TConstruct:ore.berries.two:1>
+Ore entries for <ore:slabCloth> :
+    <TConstruct:WoolSlab1:*>
+    <TConstruct:WoolSlab2:*>
+Ore entries for <ore:stoneMossy> :
+    <minecraft:stonebrick:1>
+    <minecraft:mossy_cobblestone>
+Ore entries for <ore:crafterWood> :
+    <minecraft:crafting_table>
+Ore entries for <ore:torchStone> :
+    <TConstruct:decoration.stonetorch>
+Ore entries for <ore:ingotCobalt> :
+    <TConstruct:materials:3>
+Ore entries for <ore:ingotArdite> :
+    <TConstruct:materials:4>
+Ore entries for <ore:ingotManyullyn> :
+    <TConstruct:materials:5>
+Ore entries for <ore:ingotAluminium> :
+    <TConstruct:materials:11>
+Ore entries for <ore:ingotAluminumBrass> :
+    <TConstruct:materials:14>
+Ore entries for <ore:ingotAluminiumBrass> :
+    <TConstruct:materials:14>
+Ore entries for <ore:ingotAlumite> :
+    <TConstruct:materials:15>
+Ore entries for <ore:ingotObsidian> :
+    <TConstruct:materials:18>
+Ore entries for <ore:ingotPigIron> :
+    <TConstruct:materials:34>
+Ore entries for <ore:itemRawRubber> :
+    <TConstruct:materials:36>
+Ore entries for <ore:nuggetAluminumBrass> :
+    <TConstruct:materials:24>
+Ore entries for <ore:nuggetAluminiumBrass> :
+    <TConstruct:materials:24>
+Ore entries for <ore:nuggetObsidian> :
+    <TConstruct:materials:27>
+Ore entries for <ore:nuggetCobalt> :
+    <TConstruct:materials:28>
+Ore entries for <ore:nuggetArdite> :
+    <TConstruct:materials:29>
+Ore entries for <ore:nuggetManyullyn> :
+    <TConstruct:materials:30>
+Ore entries for <ore:nuggetAlumite> :
+    <TConstruct:materials:32>
+Ore entries for <ore:nuggetPigIron> :
+    <TConstruct:materials:35>
+Ore entries for <ore:dustArdite> :
+    <TConstruct:materials:38>
+Ore entries for <ore:dustCobalt> :
+    <TConstruct:materials:39>
+Ore entries for <ore:dustAluminium> :
+    <TConstruct:materials:40>
+Ore entries for <ore:dustManyullyn> :
+    <TConstruct:materials:41>
+Ore entries for <ore:dustAluminiumBrass> :
+    <TConstruct:materials:42>
+Ore entries for <ore:dustAluminumBrass> :
+    <TConstruct:materials:42>
+Ore entries for <ore:woodRod> :
+    <TConstruct:toolRod>
+Ore entries for <ore:rodWood> :
+    <TConstruct:toolRod>
+Ore entries for <ore:stoneRod> :
+    <TConstruct:toolRod:1>
+Ore entries for <ore:rodStone> :
+    <TConstruct:toolRod:1>
+    <ForgeMicroblock:stoneRod>
+Ore entries for <ore:ironRod> :
+    <TConstruct:toolRod:2>
+Ore entries for <ore:rodIron> :
+    <TConstruct:toolRod:2>
+Ore entries for <ore:flintRod> :
+    <TConstruct:toolRod:3>
+Ore entries for <ore:rodFlint> :
+    <TConstruct:toolRod:3>
+Ore entries for <ore:cactusRod> :
+    <TConstruct:toolRod:4>
+Ore entries for <ore:rodCactus> :
+    <TConstruct:toolRod:4>
+Ore entries for <ore:boneRod> :
+    <TConstruct:toolRod:5>
+Ore entries for <ore:rodBone> :
+    <TConstruct:toolRod:5>
+Ore entries for <ore:obsidianRod> :
+    <TConstruct:toolRod:6>
+Ore entries for <ore:rodObsidian> :
+    <TConstruct:toolRod:6>
+Ore entries for <ore:netherrackRod> :
+    <TConstruct:toolRod:7>
+Ore entries for <ore:rodNetherrack> :
+    <TConstruct:toolRod:7>
+Ore entries for <ore:slimeRod> :
+    <TConstruct:toolRod:8>
+Ore entries for <ore:rodSlime> :
+    <TConstruct:toolRod:8>
+Ore entries for <ore:paperRod> :
+    <TConstruct:toolRod:9>
+Ore entries for <ore:rodPaper> :
+    <TConstruct:toolRod:9>
+Ore entries for <ore:cobaltRod> :
+    <TConstruct:toolRod:10>
+Ore entries for <ore:rodCobalt> :
+    <TConstruct:toolRod:10>
+Ore entries for <ore:arditeRod> :
+    <TConstruct:toolRod:11>
+Ore entries for <ore:rodArdite> :
+    <TConstruct:toolRod:11>
+Ore entries for <ore:manyullynRod> :
+    <TConstruct:toolRod:12>
+Ore entries for <ore:rodManyullyn> :
+    <TConstruct:toolRod:12>
+Ore entries for <ore:copperRod> :
+    <TConstruct:toolRod:13>
+Ore entries for <ore:rodCopper> :
+    <TConstruct:toolRod:13>
+Ore entries for <ore:bronzeRod> :
+    <TConstruct:toolRod:14>
+Ore entries for <ore:rodBronze> :
+    <TConstruct:toolRod:14>
+Ore entries for <ore:alumiteRod> :
+    <TConstruct:toolRod:15>
+Ore entries for <ore:rodAlumite> :
+    <TConstruct:toolRod:15>
+Ore entries for <ore:steelRod> :
+    <TConstruct:toolRod:16>
+Ore entries for <ore:rodSteel> :
+    <TConstruct:toolRod:16>
+Ore entries for <ore:blueslimeRod> :
+    <TConstruct:toolRod:17>
+Ore entries for <ore:rodBlueslime> :
+    <TConstruct:toolRod:17>
+Ore entries for <ore:thaumiumRod> :
+    <TConstruct:toolRod:31>
+Ore entries for <ore:blockRubber> :
+    <TConstruct:GlueBlock>
+Ore entries for <ore:glassWhite> :
+    <TConstruct:GlassBlock.StainedClear>
+Ore entries for <ore:glassOrange> :
+    <TConstruct:GlassBlock.StainedClear:1>
+Ore entries for <ore:glassMagenta> :
+    <TConstruct:GlassBlock.StainedClear:2>
+Ore entries for <ore:glassLightBlue> :
+    <TConstruct:GlassBlock.StainedClear:3>
+Ore entries for <ore:glassYellow> :
+    <TConstruct:GlassBlock.StainedClear:4>
+Ore entries for <ore:glassLime> :
+    <TConstruct:GlassBlock.StainedClear:5>
+Ore entries for <ore:glassPink> :
+    <TConstruct:GlassBlock.StainedClear:6>
+Ore entries for <ore:glassGray> :
+    <TConstruct:GlassBlock.StainedClear:7>
+Ore entries for <ore:glassLightGray> :
+    <TConstruct:GlassBlock.StainedClear:8>
+Ore entries for <ore:glassCyan> :
+    <TConstruct:GlassBlock.StainedClear:9>
+Ore entries for <ore:glassPurple> :
+    <TConstruct:GlassBlock.StainedClear:10>
+Ore entries for <ore:glassBlue> :
+    <TConstruct:GlassBlock.StainedClear:11>
+Ore entries for <ore:glassBrown> :
+    <TConstruct:GlassBlock.StainedClear:12>
+Ore entries for <ore:glassGreen> :
+    <TConstruct:GlassBlock.StainedClear:13>
+Ore entries for <ore:glassRed> :
+    <TConstruct:GlassBlock.StainedClear:14>
+Ore entries for <ore:glassBlack> :
+    <TConstruct:GlassBlock.StainedClear:15>
+Ore entries for <ore:oreDraconium> :
+    <DraconicEvolution:draconiumOre>
+Ore entries for <ore:blockDraconium> :
+    <DraconicEvolution:draconium>
+Ore entries for <ore:blockDraconiumAwakened> :
+    <DraconicEvolution:draconicBlock>
+Ore entries for <ore:ingotDraconium> :
+    <DraconicEvolution:draconiumIngot>
+Ore entries for <ore:dustDraconium> :
+    <DraconicEvolution:draconiumDust>
+Ore entries for <ore:ingotDraconiumAwakened> :
+    <DraconicEvolution:draconicIngot>
+Ore entries for <ore:nuggetDraconium> :
+    <DraconicEvolution:nugget>
+Ore entries for <ore:nuggetDraconiumAwakened> :
+    <DraconicEvolution:nugget:1>
+Ore entries for <ore:slabWoodOak> :
+    <minecraft:wooden_slab>
+Ore entries for <ore:slabWoodSpruce> :
+    <minecraft:wooden_slab:1>
+Ore entries for <ore:slabWoodBirch> :
+    <minecraft:wooden_slab:2>
+Ore entries for <ore:slabWoodJungle> :
+    <minecraft:wooden_slab:3>
+Ore entries for <ore:slabWoodAcacia> :
+    <minecraft:wooden_slab:4>
+Ore entries for <ore:slabWoodDarkOak> :
+    <minecraft:wooden_slab:5>
+Ore entries for <ore:slabStone> :
+    <minecraft:stone_slab>
+Ore entries for <ore:slabSandstone> :
+    <minecraft:stone_slab:1>
+Ore entries for <ore:slabCobblestone> :
+    <minecraft:stone_slab:3>
+Ore entries for <ore:slabBricks> :
+    <minecraft:stone_slab:4>
+Ore entries for <ore:slabStoneBricks> :
+    <minecraft:stone_slab:5>
+Ore entries for <ore:slabNetherBrick> :
+    <minecraft:stone_slab:6>
+Ore entries for <ore:slabQuartz> :
+    <minecraft:stone_slab:7>
+Ore entries for <ore:barsIron> :
+    <minecraft:iron_bars>
+    <EnderIO:blockDarkIronBars>
+Ore entries for <ore:blockHopper> :
+    <minecraft:hopper>
+Ore entries for <ore:blockObsidian> :
+    <minecraft:obsidian>
+Ore entries for <ore:itemNetherStar> :
+    <minecraft:nether_star>
+Ore entries for <ore:itemCoal> :
+    <minecraft:coal>
+    <minecraft:coal:*>
+Ore entries for <ore:itemCharcoal> :
+    <minecraft:coal:1>
+Ore entries for <ore:pearlEnder> :
+    <minecraft:ender_pearl>
+Ore entries for <ore:pearlEnderEye> :
+    <minecraft:ender_eye>
+Ore entries for <ore:itemBlazeRod> :
+    <minecraft:blaze_rod>
+Ore entries for <ore:itemBlazePowder> :
+    <minecraft:blaze_powder>
+Ore entries for <ore:itemClay> :
+    <minecraft:clay_ball>
+Ore entries for <ore:itemFlint> :
+    <minecraft:flint>
+Ore entries for <ore:itemGhastTear> :
+    <minecraft:ghast_tear>
+Ore entries for <ore:dustGunpowder> :
+    <minecraft:gunpowder>
+Ore entries for <ore:itemLeather> :
+    <minecraft:leather>
+Ore entries for <ore:dustEnderPearl> :
+    <EnderIO:itemPowderIngot:5>
+Ore entries for <ore:ingotEnderiumBase> :
+    <EnderIO:itemPowderIngot:6>
+Ore entries for <ore:ingotElectricalSteel> :
+    <EnderIO:itemAlloy>
+Ore entries for <ore:blockElectricalSteel> :
+    <EnderIO:blockIngotStorage>
+Ore entries for <ore:ingotEnergeticAlloy> :
+    <EnderIO:itemAlloy:1>
+Ore entries for <ore:blockEnergeticAlloy> :
+    <EnderIO:blockIngotStorage:1>
+Ore entries for <ore:ingotVibrantAlloy> :
+    <EnderIO:itemAlloy:2>
+Ore entries for <ore:ingotPhasedGold> :
+    <EnderIO:itemAlloy:2>
+Ore entries for <ore:blockVibrantAlloy> :
+    <EnderIO:blockIngotStorage:2>
+Ore entries for <ore:blockPhasedGold> :
+    <EnderIO:blockIngotStorage:2>
+Ore entries for <ore:ingotRedstoneAlloy> :
+    <EnderIO:itemAlloy:3>
+Ore entries for <ore:blockRedstoneAlloy> :
+    <EnderIO:blockIngotStorage:3>
+Ore entries for <ore:ingotConductiveIron> :
+    <EnderIO:itemAlloy:4>
+Ore entries for <ore:blockConductiveIron> :
+    <EnderIO:blockIngotStorage:4>
+Ore entries for <ore:ingotPulsatingIron> :
+    <EnderIO:itemAlloy:5>
+Ore entries for <ore:ingotPhasedIron> :
+    <EnderIO:itemAlloy:5>
+Ore entries for <ore:blockPulsatingIron> :
+    <EnderIO:blockIngotStorage:5>
+Ore entries for <ore:blockPhasedIron> :
+    <EnderIO:blockIngotStorage:5>
+Ore entries for <ore:ingotDarkSteel> :
+    <EnderIO:itemAlloy:6>
+Ore entries for <ore:blockDarkSteel> :
+    <EnderIO:blockIngotStorage:6>
+Ore entries for <ore:ingotSoularium> :
+    <EnderIO:itemAlloy:7>
+Ore entries for <ore:blockSoularium> :
+    <EnderIO:blockIngotStorage:7>
+Ore entries for <ore:nuggetPulsatingIron> :
+    <EnderIO:itemMaterial:3>
+Ore entries for <ore:nuggetVibrantAlloy> :
+    <EnderIO:itemMaterial:4>
+Ore entries for <ore:glass> :
+    <minecraft:glass>
+    <EnderIO:blockFusedQuartz:1>
+Ore entries for <ore:woodStick> :
+    <minecraft:stick>
+Ore entries for <ore:blockGlassHardened> :
+    <EnderIO:blockFusedQuartz>
+    <ThermalExpansion:Glass>
+    <ThermalExpansion:Glass:1>
+Ore entries for <ore:itemSkull> :
+    <minecraft:skull:*>
+    <EnderIO:blockEndermanSkull>
+Ore entries for <ore:itemSilicon> :
+    <EnderIO:itemMaterial>
+Ore entries for <ore:itemConduitBinder> :
+    <EnderIO:itemMaterial:1>
+Ore entries for <ore:itemBinderComposite> :
+    <EnderIO:itemMaterial:2>
+Ore entries for <ore:itemPhasedIronNugget> :
+    <EnderIO:itemMaterial:3>
+Ore entries for <ore:itemVibrantNugget> :
+    <EnderIO:itemMaterial:4>
+Ore entries for <ore:itemPulsatingCrystal> :
+    <EnderIO:itemMaterial:5>
+Ore entries for <ore:itemVibrantCrystal> :
+    <EnderIO:itemMaterial:6>
+Ore entries for <ore:itemDarkGrindingBall> :
+    <EnderIO:itemMaterial:7>
+Ore entries for <ore:itemEnderCrystal> :
+    <EnderIO:itemMaterial:8>
+Ore entries for <ore:itemAttractorCrystal> :
+    <EnderIO:itemMaterial:9>
+Ore entries for <ore:itemWeatherCrystal> :
+    <EnderIO:itemMaterial:10>
+Ore entries for <ore:itemMachineChassi> :
+    <EnderIO:itemMachinePart>
+Ore entries for <ore:itemBasicGear> :
+    <EnderIO:itemMachinePart:1>
+Ore entries for <ore:gemSaphire> :
+    <customnpcs:npcSaphire>
+Ore entries for <ore:gemAmethyst> :
+    <customnpcs:npcAmethyst>
+Ore entries for <ore:ingotDemonic> :
+    <customnpcs:npcDemonicIngot>
+Ore entries for <ore:ingotFairy> :
+    <ExtraTiC:funStuffIngot>
+Ore entries for <ore:ingotPokefennium> :
+    <ExtraTiC:funStuffIngot:1>
+Ore entries for <ore:ingotRed_aurum> :
+    <ExtraTiC:funStuffIngot:2>
+Ore entries for <ore:ingotDrulloy> :
+    <ExtraTiC:drulloyIngot>
+Ore entries for <ore:blockFairy> :
+    <ExtraTiC:blockFunStuff>
+Ore entries for <ore:blockPokefennium> :
+    <ExtraTiC:blockFunStuff:1>
+Ore entries for <ore:blockRed_aurum> :
+    <ExtraTiC:blockFunStuff:2>
+Ore entries for <ore:itemSuperconductor> :
+    <GraviSuite:itemSimpleItem:1>
+Ore entries for <ore:brickStone> :
+    <Aroma1997sDimension:portalFrame>
+Ore entries for <ore:oreNetherCoal> :
+    <NetherOres:tile.netherores.ore.0>
+Ore entries for <ore:oreNetherDiamond> :
+    <NetherOres:tile.netherores.ore.0:1>
+Ore entries for <ore:oreNetherGold> :
+    <NetherOres:tile.netherores.ore.0:2>
+Ore entries for <ore:oreNetherIron> :
+    <NetherOres:tile.netherores.ore.0:3>
+Ore entries for <ore:oreNetherLapis> :
+    <NetherOres:tile.netherores.ore.0:4>
+Ore entries for <ore:oreNetherRedstone> :
+    <NetherOres:tile.netherores.ore.0:5>
+Ore entries for <ore:oreNetherCopper> :
+    <NetherOres:tile.netherores.ore.0:6>
+Ore entries for <ore:oreNetherTin> :
+    <NetherOres:tile.netherores.ore.0:7>
+Ore entries for <ore:oreNetherEmerald> :
+    <NetherOres:tile.netherores.ore.0:8>
+Ore entries for <ore:oreNetherSilver> :
+    <NetherOres:tile.netherores.ore.0:9>
+Ore entries for <ore:oreNetherLead> :
+    <NetherOres:tile.netherores.ore.0:10>
+Ore entries for <ore:oreNetherUranium> :
+    <NetherOres:tile.netherores.ore.0:11>
+Ore entries for <ore:oreNetherRuby> :
+    <NetherOres:tile.netherores.ore.0:13>
+Ore entries for <ore:oreNetherPeridot> :
+    <NetherOres:tile.netherores.ore.0:14>
+Ore entries for <ore:oreNetherSapphire> :
+    <NetherOres:tile.netherores.ore.0:15>
+Ore entries for <ore:oreNetherPlatinum> :
+    <NetherOres:tile.netherores.ore.1>
+Ore entries for <ore:oreNetherNickel> :
+    <NetherOres:tile.netherores.ore.1:1>
+Ore entries for <ore:oreNetherSteel> :
+    <NetherOres:tile.netherores.ore.1:2>
+Ore entries for <ore:oreNetherIridium> :
+    <NetherOres:tile.netherores.ore.1:3>
+Ore entries for <ore:oreNetherSulfur> :
+    <NetherOres:tile.netherores.ore.1:5>
+Ore entries for <ore:oreNetherMithril> :
+    <NetherOres:tile.netherores.ore.1:7>
+Ore entries for <ore:oreNetherAmber> :
+    <NetherOres:tile.netherores.ore.1:11>
+Ore entries for <ore:oreNetherSaltpeter> :
+    <NetherOres:tile.netherores.ore.1:14>
+Ore entries for <ore:blockElectrumFlux> :
+    <RedstoneArsenal:Storage>
+Ore entries for <ore:blockCrystalFlux> :
+    <RedstoneArsenal:Storage:1>
+Ore entries for <ore:crystalCertusQuartz> :
+    <appliedenergistics2:item.ItemMultiMaterial>
+Ore entries for <ore:dustCertusQuartz> :
+    <appliedenergistics2:item.ItemMultiMaterial:2>
+Ore entries for <ore:dustNetherQuartz> :
+    <appliedenergistics2:item.ItemMultiMaterial:3>
+Ore entries for <ore:dustWheat> :
+    <appliedenergistics2:item.ItemMultiMaterial:4>
+    <EnderIO:itemPowderIngot:8>
+Ore entries for <ore:crystalFluix> :
+    <appliedenergistics2:item.ItemMultiMaterial:7>
+Ore entries for <ore:dustFluix> :
+    <appliedenergistics2:item.ItemMultiMaterial:8>
+Ore entries for <ore:pearlFluix> :
+    <appliedenergistics2:item.ItemMultiMaterial:9>
+Ore entries for <ore:gearWood> :
+    <appliedenergistics2:item.ItemMultiMaterial:40>
+Ore entries for <ore:crystalNetherQuartz> :
+    <minecraft:quartz>
+Ore entries for <ore:blockWool> :
+    <minecraft:wool:*>
+Ore entries for <ore:blockStainedHardenedClay> :
+    <minecraft:stained_hardened_clay:*>
+Ore entries for <ore:crystalPureFluix> :
+    <appliedenergistics2:item.ItemMultiMaterial:12>
+Ore entries for <ore:oreCertusQuartz> :
+    <appliedenergistics2:tile.OreQuartz>
+Ore entries for <ore:oreChargedCertusQuartz> :
+    <appliedenergistics2:tile.OreQuartzCharged>
+Ore entries for <ore:itemIlluminatedPanel> :
+    <appliedenergistics2:item.ItemMultiPart:180>
+    <appliedenergistics2:item.ItemMultiPart:160>
+    <appliedenergistics2:item.ItemMultiPart:200>
+Ore entries for <ore:blockCrystalMatrix> :
+    <Avaritia:Crystal_Matrix>
+Ore entries for <ore:blockCosmicNeutronium> :
+    <Avaritia:Resource_Block>
+Ore entries for <ore:blockInfinity> :
+    <Avaritia:Resource_Block:1>
+Ore entries for <ore:ingotCrystalMatrix> :
+    <Avaritia:Resource:1>
+Ore entries for <ore:ingotCosmicNeutronium> :
+    <Avaritia:Resource:4>
+Ore entries for <ore:ingotInfinity> :
+    <Avaritia:Resource:6>
+Ore entries for <ore:thermalexpansion:machineIron> :
+    <ThermalFoundation:material:12>
+Ore entries for <ore:thermalexpansion:machineGold> :
+    <ThermalFoundation:material:13>
+Ore entries for <ore:thermalexpansion:machineCopper> :
+    <Forestry:gearCopper>
+    <ThermalFoundation:material:128>
+Ore entries for <ore:thermalexpansion:machineTin> :
+    <Forestry:gearTin>
+    <ThermalFoundation:material:129>
+Ore entries for <ore:thermalexpansion:machineSilver> :
+    <ThermalFoundation:material:130>
+Ore entries for <ore:thermalexpansion:machineLead> :
+    <ThermalFoundation:material:131>
+Ore entries for <ore:thermalexpansion:machineNickel> :
+    <ThermalFoundation:material:132>
+Ore entries for <ore:thermalexpansion:machinePlatinum> :
+    <ThermalFoundation:material:133>
+Ore entries for <ore:thermalexpansion:machineMithril> :
+    <ThermalFoundation:material:134>
+Ore entries for <ore:thermalexpansion:machineElectrum> :
+    <ThermalFoundation:material:135>
+Ore entries for <ore:thermalexpansion:machineInvar> :
+    <ThermalFoundation:material:136>
+Ore entries for <ore:thermalexpansion:machineBronze> :
+    <Forestry:gearBronze>
+    <ThermalFoundation:material:137>
+Ore entries for <ore:thermalexpansion:machineSignalum> :
+    <ThermalFoundation:material:138>
+Ore entries for <ore:thermalexpansion:machineLumium> :
+    <ThermalFoundation:material:139>
+Ore entries for <ore:thermalexpansion:machineEnderium> :
+    <ThermalFoundation:material:140>
+Ore entries for <ore:dustWood> :
+    <ThermalExpansion:material:512>
+Ore entries for <ore:fertilizer> :
+    <ThermalExpansion:material:516>
+    <ThermalExpansion:material:517>
+Ore entries for <ore:fertilizerRich> :
+    <ThermalExpansion:material:517>
+Ore entries for <ore:thermalexpansion:machineFrame> :
+    <ThermalExpansion:Frame>
+    <ThermalExpansion:Frame:1>
+    <ThermalExpansion:Frame:2>
+    <ThermalExpansion:Frame:3>
+Ore entries for <ore:blockGlassHardenedIlluminated> :
+    <ThermalExpansion:Glass:1>
+Ore entries for <ore:blockClothRock> :
+    <ThermalExpansion:Rockwool:*>
+Ore entries for <ore:blockSnow> :
+    <minecraft:snow>
+Ore entries for <ore:pigment> :
+    <Botany:pigment>
+Ore entries for <ore:cropApple> :
+    <ExtraTrees:food>
+    <minecraft:apple>
+Ore entries for <ore:cropCrabapple> :
+    <ExtraTrees:food>
+Ore entries for <ore:cropOrange> :
+    <ExtraTrees:food:1>
+    <ExtraTrees:food:13>
+    <ExtraTrees:food:18>
+    <ExtraTrees:food:21>
+Ore entries for <ore:cropKumquat> :
+    <ExtraTrees:food:2>
+Ore entries for <ore:cropLime> :
+    <ExtraTrees:food:3>
+    <ExtraTrees:food:16>
+    <ExtraTrees:food:17>
+Ore entries for <ore:cropWildCherry> :
+    <ExtraTrees:food:4>
+Ore entries for <ore:cropSourCherry> :
+    <ExtraTrees:food:5>
+Ore entries for <ore:cropBlackCherry> :
+    <ExtraTrees:food:6>
+Ore entries for <ore:cropBlackthorn> :
+    <ExtraTrees:food:7>
+Ore entries for <ore:cropCherryPlum> :
+    <ExtraTrees:food:8>
+Ore entries for <ore:cropAlmond> :
+    <ExtraTrees:food:9>
+Ore entries for <ore:cropApricot> :
+    <ExtraTrees:food:10>
+Ore entries for <ore:cropGrapefruit> :
+    <ExtraTrees:food:11>
+Ore entries for <ore:cropSatsuma> :
+    <ExtraTrees:food:13>
+Ore entries for <ore:cropBuddhaHand> :
+    <ExtraTrees:food:14>
+Ore entries for <ore:cropCitron> :
+    <ExtraTrees:food:14>
+    <ExtraTrees:food:15>
+Ore entries for <ore:cropFingerLime> :
+    <ExtraTrees:food:16>
+Ore entries for <ore:cropKeyLime> :
+    <ExtraTrees:food:17>
+Ore entries for <ore:cropManderin> :
+    <ExtraTrees:food:18>
+Ore entries for <ore:cropNectarine> :
+    <ExtraTrees:food:19>
+Ore entries for <ore:cropPomelo> :
+    <ExtraTrees:food:20>
+Ore entries for <ore:cropTangerine> :
+    <ExtraTrees:food:21>
+Ore entries for <ore:cropSandPear> :
+    <ExtraTrees:food:23>
+Ore entries for <ore:cropHazelnut> :
+    <ExtraTrees:food:24>
+Ore entries for <ore:cropButternut> :
+    <ExtraTrees:food:25>
+Ore entries for <ore:cropBeechnut> :
+    <ExtraTrees:food:26>
+Ore entries for <ore:cropPecan> :
+    <ExtraTrees:food:27>
+Ore entries for <ore:cropBanana> :
+    <ExtraTrees:food:28>
+    <ExtraTrees:food:29>
+Ore entries for <ore:cropRedBanana> :
+    <ExtraTrees:food:29>
+Ore entries for <ore:cropPlantain> :
+    <ExtraTrees:food:30>
+Ore entries for <ore:cropBrazilNut> :
+    <ExtraTrees:food:31>
+Ore entries for <ore:cropFig> :
+    <ExtraTrees:food:32>
+Ore entries for <ore:cropAcorn> :
+    <ExtraTrees:food:33>
+Ore entries for <ore:cropElderberry> :
+    <ExtraTrees:food:34>
+Ore entries for <ore:cropOlive> :
+    <ExtraTrees:food:35>
+Ore entries for <ore:cropGingkoNut> :
+    <ExtraTrees:food:36>
+Ore entries for <ore:cropCoffee> :
+    <ExtraTrees:food:37>
+Ore entries for <ore:cropOsangeOrange> :
+    <ExtraTrees:food:38>
+Ore entries for <ore:cropClove> :
+    <ExtraTrees:food:39>
+Ore entries for <ore:seedWheat> :
+    <minecraft:wheat_seeds>
+Ore entries for <ore:stainedClayWhite> :
+    <minecraft:stained_hardened_clay>
+Ore entries for <ore:blockWoolWhite> :
+    <minecraft:wool>
+Ore entries for <ore:stainedClayOrange> :
+    <minecraft:stained_hardened_clay:1>
+Ore entries for <ore:blockWoolOrange> :
+    <minecraft:wool:1>
+Ore entries for <ore:stainedClayMagenta> :
+    <minecraft:stained_hardened_clay:2>
+Ore entries for <ore:blockWoolMagenta> :
+    <minecraft:wool:2>
+Ore entries for <ore:stainedClayLightBlue> :
+    <minecraft:stained_hardened_clay:3>
+Ore entries for <ore:blockWoolLightBlue> :
+    <minecraft:wool:3>
+Ore entries for <ore:stainedClayYellow> :
+    <minecraft:stained_hardened_clay:4>
+Ore entries for <ore:blockWoolYellow> :
+    <minecraft:wool:4>
+Ore entries for <ore:stainedClayLime> :
+    <minecraft:stained_hardened_clay:5>
+Ore entries for <ore:blockWoolLime> :
+    <minecraft:wool:5>
+Ore entries for <ore:stainedClayPink> :
+    <minecraft:stained_hardened_clay:6>
+Ore entries for <ore:blockWoolPink> :
+    <minecraft:wool:6>
+Ore entries for <ore:stainedClayGray> :
+    <minecraft:stained_hardened_clay:7>
+Ore entries for <ore:blockWoolGray> :
+    <minecraft:wool:7>
+Ore entries for <ore:stainedClayLightGray> :
+    <minecraft:stained_hardened_clay:8>
+Ore entries for <ore:blockWoolLightGray> :
+    <minecraft:wool:8>
+Ore entries for <ore:stainedClayCyan> :
+    <minecraft:stained_hardened_clay:9>
+Ore entries for <ore:blockWoolCyan> :
+    <minecraft:wool:9>
+Ore entries for <ore:stainedClayPurple> :
+    <minecraft:stained_hardened_clay:10>
+Ore entries for <ore:blockWoolPurple> :
+    <minecraft:wool:10>
+Ore entries for <ore:stainedClayBlue> :
+    <minecraft:stained_hardened_clay:11>
+Ore entries for <ore:blockWoolBlue> :
+    <minecraft:wool:11>
+Ore entries for <ore:stainedClayBrown> :
+    <minecraft:stained_hardened_clay:12>
+Ore entries for <ore:blockWoolBrown> :
+    <minecraft:wool:12>
+Ore entries for <ore:stainedClayGreen> :
+    <minecraft:stained_hardened_clay:13>
+Ore entries for <ore:blockWoolGreen> :
+    <minecraft:wool:13>
+Ore entries for <ore:stainedClayRed> :
+    <minecraft:stained_hardened_clay:14>
+Ore entries for <ore:blockWoolRed> :
+    <minecraft:wool:14>
+Ore entries for <ore:stainedClayBlack> :
+    <minecraft:stained_hardened_clay:15>
+Ore entries for <ore:blockWoolBlack> :
+    <minecraft:wool:15>
+Ore entries for <ore:crucioMaterial> :
+    <magicalcrops:AluminiumEssence>
+    <magicalcrops:CopperEssence>
+    <magicalcrops:CertusQuartzEssence>
+    <magicalcrops:LeadEssence>
+    <magicalcrops:TinEssence>
+    <magicalcrops:SulfurEssence>
+    <magicalcrops:BronzeEssence>
+    <magicalcrops:SaltpeterEssence>
+    <magicalcrops:AmberEssence>
+    <magicalcrops:RedstoneAlloyEssence>
+    <magicalcrops:RedstoneEssence>
+    <magicalcrops:GlowstoneEssence>
+    <magicalcrops:ObsidianEssence>
+    <magicalcrops:NetherEssence>
+    <magicalcrops:CowEssence>
+    <magicalcrops:PigEssence>
+    <magicalcrops:ChickenEssence>
+    <magicalcrops:SheepEssence>
+Ore entries for <ore:imperioMaterial> :
+    <magicalcrops:ArditeEssence>
+    <magicalcrops:NickelEssence>
+    <magicalcrops:PeridotEssence>
+    <magicalcrops:RubyEssence>
+    <magicalcrops:SapphireEssence>
+    <magicalcrops:SilverEssence>
+    <magicalcrops:YelloriteEssence>
+    <magicalcrops:AlumiteEssence>
+    <magicalcrops:BlizzEssence>
+    <magicalcrops:ElectrumEssence>
+    <magicalcrops:FluixEssence>
+    <magicalcrops:InvarEssence>
+    <magicalcrops:LumiumEssence>
+    <magicalcrops:SignalumEssence>
+    <magicalcrops:SteelEssence>
+    <magicalcrops:ElectricalSteelEssence>
+    <magicalcrops:EnergeticAlloyEssence>
+    <magicalcrops:VibrantAlloyEssence>
+    <magicalcrops:ConductiveIronEssence>
+    <magicalcrops:PulsatingIronEssence>
+    <magicalcrops:DarkSteelEssence>
+    <magicalcrops:SoulariumEssence>
+    <magicalcrops:IronEssence>
+    <magicalcrops:GoldEssence>
+    <magicalcrops:LapisEssence>
+    <magicalcrops:ExperienceEssence>
+    <magicalcrops:QuartzEssence>
+    <magicalcrops:CreeperEssence>
+    <magicalcrops:SkeletonEssence>
+    <magicalcrops:GhastEssence>
+    <magicalcrops:SpiderEssence>
+    <magicalcrops:SlimeEssence>
+    <magicalcrops:EndermanEssence>
+    <magicalcrops:BlazeEssence>
+Ore entries for <ore:zivicioMaterial> :
+    <magicalcrops:CobaltEssence>
+    <magicalcrops:PlatinumEssence>
+    <magicalcrops:EnderiumEssence>
+    <magicalcrops:ManyullynEssence>
+    <magicalcrops:DraconiumEssence>
+    <magicalcrops:DiamondEssence>
+    <magicalcrops:EmeraldEssence>
+    <magicalcrops:WitherEssence>
+Ore entries for <ore:accioMaterial> :
+    <magicalcrops:RubberEssence>
+    <magicalcrops:AirEssence>
+    <magicalcrops:CoalEssence>
+    <magicalcrops:DyeEssence>
+    <magicalcrops:EarthEssence>
+    <magicalcrops:FireEssence>
+    <magicalcrops:NatureEssence>
+    <magicalcrops:WaterEssence>
+Ore entries for <ore:oreMinicio> :
+    <magicalcrops:MinicioOre>
+Ore entries for <ore:MainInfusionMaterial> :
+    <minecraft:diamond>
+    <minecraft:emerald>
+    <minecraft:gold_block>
+Ore entries for <ore:netherMaterial> :
+    <minecraft:nether_brick>
+    <minecraft:netherrack>
+    <minecraft:soul_sand>
+Ore entries for <ore:natureMaterial> :
+    <minecraft:vine>
+    <minecraft:red_flower>
+    <minecraft:yellow_flower>
+    <minecraft:cactus>
+    <minecraft:pumpkin>
+    <minecraft:waterlily>
+    <minecraft:deadbush>
+    <minecraft:reeds>
+    <minecraft:carrot>
+    <minecraft:potato>
+    <minecraft:wheat>
+Ore entries for <ore:nuggetEfrine> :
+    <netherlicious:Nugget:1>
+Ore entries for <ore:ingotEfrine> :
+    <netherlicious:Ingot>
+Ore entries for <ore:dustGloomstone> :
+    <netherlicious:GloomstoneDust>
+Ore entries for <ore:oreEfrine> :
+    <netherlicious:EfrineOre>
+Ore entries for <ore:oreVoidQuartz> :
+    <netherlicious:VoidQuartzOre:*>
+Ore entries for <ore:blockEfrine> :
+    <netherlicious:EfrineBlock>
+Ore entries for <ore:fenceGateWood> :
+    <netherlicious:crimsonFenceGate>
+    <netherlicious:warpedFenceGate>
+    <netherlicious:foxfireFenceGate>
+Ore entries for <ore:flowerBlack> :
+    <netherlicious:WitherRose>
+Ore entries for <ore:flowerWhite> :
+    <netherlicious:WitherRose:1>
+Ore entries for <ore:flowerLightblue> :
+    <netherlicious:WitherRose:2>
+Ore entries for <ore:flowerPurple> :
+    <netherlicious:FoxfireLily>
+Ore entries for <ore:flowerBlue> :
+    <netherlicious:GloomHibiscus>
+Ore entries for <ore:flowerRed> :
+    <netherlicious:NetherFlowerShrub>
+Ore entries for <ore:flowerYellow> :
+    <netherlicious:NetherFlowerShrub:1>
+Ore entries for <ore:flowerGreen> :
+    <netherlicious:NetherFlowerShrub:2>
+Ore entries for <ore:flowerOrange> :
+    <netherlicious:NetherFlowerShrub:3>
+Ore entries for <ore:blockChain> :
+    <netherlicious:Chain>
+    <netherlicious:ChainGold>
+    <netherlicious:ChainEfrine>
+Ore entries for <ore:blockGravel> :
+    <netherlicious:Nether_Gravel>
+Ore entries for <ore:Gravel> :
+    <netherlicious:Nether_Gravel>
+Ore entries for <ore:buttonWood> :
+    <netherlicious:crimsonButton>
+    <netherlicious:warpedButton>
+    <netherlicious:foxfireButton>
+Ore entries for <ore:buttonStone> :
+    <netherlicious:blackstoneButton>
+Ore entries for <ore:listAllmushroom> :
+    <netherlicious:Fungus:*>
+Ore entries for <ore:listAllberry> :
+    <netherlicious:HellderBerryItem>
+Ore entries for <ore:listAllgrain> :
+    <netherlicious:AbyssalOatItem>
+Ore entries for <ore:cropPumpkin> :
+    <netherlicious:GhastlyGourd>
+Ore entries for <ore:cropGhastlyGourd> :
+    <netherlicious:GhastlyGourd>
+Ore entries for <ore:cropDevilishMaize> :
+    <netherlicious:DevilishMaizeItem>
+Ore entries for <ore:cropHellderBerry> :
+    <netherlicious:HellderBerryItem>
+Ore entries for <ore:listAllegg> :
+    <minecraft:egg>
+Ore entries for <ore:listAllsugar> :
+    <minecraft:sugar>
+Ore entries for <ore:listAlljuice> :
+    <netherlicious:JuiceHellderberry>
+Ore entries for <ore:listAllmeatraw> :
+    <netherlicious:StriderFlankRaw>
+Ore entries for <ore:listAllmeatcooked> :
+    <netherlicious:StriderFlankCooked>
+Ore entries for <ore:plantCrimson> :
+    <netherlicious:WartItem>
+    <netherlicious:Roots>
+    <netherlicious:Roots:2>
+    <netherlicious:Roots:3>
+    <netherlicious:Roots:4>
+    <netherlicious:Roots:5>
+    <netherlicious:CrimsonMoss>
+    <netherlicious:Plants2>
+    <netherlicious:Plants2:3>
+    <netherlicious:GroundCover>
+    <netherlicious:DoublePlants>
+    <netherlicious:DoublePlants:6>
+    <netherlicious:PotPlants>
+    <netherlicious:PotPlants:4>
+Ore entries for <ore:plantWarped> :
+    <netherlicious:WartItem:1>
+    <netherlicious:Roots:1>
+    <netherlicious:Roots:6>
+    <netherlicious:Roots:7>
+    <netherlicious:Roots:8>
+    <netherlicious:Roots:9>
+    <netherlicious:Roots:14>
+    <netherlicious:WarpedMoss>
+    <netherlicious:Plants2:1>
+    <netherlicious:Plants2:4>
+    <netherlicious:GroundCover:1>
+    <netherlicious:DoublePlants:2>
+    <netherlicious:DoublePlants:8>
+    <netherlicious:PotPlants:1>
+    <netherlicious:PotPlants:5>
+Ore entries for <ore:plantFoxfire> :
+    <netherlicious:WartItem:2>
+    <netherlicious:Roots:10>
+    <netherlicious:Roots:11>
+    <netherlicious:Roots:12>
+    <netherlicious:Roots:13>
+    <netherlicious:Plants>
+    <netherlicious:Plants:1>
+    <netherlicious:FoxfireMoss>
+    <netherlicious:Plants2:2>
+    <netherlicious:Plants2:5>
+    <netherlicious:GroundCover:2>
+    <netherlicious:DoublePlants:4>
+    <netherlicious:DoublePlants:10>
+    <netherlicious:PotPlants:2>
+    <netherlicious:PotPlants:3>
+    <netherlicious:PotPlants:6>
+Ore entries for <ore:rootCrimson> :
+    <netherlicious:Roots:2>
+    <netherlicious:Roots:3>
+    <netherlicious:Roots:4>
+    <netherlicious:Roots:5>
+Ore entries for <ore:rootWarped> :
+    <netherlicious:Roots:1>
+    <netherlicious:Roots:6>
+    <netherlicious:Roots:7>
+    <netherlicious:Roots:8>
+    <netherlicious:Roots:9>
+Ore entries for <ore:rootFoxfire> :
+    <netherlicious:Roots:10>
+    <netherlicious:Roots:11>
+    <netherlicious:Roots:12>
+    <netherlicious:Roots:13>
+Ore entries for <ore:blockWart> :
+    <netherlicious:Wartblock:*>
+Ore entries for <ore:blockBone> :
+    <netherlicious:BoneBlock:*>
+Ore entries for <ore:blockMagma> :
+    <netherlicious:MagmaBlock:*>
+Ore entries for <ore:blockSoul> :
+    <minecraft:soul_sand>
+    <netherlicious:SoulSoil:*>
+Ore entries for <ore:projredIllumar> :
+    <ProjRed|Core:projectred.core.part:19>
+    <ProjRed|Core:projectred.core.part:20>
+    <ProjRed|Core:projectred.core.part:21>
+    <ProjRed|Core:projectred.core.part:22>
+    <ProjRed|Core:projectred.core.part:23>
+    <ProjRed|Core:projectred.core.part:24>
+    <ProjRed|Core:projectred.core.part:25>
+    <ProjRed|Core:projectred.core.part:26>
+    <ProjRed|Core:projectred.core.part:27>
+    <ProjRed|Core:projectred.core.part:28>
+    <ProjRed|Core:projectred.core.part:29>
+    <ProjRed|Core:projectred.core.part:30>
+    <ProjRed|Core:projectred.core.part:31>
+    <ProjRed|Core:projectred.core.part:32>
+    <ProjRed|Core:projectred.core.part:33>
+    <ProjRed|Core:projectred.core.part:34>
+Ore entries for <ore:ingotRedAlloy> :
+    <ProjRed|Core:projectred.core.part:10>
+Ore entries for <ore:projredInsFramedWire> :
+    <ProjRed|Transmission:projectred.transmission.framewire:1>
+    <ProjRed|Transmission:projectred.transmission.framewire:2>
+    <ProjRed|Transmission:projectred.transmission.framewire:3>
+    <ProjRed|Transmission:projectred.transmission.framewire:4>
+    <ProjRed|Transmission:projectred.transmission.framewire:5>
+    <ProjRed|Transmission:projectred.transmission.framewire:6>
+    <ProjRed|Transmission:projectred.transmission.framewire:7>
+    <ProjRed|Transmission:projectred.transmission.framewire:8>
+    <ProjRed|Transmission:projectred.transmission.framewire:9>
+    <ProjRed|Transmission:projectred.transmission.framewire:10>
+    <ProjRed|Transmission:projectred.transmission.framewire:11>
+    <ProjRed|Transmission:projectred.transmission.framewire:12>
+    <ProjRed|Transmission:projectred.transmission.framewire:13>
+    <ProjRed|Transmission:projectred.transmission.framewire:14>
+    <ProjRed|Transmission:projectred.transmission.framewire:15>
+    <ProjRed|Transmission:projectred.transmission.framewire:16>
+Ore entries for <ore:projredInsulatedWire> :
+    <ProjRed|Transmission:projectred.transmission.wire:1>
+    <ProjRed|Transmission:projectred.transmission.wire:2>
+    <ProjRed|Transmission:projectred.transmission.wire:3>
+    <ProjRed|Transmission:projectred.transmission.wire:4>
+    <ProjRed|Transmission:projectred.transmission.wire:5>
+    <ProjRed|Transmission:projectred.transmission.wire:6>
+    <ProjRed|Transmission:projectred.transmission.wire:7>
+    <ProjRed|Transmission:projectred.transmission.wire:8>
+    <ProjRed|Transmission:projectred.transmission.wire:9>
+    <ProjRed|Transmission:projectred.transmission.wire:10>
+    <ProjRed|Transmission:projectred.transmission.wire:11>
+    <ProjRed|Transmission:projectred.transmission.wire:12>
+    <ProjRed|Transmission:projectred.transmission.wire:13>
+    <ProjRed|Transmission:projectred.transmission.wire:14>
+    <ProjRed|Transmission:projectred.transmission.wire:15>
+    <ProjRed|Transmission:projectred.transmission.wire:16>
+Ore entries for <ore:projredBundledCable> :
+    <ProjRed|Transmission:projectred.transmission.wire:17>
+    <ProjRed|Transmission:projectred.transmission.wire:18>
+    <ProjRed|Transmission:projectred.transmission.wire:19>
+    <ProjRed|Transmission:projectred.transmission.wire:20>
+    <ProjRed|Transmission:projectred.transmission.wire:21>
+    <ProjRed|Transmission:projectred.transmission.wire:22>
+    <ProjRed|Transmission:projectred.transmission.wire:23>
+    <ProjRed|Transmission:projectred.transmission.wire:24>
+    <ProjRed|Transmission:projectred.transmission.wire:25>
+    <ProjRed|Transmission:projectred.transmission.wire:26>
+    <ProjRed|Transmission:projectred.transmission.wire:27>
+    <ProjRed|Transmission:projectred.transmission.wire:28>
+    <ProjRed|Transmission:projectred.transmission.wire:29>
+    <ProjRed|Transmission:projectred.transmission.wire:30>
+    <ProjRed|Transmission:projectred.transmission.wire:31>
+    <ProjRed|Transmission:projectred.transmission.wire:32>
+    <ProjRed|Transmission:projectred.transmission.wire:33>
+Ore entries for <ore:dustElectrumFlux> :
+    <RedstoneArsenal:material>
+Ore entries for <ore:ingotElectrumFlux> :
+    <RedstoneArsenal:material:32>
+Ore entries for <ore:nuggetElectrumFlux> :
+    <RedstoneArsenal:material:64>
+Ore entries for <ore:gemCrystalFlux> :
+    <RedstoneArsenal:material:96>
+Ore entries for <ore:anyCertusCrystal> :
+    <appliedenergistics2:item.ItemMultiMaterial:10>
+    <appliedenergistics2:item.ItemMultiMaterial>
+Ore entries for <ore:cropCactus> :
+    <minecraft:cactus>
+Ore entries for <ore:cropMushroomRed> :
+    <minecraft:red_mushroom>
+Ore entries for <ore:cropMushroomBrown> :
+    <minecraft:brown_mushroom>

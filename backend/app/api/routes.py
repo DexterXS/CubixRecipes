@@ -27,6 +27,7 @@ from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.item_catalog import ItemCatalogService
+from app.items.oredict_parser import build_oredict_indexes
 from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
 from app.resolver.item_resolver import ItemResolver
@@ -277,6 +278,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_csv_storage_path = itempanel_data_dir / 'itempanel.csv'
     itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
     itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
+    oredict_storage_path = admin_data_dir / 'oredict.txt'
     project_root = _project_root_for_catalog(config_service)
     runtime_data_dir = config_service.data_dir if config_service.data_dir is not None else config_service.config_path.resolve(strict=False).parent / 'data'
     itempanel_csv_path = itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv'
@@ -293,6 +295,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         _active_itempanel_snbt_path(active_scripts_dir),
         itempanel_icon_catalog,
         merged_csv_path=itempanel_merged_csv_path,
+        oredict_path=oredict_storage_path,
     )
     item_catalog_service.scan()
     storage.excluded_managed_roots = [admin_data_dir]
@@ -567,6 +570,43 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'catalog': summary,
         })
         return {'ok': True, 'path': str(item_catalog_service.merged_csv_path), 'summary': summary}
+
+    @router.post('/admin/oredict/upload')
+    async def admin_upload_oredict(request: Request):
+        content = await request.body()
+        if not content.strip():
+            raise HTTPException(status_code=400, detail='oredict.txt is empty')
+        oredict_storage_path.parent.mkdir(parents=True, exist_ok=True)
+        oredict_storage_path.write_bytes(content)
+        item_catalog_service.oredict_path = oredict_storage_path
+        item_catalog_service.scan()
+        groups, reverse = build_oredict_indexes(oredict_storage_path)
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'OreDict uploaded', {
+            'path': str(oredict_storage_path),
+            'groups': len(groups),
+            'reverse_keys': len(reverse),
+        })
+        return {
+            'ok': True,
+            'path': str(oredict_storage_path),
+            'groups': len(groups),
+            'reverse_keys': len(reverse),
+        }
+
+    @router.get('/api/oredict/groups')
+    def api_oredict_groups():
+        if not oredict_storage_path.is_file():
+            return {'groups': {}, 'available': False}
+        groups, _ = build_oredict_indexes(oredict_storage_path)
+        return {'groups': groups, 'available': True}
+
+    @router.get('/api/oredict/item/{item_key:path}')
+    def api_oredict_item(item_key: str):
+        if not oredict_storage_path.is_file():
+            return {'groups': [], 'available': False}
+        _, reverse = build_oredict_indexes(oredict_storage_path)
+        normalised = item_key.lower()
+        return {'item_key': normalised, 'groups': reverse.get(normalised, []), 'available': True}
 
     @router.get('/admin/itempanel/merged')
     def admin_itempanel_merged_csv():

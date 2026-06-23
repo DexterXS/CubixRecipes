@@ -15,6 +15,7 @@ from app.items.itempanel_merge import (
     read_snbt_lines,
     read_snbt_lines_from_text,
 )
+from app.items.oredict_parser import build_oredict_indexes
 
 
 @dataclass
@@ -30,6 +31,7 @@ class ItemCatalogEntry:
     has_icon: bool = False
     icon_url: Optional[str] = None
     sources: set[str] = field(default_factory=set)
+    ore_groups: list[str] = field(default_factory=list)
 
     def to_api(self) -> dict:
         return {
@@ -44,15 +46,17 @@ class ItemCatalogEntry:
             'has_icon': self.has_icon,
             'icon_url': self.icon_url,
             'sources': sorted(self.sources),
+            'ore_groups': self.ore_groups,
         }
 
 
 class ItemCatalogService:
-    def __init__(self, csv_path: Path, snbt_path: Path, icon_catalog: ItemPanelIconCatalog, merged_csv_path: Optional[Path] = None) -> None:
+    def __init__(self, csv_path: Path, snbt_path: Path, icon_catalog: ItemPanelIconCatalog, merged_csv_path: Optional[Path] = None, oredict_path: Optional[Path] = None) -> None:
         self.csv_path = csv_path
         self.snbt_path = snbt_path
         self.merged_csv_path = merged_csv_path or csv_path.with_name('itempanel_merged.csv')
         self.icon_catalog = icon_catalog
+        self.oredict_path = oredict_path
         self.entries: list[ItemCatalogEntry] = []
         self.last_scan_report: dict[str, object] = {
             'csv_path': str(csv_path),
@@ -84,6 +88,7 @@ class ItemCatalogService:
 
         snbt_rows = self._count_snbt_rows()
         self.entries = list(by_raw.values())
+        self._enrich_ore_groups()
         self.last_scan_report = {
             'csv_path': str(self.csv_path),
             'snbt_path': str(self.snbt_path),
@@ -214,6 +219,20 @@ class ItemCatalogService:
         current.icon_url = current.icon_url or entry.icon_url
         if not current.nbt_raw:
             current.nbt_raw = entry.nbt_raw
+
+    def _enrich_ore_groups(self) -> None:
+        """Attach ore group names to each catalog entry using oredict reverse index."""
+        if not self.oredict_path or not self.oredict_path.is_file():
+            return
+        try:
+            _, reverse = build_oredict_indexes(self.oredict_path)
+        except Exception:
+            return
+        for entry in self.entries:
+            item_key = entry.key.lower()
+            groups = reverse.get(item_key, [])
+            if groups:
+                entry.ore_groups = groups
 
     def _has_icon(self, key: str, meta: int) -> bool:
         return (
