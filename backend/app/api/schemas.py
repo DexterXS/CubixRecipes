@@ -239,3 +239,9 @@ class DebugLogEventRequest(BaseModel):
     message: str
     details: dict = Field(default_factory=dict)
     verbose_only: bool = False
+
+
+class ModReplacementRequest(BaseModel):
+    modid: str
+    replacements: dict[str, str] = Field(default_factory=dict)
+

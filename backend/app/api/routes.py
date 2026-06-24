@@ -16,7 +16,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 
-from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -805,6 +805,130 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         debug_service.record_recipe_scan(storage.last_scan_report)
         log_service.log('BACKEND', 'INFO', 'RECIPES', 'Admin renamed .zs file', {'old_path': request.path, 'new_path': str(new_path)})
         return {'ok': True, 'path': str(new_path), 'files': storage.list_managed_zs_files()}
+
+    @router.get('/admin/mod-replacement/scan')
+    def admin_mod_replacement_scan(modid: str):
+        started_at = perf_counter()
+        target_modid = modid.strip().lower()
+        if not target_modid:
+            raise HTTPException(status_code=400, detail='Mod ID must not be empty')
+        
+        found_items = set()
+        for stored in storage._recipes.values():
+            recipe = stored.recipe
+            if recipe.output and recipe.output.modid.lower() == target_modid:
+                found_items.add(recipe.output.raw)
+            for row in recipe.matrix:
+                for cell in row:
+                    if cell.item and cell.item.modid.lower() == target_modid:
+                        found_items.add(cell.item.raw)
+                        
+        resolved_items = []
+        for raw in sorted(found_items):
+            try:
+                item_ref = parser.parse_item_ref(raw)
+                res = resolver.resolve(item_ref)
+                resolved_items.append({
+                    'raw': raw,
+                    'display_name': res.display_name,
+                    'icon_url': res.icon_url,
+                    'animated': res.animated,
+                })
+            except Exception:
+                resolved_items.append({
+                    'raw': raw,
+                    'display_name': raw,
+                    'icon_url': None,
+                    'animated': False,
+                })
+        
+        _log_api(log_service, 'GET', f'/api/admin/mod-replacement/scan', {'modid': modid}, '200', started_at)
+        return {'ok': True, 'items': resolved_items}
+
+    @router.post('/admin/mod-replacement/replace')
+    def admin_mod_replacement_replace(request: ModReplacementRequest):
+        started_at = perf_counter()
+        target_modid = request.modid.strip().lower()
+        replacements = request.replacements
+        if not target_modid:
+            raise HTTPException(status_code=400, detail='Mod ID must not be empty')
+        if not replacements:
+            raise HTTPException(status_code=400, detail='No replacements provided')
+            
+        for old, new in replacements.items():
+            if not new or not new.strip():
+                raise HTTPException(status_code=400, detail=f'Replacement item for {old} must not be empty')
+            if not (new.startswith('<') and new.endswith('>')):
+                raise HTTPException(status_code=400, detail=f'Invalid replacement item format: {new}')
+                
+        recipes_to_update = []
+        for stored in storage._recipes.values():
+            recipe = stored.recipe
+            needs_update = False
+            if recipe.output.raw in replacements:
+                needs_update = True
+            else:
+                for row in recipe.matrix:
+                    for cell in row:
+                        if cell.item and cell.item.raw in replacements:
+                            needs_update = True
+                            break
+                    if needs_update:
+                        break
+            if needs_update:
+                recipes_to_update.append(stored)
+                
+        if not recipes_to_update:
+            _log_api(log_service, 'POST', '/api/admin/mod-replacement/replace', request.model_dump(), '200', started_at, {'count': 0})
+            return {'ok': True, 'count': 0, 'files': []}
+            
+        by_file: dict[str, list[StoredRecipe]] = {}
+        for stored in recipes_to_update:
+            by_file.setdefault(stored.file_path, []).append(stored)
+            
+        updated_files = []
+        total_count = 0
+        for file_path_str, stored_list in by_file.items():
+            file_path = Path(file_path_str)
+            if not file_path.is_file():
+                continue
+                
+            zs_backup_service.backup_file(file_path)
+            text = file_path.read_text(encoding='utf-8')
+            sorted_stored = sorted(stored_list, key=lambda s: s.start_offset, reverse=True)
+            
+            for stored in sorted_stored:
+                recipe = stored.recipe
+                if recipe.output.raw in replacements:
+                    new_raw = replacements[recipe.output.raw]
+                    recipe.output = parser.parse_item_ref(new_raw)
+                    
+                for row in recipe.matrix:
+                    for cell in row:
+                        if cell.raw and cell.raw in replacements:
+                            new_raw = replacements[cell.raw]
+                            cell.raw = new_raw
+                            cell.item = parser.parse_item_ref(new_raw)
+                            
+                rendered = service.render_recipe(recipe, recipe.remove_template)
+                text = text[:stored.start_offset] + rendered + text[stored.end_offset:]
+                total_count += 1
+                
+            file_path.write_text(text, encoding='utf-8')
+            storage._rescan_file(file_path)
+            updated_files.append(file_path_str)
+            
+        debug_service.record_recipe_scan(storage.last_scan_report)
+        log_service.log('BACKEND', 'INFO', 'RECIPES', f'Bulk mod replacement completed', {
+            'modid': target_modid,
+            'replacements_count': len(replacements),
+            'recipes_updated': total_count,
+            'files_updated': len(updated_files)
+        })
+        
+        response_body = {'ok': True, 'count': total_count, 'files': updated_files}
+        _log_api(log_service, 'POST', '/api/admin/mod-replacement/replace', request.model_dump(), '200', started_at, response_body)
+        return response_body
 
     @router.get('/admin/zs-cloud/backups')
     def admin_list_zs_cloud_backups(request: Request):
