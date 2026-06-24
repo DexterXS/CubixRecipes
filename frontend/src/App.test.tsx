@@ -869,7 +869,8 @@ test('wipe update modal exposes csv icons atlas json and merge steps', async () 
   expect(within(dialog).getByText('2. Иконки')).toBeTruthy();
   expect(within(dialog).getByText('3. Атласы')).toBeTruthy();
   expect(within(dialog).getByText('4. itempanel.json')).toBeTruthy();
-  expect(within(dialog).getByText('5. Объединение и проверка')).toBeTruthy();
+  expect(within(dialog).getByText('5. oredict.txt (опционально)')).toBeTruthy();
+  expect(within(dialog).getByText('6. Объединение и проверка')).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Объединить файлы' })).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Открыть объединенный файл' })).toBeTruthy();
 });
@@ -1565,6 +1566,88 @@ test('admin can browse recipe draft templates created by moderators', async () =
   const template = await screen.findByLabelText('draft-template-<minecraft:planks>-moderator-template-1');
 
   expect(within(template).getByText(moderatorUser.email)).toBeTruthy();
+});
+
+test('draft item list can be grouped by author without combinations and duplicates', async () => {
+  mockRecipeDraftTemplates = [
+    {
+      id: 'template-1',
+      outputRaw: '<minecraft:planks>',
+      recipe: {
+        recipe_uid: 'template-1',
+        recipe_type: 'ct_shaped',
+        binding_mode: 'soft',
+        name: null,
+        output: { raw: '<minecraft:planks>' },
+        output_resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks' },
+        grid_w: 1,
+        grid_h: 1,
+        source: { kind: 'local_draft', path: 'draft:<minecraft:planks>' },
+        matrix: [[{ raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]]
+      },
+      sourceText: 'recipes.addShaped(<minecraft:planks>, [[<minecraft:stick>]]);',
+      createdByEmail: 'moderator@example.com',
+      createdAt: 1770000000000,
+      updatedAt: 1770000000000,
+      name: 'Moderator planks template'
+    },
+    {
+      id: 'template-2',
+      outputRaw: '<minecraft:stick>',
+      recipe: {
+        recipe_uid: 'template-2',
+        recipe_type: 'ct_shaped',
+        binding_mode: 'soft',
+        name: null,
+        output: { raw: '<minecraft:stick>' },
+        output_resolution: { display_name: 'Палка', icon_url: '/api/icons/stick' },
+        grid_w: 1,
+        grid_h: 1,
+        source: { kind: 'local_draft', path: 'draft:<minecraft:stick>' },
+        matrix: [[{ raw: '<minecraft:planks>', resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks', animated: false } }]]
+      },
+      sourceText: 'recipes.addShaped(<minecraft:stick>, [[<minecraft:planks>]]);',
+      createdByEmail: 'root.user76@gmail.com',
+      createdAt: 1770000000010,
+      updatedAt: 1770000000010,
+      name: 'Admin stick template'
+    },
+    {
+      id: 'template-3',
+      outputRaw: '<minecraft:planks>',
+      recipe: {
+        recipe_uid: 'template-3',
+        recipe_type: 'ct_shaped',
+        binding_mode: 'soft',
+        name: null,
+        output: { raw: '<minecraft:planks>' },
+        output_resolution: { display_name: 'Дубовые доски', icon_url: '/api/icons/planks' },
+        grid_w: 1,
+        grid_h: 1,
+        source: { kind: 'local_draft', path: 'draft:<minecraft:planks>' },
+        matrix: [[{ raw: '<minecraft:stick>', resolution: { display_name: 'Палка', icon_url: '/api/icons/stick', animated: false } }]]
+      },
+      sourceText: 'recipes.addShaped(<minecraft:planks>, [[<minecraft:stick>]]);',
+      createdByEmail: 'root.user76@gmail.com',
+      createdAt: 1770000000020,
+      updatedAt: 1770000000020,
+      name: 'Admin planks template'
+    }
+  ];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+
+  const groupSelect = screen.getByLabelText('draft-item-group');
+  fireEvent.change(groupSelect, { target: { value: 'author' } });
+
+  expect(screen.getByRole('button', { name: 'moderator@example.com' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'root.user76@gmail.com' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /,/ })).toBeFalsy();
+
+  const groups = screen.getAllByRole('button', { name: /moderator@example\.com|root\.user76@gmail\.com/ });
+  expect(groups.length).toBe(2);
 });
 
 test('NEI context menu can save a local custom item with a comment', async () => {

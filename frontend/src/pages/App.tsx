@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type MouseEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
@@ -8,7 +8,7 @@ import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -307,7 +307,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'oreDictPriority' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -1636,6 +1636,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [debugFilters, setDebugFilters] = useState<DebugFilters>(() => loadBooleanRecord(DEBUG_FILTERS_STORAGE_KEY, defaultDebugFilters));
   const [debugLevelFilters, setDebugLevelFilters] = useState<DebugLevelFilters>(() => loadBooleanRecord(DEBUG_LEVEL_FILTERS_STORAGE_KEY, defaultDebugLevelFilters));
   const [debugSection, setDebugSection] = useState<DebugSection>('overview');
+  const [selectedReplacementMod, setSelectedReplacementMod] = useState<string>('');
+  const [scannedReplacementItems, setScannedReplacementItems] = useState<Array<{ raw: string; display_name: string | null; icon_url: string | null; animated: boolean }>>([]);
+  const [replacementMappings, setReplacementMappings] = useState<Record<string, string>>({});
+  const [replacementLoading, setReplacementLoading] = useState<boolean>(false);
+  const [replacementStatus, setReplacementStatus] = useState<string>('');
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
@@ -3725,46 +3730,81 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return draftItemEntries.slice(safePage * DRAFT_ITEM_PAGE_SIZE, safePage * DRAFT_ITEM_PAGE_SIZE + DRAFT_ITEM_PAGE_SIZE);
   }, [draftItemEntries, draftItemPage, draftItemPageCount]);
 
-  /** Compute a stable, non-empty group key for a DraftItemEntry given the current group mode. */
-  function getDraftEntryGroupKey(entry: DraftItemEntry, mode: DraftItemGroupMode): { name: string; key: string } {
-    if (mode === 'none') return { name: 'Все предметы', key: 'all' };
+  /** Compute stable, non-empty group keys for a DraftItemEntry given the current group mode. */
+  function getDraftEntryGroupKeys(entry: DraftItemEntry, mode: DraftItemGroupMode): { name: string; key: string }[] {
+    if (mode === 'none') return [{ name: 'Все предметы', key: 'all' }];
     if (mode === 'mod') {
       const value = entry.modid.trim() || 'unknown';
-      return { name: value, key: `mod:${value}` };
+      return [{ name: value, key: `mod:${value}` }];
     }
     if (mode === 'author') {
-      const value = [...entry.authors].join(', ').trim() || 'Неизвестно';
-      return { name: value, key: `author:${value || 'unknown'}` };
+      if (entry.authors.size === 0) {
+        return [{ name: 'Неизвестно', key: 'author:unknown' }];
+      }
+      return Array.from(entry.authors).map((author) => {
+        const value = author.trim() || 'Неизвестно';
+        return { name: value, key: `author:${value}` };
+      });
     }
     if (mode === 'grid-size') {
-      const value = [...entry.gridSizes].join(', ').trim() || 'Неизвестно';
-      return { name: value, key: `grid:${value || 'unknown'}` };
+      if (entry.gridSizes.size === 0) {
+        return [{ name: 'Неизвестно', key: 'grid:unknown' }];
+      }
+      return Array.from(entry.gridSizes).map((gridSize) => {
+        const value = gridSize.trim() || 'Неизвестно';
+        return { name: value, key: `grid:${value}` };
+      });
     }
     if (mode === 'date') {
       const value = new Date(entry.maxUpdatedAt).toLocaleDateString();
-      return { name: value, key: `date:${value || 'unknown'}` };
+      return [{ name: value, key: `date:${value || 'unknown'}` }];
     }
-    return { name: 'Все предметы', key: 'all' };
+    return [{ name: 'Все предметы', key: 'all' }];
   }
 
   const groupedDraftItems = useMemo<DraftGroup[]>(() => {
-    const groups: DraftGroup[] = [];
-    let currentKey = '';
-    let currentGroup: DraftGroup | null = null;
+    if (draftItemGroupMode === 'none') {
+      return [{
+        name: 'Все предметы',
+        key: 'all',
+        items: draftItemsPage
+      }];
+    }
+
+    const groupsMap = new Map<string, { name: string; key: string; items: DraftItemEntry[] }>();
 
     for (const entry of draftItemsPage) {
-      const { name, key } = getDraftEntryGroupKey(entry, draftItemGroupMode);
-      if (key !== currentKey) {
-        if (currentGroup) groups.push(currentGroup);
-        currentKey = key;
-        currentGroup = { name, key, items: [entry] };
-      } else {
-        currentGroup!.items.push(entry);
+      const keys = getDraftEntryGroupKeys(entry, draftItemGroupMode);
+      for (const { name, key } of keys) {
+        let group = groupsMap.get(key);
+        if (!group) {
+          group = { name, key, items: [] };
+          groupsMap.set(key, group);
+        }
+        if (!group.items.some((item) => item.raw === entry.raw)) {
+          group.items.push(entry);
+        }
       }
     }
-    if (currentGroup) groups.push(currentGroup);
+
+    const groups = Array.from(groupsMap.values());
+
+    // Sort the groups consistently
+    groups.sort((a, b) => {
+      if (draftItemGroupMode === 'date') {
+        const maxA = Math.max(...a.items.map((item) => item.maxUpdatedAt));
+        const maxB = Math.max(...b.items.map((item) => item.maxUpdatedAt));
+        if (draftItemSortMode === 'date-asc') {
+          return maxA - maxB;
+        } else {
+          return maxB - maxA;
+        }
+      }
+      return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+    });
+
     return groups;
-  }, [draftItemsPage, draftItemGroupMode]);
+  }, [draftItemsPage, draftItemGroupMode, draftItemSortMode]);
 
   const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => entry.raw), [draftItemsPage]);
   const availabilityLookupRaws = useMemo(() => (
@@ -7518,6 +7558,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return renderItemCaseAliasPanel();
       case 'oreDictPriority':
         return renderOreDictPriorityPanel();
+      case 'modReplacement':
+        return renderModReplacementPanel();
       case 'recipe':
         return (
           <div className="debug-section-grid">
@@ -7732,6 +7774,248 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  async function handleScanReplacement(modid: string) {
+    if (!modid) {
+      setScannedReplacementItems([]);
+      setReplacementMappings({});
+      return;
+    }
+    setReplacementLoading(true);
+    setReplacementStatus(uiPreferences.language === 'ru' ? 'Сканирую крафты...' : 'Scanning recipes...');
+    try {
+      const response = await scanModReplacement(modid);
+      setScannedReplacementItems(response.items);
+      const initial: Record<string, string> = {};
+      response.items.forEach((item) => {
+        initial[item.raw] = '';
+      });
+      setReplacementMappings(initial);
+      setReplacementStatus(
+        uiPreferences.language === 'ru'
+          ? `Найдено предметов: ${response.items.length}`
+          : `Found items: ${response.items.length}`
+      );
+    } catch (error) {
+      setReplacementStatus(error instanceof Error ? error.message : String(error));
+    } finally {
+      setReplacementLoading(false);
+    }
+  }
+
+  async function handleReplaceModItems() {
+    if (!selectedReplacementMod) return;
+    
+    const activeReplacements: Record<string, string> = {};
+    let hasUnmapped = false;
+    scannedReplacementItems.forEach((item) => {
+      const mapped = replacementMappings[item.raw];
+      if (mapped) {
+        activeReplacements[item.raw] = mapped;
+      } else {
+        hasUnmapped = true;
+      }
+    });
+
+    if (hasUnmapped) {
+      const msg = uiPreferences.language === 'ru'
+        ? 'Пожалуйста, заполните все пустые ячейки перед заменой!'
+        : 'Please fill all empty slots before replacing!';
+      alert(msg);
+      return;
+    }
+
+    if (Object.keys(activeReplacements).length === 0) {
+      const msg = uiPreferences.language === 'ru'
+        ? 'Нет предметов для замены.'
+        : 'No items to replace.';
+      alert(msg);
+      return;
+    }
+
+    const confirmMsg = uiPreferences.language === 'ru'
+      ? `Вы действительно хотите заменить ${Object.keys(activeReplacements).length} предметов во всех рецептах? Это изменит файлы конфигурации.`
+      : `Are you sure you want to replace ${Object.keys(activeReplacements).length} items in all recipes? This will modify configuration files.`;
+    if (!window.confirm(confirmMsg)) {
+      return;
+    }
+
+    setReplacementLoading(true);
+    setReplacementStatus(uiPreferences.language === 'ru' ? 'Заменяю предметы во всех файлах...' : 'Replacing items in all files...');
+    try {
+      const response = await replaceModItems(selectedReplacementMod, activeReplacements);
+      const successMsg = uiPreferences.language === 'ru'
+        ? `Успешно заменено предметов: ${response.count} в ${response.files.length} файлах!`
+        : `Successfully replaced ${response.count} items in ${response.files.length} files!`;
+      setReplacementStatus(successMsg);
+      alert(successMsg);
+      void handleScanReplacement(selectedReplacementMod);
+    } catch (error) {
+      setReplacementStatus(error instanceof Error ? error.message : String(error));
+      alert(error instanceof Error ? error.message : String(error));
+    } finally {
+      setReplacementLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (workspaceTab === 'technical' && debugSection === 'modReplacement' && selectedReplacementMod) {
+      void handleScanReplacement(selectedReplacementMod);
+    }
+  }, [selectedReplacementMod, workspaceTab, debugSection]);
+
+  function renderModReplacementPanel() {
+    return (
+      <div className="workspace-layout workspace-layout-admin" style={{ display: 'flex', gap: '16px', height: 'calc(100vh - 120px)' }}>
+        <div className="workspace-column workspace-left" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Panel title={uiPreferences.language === 'ru' ? 'Замена модификации' : 'Mod Replacement'} subtitle={uiPreferences.language === 'ru' ? 'Позволяет массово заменить все предметы выбранного мода на новые аналоги в рецептах' : 'Allows bulk replacing all items of the selected mod with new counterparts in recipes'}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ marginBottom: '16px' }}>
+                <label className="field-block">
+                  <span>{uiPreferences.language === 'ru' ? 'Выберите модификацию для замены:' : 'Select modification to replace:'}</span>
+                  <select
+                    value={selectedReplacementMod}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSelectedReplacementMod(val);
+                      void handleScanReplacement(val);
+                    }}
+                    style={{ width: '100%', padding: '8px', background: 'var(--surface-sunken)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '4px' }}
+                  >
+                    <option value="">-- {uiPreferences.language === 'ru' ? 'Выберите мод' : 'Select mod'} --</option>
+                    {itemPanelModSummaries.map((mod) => (
+                      <option key={mod.modid} value={mod.modid}>
+                        {mod.modid} ({mod.itemCount} {uiPreferences.language === 'ru' ? 'предм.' : 'items'})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              {replacementStatus ? (
+                <div className="inline-status inline-status-default" style={{ marginBottom: '16px' }}>
+                  <span>{replacementStatus}</span>
+                </div>
+              ) : null}
+
+              <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--border-subtle)', borderRadius: '4px', background: 'var(--surface-sunken)', minHeight: '300px' }}>
+                {scannedReplacementItems.length === 0 ? (
+                  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    {selectedReplacementMod ? (uiPreferences.language === 'ru' ? 'Нет предметов этого мода в рецептах.' : 'No items of this mod found in recipes.') : (uiPreferences.language === 'ru' ? 'Выберите мод для сканирования.' : 'Select a mod to scan.')}
+                  </div>
+                ) : (
+                  <table className="case-alias-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>
+                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Оригинальный предмет' : 'Original Item'}</th>
+                        <th style={{ padding: '8px', width: '40px', textAlign: 'center' }}></th>
+                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Новый предмет (замена)' : 'New Item (replacement)'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {scannedReplacementItems.map((item) => {
+                        const mapped = replacementMappings[item.raw] || '';
+                        
+                        const handleSlotClick = () => {
+                          if (heldItemRaw) {
+                            setReplacementMappings(curr => ({ ...curr, [item.raw]: heldItemRaw }));
+                            setHeldItemRaw(null);
+                          } else if (mapped) {
+                            setHeldItemRaw(mapped);
+                            setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
+                          }
+                        };
+
+                        const handleSlotContextMenu = (e: MouseEvent) => {
+                          e.preventDefault();
+                          setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
+                        };
+
+                        const handleSlotDrop = (e: DragEvent) => {
+                          e.preventDefault();
+                          const value = e.dataTransfer.getData('text/plain');
+                          if (value) {
+                            setReplacementMappings(curr => ({ ...curr, [item.raw]: value }));
+                          }
+                        };
+
+                        return (
+                          <tr key={item.raw} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span className="output-icon-slot" style={{ display: 'inline-flex', padding: 0, border: 'none', background: 'transparent' }}>
+                                  {renderCraftItemIcon(item.raw, item.icon_url, item.animated, 1, item.display_name || item.raw)}
+                                </span>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <strong>{item.display_name || item.raw}</strong>
+                                  <code style={{ fontSize: '11px', opacity: 0.7 }}>{item.raw}</code>
+                                </div>
+                              </div>
+                            </td>
+                            <td style={{ padding: '8px', textAlign: 'center', verticalAlign: 'middle', fontSize: '18px', color: 'var(--text-muted)' }}>
+                              →
+                            </td>
+                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
+                              <div 
+                                className={`output-icon-slot ${mapped ? 'has-item' : 'is-empty-placeholder'}`}
+                                style={{ 
+                                  display: 'inline-flex', 
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  cursor: 'pointer', 
+                                  border: mapped ? '1px solid var(--border-subtle)' : '2px dashed var(--border-subtle)',
+                                  borderRadius: '4px',
+                                  background: mapped ? 'var(--surface-sunken)' : 'transparent',
+                                  padding: '4px',
+                                  minWidth: '34px',
+                                  minHeight: '34px',
+                                  verticalAlign: 'middle',
+                                  userSelect: 'none'
+                                }}
+                                onClick={handleSlotClick}
+                                onContextMenu={(e) => handleSlotContextMenu(e as any)}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => handleSlotDrop(e as any)}
+                                title={mapped ? (uiPreferences.language === 'ru' ? 'Нажмите чтобы взять, правый клик чтобы очистить' : 'Click to pick up, right-click to clear') : (uiPreferences.language === 'ru' ? 'Положите предмет из NEI сюда' : 'Drop item from NEI here')}
+                              >
+                                {mapped ? (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {renderCraftItemIcon(mapped, getCachedItemIconUrl(mapped), false, 1, resolveCellTitle(mapped))}
+                                    <span style={{ fontSize: '13px' }}>{resolveCellTitle(mapped) || mapped}</span>
+                                  </div>
+                                ) : (
+                                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{uiPreferences.language === 'ru' ? 'Пусто' : 'Empty'}</span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  className="primary-button"
+                  disabled={replacementLoading || scannedReplacementItems.length === 0}
+                  onClick={() => void handleReplaceModItems()}
+                  style={{ padding: '10px 20px', fontWeight: 'bold' }}
+                >
+                  {replacementLoading ? (uiPreferences.language === 'ru' ? 'Замена...' : 'Replacing...') : (uiPreferences.language === 'ru' ? 'Заменить все предметы в рецептах' : 'Replace all items in recipes')}
+                </button>
+              </div>
+            </div>
+          </Panel>
+        </div>
+        <div className="workspace-column workspace-right" style={{ width: '380px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {renderNeiPanel()}
+        </div>
+      </div>
+    );
+  }
+
   function renderTechnicalWorkspace() {
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
@@ -7739,6 +8023,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
       { id: 'oreDictPriority', label: 'OreDict иконки', description: 'Приоритет модов', visible: canManageModIcons },
+      { id: 'modReplacement', label: 'Замена мода', description: 'Замена предметов мода в рецептах', visible: canEditRecipes },
       { id: 'runtime', label: 'Состояния', description: 'UI, API, загрузки', visible: canUseDebug },
       { id: 'logs', label: 'Логи', description: 'Фильтры и события', visible: canUseDebug },
       { id: 'recipe', label: 'Текущий рецепт', description: 'Сетка, output, история', visible: canUseDebug },
