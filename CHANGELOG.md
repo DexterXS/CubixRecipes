@@ -4,6 +4,9 @@
 ### Added
 - Added recipe navigation arrows (◀ N/M ▶) at the bottom of the craft board, always visible; arrows are active when multiple recipes exist for the same output, showing 1/1 when there is only one.
 - Fixed cloud file download filename: exposed `Content-Disposition` header via CORS `expose_headers` so the browser now receives and uses the actual filename from the server instead of falling back to `download.zs`.
+- Исправлено группирование и обновление списка в панели черновиков: переработана функция группировки `groupedDraftItems` для объединения элементов под уникальными ключами с помощью `Map`, что предотвращает появление дубликатов React-ключей и решает проблему дублирования/наложения списков при переключении групп.
+- Устранено дублирование и объединение имен пользователей через запятую при группировке по персоналу («По персоналу»): теперь каждый автор отображается в виде отдельной группы со своим списком предметов.
+- Исправлен тест обновления вайпа `wipe update modal exposes csv icons atlas json and merge steps` в связи с добавлением шага oredict.txt.
 
 - Added moderator/admin NEI favorites stored in `data/nei_favorites.json`, with named tabs, hover+hotkey toggling, configurable favorite hotkey, and per-user NEI hidden-pattern filters.
 - Added a configurable NEI page size setting, reusable item tooltips across NEI/grids/tasks, and NEI context-menu task status.

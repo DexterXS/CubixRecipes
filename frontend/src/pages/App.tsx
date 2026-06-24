@@ -3725,46 +3725,81 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return draftItemEntries.slice(safePage * DRAFT_ITEM_PAGE_SIZE, safePage * DRAFT_ITEM_PAGE_SIZE + DRAFT_ITEM_PAGE_SIZE);
   }, [draftItemEntries, draftItemPage, draftItemPageCount]);
 
-  /** Compute a stable, non-empty group key for a DraftItemEntry given the current group mode. */
-  function getDraftEntryGroupKey(entry: DraftItemEntry, mode: DraftItemGroupMode): { name: string; key: string } {
-    if (mode === 'none') return { name: 'Все предметы', key: 'all' };
+  /** Compute stable, non-empty group keys for a DraftItemEntry given the current group mode. */
+  function getDraftEntryGroupKeys(entry: DraftItemEntry, mode: DraftItemGroupMode): { name: string; key: string }[] {
+    if (mode === 'none') return [{ name: 'Все предметы', key: 'all' }];
     if (mode === 'mod') {
       const value = entry.modid.trim() || 'unknown';
-      return { name: value, key: `mod:${value}` };
+      return [{ name: value, key: `mod:${value}` }];
     }
     if (mode === 'author') {
-      const value = [...entry.authors].join(', ').trim() || 'Неизвестно';
-      return { name: value, key: `author:${value || 'unknown'}` };
+      if (entry.authors.size === 0) {
+        return [{ name: 'Неизвестно', key: 'author:unknown' }];
+      }
+      return Array.from(entry.authors).map((author) => {
+        const value = author.trim() || 'Неизвестно';
+        return { name: value, key: `author:${value}` };
+      });
     }
     if (mode === 'grid-size') {
-      const value = [...entry.gridSizes].join(', ').trim() || 'Неизвестно';
-      return { name: value, key: `grid:${value || 'unknown'}` };
+      if (entry.gridSizes.size === 0) {
+        return [{ name: 'Неизвестно', key: 'grid:unknown' }];
+      }
+      return Array.from(entry.gridSizes).map((gridSize) => {
+        const value = gridSize.trim() || 'Неизвестно';
+        return { name: value, key: `grid:${value}` };
+      });
     }
     if (mode === 'date') {
       const value = new Date(entry.maxUpdatedAt).toLocaleDateString();
-      return { name: value, key: `date:${value || 'unknown'}` };
+      return [{ name: value, key: `date:${value || 'unknown'}` }];
     }
-    return { name: 'Все предметы', key: 'all' };
+    return [{ name: 'Все предметы', key: 'all' }];
   }
 
   const groupedDraftItems = useMemo<DraftGroup[]>(() => {
-    const groups: DraftGroup[] = [];
-    let currentKey = '';
-    let currentGroup: DraftGroup | null = null;
+    if (draftItemGroupMode === 'none') {
+      return [{
+        name: 'Все предметы',
+        key: 'all',
+        items: draftItemsPage
+      }];
+    }
+
+    const groupsMap = new Map<string, { name: string; key: string; items: DraftItemEntry[] }>();
 
     for (const entry of draftItemsPage) {
-      const { name, key } = getDraftEntryGroupKey(entry, draftItemGroupMode);
-      if (key !== currentKey) {
-        if (currentGroup) groups.push(currentGroup);
-        currentKey = key;
-        currentGroup = { name, key, items: [entry] };
-      } else {
-        currentGroup!.items.push(entry);
+      const keys = getDraftEntryGroupKeys(entry, draftItemGroupMode);
+      for (const { name, key } of keys) {
+        let group = groupsMap.get(key);
+        if (!group) {
+          group = { name, key, items: [] };
+          groupsMap.set(key, group);
+        }
+        if (!group.items.some((item) => item.raw === entry.raw)) {
+          group.items.push(entry);
+        }
       }
     }
-    if (currentGroup) groups.push(currentGroup);
+
+    const groups = Array.from(groupsMap.values());
+
+    // Sort the groups consistently
+    groups.sort((a, b) => {
+      if (draftItemGroupMode === 'date') {
+        const maxA = Math.max(...a.items.map((item) => item.maxUpdatedAt));
+        const maxB = Math.max(...b.items.map((item) => item.maxUpdatedAt));
+        if (draftItemSortMode === 'date-asc') {
+          return maxA - maxB;
+        } else {
+          return maxB - maxA;
+        }
+      }
+      return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+    });
+
     return groups;
-  }, [draftItemsPage, draftItemGroupMode]);
+  }, [draftItemsPage, draftItemGroupMode, draftItemSortMode]);
 
   const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => entry.raw), [draftItemsPage]);
   const availabilityLookupRaws = useMemo(() => (
