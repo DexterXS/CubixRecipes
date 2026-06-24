@@ -346,16 +346,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     auth_service = AuthService(root_admin_email=os.environ.get('ROOT_ADMIN_EMAIL', 'root.user76@gmail.com'))
 
 
+    default_ctx = server_manager.get_context(server_manager.servers[0]['id'])
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
-        'config_file': config.project_config_path,
-        'raw_config_payload': raw_config_payload,
-        'normalized_config': config_service.as_api_dict(config),
-        'final_index_paths': index_paths,
-        'final_recipe_scan_paths': config_service.build_recipe_scan_paths(config),
-        'scripts_dir': active_scripts_dir,
-        'verbose_debug_logging': config.verbose_debug_logging,
-        'itempanel_icon_catalog': itempanel_icon_catalog.last_scan_report,
-        'item_catalog': item_catalog_service.last_scan_report,
+        'servers': [s['id'] for s in server_manager.servers],
+        'default_server': server_manager.servers[0]['id'],
+        'config_file': default_ctx.config.project_config_path,
+        'scripts_dir': default_ctx.config.scripts_dir,
+        'verbose_debug_logging': default_ctx.config.verbose_debug_logging,
     })
 
     router = APIRouter(prefix='/api')
