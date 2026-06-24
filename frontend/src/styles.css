@@ -327,7 +327,14 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .favorite-raw { grid-column: 2; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10px; }
 .favorite-empty { min-height: 120px; display: grid; place-items: center; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); }
 .draft-filter-grid { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(180px, 240px); gap: 8px; align-items: center; }
-.draft-item-list { display: grid; grid-template-columns: repeat(auto-fill, 34px); justify-content: start; align-content: start; gap: 5px; max-height: calc(100vh - 265px); min-height: 360px; overflow: auto; padding-right: 4px; overscroll-behavior: contain; }
+.draft-item-list { display: flex; flex-direction: column; gap: 2px; max-height: calc(100vh - 265px); min-height: 360px; overflow: auto; padding-right: 4px; overscroll-behavior: contain; }
+.draft-item-group { display: flex; flex-direction: column; width: 100%; }
+.draft-group-header { display: flex; align-items: center; gap: 6px; width: 100%; background: none; border: none; border-radius: 4px; cursor: pointer; padding: 4px 2px; font-size: 12px; font-weight: 600; color: var(--muted); text-align: left; transition: color 0.15s, background 0.15s; }
+.draft-group-header:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.draft-group-chevron { display: inline-block; font-size: 10px; transition: transform 0.18s; line-height: 1; }
+.draft-group-header.is-collapsed .draft-group-chevron { transform: rotate(-90deg); }
+.draft-group-items { display: flex; flex-wrap: wrap; gap: 4px; }
+.draft-group-items.has-header { padding-top: 4px; padding-bottom: 4px; }
 .draft-item-button { position: relative; width: 34px; height: 34px; min-width: 34px; display: grid; place-items: center; padding: 0; border-radius: 4px; background: transparent; border: 1px solid transparent; color: var(--text); box-shadow: none; }
 .draft-item-button.recipe-available { background: color-mix(in srgb, #22c55e 18%, transparent); border-color: color-mix(in srgb, #22c55e 62%, transparent); }
 .draft-item-button.recipe-missing { background: color-mix(in srgb, #ef4444 13%, transparent); border-color: color-mix(in srgb, #ef4444 42%, transparent); }
@@ -336,7 +343,7 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-item-button.active,
 .draft-item-button:hover { z-index: 30; filter: none; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 22%, transparent); }
 .draft-count-badge { position: absolute; right: -3px; bottom: -3px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; background: #a855f7; color: #fff; border: 1px solid rgba(15, 23, 42, .85); font-size: 10px; line-height: 1; font-weight: 700; }
-.draft-empty-state { grid-column: 1 / -1; min-height: 220px; display: grid; place-items: center; padding: 18px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); text-align: center; }
+.draft-empty-state { min-height: 220px; display: grid; place-items: center; padding: 18px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); text-align: center; }
 .draft-selected-item { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); }
 .draft-selected-icon { position: relative; width: 54px; height: 54px; min-width: 54px; border-radius: 6px; overflow: hidden; }
 .draft-selected-icon img,
