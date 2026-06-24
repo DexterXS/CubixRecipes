@@ -162,6 +162,14 @@ type DraftItemEntry = {
   gridSizes: Set<string>;
 };
 
+type DraftGroup = {
+  /** Human-readable label shown in the group header */
+  name: string;
+  /** Stable unique key used for collapsing state, never empty */
+  key: string;
+  items: DraftItemEntry[];
+};
+
 type DraftTemplateContextMenuState = {
   draftId: string;
   x: number;
@@ -1608,6 +1616,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
   const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
   const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>('none');
+  const [collapsedDraftGroups, setCollapsedDraftGroups] = useState<Record<string, boolean>>({});
   const [draftItemPage, setDraftItemPage] = useState(0);
   const [previewDraftTemplateId, setPreviewDraftTemplateId] = useState<string | null>(null);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
@@ -2297,8 +2306,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     setCloudContextMenu(null);
     try {
       const payload = await downloadZsCloudFile(path);
-      downloadBlobFile(payload.filename, payload.blob);
-      setCloudStatus(`Файл скачан: ${payload.filename}`);
+      const expectedFilename = path.split(/[\\/]/).pop()?.trim() || 'recipe.zs';
+      const finalFilename = (payload.filename && payload.filename !== 'download.zs' ? payload.filename.trim() : expectedFilename) || 'recipe.zs';
+      downloadBlobFile(finalFilename, payload.blob);
+      setCloudStatus(`Файл скачан: ${finalFilename}`);
     } catch (error) {
       setCloudStatus(error instanceof Error ? error.message : String(error));
     }
@@ -3713,6 +3724,48 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const safePage = clamp(draftItemPage, 0, draftItemPageCount - 1);
     return draftItemEntries.slice(safePage * DRAFT_ITEM_PAGE_SIZE, safePage * DRAFT_ITEM_PAGE_SIZE + DRAFT_ITEM_PAGE_SIZE);
   }, [draftItemEntries, draftItemPage, draftItemPageCount]);
+
+  /** Compute a stable, non-empty group key for a DraftItemEntry given the current group mode. */
+  function getDraftEntryGroupKey(entry: DraftItemEntry, mode: DraftItemGroupMode): { name: string; key: string } {
+    if (mode === 'none') return { name: 'Все предметы', key: 'all' };
+    if (mode === 'mod') {
+      const value = entry.modid.trim() || 'unknown';
+      return { name: value, key: `mod:${value}` };
+    }
+    if (mode === 'author') {
+      const value = [...entry.authors].join(', ').trim() || 'Неизвестно';
+      return { name: value, key: `author:${value || 'unknown'}` };
+    }
+    if (mode === 'grid-size') {
+      const value = [...entry.gridSizes].join(', ').trim() || 'Неизвестно';
+      return { name: value, key: `grid:${value || 'unknown'}` };
+    }
+    if (mode === 'date') {
+      const value = new Date(entry.maxUpdatedAt).toLocaleDateString();
+      return { name: value, key: `date:${value || 'unknown'}` };
+    }
+    return { name: 'Все предметы', key: 'all' };
+  }
+
+  const groupedDraftItems = useMemo<DraftGroup[]>(() => {
+    const groups: DraftGroup[] = [];
+    let currentKey = '';
+    let currentGroup: DraftGroup | null = null;
+
+    for (const entry of draftItemsPage) {
+      const { name, key } = getDraftEntryGroupKey(entry, draftItemGroupMode);
+      if (key !== currentKey) {
+        if (currentGroup) groups.push(currentGroup);
+        currentKey = key;
+        currentGroup = { name, key, items: [entry] };
+      } else {
+        currentGroup!.items.push(entry);
+      }
+    }
+    if (currentGroup) groups.push(currentGroup);
+    return groups;
+  }, [draftItemsPage, draftItemGroupMode]);
+
   const visibleDraftRawItems = useMemo(() => draftItemsPage.map((entry) => entry.raw), [draftItemsPage]);
   const availabilityLookupRaws = useMemo(() => (
     [...new Set([...visibleNeiRawItems, ...visibleDraftRawItems].flatMap(recipeLookupKeysForRaw))].slice(0, 300)
@@ -6918,8 +6971,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderDraftItemsPanel() {
-    let currentGroupValue = '';
-
     return (
       <div className="workspace-panel-shell panel-draft-items">
         <Panel title="Черновики" subtitle="Только предметы с сохранёнными шаблонами" className="draft-items-panel">
@@ -6946,52 +6997,57 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <button type="button" className="ghost-button icon-button" aria-label="draft-items-next-page" disabled={draftItemPage >= draftItemPageCount - 1} onClick={() => changeDraftItemPage(1)}>›</button>
           </div>
           <div className="draft-item-list" aria-label="draft-item-list">
-            {draftItemsPage.map((entry) => {
-              const raw = entry.raw;
-              const draftCount = entry.draftCount;
-              const availability = getRecipeAvailability(raw);
-              const selected = raw === selectedDraftItemRaw;
-              const icon = renderDraftCatalogIcon(raw);
-              const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
-              
-              let groupHeader: React.ReactNode = null;
-              if (draftItemGroupMode !== 'none') {
-                let entryGroupValue = '';
-                if (draftItemGroupMode === 'mod') entryGroupValue = entry.modid;
-                else if (draftItemGroupMode === 'author') entryGroupValue = [...entry.authors].join(', ') || 'Неизвестно';
-                else if (draftItemGroupMode === 'grid-size') entryGroupValue = [...entry.gridSizes].join(', ') || 'Неизвестно';
-                else if (draftItemGroupMode === 'date') entryGroupValue = new Date(entry.maxUpdatedAt).toLocaleDateString();
-
-                if (entryGroupValue !== currentGroupValue) {
-                  currentGroupValue = entryGroupValue;
-                  groupHeader = <div className="draft-group-header" key={`group-${currentGroupValue}`}>{currentGroupValue}</div>;
-                }
-              }
-
-              const itemNode = (
-                <button
-                  key={raw}
-                  type="button"
-                  className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
-                  aria-label={`draft-item-${raw}`}
-                  data-item-raw={raw}
-                  onMouseEnter={() => updateHoveredItemRaw(raw)}
-                  onFocus={() => updateHoveredItemRaw(raw)}
-                  onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                  onClick={() => setSelectedDraftItemRaw(raw)}
-                >
-                  <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
-                    {icon}
-                  </span>
-                  {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
-                  {renderItemTooltip(raw)}
-                </button>
+            {draftItemsPage.length === 0 ? (
+              <div className="draft-empty-state">Нет сохранённых шаблонов.</div>
+            ) : groupedDraftItems.map((group) => {
+              const isCollapsed = Boolean(collapsedDraftGroups[group.key]);
+              return (
+                <div key={group.key} className="draft-item-group">
+                  {draftItemGroupMode !== 'none' && (
+                    <button
+                      type="button"
+                      className={`draft-group-header${isCollapsed ? ' is-collapsed' : ''}`}
+                      onClick={() => setCollapsedDraftGroups((curr) => ({ ...curr, [group.key]: !isCollapsed }))}
+                    >
+                      <span className="draft-group-chevron" aria-hidden="true">▼</span>
+                      {group.name}
+                    </button>
+                  )}
+                  {!isCollapsed && (
+                    <div className={`draft-group-items${draftItemGroupMode !== 'none' ? ' has-header' : ''}`}>
+                      {group.items.map((entry) => {
+                        const raw = entry.raw;
+                        const draftCount = entry.draftCount;
+                        const availability = getRecipeAvailability(raw);
+                        const selected = raw === selectedDraftItemRaw;
+                        const icon = renderDraftCatalogIcon(raw);
+                        const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
+                        return (
+                          <button
+                            key={raw}
+                            type="button"
+                            className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
+                            aria-label={`draft-item-${raw}`}
+                            data-item-raw={raw}
+                            onMouseEnter={() => updateHoveredItemRaw(raw)}
+                            onFocus={() => updateHoveredItemRaw(raw)}
+                            onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                            onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
+                            onClick={() => setSelectedDraftItemRaw(raw)}
+                          >
+                            <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
+                              {icon}
+                            </span>
+                            {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
+                            {renderItemTooltip(raw)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
-
-              return groupHeader ? <>{groupHeader}{itemNode}</> : itemNode;
             })}
-            {!draftItemsPage.length ? <div className="draft-empty-state">Нет сохранённых шаблонов.</div> : null}
           </div>
         </Panel>
       </div>
@@ -7877,7 +7933,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   <span>{recipe.recipe_type}</span>
                 </div>
                 <div className="settings-grid">
-                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={recipe.grid_w} onChange={(event) => applyRecipePatch({ grid_w: Number(event.target.value), grid_h: Number(event.target.value) })}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
+                  <label className="field-block"><span>Сетка</span><select aria-label="settings-grid-size" value={recipe.grid_w} onChange={(event) => setGridSize(Number(event.target.value))}>{[2, 3, 9].map((size) => <option key={size} value={size}>{size}x{size}</option>)}</select></label>
                   <label className="field-block"><span>Тип</span><select aria-label="settings-craft-mode" value={recipeCraftMode} onChange={(event) => setRecipeCraftMode(event.target.value as RecipeCraftMode)}><option value="shaped">Форменный</option><option value="shapeless" disabled={recipe.grid_w >= 9}>Бесформенный</option></select></label>
                   <label className="field-block"><span>Позиция</span><select aria-label="settings-binding-mode" value={recipeBindingMode} disabled={recipe.recipe_type === 'ct_shapeless'} onChange={(event) => setRecipeBindingMode(event.target.value as RecipeBindingMode)}><option value="soft">Свободная</option><option value="strict">Точная</option></select></label>
                   <label className="field-block"><span>{t('fields.metaMode')}</span><select aria-label="meta-mode" value={metaMode} onChange={(event) => setMetaMode(event.target.value)}><option value="strict">{t('parseModes.strict')}</option><option value="wildcard">{t('parseModes.wildcard')}</option><option value="ignore">{t('parseModes.ignore')}</option></select></label>
