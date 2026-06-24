@@ -8,7 +8,7 @@ import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -358,6 +358,8 @@ type LocalDraftPayload = {
 interface AppProps {
   authUser?: AuthUser;
   onLogout?: () => Promise<void>;
+  onResetServer?: () => void;
+  activeServerId?: string;
 }
 
 const fallbackAuthUser: AuthUser = {
@@ -1545,7 +1547,7 @@ function nextFavoriteTabId(): string {
   return `tab-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined }: AppProps) {
+export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined, onResetServer, activeServerId }: AppProps) {
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
     localDraftRef.current = loadLocalDraftPayload(authUser.email);
@@ -1554,6 +1556,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   const [input, setInput] = useState(restoredDraft?.input ?? '');
   const [matrix, setMatrix] = useState<CellValue[][]>(() => restoredDraft ? cloneMatrix(restoredDraft.matrix) : cloneMatrix(defaultMatrix));
+  const [serversList, setServersList] = useState<Array<{ id: string; name: string }>>([]);
+  
+  useEffect(() => {
+    listServers().then(res => setServersList(res.servers)).catch(() => {});
+  }, []);
   const [status, setStatus] = useState('Готово');
   const [strictBinding, setStrictBinding] = useState(restoredDraft?.strictBinding ?? defaultRecipe.binding_mode === 'strict');
   const [metaMode, setMetaMode] = useState(restoredDraft?.metaMode ?? 'strict');
@@ -8271,7 +8278,27 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   return (
     <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown} onContextMenuCapture={handleHeldItemContextMenu}>
       <div className="utility-bar">
-        <strong>CubixRecipes</strong>
+        <div className="brand-with-server">
+          <strong>CubixRecipes</strong>
+          {activeServerId && (
+            <div className="active-server-chip" title="Активный сервер">
+              <span className="server-icon">🖥️</span>
+              <span className="server-name-label">
+                {serversList.find(s => s.id === activeServerId)?.name || activeServerId}
+              </span>
+              {onResetServer && (
+                <button
+                  type="button"
+                  className="change-server-inline-btn"
+                  onClick={onResetServer}
+                  title="Сменить сервер"
+                >
+                  🔁
+                </button>
+              )}
+            </div>
+          )}
+        </div>
         <nav className="main-tabs" aria-label="workspace-tabs">
           {workspaceTabs.map((tab) => (
             <button key={tab.id} type="button" data-testid={`workspace-tab-${tab.id}`} className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>

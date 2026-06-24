@@ -11,10 +11,43 @@ from typing import Any, Optional
 from urllib.parse import quote, urlencode, urlparse
 from urllib.parse import unquote
 from zipfile import ZipFile
+from contextvars import ContextVar
 
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
+
+# Context variables and dynamic proxy pattern for multiple servers
+active_request: ContextVar[Optional[Request]] = ContextVar('active_request', default=None)
+
+class ContextProxy:
+    def __init__(self, get_context_fn, attr_name):
+        object.__setattr__(self, '_get_context_fn', get_context_fn)
+        object.__setattr__(self, '_attr_name', attr_name)
+
+    def __getattr__(self, name):
+        context = self._get_context_fn()
+        target = getattr(context, self._attr_name)
+        return getattr(target, name)
+
+    def __setattr__(self, name, value):
+        context = self._get_context_fn()
+        target = getattr(context, self._attr_name)
+        setattr(target, name, value)
+
+class PathProxy:
+    def __init__(self, get_path_fn):
+        object.__setattr__(self, '_get_path_fn', get_path_fn)
+
+    def __getattr__(self, name):
+        return getattr(self._get_path_fn(), name)
+
+    def __str__(self):
+        return str(self._get_path_fn())
+
+    def __fspath__(self):
+        return os.fspath(self._get_path_fn())
+
 
 from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
@@ -258,75 +291,68 @@ def _cookie_https_only(same_site: str) -> bool:
 
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
     parser = RecipeParser()
-    config_service = ProjectConfigService(Path(config_path) if config_path else None)
-    config = config_service.load()
-    raw_config_payload = {}
-    config_path_obj = Path(config.project_config_path)
-    if config_path_obj.exists():
-        try:
-            raw_config_payload = json.loads(config_path_obj.read_text(encoding='utf-8'))
-        except Exception:
-            raw_config_payload = {'_raw': config_path_obj.read_text(encoding='utf-8', errors='replace')[:2000]}
-    log_service = DebugLogService(verbose=config.verbose_debug_logging)
-    debug_service = DebugService(config_service)
-    active_scripts_dir = scripts_dir if scripts_dir != 'scripts' else config.scripts_dir
-    storage = ZsStorage(active_scripts_dir, log_service=log_service)
-    storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(config))
-    asset_index = AssetIndex(log_service=log_service)
-    admin_data_dir = config_service.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
-    itempanel_data_dir = admin_data_dir / 'itempanel'
-    itempanel_csv_storage_path = itempanel_data_dir / 'itempanel.csv'
-    itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
-    itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
-    oredict_storage_path = admin_data_dir / 'oredict.txt'
-    project_root = _project_root_for_catalog(config_service)
-    runtime_data_dir = config_service.data_dir if config_service.data_dir is not None else config_service.config_path.resolve(strict=False).parent / 'data'
-    itempanel_csv_path = itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv'
+    config_service_base = ProjectConfigService(Path(config_path) if config_path else None)
+    admin_data_dir = config_service_base.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
+    runtime_data_dir_base = config_service_base.data_dir if config_service_base.data_dir is not None else config_service_base.config_path.resolve(strict=False).parent / 'data'
+    
+    # Initialize ServerManager
+    log_service = DebugLogService(verbose=False)
+    from app.services.server_manager import ServerManager
+    server_manager = ServerManager(admin_data_dir, runtime_data_dir_base, parser, log_service)
+    
+    def _current_context() -> Any:
+        req = active_request.get()
+        if req is None:
+            return server_manager.get_context(server_manager.servers[0]['id'])
+        ctx = getattr(req.state, 'server_context', None)
+        if ctx is None:
+            return server_manager.get_context(server_manager.servers[0]['id'])
+        return ctx
 
-    def _active_itempanel_snbt_path(current_scripts_dir: str) -> Path:
-        if itempanel_snbt_storage_path.is_file():
-            return itempanel_snbt_storage_path
-        return _itempanel_snbt_path_for_catalog(project_root, current_scripts_dir)
+    # Dynamically proxied services based on X-Server-Id
+    storage = ContextProxy(_current_context, 'storage')
+    asset_index = ContextProxy(_current_context, 'asset_index')
+    itempanel_icon_catalog = ContextProxy(_current_context, 'itempanel_icon_catalog')
+    item_catalog_service = ContextProxy(_current_context, 'item_catalog_service')
+    mod_icon_atlas_service = ContextProxy(_current_context, 'mod_icon_atlas_service')
+    item_case_alias_service = ContextProxy(_current_context, 'item_case_alias_service')
+    zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
+    recipe_draft_store = ContextProxy(_current_context, 'recipe_draft_store')
+    recipe_task_store = ContextProxy(_current_context, 'recipe_task_store')
+    nei_favorites_store = ContextProxy(_current_context, 'nei_favorites_store')
+    resolver = ContextProxy(_current_context, 'resolver')
+    custom_item_service = ContextProxy(_current_context, 'custom_item_service')
+    config_service = ContextProxy(_current_context, 'config_service')
+    config = ContextProxy(_current_context, 'config')
 
-    itempanel_icon_catalog = ItemPanelIconCatalog(itempanel_csv_path, project_root / 'itempanel_icons')
-    itempanel_icon_catalog.scan()
-    item_catalog_service = ItemCatalogService(
-        itempanel_icon_catalog.csv_path,
-        _active_itempanel_snbt_path(active_scripts_dir),
-        itempanel_icon_catalog,
-        merged_csv_path=itempanel_merged_csv_path,
-        oredict_path=oredict_storage_path,
-    )
-    item_catalog_service.scan()
-    storage.excluded_managed_roots = [admin_data_dir]
+    # Path Proxies
+    oredict_storage_path = PathProxy(lambda: _current_context().admin_data_dir / 'oredict.txt')
+    itempanel_csv_storage_path = PathProxy(lambda: _current_context().admin_data_dir / 'itempanel' / 'itempanel.csv')
+    itempanel_snbt_storage_path = PathProxy(lambda: _current_context().admin_data_dir / 'itempanel' / 'itempanel.json')
+    itempanel_merged_csv_path = PathProxy(lambda: _current_context().admin_data_dir / 'itempanel' / 'itempanel_merged.csv')
+    runtime_data_dir = PathProxy(lambda: _current_context().runtime_data_dir)
+    
+    project_root = _project_root_for_catalog(config_service_base)
+    itempanel_csv_path = PathProxy(lambda: itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv')
+
+    # Enable verbose log service logging if active server config dictates it
+    def _update_verbose_logging_status():
+        log_service.verbose = _current_context().config.verbose_debug_logging
+
+    debug_service = DebugService(config_service_base) # Keep global debug service or delegate
+
     access_control_store = AccessControlStore(admin_data_dir / 'access_control.json')
-    mod_icon_atlas_service = ModIconAtlasService(admin_data_dir / 'mod_icon_archives', admin_data_dir / 'mod_icon_atlases')
-    item_case_alias_service = ItemCaseAliasService(Path(active_scripts_dir), itempanel_icon_catalog.csv_path, admin_data_dir / 'item_case_aliases')
-    zs_backup_service = ZsCloudBackupService(admin_data_dir / 'secret_zs_backups')
-    recipe_draft_store = RecipeDraftTemplateStore(admin_data_dir / 'recipe_draft_templates.json')
-    recipe_task_store = RecipeTaskStore(admin_data_dir / 'recipe_tasks.json')
-    nei_favorites_store = NeiFavoritesStore(runtime_data_dir / 'nei_favorites.json')
-    resolver = ItemResolver(asset_index, log_service=log_service, itempanel_icon_catalog=itempanel_icon_catalog)
-    index_paths = config_service.build_index_paths(config)
-    if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):
-        asset_index.scan_paths(index_paths)
-    debug_service.update_config(config, used_recipe_paths=config_service.build_recipe_scan_paths(config), used_asset_paths=index_paths)
-    debug_service.record_recipe_scan(storage.last_scan_report)
-    debug_service.record_asset_scan(asset_index.last_scan_report)
     service = RecipeService(storage, parser)
     auth_service = AuthService(root_admin_email=os.environ.get('ROOT_ADMIN_EMAIL', 'root.user76@gmail.com'))
-    custom_item_service = CustomItemService(admin_data_dir / 'custom_items')
 
+
+    default_ctx = server_manager.get_context(server_manager.servers[0]['id'])
     log_service.log('BACKEND', 'INFO', 'CONFIG', 'Application bootstrapped', {
-        'config_file': config.project_config_path,
-        'raw_config_payload': raw_config_payload,
-        'normalized_config': config_service.as_api_dict(config),
-        'final_index_paths': index_paths,
-        'final_recipe_scan_paths': config_service.build_recipe_scan_paths(config),
-        'scripts_dir': active_scripts_dir,
-        'verbose_debug_logging': config.verbose_debug_logging,
-        'itempanel_icon_catalog': itempanel_icon_catalog.last_scan_report,
-        'item_catalog': item_catalog_service.last_scan_report,
+        'servers': [s['id'] for s in server_manager.servers],
+        'default_server': server_manager.servers[0]['id'],
+        'config_file': default_ctx.config.project_config_path,
+        'scripts_dir': default_ctx.config.scripts_dir,
+        'verbose_debug_logging': default_ctx.config.verbose_debug_logging,
     })
 
     router = APIRouter(prefix='/api')
@@ -1371,6 +1397,14 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     cors_origins = _cors_origins()
 
     @app.middleware('http')
+    async def set_active_request(request: Request, call_next):
+        token = active_request.set(request)
+        try:
+            return await call_next(request)
+        finally:
+            active_request.reset(token)
+
+    @app.middleware('http')
     async def require_authenticated_api(request: Request, call_next):
         path = request.url.path
         if request.method.upper() == 'OPTIONS':
@@ -1401,7 +1435,24 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         if not role_has_permission(user.role, permission, user.email):
             return JSONResponse({'detail': 'Forbidden', 'permission': permission}, status_code=403)
         request.state.auth_user = user_payload
+
+        # Extract X-Server-Id header and bind the appropriate server context
+        if not path.startswith('/api/servers'):
+            server_id = request.headers.get("X-Server-Id")
+            if not server_id:
+                if server_manager.servers:
+                    server_id = server_manager.servers[0]["id"]
+                else:
+                    return JSONResponse({'detail': 'Server ID is required'}, status_code=400)
+            
+            context = server_manager.get_context(server_id)
+            if not context:
+                return JSONResponse({'detail': f'Server {server_id} not found'}, status_code=404)
+            request.state.server_context = context
+            _update_verbose_logging_status()
+
         return await call_next(request)
+
 
     if session_secret:
         try:
@@ -1430,9 +1481,63 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             expose_headers=['Content-Disposition'],
         )
 
+    @router.get('/servers')
+    def list_servers(request: Request):
+        return {'servers': server_manager.servers}
+
+    @router.post('/servers')
+    def create_server(request: Request, payload: dict):
+        _require_root_admin(request)
+        name = payload.get('name', '').strip()
+        if not name:
+            raise HTTPException(status_code=400, detail='Server name must not be empty')
+        
+        # Clean name to safe server ID (slug)
+        import re
+        server_id = re.sub(r'[^a-zA-Z0-9_-]', '', name.lower())
+        if not server_id:
+            server_id = 'server_' + str(int(perf_counter()))
+            
+        if any(s['id'] == server_id for s in server_manager.servers):
+            raise HTTPException(status_code=400, detail=f'Server with ID {server_id} already exists')
+            
+        try:
+            server_manager.create_server(server_id, name)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+        return {'ok': True, 'servers': server_manager.servers}
+
+    @router.put('/servers/{server_id}')
+    def rename_server(server_id: str, request: Request, payload: dict):
+        _require_root_admin(request)
+        name = payload.get('name', '').strip()
+        if not name:
+            raise HTTPException(status_code=400, detail='Server name must not be empty')
+        try:
+            server_manager.rename_server(server_id, name)
+        except ValueError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+        return {'ok': True, 'servers': server_manager.servers}
+
+    @router.delete('/servers/{server_id}')
+    def delete_server(server_id: str, request: Request):
+        _require_root_admin(request)
+        if server_id == 'hitech':
+            raise HTTPException(status_code=400, detail='Cannot delete default HiTech server')
+        try:
+            server_manager.delete_server(server_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=404, detail=str(exc))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+        return {'ok': True, 'servers': server_manager.servers}
+
     @app.get('/health')
     def health_check():
         return {'ok': True}
 
     app.include_router(router)
     return app
+

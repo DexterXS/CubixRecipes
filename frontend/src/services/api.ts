@@ -84,6 +84,28 @@ async function readErrorMessage(response: Response): Promise<string> {
   return message;
 }
 
+function buildRequestHeaders(customHeaders?: HeadersInit): Record<string, string> {
+  const headers: Record<string, string> = {};
+  if (customHeaders) {
+    if (customHeaders instanceof Headers) {
+      customHeaders.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(customHeaders)) {
+      customHeaders.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, customHeaders);
+    }
+  }
+  const activeServerId = window.localStorage.getItem('active_server_id');
+  if (activeServerId) {
+    headers['X-Server-Id'] = activeServerId;
+  }
+  return headers;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const startedAt = performance.now();
   const payloadPreview = typeof init?.body === 'string' ? init.body.slice(0, 600) : undefined;
@@ -97,7 +119,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   let response: Response;
   try {
-    response = await fetch(path, { credentials: 'include', ...init });
+    const headers = buildRequestHeaders(init?.headers);
+    response = await fetch(path, { credentials: 'include', ...init, headers });
   } catch (error) {
     const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
     const message = buildBackendUnavailableMessage(path);
@@ -150,7 +173,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 async function requestBlob(path: string, init?: RequestInit): Promise<{ blob: Blob; filename: string }> {
-  const response = await fetch(path, { credentials: 'include', ...init });
+  const headers = buildRequestHeaders(init?.headers);
+  const response = await fetch(path, { credentials: 'include', ...init, headers });
   if (!response.ok) {
     throw new Error(await readErrorMessage(response));
   }
@@ -162,6 +186,7 @@ async function requestBlob(path: string, init?: RequestInit): Promise<{ blob: Bl
     : plainMatch?.[1] ?? 'download.zs';
   return { blob: await response.blob(), filename };
 }
+
 
 export async function parseText(text: string): Promise<ParseResponse> {
   return request<ParseResponse>(apiPath('/parse'), {
@@ -331,10 +356,11 @@ export async function getItemCatalog(): Promise<ItemCatalogResponse> {
 
 async function uploadRawItemPanelFile(file: File, endpoint: string, contentType: string): Promise<Response> {
   const path = apiPath(`${endpoint}?filename=${encodeURIComponent(file.name)}`);
+  const headers = buildRequestHeaders({ 'Content-Type': contentType });
   const response = await fetch(path, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': contentType },
+    headers,
     body: file
   });
   if (!response.ok) {
@@ -455,10 +481,11 @@ export async function getModIconAtlasManifest(): Promise<ModIconAtlasManifest | 
 
 export async function uploadModIconArchive(file: File, replace = false): Promise<ModIconAdminStatus> {
   const path = apiPath(`/admin/mod-icons/archive?filename=${encodeURIComponent(file.name)}&replace=${replace ? 'true' : 'false'}`);
+  const headers = buildRequestHeaders({ 'Content-Type': 'application/zip' });
   const response = await fetch(path, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/zip' },
+    headers,
     body: file
   });
   if (!response.ok) {
@@ -523,10 +550,11 @@ export async function saveManualItemCaseAlias(lowerKey: string, original: string
 
 export async function uploadItemCaseAliasFmlLog(file: File): Promise<ItemCaseAliasReport> {
   const path = apiPath(`/admin/item-case-aliases/fml-log?filename=${encodeURIComponent(file.name)}`);
+  const headers = buildRequestHeaders({ 'Content-Type': 'text/plain' });
   const response = await fetch(path, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'text/plain' },
+    headers,
     body: file
   });
   if (!response.ok) {
@@ -609,3 +637,35 @@ export async function replaceModItems(modid: string, replacements: Record<string
     body: JSON.stringify({ modid, replacements })
   });
 }
+
+export interface ServerInfo {
+  id: string;
+  name: string;
+}
+
+export async function listServers(): Promise<{ servers: ServerInfo[] }> {
+  return request<{ servers: ServerInfo[] }>(apiPath('/servers'));
+}
+
+export async function createServer(name: string): Promise<{ ok: boolean; servers: ServerInfo[] }> {
+  return request<{ ok: boolean; servers: ServerInfo[] }>(apiPath('/servers'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name })
+  });
+}
+
+export async function renameServer(serverId: string, name: string): Promise<{ ok: boolean; servers: ServerInfo[] }> {
+  return request<{ ok: boolean; servers: ServerInfo[] }>(apiPath(`/servers/${serverId}`), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name })
+  });
+}
+
+export async function deleteServer(serverId: string): Promise<{ ok: boolean; servers: ServerInfo[] }> {
+  return request<{ ok: boolean; servers: ServerInfo[] }>(apiPath(`/servers/${serverId}`), {
+    method: 'DELETE'
+  });
+}
+

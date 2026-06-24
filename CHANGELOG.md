@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### Added
+- Added multi-server architecture with server selection, creation, renaming, and deletion support. Each server has fully isolated data (scripts, mods, item catalog, oredict, custom items, recipe tasks, draft templates, and favorites) stored under `.cubixrecipes_admin/servers/{server_id}/`.
+- Added automatic backwards-compatible migration of legacy configuration and data files into the default **HiTech** server context on the first run.
+- Added ContextProxy and PathProxy dynamic routing based on the `X-Server-Id` request header to allow backend routes to work seamlessly without modifying their internal logic.
+- Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
+
 - Added recipe navigation arrows (◀ N/M ▶) at the bottom of the craft board, always visible; arrows are active when multiple recipes exist for the same output, showing 1/1 when there is only one.
 - Fixed cloud file download filename: exposed `Content-Disposition` header via CORS `expose_headers` so the browser now receives and uses the actual filename from the server instead of falling back to `download.zs`.
 - Исправлено группирование и обновление списка в панели черновиков: переработана функция группировки `groupedDraftItems` для объединения элементов под уникальными ключами с помощью `Map`, что предотвращает появление дубликатов React-ключей и решает проблему дублирования/наложения списков при переключении групп.
