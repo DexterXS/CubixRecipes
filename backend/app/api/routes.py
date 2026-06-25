@@ -1436,9 +1436,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             return JSONResponse({'detail': 'Forbidden', 'permission': permission}, status_code=403)
         request.state.auth_user = user_payload
 
-        # Extract X-Server-Id header and bind the appropriate server context
+        # Extract X-Server-Id header or query params and bind the appropriate server context
         if not path.startswith('/api/servers'):
-            server_id = request.headers.get("X-Server-Id")
+            server_id = request.headers.get("X-Server-Id") or request.query_params.get("server") or request.query_params.get("server_id")
             if not server_id:
                 if server_manager.servers:
                     server_id = server_manager.servers[0]["id"]
