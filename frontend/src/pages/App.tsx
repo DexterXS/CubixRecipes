@@ -1080,10 +1080,16 @@ function customItemToEntry(item: CustomItem): ItemPanelEntry {
 }
 
 function normalizeAtlasImageUrl(imageUrl: string): string {
+  let url = imageUrl;
   if (imageUrl.startsWith('/api/')) {
-    return apiPath(imageUrl.slice(4));
+    url = apiPath(imageUrl.slice(4));
   }
-  return imageUrl;
+  const activeServerId = window.localStorage.getItem('active_server_id');
+  if (activeServerId && (url.startsWith('http') || url.startsWith('/'))) {
+    const separator = url.includes('?') ? '&' : '?';
+    url = `${url}${separator}server=${encodeURIComponent(activeServerId)}`;
+  }
+  return url;
 }
 
 function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw: string, wildcardTick = 0): ItemPanelAtlasEntry | undefined {
@@ -3132,7 +3138,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeServerId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -3156,7 +3162,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeServerId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -3175,7 +3181,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeServerId]);
 
   function persistUiPreferences(next: UiPreferences) {
     hasLocalUiChangesRef.current = true;
