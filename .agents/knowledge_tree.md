@@ -332,6 +332,13 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/tasks/taskDefaults.ts`
   - Local task default templates and text expansion.
 
+### Recipe Editor Feature
+- `frontend/src/features/recipe-editor/recipeMatrix.ts`
+  - Owns recipe matrix cloning, resizing, trimming, source-shape normalization, and craft-mode/recipe-type mapping.
+  - Extracted from `pages/App.tsx` so recipe-editor domain logic is no longer owned by the page shell.
+- `frontend/src/features/recipe-editor/recipeMatrix.test.ts`
+  - Covers matrix edge trimming, strict/shapeless position preservation, supported grid sizing, and recipe type mapping.
+
 ### Frontend Services and Types
 - `frontend/src/services/api/`
   - Modular frontend API client with stable barrel export at `frontend/src/services/api/index.ts`.
@@ -362,6 +369,7 @@ Last full rebuild: 2026-06-29
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
+- `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.
 
@@ -435,9 +443,9 @@ Last full rebuild: 2026-06-29
 
 ### Recipe Parse, Edit, Search, Save
 - Backend files: `api/routes.py`, `api/schemas.py`, `domain/models.py`, `parsers/recipe_parser.py`, `services/recipe_service.py`, `storage/zs_storage.py`.
-- Frontend files: `pages/App.tsx`, `components/RecipeGrid.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
+- Frontend files: `pages/App.tsx`, `features/recipe-editor/recipeMatrix.ts`, `components/RecipeGrid.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
 - APIs: `/parse`, `/recipes/create`, `/recipes/search`, `/recipes/uses`, `/recipes/search-batch`, `/recipes/{recipe_uid}`, `/recipes/save-as`, `/zs/files`, `/zs/files/create`.
-- Tests: `test_parser.py`, `test_storage.py`, `test_api_routes.py`, `App.test.tsx`.
+- Tests: `test_parser.py`, `test_storage.py`, `test_api_routes.py`, `App.test.tsx`, `recipeMatrix.test.ts`.
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
@@ -519,6 +527,7 @@ Last full rebuild: 2026-06-29
 ### Frontend Import Direction
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
+- `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
 - `services/api/client.ts` -> runtime config, debug log.

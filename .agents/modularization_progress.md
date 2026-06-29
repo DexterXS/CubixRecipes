@@ -8,8 +8,8 @@ Temporary file. Keep this file while the modular structure migration is in progr
 - Keep existing public imports and API contracts stable during each extraction.
 
 ## Active Step
-- Step: prepare the next frontend split after API client modularization.
-- Reason: API imports are now stable through `frontend/src/services/api/index.ts`, so later `App.tsx` feature extraction can depend on smaller API modules.
+- Step: continue extracting `frontend/src/pages/App.tsx` into frontend feature modules.
+- Reason: `App.tsx` remains the largest structural risk; pure recipe-editor helpers are now separated, so the next split can target a larger workflow boundary.
 - Target shape: keep extracting one frontend feature boundary at a time without changing UI behavior.
 
 ## Completed
@@ -20,9 +20,13 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - `recipes.ts`, `items.ts`, `itempanel.ts`, `auth.ts`, `tasks.ts`, `modIcons.ts`, `aliases.ts`, `zsCloud.ts`, `oredict.ts`, `modReplacement.ts`, `servers.ts`, `settings.ts`, `favorites.ts`: endpoint groups by backend concern.
   - `index.ts`: barrel export preserving existing `../services/api` imports.
   - Why this shape: API client ownership is split by backend/API concern while callers keep the same public import path.
+- Created `frontend/src/features/recipe-editor/recipeMatrix.ts`.
+  - Moved matrix clone/resize/trim/source-shape helpers and recipe type mapping out of `App.tsx`.
+  - Added `recipeMatrix.test.ts` for trim/preserve/grid-size behavior.
+  - Why this shape: matrix source-shaping is recipe-editor domain logic, not page-shell state or UI rendering.
 
 ## Still Needed
-- Split `frontend/src/pages/App.tsx` into feature modules after API imports are stable.
+- Continue splitting `frontend/src/pages/App.tsx` into feature modules.
 - Split large frontend tests/styles by feature once the related application modules exist.
 - Split `backend/app/api/routes.py` into backend routers by API concern.
 
