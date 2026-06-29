@@ -7,6 +7,7 @@ import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
+import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
@@ -317,7 +318,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -7689,10 +7690,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       uploadedDrafts: uploadedDrafts.map((draft) => ({ id: draft.id, name: draft.name, size: draft.size, lastModified: draft.lastModified })),
       recipeDraftTemplates: recipeDraftTemplates.map((draft) => ({ id: draft.id, outputRaw: draft.outputRaw, name: draft.name, createdByEmail: draft.createdByEmail, updatedAt: draft.updatedAt }))
     };
+    const iconLabSampleRaw = outputRaw || visibleNeiRawItems[0] || '<minecraft:planks>';
+    const iconLabSampleTitle = resolveCellTitle(iconLabSampleRaw) || iconLabSampleRaw;
+    const iconLabUsesOutput = Boolean(outputRaw) && iconLabSampleRaw === outputRaw;
+    const iconLabIconUrl = iconLabUsesOutput ? recipe.output_resolution?.icon_url : itemSearchIcons[iconLabSampleRaw];
+    const iconLabAnimated = iconLabUsesOutput ? recipe.output_resolution?.animated : false;
+    const iconLabFrameTime = iconLabUsesOutput ? recipe.output_resolution?.animation_meta?.frametime : undefined;
 
     switch (debugSection) {
       case 'modIcons':
         return canManageModIcons ? renderModIconsPanel() : <div className="inline-hint inline-hint-warning">Управление иконками доступно только администраторам.</div>;
+      case 'iconLab':
+        return (
+          <IconScaleLab
+            sampleRaw={iconLabSampleRaw}
+            sampleTitle={iconLabSampleTitle}
+            renderSampleIcon={() => renderCraftItemIcon(iconLabSampleRaw, iconLabIconUrl, iconLabAnimated, iconLabFrameTime, iconLabSampleTitle)}
+          />
+        );
       case 'access':
         return (
           <div className="debug-section-grid">
@@ -8189,6 +8204,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
+      { id: 'iconLab', label: 'Иконки тест', description: '64 варианта размера', visible: canUseDebug },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
       { id: 'oreDictPriority', label: 'OreDict иконки', description: 'Приоритет модов', visible: canManageModIcons },

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a temporary technical-panel icon scale lab with 64 real-icon variants for comparing small-cell centering and sizing strategies.
 - Added modular NEI/favorites icon-cell UI with browser-style favorite tabs, a `+` tab creator, hidden `...` favorite settings, mobile long-press item inspection, and `...` item actions for NEI/favorites.
 - Added a mobile app drawer with workspace navigation, server switch, language, settings, logout, and editor tools, plus NEI/Favorites tab switching in the recipe workspace.
 - Added a dedicated mobile stylesheet for phone/tablet recipe editing, with touch-sized craft grid/NEI controls, stacked editor/search layout, mobile modal sizing, and a touch-visible selected-item bar for NEI insertion.
@@ -15,7 +16,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
-- Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation now sits under the output slot.
+- Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation stays compact below the craft board.
 - Changed the default NEI page size to 32 items and replaced the manual page-size input with a dropdown of fixed options.
 - Added symbol-coded craft settings inside the craft-board `...` menu for grid size, recipe type, and binding mode, with green active and red inactive states.
 - Fixed mobile NEI long-press behavior so item text no longer gets selected, touch long-press no longer opens the full action menu accidentally, and item-cell `...` actions are hidden on touch screens while remaining available from the mobile item tooltip.

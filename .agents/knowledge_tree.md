@@ -349,6 +349,12 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`
   - Covers matrix edge trimming, strict/shapeless position preservation, supported grid sizing, and recipe type mapping.
 
+### Icon Lab Feature
+- `frontend/src/features/icon-lab/IconScaleLab.tsx`
+  - Temporary technical-panel lab for comparing 64 small-cell icon sizing and centering variants against the current real item icon.
+- `frontend/src/features/icon-lab/IconScaleLab.css`
+  - Scoped presentation for the icon lab preview grid and per-variant scaling/centering modes.
+
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
