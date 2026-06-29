@@ -1109,9 +1109,11 @@ test('long press shows item information without taking the item', async () => {
 
   fireEvent.pointerDown(item, { pointerType: 'touch', clientX: 120, clientY: 160 });
   await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 160 });
 
   expect(await screen.findByLabelText('touch-item-actions-<minecraft:planks>')).toBeTruthy();
   expect(screen.queryByLabelText('touch-held-item')).toBeFalsy();
+  expect(document.querySelector('.nei-context-menu')).toBeFalsy();
 });
 
 test('moderator NEI hidden patterns remove matching item variants from the panel', async () => {

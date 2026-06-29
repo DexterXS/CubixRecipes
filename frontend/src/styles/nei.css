@@ -165,6 +165,9 @@
   border-radius: 10px;
   background: var(--panel-strong);
   box-shadow: 0 18px 40px var(--shadow);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .mobile-item-inspection .item-tooltip,
@@ -191,13 +194,7 @@
   }
 
   .nei-list .nei-item-more {
-    top: -5px;
-    right: -5px;
-    width: 22px;
-    height: 20px;
-    min-height: 20px;
-    display: grid;
-    opacity: 0.9;
+    display: none !important;
   }
 
   .nei-list .nei-item-cell,

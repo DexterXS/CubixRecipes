@@ -48,6 +48,7 @@ export function NeiIconItem({
   onDragEnd
 }: NeiIconItemProps) {
   const touchRef = useRef<TouchState | null>(null);
+  const suppressTouchContextMenuUntilRef = useRef(0);
 
   const clearLongPressTimer = () => {
     const state = touchRef.current;
@@ -68,6 +69,7 @@ export function NeiIconItem({
     if (event.pointerType === 'mouse') {
       return;
     }
+    suppressTouchContextMenuUntilRef.current = Date.now() + 2000;
     const startX = Number.isFinite(event.clientX) ? event.clientX : 0;
     const startY = Number.isFinite(event.clientY) ? event.clientY : 0;
     const state: TouchState = {
@@ -148,6 +150,9 @@ export function NeiIconItem({
         onDoubleClick={() => onOutputPick(pickRaw)}
         onContextMenu={(event) => {
           event.preventDefault();
+          if (Date.now() < suppressTouchContextMenuUntilRef.current) {
+            return;
+          }
           onOpenActions(raw, event.clientX, event.clientY, event);
         }}
       >

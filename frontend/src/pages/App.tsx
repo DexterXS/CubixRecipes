@@ -5990,6 +5990,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         style={getContextMenuStyle(touchItemInspection.x, touchItemInspection.y, { width: 300, height: 210 })}
         onMouseDown={(event) => event.stopPropagation()}
         onPointerDown={(event) => event.stopPropagation()}
+        onContextMenu={(event) => event.preventDefault()}
       >
         <div className="mobile-item-inspection-tooltip">
           {renderItemTooltip(raw, touchItemInspection.entry)}

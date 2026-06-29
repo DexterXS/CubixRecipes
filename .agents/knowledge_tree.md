@@ -352,7 +352,7 @@ Last full rebuild: 2026-06-29
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
-  - Owns guarded touch behavior: scroll movement cancels pick, short tap picks, long press opens item inspection.
+  - Owns guarded touch behavior: scroll movement cancels pick, short tap picks, long press opens item inspection, and touch-generated context menus are suppressed so the tooltip action button remains the mobile path to item actions.
 - `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`
   - Owns NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI.
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
