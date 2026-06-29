@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './pages/App';
 import './styles.css';
 import './styles/mobile.css';
+import './styles/mobile-shell.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';

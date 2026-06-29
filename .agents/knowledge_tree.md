@@ -325,6 +325,12 @@ Last full rebuild: 2026-06-29
 - `frontend/src/components/StatusBar.tsx`: status item row.
 - `frontend/src/components/TabNav.tsx`: tab navigation using shared tab types.
 
+### Mobile Shell Feature
+- `frontend/src/features/mobile-shell/MobileAppMenu.tsx`
+  - Owns the phone app drawer for workspace navigation, active server/change-server action, language/settings/logout actions, and contextual editor tools.
+- `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`
+  - Covers drawer opening, navigation action wiring, server action visibility, and editor tool access.
+
 ### Task Feature
 - `frontend/src/features/tasks/RecipeTasksBoard.tsx`
   - Admin task board, task forms, drag/reorder/status operations, user/item search, deadline helpers.
@@ -334,9 +340,9 @@ Last full rebuild: 2026-06-29
 
 ### Recipe Editor Feature
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.tsx`
-  - Owns the editor workspace shell that keeps desktop columns stable while exposing phone-specific hamburger menu and NEI/Favorites tab switching.
+  - Owns the editor workspace shell that keeps desktop columns stable while exposing phone-specific NEI/Favorites tab switching.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`
-  - Covers hamburger menu state and NEI/Favorites tab switching structure.
+  - Covers recipe file fallback slot and NEI/Favorites tab switching structure.
 - `frontend/src/features/recipe-editor/recipeMatrix.ts`
   - Owns recipe matrix cloning, resizing, trimming, source-shape normalization, and craft-mode/recipe-type mapping.
   - Extracted from `pages/App.tsx` so recipe-editor domain logic is no longer owned by the page shell.
@@ -372,9 +378,12 @@ Last full rebuild: 2026-06-29
   - Global app styling.
 - `frontend/src/styles/mobile.css`
   - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, NEI/search panel, touch held-item bar, and modal sizing.
+- `frontend/src/styles/mobile-shell.css`
+  - Phone app drawer presentation layer for global navigation, server switching, settings, logout, and contextual editor tools.
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
+- `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/services/api.test.ts`: API helper behavior.
@@ -535,7 +544,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
-- `main.tsx` -> `styles.css`, `styles/mobile.css`.
+- `main.tsx` -> `styles.css`, `styles/mobile.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
 - `services/api/client.ts` -> runtime config, debug log.

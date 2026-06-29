@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 
 import { MobileRecipeWorkspace } from './MobileRecipeWorkspace';
 
-test('mobile recipe workspace keeps recipe files in the hamburger menu', () => {
+test('mobile recipe workspace keeps recipe files in the desktop fallback slot', () => {
   render(
     <MobileRecipeWorkspace
       canUseNeiFavorites={false}
@@ -15,14 +15,6 @@ test('mobile recipe workspace keeps recipe files in the hamburger menu', () => {
 
   expect(screen.getByText('craft')).toBeTruthy();
   expect(screen.getByText('files')).toBeTruthy();
-
-  const menuButton = screen.getByLabelText('mobile-workspace-menu');
-  expect(menuButton.getAttribute('aria-expanded')).toBe('false');
-
-  fireEvent.click(menuButton);
-
-  expect(menuButton.getAttribute('aria-expanded')).toBe('true');
-  expect(screen.getByText('Меню редактора')).toBeTruthy();
 });
 
 test('mobile recipe workspace switches NEI to favorites without duplicating panels', () => {

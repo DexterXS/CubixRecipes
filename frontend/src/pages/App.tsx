@@ -4,6 +4,7 @@ import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
+import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
@@ -8296,16 +8297,37 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  const activeServerName = activeServerId
+    ? (serversList.find((server) => server.id === activeServerId)?.name || activeServerId)
+    : null;
+
   return (
     <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown} onContextMenuCapture={handleHeldItemContextMenu}>
       <div className="utility-bar">
+        <MobileAppMenu
+          appName="CubixRecipes"
+          userEmail={authUser.email}
+          userRole={authUser.role}
+          serverName={activeServerName}
+          tabs={workspaceTabs}
+          activeTab={workspaceTab}
+          onSelectTab={(tabId) => setWorkspaceTab(tabId as WorkspaceTab)}
+          onResetServer={onResetServer}
+          language={uiPreferences.language}
+          canManageSettings={canManageSettings}
+          canOpenSettings={canOpenSettings}
+          onLanguageChange={(language) => patchUiPreferences({ language })}
+          onOpenSettings={() => setIsLayoutSettingsOpen(true)}
+          onLogout={onLogout}
+          editorTools={workspaceTab === 'editor' ? renderRecipeFilesPanel() : undefined}
+        />
         <div className="brand-with-server">
           <strong>CubixRecipes</strong>
           {activeServerId && (
             <div className="active-server-chip" title="Активный сервер">
               <span className="server-icon">🖥️</span>
               <span className="server-name-label">
-                {serversList.find(s => s.id === activeServerId)?.name || activeServerId}
+                {activeServerName}
               </span>
               {onResetServer && (
                 <button

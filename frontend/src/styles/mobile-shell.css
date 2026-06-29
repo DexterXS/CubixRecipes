@@ -1,0 +1,127 @@
+.mobile-app-menu {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 1024px) {
+  .mobile-app-menu {
+    display: block;
+  }
+
+  .mobile-app-menu-button {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--panel) 86%, transparent);
+    color: var(--text);
+    font-size: 24px;
+  }
+
+  .mobile-app-menu.is-open .mobile-app-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2190;
+    display: block;
+    border: 0;
+    background: rgba(2, 6, 23, 0.58);
+    backdrop-filter: blur(3px);
+  }
+
+  .mobile-app-menu-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2201;
+    width: min(84vw, 390px);
+    overflow: auto;
+    padding: 18px 14px 24px;
+    background: var(--panel-strong);
+    border-right: 1px solid var(--border);
+    box-shadow: 22px 0 52px var(--shadow);
+  }
+
+  .mobile-app-menu-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-app-menu-head div,
+  .mobile-menu-section,
+  .mobile-menu-items,
+  .mobile-menu-field,
+  .mobile-menu-info {
+    display: grid;
+    gap: 8px;
+  }
+
+  .mobile-app-menu-head strong {
+    font-size: 20px;
+  }
+
+  .mobile-app-menu-head span,
+  .mobile-menu-section-title,
+  .mobile-menu-info span,
+  .mobile-menu-field span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .mobile-menu-section {
+    margin-top: 16px;
+  }
+
+  .mobile-menu-section-title {
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  .mobile-menu-item,
+  .mobile-menu-info,
+  .mobile-menu-field {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--field-bg) 86%, transparent);
+    color: var(--text);
+    text-align: left;
+  }
+
+  .mobile-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 800;
+  }
+
+  .mobile-menu-item.active {
+    border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .mobile-menu-field select {
+    width: 100%;
+  }
+
+  .mobile-menu-logout {
+    color: #fca5a5;
+    border-color: color-mix(in srgb, #ef4444 38%, var(--border));
+  }
+
+  .mobile-menu-editor-tools .panel-recipe-files {
+    display: flex;
+  }
+
+  .desktop-recipe-files {
+    display: none;
+  }
+}

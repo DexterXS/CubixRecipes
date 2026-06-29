@@ -24,10 +24,17 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved matrix clone/resize/trim/source-shape helpers and recipe type mapping out of `App.tsx`.
   - Added `recipeMatrix.test.ts` for trim/preserve/grid-size behavior.
   - Why this shape: matrix source-shaping is recipe-editor domain logic, not page-shell state or UI rendering.
+- Created `frontend/src/features/mobile-shell/MobileAppMenu.tsx`.
+  - Moved the phone app drawer for workspace tabs, server switching, language, settings, logout, and contextual editor tools into a dedicated mobile-shell feature.
+  - Added `MobileAppMenu.test.tsx` for drawer navigation and editor-tool access.
+  - Why this shape: global mobile navigation belongs to the app shell, not the recipe editor or page component.
+- Created `frontend/src/styles/mobile-shell.css`.
+  - Moved global mobile drawer styles out of `frontend/src/styles/mobile.css`.
+  - Why this shape: app-shell mobile navigation has separate ownership from recipe workspace mobile layout and keeps both CSS files under the hard file-size limit.
 - Created `frontend/src/features/recipe-editor/MobileRecipeWorkspace.tsx`.
   - Moved the editor workspace shell for recipe builder, recipe files, NEI, and NEI favorites out of `App.tsx`.
-  - Added mobile hamburger menu state for recipe file tools and mobile NEI/Favorites tab state.
-  - Added `MobileRecipeWorkspace.test.tsx` for menu and tab behavior.
+  - Added mobile NEI/Favorites tab state while keeping recipe file tools available for the app drawer.
+  - Added `MobileRecipeWorkspace.test.tsx` for recipe-file fallback and tab behavior.
   - Why this shape: mobile editor workflow is recipe-editor UI ownership and should not stay embedded in the page shell.
 - Created `frontend/src/styles/mobile.css`.
   - Added phone/tablet layout rules for recipe editor, craft grid, NEI/search panel, touch targets, and modals.
