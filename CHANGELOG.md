@@ -9,6 +9,7 @@
 
 ### Fixed
 - Fixed atlas/icon mismatch when switching between different servers by making item catalog and atlas useEffect hooks re-run on server change, appending active server ID as a cache-busting query parameter to image/atlas URLs, and allowing the backend context middleware to resolve server ID from query parameters.
+- Fixed multi-server itempanel fallback and cache isolation: the default server can still read the project root itempanel catalog until a server-specific catalog is uploaded, frontend itempanel/icon caches are scoped by server, project settings rescan no longer calls a removed SNBT helper, and the craft table draft can stay shared across servers through a local setting.
 
 - Added recipe navigation arrows (◀ N/M ▶) at the bottom of the craft board, always visible; arrows are active when multiple recipes exist for the same output, showing 1/1 when there is only one.
 - Fixed cloud file download filename: exposed `Content-Disposition` header via CORS `expose_headers` so the browser now receives and uses the actual filename from the server instead of falling back to `download.zs`.

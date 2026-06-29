@@ -221,6 +221,7 @@ type ItemPanelTranslations = {
 };
 const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
+const SHARED_CRAFT_DRAFT_STORAGE_KEY = 'cubixrecipes:shared-craft-draft:v1';
 const NEI_VISIBLE_ROWS = 16;
 const NEI_FALLBACK_COLUMNS = 8;
 const LOCAL_DRAFT_SCHEMA_VERSION = 1;
@@ -545,6 +546,32 @@ function localDraftUserHash(email: string): string {
 
 function localDraftStorageKey(email: string): string {
   return `${LOCAL_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function serverLocalDraftStorageKey(email: string, serverId: string | undefined, sharedCraftDraft: boolean): string {
+  const baseKey = localDraftStorageKey(email);
+  return sharedCraftDraft || !serverId ? baseKey : `${baseKey}:server:${serverId}`;
+}
+
+function serverScopedStorageKey(baseKey: string, serverId: string | undefined): string {
+  return serverId ? `${baseKey}:server:${serverId}` : baseKey;
+}
+
+function loadSharedCraftDraftEnabled(): boolean {
+  try {
+    const raw = window.localStorage.getItem(SHARED_CRAFT_DRAFT_STORAGE_KEY);
+    return raw === null ? true : raw === 'true';
+  } catch {
+    return true;
+  }
+}
+
+function persistSharedCraftDraftEnabled(enabled: boolean): void {
+  try {
+    window.localStorage.setItem(SHARED_CRAFT_DRAFT_STORAGE_KEY, enabled ? 'true' : 'false');
+  } catch {
+    // Local craft draft storage mode is best-effort.
+  }
 }
 
 function recipeDraftStorageKey(email: string): string {
@@ -890,9 +917,9 @@ function hashLocalDraftState(state: LocalDraftState): string {
   return stableHash(JSON.stringify(state));
 }
 
-function loadLocalDraftPayload(email: string): LocalDraftPayload | null {
+function loadLocalDraftPayload(email: string, storageKey = localDraftStorageKey(email)): LocalDraftPayload | null {
   try {
-    const raw = window.localStorage.getItem(localDraftStorageKey(email));
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as unknown;
     if (!isObjectRecord(parsed) || parsed.schemaVersion !== LOCAL_DRAFT_SCHEMA_VERSION || typeof parsed.craftHash !== 'string') {
@@ -1554,9 +1581,13 @@ function nextFavoriteTabId(): string {
 }
 
 export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined, onResetServer, activeServerId }: AppProps) {
+  const [sharedCraftDraftEnabled, setSharedCraftDraftEnabled] = useState(() => loadSharedCraftDraftEnabled());
+  const localDraftStorageKeyCurrent = serverLocalDraftStorageKey(authUser.email, activeServerId, sharedCraftDraftEnabled);
+  const itemPanelCacheKey = serverScopedStorageKey(ITEMPANEL_CACHE_KEY, activeServerId);
+  const itemSearchIconCacheKey = serverScopedStorageKey(ITEM_SEARCH_ICON_CACHE_KEY, activeServerId);
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
-    localDraftRef.current = loadLocalDraftPayload(authUser.email);
+    localDraftRef.current = loadLocalDraftPayload(authUser.email, localDraftStorageKeyCurrent);
   }
   const restoredDraft = localDraftRef.current?.state ?? null;
 
@@ -1719,7 +1750,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [cloudBackupStatus, setCloudBackupStatus] = useState('');
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
-      const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
+      const raw = window.localStorage.getItem(itemSearchIconCacheKey);
       if (!raw) return {};
       const parsed = JSON.parse(raw) as Record<string, string | null>;
       return parsed && typeof parsed === 'object' ? parsed : {};
@@ -1733,6 +1764,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const persistTimerRef = useRef<number | null>(null);
   const localDraftPersistTimerRef = useRef<number | null>(null);
   const lastLocalDraftHashRef = useRef(localDraftRef.current?.craftHash ?? '');
+  const lastLocalDraftStorageKeyRef = useRef(localDraftStorageKeyCurrent);
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
   const neiFavoritesSaveTimerRef = useRef<number | null>(null);
@@ -1743,6 +1775,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const texturePauseRef = useRef(false);
   const textureCancelRef = useRef(false);
   const iconRequestRef = useRef<Set<string>>(new Set());
+  const itemSearchIconCacheKeyRef = useRef(itemSearchIconCacheKey);
   const neiListRef = useRef<HTMLDivElement | null>(null);
   const cursorPointRef = useRef({ x: 0, y: 0 });
   const heldCursorRef = useRef<HTMLDivElement | null>(null);
@@ -1814,6 +1847,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } catch {
       // Local debug preferences are best-effort only.
     }
+  }
+
+  function setSharedCraftDraftMode(enabled: boolean) {
+    persistSharedCraftDraftEnabled(enabled);
+    lastLocalDraftHashRef.current = '';
+    setSharedCraftDraftEnabled(enabled);
+    setSaveStatus(enabled ? 'Крафтовый стол общий для всех серверов' : 'Крафтовый стол сохраняется отдельно для сервера');
   }
 
   function toggleDebugFilter(category: DebugCategory, enabled: boolean) {
@@ -1993,7 +2033,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemCatalogSummary(summary);
     }
     try {
-      window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries: uniqueEntries, summary: summary ?? null }));
+      window.localStorage.setItem(itemPanelCacheKey, JSON.stringify({ entries: uniqueEntries, summary: summary ?? null }));
     } catch {
       // Cache persistence is best-effort.
     }
@@ -2977,7 +3017,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       modalScales
     };
     const craftHash = hashLocalDraftState(draftState);
-    if (craftHash === lastLocalDraftHashRef.current) {
+    if (craftHash === lastLocalDraftHashRef.current && localDraftStorageKeyCurrent === lastLocalDraftStorageKeyRef.current) {
       return undefined;
     }
 
@@ -2994,8 +3034,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         state: draftState
       };
       try {
-        window.localStorage.setItem(localDraftStorageKey(authUser.email), JSON.stringify(payload));
+        window.localStorage.setItem(localDraftStorageKeyCurrent, JSON.stringify(payload));
         lastLocalDraftHashRef.current = craftHash;
+        lastLocalDraftStorageKeyRef.current = localDraftStorageKeyCurrent;
       } catch (error) {
         logFrontendEvent({
           level: 'WARN',
@@ -3013,6 +3054,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
   }, [
     authUser.email,
+    localDraftStorageKeyCurrent,
     input,
     matrix,
     recipe,
@@ -3037,6 +3079,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     recipeForwardHistory,
     modalScales
   ]);
+
+  useEffect(() => {
+    lastLocalDraftHashRef.current = '';
+  }, [localDraftStorageKeyCurrent]);
 
   useEffect(() => {
     persistCustomRemoveTemplates(customRemoveTemplates);
@@ -3067,7 +3113,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
       try {
-        const cached = window.localStorage.getItem(ITEMPANEL_CACHE_KEY);
+        const cached = window.localStorage.getItem(itemPanelCacheKey);
         if (cached) {
           const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
@@ -3138,7 +3184,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, [activeServerId]);
+  }, [activeServerId, itemPanelCacheKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -3963,12 +4009,32 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [visibleNeiRawItems, itemSearchIcons, itemPanelAtlas, modIconByRaw]);
 
   useEffect(() => {
+    if (itemSearchIconCacheKeyRef.current !== itemSearchIconCacheKey) {
+      return;
+    }
     try {
-      window.localStorage.setItem(ITEM_SEARCH_ICON_CACHE_KEY, JSON.stringify(itemSearchIcons));
+      window.localStorage.setItem(itemSearchIconCacheKey, JSON.stringify(itemSearchIcons));
     } catch {
       // ignore cache persistence errors
     }
-  }, [itemSearchIcons]);
+  }, [itemSearchIcons, itemSearchIconCacheKey]);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(itemSearchIconCacheKey);
+      if (!raw) {
+        setItemSearchIcons({});
+        itemSearchIconCacheKeyRef.current = itemSearchIconCacheKey;
+        return;
+      }
+      const parsed = JSON.parse(raw) as Record<string, string | null>;
+      setItemSearchIcons(parsed && typeof parsed === 'object' ? parsed : {});
+    } catch {
+      setItemSearchIcons({});
+    }
+    itemSearchIconCacheKeyRef.current = itemSearchIconCacheKey;
+    iconRequestRef.current.clear();
+  }, [itemSearchIconCacheKey]);
 
   async function waitWhileTextureLoadingPaused() {
     while (texturePauseRef.current && !textureCancelRef.current) {
@@ -8378,6 +8444,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   step={8}
                   value={uiPreferences.nei_page_size}
                   onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 128), 16, 512) })}
+                />
+              </label>
+              <label className="switch-field">
+                <span>Общий крафтовый стол между серверами</span>
+                <input
+                  aria-label="shared-craft-draft-enabled"
+                  type="checkbox"
+                  checked={sharedCraftDraftEnabled}
+                  onChange={(event) => setSharedCraftDraftMode(event.target.checked)}
                 />
               </label>
               <section className="settings-section">
