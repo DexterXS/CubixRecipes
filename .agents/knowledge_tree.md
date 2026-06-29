@@ -15,6 +15,7 @@ Last full rebuild: 2026-06-29
 - Frontend: React + Vite application under `frontend/src`.
 - Admin shell: PySide/control scripts in `admin_panel.py`, `start-dev.py`, plus packaged `CubixRecipes_Admin.exe`.
 - Local workflows and agent rules: `AGENTS.md`, `.agents/skills/*`, `.agents/knowledge_tree.md`.
+- Project automation scripts: `scripts/*`, plus owner-specific scripts under `backend/scripts/`, `frontend/scripts/`, or `.agents/scripts/` when needed.
 - Static/catalog data: root `itempanel.csv`, `itempanel.json`, `oredict.txt`, `mods_json/*.json`, `itempanel_icons/`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`, `frontend/public/itempanel-atlas.png`.
 
 ## Runtime Data Model
@@ -38,6 +39,19 @@ Last full rebuild: 2026-06-29
 - SQL tables:
   - `users`: Google-authenticated users, roles, timestamps, unique `google_sub` and `email`.
   - `custom_items`: declared in auth database model for owner/global item records, unique owner/raw pair.
+
+## Automation and Governance Scripts
+- `scripts/check_file_sizes.py`
+  - Reports text/code files above the project warning and hard line-count limits.
+  - Default mode is a safe report that exits successfully; use `--enforce` when a hard-limit violation should fail the command.
+  - Default thresholds follow `AGENTS.md`: warning above 400 lines, hard limit above 500 lines.
+  - Use before adding logic to files near the limit and during modularization work.
+
+## Local Governance Skills
+- `.agents/skills/file-size-guard/SKILL.md`: workflow for checking file-size risk and splitting by ownership instead of arbitrary chunks.
+- `.agents/skills/script-automation/SKILL.md`: workflow for turning repeated deterministic tasks into reusable scripts with dry-run/test verification.
+- `.agents/skills/modular-monolith/SKILL.md`: workflow for structure changes and module boundary cleanup.
+- `.agents/skills/project-rules/SKILL.md`: workflow for changing AGENTS, roadmap, and local skills.
 
 ## Backend Modules
 
@@ -504,6 +518,8 @@ Last full rebuild: 2026-06-29
 ## Known Structural Risks
 - `backend/app/api/routes.py` is a large orchestration file and is the Stage 4 modularization target.
 - `frontend/src/pages/App.tsx` is very large and is the Stage 5 modularization target.
+- Normal application files should stay under the 500-line hard limit from `AGENTS.md`; existing oversized files are technical debt and should not receive new feature logic without extracting the touched concern.
+- Current file-size guard hotspots also include `frontend/src/App.test.tsx`, `frontend/src/styles.css`, `frontend/src/services/api.ts`, `frontend/src/features/tasks/RecipeTasksBoard.tsx`, `backend/app/tests/test_api_routes.py`, `start-dev.py`, and `admin_panel.py`.
 - Static frontend itempanel files and localStorage can mask backend itempanel uploads; check loader/cache path before changing catalog behavior.
 - Full backend pytest may be blocked in this environment when dependencies such as `pytest` or `fastapi` are missing; prefer focused tests for touched modules plus frontend test/build when relevant.
 - `recipe_db_path` exists in config validation but is currently marked unused by backend.

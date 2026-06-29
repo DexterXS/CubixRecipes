@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added governance rules for file-size limits, repeatable-task script automation, and test-first development, plus reusable `file-size-guard` / `script-automation` skills and `scripts/check_file_sizes.py`.
 - Added `.agents/knowledge_tree.md` as the primary structured project knowledge source, plus a local `knowledge-tree` skill and AGENTS rule requiring future tasks to consult and maintain it.
 - Added multi-server architecture with server selection, creation, renaming, and deletion support. Each server has fully isolated data (scripts, mods, item catalog, oredict, custom items, recipe tasks, draft templates, and favorites) stored under `.cubixrecipes_admin/servers/{server_id}/`.
 - Added automatic backwards-compatible migration of legacy configuration and data files into the default **HiTech** server context on the first run.
