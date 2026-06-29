@@ -116,19 +116,23 @@
   .mobile-nei-tab-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin-bottom: 8px;
-    padding: 4px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--field-bg) 82%, transparent);
+    gap: 2px;
+    margin-bottom: 5px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border-radius: 8px;
+    background: transparent;
   }
 
   .mobile-nei-tab-list button {
-    min-height: 42px;
-    border-radius: 8px;
+    min-height: 36px;
+    padding: 5px 8px;
+    border: 0;
+    border-radius: 6px;
     background: transparent;
     color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
   }
 
   .mobile-nei-tab-list button.active {
@@ -298,6 +302,16 @@
     gap: 8px;
   }
 
+  .panel-nei .panel-header {
+    display: none;
+  }
+
+  .nei-panel input[aria-label='nei-search'] {
+    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
   .nei-list {
     grid-template-columns: repeat(auto-fill, minmax(44px, 44px));
     gap: 8px;
@@ -410,7 +424,20 @@
   .craft-recipe-nav {
     background: transparent;
     border: 0;
-    padding: 8px 0 0;
+    padding: 4px 0 0;
+    gap: 4px;
+  }
+
+  .craft-nav-arrow {
+    width: 22px;
+    height: 20px;
+    min-width: 22px;
+    font-size: 12px;
+  }
+
+  .craft-nav-counter {
+    min-width: 28px;
+    font-size: 11px;
   }
 
   .craft-arrow {

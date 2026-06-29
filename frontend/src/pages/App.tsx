@@ -71,7 +71,7 @@ const defaultUiPreferences: UiPreferences = {
   editor_mode: 'edit',
   theme_mode: 'dark',
   ui_scale: 1.15,
-  nei_page_size: 128,
+  nei_page_size: 32,
   language: 'ru',
   active_view_tab: 'editor',
   reset_layout_version: 4,
@@ -1397,7 +1397,7 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
     theme_mode: (source?.theme_mode ?? 'dark') as ThemeMode,
     ui_scale: ([1, 1.15, 1.3, 1.5].includes(normalizedScale) ? normalizedScale : 1.15) as UiScale,
-    nei_page_size: clamp(Math.floor(Number(source?.nei_page_size ?? 128) || 128), 16, 512),
+    nei_page_size: clamp(Math.floor(Number(source?.nei_page_size ?? 32) || 32), 16, 512),
     language: (source?.language ?? 'ru') as UiLanguage,
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
     reset_layout_version: source?.reset_layout_version ?? 4,
@@ -5623,26 +5623,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
                 {outputRaw ? renderItemTooltip(outputRaw) : null}
               </button>
+              <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
+                <button
+                  type="button"
+                  className="craft-nav-arrow"
+                  aria-label="similar-recipe-prev"
+                  disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index <= 0}
+                  onClick={() => changeSimilarRecipe(-1)}
+                >{'<'}</button>
+                <span className="craft-nav-counter">
+                  {similarRecipes ? `${similarRecipes.index + 1}/${similarRecipes.matches.length}` : '1/1'}
+                </span>
+                <button
+                  type="button"
+                  className="craft-nav-arrow"
+                  aria-label="similar-recipe-next"
+                  disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1}
+                  onClick={() => changeSimilarRecipe(1)}
+                >{'>'}</button>
+              </div>
             </div>
-          </div>
-          <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
-            <button
-              type="button"
-              className="craft-nav-arrow"
-              aria-label="similar-recipe-prev"
-              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index <= 0}
-              onClick={() => changeSimilarRecipe(-1)}
-            >◀</button>
-            <span className="craft-nav-counter">
-              {similarRecipes ? `${similarRecipes.index + 1}/${similarRecipes.matches.length}` : '1/1'}
-            </span>
-            <button
-              type="button"
-              className="craft-nav-arrow"
-              aria-label="similar-recipe-next"
-              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1}
-              onClick={() => changeSimilarRecipe(1)}
-            >▶</button>
           </div>
         </Panel>
       </div>
@@ -8453,15 +8453,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </label>
               <label className="field-block">
                 <span>Иконок NEI на страницу</span>
-                <input
+                <select
                   aria-label="nei-page-size"
-                  type="number"
-                  min={16}
-                  max={512}
-                  step={8}
                   value={uiPreferences.nei_page_size}
-                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 128), 16, 512) })}
-                />
+                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 32), 16, 512) })}
+                >
+                  {[16, 32, 64, 96, 128, 256, 512].map((size) => (
+                    <option key={size} value={size}>{size}</option>
+                  ))}
+                </select>
               </label>
               <label className="switch-field">
                 <span>Общий крафтовый стол между серверами</span>

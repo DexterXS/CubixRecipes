@@ -1304,6 +1304,7 @@ test('settings keeps UI/debug controls separate from technical access', async ()
   fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
   expect(screen.getByRole('dialog', { name: 'Настройки' })).toBeTruthy();
   expect(screen.getByLabelText('ui-scale')).toBeTruthy();
+  expect((screen.getByLabelText('nei-page-size') as HTMLSelectElement).value).toBe('32');
   expect(screen.getByText('Debug режим')).toBeTruthy();
   expect(screen.queryByText('Права персонала')).toBeFalsy();
   expect(screen.queryByLabelText('whitelist-emails')).toBeFalsy();
