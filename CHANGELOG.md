@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a dedicated mobile stylesheet for phone/tablet recipe editing, with touch-sized craft grid/NEI controls, stacked editor/search layout, mobile modal sizing, and a touch-visible selected-item bar for NEI insertion.
 - Extracted recipe matrix helper logic from `App.tsx` into `frontend/src/features/recipe-editor/recipeMatrix.ts` with focused unit coverage.
 - Split the frontend API client from one oversized `services/api.ts` file into domain modules under `frontend/src/services/api/` while preserving the existing `services/api` import path.
 - Added governance rules for file-size limits, repeatable-task script automation, and test-first development, plus reusable `file-size-guard` / `script-automation` skills and `scripts/check_file_sizes.py`.

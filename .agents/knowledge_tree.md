@@ -298,7 +298,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/main.tsx`
   - Renders auth gate, server gate, and main `App`.
   - Components/types: `ServerGate`, `ServerGateProps`.
-  - Depends on `AuthGate`, `ServerSelect`, `App`, debug logging, and shared types.
+  - Depends on `AuthGate`, `ServerSelect`, `App`, global styles, mobile styles, debug logging, and shared types.
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
   - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings.
@@ -366,6 +366,8 @@ Last full rebuild: 2026-06-29
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
   - Global app styling.
+- `frontend/src/styles/mobile.css`
+  - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, NEI/search panel, touch held-item bar, and modal sizing.
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
@@ -528,6 +530,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
+- `main.tsx` -> `styles.css`, `styles/mobile.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
 - `services/api/client.ts` -> runtime config, debug log.
@@ -540,7 +543,7 @@ Last full rebuild: 2026-06-29
 ## Known Structural Risks
 - `backend/app/api/routes.py` is a large orchestration file and is the Stage 4 modularization target.
 - `frontend/src/pages/App.tsx` is very large and is the Stage 5 modularization target.
-- Normal application files should stay under the 500-line hard limit from `AGENTS.md`; existing oversized files are technical debt and should not receive new feature logic without extracting the touched concern.
+- Normal application files should stay under the 500-line hard limit from `AGENTS.md`; existing oversized files are technical debt and should not receive new feature logic without extracting the touched concern. Mobile presentation now belongs in `frontend/src/styles/mobile.css` rather than growing `frontend/src/styles.css`.
 - Current file-size guard hotspots also include `frontend/src/App.test.tsx`, `frontend/src/styles.css`, `frontend/src/features/tasks/RecipeTasksBoard.tsx`, `backend/app/tests/test_api_routes.py`, `start-dev.py`, and `admin_panel.py`.
 - Static frontend itempanel files and localStorage can mask backend itempanel uploads; check loader/cache path before changing catalog behavior.
 - Full backend pytest may be blocked in this environment when dependencies such as `pytest` or `fastapi` are missing; prefer focused tests for touched modules plus frontend test/build when relevant.

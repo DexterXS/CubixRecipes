@@ -5453,6 +5453,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderRecipeBuilderPanel() {
     const gridSize = matrix.length;
     const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
+    const heldItemTitle = heldItemRaw ? resolveCellTitle(heldItemRaw) : null;
     return (
       <div className="workspace-panel-shell panel-recipe-builder">
         <Panel
@@ -5502,6 +5503,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           </div>
 
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
+          {heldItemRaw ? (
+            <div className="touch-held-item-bar" aria-label="touch-held-item">
+              <span className="touch-held-item-icon" aria-hidden="true">
+                {renderHeldItemIcon(heldItemRaw)}
+              </span>
+              <span className="touch-held-item-text">
+                <strong>{heldItemTitle ?? heldItemRaw}</strong>
+                <code>{heldItemRaw}</code>
+              </span>
+              <button
+                type="button"
+                className="ghost-button touch-held-item-clear"
+                aria-label="clear-held-item"
+                onClick={() => setHeldItemRaw(null)}
+              >
+                x
+              </button>
+            </div>
+          ) : null}
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
               <details className="craft-board-menu" data-close-on-select>

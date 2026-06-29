@@ -817,6 +817,20 @@ test('right click clears a held item before opening context menus again', async 
   expect(document.querySelector('.nei-context-menu')).toBeTruthy();
 });
 
+test('touch held item bar tracks and clears a selected NEI item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.click(item);
+
+  const touchHeldItem = screen.getByLabelText('touch-held-item');
+  expect(within(touchHeldItem).getByText('<minecraft:planks>')).toBeTruthy();
+
+  fireEvent.click(screen.getByLabelText('clear-held-item'));
+  expect(screen.queryByLabelText('touch-held-item')).toBeFalsy();
+  expect(document.querySelector('.held-item-cursor')).toBeFalsy();
+});
+
 test('dropdown menus close after actions and outside clicks', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
