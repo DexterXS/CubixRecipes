@@ -59,6 +59,12 @@ For very small tasks (e.g. rename button, change text):
 
 ## Development Workflow
 
+### Project Knowledge Tree
+- `.agents/knowledge_tree.md` is the primary structured source for project architecture, module ownership, API/file dependencies, runtime data, and feature-to-file mapping.
+- Before each new task, consult `.agents/knowledge_tree.md`, identify the minimal affected files, and open only those files unless a full rebuild is explicitly requested.
+- Update `.agents/knowledge_tree.md` after changes to affected functionality, module links, APIs, data files, or ownership boundaries.
+- Rebuild the whole tree only when the user explicitly says: "Перестрой дерево знаний полностью".
+
 ### Local Site Verification
 - Never start frontend dev servers, open localhost, or verify CubixRecipes as a local website unless the user explicitly asks for that in the current task.
 

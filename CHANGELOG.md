@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added `.agents/knowledge_tree.md` as the primary structured project knowledge source, plus a local `knowledge-tree` skill and AGENTS rule requiring future tasks to consult and maintain it.
 - Added multi-server architecture with server selection, creation, renaming, and deletion support. Each server has fully isolated data (scripts, mods, item catalog, oredict, custom items, recipe tasks, draft templates, and favorites) stored under `.cubixrecipes_admin/servers/{server_id}/`.
 - Added automatic backwards-compatible migration of legacy configuration and data files into the default **HiTech** server context on the first run.
 - Added ContextProxy and PathProxy dynamic routing based on the `X-Server-Id` request header to allow backend routes to work seamlessly without modifying their internal logic.
