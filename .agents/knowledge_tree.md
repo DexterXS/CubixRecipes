@@ -333,6 +333,10 @@ Last full rebuild: 2026-06-29
   - Local task default templates and text expansion.
 
 ### Recipe Editor Feature
+- `frontend/src/features/recipe-editor/MobileRecipeWorkspace.tsx`
+  - Owns the editor workspace shell that keeps desktop columns stable while exposing phone-specific hamburger menu and NEI/Favorites tab switching.
+- `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`
+  - Covers hamburger menu state and NEI/Favorites tab switching structure.
 - `frontend/src/features/recipe-editor/recipeMatrix.ts`
   - Owns recipe matrix cloning, resizing, trimming, source-shape normalization, and craft-mode/recipe-type mapping.
   - Extracted from `pages/App.tsx` so recipe-editor domain logic is no longer owned by the page shell.
@@ -371,6 +375,7 @@ Last full rebuild: 2026-06-29
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
+- `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

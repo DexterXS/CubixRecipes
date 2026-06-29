@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a mobile recipe workspace component with a hamburger editor menu and NEI/Favorites tab switching so phone users can access hidden tools without cluttering the craft screen.
 - Added a dedicated mobile stylesheet for phone/tablet recipe editing, with touch-sized craft grid/NEI controls, stacked editor/search layout, mobile modal sizing, and a touch-visible selected-item bar for NEI insertion.
 - Extracted recipe matrix helper logic from `App.tsx` into `frontend/src/features/recipe-editor/recipeMatrix.ts` with focused unit coverage.
 - Split the frontend API client from one oversized `services/api.ts` file into domain modules under `frontend/src/services/api/` while preserving the existing `services/api` import path.
@@ -15,7 +16,7 @@
 ### Fixed
 - Removed the hardcoded `1.7.10 - 1.12.2` badges from server selection cards.
 - Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.
-- Simplified the mobile editor workspace into a craft-first flow: recipe file tools and NEI favorites are hidden from the main phone scroll, the craft board keeps output to the right, and NEI remains below the craft area.
+- Simplified the mobile editor workspace into a craft-first flow: recipe file tools move into a hamburger menu, NEI favorites move into a tab next to NEI, the craft board keeps output to the right, and NEI remains below the craft area.
 - Fixed atlas/icon mismatch when switching between different servers by making item catalog and atlas useEffect hooks re-run on server change, appending active server ID as a cache-busting query parameter to image/atlas URLs, and allowing the backend context middleware to resolve server ID from query parameters.
 - Fixed multi-server itempanel fallback and cache isolation: the default server can still read the project root itempanel catalog until a server-specific catalog is uploaded, frontend itempanel/icon caches are scoped by server, project settings rescan no longer calls a removed SNBT helper, and the craft table draft can stay shared across servers through a local setting.
 

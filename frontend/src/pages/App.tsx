@@ -6,6 +6,7 @@ import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
+import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
@@ -8119,16 +8120,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return renderTechnicalWorkspace();
     }
     return (
-      <div className={`workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main ${canUseNeiFavorites ? 'has-nei-favorites' : ''}`.trim()}>
-        {canUseNeiFavorites ? <div className="workspace-column workspace-favorites">{renderNeiFavoritesPanel()}</div> : null}
-        <div className="workspace-column workspace-center">
-          {renderRecipeBuilderPanel()}
-          {renderRecipeFilesPanel()}
-        </div>
-        <div className="workspace-column workspace-right">
-          {renderNeiPanel()}
-        </div>
-      </div>
+      <MobileRecipeWorkspace
+        canUseNeiFavorites={canUseNeiFavorites}
+        recipeBuilder={renderRecipeBuilderPanel()}
+        recipeFiles={renderRecipeFilesPanel()}
+        neiPanel={renderNeiPanel()}
+        neiFavoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : undefined}
+      />
     );
   }
 
