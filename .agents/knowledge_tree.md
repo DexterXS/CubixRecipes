@@ -14,7 +14,7 @@ Last full rebuild: 2026-06-29
 - Backend: FastAPI application under `backend/app`.
 - Frontend: React + Vite application under `frontend/src`.
 - Admin shell: PySide/control scripts in `admin_panel.py`, `start-dev.py`, plus packaged `CubixRecipes_Admin.exe`.
-- Local workflows and agent rules: `AGENTS.md`, `.agents/skills/*`, `.agents/knowledge_tree.md`.
+- Local workflows and agent rules: `AGENTS.md`, `.agents/skills/*`, `.agents/knowledge_tree.md`, temporary `.agents/modularization_progress.md`.
 - Project automation scripts: `scripts/*`, plus owner-specific scripts under `backend/scripts/`, `frontend/scripts/`, or `.agents/scripts/` when needed.
 - Static/catalog data: root `itempanel.csv`, `itempanel.json`, `oredict.txt`, `mods_json/*.json`, `itempanel_icons/`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`, `frontend/public/itempanel-atlas.png`.
 
@@ -303,7 +303,7 @@ Last full rebuild: 2026-06-29
   - Central SPA workflow module and current biggest frontend file.
   - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
-  - Calls most functions from `frontend/src/services/api.ts`.
+  - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
 
 ### Auth and Server Selection
@@ -333,11 +333,22 @@ Last full rebuild: 2026-06-29
   - Local task default templates and text expansion.
 
 ### Frontend Services and Types
-- `frontend/src/services/api.ts`
-  - Single frontend API client.
-  - Uses `apiPath` from runtime config and credentials-including fetch.
-  - Exports parse/search/save/settings/resolve/custom item/draft/itempanel/auth/access/task/favorite/mod icon/alias/cloud/OreDict/mod replacement/server functions.
-  - Static fallback fetch: `/itempanel-atlas.json`.
+- `frontend/src/services/api/`
+  - Modular frontend API client with stable barrel export at `frontend/src/services/api/index.ts`.
+  - `client.ts`: shared request wrapper, conflict error, active-server header injection, JSON validation, backend-unavailable messages, blob download filename parsing.
+  - `recipes.ts`: parse/create/update/search/save-as recipe endpoints.
+  - `settings.ts`: project settings and UI preferences endpoints.
+  - `items.ts`: item resolve, custom item, and draft-template endpoints.
+  - `itempanel.ts`: item catalog/atlas and itempanel upload/merge endpoints, including static `/itempanel-atlas.json` fallback.
+  - `auth.ts`: current user, login/logout, users, roles, access-control endpoints.
+  - `tasks.ts`: admin recipe task board endpoints and `RecipeTaskPayload`.
+  - `favorites.ts`: NEI favorites endpoints.
+  - `modIcons.ts`: mod icon archive/admin/atlas endpoints.
+  - `aliases.ts`: item-case alias report/manual/FML-log endpoints.
+  - `zsCloud.ts`: cloud `.zs` files and backup endpoints.
+  - `oredict.ts`: OreDict upload/list endpoints.
+  - `modReplacement.ts`: mod replacement scan/replace endpoints.
+  - `servers.ts`: server list/create/rename/delete endpoints and `ServerInfo`.
 - `frontend/src/services/debugLog.ts`
   - Frontend console capture and debug event sender.
 - `frontend/src/config/runtime.ts`
@@ -424,59 +435,59 @@ Last full rebuild: 2026-06-29
 
 ### Recipe Parse, Edit, Search, Save
 - Backend files: `api/routes.py`, `api/schemas.py`, `domain/models.py`, `parsers/recipe_parser.py`, `services/recipe_service.py`, `storage/zs_storage.py`.
-- Frontend files: `pages/App.tsx`, `components/RecipeGrid.tsx`, `components/NbtTreeEditor.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `pages/App.tsx`, `components/RecipeGrid.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
 - APIs: `/parse`, `/recipes/create`, `/recipes/search`, `/recipes/uses`, `/recipes/search-batch`, `/recipes/{recipe_uid}`, `/recipes/save-as`, `/zs/files`, `/zs/files/create`.
 - Tests: `test_parser.py`, `test_storage.py`, `test_api_routes.py`, `App.test.tsx`.
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `services/api.ts`, `components/RecipeGrid.tsx`, `types/index.ts`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 
 ### Icon Indexing and Resolver
 - Backend files: `indexer/asset_index.py`, `indexer/itempanel_icon_catalog.py`, `resolver/item_resolver.py`, `services/mod_icon_atlas_service.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api.ts`.
+- Frontend files: `pages/App.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api/*`.
 - Data files: `mods_json/*.json`, `itempanel_icons/`, mod icon ZIP archives, generated atlases.
 - APIs: `/index/scan`, `/index/status/{scan_id}`, `/items/resolve`, `/icons/{icon_asset_id:path}`, `/admin/mod-icons*`, `/mod-icons/atlas`, `/mod-icons/atlases/{filename}`.
 - Tests: `test_resolver.py`, `test_asset_index_performance.py`, `test_itempanel_icon_catalog.py`, `test_mod_icon_atlas_service.py`, `test_mods_json_manifests.py`.
 
 ### Multi-Server Isolation
 - Backend files: `services/server_manager.py`, `api/routes.py`, `config/project_config.py`.
-- Frontend files: `main.tsx`, `auth/ServerSelect.tsx`, `pages/App.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `main.tsx`, `auth/ServerSelect.tsx`, `pages/App.tsx`, `services/api/*`, `types/index.ts`.
 - Data files: `.cubixrecipes_admin/servers.json`, `.cubixrecipes_admin/servers/{server_id}/...`, runtime `servers/{server_id}/...`.
 - APIs: `/servers`, server-aware regular API via `X-Server-Id` and query fallback.
 - Tests: `test_server_manager.py`, `test_api_routes.py`, `App.test.tsx`.
 
 ### Auth, Roles, Whitelist
 - Backend files: `auth/database.py`, `auth/service.py`, `auth/permissions.py`, `auth/access_control.py`, `api/routes.py`.
-- Frontend files: `auth/AuthGate.tsx`, `auth/permissions.ts`, `pages/App.tsx`, `services/api.ts`.
+- Frontend files: `auth/AuthGate.tsx`, `auth/permissions.ts`, `pages/App.tsx`, `services/api/*`.
 - SQL tables: `users`, `custom_items`.
 - APIs: `/auth/me`, `/auth/google/start`, `/auth/google/callback`, `/auth/logout`, `/admin/users`, `/admin/access`.
 - Tests: `test_auth_permissions.py`, `test_api_routes.py`.
 
 ### Admin Tasks
 - Backend files: `storage/recipe_tasks.py`, `api/routes.py`, `api/schemas.py`.
-- Frontend files: `features/tasks/RecipeTasksBoard.tsx`, `features/tasks/taskDefaults.ts`, `pages/App.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `features/tasks/RecipeTasksBoard.tsx`, `features/tasks/taskDefaults.ts`, `pages/App.tsx`, `services/api/*`, `types/index.ts`.
 - Data files: `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`.
 - APIs: `/admin/tasks`, `/admin/tasks/{task_id}`, `/admin/tasks/order`, `/admin/tasks/board`.
 
 ### Draft Templates and Custom Items
 - Backend files: `storage/recipe_drafts.py`, `items/custom_items.py`, `api/routes.py`, `api/schemas.py`.
-- Frontend files: `pages/App.tsx`, `components/NbtTreeEditor.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `pages/App.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
 - Data files: `recipe_draft_templates.json`, `custom_items/`.
 - APIs: `/recipe-drafts/templates`, `/items/custom`.
 
 ### ZS Cloud and Backups
 - Backend files: `storage/zs_storage.py`, `storage/zs_cloud.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `pages/App.tsx`, `services/api/*`, `types/index.ts`.
 - Data files: configured `scripts_dir`, `.cubixrecipes_admin/servers/{server_id}/secret_zs_backups/`.
 - APIs: `/admin/zs-cloud/files*`, `/admin/zs-cloud/backups*`, `/recipes/save-as`.
 
 ### OreDict and Mod Replacement
 - Backend files: `items/oredict_parser.py`, `api/routes.py`, `services/item_case_alias_service.py`.
-- Frontend files: `pages/App.tsx`, `services/api.ts`, `types/index.ts`.
+- Frontend files: `pages/App.tsx`, `services/api/*`, `types/index.ts`.
 - Data files: `oredict.txt`, uploaded cloud `.zs`, FML logs, alias report files.
 - APIs: `/admin/oredict/upload`, `/api/oredict/groups`, `/api/oredict/item/{item_key:path}`, `/admin/mod-replacement/scan`, `/admin/mod-replacement/replace`, `/item-case-aliases`, `/admin/item-case-aliases/*`.
 
@@ -509,7 +520,9 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
-- `services/api.ts` -> runtime config, types, debug log.
+- `services/api/index.ts` -> API domain modules.
+- `services/api/client.ts` -> runtime config, debug log.
+- `services/api/*` domain modules -> `services/api/client.ts`, shared frontend types where needed.
 - `components/RecipeGrid.tsx` -> `AnimatedIcon`, types.
 - `components/TabNav.tsx` -> types.
 - `auth/AuthGate.tsx` -> API client, types.
@@ -519,7 +532,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/api/routes.py` is a large orchestration file and is the Stage 4 modularization target.
 - `frontend/src/pages/App.tsx` is very large and is the Stage 5 modularization target.
 - Normal application files should stay under the 500-line hard limit from `AGENTS.md`; existing oversized files are technical debt and should not receive new feature logic without extracting the touched concern.
-- Current file-size guard hotspots also include `frontend/src/App.test.tsx`, `frontend/src/styles.css`, `frontend/src/services/api.ts`, `frontend/src/features/tasks/RecipeTasksBoard.tsx`, `backend/app/tests/test_api_routes.py`, `start-dev.py`, and `admin_panel.py`.
+- Current file-size guard hotspots also include `frontend/src/App.test.tsx`, `frontend/src/styles.css`, `frontend/src/features/tasks/RecipeTasksBoard.tsx`, `backend/app/tests/test_api_routes.py`, `start-dev.py`, and `admin_panel.py`.
 - Static frontend itempanel files and localStorage can mask backend itempanel uploads; check loader/cache path before changing catalog behavior.
 - Full backend pytest may be blocked in this environment when dependencies such as `pytest` or `fastapi` are missing; prefer focused tests for touched modules plus frontend test/build when relevant.
 - `recipe_db_path` exists in config validation but is currently marked unused by backend.

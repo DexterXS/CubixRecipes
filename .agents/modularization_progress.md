@@ -1,0 +1,31 @@
+# Modularization Progress
+
+Temporary file. Keep this file while the modular structure migration is in progress, update it after each completed split, and delete it on the final modularization step.
+
+## Current Objective
+- Move CubixRecipes toward a modular-monolith structure without changing behavior.
+- Split oversized files by ownership and feature boundary, not by arbitrary line count.
+- Keep existing public imports and API contracts stable during each extraction.
+
+## Active Step
+- Step: prepare the next frontend split after API client modularization.
+- Reason: API imports are now stable through `frontend/src/services/api/index.ts`, so later `App.tsx` feature extraction can depend on smaller API modules.
+- Target shape: keep extracting one frontend feature boundary at a time without changing UI behavior.
+
+## Completed
+- Added governance rules for file limits, script automation, and test-first workflow.
+- Added `scripts/check_file_sizes.py` and verified it with a dry-run.
+- Split `frontend/src/services/api.ts` into `frontend/src/services/api/` domain modules.
+  - `client.ts`: shared request, error, auth-header, blob download behavior.
+  - `recipes.ts`, `items.ts`, `itempanel.ts`, `auth.ts`, `tasks.ts`, `modIcons.ts`, `aliases.ts`, `zsCloud.ts`, `oredict.ts`, `modReplacement.ts`, `servers.ts`, `settings.ts`, `favorites.ts`: endpoint groups by backend concern.
+  - `index.ts`: barrel export preserving existing `../services/api` imports.
+  - Why this shape: API client ownership is split by backend/API concern while callers keep the same public import path.
+
+## Still Needed
+- Split `frontend/src/pages/App.tsx` into feature modules after API imports are stable.
+- Split large frontend tests/styles by feature once the related application modules exist.
+- Split `backend/app/api/routes.py` into backend routers by API concern.
+
+## Notes
+- Do not delete this file until the whole modularization pass is complete.
+- Update `.agents/knowledge_tree.md` after each ownership change.
