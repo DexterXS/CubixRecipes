@@ -13,6 +13,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.
 - Fixed atlas/icon mismatch when switching between different servers by making item catalog and atlas useEffect hooks re-run on server change, appending active server ID as a cache-busting query parameter to image/atlas URLs, and allowing the backend context middleware to resolve server ID from query parameters.
 - Fixed multi-server itempanel fallback and cache isolation: the default server can still read the project root itempanel catalog until a server-specific catalog is uploaded, frontend itempanel/icon caches are scoped by server, project settings rescan no longer calls a removed SNBT helper, and the craft table draft can stay shared across servers through a local setting.
 
