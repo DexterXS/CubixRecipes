@@ -5486,6 +5486,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const gridSize = matrix.length;
     const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
     const heldItemTitle = heldItemRaw ? resolveCellTitle(heldItemRaw) : null;
+    const craftGridOptions = [
+      { value: 2, symbol: '2', label: '2x2' },
+      { value: 3, symbol: '3', label: '3x3' },
+      { value: 9, symbol: '9', label: '9x9' }
+    ];
+    const craftModeOptions: Array<{ value: RecipeCraftMode; symbol: string; label: string; disabled?: boolean }> = [
+      { value: 'shaped', symbol: '■', label: 'Форменный' },
+      { value: 'shapeless', symbol: '◇', label: 'Бесформенный', disabled: gridSize === 9 }
+    ];
+    const craftBindingOptions: Array<{ value: RecipeBindingMode; symbol: string; label: string; disabled?: boolean }> = [
+      { value: 'soft', symbol: '↔', label: 'Свободная', disabled: recipe.recipe_type === 'ct_shapeless' },
+      { value: 'strict', symbol: '⊙', label: 'Точная', disabled: recipe.recipe_type === 'ct_shapeless' }
+    ];
+    const craftStatusSymbols = [
+      { key: 'grid', symbol: String(gridSize), active: true },
+      { key: 'mode', symbol: recipeCraftMode === 'shaped' ? '■' : '◇', active: true },
+      { key: 'binding', symbol: recipe.recipe_type === 'ct_shapeless' ? '×' : recipeBindingMode === 'strict' ? '⊙' : '↔', active: recipe.recipe_type !== 'ct_shapeless' }
+    ];
     return (
       <div className="workspace-panel-shell panel-recipe-builder">
         <Panel
@@ -5557,11 +5575,85 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
               <details className="craft-board-menu" data-close-on-select>
-                <summary aria-label="craft-board-menu">...</summary>
+                <summary aria-label="craft-board-menu">
+                  <span aria-hidden="true">...</span>
+                  <span className="craft-board-menu-state" aria-hidden="true">
+                    {craftStatusSymbols.map((item) => (
+                      <span key={item.key} className={`craft-state-symbol ${item.active ? 'is-active' : 'is-inactive'}`}>{item.symbol}</span>
+                    ))}
+                  </span>
+                </summary>
                 <div className="craft-board-menu-popover">
+                  <div className="craft-board-settings" aria-label="craft-board-settings">
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Размер сетки</span>
+                      <div className="craft-board-setting-options">
+                        {craftGridOptions.map((option) => {
+                          const active = gridSize === option.value;
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-grid-${option.value}`}
+                              data-keep-menu-open
+                              onClick={() => setGridSize(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Тип рецепта</span>
+                      <div className="craft-board-setting-options">
+                        {craftModeOptions.map((option) => {
+                          const active = recipeCraftMode === option.value;
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-mode-${option.value}`}
+                              disabled={option.disabled}
+                              data-keep-menu-open
+                              onClick={() => setRecipeCraftMode(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Позиция</span>
+                      <div className="craft-board-setting-options">
+                        {craftBindingOptions.map((option) => {
+                          const active = recipeBindingMode === option.value && recipe.recipe_type !== 'ct_shapeless';
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-binding-${option.value}`}
+                              disabled={option.disabled}
+                              data-keep-menu-open
+                              onClick={() => setRecipeBindingMode(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
                   <button type="button" className="secondary-button" onClick={() => openCraftEditorModal({ kind: 'output' })} disabled={!canCreateTemplates && !canEditRecipes}>Детальные настройки output</button>
-                  <button type="button" className="secondary-button" onClick={copyCurrentCraftBody}>Скопировать текущее тело крафта</button>
-                  <button type="button" disabled={!craftBodyTemplate || (!canCreateTemplates && !canEditRecipes)} onClick={pasteCraftBody}>Вставить тело крафта</button>
+                  <button type="button" className="secondary-button" aria-label="copy-craft-body" onClick={copyCurrentCraftBody}>Скопировать текущее тело крафта</button>
+                  <button type="button" aria-label="paste-craft-body" disabled={!craftBodyTemplate || (!canCreateTemplates && !canEditRecipes)} onClick={pasteCraftBody}>Вставить тело крафта</button>
                 </div>
               </details>
               <RecipeGrid

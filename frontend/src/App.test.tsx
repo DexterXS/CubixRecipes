@@ -838,7 +838,7 @@ test('dropdown menus close after actions and outside clicks', async () => {
   expect(craftMenu).toBeTruthy();
   fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
   expect(craftMenu.open).toBe(true);
-  fireEvent.click(within(craftMenu).getAllByRole('button')[1]);
+  fireEvent.click(within(craftMenu).getByLabelText('copy-craft-body'));
   await waitFor(() => expect(craftMenu.open).toBe(false));
 
   fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
@@ -1558,6 +1558,12 @@ test('recipe builder supports 2x2, shapeless, and strict placement controls', as
     const payload = findLocalDraftPayload();
     expect(payload?.state?.recipe.binding_mode).toBe('strict');
   });
+
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByLabelText('craft-grid-3'));
+  expect(screen.getByLabelText('craft-cell-2-2')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('craft-mode-shapeless'));
+  expect((screen.getByLabelText('craft-binding-strict') as HTMLButtonElement).disabled).toBe(true);
 });
 
 test('saved recipe draft templates can be browsed, previewed, opened, and removed', async () => {
@@ -1824,7 +1830,7 @@ test('craft board menu copies and pastes the craft body without replacing output
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');
 
   fireEvent.click(screen.getByLabelText('craft-board-menu'));
-  fireEvent.click(screen.getByRole('button', { name: 'Скопировать текущее тело крафта' }));
+  fireEvent.click(screen.getByLabelText('copy-craft-body'));
 
   const exampleItem = await screen.findByLabelText('nei-item-<examplemod:item>');
   fireEvent.mouseEnter(exampleItem);
@@ -1833,7 +1839,7 @@ test('craft board menu copies and pastes the craft body without replacing output
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBeUndefined();
 
   fireEvent.click(screen.getByLabelText('craft-board-menu'));
-  fireEvent.click(screen.getByRole('button', { name: 'Вставить тело крафта' }));
+  fireEvent.click(screen.getByLabelText('paste-craft-body'));
 
   await waitFor(() => expect(craftOutputRaw()?.toLowerCase()).toBe('<examplemod:item>'));
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');
