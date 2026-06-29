@@ -30,7 +30,7 @@
     max-width: none;
     min-height: 100dvh;
     overflow-x: hidden;
-    padding: 6px;
+    padding: 8px;
   }
 
   .utility-bar {
@@ -39,9 +39,9 @@
     z-index: 120;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
-    padding: 6px;
-    border-radius: 0 0 10px 10px;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 0 0 12px 12px;
   }
 
   .brand-with-server,
@@ -83,14 +83,14 @@
   .nei-pager button,
   .suggestion-item,
   .favorite-item {
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .workspace-layout-builder,
   .workspace-layout-builder.has-nei-favorites {
     grid-template-columns: minmax(0, 1fr);
     max-width: min(100%, 860px);
-    gap: 8px;
+    gap: 10px;
   }
 
   .workspace-layout-main .workspace-center {
@@ -116,16 +116,16 @@
   .mobile-nei-tab-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px;
-    margin-bottom: 6px;
-    padding: 3px;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 4px;
     border: 1px solid var(--border);
     border-radius: 12px;
     background: color-mix(in srgb, var(--field-bg) 82%, transparent);
   }
 
   .mobile-nei-tab-list button {
-    min-height: 38px;
+    min-height: 42px;
     border-radius: 8px;
     background: transparent;
     color: var(--muted);
@@ -160,7 +160,6 @@
   .panel-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
   }
 
   .panel-header-main,
@@ -169,14 +168,12 @@
   }
 
   .panel-title-row h2 {
-    font-size: 16px;
     overflow-wrap: normal;
     word-break: normal;
   }
 
   .panel-header p {
     max-width: 100%;
-    line-height: 1.15;
   }
 
   .recipe-panel-actions,
@@ -188,7 +185,7 @@
 
   .recipe-builder-controls {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    gap: 8px;
   }
 
   .grid-meta {
@@ -197,25 +194,18 @@
 
   .touch-held-item-bar {
     display: grid;
-    position: fixed;
-    left: 50%;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
-    z-index: 2140;
-    width: min(520px, calc(100vw - 12px));
-    transform: translateX(-50%);
-    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
     align-items: center;
-    gap: 6px;
-    padding: 5px;
+    gap: 8px;
+    padding: 8px;
     border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
     border-radius: 8px;
     background: color-mix(in srgb, var(--field-bg) 84%, var(--panel));
-    box-shadow: 0 10px 28px var(--shadow);
   }
 
   .touch-held-item-icon {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
     border: 1px solid var(--border);
@@ -225,8 +215,8 @@
 
   .touch-held-item-icon img,
   .touch-held-item-icon .held-atlas-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 
   .touch-held-item-text {
@@ -244,12 +234,12 @@
 
   .touch-held-item-text code {
     color: var(--muted);
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .touch-held-item-clear {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     padding: 0;
   }
 
@@ -262,7 +252,7 @@
     justify-content: center;
     place-items: center;
     overflow-x: auto;
-    padding: 6px;
+    padding: 8px;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -286,37 +276,31 @@
   }
 
   .grid-wrap {
-    --craft-cell: 40px;
+    --craft-cell: 46px;
   }
 
   .grid-wrap[data-grid-size='9'] {
-    --craft-cell: 26px;
+    --craft-cell: 30px;
   }
 
   .recipe-craft-board .craft-output-slot {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
   }
 
   .craft-board-menu summary {
-    min-width: 38px;
-    min-height: 36px;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .nei-panel .panel-body {
-    gap: 6px;
-  }
-
-  .nei-panel input[aria-label='nei-search'] {
-    min-height: 38px;
-    padding: 7px 10px;
-    font-size: 14px;
+    gap: 8px;
   }
 
   .nei-list {
-    grid-template-columns: repeat(auto-fill, minmax(40px, 40px));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 44px));
+    gap: 8px;
     max-height: min(42vh, 420px);
     overflow: auto;
     padding: 4px;
@@ -324,15 +308,15 @@
   }
 
   .nei-list .nei-item {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
   }
 
   .nei-icon,
   .nei-list .animated-icon {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
 
   .nei-list .nei-atlas-icon {
@@ -340,12 +324,12 @@
   }
 
   .nei-pager {
-    grid-template-columns: 38px minmax(0, 1fr) 38px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
   }
 
   .nei-pager .icon-button {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
   }
 
   .modal-backdrop {
@@ -373,26 +357,13 @@
 
 @media (hover: none), (pointer: coarse), (max-width: 640px) {
   main.app-shell {
-    padding: 4px;
+    padding: 6px;
   }
 
   .panel-header,
   .panel-body {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  .mobile-nei-tab-list {
-    margin-bottom: 5px;
-  }
-
-  .mobile-nei-tab-list button {
-    min-height: 36px;
-  }
-
-  .nei-panel input[aria-label='nei-search'] {
-    min-height: 36px;
-    padding: 6px 9px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .main-tabs {
@@ -426,54 +397,54 @@
   }
 
   .recipe-craft-board {
-    grid-template-columns: minmax(0, max-content) 24px 40px;
+    grid-template-columns: minmax(0, max-content) 28px 48px;
     align-items: center;
     justify-items: center;
-    gap: 4px;
+    gap: 6px;
     min-width: max-content;
     width: max-content;
     margin: 0 auto;
-    padding: 6px;
+    padding: 10px;
   }
 
   .craft-recipe-nav {
     background: transparent;
     border: 0;
-    padding: 5px 0 0;
+    padding: 8px 0 0;
   }
 
   .craft-arrow {
-    width: 24px;
-    height: 18px;
+    width: 28px;
+    height: 22px;
     transform: none;
   }
 
   .craft-arrow::before {
-    top: 7px;
-    width: 15px;
-    height: 4px;
+    top: 8px;
+    width: 18px;
+    height: 5px;
   }
 
   .craft-arrow::after {
     top: 0;
-    border-top-width: 9px;
-    border-bottom-width: 9px;
-    border-left-width: 10px;
+    border-top-width: 11px;
+    border-bottom-width: 11px;
+    border-left-width: 12px;
   }
 
   .recipe-craft-board .craft-output-slot {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
   }
 
   .grid-wrap {
-    --craft-cell: 36px;
-    padding: 4px;
+    --craft-cell: 42px;
+    padding: 5px;
   }
 
   .grid-wrap[data-grid-size='9'] {
-    --craft-cell: 24px;
+    --craft-cell: 27px;
   }
 
   .recipe-actions-popover {
@@ -495,25 +466,6 @@
   }
 
   .nei-list {
-    grid-template-columns: repeat(auto-fill, minmax(36px, 36px));
-    gap: 5px;
-    max-height: min(40vh, 360px);
-  }
-
-  .nei-list .nei-item {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-  }
-
-  .nei-list .nei-item-cell {
-    width: 36px;
-    height: 36px;
-  }
-
-  .nei-icon,
-  .nei-list .animated-icon {
-    width: 32px;
-    height: 32px;
+    max-height: min(38vh, 360px);
   }
 }
