@@ -15,6 +15,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Tightened the mobile editor layout by reducing touch control sizes, craft-board spacing, NEI cell sizes, and mobile shell padding; the selected-item bar now floats instead of increasing page height.
 - Fixed mobile NEI long-press behavior so item text no longer gets selected, touch long-press no longer opens the full action menu accidentally, and item-cell `...` actions are hidden on touch screens while remaining available from the mobile item tooltip.
 - Removed the hardcoded `1.7.10 - 1.12.2` badges from server selection cards.
 - Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.

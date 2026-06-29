@@ -8,15 +8,15 @@
   }
 
   .mobile-app-menu-button {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     display: grid;
     place-items: center;
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 12px;
     background: color-mix(in srgb, var(--panel) 86%, transparent);
     color: var(--text);
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .mobile-app-menu.is-open .mobile-app-menu-backdrop {
@@ -37,7 +37,7 @@
     z-index: 2201;
     width: min(84vw, 390px);
     overflow: auto;
-    padding: 18px 14px 24px;
+    padding: 14px 12px 20px;
     background: var(--panel-strong);
     border-right: 1px solid var(--border);
     box-shadow: 22px 0 52px var(--shadow);
@@ -47,8 +47,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
-    padding-bottom: 14px;
+    gap: 10px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
   }
 
@@ -58,11 +58,11 @@
   .mobile-menu-field,
   .mobile-menu-info {
     display: grid;
-    gap: 8px;
+    gap: 6px;
   }
 
   .mobile-app-menu-head strong {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .mobile-app-menu-head span,
@@ -74,7 +74,7 @@
   }
 
   .mobile-menu-section {
-    margin-top: 16px;
+    margin-top: 12px;
   }
 
   .mobile-menu-section-title {
@@ -86,8 +86,8 @@
   .mobile-menu-info,
   .mobile-menu-field {
     width: 100%;
-    min-height: 52px;
-    padding: 12px 14px;
+    min-height: 46px;
+    padding: 10px 12px;
     border: 1px solid var(--border);
     border-radius: 12px;
     background: color-mix(in srgb, var(--field-bg) 86%, transparent);

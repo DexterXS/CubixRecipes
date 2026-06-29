@@ -387,7 +387,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/styles/nei.css`
   - NEI/favorites icon-cell, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
-  - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, NEI/search panel, touch held-item bar, and modal sizing.
+  - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, NEI/search panel, compact mobile density, floating touch held-item bar, and modal sizing.
 - `frontend/src/styles/mobile-shell.css`
   - Phone app drawer presentation layer for global navigation, server switching, settings, logout, and contextual editor tools.
 
