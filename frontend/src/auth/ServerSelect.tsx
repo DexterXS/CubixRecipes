@@ -139,7 +139,6 @@ export function ServerSelect({ authUser, onSelect }: ServerSelectProps) {
             >
               <div className="server-card-glow"></div>
               <div className="server-card-content">
-                <span className="server-version">1.7.10 - 1.12.2</span>
                 <h2>{server.name}</h2>
                 <div className="server-card-footer">
                   <span>Перейти в панель &rarr;</span>

@@ -13,6 +13,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Removed the hardcoded `1.7.10 - 1.12.2` badges from server selection cards.
 - Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.
 - Simplified the mobile editor workspace into a craft-first flow: recipe file tools and NEI favorites are hidden from the main phone scroll, the craft board keeps output to the right, and NEI remains below the craft area.
 - Fixed atlas/icon mismatch when switching between different servers by making item catalog and atlas useEffect hooks re-run on server change, appending active server ID as a cache-busting query parameter to image/atlas URLs, and allowing the backend context middleware to resolve server ID from query parameters.
