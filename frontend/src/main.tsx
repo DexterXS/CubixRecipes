@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './pages/App';
 import './styles.css';
+import './styles/nei.css';
 import './styles/mobile.css';
 import './styles/mobile-shell.css';
 import { installConsoleCapture } from './services/debugLog';

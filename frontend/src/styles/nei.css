@@ -1,0 +1,236 @@
+.nei-list .nei-item-cell {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+.nei-list .nei-item-cell > .nei-item {
+  width: 100%;
+  height: 100%;
+}
+
+.nei-list .nei-item-more {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  z-index: 45;
+  width: 20px;
+  height: 18px;
+  min-height: 18px;
+  display: none;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--panel-strong) 92%, transparent);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 8px 18px var(--shadow);
+}
+
+.nei-list .nei-item-cell:hover .nei-item-more,
+.nei-list .nei-item-cell:focus-within .nei-item-more {
+  display: grid;
+}
+
+.favorite-panel-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+}
+
+.favorite-browser-tabs {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 0 2px 2px;
+  scrollbar-width: thin;
+}
+
+.favorite-browser-tab {
+  min-height: 34px;
+  max-width: 150px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-bottom-color: color-mix(in srgb, var(--border) 45%, transparent);
+  border-radius: 8px 8px 3px 3px;
+  background: color-mix(in srgb, var(--field-bg) 74%, transparent);
+  color: var(--muted);
+}
+
+.favorite-browser-tab.active {
+  border-color: #f59e0b;
+  background: color-mix(in srgb, #f59e0b 18%, var(--field-bg));
+  color: var(--text);
+}
+
+.favorite-browser-tab span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.favorite-browser-tab strong {
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.favorite-browser-tab-add {
+  width: 34px;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.favorite-settings-menu {
+  position: relative;
+}
+
+.favorite-settings-trigger {
+  width: 36px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--field-bg) 78%, transparent);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.favorite-settings-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 120;
+  width: min(330px, calc(100vw - 32px));
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-strong);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.favorite-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.favorite-create-tab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.favorite-items.nei-list {
+  grid-template-columns: repeat(auto-fill, 34px);
+  gap: 5px;
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+  padding: 4px;
+}
+
+.favorite-items .favorite-icon {
+  background: transparent;
+}
+
+.favorite-empty {
+  grid-column: 1 / -1;
+}
+
+.mobile-item-inspection {
+  position: fixed;
+  z-index: 2520;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px;
+  gap: 8px;
+  align-items: start;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-strong);
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+.mobile-item-inspection .item-tooltip,
+.mobile-item-inspection .nei-tooltip {
+  position: static;
+  display: grid !important;
+  min-width: 0;
+  max-width: none;
+  transform: none;
+  pointer-events: auto;
+}
+
+.mobile-item-inspection-more {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 1024px) {
+  .nei-list .nei-item-cell {
+    width: 44px;
+    height: 44px;
+  }
+
+  .nei-list .nei-item-more {
+    top: -5px;
+    right: -5px;
+    width: 22px;
+    height: 20px;
+    min-height: 20px;
+    display: grid;
+    opacity: 0.9;
+  }
+
+  .nei-list .nei-item-cell,
+  .nei-list .nei-item {
+    touch-action: pan-y;
+  }
+
+  .favorite-panel-toolbar {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  .favorite-browser-tab {
+    min-height: 42px;
+    max-width: 138px;
+  }
+
+  .favorite-browser-tab-add,
+  .favorite-settings-trigger {
+    width: 44px;
+    height: 42px;
+  }
+
+  .favorite-create-tab {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .favorite-items.nei-list {
+    grid-template-columns: repeat(auto-fill, 44px);
+    gap: 8px;
+    max-height: min(42vh, 420px);
+  }
+
+  .mobile-item-inspection {
+    width: min(320px, calc(100vw - 24px));
+  }
+}

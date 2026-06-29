@@ -5,6 +5,8 @@ import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
+import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
+import { NeiIconItem } from '../features/nei/NeiIconItem';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
@@ -181,6 +183,13 @@ type NeiContextMenuState = {
   x: number;
   y: number;
   customPickerOpen?: boolean;
+};
+
+type TouchItemInspectionState = {
+  raw: string;
+  x: number;
+  y: number;
+  entry?: ItemPanelEntry | null;
 };
 
 type CloudFileContextMenuState = {
@@ -1621,6 +1630,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [touchItemInspection, setTouchItemInspection] = useState<TouchItemInspectionState | null>(null);
   const [oreDictGroups, setOreDictGroups] = useState<Record<string, string[]>>({});
   const [oreDictOverrides, setOreDictOverrides] = useState<Record<string, string | null>>(() => {
     try {
@@ -2645,6 +2655,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setHeldItemRaw(null);
+        setTouchItemInspection(null);
+        setNeiContextMenu(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -4266,7 +4278,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function handleNeiItemPick(raw: string) {
     const nextRaw = applyItemCaseAlias(raw);
+    setTouchItemInspection(null);
     setHeldItemRaw((current) => (current === nextRaw ? null : nextRaw));
+  }
+
+  function openNeiItemActions(raw: string, x: number, y: number) {
+    setTouchItemInspection(null);
+    setNeiContextMenu({ raw, x, y });
+  }
+
+  function inspectNeiItem(raw: string, x: number, y: number, entry?: ItemPanelEntry | null) {
+    setNeiContextMenu(null);
+    updateHoveredItemRaw(raw);
+    setTouchItemInspection({ raw, x, y, entry });
   }
 
   function handleNeiItemTaskPrefill(raw: string) {
@@ -4634,6 +4658,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const target = event.target instanceof Element ? event.target : null;
       if (!target?.closest('.nei-context-menu')) {
         setNeiContextMenu(null);
+      }
+    }
+    if (touchItemInspection) {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest('.mobile-item-inspection')) {
+        setTouchItemInspection(null);
       }
     }
     if (draftTemplateContextMenu) {
@@ -5795,39 +5825,36 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const title = resolveCellTitle(raw) || raw;
     const availability = getRecipeAvailability(raw);
     return (
-      <button
+      <NeiIconItem
         key={raw}
-        type="button"
-        className={`favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'}`}
-        aria-label={`favorite-item-${raw}`}
-        data-item-raw={raw}
-        draggable
-        onMouseEnter={() => updateHoveredItemRaw(raw)}
-        onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-        onFocus={() => updateHoveredItemRaw(raw)}
-        onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-        onDragStart={(event) => {
-          event.dataTransfer.setData('text/plain', raw);
+        raw={raw}
+        ariaLabelPrefix="favorite-item"
+        className={`nei-item favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+        icon={(
+          <span className="nei-icon favorite-icon" aria-hidden="true">
+            {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
+          </span>
+        )}
+        tooltip={renderItemTooltip(raw)}
+        onHover={(nextRaw) => updateHoveredItemRaw((current) => {
+          if (nextRaw) {
+            return nextRaw;
+          }
+          return current === raw ? null : current;
+        })}
+        onPick={handleNeiItemPick}
+        onOutputPick={(nextRaw) => handleRecipeItemDrop({ kind: 'output' }, nextRaw)}
+        onOpenActions={openNeiItemActions}
+        onInspect={(nextRaw, x, y) => inspectNeiItem(nextRaw, x, y)}
+        onDragStart={(event, nextRaw) => {
+          event.dataTransfer.setData('text/plain', nextRaw);
           event.dataTransfer.effectAllowed = 'copy';
-          setHeldItemRaw(raw);
+          setHeldItemRaw(nextRaw);
         }}
-        onDragEnd={() => {
-          setHeldItemRaw((current) => (current === raw ? null : current));
+        onDragEnd={(nextRaw) => {
+          setHeldItemRaw((current) => (current === nextRaw ? null : current));
         }}
-        onClick={() => handleNeiItemPick(raw)}
-        onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
-        onContextMenu={(event) => {
-          event.preventDefault();
-          setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
-        }}
-      >
-        <span className="favorite-icon" aria-hidden="true">
-          {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
-        </span>
-        <span className="favorite-title">{title}</span>
-        <span className="favorite-raw">{raw}</span>
-        {renderItemTooltip(raw)}
-      </button>
+      />
     );
   }
 
@@ -5837,50 +5864,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
     const activeTab = activeNeiFavoriteTab();
     return (
-      <div className="workspace-panel-shell panel-nei-favorites">
-        <Panel title="Избранное NEI" subtitle={`Хоткей: ${neiFavorites.favoriteHotkey || 'A'}`} className="nei-favorites-panel">
-          <div className="favorite-tabs" role="tablist" aria-label="favorite-tabs">
-            {neiFavorites.tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={tab.id === neiFavorites.activeTabId}
-                className={`favorite-tab ${tab.id === neiFavorites.activeTabId ? 'active' : ''}`}
-                onClick={() => setActiveFavoriteTab(tab.id)}
-              >
-                <span>{tab.name}</span>
-                <strong>{tab.items.length}</strong>
-              </button>
-            ))}
-          </div>
-          <label className="field-block">
-            <span>Название вкладки</span>
-            <input aria-label="favorite-active-tab-name" type="text" value={activeTab.name} onChange={(event) => renameActiveFavoriteTab(event.target.value)} />
-          </label>
-          <div className="favorite-tab-actions">
-            <input
-              aria-label="favorite-new-tab-name"
-              type="text"
-              value={newFavoriteTabName}
-              onChange={(event) => setNewFavoriteTabName(event.target.value)}
-              placeholder="Новая вкладка"
-            />
-            <button type="button" className="secondary-button" aria-label="favorite-add-tab" onClick={addFavoriteTab}>Создать</button>
-            <button type="button" className="ghost-button danger-lite-button" aria-label="favorite-delete-tab" disabled={neiFavorites.tabs.length <= 1} onClick={deleteActiveFavoriteTab}>Удалить</button>
-          </div>
-          <div className="favorite-help-line">
-            <span>Наведи на предмет и нажми {neiFavorites.favoriteHotkey || 'A'}</span>
-            <strong>{activeTab.items.length}</strong>
-          </div>
-          <div className="favorite-items" aria-label="nei-favorites-items">
-            {activeTab.items.length ? activeTab.items.map((item) => renderNeiFavoriteItem(item.raw)) : (
-              <div className="favorite-empty">Пока пусто</div>
-            )}
-          </div>
-          {neiFavoritesStatus ? <div className="inline-status inline-status-default">{neiFavoritesStatus}</div> : null}
-        </Panel>
-      </div>
+      <NeiFavoritesPanel
+        profile={neiFavorites}
+        activeTab={activeTab}
+        status={neiFavoritesStatus}
+        hiddenPatternsDraft={neiHiddenPatternsDraft}
+        newTabName={newFavoriteTabName}
+        renderFavoriteItem={renderNeiFavoriteItem}
+        onSelectTab={setActiveFavoriteTab}
+        onRenameActiveTab={renameActiveFavoriteTab}
+        onNewTabNameChange={setNewFavoriteTabName}
+        onAddTab={addFavoriteTab}
+        onDeleteActiveTab={deleteActiveFavoriteTab}
+        onFavoriteHotkeyChange={updateFavoriteHotkey}
+        onHiddenPatternsChange={updateNeiHiddenPatterns}
+      />
     );
   }
 
@@ -5922,56 +5920,88 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 }
                 : undefined;
               return (
-                <button
+                <NeiIconItem
                   key={itemPanelEntryIdentity(entry)}
-                  type="button"
+                  raw={raw}
+                  pickRaw={insertRaw}
+                  ariaLabelPrefix="nei-item"
                   className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${isFavorite ? 'is-favorite' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
-                  aria-label={`nei-item-${raw}`}
-                  data-item-raw={raw}
-                  draggable
-                  onDragStart={(event) => {
-                    event.dataTransfer.setData('text/plain', insertRaw);
-                    event.dataTransfer.effectAllowed = 'copy';
-                    setHeldItemRaw(insertRaw);
-                  }}
-                  onDragEnd={() => {
-                    setHeldItemRaw((current) => (current === insertRaw ? null : current));
-                  }}
-                  onClick={() => handleNeiItemPick(insertRaw)}
-                  onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, insertRaw)}
-                  onContextMenu={(event) => {
-                    event.preventDefault();
-                    if (event.ctrlKey) {
+                  icon={(
+                    <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
+                      {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
+                      {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
+                      {!modIconStyle && !atlasStyle && iconUrl ? (
+                        <img
+                          src={iconUrl}
+                          alt=""
+                          onError={() => {
+                            setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+                          }}
+                        />
+                      ) : null}
+                    </span>
+                  )}
+                  tooltip={renderItemTooltip(raw, entry)}
+                  onHover={(nextRaw) => updateHoveredItemRaw((current) => {
+                    if (nextRaw) {
+                      return nextRaw;
+                    }
+                    return current === raw ? null : current;
+                  })}
+                  onPick={handleNeiItemPick}
+                  onOutputPick={(nextRaw) => handleRecipeItemDrop({ kind: 'output' }, nextRaw)}
+                  onOpenActions={(nextRaw, x, y, event) => {
+                    if (event?.ctrlKey) {
                       openCustomItemEditor(raw, 'user', 'local');
                       return;
                     }
-                    setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
+                    openNeiItemActions(nextRaw, x, y);
+                  }}
+                  onInspect={(nextRaw, x, y) => inspectNeiItem(nextRaw, x, y, entry)}
+                  onDragStart={(event, nextRaw) => {
+                    event.dataTransfer.setData('text/plain', nextRaw);
+                    event.dataTransfer.effectAllowed = 'copy';
+                    setHeldItemRaw(nextRaw);
+                  }}
+                  onDragEnd={(nextRaw) => {
+                    setHeldItemRaw((current) => (current === nextRaw ? null : current));
                   }}
                 >
-                  <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
-                    {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
-                    {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
-                    {!modIconStyle && !atlasStyle && iconUrl ? (
-                      <img
-                        src={iconUrl}
-                        alt=""
-                        onError={() => {
-                          setItemSearchIcons((current) => ({ ...current, [raw]: null }));
-                        }}
-                      />
-                    ) : null}
-                  </span>
                   <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
-                  {renderItemTooltip(raw, entry)}
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
                   {overrideGroup ? <span className="nei-oredict-dot" aria-hidden="true">⊕</span> : null}
                   {isFavorite ? <span className="nei-favorite-dot" aria-hidden="true">A</span> : null}
-                </button>
+                </NeiIconItem>
               );
             })}
           </div>
         </Panel>
+      </div>
+    );
+  }
+
+  function renderTouchItemInspection() {
+    if (!touchItemInspection) return null;
+    const raw = touchItemInspection.raw;
+    return (
+      <div
+        className="mobile-item-inspection"
+        style={getContextMenuStyle(touchItemInspection.x, touchItemInspection.y, { width: 300, height: 210 })}
+        onMouseDown={(event) => event.stopPropagation()}
+        onPointerDown={(event) => event.stopPropagation()}
+      >
+        <div className="mobile-item-inspection-tooltip">
+          {renderItemTooltip(raw, touchItemInspection.entry)}
+        </div>
+        <button
+          type="button"
+          className="mobile-item-inspection-more"
+          aria-label={`touch-item-actions-${raw}`}
+          onClick={() => openNeiItemActions(raw, touchItemInspection.x, touchItemInspection.y)}
+        >
+          ...
+        </button>
       </div>
     );
   }
@@ -5984,10 +6014,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const addedToTask = rawHasTask(raw);
     const taskStatusText = taskLookupStatus === 'loading' ? 'проверяю' : addedToTask ? 'да' : 'нет';
     const templateEnabled = loadTaskDefaultTemplate().enabled;
+    const favoriteRaw = applyItemCaseAlias(raw);
+    const isFavorite = activeFavoriteRawSet.has(favoriteRaw) || activeFavoriteRawSet.has(raw);
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 620 : (custom ? 430 : 390) })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 660 : (custom ? 470 : 440) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
@@ -5996,6 +6028,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <span>Добавлено в задачу</span>
             <strong className={addedToTask ? 'is-yes' : 'is-no'}>{taskStatusText}</strong>
           </div>
+        ) : null}
+        {canUseNeiFavorites ? (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              toggleNeiFavorite(raw);
+              setNeiContextMenu(null);
+            }}
+          >
+            {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+          </button>
         ) : null}
         
         {(() => {
@@ -8373,6 +8417,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         </div>
       ) : null}
       {renderHotkeyDebugPanel()}
+      {renderTouchItemInspection()}
       {renderNeiContextMenu()}
       {renderDraftTemplateContextMenu()}
       {renderCloudContextMenu()}

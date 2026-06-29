@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added modular NEI/favorites icon-cell UI with browser-style favorite tabs, a `+` tab creator, hidden `...` favorite settings, mobile long-press item inspection, and `...` item actions for NEI/favorites.
 - Added a mobile app drawer with workspace navigation, server switch, language, settings, logout, and editor tools, plus NEI/Favorites tab switching in the recipe workspace.
 - Added a dedicated mobile stylesheet for phone/tablet recipe editing, with touch-sized craft grid/NEI controls, stacked editor/search layout, mobile modal sizing, and a touch-visible selected-item bar for NEI insertion.
 - Extracted recipe matrix helper logic from `App.tsx` into `frontend/src/features/recipe-editor/recipeMatrix.ts` with focused unit coverage.

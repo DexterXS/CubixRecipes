@@ -349,6 +349,14 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`
   - Covers matrix edge trimming, strict/shapeless position preservation, supported grid sizing, and recipe type mapping.
 
+### NEI and Favorites Features
+- `frontend/src/features/nei/NeiIconItem.tsx`
+  - Shared icon-cell component for NEI and favorite items.
+  - Owns guarded touch behavior: scroll movement cancels pick, short tap picks, long press opens item inspection.
+- `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`
+  - Owns NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI.
+  - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
+
 ### Frontend Services and Types
 - `frontend/src/services/api/`
   - Modular frontend API client with stable barrel export at `frontend/src/services/api/index.ts`.
@@ -376,6 +384,8 @@ Last full rebuild: 2026-06-29
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
   - Global app styling.
+- `frontend/src/styles/nei.css`
+  - NEI/favorites icon-cell, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
   - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, NEI/search panel, touch held-item bar, and modal sizing.
 - `frontend/src/styles/mobile-shell.css`
@@ -383,6 +393,8 @@ Last full rebuild: 2026-06-29
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
+- `frontend/src/features/nei/NeiIconItem.tsx`: covered through App NEI/favorites interaction tests.
+- `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`: covered through App favorite-tab and hidden-settings tests.
 - `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
@@ -465,7 +477,7 @@ Last full rebuild: 2026-06-29
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
@@ -544,7 +556,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
-- `main.tsx` -> `styles.css`, `styles/mobile.css`, `styles/mobile-shell.css`.
+- `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
 - `services/api/client.ts` -> runtime config, debug log.

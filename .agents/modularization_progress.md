@@ -36,6 +36,16 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Added mobile NEI/Favorites tab state while keeping recipe file tools available for the app drawer.
   - Added `MobileRecipeWorkspace.test.tsx` for recipe-file fallback and tab behavior.
   - Why this shape: mobile editor workflow is recipe-editor UI ownership and should not stay embedded in the page shell.
+- Created `frontend/src/features/nei/NeiIconItem.tsx`.
+  - Moved shared NEI/favorite item-cell interaction into one feature component.
+  - Added guarded touch behavior: scroll movement cancels pick, short tap picks, long press opens item inspection.
+  - Why this shape: NEI item interaction must stay consistent across the NEI panel and favorite tabs instead of being duplicated in `App.tsx`.
+- Created `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`.
+  - Moved favorite tab layout, `+` tab creation, and hidden `...` settings into a dedicated feature component.
+  - Why this shape: favorite-tab UI is NEI-favorites ownership, while `App.tsx` keeps only profile state and persistence callbacks.
+- Created `frontend/src/styles/nei.css`.
+  - Moved NEI/favorites item-cell, browser-tab, settings-menu, and mobile inspection styles out of the oversized global stylesheet.
+  - Why this shape: NEI presentation has its own ownership and should not grow `frontend/src/styles.css` or compress mobile styles.
 - Created `frontend/src/styles/mobile.css`.
   - Added phone/tablet layout rules for recipe editor, craft grid, NEI/search panel, touch targets, and modals.
   - Kept mobile presentation separate from the existing large global stylesheet.

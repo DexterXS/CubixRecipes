@@ -1073,6 +1073,47 @@ test('moderator can toggle NEI favorites with the configured hotkey', async () =
   await waitFor(() => expect(mockNeiFavorites.tabs[0].items).toHaveLength(0));
 });
 
+test('NEI favorites use browser tabs and hide settings behind menu', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  expect(await screen.findByText('Избранное NEI')).toBeTruthy();
+  expect(screen.queryByLabelText('favorite-active-tab-name')).toBeFalsy();
+
+  fireEvent.click(screen.getByLabelText('favorite-add-tab-open'));
+  fireEvent.change(screen.getByLabelText('favorite-new-tab-name'), { target: { value: 'Блоки' } });
+  fireEvent.click(screen.getByLabelText('favorite-add-tab'));
+
+  await waitFor(() => expect(mockNeiFavorites.tabs.some((tab) => tab.name === 'Блоки')).toBe(true));
+  expect(screen.getByRole('tab', { name: /Блоки/ })).toBeTruthy();
+
+  fireEvent.click(screen.getByLabelText('favorite-settings-menu'));
+  expect(screen.getByLabelText('favorite-active-tab-name')).toBeTruthy();
+  expect(screen.getByLabelText('nei-hidden-patterns-panel')).toBeTruthy();
+});
+
+test('favorite items render as NEI icon cells', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:stick>');
+
+  fireEvent.mouseOver(item);
+  fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+
+  const favorite = await screen.findByLabelText('favorite-item-<minecraft:stick>');
+  expect(favorite.querySelector('.favorite-title')).toBeFalsy();
+  expect(favorite.querySelector('.favorite-raw')).toBeFalsy();
+  expect(favorite.querySelector('.nei-icon')).toBeTruthy();
+});
+
+test('long press shows item information without taking the item', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.pointerDown(item, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+
+  expect(await screen.findByLabelText('touch-item-actions-<minecraft:planks>')).toBeTruthy();
+  expect(screen.queryByLabelText('touch-held-item')).toBeFalsy();
+});
+
 test('moderator NEI hidden patterns remove matching item variants from the panel', async () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(await screen.findByLabelText('nei-item-<examplemod:item>')).toBeTruthy();
