@@ -79,6 +79,7 @@ export interface UiPreferences {
   panel_layout: PanelLayoutItem[];
   workspace_layout: WorkspaceLayout;
   icon_surfaces: Record<string, IconSurfaceSettings>;
+  mobile_icon_surfaces: Record<string, IconSurfaceSettings>;
 }
 
 export interface ProjectSettings {

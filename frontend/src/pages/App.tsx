@@ -9,7 +9,7 @@ import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
 import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
-import { defaultIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
+import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
@@ -81,7 +81,8 @@ const defaultUiPreferences: UiPreferences = {
   reset_layout_version: 4,
   panel_layout: defaultPanelLayout,
   workspace_layout: defaultWorkspaceLayout,
-  icon_surfaces: defaultIconSurfaceSettings
+  icon_surfaces: defaultIconSurfaceSettings,
+  mobile_icon_surfaces: defaultMobileIconSurfaceSettings
 };
 
 const defaultNeiFavoritesProfile: NeiFavoritesProfile = {
@@ -323,6 +324,7 @@ type HotkeyDebugEvent = {
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
 type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type IconSettingsProfile = 'desktop' | 'mobile';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -1408,7 +1410,8 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     reset_layout_version: source?.reset_layout_version ?? 4,
     panel_layout: normalizePanelLayout(source?.panel_layout),
     workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout),
-    icon_surfaces: normalizeIconSurfaceSettings(source?.icon_surfaces)
+    icon_surfaces: normalizeIconSurfaceSettings(source?.icon_surfaces),
+    mobile_icon_surfaces: normalizeIconSurfaceSettings(source?.mobile_icon_surfaces, defaultMobileIconSurfaceSettings)
   };
 }
 
@@ -1576,7 +1579,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
-  const iconSurfaceStyle = useIconSurfaceCssVars(uiPreferences.icon_surfaces);
+  const iconSurfaceStyle = useIconSurfaceCssVars(uiPreferences.icon_surfaces, uiPreferences.mobile_icon_surfaces);
+  const [iconSettingsProfile, setIconSettingsProfile] = useState<IconSettingsProfile>('desktop');
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>(restoredDraft?.workspaceTab ?? 'editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
@@ -3220,13 +3224,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function patchIconSurface(surfaceId: IconSurfaceId, next: IconSurfaceSettings) {
+    if (iconSettingsProfile === 'mobile') {
+      patchUiPreferences({
+        mobile_icon_surfaces: patchIconSurfaceSettings(latestUiPreferencesRef.current.mobile_icon_surfaces, surfaceId, next, defaultMobileIconSurfaceSettings)
+      });
+      return;
+    }
     patchUiPreferences({
       icon_surfaces: patchIconSurfaceSettings(latestUiPreferencesRef.current.icon_surfaces, surfaceId, next)
     });
   }
 
   function resetIconSurfaces() {
-    patchUiPreferences({ icon_surfaces: defaultIconSurfaceSettings });
+    patchUiPreferences(iconSettingsProfile === 'mobile'
+      ? { mobile_icon_surfaces: defaultMobileIconSurfaceSettings }
+      : { icon_surfaces: defaultIconSurfaceSettings });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
@@ -5596,11 +5608,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <div className="recipe-craft-board">
               <details className="craft-board-menu" data-close-on-select>
                 <summary aria-label="craft-board-menu">
-                  <span aria-hidden="true">...</span>
                   <span className="craft-board-menu-state" aria-hidden="true">
                     {craftStatusSymbols.map((item) => (
                       <span key={item.key} className={`craft-state-symbol ${item.active ? 'is-active' : 'is-inactive'}`}>{item.symbol}</span>
                     ))}
+                    <span className="craft-state-symbol is-settings">⚙</span>
                   </span>
                 </summary>
                 <div className="craft-board-menu-popover">
@@ -7722,8 +7734,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       case 'iconSettings':
         return canManageSettings ? (
           <IconSettingsPanel
-            settings={uiPreferences.icon_surfaces}
+            profile={iconSettingsProfile}
+            settings={iconSettingsProfile === 'mobile' ? uiPreferences.mobile_icon_surfaces : uiPreferences.icon_surfaces}
             renderSampleIcon={() => renderCraftItemIcon(iconLabSampleRaw, iconLabIconUrl, iconLabAnimated, iconLabFrameTime, iconLabSampleTitle)}
+            onProfileChange={setIconSettingsProfile}
             onChange={patchIconSurface}
             onResetAll={resetIconSurfaces}
           />

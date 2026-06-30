@@ -61,6 +61,7 @@ class UiPreferencesConfig:
     panel_layout: list[PanelLayoutItemConfig] = field(default_factory=list)
     workspace_layout: WorkspaceLayoutConfig = field(default_factory=WorkspaceLayoutConfig)
     icon_surfaces: dict[str, dict[str, Any]] = field(default_factory=dict)
+    mobile_icon_surfaces: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -273,6 +274,7 @@ class ProjectConfigService:
             panel_layout=self._coerce_panel_layout(payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)),
             workspace_layout=self._coerce_workspace_layout(payload.get('workspace_layout', DEFAULT_WORKSPACE_LAYOUT)),
             icon_surfaces=self._coerce_icon_surfaces(payload.get('icon_surfaces', {})),
+            mobile_icon_surfaces=self._coerce_icon_surfaces(payload.get('mobile_icon_surfaces', {})),
         )
 
     def _coerce_icon_surfaces(self, raw: Any) -> dict[str, dict[str, Any]]:

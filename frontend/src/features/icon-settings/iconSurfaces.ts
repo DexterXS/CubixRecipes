@@ -56,20 +56,37 @@ export const defaultIconSurfaceSettings = iconSurfaceDefinitions.reduce((acc, su
   return acc;
 }, {} as IconSurfaceSettingsMap);
 
+export const defaultMobileIconSurfaceSettings: IconSurfaceSettingsMap = {
+  ...defaultIconSurfaceSettings,
+  nei: { cell: 44, icon: 40, gap: 8, mode: 'scale' },
+  favorites: { cell: 44, icon: 40, gap: 8, mode: 'scale' },
+  draftItems: { cell: 38, icon: 30, gap: 6, mode: 'scale' },
+  craftGrid: { cell: 42, icon: 28, gap: 2, mode: 'scale' },
+  craftGrid9: { cell: 25, icon: 14, gap: 1, mode: 'scale' },
+  craftOutput: { cell: 36, icon: 24, gap: 0, mode: 'scale' },
+  draftPreview9: { cell: 30, icon: 12, gap: 1, mode: 'scale' },
+  touchHeld: { cell: 44, icon: 32, gap: 8, mode: 'scale' },
+  mobileInspection: { cell: 36, icon: 28, gap: 8, mode: 'scale' }
+};
+
 const modeSet = new Set<IconCenterMode>(['grid', 'absolute', 'wrapper', 'scale']);
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-export function normalizeIconSurfaceSettings(raw?: Partial<Record<string, Partial<IconSurfaceSettings>>> | null): IconSurfaceSettingsMap {
+export function normalizeIconSurfaceSettings(
+  raw?: Partial<Record<string, Partial<IconSurfaceSettings>>> | null,
+  defaults: IconSurfaceSettingsMap = defaultIconSurfaceSettings
+): IconSurfaceSettingsMap {
   const source = raw && typeof raw === 'object' ? raw : {};
   return iconSurfaceDefinitions.reduce((acc, surface) => {
     const incoming = source[surface.id] ?? {};
-    const cell = clamp(Math.round(Number(incoming.cell ?? surface.defaults.cell) || surface.defaults.cell), surface.minCell, surface.maxCell);
-    const icon = clamp(Math.round(Number(incoming.icon ?? surface.defaults.icon) || surface.defaults.icon), surface.minIcon, surface.maxIcon);
-    const gap = clamp(Math.round(Number(incoming.gap ?? surface.defaults.gap) || surface.defaults.gap), 0, 24);
-    const mode = modeSet.has(incoming.mode as IconCenterMode) ? incoming.mode as IconCenterMode : surface.defaults.mode;
+    const fallback = defaults[surface.id] ?? surface.defaults;
+    const cell = clamp(Math.round(Number(incoming.cell ?? fallback.cell) || fallback.cell), surface.minCell, surface.maxCell);
+    const icon = clamp(Math.round(Number(incoming.icon ?? fallback.icon) || fallback.icon), surface.minIcon, surface.maxIcon);
+    const gap = clamp(Math.round(Number(incoming.gap ?? fallback.gap) || fallback.gap), 0, 24);
+    const mode = modeSet.has(incoming.mode as IconCenterMode) ? incoming.mode as IconCenterMode : fallback.mode;
     acc[surface.id] = { cell, icon, gap, mode };
     return acc;
   }, {} as IconSurfaceSettingsMap);
@@ -78,18 +95,23 @@ export function normalizeIconSurfaceSettings(raw?: Partial<Record<string, Partia
 export function patchIconSurfaceSettings(
   current: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined,
   surfaceId: IconSurfaceId,
-  next: IconSurfaceSettings
+  next: IconSurfaceSettings,
+  defaults: IconSurfaceSettingsMap = defaultIconSurfaceSettings
 ): IconSurfaceSettingsMap {
   return normalizeIconSurfaceSettings({
     ...(current ?? {}),
     [surfaceId]: next
-  });
+  }, defaults);
 }
 
 export type IconViewport = {
   width: number;
   height: number;
 };
+
+export function isMobileIconViewport(viewport: IconViewport | null): boolean {
+  return Boolean(viewport && viewport.width <= 760);
+}
 
 function dynamicCraftCell(surface: IconSurfaceSettings, viewport: IconViewport | null, gridSize: 3 | 9): number {
   if (!viewport) return surface.cell;
@@ -109,9 +131,10 @@ function scaledIcon(base: IconSurfaceSettings, nextCell: number, minIcon: number
 
 export function buildIconSurfaceCssVars(
   settings: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined,
-  viewport: IconViewport | null
+  viewport: IconViewport | null,
+  defaults: IconSurfaceSettingsMap = defaultIconSurfaceSettings
 ): CSSProperties {
-  const normalized = normalizeIconSurfaceSettings(settings);
+  const normalized = normalizeIconSurfaceSettings(settings, defaults);
   const craftCell = dynamicCraftCell(normalized.craftGrid, viewport, 3);
   const craftIcon = scaledIcon(normalized.craftGrid, craftCell, 16);
   const craft9Cell = dynamicCraftCell(normalized.craftGrid9, viewport, 9);

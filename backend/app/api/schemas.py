@@ -214,6 +214,7 @@ class UiPreferencesRequest(BaseModel):
     panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
     workspace_layout: WorkspaceLayoutRequest = Field(default_factory=WorkspaceLayoutRequest)
     icon_surfaces: dict[str, IconSurfaceRequest] = Field(default_factory=dict)
+    mobile_icon_surfaces: dict[str, IconSurfaceRequest] = Field(default_factory=dict)
 
 
 class ProjectSettingsRequest(BaseModel):

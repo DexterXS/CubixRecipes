@@ -294,8 +294,10 @@
   }
 
   .craft-board-menu summary {
-    min-width: 44px;
-    min-height: 44px;
+    width: 34px;
+    height: 34px;
+    min-width: 0;
+    min-height: 0;
   }
 
   .nei-panel .panel-body {
@@ -425,6 +427,11 @@
     grid-template-columns: minmax(0, max-content) 20px 36px;
     gap: 4px;
     padding: 6px;
+  }
+
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-board-menu {
+    right: 4px;
+    top: 4px;
   }
 
   .craft-recipe-nav {

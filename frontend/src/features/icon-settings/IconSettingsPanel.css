@@ -9,6 +9,29 @@
   gap: 10px;
 }
 
+.icon-settings-profile-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(74px, 1fr));
+  gap: 4px;
+  margin-top: 8px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--field-bg) 72%, transparent);
+}
+
+.icon-settings-profile-tabs button {
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.icon-settings-profile-tabs button.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 26%, var(--field-bg));
+}
+
 .icon-settings-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);

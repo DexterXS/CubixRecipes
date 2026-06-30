@@ -1,10 +1,12 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { defaultIconSurfaceSettings, iconSurfaceDefinitions, type IconCenterMode, type IconSurfaceId, type IconSurfaceSettings, type IconSurfaceSettingsMap, normalizeIconSurfaceSettings } from './iconSurfaces';
+import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, iconSurfaceDefinitions, type IconCenterMode, type IconSurfaceId, type IconSurfaceSettings, type IconSurfaceSettingsMap, normalizeIconSurfaceSettings } from './iconSurfaces';
 import './IconSettingsPanel.css';
 
 type IconSettingsPanelProps = {
+  profile: 'desktop' | 'mobile';
   settings: IconSurfaceSettingsMap;
   renderSampleIcon: () => ReactNode;
+  onProfileChange: (profile: 'desktop' | 'mobile') => void;
   onChange: (surfaceId: IconSurfaceId, next: IconSurfaceSettings) => void;
   onResetAll: () => void;
 };
@@ -16,8 +18,9 @@ const modes: Array<{ value: IconCenterMode; label: string }> = [
   { value: 'scale', label: 'scale' }
 ];
 
-export function IconSettingsPanel({ settings, renderSampleIcon, onChange, onResetAll }: IconSettingsPanelProps) {
-  const normalized = normalizeIconSurfaceSettings(settings);
+export function IconSettingsPanel({ profile, settings, renderSampleIcon, onProfileChange, onChange, onResetAll }: IconSettingsPanelProps) {
+  const defaults = profile === 'mobile' ? defaultMobileIconSurfaceSettings : defaultIconSurfaceSettings;
+  const normalized = normalizeIconSurfaceSettings(settings, defaults);
 
   return (
     <div className="icon-settings-panel" aria-label="icon-settings-panel">
@@ -25,10 +28,28 @@ export function IconSettingsPanel({ settings, renderSampleIcon, onChange, onRese
         <div className="settings-section-title compact">
           <div>
             <h3>Иконки интерфейса</h3>
-            <span>Единые настройки для всех меню. Новая поверхность добавляется в реестр и автоматически появляется здесь.</span>
+            <span>Профили ПК и телефона сохраняются отдельно. Новая поверхность добавляется в реестр и автоматически появляется здесь.</span>
+            <div className="icon-settings-profile-tabs" aria-label="icon-settings-profile-tabs">
+              <button
+                type="button"
+                className={profile === 'desktop' ? 'active' : ''}
+                aria-label="icon-settings-profile-desktop"
+                onClick={() => onProfileChange('desktop')}
+              >
+                ПК
+              </button>
+              <button
+                type="button"
+                className={profile === 'mobile' ? 'active' : ''}
+                aria-label="icon-settings-profile-mobile"
+                onClick={() => onProfileChange('mobile')}
+              >
+                Телефон
+              </button>
+            </div>
           </div>
           <button type="button" className="secondary-button" aria-label="icon-settings-reset-all" onClick={onResetAll}>
-            Сбросить все
+            Сбросить профиль
           </button>
         </div>
         <div className="icon-settings-list">
@@ -114,7 +135,7 @@ export function IconSettingsPanel({ settings, renderSampleIcon, onChange, onRese
                     type="button"
                     className="ghost-button"
                     aria-label={`icon-${surface.id}-reset`}
-                    onClick={() => onChange(surface.id, defaultIconSurfaceSettings[surface.id])}
+                    onClick={() => onChange(surface.id, defaults[surface.id])}
                   >
                     Сбросить поверхность
                   </button>

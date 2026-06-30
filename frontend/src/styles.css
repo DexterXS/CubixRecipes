@@ -236,16 +236,17 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .recipe-builder-output span { color: var(--muted); font-size: 12px; margin-top: 4px; }
 .recipe-builder-grid { max-height: calc(100vh - 280px); min-height: 360px; display: grid; place-items: center; }
 .recipe-craft-board { position: relative; display: grid; grid-template-columns: minmax(0, max-content) 46px 92px; gap: 12px 16px; align-items: center; justify-content: center; min-width: max-content; padding: 14px 18px; background: #c8c8c8; }
-.craft-board-menu { position: absolute; right: 8px; top: 8px; z-index: 70; }
-.craft-board-menu summary { min-width: 30px; height: 26px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; list-style: none; border: 1px solid #737373; border-radius: 4px; background: #a3a3a3; color: #111827; font-weight: 900; cursor: pointer; user-select: none; padding: 0 5px; }
+.craft-board-menu { position: absolute; right: 6px; top: 6px; z-index: 70; }
+.craft-board-menu summary { width: 34px; height: 34px; display: grid; place-items: center; list-style: none; border: 1px solid #737373; border-radius: 4px; background: #a3a3a3; color: #111827; font-weight: 900; cursor: pointer; user-select: none; padding: 2px; }
 .craft-board-menu summary::-webkit-details-marker { display: none; }
 .craft-board-menu[open] summary { background: #d4d4d4; border-color: #2563eb; }
 .craft-board-menu-popover { position: absolute; right: 0; top: calc(100% + 6px); width: 300px; display: grid; gap: 7px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--panel-strong); box-shadow: 0 18px 40px var(--shadow); }
 .craft-board-menu-popover button { width: 100%; justify-content: flex-start; text-align: left; }
-.craft-board-menu-state { display: inline-flex; align-items: center; gap: 2px; }
-.craft-state-symbol { min-width: 15px; height: 15px; display: inline-grid; place-items: center; border-radius: 3px; color: #fff; font-size: 10px; line-height: 1; }
+.craft-board-menu-state { display: grid; grid-template-columns: repeat(2, 14px); gap: 2px; }
+.craft-state-symbol { width: 14px; height: 14px; display: inline-grid; place-items: center; border-radius: 3px; color: #fff; font-size: 9px; line-height: 1; }
 .craft-state-symbol.is-active { background: #16a34a; }
 .craft-state-symbol.is-inactive { background: #dc2626; }
+.craft-state-symbol.is-settings { background: #2563eb; font-size: 10px; }
 .craft-board-settings { display: grid; gap: 8px; padding: 7px; border: 1px solid color-mix(in srgb, var(--border) 82%, transparent); border-radius: 7px; background: color-mix(in srgb, var(--field-bg) 72%, transparent); }
 .craft-board-setting-group { display: grid; gap: 5px; }
 .craft-board-setting-title { color: var(--muted); font-size: 11px; font-weight: 800; }

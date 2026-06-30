@@ -78,7 +78,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/config/project_config.py`
   - Project paths, UI preferences, data-dir defaults, validation, runtime directory creation.
   - Classes: `PanelLayoutItemConfig`, `WorkspaceLayoutConfig`, `UiPreferencesConfig`, `ProjectPathsConfig`, `ProjectConfigService`.
-  - Reads/writes config JSON; builds recipe scan paths and icon index paths; normalizes persisted UI icon surface settings under `ui_preferences.icon_surfaces`.
+  - Reads/writes config JSON; builds recipe scan paths and icon index paths; normalizes persisted desktop/mobile UI icon surface settings under `ui_preferences.icon_surfaces` and `ui_preferences.mobile_icon_surfaces`.
   - Recognizes `CUBIXRECIPES_DATA_DIR`, Railway volume env, and `/data`.
 
 ### Auth and Access
@@ -358,11 +358,11 @@ Last full rebuild: 2026-06-29
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
   - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, held item, and mobile inspection.
-  - Builds shared CSS custom properties and dynamic craft-grid fitting from viewport size.
+  - Builds shared CSS custom properties, desktop/mobile default profiles, and dynamic craft-grid fitting from viewport size.
 - `frontend/src/features/icon-settings/useIconViewport.ts`
-  - React hook owner for viewport tracking and icon-surface CSS variable generation.
+  - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.
 - `frontend/src/features/icon-settings/IconSettingsPanel.tsx`
-  - Admin technical-panel UI for live icon-size previews, sliders, center-mode toggles, and reset controls.
+  - Admin technical-panel UI for desktop/mobile profile switching, live icon-size previews, sliders, center-mode toggles, and reset controls.
 - `frontend/src/features/icon-settings/IconSettingsPanel.css`
   - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
 
@@ -396,7 +396,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/config/runtime.ts`
   - API base resolution, Vite/backend target messages, URL helpers, itempanel fallback env helper.
 - `frontend/src/types/index.ts`
-  - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, icon surface settings, tasks, favorites, users, cloud files, aliases, OreDict.
+  - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, desktop/mobile icon surface settings, tasks, favorites, users, cloud files, aliases, OreDict.
 - `frontend/src/i18n.ts`
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { buildIconSurfaceCssVars, type IconSurfaceSettings, type IconViewport } from './iconSurfaces';
+import { buildIconSurfaceCssVars, defaultMobileIconSurfaceSettings, isMobileIconViewport, type IconSurfaceSettings, type IconViewport } from './iconSurfaces';
 
 function readIconViewport(): IconViewport {
   if (typeof window === 'undefined') {
@@ -25,7 +25,13 @@ export function useIconViewport(): IconViewport {
   return viewport;
 }
 
-export function useIconSurfaceCssVars(settings: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined) {
+export function useIconSurfaceCssVars(
+  desktopSettings: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined,
+  mobileSettings: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined
+) {
   const viewport = useIconViewport();
-  return buildIconSurfaceCssVars(settings, viewport);
+  if (isMobileIconViewport(viewport)) {
+    return buildIconSurfaceCssVars(mobileSettings, viewport, defaultMobileIconSurfaceSettings);
+  }
+  return buildIconSurfaceCssVars(desktopSettings, viewport);
 }
