@@ -326,6 +326,13 @@ type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
 type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
 type IconSettingsProfile = 'desktop' | 'mobile';
 
+function initialIconSettingsProfile(): IconSettingsProfile {
+  if (typeof window !== 'undefined' && window.innerWidth <= 760) {
+    return 'mobile';
+  }
+  return 'desktop';
+}
+
 type ActiveItemInspection = {
   raw: string | null;
   source: 'hover-ref' | 'hover-state' | 'dom' | 'held' | 'none';
@@ -1580,7 +1587,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
   const iconSurfaceStyle = useIconSurfaceCssVars(uiPreferences.icon_surfaces, uiPreferences.mobile_icon_surfaces);
-  const [iconSettingsProfile, setIconSettingsProfile] = useState<IconSettingsProfile>('desktop');
+  const [iconSettingsProfile, setIconSettingsProfile] = useState<IconSettingsProfile>(() => initialIconSettingsProfile());
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>(restoredDraft?.workspaceTab ?? 'editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),

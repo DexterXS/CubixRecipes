@@ -19,6 +19,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.
 - Fixed mobile craft output atlas icons being cropped by icon-size settings, which could make the real phone view appear offset compared with the mobile icon-settings preview.
 - Reworked the craft-board settings trigger into a compact 2x2 status/settings button so it no longer overlaps the recipe board on mobile.
 - Reduced the mobile 9x9 craft-board footprint so the output side no longer gets clipped on narrow phone screens.

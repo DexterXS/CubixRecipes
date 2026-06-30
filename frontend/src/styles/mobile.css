@@ -496,9 +496,9 @@
   }
 
   .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-output-slot {
-    width: min(var(--icon-craft-output-cell, 36px), 36px);
-    height: min(var(--icon-craft-output-cell, 36px), 36px);
-    min-width: min(var(--icon-craft-output-cell, 36px), 36px);
+    width: var(--icon-craft-output-cell, 36px);
+    height: var(--icon-craft-output-cell, 36px);
+    min-width: var(--icon-craft-output-cell, 36px);
     padding: 3px;
   }
 
@@ -508,7 +508,7 @@
   }
 
   .grid-wrap[data-grid-size='9'] {
-    --craft-cell: min(var(--icon-craft-grid9-cell, 25px), 25px);
+    --craft-cell: var(--icon-craft-grid9-cell, 25px);
   }
 
   .recipe-actions-popover {

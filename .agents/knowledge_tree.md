@@ -363,6 +363,7 @@ Last full rebuild: 2026-06-29
   - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.
 - `frontend/src/features/icon-settings/IconSettingsPanel.tsx`
   - Admin technical-panel UI for desktop/mobile profile switching, live icon-size previews, sliders, center-mode toggles, and reset controls.
+  - On phone-width viewports, `pages/App.tsx` opens this panel on the mobile icon profile so preview values match the active runtime CSS profile.
 - `frontend/src/features/icon-settings/IconSettingsPanel.css`
   - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
 
@@ -408,6 +409,7 @@ Last full rebuild: 2026-06-29
   - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, compact mobile item action menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
   - Phone/tablet presentation layer for the main workspace, recipe builder, CSS-variable-driven craft grid/output sizing, compact NEI tabs/search, touch held-item bar, and modal sizing.
+  - Narrow phone rules must not clamp 9x9 craft/output icon settings behind the profile values; the settings preview and runtime board should use the same CSS variables.
 - `frontend/src/styles/mobile-shell.css`
   - Phone app drawer presentation layer for global navigation, server switching, settings, logout, and contextual editor tools.
 

@@ -156,6 +156,8 @@ function openRecipeActions() {
 }
 
 beforeEach(() => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 768 });
   window.localStorage.clear();
   mockRecipeDraftTemplates = [];
   mockRecipeTasks = [];
@@ -809,6 +811,18 @@ test('technical workspace uses side navigation sections', async () => {
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);
+});
+
+test('icon settings opens the mobile profile on phone viewport', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 780 });
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
+
+  expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
+  expect((screen.getByLabelText('icon-craftGrid9-cell') as HTMLInputElement).value).toBe('25');
 });
 
 test('right click clears a held item before opening context menus again', async () => {
