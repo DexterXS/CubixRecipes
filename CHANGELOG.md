@@ -17,6 +17,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Reduced the mobile 9x9 craft-board footprint so the output side no longer gets clipped on narrow phone screens.
 - Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation stays compact below the craft board.
 - Changed the default NEI page size to 32 items and replaced the manual page-size input with a dropdown of fixed options.
 - Added symbol-coded craft settings inside the craft-board `...` menu for grid size, recipe type, and binding mode, with green active and red inactive states.

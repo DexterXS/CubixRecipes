@@ -93,8 +93,8 @@ export type IconViewport = {
 
 function dynamicCraftCell(surface: IconSurfaceSettings, viewport: IconViewport | null, gridSize: 3 | 9): number {
   if (!viewport) return surface.cell;
-  const horizontalReserve = gridSize === 9 ? 132 : 220;
-  const verticalReserve = gridSize === 9 ? 392 : 460;
+  const horizontalReserve = gridSize === 9 ? 168 : 220;
+  const verticalReserve = gridSize === 9 ? 420 : 460;
   const widthCell = (viewport.width - horizontalReserve) / gridSize;
   const heightCell = (viewport.height - verticalReserve) / gridSize;
   const fitted = Math.floor(Math.min(widthCell, heightCell));

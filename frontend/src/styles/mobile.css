@@ -421,6 +421,12 @@
     padding: 10px;
   }
 
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) {
+    grid-template-columns: minmax(0, max-content) 20px 36px;
+    gap: 4px;
+    padding: 6px;
+  }
+
   .craft-recipe-nav {
     background: transparent;
     border: 0;
@@ -446,10 +452,21 @@
     transform: none;
   }
 
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-arrow {
+    width: 20px;
+    height: 18px;
+  }
+
   .craft-arrow::before {
     top: 8px;
     width: 18px;
     height: 5px;
+  }
+
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-arrow::before {
+    top: 7px;
+    width: 13px;
+    height: 4px;
   }
 
   .craft-arrow::after {
@@ -459,10 +476,23 @@
     border-left-width: 12px;
   }
 
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-arrow::after {
+    border-top-width: 9px;
+    border-bottom-width: 9px;
+    border-left-width: 9px;
+  }
+
   .recipe-craft-board .craft-output-slot {
     width: var(--icon-craft-output-cell, 48px);
     height: var(--icon-craft-output-cell, 48px);
     min-width: var(--icon-craft-output-cell, 48px);
+  }
+
+  .recipe-craft-board:has(.grid-wrap[data-grid-size='9']) .craft-output-slot {
+    width: min(var(--icon-craft-output-cell, 36px), 36px);
+    height: min(var(--icon-craft-output-cell, 36px), 36px);
+    min-width: min(var(--icon-craft-output-cell, 36px), 36px);
+    padding: 3px;
   }
 
   .grid-wrap {
@@ -471,7 +501,7 @@
   }
 
   .grid-wrap[data-grid-size='9'] {
-    --craft-cell: var(--icon-craft-grid9-cell, 27px);
+    --craft-cell: min(var(--icon-craft-grid9-cell, 25px), 25px);
   }
 
   .recipe-actions-popover {
