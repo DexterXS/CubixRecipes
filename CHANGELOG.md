@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added admin-configurable icon surface settings for NEI, favorites, drafts, craft grids, outputs, tasks, and mobile held/inspection previews, with live previews and shared CSS variables.
 - Added a temporary technical-panel icon scale lab with 64 real-icon variants for comparing small-cell centering and sizing strategies.
 - Added modular NEI/favorites icon-cell UI with browser-style favorite tabs, a `+` tab creator, hidden `...` favorite settings, mobile long-press item inspection, and `...` item actions for NEI/favorites.
 - Added a mobile app drawer with workspace navigation, server switch, language, settings, logout, and editor tools, plus NEI/Favorites tab switching in the recipe workspace.

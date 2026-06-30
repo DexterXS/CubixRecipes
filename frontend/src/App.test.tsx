@@ -800,6 +800,9 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByLabelText('debug-navigation')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-logs'));
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
+  expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);

@@ -8,6 +8,9 @@ import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
 import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
+import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
+import { defaultIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
+import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
@@ -77,7 +80,8 @@ const defaultUiPreferences: UiPreferences = {
   active_view_tab: 'editor',
   reset_layout_version: 4,
   panel_layout: defaultPanelLayout,
-  workspace_layout: defaultWorkspaceLayout
+  workspace_layout: defaultWorkspaceLayout,
+  icon_surfaces: defaultIconSurfaceSettings
 };
 
 const defaultNeiFavoritesProfile: NeiFavoritesProfile = {
@@ -318,7 +322,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -1403,7 +1407,8 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
     reset_layout_version: source?.reset_layout_version ?? 4,
     panel_layout: normalizePanelLayout(source?.panel_layout),
-    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout)
+    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout),
+    icon_surfaces: normalizeIconSurfaceSettings(source?.icon_surfaces)
   };
 }
 
@@ -1571,6 +1576,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
+  const iconSurfaceStyle = useIconSurfaceCssVars(uiPreferences.icon_surfaces);
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>(restoredDraft?.workspaceTab ?? 'editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
@@ -2835,7 +2841,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function getAppShellStyle(): CSSProperties {
-    return { '--ui-scale': uiPreferences.ui_scale } as CSSProperties;
+    return {
+      '--ui-scale': uiPreferences.ui_scale,
+      ...iconSurfaceStyle
+    } as CSSProperties;
   }
 
   useEffect(() => {
@@ -3208,6 +3217,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function patchUiPreferences(patch: Partial<UiPreferences>) {
     persistUiPreferences({ ...latestUiPreferencesRef.current, ...patch });
+  }
+
+  function patchIconSurface(surfaceId: IconSurfaceId, next: IconSurfaceSettings) {
+    patchUiPreferences({
+      icon_surfaces: patchIconSurfaceSettings(latestUiPreferencesRef.current.icon_surfaces, surfaceId, next)
+    });
+  }
+
+  function resetIconSurfaces() {
+    patchUiPreferences({ icon_surfaces: defaultIconSurfaceSettings });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
@@ -7700,6 +7719,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     switch (debugSection) {
       case 'modIcons':
         return canManageModIcons ? renderModIconsPanel() : <div className="inline-hint inline-hint-warning">Управление иконками доступно только администраторам.</div>;
+      case 'iconSettings':
+        return canManageSettings ? (
+          <IconSettingsPanel
+            settings={uiPreferences.icon_surfaces}
+            renderSampleIcon={() => renderCraftItemIcon(iconLabSampleRaw, iconLabIconUrl, iconLabAnimated, iconLabFrameTime, iconLabSampleTitle)}
+            onChange={patchIconSurface}
+            onResetAll={resetIconSurfaces}
+          />
+        ) : <div className="inline-hint inline-hint-warning">Настройки иконок доступны только администраторам.</div>;
       case 'iconLab':
         return (
           <IconScaleLab
@@ -8204,6 +8232,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
+      { id: 'iconSettings', label: 'Иконки', description: 'Размеры всех меню', visible: canManageSettings },
       { id: 'iconLab', label: 'Иконки тест', description: '64 варианта размера', visible: canUseDebug },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },

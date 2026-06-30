@@ -193,11 +193,19 @@ class WorkspaceLayoutRequest(BaseModel):
     extreme_grid_gap: int = Field(default=8, ge=0, le=24)
 
 
+class IconSurfaceRequest(BaseModel):
+    cell: int = Field(default=34, ge=8, le=160)
+    icon: int = Field(default=28, ge=4, le=128)
+    gap: int = Field(default=4, ge=0, le=32)
+    mode: Literal['grid', 'absolute', 'wrapper', 'scale'] = 'scale'
+
+
 class UiPreferencesRequest(BaseModel):
     display_mode: Literal['text', 'icons'] = 'text'
     animations_enabled: bool = True
     density_mode: Literal['compact', 'normal', 'wide'] = 'normal'
     editor_mode: Literal['view', 'edit'] = 'edit'
+    theme_mode: Literal['dark', 'light'] = 'dark'
     ui_scale: float = 1.15
     nei_page_size: int = Field(default=32, ge=16, le=512)
     language: Literal['ru', 'en'] = 'ru'
@@ -205,6 +213,7 @@ class UiPreferencesRequest(BaseModel):
     reset_layout_version: int = 4
     panel_layout: list[PanelLayoutItemRequest] = Field(default_factory=list)
     workspace_layout: WorkspaceLayoutRequest = Field(default_factory=WorkspaceLayoutRequest)
+    icon_surfaces: dict[str, IconSurfaceRequest] = Field(default_factory=dict)
 
 
 class ProjectSettingsRequest(BaseModel):

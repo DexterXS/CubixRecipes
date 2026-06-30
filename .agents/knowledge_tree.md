@@ -66,7 +66,7 @@ Last full rebuild: 2026-06-29
   - Depends on nearly all backend services and stores.
 - `backend/app/api/schemas.py`
   - Pydantic request models for parse/search/save/resolve/custom items/drafts/tasks/favorites/settings/auth/access/debug/mod replacement.
-  - Key classes: `ParseRequest`, `SearchRequest`, `IngredientSearchRequest`, `BatchSearchRequest`, `CreateRecipeRequest`, `SaveAsRequest`, `UpdateRecipeRequest`, `ResolveRequest`, `CustomItemRequest`, `RecipeDraftTemplateRequest`, `RecipeTask*Request`, `Nei*Request`, `ProjectSettingsRequest`, `RoleUpdateRequest`, `AccessControlRequest`, `DebugLogEventRequest`, `ModReplacementRequest`.
+  - Key classes: `ParseRequest`, `SearchRequest`, `IngredientSearchRequest`, `BatchSearchRequest`, `CreateRecipeRequest`, `SaveAsRequest`, `UpdateRecipeRequest`, `ResolveRequest`, `CustomItemRequest`, `RecipeDraftTemplateRequest`, `RecipeTask*Request`, `Nei*Request`, `ProjectSettingsRequest`, `IconSurfaceRequest`, `RoleUpdateRequest`, `AccessControlRequest`, `DebugLogEventRequest`, `ModReplacementRequest`.
 
 ### Domain
 - `backend/app/domain/models.py`
@@ -78,7 +78,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/config/project_config.py`
   - Project paths, UI preferences, data-dir defaults, validation, runtime directory creation.
   - Classes: `PanelLayoutItemConfig`, `WorkspaceLayoutConfig`, `UiPreferencesConfig`, `ProjectPathsConfig`, `ProjectConfigService`.
-  - Reads/writes config JSON; builds recipe scan paths and icon index paths.
+  - Reads/writes config JSON; builds recipe scan paths and icon index paths; normalizes persisted UI icon surface settings under `ui_preferences.icon_surfaces`.
   - Recognizes `CUBIXRECIPES_DATA_DIR`, Railway volume env, and `/data`.
 
 ### Auth and Access
@@ -301,7 +301,7 @@ Last full rebuild: 2026-06-29
   - Depends on `AuthGate`, `ServerSelect`, `App`, global styles, mobile styles, debug logging, and shared types.
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
-  - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings.
+  - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted icon-surface settings.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
@@ -355,6 +355,17 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/icon-lab/IconScaleLab.css`
   - Scoped presentation for the icon lab preview grid and per-variant scaling/centering modes.
 
+### Icon Settings Feature
+- `frontend/src/features/icon-settings/iconSurfaces.ts`
+  - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, held item, and mobile inspection.
+  - Builds shared CSS custom properties and dynamic craft-grid fitting from viewport size.
+- `frontend/src/features/icon-settings/useIconViewport.ts`
+  - React hook owner for viewport tracking and icon-surface CSS variable generation.
+- `frontend/src/features/icon-settings/IconSettingsPanel.tsx`
+  - Admin technical-panel UI for live icon-size previews, sliders, center-mode toggles, and reset controls.
+- `frontend/src/features/icon-settings/IconSettingsPanel.css`
+  - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
+
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
@@ -385,15 +396,15 @@ Last full rebuild: 2026-06-29
 - `frontend/src/config/runtime.ts`
   - API base resolution, Vite/backend target messages, URL helpers, itempanel fallback env helper.
 - `frontend/src/types/index.ts`
-  - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, tasks, favorites, users, cloud files, aliases, OreDict.
+  - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, icon surface settings, tasks, favorites, users, cloud files, aliases, OreDict.
 - `frontend/src/i18n.ts`
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
-  - Global app styling, including craft-grid icon sizing and draft-preview icon scaling.
+  - Global app styling, including CSS-variable-driven craft-grid, output, favorites, draft, task, and held-item icon sizing.
 - `frontend/src/styles/nei.css`
-  - NEI/favorites icon-cell, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
+  - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
-  - Phone/tablet presentation layer for the main workspace, recipe builder, craft grid, compact NEI tabs/search, touch held-item bar, and modal sizing.
+  - Phone/tablet presentation layer for the main workspace, recipe builder, CSS-variable-driven craft grid/output sizing, compact NEI tabs/search, touch held-item bar, and modal sizing.
 - `frontend/src/styles/mobile-shell.css`
   - Phone app drawer presentation layer for global navigation, server switching, settings, logout, and contextual editor tools.
 
@@ -404,6 +415,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
+- Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.
 

@@ -56,6 +56,15 @@ export interface WorkspaceLayout {
   extreme_grid_gap?: number;
 }
 
+export type IconCenterMode = 'grid' | 'absolute' | 'wrapper' | 'scale';
+
+export interface IconSurfaceSettings {
+  cell: number;
+  icon: number;
+  gap: number;
+  mode: IconCenterMode;
+}
+
 export interface UiPreferences {
   display_mode: DisplayMode;
   animations_enabled: boolean;
@@ -69,6 +78,7 @@ export interface UiPreferences {
   reset_layout_version: number;
   panel_layout: PanelLayoutItem[];
   workspace_layout: WorkspaceLayout;
+  icon_surfaces: Record<string, IconSurfaceSettings>;
 }
 
 export interface ProjectSettings {
