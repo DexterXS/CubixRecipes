@@ -410,6 +410,8 @@ Last full rebuild: 2026-06-29
 - `frontend/src/styles/mobile.css`
   - Phone/tablet presentation layer for the main workspace, recipe builder, CSS-variable-driven craft grid/output sizing, compact NEI tabs/search, touch held-item bar, and modal sizing.
   - Narrow phone rules must not clamp 9x9 craft/output icon settings behind the profile values; the settings preview and runtime board should use the same CSS variables.
+- `frontend/src/styles/mobile-craft-icons.css`
+  - Touch-only craft-board icon centering rules loaded after `mobile.css`; explicitly centers recipe-builder grid/output icons with absolute 50% positioning plus translate/scale so Android Chrome does not place transformed atlas sprites in a slot corner.
 - `frontend/src/styles/mobile-shell.css`
   - Phone app drawer presentation layer for global navigation, server switching, settings, logout, and contextual editor tools.
 
@@ -579,7 +581,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
-- `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-shell.css`.
+- `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
 - `services/api/client.ts` -> runtime config, debug log.
