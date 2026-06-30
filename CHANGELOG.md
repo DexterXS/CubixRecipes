@@ -19,6 +19,7 @@
 - Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation stays compact below the craft board.
 - Changed the default NEI page size to 32 items and replaced the manual page-size input with a dropdown of fixed options.
 - Added symbol-coded craft settings inside the craft-board `...` menu for grid size, recipe type, and binding mode, with green active and red inactive states.
+- Applied the selected icon-lab variants: #64 for compact 9x9 craft-grid icons and #52 for 9x9 draft preview icons.
 - Fixed mobile NEI long-press behavior so item text no longer gets selected, touch long-press no longer opens the full action menu accidentally, and item-cell `...` actions are hidden on touch screens while remaining available from the mobile item tooltip.
 - Removed the hardcoded `1.7.10 - 1.12.2` badges from server selection cards.
 - Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.

@@ -389,7 +389,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/i18n.ts`
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
-  - Global app styling.
+  - Global app styling, including craft-grid icon sizing and draft-preview icon scaling.
 - `frontend/src/styles/nei.css`
   - NEI/favorites icon-cell, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`

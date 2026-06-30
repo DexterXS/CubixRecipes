@@ -379,14 +379,14 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .draft-preview-grid .grid-wrap { --craft-cell: 48px; --preview-icon-scale: 0.88; place-self: center; width: max-content; min-width: 0; }
 .draft-preview-grid .grid-wrap[data-grid-size='2'] { --craft-cell: 50px; --preview-icon-scale: 0.88; }
 .draft-preview-grid .grid-wrap[data-grid-size='3'] { --craft-cell: 48px; --preview-icon-scale: 0.88; }
-.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 24px; --preview-icon-scale: 0.58; }
+.draft-preview-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 36px; --preview-icon-scale: 0.4375; }
 .draft-preview-grid .cell-visual { display: grid; place-items: center; }
 .draft-preview-grid .cell-icon-slot { display: grid; place-items: center; padding: 0; overflow: hidden; }
 .draft-preview-grid .cell-icon-slot img,
 .draft-preview-grid .cell-icon-slot .animated-icon { width: min(32px, calc(var(--craft-cell) - 8px)); height: min(32px, calc(var(--craft-cell) - 8px)); object-fit: contain; }
 .draft-preview-grid .cell-atlas-icon { display: block; width: 32px; height: 32px; background-repeat: no-repeat; image-rendering: pixelated; transform: scale(var(--preview-icon-scale)); transform-origin: center; }
 .draft-preview-grid .grid-cell.size-9 .cell-icon-slot img,
-.draft-preview-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 20px; height: 20px; }
+.draft-preview-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 32px; height: 32px; transform: scale(var(--preview-icon-scale)); transform-origin: center; }
 .draft-preview-grid .grid-cell.size-9 .cell-atlas-icon { transform: scale(var(--preview-icon-scale)); }
 .draft-template-list { display: grid; gap: 8px; max-height: calc(100vh - 560px); min-height: 150px; overflow: auto; padding-right: 6px; }
 .draft-template-card { position: relative; display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--field-bg) 82%, transparent); cursor: pointer; }
@@ -520,6 +520,7 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .grid-scroll-zone { flex: 1; min-height: 220px; overflow: auto; padding: 10px; background: #c8c8c8; border: 2px solid #2f2f2f; border-radius: 2px; box-shadow: inset 0 0 0 2px #f2f2f2; }
 .grid-wrap { --craft-cell: clamp(calc(42px * var(--ui-scale)), 6.2vw, calc(58px * var(--ui-scale))); display: grid; gap: 2px; justify-content: center; width: fit-content; min-width: fit-content; padding: 6px; background: #bfbfbf; border: 2px solid #2f2f2f; box-shadow: inset 0 0 0 2px #e9e9e9; }
 .grid-wrap[data-grid-size='9'] { --craft-cell: clamp(calc(32px * var(--ui-scale)), 3.4vw, calc(42px * var(--ui-scale))); }
+.recipe-builder-grid .grid-wrap[data-grid-size='9'] { --craft-cell: 36px; --craft-icon-scale: 0.625; }
 .grid-row { display: grid; grid-auto-flow: column; gap: 2px; justify-content: center; }
 .grid-wrap[data-grid-size='9'] .grid-row.group-row-start { margin-top: var(--extreme-grid-gap, 8px); }
 .grid-wrap[data-grid-size='9'] .grid-cell.group-col-start { margin-left: var(--extreme-grid-gap, 8px); }
@@ -547,6 +548,9 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 .grid-cell.size-9 .cell-icon-slot img,
 .grid-cell.size-9 .cell-icon-slot .animated-icon { width: min(100%, calc(28px * var(--ui-scale))); height: min(100%, calc(28px * var(--ui-scale))); }
 .grid-cell.size-9 .cell-atlas-icon { transform: scale(calc(var(--ui-scale) * 0.875)); }
+.recipe-builder-grid .grid-cell.size-9 .cell-icon-slot img,
+.recipe-builder-grid .grid-cell.size-9 .cell-icon-slot .animated-icon { width: 32px; height: 32px; transform: scale(var(--craft-icon-scale)); transform-origin: center; }
+.recipe-builder-grid .grid-cell.size-9 .cell-atlas-icon { transform: scale(var(--craft-icon-scale)); }
 .cell-preview { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 .local-script-editor textarea { min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical; }
 .held-item-cursor { position: fixed; left: 0; top: 0; z-index: 2000; width: 36px; height: 36px; display: grid; place-items: center; pointer-events: none; will-change: transform; transform: translate3d(0, 0, 0); transition: none; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35)); }
