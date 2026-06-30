@@ -261,8 +261,8 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .craft-arrow::after { content: ""; position: absolute; right: 0; top: 2px; border-top: 14px solid transparent; border-bottom: 14px solid transparent; border-left: 16px solid #8f8f8f; }
 .craft-output-slot { width: var(--icon-craft-output-cell, 52px); height: var(--icon-craft-output-cell, 52px); border-radius: 0; border: 2px solid #333; border-top-color: #eeeeee; border-left-color: #eeeeee; border-right-color: #4a4a4a; border-bottom-color: #4a4a4a; background: #8f8f8f; box-shadow: inset -2px -2px 0 rgba(0,0,0,.28), inset 2px 2px 0 rgba(255,255,255,.28); padding: 4px; }
 .craft-output-slot img,
-.craft-output-slot .animated-icon,
-.craft-output-slot .output-atlas-icon { width: var(--icon-craft-output-icon, 32px); height: var(--icon-craft-output-icon, 32px); transform: none; }
+.craft-output-slot .animated-icon { width: var(--icon-craft-output-icon, 32px); height: var(--icon-craft-output-icon, 32px); transform: none; object-fit: contain; image-rendering: pixelated; }
+.craft-output-slot .output-atlas-icon { width: 32px; height: 32px; transform: scale(var(--icon-craft-output-scale, 1)); transform-origin: center; }
 .panel.nei-panel { overflow: visible; }
 .nei-panel .panel-body { gap: 10px; }
 .nei-pager { display: grid; grid-template-columns: 32px 1fr 32px; align-items: center; gap: 8px; }

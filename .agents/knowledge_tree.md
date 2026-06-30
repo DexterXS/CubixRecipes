@@ -370,6 +370,8 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
   - Owns guarded touch behavior: scroll movement cancels pick, short tap picks, long press opens item inspection, and touch-generated context menus are suppressed so the tooltip action button remains the mobile path to item actions.
+- `frontend/src/pages/App.tsx`
+  - Owns the NEI item action menu callbacks, including mobile `...` actions for opening the item recipe and viewing recipe usages.
 - `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`
   - Owns NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI.
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
@@ -401,8 +403,9 @@ Last full rebuild: 2026-06-29
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
   - Global app styling, including CSS-variable-driven craft-grid, output, favorites, draft, task, and held-item icon sizing.
+  - Craft output atlas sprites keep their 32px tile and use output scale variables so phone output icons match the icon-settings preview instead of being cropped.
 - `frontend/src/styles/nei.css`
-  - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, and mobile item-inspection presentation.
+  - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, compact mobile item action menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
   - Phone/tablet presentation layer for the main workspace, recipe builder, CSS-variable-driven craft grid/output sizing, compact NEI tabs/search, touch held-item bar, and modal sizing.
 - `frontend/src/styles/mobile-shell.css`

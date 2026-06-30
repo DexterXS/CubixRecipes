@@ -4629,6 +4629,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function openNeiContextRecipe(raw: string) {
+    setNeiContextMenu(null);
+    setTouchItemInspection(null);
+    void openRecipeForItem(raw);
+  }
+
+  function openNeiContextUses(raw: string) {
+    setNeiContextMenu(null);
+    setTouchItemInspection(null);
+    void openRecipeUsesForItem(raw);
+  }
+
   function openRecipeFromUses(recipeToOpen: RecipeView) {
     applyRecipe(recipeToOpen, undefined, { rememberCurrent: true });
     setSimilarRecipes(null);
@@ -6144,10 +6156,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 660 : (custom ? 470 : 440) })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 720 : (custom ? 530 : 500) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
+        <button type="button" onClick={() => openNeiContextRecipe(raw)}>Посмотреть крафт</button>
+        <button type="button" className="secondary-button" onClick={() => openNeiContextUses(raw)}>Посмотреть где используется</button>
         {canManageTasks ? (
           <div className="context-menu-status">
             <span>Добавлено в задачу</span>

@@ -1125,6 +1125,32 @@ test('long press shows item information without taking the item', async () => {
   expect(document.querySelector('.nei-context-menu')).toBeFalsy();
 });
 
+test('mobile item actions can open recipes and uses from the long press menu', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.pointerDown(item, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.click(await screen.findByLabelText('touch-item-actions-<minecraft:planks>'));
+
+  expect(await screen.findByRole('button', { name: 'Посмотреть крафт' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Посмотреть где используется' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Посмотреть крафт' }));
+
+  await waitFor(() => expect(craftOutputRaw()).toBe('<minecraft:planks>'));
+  expect(document.querySelector('.nei-context-menu')).toBeFalsy();
+
+  const reopenedItem = await screen.findByLabelText('nei-item-<minecraft:planks>');
+  fireEvent.pointerDown(reopenedItem, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.click(await screen.findByLabelText('touch-item-actions-<minecraft:planks>'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Посмотреть где используется' }));
+
+  const dialog = await screen.findByRole('dialog', { name: 'Использования предмета' });
+  expect(dialog).toBeTruthy();
+  expect(within(dialog).getByText('1/1')).toBeTruthy();
+});
+
 test('moderator NEI hidden patterns remove matching item variants from the panel', async () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(await screen.findByLabelText('nei-item-<examplemod:item>')).toBeTruthy();

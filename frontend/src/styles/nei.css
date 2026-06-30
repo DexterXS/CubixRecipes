@@ -247,4 +247,21 @@
   .mobile-item-inspection {
     width: min(320px, calc(100vw - 24px));
   }
+
+  .nei-context-menu {
+    gap: 5px;
+    padding: 8px;
+    font-size: 80%;
+  }
+
+  .nei-context-menu button {
+    padding: 6px 10px;
+    border-radius: 9px;
+    font-size: inherit;
+  }
+
+  .nei-context-menu .context-menu-status {
+    padding: 6px 7px;
+    font-size: inherit;
+  }
 }

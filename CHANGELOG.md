@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added mobile NEI item context-menu actions for opening an item's recipe and viewing where the item is used from the long-press `...` menu.
 - Added separate desktop and mobile icon-surface profiles, selectable from the admin icon settings panel.
 - Added admin-configurable icon surface settings for NEI, favorites, drafts, craft grids, outputs, tasks, and mobile held/inspection previews, with live previews and shared CSS variables.
 - Added a temporary technical-panel icon scale lab with 64 real-icon variants for comparing small-cell centering and sizing strategies.
@@ -18,6 +19,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed mobile craft output atlas icons being cropped by icon-size settings, which could make the real phone view appear offset compared with the mobile icon-settings preview.
 - Reworked the craft-board settings trigger into a compact 2x2 status/settings button so it no longer overlaps the recipe board on mobile.
 - Reduced the mobile 9x9 craft-board footprint so the output side no longer gets clipped on narrow phone screens.
 - Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation stays compact below the craft board.
