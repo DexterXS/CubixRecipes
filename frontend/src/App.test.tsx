@@ -156,6 +156,8 @@ function openRecipeActions() {
 }
 
 beforeEach(() => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 768 });
   window.localStorage.clear();
   mockRecipeDraftTemplates = [];
   mockRecipeTasks = [];
@@ -800,6 +802,27 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByLabelText('debug-navigation')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-logs'));
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
+  expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  fireEvent.click(screen.getByLabelText('icon-settings-profile-mobile'));
+  expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
+  expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
+  expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);
+});
+
+test('icon settings opens the mobile profile on phone viewport', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 780 });
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
+
+  expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
+  expect((screen.getByLabelText('icon-craftGrid9-cell') as HTMLInputElement).value).toBe('25');
 });
 
 test('right click clears a held item before opening context menus again', async () => {
@@ -817,6 +840,20 @@ test('right click clears a held item before opening context menus again', async 
   expect(document.querySelector('.nei-context-menu')).toBeTruthy();
 });
 
+test('touch held item bar tracks and clears a selected NEI item', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.click(item);
+
+  const touchHeldItem = screen.getByLabelText('touch-held-item');
+  expect(within(touchHeldItem).getByText('<minecraft:planks>')).toBeTruthy();
+
+  fireEvent.click(screen.getByLabelText('clear-held-item'));
+  expect(screen.queryByLabelText('touch-held-item')).toBeFalsy();
+  expect(document.querySelector('.held-item-cursor')).toBeFalsy();
+});
+
 test('dropdown menus close after actions and outside clicks', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
@@ -824,7 +861,7 @@ test('dropdown menus close after actions and outside clicks', async () => {
   expect(craftMenu).toBeTruthy();
   fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
   expect(craftMenu.open).toBe(true);
-  fireEvent.click(within(craftMenu).getAllByRole('button')[1]);
+  fireEvent.click(within(craftMenu).getByLabelText('copy-craft-body'));
   await waitFor(() => expect(craftMenu.open).toBe(false));
 
   fireEvent.click(craftMenu.querySelector('summary') as HTMLElement);
@@ -1059,6 +1096,75 @@ test('moderator can toggle NEI favorites with the configured hotkey', async () =
   await waitFor(() => expect(mockNeiFavorites.tabs[0].items).toHaveLength(0));
 });
 
+test('NEI favorites use browser tabs and hide settings behind menu', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  expect(await screen.findByText('Избранное NEI')).toBeTruthy();
+  expect(screen.queryByLabelText('favorite-active-tab-name')).toBeFalsy();
+
+  fireEvent.click(screen.getByLabelText('favorite-add-tab-open'));
+  fireEvent.change(screen.getByLabelText('favorite-new-tab-name'), { target: { value: 'Блоки' } });
+  fireEvent.click(screen.getByLabelText('favorite-add-tab'));
+
+  await waitFor(() => expect(mockNeiFavorites.tabs.some((tab) => tab.name === 'Блоки')).toBe(true));
+  expect(screen.getByRole('tab', { name: /Блоки/ })).toBeTruthy();
+
+  fireEvent.click(screen.getByLabelText('favorite-settings-menu'));
+  expect(screen.getByLabelText('favorite-active-tab-name')).toBeTruthy();
+  expect(screen.getByLabelText('nei-hidden-patterns-panel')).toBeTruthy();
+});
+
+test('favorite items render as NEI icon cells', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:stick>');
+
+  fireEvent.mouseOver(item);
+  fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+
+  const favorite = await screen.findByLabelText('favorite-item-<minecraft:stick>');
+  expect(favorite.querySelector('.favorite-title')).toBeFalsy();
+  expect(favorite.querySelector('.favorite-raw')).toBeFalsy();
+  expect(favorite.querySelector('.nei-icon')).toBeTruthy();
+});
+
+test('long press shows item information without taking the item', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.pointerDown(item, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.contextMenu(item, { clientX: 120, clientY: 160 });
+
+  expect(await screen.findByLabelText('touch-item-actions-<minecraft:planks>')).toBeTruthy();
+  expect(screen.queryByLabelText('touch-held-item')).toBeFalsy();
+  expect(document.querySelector('.nei-context-menu')).toBeFalsy();
+});
+
+test('mobile item actions can open recipes and uses from the long press menu', async () => {
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.pointerDown(item, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.click(await screen.findByLabelText('touch-item-actions-<minecraft:planks>'));
+
+  expect(await screen.findByRole('button', { name: 'Посмотреть крафт' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Посмотреть где используется' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Посмотреть крафт' }));
+
+  await waitFor(() => expect(craftOutputRaw()).toBe('<minecraft:planks>'));
+  expect(document.querySelector('.nei-context-menu')).toBeFalsy();
+
+  const reopenedItem = await screen.findByLabelText('nei-item-<minecraft:planks>');
+  fireEvent.pointerDown(reopenedItem, { pointerType: 'touch', clientX: 120, clientY: 160 });
+  await new Promise((resolve) => window.setTimeout(resolve, 560));
+  fireEvent.click(await screen.findByLabelText('touch-item-actions-<minecraft:planks>'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Посмотреть где используется' }));
+
+  const dialog = await screen.findByRole('dialog', { name: 'Использования предмета' });
+  expect(dialog).toBeTruthy();
+  expect(within(dialog).getByText('1/1')).toBeTruthy();
+});
+
 test('moderator NEI hidden patterns remove matching item variants from the panel', async () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(await screen.findByLabelText('nei-item-<examplemod:item>')).toBeTruthy();
@@ -1247,6 +1353,7 @@ test('settings keeps UI/debug controls separate from technical access', async ()
   fireEvent.click(screen.getByRole('button', { name: 'Настройки' }));
   expect(screen.getByRole('dialog', { name: 'Настройки' })).toBeTruthy();
   expect(screen.getByLabelText('ui-scale')).toBeTruthy();
+  expect((screen.getByLabelText('nei-page-size') as HTMLSelectElement).value).toBe('32');
   expect(screen.getByText('Debug режим')).toBeTruthy();
   expect(screen.queryByText('Права персонала')).toBeFalsy();
   expect(screen.queryByLabelText('whitelist-emails')).toBeFalsy();
@@ -1500,6 +1607,12 @@ test('recipe builder supports 2x2, shapeless, and strict placement controls', as
     const payload = findLocalDraftPayload();
     expect(payload?.state?.recipe.binding_mode).toBe('strict');
   });
+
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByLabelText('craft-grid-3'));
+  expect(screen.getByLabelText('craft-cell-2-2')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('craft-mode-shapeless'));
+  expect((screen.getByLabelText('craft-binding-strict') as HTMLButtonElement).disabled).toBe(true);
 });
 
 test('saved recipe draft templates can be browsed, previewed, opened, and removed', async () => {
@@ -1766,7 +1879,7 @@ test('craft board menu copies and pastes the craft body without replacing output
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');
 
   fireEvent.click(screen.getByLabelText('craft-board-menu'));
-  fireEvent.click(screen.getByRole('button', { name: 'Скопировать текущее тело крафта' }));
+  fireEvent.click(screen.getByLabelText('copy-craft-body'));
 
   const exampleItem = await screen.findByLabelText('nei-item-<examplemod:item>');
   fireEvent.mouseEnter(exampleItem);
@@ -1775,7 +1888,7 @@ test('craft board menu copies and pastes the craft body without replacing output
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBeUndefined();
 
   fireEvent.click(screen.getByLabelText('craft-board-menu'));
-  fireEvent.click(screen.getByRole('button', { name: 'Вставить тело крафта' }));
+  fireEvent.click(screen.getByLabelText('paste-craft-body'));
 
   await waitFor(() => expect(craftOutputRaw()?.toLowerCase()).toBe('<examplemod:item>'));
   expect((screen.getByLabelText('craft-cell-0-0').closest('[data-craft-cell="true"]') as HTMLElement).dataset.itemRaw).toBe('<minecraft:stick>');

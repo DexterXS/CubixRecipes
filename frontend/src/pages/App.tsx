@@ -4,8 +4,17 @@ import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
+import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
+import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
+import { NeiIconItem } from '../features/nei/NeiIconItem';
+import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
+import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
+import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
+import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
+import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
+import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
@@ -49,9 +58,6 @@ const PERSISTENT_SCRIPTS_DIR = '/data/scripts';
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
 type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
-type RecipeType = 'ct_shaped' | 'ct_shapeless' | 'avaritia_extreme_shaped';
-type RecipeCraftMode = 'shaped' | 'shapeless';
-type RecipeBindingMode = 'soft' | 'strict';
 type CraftBodyTemplate = {
   schemaVersion: 1;
   recipeType: string;
@@ -69,12 +75,14 @@ const defaultUiPreferences: UiPreferences = {
   editor_mode: 'edit',
   theme_mode: 'dark',
   ui_scale: 1.15,
-  nei_page_size: 128,
+  nei_page_size: 32,
   language: 'ru',
   active_view_tab: 'editor',
   reset_layout_version: 4,
   panel_layout: defaultPanelLayout,
-  workspace_layout: defaultWorkspaceLayout
+  workspace_layout: defaultWorkspaceLayout,
+  icon_surfaces: defaultIconSurfaceSettings,
+  mobile_icon_surfaces: defaultMobileIconSurfaceSettings
 };
 
 const defaultNeiFavoritesProfile: NeiFavoritesProfile = {
@@ -183,6 +191,13 @@ type NeiContextMenuState = {
   customPickerOpen?: boolean;
 };
 
+type TouchItemInspectionState = {
+  raw: string;
+  x: number;
+  y: number;
+  entry?: ItemPanelEntry | null;
+};
+
 type CloudFileContextMenuState = {
   path: string;
   x: number;
@@ -221,6 +236,7 @@ type ItemPanelTranslations = {
 };
 const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
+const SHARED_CRAFT_DRAFT_STORAGE_KEY = 'cubixrecipes:shared-craft-draft:v1';
 const NEI_VISIBLE_ROWS = 16;
 const NEI_FALLBACK_COLUMNS = 8;
 const LOCAL_DRAFT_SCHEMA_VERSION = 1;
@@ -307,7 +323,15 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type IconSettingsProfile = 'desktop' | 'mobile';
+
+function initialIconSettingsProfile(): IconSettingsProfile {
+  if (typeof window !== 'undefined' && window.innerWidth <= 760) {
+    return 'mobile';
+  }
+  return 'desktop';
+}
 
 type ActiveItemInspection = {
   raw: string | null;
@@ -430,73 +454,6 @@ function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallba
   };
 }
 
-function cloneMatrix(matrix: CellValue[][]): CellValue[][] {
-  return matrix.map((row) => [...row]);
-}
-
-function toCellMatrix(recipe: RecipeView): CellValue[][] {
-  return recipe.matrix.map((row) => row.map((cell) => cell.raw));
-}
-
-function maxGridWidth(matrix: CellValue[][]): number {
-  return Math.max(0, ...matrix.map((row) => row.length));
-}
-
-function normalizeGridSize(size: number): 2 | 3 | 9 {
-  if (size >= 9) return 9;
-  return size <= 2 ? 2 : 3;
-}
-
-function resizeMatrix(matrix: CellValue[][], size: number): CellValue[][] {
-  return Array.from({ length: size }, (_, rowIndex) => (
-    Array.from({ length: size }, (_, colIndex) => matrix[rowIndex]?.[colIndex] ?? null)
-  ));
-}
-
-function rowIsEmpty(row: CellValue[]): boolean {
-  return row.every((cell) => !cell || cell === 'null');
-}
-
-function columnIsEmpty(matrix: CellValue[][], index: number): boolean {
-  return matrix.every((row) => index >= row.length || !row[index] || row[index] === 'null');
-}
-
-function trimMatrixEdges(matrix: CellValue[][]): CellValue[][] {
-  if (!matrix.length) return [[null]];
-  let top = 0;
-  let bottom = matrix.length;
-  while (top < bottom && rowIsEmpty(matrix[top])) top += 1;
-  while (bottom > top && rowIsEmpty(matrix[bottom - 1])) bottom -= 1;
-  const cropped = matrix.slice(top, bottom).map((row) => [...row]);
-  if (!cropped.length) return [[null]];
-  let left = 0;
-  let right = maxGridWidth(cropped);
-  while (left < right && columnIsEmpty(cropped, left)) left += 1;
-  while (right > left && columnIsEmpty(cropped, right - 1)) right -= 1;
-  const trimmed = cropped.map((row) => row.slice(left, right));
-  const width = Math.max(1, maxGridWidth(trimmed));
-  return trimmed.map((row) => [...row, ...Array.from({ length: Math.max(0, width - row.length) }, () => null)]);
-}
-
-function matrixForRecipeSource(matrix: CellValue[][], recipeType: string, bindingMode: RecipeBindingMode): CellValue[][] {
-  if (recipeType === 'avaritia_extreme_shaped' || bindingMode === 'strict' || recipeType === 'ct_shapeless') {
-    const width = Math.max(1, maxGridWidth(matrix));
-    return matrix.length
-      ? matrix.map((row) => [...row, ...Array.from({ length: Math.max(0, width - row.length) }, () => null)])
-      : [[null]];
-  }
-  return trimMatrixEdges(matrix);
-}
-
-function recipeTypeFromCraftMode(mode: RecipeCraftMode, gridSize: number): RecipeType {
-  if (gridSize >= 9) return 'avaritia_extreme_shaped';
-  return mode === 'shapeless' ? 'ct_shapeless' : 'ct_shaped';
-}
-
-function craftModeFromRecipeType(recipeType: string): RecipeCraftMode {
-  return recipeType === 'ct_shapeless' ? 'shapeless' : 'shaped';
-}
-
 function buildStructuredItemRaw(modidDraft: string, itemDraft: string, metaDraft: string, nbtRoot: NbtCompoundNode): string {
   const modid = modidDraft.trim().toLowerCase();
   const item = itemDraft.trim().toLowerCase();
@@ -545,6 +502,32 @@ function localDraftUserHash(email: string): string {
 
 function localDraftStorageKey(email: string): string {
   return `${LOCAL_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function serverLocalDraftStorageKey(email: string, serverId: string | undefined, sharedCraftDraft: boolean): string {
+  const baseKey = localDraftStorageKey(email);
+  return sharedCraftDraft || !serverId ? baseKey : `${baseKey}:server:${serverId}`;
+}
+
+function serverScopedStorageKey(baseKey: string, serverId: string | undefined): string {
+  return serverId ? `${baseKey}:server:${serverId}` : baseKey;
+}
+
+function loadSharedCraftDraftEnabled(): boolean {
+  try {
+    const raw = window.localStorage.getItem(SHARED_CRAFT_DRAFT_STORAGE_KEY);
+    return raw === null ? true : raw === 'true';
+  } catch {
+    return true;
+  }
+}
+
+function persistSharedCraftDraftEnabled(enabled: boolean): void {
+  try {
+    window.localStorage.setItem(SHARED_CRAFT_DRAFT_STORAGE_KEY, enabled ? 'true' : 'false');
+  } catch {
+    // Local craft draft storage mode is best-effort.
+  }
 }
 
 function recipeDraftStorageKey(email: string): string {
@@ -890,9 +873,9 @@ function hashLocalDraftState(state: LocalDraftState): string {
   return stableHash(JSON.stringify(state));
 }
 
-function loadLocalDraftPayload(email: string): LocalDraftPayload | null {
+function loadLocalDraftPayload(email: string, storageKey = localDraftStorageKey(email)): LocalDraftPayload | null {
   try {
-    const raw = window.localStorage.getItem(localDraftStorageKey(email));
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as unknown;
     if (!isObjectRecord(parsed) || parsed.schemaVersion !== LOCAL_DRAFT_SCHEMA_VERSION || typeof parsed.craftHash !== 'string') {
@@ -1428,12 +1411,14 @@ function normalizeUiPreferences(settings?: ProjectSettings | null): UiPreference
     editor_mode: (source?.editor_mode ?? 'edit') as EditorMode,
     theme_mode: (source?.theme_mode ?? 'dark') as ThemeMode,
     ui_scale: ([1, 1.15, 1.3, 1.5].includes(normalizedScale) ? normalizedScale : 1.15) as UiScale,
-    nei_page_size: clamp(Math.floor(Number(source?.nei_page_size ?? 128) || 128), 16, 512),
+    nei_page_size: clamp(Math.floor(Number(source?.nei_page_size ?? 32) || 32), 16, 512),
     language: (source?.language ?? 'ru') as UiLanguage,
     active_view_tab: (source?.active_view_tab ?? 'editor') as AppTab,
     reset_layout_version: source?.reset_layout_version ?? 4,
     panel_layout: normalizePanelLayout(source?.panel_layout),
-    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout)
+    workspace_layout: normalizeWorkspaceLayout(source?.workspace_layout),
+    icon_surfaces: normalizeIconSurfaceSettings(source?.icon_surfaces),
+    mobile_icon_surfaces: normalizeIconSurfaceSettings(source?.mobile_icon_surfaces, defaultMobileIconSurfaceSettings)
   };
 }
 
@@ -1554,9 +1539,13 @@ function nextFavoriteTabId(): string {
 }
 
 export default function App({ authUser = fallbackAuthUser, onLogout = async () => undefined, onResetServer, activeServerId }: AppProps) {
+  const [sharedCraftDraftEnabled, setSharedCraftDraftEnabled] = useState(() => loadSharedCraftDraftEnabled());
+  const localDraftStorageKeyCurrent = serverLocalDraftStorageKey(authUser.email, activeServerId, sharedCraftDraftEnabled);
+  const itemPanelCacheKey = serverScopedStorageKey(ITEMPANEL_CACHE_KEY, activeServerId);
+  const itemSearchIconCacheKey = serverScopedStorageKey(ITEM_SEARCH_ICON_CACHE_KEY, activeServerId);
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
-    localDraftRef.current = loadLocalDraftPayload(authUser.email);
+    localDraftRef.current = loadLocalDraftPayload(authUser.email, localDraftStorageKeyCurrent);
   }
   const restoredDraft = localDraftRef.current?.state ?? null;
 
@@ -1597,6 +1586,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [settings, setSettings] = useState<ProjectSettings | null>(null);
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
+  const iconSurfaceStyle = useIconSurfaceCssVars(uiPreferences.icon_surfaces, uiPreferences.mobile_icon_surfaces);
+  const [iconSettingsProfile, setIconSettingsProfile] = useState<IconSettingsProfile>(() => initialIconSettingsProfile());
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>(restoredDraft?.workspaceTab ?? 'editor');
   const [itemPanelTranslations, setItemPanelTranslations] = useState<ItemPanelTranslations>({
     byKey: new Map(),
@@ -1657,6 +1648,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [customItems, setCustomItems] = useState<CustomItem[]>(() => loadLocalCustomItems(authUser.email));
   const [customItemsStatus, setCustomItemsStatus] = useState('');
   const [neiContextMenu, setNeiContextMenu] = useState<NeiContextMenuState | null>(null);
+  const [touchItemInspection, setTouchItemInspection] = useState<TouchItemInspectionState | null>(null);
   const [oreDictGroups, setOreDictGroups] = useState<Record<string, string[]>>({});
   const [oreDictOverrides, setOreDictOverrides] = useState<Record<string, string | null>>(() => {
     try {
@@ -1719,7 +1711,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [cloudBackupStatus, setCloudBackupStatus] = useState('');
   const [itemSearchIcons, setItemSearchIcons] = useState<Record<string, string | null>>(() => {
     try {
-      const raw = window.localStorage.getItem(ITEM_SEARCH_ICON_CACHE_KEY);
+      const raw = window.localStorage.getItem(itemSearchIconCacheKey);
       if (!raw) return {};
       const parsed = JSON.parse(raw) as Record<string, string | null>;
       return parsed && typeof parsed === 'object' ? parsed : {};
@@ -1733,6 +1725,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const persistTimerRef = useRef<number | null>(null);
   const localDraftPersistTimerRef = useRef<number | null>(null);
   const lastLocalDraftHashRef = useRef(localDraftRef.current?.craftHash ?? '');
+  const lastLocalDraftStorageKeyRef = useRef(localDraftStorageKeyCurrent);
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
   const neiFavoritesSaveTimerRef = useRef<number | null>(null);
@@ -1743,6 +1736,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const texturePauseRef = useRef(false);
   const textureCancelRef = useRef(false);
   const iconRequestRef = useRef<Set<string>>(new Set());
+  const itemSearchIconCacheKeyRef = useRef(itemSearchIconCacheKey);
   const neiListRef = useRef<HTMLDivElement | null>(null);
   const cursorPointRef = useRef({ x: 0, y: 0 });
   const heldCursorRef = useRef<HTMLDivElement | null>(null);
@@ -1814,6 +1808,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } catch {
       // Local debug preferences are best-effort only.
     }
+  }
+
+  function setSharedCraftDraftMode(enabled: boolean) {
+    persistSharedCraftDraftEnabled(enabled);
+    lastLocalDraftHashRef.current = '';
+    setSharedCraftDraftEnabled(enabled);
+    setSaveStatus(enabled ? 'Крафтовый стол общий для всех серверов' : 'Крафтовый стол сохраняется отдельно для сервера');
   }
 
   function toggleDebugFilter(category: DebugCategory, enabled: boolean) {
@@ -1993,7 +1994,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemCatalogSummary(summary);
     }
     try {
-      window.localStorage.setItem(ITEMPANEL_CACHE_KEY, JSON.stringify({ entries: uniqueEntries, summary: summary ?? null }));
+      window.localStorage.setItem(itemPanelCacheKey, JSON.stringify({ entries: uniqueEntries, summary: summary ?? null }));
     } catch {
       // Cache persistence is best-effort.
     }
@@ -2672,6 +2673,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setHeldItemRaw(null);
+        setTouchItemInspection(null);
+        setNeiContextMenu(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -2849,7 +2852,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function getAppShellStyle(): CSSProperties {
-    return { '--ui-scale': uiPreferences.ui_scale } as CSSProperties;
+    return {
+      '--ui-scale': uiPreferences.ui_scale,
+      ...iconSurfaceStyle
+    } as CSSProperties;
   }
 
   useEffect(() => {
@@ -2977,7 +2983,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       modalScales
     };
     const craftHash = hashLocalDraftState(draftState);
-    if (craftHash === lastLocalDraftHashRef.current) {
+    if (craftHash === lastLocalDraftHashRef.current && localDraftStorageKeyCurrent === lastLocalDraftStorageKeyRef.current) {
       return undefined;
     }
 
@@ -2994,8 +3000,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         state: draftState
       };
       try {
-        window.localStorage.setItem(localDraftStorageKey(authUser.email), JSON.stringify(payload));
+        window.localStorage.setItem(localDraftStorageKeyCurrent, JSON.stringify(payload));
         lastLocalDraftHashRef.current = craftHash;
+        lastLocalDraftStorageKeyRef.current = localDraftStorageKeyCurrent;
       } catch (error) {
         logFrontendEvent({
           level: 'WARN',
@@ -3013,6 +3020,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     };
   }, [
     authUser.email,
+    localDraftStorageKeyCurrent,
     input,
     matrix,
     recipe,
@@ -3037,6 +3045,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     recipeForwardHistory,
     modalScales
   ]);
+
+  useEffect(() => {
+    lastLocalDraftHashRef.current = '';
+  }, [localDraftStorageKeyCurrent]);
 
   useEffect(() => {
     persistCustomRemoveTemplates(customRemoveTemplates);
@@ -3067,7 +3079,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
       try {
-        const cached = window.localStorage.getItem(ITEMPANEL_CACHE_KEY);
+        const cached = window.localStorage.getItem(itemPanelCacheKey);
         if (cached) {
           const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
@@ -3138,7 +3150,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, [activeServerId]);
+  }, [activeServerId, itemPanelCacheKey]);
 
   useEffect(() => {
     let cancelled = false;
@@ -3216,6 +3228,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function patchUiPreferences(patch: Partial<UiPreferences>) {
     persistUiPreferences({ ...latestUiPreferencesRef.current, ...patch });
+  }
+
+  function patchIconSurface(surfaceId: IconSurfaceId, next: IconSurfaceSettings) {
+    if (iconSettingsProfile === 'mobile') {
+      patchUiPreferences({
+        mobile_icon_surfaces: patchIconSurfaceSettings(latestUiPreferencesRef.current.mobile_icon_surfaces, surfaceId, next, defaultMobileIconSurfaceSettings)
+      });
+      return;
+    }
+    patchUiPreferences({
+      icon_surfaces: patchIconSurfaceSettings(latestUiPreferencesRef.current.icon_surfaces, surfaceId, next)
+    });
+  }
+
+  function resetIconSurfaces() {
+    patchUiPreferences(iconSettingsProfile === 'mobile'
+      ? { mobile_icon_surfaces: defaultMobileIconSurfaceSettings }
+      : { icon_surfaces: defaultIconSurfaceSettings });
   }
 
   function patchPanelLayout(nextLayout: PanelLayoutItem[]) {
@@ -3963,12 +3993,32 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [visibleNeiRawItems, itemSearchIcons, itemPanelAtlas, modIconByRaw]);
 
   useEffect(() => {
+    if (itemSearchIconCacheKeyRef.current !== itemSearchIconCacheKey) {
+      return;
+    }
     try {
-      window.localStorage.setItem(ITEM_SEARCH_ICON_CACHE_KEY, JSON.stringify(itemSearchIcons));
+      window.localStorage.setItem(itemSearchIconCacheKey, JSON.stringify(itemSearchIcons));
     } catch {
       // ignore cache persistence errors
     }
-  }, [itemSearchIcons]);
+  }, [itemSearchIcons, itemSearchIconCacheKey]);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(itemSearchIconCacheKey);
+      if (!raw) {
+        setItemSearchIcons({});
+        itemSearchIconCacheKeyRef.current = itemSearchIconCacheKey;
+        return;
+      }
+      const parsed = JSON.parse(raw) as Record<string, string | null>;
+      setItemSearchIcons(parsed && typeof parsed === 'object' ? parsed : {});
+    } catch {
+      setItemSearchIcons({});
+    }
+    itemSearchIconCacheKeyRef.current = itemSearchIconCacheKey;
+    iconRequestRef.current.clear();
+  }, [itemSearchIconCacheKey]);
 
   async function waitWhileTextureLoadingPaused() {
     while (texturePauseRef.current && !textureCancelRef.current) {
@@ -4267,7 +4317,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function handleNeiItemPick(raw: string) {
     const nextRaw = applyItemCaseAlias(raw);
+    setTouchItemInspection(null);
     setHeldItemRaw((current) => (current === nextRaw ? null : nextRaw));
+  }
+
+  function openNeiItemActions(raw: string, x: number, y: number) {
+    setTouchItemInspection(null);
+    setNeiContextMenu({ raw, x, y });
+  }
+
+  function inspectNeiItem(raw: string, x: number, y: number, entry?: ItemPanelEntry | null) {
+    setNeiContextMenu(null);
+    updateHoveredItemRaw(raw);
+    setTouchItemInspection({ raw, x, y, entry });
   }
 
   function handleNeiItemTaskPrefill(raw: string) {
@@ -4574,6 +4636,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  function openNeiContextRecipe(raw: string) {
+    setNeiContextMenu(null);
+    setTouchItemInspection(null);
+    void openRecipeForItem(raw);
+  }
+
+  function openNeiContextUses(raw: string) {
+    setNeiContextMenu(null);
+    setTouchItemInspection(null);
+    void openRecipeUsesForItem(raw);
+  }
+
   function openRecipeFromUses(recipeToOpen: RecipeView) {
     applyRecipe(recipeToOpen, undefined, { rememberCurrent: true });
     setSimilarRecipes(null);
@@ -4635,6 +4709,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const target = event.target instanceof Element ? event.target : null;
       if (!target?.closest('.nei-context-menu')) {
         setNeiContextMenu(null);
+      }
+    }
+    if (touchItemInspection) {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target?.closest('.mobile-item-inspection')) {
+        setTouchItemInspection(null);
       }
     }
     if (draftTemplateContextMenu) {
@@ -5456,6 +5536,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderRecipeBuilderPanel() {
     const gridSize = matrix.length;
     const canSaveActions = Boolean(getValidOutputRaw()) && (canCreateTemplates || canEditRecipes);
+    const heldItemTitle = heldItemRaw ? resolveCellTitle(heldItemRaw) : null;
+    const craftGridOptions = [
+      { value: 2, symbol: '2', label: '2x2' },
+      { value: 3, symbol: '3', label: '3x3' },
+      { value: 9, symbol: '9', label: '9x9' }
+    ];
+    const craftModeOptions: Array<{ value: RecipeCraftMode; symbol: string; label: string; disabled?: boolean }> = [
+      { value: 'shaped', symbol: '■', label: 'Форменный' },
+      { value: 'shapeless', symbol: '◇', label: 'Бесформенный', disabled: gridSize === 9 }
+    ];
+    const craftBindingOptions: Array<{ value: RecipeBindingMode; symbol: string; label: string; disabled?: boolean }> = [
+      { value: 'soft', symbol: '↔', label: 'Свободная', disabled: recipe.recipe_type === 'ct_shapeless' },
+      { value: 'strict', symbol: '⊙', label: 'Точная', disabled: recipe.recipe_type === 'ct_shapeless' }
+    ];
+    const craftStatusSymbols = [
+      { key: 'grid', symbol: String(gridSize), active: true },
+      { key: 'mode', symbol: recipeCraftMode === 'shaped' ? '■' : '◇', active: true },
+      { key: 'binding', symbol: recipe.recipe_type === 'ct_shapeless' ? '×' : recipeBindingMode === 'strict' ? '⊙' : '↔', active: recipe.recipe_type !== 'ct_shapeless' }
+    ];
     return (
       <div className="workspace-panel-shell panel-recipe-builder">
         <Panel
@@ -5505,14 +5604,107 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           </div>
 
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
+          {heldItemRaw ? (
+            <div className="touch-held-item-bar" aria-label="touch-held-item">
+              <span className="touch-held-item-icon" aria-hidden="true">
+                {renderHeldItemIcon(heldItemRaw)}
+              </span>
+              <span className="touch-held-item-text">
+                <strong>{heldItemTitle ?? heldItemRaw}</strong>
+                <code>{heldItemRaw}</code>
+              </span>
+              <button
+                type="button"
+                className="ghost-button touch-held-item-clear"
+                aria-label="clear-held-item"
+                onClick={() => setHeldItemRaw(null)}
+              >
+                x
+              </button>
+            </div>
+          ) : null}
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
               <details className="craft-board-menu" data-close-on-select>
-                <summary aria-label="craft-board-menu">...</summary>
+                <summary aria-label="craft-board-menu">
+                  <span className="craft-board-menu-state" aria-hidden="true">
+                    {craftStatusSymbols.map((item) => (
+                      <span key={item.key} className={`craft-state-symbol ${item.active ? 'is-active' : 'is-inactive'}`}>{item.symbol}</span>
+                    ))}
+                    <span className="craft-state-symbol is-settings">⚙</span>
+                  </span>
+                </summary>
                 <div className="craft-board-menu-popover">
+                  <div className="craft-board-settings" aria-label="craft-board-settings">
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Размер сетки</span>
+                      <div className="craft-board-setting-options">
+                        {craftGridOptions.map((option) => {
+                          const active = gridSize === option.value;
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-grid-${option.value}`}
+                              data-keep-menu-open
+                              onClick={() => setGridSize(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Тип рецепта</span>
+                      <div className="craft-board-setting-options">
+                        {craftModeOptions.map((option) => {
+                          const active = recipeCraftMode === option.value;
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-mode-${option.value}`}
+                              disabled={option.disabled}
+                              data-keep-menu-open
+                              onClick={() => setRecipeCraftMode(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="craft-board-setting-group">
+                      <span className="craft-board-setting-title">Позиция</span>
+                      <div className="craft-board-setting-options">
+                        {craftBindingOptions.map((option) => {
+                          const active = recipeBindingMode === option.value && recipe.recipe_type !== 'ct_shapeless';
+                          return (
+                            <button
+                              key={option.value}
+                              type="button"
+                              className={`craft-setting-option ${active ? 'is-active' : 'is-inactive'}`}
+                              aria-label={`craft-binding-${option.value}`}
+                              disabled={option.disabled}
+                              data-keep-menu-open
+                              onClick={() => setRecipeBindingMode(option.value)}
+                            >
+                              <span className="craft-setting-symbol">{option.symbol}</span>
+                              <span>{option.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
                   <button type="button" className="secondary-button" onClick={() => openCraftEditorModal({ kind: 'output' })} disabled={!canCreateTemplates && !canEditRecipes}>Детальные настройки output</button>
-                  <button type="button" className="secondary-button" onClick={copyCurrentCraftBody}>Скопировать текущее тело крафта</button>
-                  <button type="button" disabled={!craftBodyTemplate || (!canCreateTemplates && !canEditRecipes)} onClick={pasteCraftBody}>Вставить тело крафта</button>
+                  <button type="button" className="secondary-button" aria-label="copy-craft-body" onClick={copyCurrentCraftBody}>Скопировать текущее тело крафта</button>
+                  <button type="button" aria-label="paste-craft-body" disabled={!craftBodyTemplate || (!canCreateTemplates && !canEditRecipes)} onClick={pasteCraftBody}>Вставить тело крафта</button>
                 </div>
               </details>
               <RecipeGrid
@@ -5574,26 +5766,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
                 {outputRaw ? renderItemTooltip(outputRaw) : null}
               </button>
+              <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
+                <button
+                  type="button"
+                  className="craft-nav-arrow"
+                  aria-label="similar-recipe-prev"
+                  disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index <= 0}
+                  onClick={() => changeSimilarRecipe(-1)}
+                >{'<'}</button>
+                <span className="craft-nav-counter">
+                  {similarRecipes ? `${similarRecipes.index + 1}/${similarRecipes.matches.length}` : '1/1'}
+                </span>
+                <button
+                  type="button"
+                  className="craft-nav-arrow"
+                  aria-label="similar-recipe-next"
+                  disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1}
+                  onClick={() => changeSimilarRecipe(1)}
+                >{'>'}</button>
+              </div>
             </div>
-          </div>
-          <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
-            <button
-              type="button"
-              className="craft-nav-arrow"
-              aria-label="similar-recipe-prev"
-              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index <= 0}
-              onClick={() => changeSimilarRecipe(-1)}
-            >◀</button>
-            <span className="craft-nav-counter">
-              {similarRecipes ? `${similarRecipes.index + 1}/${similarRecipes.matches.length}` : '1/1'}
-            </span>
-            <button
-              type="button"
-              className="craft-nav-arrow"
-              aria-label="similar-recipe-next"
-              disabled={!similarRecipes || similarRecipes.matches.length <= 1 || similarRecipes.index >= similarRecipes.matches.length - 1}
-              onClick={() => changeSimilarRecipe(1)}
-            >▶</button>
           </div>
         </Panel>
       </div>
@@ -5776,39 +5968,36 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const title = resolveCellTitle(raw) || raw;
     const availability = getRecipeAvailability(raw);
     return (
-      <button
+      <NeiIconItem
         key={raw}
-        type="button"
-        className={`favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'}`}
-        aria-label={`favorite-item-${raw}`}
-        data-item-raw={raw}
-        draggable
-        onMouseEnter={() => updateHoveredItemRaw(raw)}
-        onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-        onFocus={() => updateHoveredItemRaw(raw)}
-        onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-        onDragStart={(event) => {
-          event.dataTransfer.setData('text/plain', raw);
+        raw={raw}
+        ariaLabelPrefix="favorite-item"
+        className={`nei-item favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+        icon={(
+          <span className="nei-icon favorite-icon" aria-hidden="true">
+            {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
+          </span>
+        )}
+        tooltip={renderItemTooltip(raw)}
+        onHover={(nextRaw) => updateHoveredItemRaw((current) => {
+          if (nextRaw) {
+            return nextRaw;
+          }
+          return current === raw ? null : current;
+        })}
+        onPick={handleNeiItemPick}
+        onOutputPick={(nextRaw) => handleRecipeItemDrop({ kind: 'output' }, nextRaw)}
+        onOpenActions={openNeiItemActions}
+        onInspect={(nextRaw, x, y) => inspectNeiItem(nextRaw, x, y)}
+        onDragStart={(event, nextRaw) => {
+          event.dataTransfer.setData('text/plain', nextRaw);
           event.dataTransfer.effectAllowed = 'copy';
-          setHeldItemRaw(raw);
+          setHeldItemRaw(nextRaw);
         }}
-        onDragEnd={() => {
-          setHeldItemRaw((current) => (current === raw ? null : current));
+        onDragEnd={(nextRaw) => {
+          setHeldItemRaw((current) => (current === nextRaw ? null : current));
         }}
-        onClick={() => handleNeiItemPick(raw)}
-        onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, raw)}
-        onContextMenu={(event) => {
-          event.preventDefault();
-          setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
-        }}
-      >
-        <span className="favorite-icon" aria-hidden="true">
-          {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
-        </span>
-        <span className="favorite-title">{title}</span>
-        <span className="favorite-raw">{raw}</span>
-        {renderItemTooltip(raw)}
-      </button>
+      />
     );
   }
 
@@ -5818,50 +6007,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
     const activeTab = activeNeiFavoriteTab();
     return (
-      <div className="workspace-panel-shell panel-nei-favorites">
-        <Panel title="Избранное NEI" subtitle={`Хоткей: ${neiFavorites.favoriteHotkey || 'A'}`} className="nei-favorites-panel">
-          <div className="favorite-tabs" role="tablist" aria-label="favorite-tabs">
-            {neiFavorites.tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={tab.id === neiFavorites.activeTabId}
-                className={`favorite-tab ${tab.id === neiFavorites.activeTabId ? 'active' : ''}`}
-                onClick={() => setActiveFavoriteTab(tab.id)}
-              >
-                <span>{tab.name}</span>
-                <strong>{tab.items.length}</strong>
-              </button>
-            ))}
-          </div>
-          <label className="field-block">
-            <span>Название вкладки</span>
-            <input aria-label="favorite-active-tab-name" type="text" value={activeTab.name} onChange={(event) => renameActiveFavoriteTab(event.target.value)} />
-          </label>
-          <div className="favorite-tab-actions">
-            <input
-              aria-label="favorite-new-tab-name"
-              type="text"
-              value={newFavoriteTabName}
-              onChange={(event) => setNewFavoriteTabName(event.target.value)}
-              placeholder="Новая вкладка"
-            />
-            <button type="button" className="secondary-button" aria-label="favorite-add-tab" onClick={addFavoriteTab}>Создать</button>
-            <button type="button" className="ghost-button danger-lite-button" aria-label="favorite-delete-tab" disabled={neiFavorites.tabs.length <= 1} onClick={deleteActiveFavoriteTab}>Удалить</button>
-          </div>
-          <div className="favorite-help-line">
-            <span>Наведи на предмет и нажми {neiFavorites.favoriteHotkey || 'A'}</span>
-            <strong>{activeTab.items.length}</strong>
-          </div>
-          <div className="favorite-items" aria-label="nei-favorites-items">
-            {activeTab.items.length ? activeTab.items.map((item) => renderNeiFavoriteItem(item.raw)) : (
-              <div className="favorite-empty">Пока пусто</div>
-            )}
-          </div>
-          {neiFavoritesStatus ? <div className="inline-status inline-status-default">{neiFavoritesStatus}</div> : null}
-        </Panel>
-      </div>
+      <NeiFavoritesPanel
+        profile={neiFavorites}
+        activeTab={activeTab}
+        status={neiFavoritesStatus}
+        hiddenPatternsDraft={neiHiddenPatternsDraft}
+        newTabName={newFavoriteTabName}
+        renderFavoriteItem={renderNeiFavoriteItem}
+        onSelectTab={setActiveFavoriteTab}
+        onRenameActiveTab={renameActiveFavoriteTab}
+        onNewTabNameChange={setNewFavoriteTabName}
+        onAddTab={addFavoriteTab}
+        onDeleteActiveTab={deleteActiveFavoriteTab}
+        onFavoriteHotkeyChange={updateFavoriteHotkey}
+        onHiddenPatternsChange={updateNeiHiddenPatterns}
+      />
     );
   }
 
@@ -5903,56 +6063,89 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 }
                 : undefined;
               return (
-                <button
+                <NeiIconItem
                   key={itemPanelEntryIdentity(entry)}
-                  type="button"
+                  raw={raw}
+                  pickRaw={insertRaw}
+                  ariaLabelPrefix="nei-item"
                   className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${isFavorite ? 'is-favorite' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
-                  aria-label={`nei-item-${raw}`}
-                  data-item-raw={raw}
-                  draggable
-                  onDragStart={(event) => {
-                    event.dataTransfer.setData('text/plain', insertRaw);
-                    event.dataTransfer.effectAllowed = 'copy';
-                    setHeldItemRaw(insertRaw);
-                  }}
-                  onDragEnd={() => {
-                    setHeldItemRaw((current) => (current === insertRaw ? null : current));
-                  }}
-                  onClick={() => handleNeiItemPick(insertRaw)}
-                  onDoubleClick={() => handleRecipeItemDrop({ kind: 'output' }, insertRaw)}
-                  onContextMenu={(event) => {
-                    event.preventDefault();
-                    if (event.ctrlKey) {
+                  icon={(
+                    <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
+                      {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
+                      {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
+                      {!modIconStyle && !atlasStyle && iconUrl ? (
+                        <img
+                          src={iconUrl}
+                          alt=""
+                          onError={() => {
+                            setItemSearchIcons((current) => ({ ...current, [raw]: null }));
+                          }}
+                        />
+                      ) : null}
+                    </span>
+                  )}
+                  tooltip={renderItemTooltip(raw, entry)}
+                  onHover={(nextRaw) => updateHoveredItemRaw((current) => {
+                    if (nextRaw) {
+                      return nextRaw;
+                    }
+                    return current === raw ? null : current;
+                  })}
+                  onPick={handleNeiItemPick}
+                  onOutputPick={(nextRaw) => handleRecipeItemDrop({ kind: 'output' }, nextRaw)}
+                  onOpenActions={(nextRaw, x, y, event) => {
+                    if (event?.ctrlKey) {
                       openCustomItemEditor(raw, 'user', 'local');
                       return;
                     }
-                    setNeiContextMenu({ raw, x: event.clientX, y: event.clientY });
+                    openNeiItemActions(nextRaw, x, y);
+                  }}
+                  onInspect={(nextRaw, x, y) => inspectNeiItem(nextRaw, x, y, entry)}
+                  onDragStart={(event, nextRaw) => {
+                    event.dataTransfer.setData('text/plain', nextRaw);
+                    event.dataTransfer.effectAllowed = 'copy';
+                    setHeldItemRaw(nextRaw);
+                  }}
+                  onDragEnd={(nextRaw) => {
+                    setHeldItemRaw((current) => (current === nextRaw ? null : current));
                   }}
                 >
-                  <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
-                    {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
-                    {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
-                    {!modIconStyle && !atlasStyle && iconUrl ? (
-                      <img
-                        src={iconUrl}
-                        alt=""
-                        onError={() => {
-                          setItemSearchIcons((current) => ({ ...current, [raw]: null }));
-                        }}
-                      />
-                    ) : null}
-                  </span>
                   <span className="nei-name" aria-hidden="true">{entry.displayRu || entry.displayEn || entry.key}</span>
                   <span className="nei-raw" aria-hidden="true">{raw}</span>
-                  {renderItemTooltip(raw, entry)}
                   {customForRaw ? <span className="nei-custom-dot" aria-hidden="true" /> : null}
                   {overrideGroup ? <span className="nei-oredict-dot" aria-hidden="true">⊕</span> : null}
                   {isFavorite ? <span className="nei-favorite-dot" aria-hidden="true">A</span> : null}
-                </button>
+                </NeiIconItem>
               );
             })}
           </div>
         </Panel>
+      </div>
+    );
+  }
+
+  function renderTouchItemInspection() {
+    if (!touchItemInspection) return null;
+    const raw = touchItemInspection.raw;
+    return (
+      <div
+        className="mobile-item-inspection"
+        style={getContextMenuStyle(touchItemInspection.x, touchItemInspection.y, { width: 300, height: 210 })}
+        onMouseDown={(event) => event.stopPropagation()}
+        onPointerDown={(event) => event.stopPropagation()}
+        onContextMenu={(event) => event.preventDefault()}
+      >
+        <div className="mobile-item-inspection-tooltip">
+          {renderItemTooltip(raw, touchItemInspection.entry)}
+        </div>
+        <button
+          type="button"
+          className="mobile-item-inspection-more"
+          aria-label={`touch-item-actions-${raw}`}
+          onClick={() => openNeiItemActions(raw, touchItemInspection.x, touchItemInspection.y)}
+        >
+          ...
+        </button>
       </div>
     );
   }
@@ -5965,18 +6158,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const addedToTask = rawHasTask(raw);
     const taskStatusText = taskLookupStatus === 'loading' ? 'проверяю' : addedToTask ? 'да' : 'нет';
     const templateEnabled = loadTaskDefaultTemplate().enabled;
+    const favoriteRaw = applyItemCaseAlias(raw);
+    const isFavorite = activeFavoriteRawSet.has(favoriteRaw) || activeFavoriteRawSet.has(raw);
     return (
       <div
         className="context-menu nei-context-menu"
-        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 620 : (custom ? 430 : 390) })}
+        style={getContextMenuStyle(neiContextMenu.x, neiContextMenu.y, { width: 340, height: pickerOpen ? 720 : (custom ? 530 : 500) })}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <strong>{raw}</strong>
+        <button type="button" onClick={() => openNeiContextRecipe(raw)}>Посмотреть крафт</button>
+        <button type="button" className="secondary-button" onClick={() => openNeiContextUses(raw)}>Посмотреть где используется</button>
         {canManageTasks ? (
           <div className="context-menu-status">
             <span>Добавлено в задачу</span>
             <strong className={addedToTask ? 'is-yes' : 'is-no'}>{taskStatusText}</strong>
           </div>
+        ) : null}
+        {canUseNeiFavorites ? (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              toggleNeiFavorite(raw);
+              setNeiContextMenu(null);
+            }}
+          >
+            {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+          </button>
         ) : null}
         
         {(() => {
@@ -7533,10 +7742,35 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       uploadedDrafts: uploadedDrafts.map((draft) => ({ id: draft.id, name: draft.name, size: draft.size, lastModified: draft.lastModified })),
       recipeDraftTemplates: recipeDraftTemplates.map((draft) => ({ id: draft.id, outputRaw: draft.outputRaw, name: draft.name, createdByEmail: draft.createdByEmail, updatedAt: draft.updatedAt }))
     };
+    const iconLabSampleRaw = outputRaw || visibleNeiRawItems[0] || '<minecraft:planks>';
+    const iconLabSampleTitle = resolveCellTitle(iconLabSampleRaw) || iconLabSampleRaw;
+    const iconLabUsesOutput = Boolean(outputRaw) && iconLabSampleRaw === outputRaw;
+    const iconLabIconUrl = iconLabUsesOutput ? recipe.output_resolution?.icon_url : itemSearchIcons[iconLabSampleRaw];
+    const iconLabAnimated = iconLabUsesOutput ? recipe.output_resolution?.animated : false;
+    const iconLabFrameTime = iconLabUsesOutput ? recipe.output_resolution?.animation_meta?.frametime : undefined;
 
     switch (debugSection) {
       case 'modIcons':
         return canManageModIcons ? renderModIconsPanel() : <div className="inline-hint inline-hint-warning">Управление иконками доступно только администраторам.</div>;
+      case 'iconSettings':
+        return canManageSettings ? (
+          <IconSettingsPanel
+            profile={iconSettingsProfile}
+            settings={iconSettingsProfile === 'mobile' ? uiPreferences.mobile_icon_surfaces : uiPreferences.icon_surfaces}
+            renderSampleIcon={() => renderCraftItemIcon(iconLabSampleRaw, iconLabIconUrl, iconLabAnimated, iconLabFrameTime, iconLabSampleTitle)}
+            onProfileChange={setIconSettingsProfile}
+            onChange={patchIconSurface}
+            onResetAll={resetIconSurfaces}
+          />
+        ) : <div className="inline-hint inline-hint-warning">Настройки иконок доступны только администраторам.</div>;
+      case 'iconLab':
+        return (
+          <IconScaleLab
+            sampleRaw={iconLabSampleRaw}
+            sampleTitle={iconLabSampleTitle}
+            renderSampleIcon={() => renderCraftItemIcon(iconLabSampleRaw, iconLabIconUrl, iconLabAnimated, iconLabFrameTime, iconLabSampleTitle)}
+          />
+        );
       case 'access':
         return (
           <div className="debug-section-grid">
@@ -8033,6 +8267,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
+      { id: 'iconSettings', label: 'Иконки', description: 'Размеры всех меню', visible: canManageSettings },
+      { id: 'iconLab', label: 'Иконки тест', description: '64 варианта размера', visible: canUseDebug },
       { id: 'access', label: 'Доступ', description: 'Роли и whitelist', visible: canManageRoles },
       { id: 'caseAliases', label: 'Словарь регистра', description: 'Облако → itempanel', visible: canManageModIcons },
       { id: 'oreDictPriority', label: 'OreDict иконки', description: 'Приоритет модов', visible: canManageModIcons },
@@ -8102,16 +8338,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return renderTechnicalWorkspace();
     }
     return (
-      <div className={`workspace-layout workspace-layout-editor workspace-layout-builder workspace-layout-main ${canUseNeiFavorites ? 'has-nei-favorites' : ''}`.trim()}>
-        {canUseNeiFavorites ? <div className="workspace-column workspace-favorites">{renderNeiFavoritesPanel()}</div> : null}
-        <div className="workspace-column workspace-center">
-          {renderRecipeBuilderPanel()}
-          {renderRecipeFilesPanel()}
-        </div>
-        <div className="workspace-column workspace-right">
-          {renderNeiPanel()}
-        </div>
-      </div>
+      <MobileRecipeWorkspace
+        canUseNeiFavorites={canUseNeiFavorites}
+        recipeBuilder={renderRecipeBuilderPanel()}
+        recipeFiles={renderRecipeFilesPanel()}
+        neiPanel={renderNeiPanel()}
+        neiFavoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : undefined}
+      />
     );
   }
 
@@ -8281,16 +8514,37 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
+  const activeServerName = activeServerId
+    ? (serversList.find((server) => server.id === activeServerId)?.name || activeServerId)
+    : null;
+
   return (
     <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown} onContextMenuCapture={handleHeldItemContextMenu}>
       <div className="utility-bar">
+        <MobileAppMenu
+          appName="CubixRecipes"
+          userEmail={authUser.email}
+          userRole={authUser.role}
+          serverName={activeServerName}
+          tabs={workspaceTabs}
+          activeTab={workspaceTab}
+          onSelectTab={(tabId) => setWorkspaceTab(tabId as WorkspaceTab)}
+          onResetServer={onResetServer}
+          language={uiPreferences.language}
+          canManageSettings={canManageSettings}
+          canOpenSettings={canOpenSettings}
+          onLanguageChange={(language) => patchUiPreferences({ language })}
+          onOpenSettings={() => setIsLayoutSettingsOpen(true)}
+          onLogout={onLogout}
+          editorTools={workspaceTab === 'editor' ? renderRecipeFilesPanel() : undefined}
+        />
         <div className="brand-with-server">
           <strong>CubixRecipes</strong>
           {activeServerId && (
             <div className="active-server-chip" title="Активный сервер">
               <span className="server-icon">🖥️</span>
               <span className="server-name-label">
-                {serversList.find(s => s.id === activeServerId)?.name || activeServerId}
+                {activeServerName}
               </span>
               {onResetServer && (
                 <button
@@ -8336,6 +8590,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         </div>
       ) : null}
       {renderHotkeyDebugPanel()}
+      {renderTouchItemInspection()}
       {renderNeiContextMenu()}
       {renderDraftTemplateContextMenu()}
       {renderCloudContextMenu()}
@@ -8370,14 +8625,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </label>
               <label className="field-block">
                 <span>Иконок NEI на страницу</span>
-                <input
+                <select
                   aria-label="nei-page-size"
-                  type="number"
-                  min={16}
-                  max={512}
-                  step={8}
                   value={uiPreferences.nei_page_size}
-                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 128), 16, 512) })}
+                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 32), 16, 512) })}
+                >
+                  {[16, 32, 64, 96, 128, 256, 512].map((size) => (
+                    <option key={size} value={size}>{size}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="switch-field">
+                <span>Общий крафтовый стол между серверами</span>
+                <input
+                  aria-label="shared-craft-draft-enabled"
+                  type="checkbox"
+                  checked={sharedCraftDraftEnabled}
+                  onChange={(event) => setSharedCraftDraftMode(event.target.checked)}
                 />
               </label>
               <section className="settings-section">

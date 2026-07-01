@@ -52,12 +52,16 @@ class UiPreferencesConfig:
     animations_enabled: bool = True
     density_mode: str = 'normal'
     editor_mode: str = 'edit'
+    theme_mode: str = 'dark'
     ui_scale: float = 1.15
+    nei_page_size: int = 32
     language: str = 'ru'
     active_view_tab: str = 'editor'
     reset_layout_version: int = 4
     panel_layout: list[PanelLayoutItemConfig] = field(default_factory=list)
     workspace_layout: WorkspaceLayoutConfig = field(default_factory=WorkspaceLayoutConfig)
+    icon_surfaces: dict[str, dict[str, Any]] = field(default_factory=dict)
+    mobile_icon_surfaces: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -261,13 +265,38 @@ class ProjectConfigService:
             animations_enabled=bool(payload.get('animations_enabled', True)),
             density_mode=str(payload.get('density_mode', 'normal') or 'normal'),
             editor_mode=str(payload.get('editor_mode', 'edit') or 'edit'),
+            theme_mode=str(payload.get('theme_mode', 'dark') or 'dark'),
             ui_scale=float(payload.get('ui_scale', 1.15) or 1.15),
+            nei_page_size=self._clamp_int(payload.get('nei_page_size', 32), 16, 512, 32),
             language=str(payload.get('language', 'ru') or 'ru'),
             active_view_tab=str(payload.get('active_view_tab', 'editor') or 'editor'),
             reset_layout_version=int(payload.get('reset_layout_version', 4) or 4),
             panel_layout=self._coerce_panel_layout(payload.get('panel_layout', DEFAULT_PANEL_LAYOUT)),
             workspace_layout=self._coerce_workspace_layout(payload.get('workspace_layout', DEFAULT_WORKSPACE_LAYOUT)),
+            icon_surfaces=self._coerce_icon_surfaces(payload.get('icon_surfaces', {})),
+            mobile_icon_surfaces=self._coerce_icon_surfaces(payload.get('mobile_icon_surfaces', {})),
         )
+
+    def _coerce_icon_surfaces(self, raw: Any) -> dict[str, dict[str, Any]]:
+        if not isinstance(raw, dict):
+            return {}
+        result: dict[str, dict[str, Any]] = {}
+        for key, value in raw.items():
+            if not isinstance(value, dict):
+                continue
+            surface_id = str(key).strip()
+            if not surface_id:
+                continue
+            mode = str(value.get('mode', 'scale') or 'scale')
+            if mode not in {'grid', 'absolute', 'wrapper', 'scale'}:
+                mode = 'scale'
+            result[surface_id] = {
+                'cell': self._clamp_int(value.get('cell', 34), 8, 160, 34),
+                'icon': self._clamp_int(value.get('icon', 28), 4, 128, 28),
+                'gap': self._clamp_int(value.get('gap', 4), 0, 32, 4),
+                'mode': mode,
+            }
+        return result
 
     def _coerce_workspace_layout(self, raw: Any) -> WorkspaceLayoutConfig:
         payload = raw if isinstance(raw, dict) else {}

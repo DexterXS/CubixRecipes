@@ -29,6 +29,7 @@ class ServerContext:
         name: str,
         global_admin_data_dir: Path,
         global_data_dir: Path,
+        project_root: Path,
         parser: Any,
         log_service: Any,
     ) -> None:
@@ -36,6 +37,7 @@ class ServerContext:
         self.name = name
         self.parser = parser
         self.log_service = log_service
+        self.project_root = project_root
 
         self.admin_data_dir = global_admin_data_dir / "servers" / server_id
         self.admin_data_dir.mkdir(parents=True, exist_ok=True)
@@ -56,22 +58,23 @@ class ServerContext:
         self.asset_index = AssetIndex(log_service=self.log_service)
 
         itempanel_data_dir = self.admin_data_dir / 'itempanel'
-        itempanel_csv_storage_path = itempanel_data_dir / 'itempanel.csv'
-        itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
-        itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
+        self.itempanel_csv_storage_path = itempanel_data_dir / 'itempanel.csv'
+        self.itempanel_snbt_storage_path = itempanel_data_dir / 'itempanel.json'
+        self.itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
+        self.itempanel_icons_dir = self.admin_data_dir / 'itempanel_icons'
         oredict_storage_path = self.admin_data_dir / 'oredict.txt'
 
         self.itempanel_icon_catalog = ItemPanelIconCatalog(
-            itempanel_csv_storage_path,
-            self.admin_data_dir / 'itempanel_icons'
+            self.active_itempanel_csv_path(),
+            self.active_itempanel_icons_dir()
         )
         self.itempanel_icon_catalog.scan()
 
         self.item_catalog_service = ItemCatalogService(
             self.itempanel_icon_catalog.csv_path,
-            itempanel_snbt_storage_path,
+            self.active_itempanel_snbt_path(active_scripts_dir),
             self.itempanel_icon_catalog,
-            merged_csv_path=itempanel_merged_csv_path,
+            merged_csv_path=self.itempanel_merged_csv_path,
             oredict_path=oredict_storage_path,
         )
         self.item_catalog_service.scan()
@@ -102,17 +105,47 @@ class ServerContext:
         if index_paths and not has_catalog_icons:
             self.asset_index.scan_paths(index_paths)
 
+    def active_itempanel_csv_path(self) -> Path:
+        if self.itempanel_csv_storage_path.is_file() or self.itempanel_merged_csv_path.is_file():
+            return self.itempanel_csv_storage_path
+        return self.project_root / 'itempanel.csv'
+
+    def active_itempanel_icons_dir(self) -> Path:
+        if self.itempanel_csv_storage_path.is_file() or self.itempanel_icons_dir.is_dir():
+            return self.itempanel_icons_dir
+        return self.project_root / 'itempanel_icons'
+
+    def active_itempanel_snbt_path(self, current_scripts_dir: str) -> Path:
+        if self.itempanel_snbt_storage_path.is_file():
+            return self.itempanel_snbt_storage_path
+        scripts_path = Path(current_scripts_dir).expanduser().resolve(strict=False)
+        candidates = [
+            scripts_path.parent / 'dumps' / 'itempanel.json',
+            self.project_root / 'dumps' / 'itempanel.json',
+            self.project_root / 'itempanel.json',
+        ]
+        return next((candidate for candidate in candidates if candidate.is_file()), candidates[-1])
+
+    def refresh_itempanel_sources(self, current_scripts_dir: Optional[str] = None) -> None:
+        scripts_dir = current_scripts_dir or self.config.scripts_dir
+        self.itempanel_icon_catalog.csv_path = self.active_itempanel_csv_path()
+        self.itempanel_icon_catalog.icons_dir = self.active_itempanel_icons_dir()
+        self.item_catalog_service.csv_path = self.itempanel_icon_catalog.csv_path
+        self.item_catalog_service.snbt_path = self.active_itempanel_snbt_path(scripts_dir)
+
 
 class ServerManager:
     def __init__(
         self,
         global_admin_data_dir: Path,
         global_data_dir: Path,
+        project_root: Path,
         parser: Any,
         log_service: Any,
     ) -> None:
         self.global_admin_data_dir = global_admin_data_dir
         self.global_data_dir = global_data_dir
+        self.project_root = project_root
         self.parser = parser
         self.log_service = log_service
 
@@ -200,6 +233,7 @@ class ServerManager:
                 name=server_info['name'],
                 global_admin_data_dir=self.global_admin_data_dir,
                 global_data_dir=self.global_data_dir,
+                project_root=self.project_root,
                 parser=self.parser,
                 log_service=self.log_service,
             )

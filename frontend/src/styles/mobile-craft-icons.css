@@ -1,0 +1,45 @@
+@media (hover: none), (pointer: coarse), (max-width: 1024px) {
+  .recipe-builder-grid .cell-icon-slot,
+  .recipe-builder-grid .craft-output-slot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 0;
+  }
+
+  .recipe-builder-grid .cell-icon-slot img,
+  .recipe-builder-grid .cell-icon-slot .animated-icon,
+  .recipe-builder-grid .cell-atlas-icon,
+  .recipe-builder-grid .craft-output-slot img,
+  .recipe-builder-grid .craft-output-slot .animated-icon,
+  .recipe-builder-grid .craft-output-slot .output-atlas-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    max-width: none;
+    max-height: none;
+    transform-origin: center;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+
+  .recipe-builder-grid .cell-icon-slot img,
+  .recipe-builder-grid .cell-icon-slot .animated-icon,
+  .recipe-builder-grid .cell-atlas-icon {
+    transform: translate(-50%, -50%) scale(var(--icon-craft-grid-scale, 1));
+  }
+
+  .recipe-builder-grid .grid-cell.size-9 .cell-icon-slot img,
+  .recipe-builder-grid .grid-cell.size-9 .cell-icon-slot .animated-icon,
+  .recipe-builder-grid .grid-cell.size-9 .cell-atlas-icon {
+    transform: translate(-50%, -50%) scale(var(--icon-craft-grid9-scale, 0.625));
+  }
+
+  .recipe-builder-grid .craft-output-slot img,
+  .recipe-builder-grid .craft-output-slot .animated-icon,
+  .recipe-builder-grid .craft-output-slot .output-atlas-icon {
+    transform: translate(-50%, -50%) scale(var(--icon-craft-output-scale, 1));
+  }
+}

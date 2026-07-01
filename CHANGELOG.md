@@ -2,13 +2,38 @@
 
 ## [Unreleased]
 ### Added
+- Added mobile NEI item context-menu actions for opening an item's recipe and viewing where the item is used from the long-press `...` menu.
+- Added separate desktop and mobile icon-surface profiles, selectable from the admin icon settings panel.
+- Added admin-configurable icon surface settings for NEI, favorites, drafts, craft grids, outputs, tasks, and mobile held/inspection previews, with live previews and shared CSS variables.
+- Added a temporary technical-panel icon scale lab with 64 real-icon variants for comparing small-cell centering and sizing strategies.
+- Added modular NEI/favorites icon-cell UI with browser-style favorite tabs, a `+` tab creator, hidden `...` favorite settings, mobile long-press item inspection, and `...` item actions for NEI/favorites.
+- Added a mobile app drawer with workspace navigation, server switch, language, settings, logout, and editor tools, plus NEI/Favorites tab switching in the recipe workspace.
+- Added a dedicated mobile stylesheet for phone/tablet recipe editing, with touch-sized craft grid/NEI controls, stacked editor/search layout, mobile modal sizing, and a touch-visible selected-item bar for NEI insertion.
+- Extracted recipe matrix helper logic from `App.tsx` into `frontend/src/features/recipe-editor/recipeMatrix.ts` with focused unit coverage.
+- Split the frontend API client from one oversized `services/api.ts` file into domain modules under `frontend/src/services/api/` while preserving the existing `services/api` import path.
+- Added governance rules for file-size limits, repeatable-task script automation, and test-first development, plus reusable `file-size-guard` / `script-automation` skills and `scripts/check_file_sizes.py`.
+- Added `.agents/knowledge_tree.md` as the primary structured project knowledge source, plus a local `knowledge-tree` skill and AGENTS rule requiring future tasks to consult and maintain it.
 - Added multi-server architecture with server selection, creation, renaming, and deletion support. Each server has fully isolated data (scripts, mods, item catalog, oredict, custom items, recipe tasks, draft templates, and favorites) stored under `.cubixrecipes_admin/servers/{server_id}/`.
 - Added automatic backwards-compatible migration of legacy configuration and data files into the default **HiTech** server context on the first run.
 - Added ContextProxy and PathProxy dynamic routing based on the `X-Server-Id` request header to allow backend routes to work seamlessly without modifying their internal logic.
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
+- Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.
+- Fixed mobile craft output atlas icons being cropped by icon-size settings, which could make the real phone view appear offset compared with the mobile icon-settings preview.
+- Reworked the craft-board settings trigger into a compact 2x2 status/settings button so it no longer overlaps the recipe board on mobile.
+- Reduced the mobile 9x9 craft-board footprint so the output side no longer gets clipped on narrow phone screens.
+- Made the mobile editor more compact without shrinking NEI item cells: NEI/Favorites tabs are flatter, the mobile NEI heading is hidden, search is smaller, and recipe navigation stays compact below the craft board.
+- Changed the default NEI page size to 32 items and replaced the manual page-size input with a dropdown of fixed options.
+- Added symbol-coded craft settings inside the craft-board `...` menu for grid size, recipe type, and binding mode, with green active and red inactive states.
+- Applied the selected icon-lab variants: #64 for compact 9x9 craft-grid icons and #52 for 9x9 draft preview icons.
+- Fixed mobile NEI long-press behavior so item text no longer gets selected, touch long-press no longer opens the full action menu accidentally, and item-cell `...` actions are hidden on touch screens while remaining available from the mobile item tooltip.
+- Removed the hardcoded `1.7.10 - 1.12.2` badges from server selection cards.
+- Fixed mobile recipe editor layout issues where header actions squeezed panel titles into vertical text, workspace tabs overlapped, craft board controls left too much empty space, and hover tooltips/held cursor appeared on touch screens.
+- Simplified the mobile editor workspace into a craft-first flow: recipe file tools move into the app drawer, NEI favorites move into a tab next to NEI, the craft board keeps output to the right, and NEI remains below the craft area.
 - Fixed atlas/icon mismatch when switching between different servers by making item catalog and atlas useEffect hooks re-run on server change, appending active server ID as a cache-busting query parameter to image/atlas URLs, and allowing the backend context middleware to resolve server ID from query parameters.
+- Fixed multi-server itempanel fallback and cache isolation: the default server can still read the project root itempanel catalog until a server-specific catalog is uploaded, frontend itempanel/icon caches are scoped by server, project settings rescan no longer calls a removed SNBT helper, and the craft table draft can stay shared across servers through a local setting.
 
 - Added recipe navigation arrows (◀ N/M ▶) at the bottom of the craft board, always visible; arrows are active when multiple recipes exist for the same output, showing 1/1 when there is only one.
 - Fixed cloud file download filename: exposed `Content-Disposition` header via CORS `expose_headers` so the browser now receives and uses the actual filename from the server instead of falling back to `download.zs`.

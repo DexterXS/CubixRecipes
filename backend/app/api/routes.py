@@ -298,7 +298,8 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     # Initialize ServerManager
     log_service = DebugLogService(verbose=False)
     from app.services.server_manager import ServerManager
-    server_manager = ServerManager(admin_data_dir, runtime_data_dir_base, parser, log_service)
+    project_root = _project_root_for_catalog(config_service_base)
+    server_manager = ServerManager(admin_data_dir, runtime_data_dir_base, project_root, parser, log_service)
     
     def _current_context() -> Any:
         req = active_request.get()
@@ -332,7 +333,6 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_merged_csv_path = PathProxy(lambda: _current_context().admin_data_dir / 'itempanel' / 'itempanel_merged.csv')
     runtime_data_dir = PathProxy(lambda: _current_context().runtime_data_dir)
     
-    project_root = _project_root_for_catalog(config_service_base)
     itempanel_csv_path = PathProxy(lambda: itempanel_csv_storage_path if itempanel_csv_storage_path.is_file() else project_root / 'itempanel.csv')
 
     # Enable verbose log service logging if active server config dictates it
@@ -1239,8 +1239,8 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         log_service.set_verbose(updated.verbose_debug_logging)
         storage.scripts_dir = Path(updated.scripts_dir)
         storage.scan(extra_paths=config_service.build_extra_recipe_scan_paths(updated))
+        _current_context().refresh_itempanel_sources(updated.scripts_dir)
         itempanel_icon_catalog.scan()
-        item_catalog_service.snbt_path = _active_itempanel_snbt_path(updated.scripts_dir)
         item_catalog_service.scan()
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)

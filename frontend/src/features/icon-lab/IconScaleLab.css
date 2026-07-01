@@ -1,0 +1,122 @@
+.icon-scale-lab {
+  display: grid;
+  gap: 12px;
+}
+
+.icon-lab-sample {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--field-bg) 82%, transparent);
+}
+
+.icon-lab-sample code {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.icon-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 10px;
+}
+
+.icon-lab-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 74%, var(--field-bg));
+}
+
+.icon-lab-preview {
+  width: var(--lab-cell);
+  height: var(--lab-cell);
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #333;
+  border-top-color: #eeeeee;
+  border-left-color: #eeeeee;
+  border-right-color: #4a4a4a;
+  border-bottom-color: #4a4a4a;
+  background: #8f8f8f;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, .28), inset 2px 2px 0 rgba(255, 255, 255, .28);
+}
+
+.icon-lab-content {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.icon-lab-content > img,
+.icon-lab-content > .animated-icon,
+.icon-lab-content > .cell-atlas-icon,
+.icon-lab-content > .output-atlas-icon {
+  width: var(--lab-icon) !important;
+  height: var(--lab-icon) !important;
+  max-width: none !important;
+  max-height: none !important;
+  transform: none !important;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.icon-lab-mode-absolute .icon-lab-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+.icon-lab-mode-wrapper .icon-lab-content {
+  width: calc(var(--lab-icon) + 2px);
+  height: calc(var(--lab-icon) + 2px);
+  padding: 1px;
+  overflow: hidden;
+}
+
+.icon-lab-mode-scale .icon-lab-content {
+  width: 32px;
+  height: 32px;
+  transform: scale(var(--lab-scale));
+  transform-origin: center;
+}
+
+.icon-lab-mode-scale .icon-lab-content > img,
+.icon-lab-mode-scale .icon-lab-content > .animated-icon,
+.icon-lab-mode-scale .icon-lab-content > .cell-atlas-icon,
+.icon-lab-mode-scale .icon-lab-content > .output-atlas-icon {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.icon-lab-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.icon-lab-meta span,
+.icon-lab-meta code {
+  color: var(--muted);
+}
+
+.icon-lab-meta code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

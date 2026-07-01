@@ -59,6 +59,12 @@ For very small tasks (e.g. rename button, change text):
 
 ## Development Workflow
 
+### Project Knowledge Tree
+- `.agents/knowledge_tree.md` is the primary structured source for project architecture, module ownership, API/file dependencies, runtime data, and feature-to-file mapping.
+- Before each new task, consult `.agents/knowledge_tree.md`, identify the minimal affected files, and open only those files unless a full rebuild is explicitly requested.
+- Update `.agents/knowledge_tree.md` after changes to affected functionality, module links, APIs, data files, or ownership boundaries.
+- Rebuild the whole tree only when the user explicitly says: "Перестрой дерево знаний полностью".
+
 ### Local Site Verification
 - Never start frontend dev servers, open localhost, or verify CubixRecipes as a local website unless the user explicitly asks for that in the current task.
 
@@ -76,7 +82,7 @@ For very small tasks (e.g. rename button, change text):
 3. Update `CHANGELOG.md`.
 4. Update `AGENTS.md` if a new durable rule is discovered.
 5. Update or create a skill if the workflow changed.
-6. After every completed task, commit and push the finished changes directly to the GitHub `main` branch unless the user explicitly says not to push or asks for another branch/PR flow.
+6. After every completed task, commit and push the finished changes directly to the GitHub `test` branch unless the user explicitly says not to push or asks for another branch/PR flow; `main` is updated manually by the user after testing.
 
 ---
 
@@ -157,6 +163,40 @@ If something does not work:
 - Measure before and after significant optimization work.
 - Prefer incremental scans, caches with invalidation, and bounded debug payloads over repeated full recomputation.
 - Heavy startup work must be lazy, cached, or explicitly tracked as a startup cost.
+
+---
+
+## File Size and Module Rules
+
+### File Size Limits
+- Target application file size: 300 lines or less.
+- Warning zone: 300-400 lines. New code is allowed only when the file still has a clear single responsibility.
+- Split zone: 400-500 lines. Before adding new logic, check whether the touched concern should move into a module folder.
+- Hard limit: 500 lines for normal application code.
+- If a file is already over 500 lines, do not add new feature logic directly to it. First extract the touched concern into a focused module, hook, service, router, or utility with a clear owner.
+- Generated files, data files, and fixture-heavy tests may exceed the limit only when documented by the task. Large tests should still be split when practical.
+
+### Large File Change Rule
+- When a requested change touches a file that is already over 500 lines, keep the edit to the smallest safe behavior change.
+- If the change adds a new workflow, state, route group, service method family, or UI section, create or extend the appropriate module folder instead of growing the large file.
+- Do not split by arbitrary line count. Split by ownership, feature boundary, or layer responsibility.
+- After extracting a concern, update `.agents/knowledge_tree.md` so future agents know the new owner.
+
+### Script Automation Rule
+- If a task is repeated 3-4 times, or can be reliably expressed as deterministic steps, create a reusable script for it.
+- Do not keep spending agent time on repeatable manual work when a script can own the task.
+- Before manually repeating a workflow, check existing scripts and `.agents/knowledge_tree.md`.
+- Scripts must live in an appropriate project folder such as `scripts/`, `backend/scripts/`, `frontend/scripts/`, or `.agents/scripts/` depending on ownership.
+- Every script must have a clear purpose, safe defaults, readable output, validation, and error handling.
+- After creating or changing a script, test it with the smallest focused test or dry-run that proves the behavior.
+- Future agents must use the script for the repeated task once it exists, then verify the result through tests or a dry-run.
+
+### Test-First Development Rule
+- Prefer writing the test or contract check before implementing new behavior when the expected result can be described clearly.
+- Use test-first especially for parsers, storage behavior, API response contracts, services, data migrations, deterministic scripts, and bug fixes.
+- A valid test-first loop is: write a focused failing test, implement the smallest code that passes it, then refactor only if needed and approved by scope.
+- For UI-only copy/style changes, a pre-existing visual or component test is enough when a new test would add little value.
+- Do not fake tests around implementation details. Tests must describe observable behavior, API shape, file output, or a stable module contract.
 
 ---
 
