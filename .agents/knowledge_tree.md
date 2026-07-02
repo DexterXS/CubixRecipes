@@ -377,6 +377,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/DiagnosticsRuntimePanel.tsx`
   - Owns the technical-panel runtime section presentation for UI state, backend/loading state, and computed action availability.
   - Receives runtime values from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsOverviewPanel.tsx`
+  - Owns the technical-panel overview section presentation for status, current recipe diagnostics, and quick debug values.
+  - Receives computed status and recipe state from `pages/App.tsx`.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -456,6 +459,7 @@ Last full rebuild: 2026-06-29
 - Debug event list behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics logs panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics runtime panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics overview panel behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

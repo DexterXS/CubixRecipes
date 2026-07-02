@@ -21,6 +21,7 @@ import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWor
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
 import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
+import { DiagnosticsOverviewPanel } from '../features/diagnostics/DiagnosticsOverviewPanel';
 import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRuntimePanel';
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
@@ -7846,38 +7847,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return <pre className="raw-block debug-raw-block">{JSON.stringify(rawPayload, null, 2)}</pre>;
       default:
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Статус</h3>
-                <span>{status}</span>
-              </div>
-              <StatusBar items={statusItems} />
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Диагностика</h3>
-                <span>Краткая проверка текущего рецепта.</span>
-              </div>
-              <ul className="diagnostics-list">
-                <li>Unresolved cells: {unresolvedCells}</li>
-                <li>Output icon: {recipe.output_resolution?.icon_url ?? 'not found'}</li>
-                <li>Current file: {recipe.source.path ?? 'unsaved'}</li>
-              </ul>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Быстрый debug</h3>
-                <span>Последние ключевые состояния.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Последний API</span><strong>{lastApiStatus}</strong></div>
-                <div><span>Parse result</span><strong>{lastParseResult}</strong></div>
-                <div><span>Иконка output</span><strong>{recipe.output_resolution?.icon_url ? 'найдена' : 'нет'}</strong></div>
-                <div><span>Debug</span><strong>{isHotkeyDebugActive ? 'включен' : 'выключен'}</strong></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsOverviewPanel
+            status={status}
+            statusItems={statusItems}
+            unresolvedCells={unresolvedCells}
+            outputIconUrl={recipe.output_resolution?.icon_url}
+            sourcePath={recipe.source.path}
+            lastApiStatus={lastApiStatus}
+            lastParseResult={lastParseResult}
+            debugActive={isHotkeyDebugActive}
+          />
         );
     }
   }

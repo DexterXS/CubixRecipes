@@ -75,6 +75,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel runtime section out of `App.tsx`, including UI state, backend/loading state, and computed action availability.
   - Kept the runtime value calculation in `App.tsx` so this remains a presentation-only extraction.
   - Why this shape: runtime status is a bounded diagnostics section and does not need recipe editor ownership.
+- Created `frontend/src/features/diagnostics/DiagnosticsOverviewPanel.tsx`.
+  - Moved the technical-panel overview section out of `App.tsx`, including status, recipe diagnostics, and quick debug values.
+  - Kept all status and recipe value calculation in `App.tsx` so this remains a presentation-only extraction.
+  - Why this shape: the default technical-panel overview is a bounded diagnostics presentation concern and can move without changing recipe/editor state.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.

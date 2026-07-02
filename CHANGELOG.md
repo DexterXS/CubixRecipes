@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a diagnostics overview panel component, moving the technical-panel status/quick-debug overview out of the main app page shell.
 - Added a diagnostics runtime panel component, moving the technical-panel runtime/status section out of the main app page shell.
 - Added a diagnostics logs panel component, moving the technical-panel logs section and its filter UI out of the main app page shell.
 - Added a diagnostics debug-events list component and moved debug event rendering/types out of the main app page shell.
