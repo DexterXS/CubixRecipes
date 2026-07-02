@@ -364,6 +364,11 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/icon-lab/IconScaleLab.css`
   - Scoped presentation for the icon lab preview grid and per-variant scaling/centering modes.
 
+### Diagnostics Feature
+- `frontend/src/features/diagnostics/TechnicalPanelShell.tsx`
+  - Owns the technical panel shell, sidebar navigation, diagnostics section IDs, visible section rendering, and wipe-update sidebar action.
+  - Receives active section state and rendered section content from `pages/App.tsx`; section content still lives in the page shell until later diagnostics splits.
+
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
   - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, held item, and mobile inspection.
@@ -438,6 +443,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/app/workspaceNavigation.test.ts`: app-shell workspace tab map, labels, and permission filtering.
 - Global settings modal behavior is covered through `frontend/src/App.test.tsx`.
+- Technical panel shell/sidebar behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

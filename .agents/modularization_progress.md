@@ -59,11 +59,15 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the global settings modal UI for UI scale, NEI page size, shared draft mode, hotkey debug filters, and NEI favorite/filter preferences out of `App.tsx`.
   - Kept state and persistence callbacks in `App.tsx` so this extraction changes ownership without changing behavior.
   - Why this shape: settings presentation is a settings feature concern, while persistence still depends on broader app state until a later settings-state split.
+- Created `frontend/src/features/diagnostics/TechnicalPanelShell.tsx`.
+  - Moved the technical panel shell, sidebar navigation, section ID contract, and wipe-update sidebar action out of `App.tsx`.
+  - Kept the actual debug/admin section content in `App.tsx` for this slice so behavior and data dependencies remain unchanged.
+  - Why this shape: diagnostics navigation is a stable shell boundary and can move before splitting individual debug sections.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
 - Continue splitting settings into a dedicated settings hub, with contextual shortcuts from recipes/items only.
-- Split the technical panel into diagnostics/admin modules instead of keeping all debug sections in the page shell.
+- Continue splitting the technical panel into diagnostics/admin modules instead of keeping all debug sections in the page shell.
 - Split item/NEI/catalog workflows into an items feature area separate from recipe editing.
 - Split recipe-editor/NEI UI rendering from `frontend/src/pages/App.tsx` once the mobile behavior stabilizes.
 - Split large frontend tests/styles by feature once the related application modules exist.

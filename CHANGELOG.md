@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a dedicated diagnostics technical-panel shell component, moving sidebar section navigation and the wipe-update action out of the main app page shell.
 - Added a dedicated settings feature component for the global settings modal, moving UI/debug/NEI preference presentation out of the main app page shell.
 - Added an app-shell navigation boundary with product-oriented workspace labels, a reusable desktop workspace nav component, and a dedicated active-server chip outside the recipe page shell.
 - Added mobile NEI item context-menu actions for opening an item's recipe and viewing where the item is used from the long-press `...` menu.

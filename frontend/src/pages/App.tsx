@@ -19,6 +19,7 @@ import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
+import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
@@ -326,7 +327,7 @@ type HotkeyDebugEvent = {
 };
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = DiagnosticsSectionId;
 type IconSettingsProfile = 'desktop' | 'mobile';
 
 function initialIconSettingsProfile(): IconSettingsProfile {
@@ -8267,7 +8268,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderTechnicalWorkspace() {
-    const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
+    const sections: TechnicalPanelSection[] = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
       { id: 'iconSettings', label: 'Иконки', description: 'Размеры всех меню', visible: canManageSettings },
@@ -8283,32 +8284,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     ];
 
     return (
-      <div className="debug-shell" aria-label="debug-workspace">
-        <aside className="debug-sidebar" aria-label="debug-navigation">
-          <strong>Техническая панель</strong>
-          {sections.filter((section) => section.visible).map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              className={`debug-nav-button ${debugSection === section.id ? 'active' : ''}`.trim()}
-              aria-label={`debug-section-${section.id}`}
-              onClick={() => setDebugSection(section.id)}
-            >
-              <span>{section.label}</span>
-              <small>{section.description}</small>
-            </button>
-          ))}
-          {canManageModIcons ? (
-            <button type="button" className="debug-nav-button debug-nav-action" aria-label="Обновление вайпа" onClick={() => setIsWipeUpdateOpen(true)}>
-              <span>Обновление вайпа</span>
-              <small>CSV, SNBT, атласы</small>
-            </button>
-          ) : null}
-        </aside>
-        <section className="debug-content">
-          {renderDebugSectionContent()}
-        </section>
-      </div>
+      <TechnicalPanelShell
+        title="Техническая панель"
+        sections={sections}
+        activeSection={debugSection}
+        wipeUpdateVisible={canManageModIcons}
+        wipeUpdateLabel="Обновление вайпа"
+        wipeUpdateDescription="CSV, SNBT, атласы"
+        onSelectSection={setDebugSection}
+        onOpenWipeUpdate={() => setIsWipeUpdateOpen(true)}
+      >
+        {renderDebugSectionContent()}
+      </TechnicalPanelShell>
     );
   }
 
