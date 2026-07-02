@@ -71,6 +71,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the full technical-panel logs section out of `App.tsx`, including filter toggles, level toggles, event count, and debug event list composition.
   - Kept debug filter state and update callbacks in `App.tsx` for now because they are shared with the settings modal.
   - Why this shape: logs are the smallest complete diagnostics section and prove the section-content extraction pattern.
+- Created `frontend/src/features/diagnostics/DiagnosticsRuntimePanel.tsx`.
+  - Moved the technical-panel runtime section out of `App.tsx`, including UI state, backend/loading state, and computed action availability.
+  - Kept the runtime value calculation in `App.tsx` so this remains a presentation-only extraction.
+  - Why this shape: runtime status is a bounded diagnostics section and does not need recipe editor ownership.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.

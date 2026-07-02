@@ -374,6 +374,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/DiagnosticsLogsPanel.tsx`
   - Owns the technical-panel logs section presentation: category filters, level filters, event count, and `DebugEventsList` composition.
   - Receives debug filter state and callbacks from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsRuntimePanel.tsx`
+  - Owns the technical-panel runtime section presentation for UI state, backend/loading state, and computed action availability.
+  - Receives runtime values from `pages/App.tsx`.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -452,6 +455,7 @@ Last full rebuild: 2026-06-29
 - Technical panel shell/sidebar behavior is covered through `frontend/src/App.test.tsx`.
 - Debug event list behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics logs panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics runtime panel behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

@@ -21,6 +21,7 @@ import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWor
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
 import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
+import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRuntimePanel';
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
@@ -7810,50 +7811,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         );
       case 'runtime':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Интерфейс</h3>
-                <span>Текущие режимы и выбранные состояния.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Вкладка</span><strong>{workspaceTab}</strong></div>
-                <div><span>Тема</span><strong>{uiPreferences.theme_mode}</strong></div>
-                <div><span>Масштаб</span><strong>{Math.round(uiPreferences.ui_scale * 100)}%</strong></div>
-                <div><span>Режим редактора</span><strong>{uiPreferences.editor_mode}</strong></div>
-                <div><span>В мышке</span><strong>{heldItemRaw ?? 'нет'}</strong></div>
-                <div><span>Под курсором</span><strong>{hoveredItemRaw ?? 'нет'}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Загрузки</h3>
-                <span>API, облако, иконки и локальные данные.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Backend</span><strong>{backendAvailable ? 'online' : 'unavailable'}</strong></div>
-                <div><span>API</span><strong>{lastApiStatus}</strong></div>
-                <div><span>Texture loader</span><strong>{textureLoadState}</strong></div>
-                <div><span>Texture mods</span><strong>{selectedTextureCount}/{itemPanelModSummaries.length}</strong></div>
-                <div><span>Cloud</span><strong>{cloudStatus || 'idle'}</strong></div>
-                <div><span>Шаблонов</span><strong>{recipeDraftTemplates.length}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Кнопки</h3>
-                <span>Вычисленные состояния основных действий.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Save local</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Save cloud</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Save draft</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Clear</span><strong>{canCreateTemplates || canEditRecipes ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Back</span><strong>{recipeBackHistory.length ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Forward</span><strong>{recipeForwardHistory.length ? 'enabled' : 'disabled'}</strong></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsRuntimePanel
+            workspaceTab={workspaceTab}
+            uiPreferences={uiPreferences}
+            heldItemRaw={heldItemRaw}
+            hoveredItemRaw={hoveredItemRaw}
+            backendAvailable={backendAvailable}
+            lastApiStatus={lastApiStatus}
+            textureLoadState={textureLoadState}
+            selectedTextureCount={selectedTextureCount}
+            totalTextureModCount={itemPanelModSummaries.length}
+            cloudStatus={cloudStatus}
+            recipeDraftTemplateCount={recipeDraftTemplates.length}
+            canSaveActions={canSaveActions}
+            canClear={canCreateTemplates || canEditRecipes}
+            canGoBack={recipeBackHistory.length > 0}
+            canGoForward={recipeForwardHistory.length > 0}
+          />
         );
       case 'logs':
         return (
