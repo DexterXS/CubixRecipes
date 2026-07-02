@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AppWorkspaceNav } from '../app/AppWorkspaceNav';
 import { ServerContextChip } from '../app/ServerContextChip';
 import { buildWorkspaceNavigation, type WorkspaceTab } from '../app/workspaceNavigation';
@@ -15,6 +15,7 @@ import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
+import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
@@ -7981,154 +7982,27 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderModReplacementPanel() {
     return (
-      <div className="workspace-layout workspace-layout-admin" style={{ display: 'flex', gap: '16px', height: 'calc(100vh - 120px)' }}>
-        <div className="workspace-column workspace-left" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <Panel title={uiPreferences.language === 'ru' ? 'Замена модификации' : 'Mod Replacement'} subtitle={uiPreferences.language === 'ru' ? 'Позволяет массово заменить все предметы выбранного мода на новые аналоги в рецептах' : 'Allows bulk replacing all items of the selected mod with new counterparts in recipes'}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ marginBottom: '16px' }}>
-                <label className="field-block">
-                  <span>{uiPreferences.language === 'ru' ? 'Выберите модификацию для замены:' : 'Select modification to replace:'}</span>
-                  <select
-                    value={selectedReplacementMod}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setSelectedReplacementMod(val);
-                      void handleScanReplacement(val);
-                    }}
-                    style={{ width: '100%', padding: '8px', background: 'var(--surface-sunken)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '4px' }}
-                  >
-                    <option value="">-- {uiPreferences.language === 'ru' ? 'Выберите мод' : 'Select mod'} --</option>
-                    {itemPanelModSummaries.map((mod) => (
-                      <option key={mod.modid} value={mod.modid}>
-                        {mod.modid} ({mod.itemCount} {uiPreferences.language === 'ru' ? 'предм.' : 'items'})
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              {replacementStatus ? (
-                <div className="inline-status inline-status-default" style={{ marginBottom: '16px' }}>
-                  <span>{replacementStatus}</span>
-                </div>
-              ) : null}
-
-              <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--border-subtle)', borderRadius: '4px', background: 'var(--surface-sunken)', minHeight: '300px' }}>
-                {scannedReplacementItems.length === 0 ? (
-                  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {selectedReplacementMod ? (uiPreferences.language === 'ru' ? 'Нет предметов этого мода в рецептах.' : 'No items of this mod found in recipes.') : (uiPreferences.language === 'ru' ? 'Выберите мод для сканирования.' : 'Select a mod to scan.')}
-                  </div>
-                ) : (
-                  <table className="case-alias-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>
-                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Оригинальный предмет' : 'Original Item'}</th>
-                        <th style={{ padding: '8px', width: '40px', textAlign: 'center' }}></th>
-                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Новый предмет (замена)' : 'New Item (replacement)'}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {scannedReplacementItems.map((item) => {
-                        const mapped = replacementMappings[item.raw] || '';
-                        
-                        const handleSlotClick = () => {
-                          if (heldItemRaw) {
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: heldItemRaw }));
-                            setHeldItemRaw(null);
-                          } else if (mapped) {
-                            setHeldItemRaw(mapped);
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
-                          }
-                        };
-
-                        const handleSlotContextMenu = (e: MouseEvent) => {
-                          e.preventDefault();
-                          setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
-                        };
-
-                        const handleSlotDrop = (e: DragEvent) => {
-                          e.preventDefault();
-                          const value = e.dataTransfer.getData('text/plain');
-                          if (value) {
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: value }));
-                          }
-                        };
-
-                        return (
-                          <tr key={item.raw} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span className="output-icon-slot" style={{ display: 'inline-flex', padding: 0, border: 'none', background: 'transparent' }}>
-                                  {renderCraftItemIcon(item.raw, item.icon_url, item.animated, 1, item.display_name || item.raw)}
-                                </span>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                  <strong>{item.display_name || item.raw}</strong>
-                                  <code style={{ fontSize: '11px', opacity: 0.7 }}>{item.raw}</code>
-                                </div>
-                              </div>
-                            </td>
-                            <td style={{ padding: '8px', textAlign: 'center', verticalAlign: 'middle', fontSize: '18px', color: 'var(--text-muted)' }}>
-                              →
-                            </td>
-                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
-                              <div 
-                                className={`output-icon-slot ${mapped ? 'has-item' : 'is-empty-placeholder'}`}
-                                style={{ 
-                                  display: 'inline-flex', 
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'pointer', 
-                                  border: mapped ? '1px solid var(--border-subtle)' : '2px dashed var(--border-subtle)',
-                                  borderRadius: '4px',
-                                  background: mapped ? 'var(--surface-sunken)' : 'transparent',
-                                  padding: '4px',
-                                  minWidth: '34px',
-                                  minHeight: '34px',
-                                  verticalAlign: 'middle',
-                                  userSelect: 'none'
-                                }}
-                                onClick={handleSlotClick}
-                                onContextMenu={(e) => handleSlotContextMenu(e as any)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleSlotDrop(e as any)}
-                                title={mapped ? (uiPreferences.language === 'ru' ? 'Нажмите чтобы взять, правый клик чтобы очистить' : 'Click to pick up, right-click to clear') : (uiPreferences.language === 'ru' ? 'Положите предмет из NEI сюда' : 'Drop item from NEI here')}
-                              >
-                                {mapped ? (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {renderCraftItemIcon(mapped, getCachedItemIconUrl(mapped), false, 1, resolveCellTitle(mapped))}
-                                    <span style={{ fontSize: '13px' }}>{resolveCellTitle(mapped) || mapped}</span>
-                                  </div>
-                                ) : (
-                                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{uiPreferences.language === 'ru' ? 'Пусто' : 'Empty'}</span>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-
-              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  className="primary-button"
-                  disabled={replacementLoading || scannedReplacementItems.length === 0}
-                  onClick={() => void handleReplaceModItems()}
-                  style={{ padding: '10px 20px', fontWeight: 'bold' }}
-                >
-                  {replacementLoading ? (uiPreferences.language === 'ru' ? 'Замена...' : 'Replacing...') : (uiPreferences.language === 'ru' ? 'Заменить все предметы в рецептах' : 'Replace all items in recipes')}
-                </button>
-              </div>
-            </div>
-          </Panel>
-        </div>
-        <div className="workspace-column workspace-right" style={{ width: '380px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          {renderNeiPanel()}
-        </div>
-      </div>
+      <ModReplacementPanel
+        language={uiPreferences.language}
+        mods={itemPanelModSummaries}
+        selectedMod={selectedReplacementMod}
+        items={scannedReplacementItems}
+        mappings={replacementMappings}
+        loading={replacementLoading}
+        status={replacementStatus}
+        heldItemRaw={heldItemRaw}
+        neiPanel={renderNeiPanel()}
+        renderItemIcon={renderCraftItemIcon}
+        resolveItemTitle={resolveCellTitle}
+        getCachedItemIconUrl={getCachedItemIconUrl}
+        onSelectedModChange={(modid) => {
+          setSelectedReplacementMod(modid);
+          void handleScanReplacement(modid);
+        }}
+        onMappingChange={(raw, mapped) => setReplacementMappings((current) => ({ ...current, [raw]: mapped }))}
+        onHeldItemChange={setHeldItemRaw}
+        onReplace={() => void handleReplaceModItems()}
+      />
     );
   }
 

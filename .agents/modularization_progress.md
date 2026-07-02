@@ -87,6 +87,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel access section layout out of `App.tsx`, including personnel, whitelist, and static role-permission reference blocks.
   - Kept role-management and whitelist forms in `App.tsx` for now and passed them as rendered content.
   - Why this shape: access layout is diagnostics presentation, while role and whitelist behavior still depend on wider app/admin state.
+- Created `frontend/src/features/diagnostics/ModReplacementPanel.tsx`.
+  - Moved the technical-panel mod replacement UI out of `App.tsx`, including source mod selection, replacement mapping table, slot click/drop interactions, replace button, and NEI picker column.
+  - Kept scan/replace API orchestration and recipe/item icon lookup in `App.tsx` for now and passed those values/callbacks into the panel.
+  - Why this shape: the panel is a complete diagnostics/admin workflow surface and removes more than 100 lines from the page shell without changing persistence or backend behavior.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.

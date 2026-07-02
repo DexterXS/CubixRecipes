@@ -386,6 +386,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/DiagnosticsAccessPanel.tsx`
   - Owns the technical-panel access section layout for personnel roles, whitelist, and static role permission reference.
   - Receives role-management and whitelist content from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/ModReplacementPanel.tsx`
+  - Owns the technical-panel mod replacement UI for choosing a source mod, mapping recipe items to replacements, and embedding the NEI picker column.
+  - Receives scan/replace state, item icon renderers, and callbacks from `pages/App.tsx`; scanning and persistence remain in the page shell until a later state/service split.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -468,6 +471,7 @@ Last full rebuild: 2026-06-29
 - Diagnostics overview panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics recipe panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics access panel behavior is covered through `frontend/src/App.test.tsx`.
+- Mod replacement technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.
