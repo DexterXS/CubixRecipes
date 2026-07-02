@@ -20,7 +20,8 @@ import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputVa
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
-import { DebugEventsList, type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
+import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
+import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
@@ -7856,41 +7857,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         );
       case 'logs':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Фильтры вывода</h3>
-                <span>Эти же настройки доступны в модальном окне настроек.</span>
-              </div>
-              <div className="debug-filter-grid">
-                {Object.entries(debugCategoryLabels).map(([category, label]) => (
-                  <label key={category} className="view-toggle">
-                    <input type="checkbox" checked={debugFilters[category as DebugCategory]} onChange={(event) => toggleDebugFilter(category as DebugCategory, event.target.checked)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="debug-filter-grid">
-                {Object.entries(debugLevelLabels).map(([level, label]) => (
-                  <label key={level} className="view-toggle">
-                    <input type="checkbox" checked={debugLevelFilters[level as HotkeyDebugLevel]} onChange={(event) => toggleDebugLevel(level as HotkeyDebugLevel, event.target.checked)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Лента событий</h3>
-                <span>{isHotkeyDebugActive ? `Событий: ${hotkeyDebugEvents.length}` : 'Debug выключен в настройках.'}</span>
-              </div>
-              <DebugEventsList
-                events={hotkeyDebugEvents}
-                categoryLabels={debugCategoryLabels}
-                emptyMessage="Debug включен, но событий пока нет. Выполни действие в интерфейсе, чтобы оно появилось здесь."
-              />
-            </section>
-          </div>
+          <DiagnosticsLogsPanel
+            events={hotkeyDebugEvents}
+            categoryLabels={debugCategoryLabels}
+            levelLabels={debugLevelLabels}
+            categoryFilters={debugFilters}
+            levelFilters={debugLevelFilters}
+            debugActive={isHotkeyDebugActive}
+            onCategoryFilterChange={toggleDebugFilter}
+            onLevelFilterChange={toggleDebugLevel}
+          />
         );
       case 'raw':
         return <pre className="raw-block debug-raw-block">{JSON.stringify(rawPayload, null, 2)}</pre>;

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a diagnostics logs panel component, moving the technical-panel logs section and its filter UI out of the main app page shell.
 - Added a diagnostics debug-events list component and moved debug event rendering/types out of the main app page shell.
 - Added a dedicated diagnostics technical-panel shell component, moving sidebar section navigation and the wipe-update action out of the main app page shell.
 - Added a dedicated settings feature component for the global settings modal, moving UI/debug/NEI preference presentation out of the main app page shell.
