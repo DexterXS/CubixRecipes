@@ -22,6 +22,7 @@ import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWid
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
 import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
 import { DiagnosticsOverviewPanel } from '../features/diagnostics/DiagnosticsOverviewPanel';
+import { DiagnosticsRecipePanel } from '../features/diagnostics/DiagnosticsRecipePanel';
 import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRuntimePanel';
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
@@ -7780,35 +7781,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return renderModReplacementPanel();
       case 'recipe':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Рецепт</h3>
-                <span>Состояние текущей сетки и результата.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Тип</span><strong>{recipe.recipe_type}</strong></div>
-                <div><span>Позиция</span><strong>{recipeBindingMode}</strong></div>
-                <div><span>Размер</span><strong>{summary}</strong></div>
-                <div><span>Заполнено</span><strong>{filledCells}</strong></div>
-                <div><span>Пусто</span><strong>{nullCells}</strong></div>
-                <div><span>Проблемных ячеек</span><strong>{unresolvedCells}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Output</h3>
-                <span>{outputDisplayName ?? outputRaw}</span>
-              </div>
-              <div className="recipe-uses-output">
-                <span className="output-icon-slot">{renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}</span>
-                <div>
-                  <strong>{outputRaw}</strong>
-                  <span>{recipe.output_resolution?.icon_url ? 'Иконка найдена' : 'Иконка не найдена'}</span>
-                </div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsRecipePanel
+            recipeType={recipe.recipe_type}
+            bindingMode={recipeBindingMode}
+            summary={summary}
+            filledCells={filledCells}
+            nullCells={nullCells}
+            unresolvedCells={unresolvedCells}
+            outputRaw={outputRaw}
+            outputDisplayName={outputDisplayName}
+            outputIcon={renderCraftItemIcon(
+              outputRaw,
+              recipe.output_resolution?.icon_url,
+              recipe.output_resolution?.animated,
+              recipe.output_resolution?.animation_meta?.frametime,
+              outputDisplayName ?? outputRaw
+            )}
+            outputIconFound={Boolean(recipe.output_resolution?.icon_url)}
+          />
         );
       case 'runtime':
         return (

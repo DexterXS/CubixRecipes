@@ -79,6 +79,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel overview section out of `App.tsx`, including status, recipe diagnostics, and quick debug values.
   - Kept all status and recipe value calculation in `App.tsx` so this remains a presentation-only extraction.
   - Why this shape: the default technical-panel overview is a bounded diagnostics presentation concern and can move without changing recipe/editor state.
+- Created `frontend/src/features/diagnostics/DiagnosticsRecipePanel.tsx`.
+  - Moved the technical-panel recipe diagnostics section out of `App.tsx`, including grid state, output status, and the output icon display slot.
+  - Kept item icon rendering in `App.tsx` for now and passed the rendered output icon into the panel.
+  - Why this shape: recipe diagnostics presentation can move before the broader recipe editor rendering split, without crossing item rendering ownership too early.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
