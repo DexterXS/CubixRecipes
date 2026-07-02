@@ -376,6 +376,11 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/icon-settings/IconSettingsPanel.css`
   - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
 
+### Settings Feature
+- `frontend/src/features/settings/AppSettingsModal.tsx`
+  - Owns the global settings modal presentation for UI scale, NEI page size, shared craft draft mode, hotkey debug filters, and NEI favorite/filter preferences.
+  - Receives state and persistence callbacks from `pages/App.tsx`; persistence still belongs to the page shell until settings state is split further.
+
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
@@ -432,6 +437,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/app/workspaceNavigation.test.ts`: app-shell workspace tab map, labels, and permission filtering.
+- Global settings modal behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

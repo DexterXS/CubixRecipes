@@ -55,10 +55,14 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved top-level workspace tab definitions, product-oriented labels, visibility rules, desktop navigation rendering, and active server chip rendering out of `App.tsx`.
   - Added `workspaceNavigation.test.ts` for the navigation map and restricted-section filtering.
   - Why this shape: app-shell navigation and server context are global product concerns, not recipe-editor logic.
+- Created `frontend/src/features/settings/AppSettingsModal.tsx`.
+  - Moved the global settings modal UI for UI scale, NEI page size, shared draft mode, hotkey debug filters, and NEI favorite/filter preferences out of `App.tsx`.
+  - Kept state and persistence callbacks in `App.tsx` so this extraction changes ownership without changing behavior.
+  - Why this shape: settings presentation is a settings feature concern, while persistence still depends on broader app state until a later settings-state split.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
-- Split settings into a dedicated settings feature/hub, with contextual shortcuts from recipes/items only.
+- Continue splitting settings into a dedicated settings hub, with contextual shortcuts from recipes/items only.
 - Split the technical panel into diagnostics/admin modules instead of keeping all debug sections in the page shell.
 - Split item/NEI/catalog workflows into an items feature area separate from recipe editing.
 - Split recipe-editor/NEI UI rendering from `frontend/src/pages/App.tsx` once the mobile behavior stabilizes.
