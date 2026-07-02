@@ -8,9 +8,9 @@ Temporary file. Keep this file while the modular structure migration is in progr
 - Keep existing public imports and API contracts stable during each extraction.
 
 ## Active Step
-- Step: continue frontend modularization around recipe-editor and NEI/search workflow.
-- Reason: `App.tsx` remains the largest structural risk; the first mobile pass touched recipe-editor/NEI UI behavior, so the next extraction should follow that ownership boundary.
-- Target shape: extract recipe-editor UI/workflow pieces from the page shell while keeping mobile styles isolated in a dedicated stylesheet.
+- Step: introduce the app-shell navigation boundary before deeper feature splits.
+- Reason: `App.tsx` currently owns product navigation, server-context rendering, recipe workflows, item workflows, settings, and technical panels; the navigation/server context can move first without changing API or recipe behavior.
+- Target shape: `frontend/src/app/` owns top-level workspace navigation and global server context UI, while feature modules continue to own their workflows.
 
 ## Completed
 - Added governance rules for file limits, script automation, and test-first workflow.
@@ -51,9 +51,16 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Kept mobile presentation separate from the existing large global stylesheet.
   - Added a touch-only held-item bar in the recipe builder so selected NEI items are visible without relying on the mouse cursor.
   - Why this shape: mobile behavior is a presentation concern shared by the current page shell, so it can be isolated now without moving unstable `App.tsx` state prematurely.
+- Created `frontend/src/app/workspaceNavigation.ts`, `AppWorkspaceNav.tsx`, and `ServerContextChip.tsx`.
+  - Moved top-level workspace tab definitions, product-oriented labels, visibility rules, desktop navigation rendering, and active server chip rendering out of `App.tsx`.
+  - Added `workspaceNavigation.test.ts` for the navigation map and restricted-section filtering.
+  - Why this shape: app-shell navigation and server context are global product concerns, not recipe-editor logic.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
+- Split settings into a dedicated settings feature/hub, with contextual shortcuts from recipes/items only.
+- Split the technical panel into diagnostics/admin modules instead of keeping all debug sections in the page shell.
+- Split item/NEI/catalog workflows into an items feature area separate from recipe editing.
 - Split recipe-editor/NEI UI rendering from `frontend/src/pages/App.tsx` once the mobile behavior stabilizes.
 - Split large frontend tests/styles by feature once the related application modules exist.
 - Split `backend/app/api/routes.py` into backend routers by API concern.

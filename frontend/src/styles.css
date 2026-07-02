@@ -198,6 +198,11 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 12px
 .main-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 14px; background: rgba(15, 23, 42, 0.32); }
 .main-tab-button { background: transparent; color: var(--text); border-color: transparent; padding: 7px 11px; }
 .main-tab-button.active { background: var(--accent-strong); color: #fff; }
+.app-workspace-nav { align-items: stretch; }
+.app-workspace-nav-button { min-width: 112px; min-height: 46px; display: grid; align-content: center; gap: 2px; text-align: left; border-radius: 10px; }
+.app-workspace-nav-label { font-weight: 800; line-height: 1.05; letter-spacing: 0; }
+.app-workspace-nav-description { color: var(--muted); font-size: 11px; line-height: 1.15; letter-spacing: 0; }
+.app-workspace-nav-button.active .app-workspace-nav-description { color: rgba(255, 255, 255, 0.82); }
 .theme-toggle { width: 38px; height: 38px; display: inline-grid; place-items: center; padding: 0; border-radius: 12px; background: transparent; color: var(--text); border-color: var(--border); font-size: 18px; }
 .texture-mods-menu { width: min(520px, 90vw); max-height: min(62vh, 560px); overflow: auto; }
 .texture-menu-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }

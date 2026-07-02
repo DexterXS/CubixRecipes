@@ -1,4 +1,7 @@
 import { type CSSProperties, type MouseEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { AppWorkspaceNav } from '../app/AppWorkspaceNav';
+import { ServerContextChip } from '../app/ServerContextChip';
+import { buildWorkspaceNavigation, type WorkspaceTab } from '../app/workspaceNavigation';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
@@ -57,7 +60,6 @@ const EMPTY_ITEM_CASE_ALIASES: Record<string, string> = {};
 const PERSISTENT_SCRIPTS_DIR = '/data/scripts';
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
-type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
 type CraftBodyTemplate = {
   schemaVersion: 1;
   recipeType: string;
@@ -1762,13 +1764,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   hotkeyDebugActiveRef.current = isHotkeyDebugActive;
-  const workspaceTabs = [
-    { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
-    { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
-    { id: 'tasks' as const, label: uiPreferences.language === 'ru' ? 'Задачи' : 'Tasks', visible: canManageTasks },
-    { id: 'technical' as const, label: uiPreferences.language === 'ru' ? 'Техническая панель' : 'Technical panel', visible: canUseTechnicalPanel },
-    { id: 'cloud' as const, label: uiPreferences.language === 'ru' ? 'Облако' : 'Cloud', visible: canManageCloudFiles }
-  ].filter((tab) => tab.visible);
+  const workspaceTabs = buildWorkspaceNavigation(uiPreferences.language, {
+    canCreateTemplates,
+    canEditRecipes,
+    canManageCloudFiles,
+    canManageTasks,
+    canUseTechnicalPanel
+  });
 
   function logAppDebug(category: DebugCategory, message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
     if (!hotkeyDebugActiveRef.current) {
@@ -8540,32 +8542,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         />
         <div className="brand-with-server">
           <strong>CubixRecipes</strong>
-          {activeServerId && (
-            <div className="active-server-chip" title="Активный сервер">
-              <span className="server-icon">🖥️</span>
-              <span className="server-name-label">
-                {activeServerName}
-              </span>
-              {onResetServer && (
-                <button
-                  type="button"
-                  className="change-server-inline-btn"
-                  onClick={onResetServer}
-                  title="Сменить сервер"
-                >
-                  🔁
-                </button>
-              )}
-            </div>
-          )}
+          {activeServerId ? <ServerContextChip serverName={activeServerName} onResetServer={onResetServer} /> : null}
         </div>
-        <nav className="main-tabs" aria-label="workspace-tabs">
-          {workspaceTabs.map((tab) => (
-            <button key={tab.id} type="button" data-testid={`workspace-tab-${tab.id}`} className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        <AppWorkspaceNav tabs={workspaceTabs} activeTab={workspaceTab} onSelectTab={setWorkspaceTab} />
         <div className="utility-actions">
           <div className="user-chip" title={authUser.email}>
             {authUser.avatar_url ? <img src={authUser.avatar_url} alt="" /> : null}

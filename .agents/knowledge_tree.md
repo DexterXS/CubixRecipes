@@ -299,9 +299,18 @@ Last full rebuild: 2026-06-29
   - Renders auth gate, server gate, and main `App`.
   - Components/types: `ServerGate`, `ServerGateProps`.
   - Depends on `AuthGate`, `ServerSelect`, `App`, global styles, mobile styles, debug logging, and shared types.
+- `frontend/src/app/workspaceNavigation.ts`
+  - App-shell owner for top-level workspace tab IDs, product-oriented labels, section areas, descriptions, and permission-based visibility.
+  - Exports shared `WorkspaceTab` so the page shell and navigation components do not redefine the workspace-tab contract.
+- `frontend/src/app/AppWorkspaceNav.tsx`
+  - Desktop workspace navigation component for the global product sections currently backed by existing workspaces: recipes, drafts, tasks, files, and tech.
+  - Preserves `workspace-tab-*` test IDs for existing workflow tests.
+- `frontend/src/app/ServerContextChip.tsx`
+  - Global active-server chip in the app shell, including the quick change-server action.
+  - Keeps server context visible outside recipe-specific UI.
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
-  - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted icon-surface settings.
+  - Owns editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted app-shell navigation and icon-surface settings.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
@@ -422,6 +431,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
+- `frontend/src/app/workspaceNavigation.test.ts`: app-shell workspace tab map, labels, and permission filtering.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

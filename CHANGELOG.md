@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added an app-shell navigation boundary with product-oriented workspace labels, a reusable desktop workspace nav component, and a dedicated active-server chip outside the recipe page shell.
 - Added mobile NEI item context-menu actions for opening an item's recipe and viewing where the item is used from the long-press `...` menu.
 - Added separate desktop and mobile icon-surface profiles, selectable from the admin icon settings panel.
 - Added admin-configurable icon surface settings for NEI, favorites, drafts, craft grids, outputs, tasks, and mobile held/inspection previews, with live previews and shared CSS variables.
