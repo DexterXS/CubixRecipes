@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
 - Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
 - Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.
 - Added a diagnostics recipe panel component, moving the technical-panel recipe/grid/output diagnostics section out of the main app page shell.

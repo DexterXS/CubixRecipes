@@ -389,6 +389,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/ModReplacementPanel.tsx`
   - Owns the technical-panel mod replacement UI for choosing a source mod, mapping recipe items to replacements, and embedding the NEI picker column.
   - Receives scan/replace state, item icon renderers, and callbacks from `pages/App.tsx`; scanning and persistence remain in the page shell until a later state/service split.
+- `frontend/src/features/diagnostics/ItemCaseAliasPanel.tsx`
+  - Owns the technical-panel item case-alias report UI: generation controls, FML log upload, manual alias form, alias table, and missing itempanel list.
+  - Receives report data and persistence callbacks from `pages/App.tsx`; report API orchestration remains in the page shell until a later diagnostics service split.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -472,6 +475,7 @@ Last full rebuild: 2026-06-29
 - Diagnostics recipe panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics access panel behavior is covered through `frontend/src/App.test.tsx`.
 - Mod replacement technical-panel behavior is covered through `frontend/src/App.test.tsx`.
+- Item case-alias technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

@@ -91,6 +91,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel mod replacement UI out of `App.tsx`, including source mod selection, replacement mapping table, slot click/drop interactions, replace button, and NEI picker column.
   - Kept scan/replace API orchestration and recipe/item icon lookup in `App.tsx` for now and passed those values/callbacks into the panel.
   - Why this shape: the panel is a complete diagnostics/admin workflow surface and removes more than 100 lines from the page shell without changing persistence or backend behavior.
+- Created `frontend/src/features/diagnostics/ItemCaseAliasPanel.tsx`.
+  - Moved the technical-panel item case-alias report UI out of `App.tsx`, including report controls, FML log upload, manual alias form, alias table, and missing itempanel list.
+  - Kept report generation, refresh, upload, and manual-save orchestration in `App.tsx` for now and passed those callbacks into the panel.
+  - Why this shape: case-alias reporting is a complete diagnostics/admin surface and removes more than 100 lines from the page shell without changing API behavior.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
