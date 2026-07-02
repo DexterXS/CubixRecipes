@@ -63,11 +63,15 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical panel shell, sidebar navigation, section ID contract, and wipe-update sidebar action out of `App.tsx`.
   - Kept the actual debug/admin section content in `App.tsx` for this slice so behavior and data dependencies remain unchanged.
   - Why this shape: diagnostics navigation is a stable shell boundary and can move before splitting individual debug sections.
+- Created `frontend/src/features/diagnostics/DebugEventsList.tsx`.
+  - Moved debug event list rendering and debug event/category/level types out of `App.tsx`.
+  - Kept event collection, filtering, and persistence in `App.tsx` because those still depend on global app interactions.
+  - Why this shape: logs are a bounded diagnostics presentation concern and can move without touching debug event producers.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
 - Continue splitting settings into a dedicated settings hub, with contextual shortcuts from recipes/items only.
-- Continue splitting the technical panel into diagnostics/admin modules instead of keeping all debug sections in the page shell.
+- Continue splitting technical-panel section content into diagnostics/admin modules instead of keeping all debug sections in the page shell.
 - Split item/NEI/catalog workflows into an items feature area separate from recipe editing.
 - Split recipe-editor/NEI UI rendering from `frontend/src/pages/App.tsx` once the mobile behavior stabilizes.
 - Split large frontend tests/styles by feature once the related application modules exist.

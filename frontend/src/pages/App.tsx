@@ -20,6 +20,7 @@ import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputVa
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
+import { DebugEventsList, type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
@@ -314,17 +315,10 @@ type CloudUploadConflictState = {
   resolve: (mode: CloudUploadConflictMode) => void;
 };
 
-type HotkeyDebugLevel = 'info' | 'success' | 'warning' | 'error';
-type HotkeyDebugDetails = Record<string, string | number | boolean | null | undefined>;
-type DebugCategory = 'hotkeys' | 'ui' | 'recipe' | 'api' | 'storage';
-type HotkeyDebugEvent = {
-  id: number;
-  timestamp: string;
-  level: HotkeyDebugLevel;
-  category: DebugCategory;
-  message: string;
-  details?: HotkeyDebugDetails;
-};
+type HotkeyDebugLevel = DebugEventLevel;
+type HotkeyDebugDetails = DebugEventDetails;
+type DebugCategory = DebugEventCategory;
+type HotkeyDebugEvent = DebugEventItem;
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
 type DebugSection = DiagnosticsSectionId;
@@ -7541,36 +7535,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
-  function renderDebugEventsList() {
-    if (!hotkeyDebugEvents.length) {
-      return <div className="inline-hint">Debug включен, но событий пока нет. Выполни действие в интерфейсе, чтобы оно появилось здесь.</div>;
-    }
-    return (
-      <ol className="debug-log-list">
-        {hotkeyDebugEvents.map((entry) => (
-          <li key={entry.id} className={`debug-log-event debug-log-${entry.level}`}>
-            <div className="debug-log-event-head">
-              <span>{entry.timestamp}</span>
-              <strong>{entry.message}</strong>
-              <em>{debugCategoryLabels[entry.category]}</em>
-              <code>{entry.level}</code>
-            </div>
-            {entry.details ? (
-              <dl>
-                {Object.entries(entry.details).map(([key, value]) => (
-                  <div key={key}>
-                    <dt>{key}</dt>
-                    <dd>{String(value)}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
-          </li>
-        ))}
-      </ol>
-    );
-  }
-
   function renderItemCaseAliasPanel() {
     const report = itemCaseAliasReport;
     const summary = report?.summary;
@@ -7920,7 +7884,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 <h3>Лента событий</h3>
                 <span>{isHotkeyDebugActive ? `Событий: ${hotkeyDebugEvents.length}` : 'Debug выключен в настройках.'}</span>
               </div>
-              {renderDebugEventsList()}
+              <DebugEventsList
+                events={hotkeyDebugEvents}
+                categoryLabels={debugCategoryLabels}
+                emptyMessage="Debug включен, но событий пока нет. Выполни действие в интерфейсе, чтобы оно появилось здесь."
+              />
             </section>
           </div>
         );
