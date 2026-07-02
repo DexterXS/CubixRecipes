@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.
 - Added a diagnostics recipe panel component, moving the technical-panel recipe/grid/output diagnostics section out of the main app page shell.
 - Added a diagnostics overview panel component, moving the technical-panel status/quick-debug overview out of the main app page shell.
 - Added a diagnostics runtime panel component, moving the technical-panel runtime/status section out of the main app page shell.

@@ -83,6 +83,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel recipe diagnostics section out of `App.tsx`, including grid state, output status, and the output icon display slot.
   - Kept item icon rendering in `App.tsx` for now and passed the rendered output icon into the panel.
   - Why this shape: recipe diagnostics presentation can move before the broader recipe editor rendering split, without crossing item rendering ownership too early.
+- Created `frontend/src/features/diagnostics/DiagnosticsAccessPanel.tsx`.
+  - Moved the technical-panel access section layout out of `App.tsx`, including personnel, whitelist, and static role-permission reference blocks.
+  - Kept role-management and whitelist forms in `App.tsx` for now and passed them as rendered content.
+  - Why this shape: access layout is diagnostics presentation, while role and whitelist behavior still depend on wider app/admin state.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.

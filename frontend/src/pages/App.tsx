@@ -20,6 +20,7 @@ import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputVa
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
+import { DiagnosticsAccessPanel } from '../features/diagnostics/DiagnosticsAccessPanel';
 import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
 import { DiagnosticsOverviewPanel } from '../features/diagnostics/DiagnosticsOverviewPanel';
 import { DiagnosticsRecipePanel } from '../features/diagnostics/DiagnosticsRecipePanel';
@@ -7745,33 +7746,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         );
       case 'access':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Персонал</h3>
-                <span>Роли пользователей и доступ по Google почте.</span>
-              </div>
-              {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Whitelist</h3>
-                <span>Допуск операторов и админов на сайт.</span>
-              </div>
-              {canManageRoles ? renderAccessControlContent() : null}
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Доступ по ролям</h3>
-                <span>Справочник текущих ролей сайта.</span>
-              </div>
-              <div className="permissions-grid">
-                <div><strong>admin</strong><span>файлы, рецепты, настройки, роли, отладка</span></div>
-                <div><strong>moderator</strong><span>создание шаблонов и черновиков</span></div>
-                <div><strong>default</strong><span>только просмотр</span></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsAccessPanel
+            usersContent={canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+            whitelistContent={canManageRoles ? renderAccessControlContent() : null}
+          />
         );
       case 'caseAliases':
         return renderItemCaseAliasPanel();

@@ -383,6 +383,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/DiagnosticsRecipePanel.tsx`
   - Owns the technical-panel recipe diagnostics section presentation for grid state, output status, and output icon display slot.
   - Receives computed recipe values and a pre-rendered output icon from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsAccessPanel.tsx`
+  - Owns the technical-panel access section layout for personnel roles, whitelist, and static role permission reference.
+  - Receives role-management and whitelist content from `pages/App.tsx`.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -464,6 +467,7 @@ Last full rebuild: 2026-06-29
 - Diagnostics runtime panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics overview panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics recipe panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics access panel behavior is covered through `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.
