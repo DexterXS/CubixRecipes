@@ -122,6 +122,20 @@
   gap: 8px;
 }
 
+.auction-admin-settings {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+
+.auction-admin-settings span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .auction-card,
 .auction-lot-row,
 .auction-picker-row {
@@ -133,8 +147,59 @@
 
 .auction-card {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   text-align: left;
+}
+
+.auction-card-inventory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 34px));
+  gap: 6px;
+}
+
+.auction-inventory-slot {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.auction-inventory-slot.empty {
+  background: transparent;
+  border-style: dashed;
+  opacity: 0.72;
+}
+
+.auction-inventory-slot.has-warning {
+  border-color: var(--warning, #f5c542);
+}
+
+.auction-inventory-slot small,
+.auction-inventory-slot b {
+  position: absolute;
+  right: 2px;
+  bottom: 1px;
+  min-width: 14px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #e5eefc;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+}
+
+.auction-inventory-slot b {
+  left: 2px;
+  right: auto;
+  bottom: auto;
+  top: 1px;
+  color: var(--warning, #f5c542);
 }
 
 .auction-card.active {

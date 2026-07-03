@@ -11,6 +11,7 @@ import {
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { AuctionHelpTip } from './AuctionHelpTip';
+import { AuctionPlanPanel } from './AuctionPlanPanel';
 import { AuctionPriceGraph } from './AuctionPriceGraph';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
@@ -87,6 +88,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const [selectedAuctionId, setSelectedAuctionId] = useState('1');
   const [curve, setCurve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
   const [itemSearch, setItemSearch] = useState('');
+  const [maxItemsPerAuction, setMaxItemsPerAuction] = useState(4);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
 
@@ -103,6 +105,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     return itemOptions.filter((item) => `${item.raw} ${item.title} ${item.legacyId ?? ''}`.toLowerCase().includes(query)).slice(0, 120);
   }, [itemOptions, itemSearch]);
   const nbtSkippedCount = auctions.flatMap((auction) => auction.items).filter((item) => item.hasNbt).length;
+  const selectedAuctionFull = selectedAuction ? selectedAuction.items.length >= maxItemsPerAuction : false;
 
   const updateAuction = (id: string, patch: Partial<AuctionDraft>) => {
     setAuctions((current) => current.map((auction) => auction.id === id ? { ...auction, ...patch } : auction));
@@ -128,8 +131,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
   const addItemToAuction = (option: AuctionItemOption) => {
     if (!selectedAuction) return;
+    if (selectedAuction.items.length >= maxItemsPerAuction) return;
     const item: AuctionLotItem = { ...option, uid: `${option.raw}-${Date.now()}-${Math.random().toString(36).slice(2)}`, quantity: 1, basePrice: 100 };
     updateAuction(selectedAuction.id, { items: [...selectedAuction.items, item] });
+  };
+
+  const updateMaxItemsPerAuction = (value: number) => {
+    const normalized = Math.max(1, Math.min(27, Math.round(Number.isFinite(value) ? value : 1)));
+    setMaxItemsPerAuction(normalized);
   };
 
   const updateLotItem = (uid: string, patch: Partial<AuctionLotItem>) => {
@@ -170,27 +179,15 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       </div>
 
       <div className="auction-layout">
-        <Panel
-          title="План аукционов"
-          subtitle="По умолчанию горизонт ограничен 3 месяцами"
-          actions={(
-            <AuctionHelpTip label="Подсказка: План аукционов">
-              Здесь список локальных заготовок аукционов. Это ещё не серверные аукционы: серверный ID появится только после выполнения `/aca create`.
-              Пример: можно сделать заготовку “Донат блоки июль”, включить повторы и потом получить несколько ID с сервера.
-            </AuctionHelpTip>
-          )}
-        >
-          <div className="auction-list">
-            {auctions.map((auction) => (
-              <button key={auction.id} type="button" className={`auction-card ${selectedAuction?.id === auction.id ? 'active' : ''}`.trim()} onClick={() => setSelectedAuctionId(auction.id)}>
-                <strong>{auction.name}</strong>
-                <span>{auction.currency} · {auction.startLocal.replace('T', ' ')}</span>
-                {auction.repeatEnabled ? <span>Повтор: {auction.repeatCount} раз, каждые {auction.repeatEveryDays} дн.</span> : null}
-              </button>
-            ))}
-            <button type="button" className="secondary-button" title="Создаёт ещё одну локальную заготовку аукциона в текущем плане." onClick={addAuction}>Добавить аукцион</button>
-          </div>
-        </Panel>
+        <AuctionPlanPanel
+          auctions={auctions}
+          selectedAuctionId={selectedAuctionId}
+          maxItemsPerAuction={maxItemsPerAuction}
+          renderItemIcon={renderItemIcon}
+          onSelectAuction={setSelectedAuctionId}
+          onAddAuction={addAuction}
+          onMaxItemsChange={updateMaxItemsPerAuction}
+        />
 
         {selectedAuction && mode === 'config' ? (
           <Panel
@@ -297,6 +294,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                   </div>
                 ))}
                 {!selectedAuction.items.length ? <div className="inline-hint">Выбери предмет из списка NEI справа.</div> : null}
+                {selectedAuctionFull ? <div className="inline-status inline-status-warning">Лимит предметов для этого аукциона заполнен: {selectedAuction.items.length}/{maxItemsPerAuction}</div> : null}
               </div>
               {nbtSkippedCount ? <div className="inline-status inline-status-warning">NBT предметов будет пропущено при генерации: {nbtSkippedCount}</div> : null}
             </Panel>
@@ -313,7 +311,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               <input aria-label="auction-item-search" title="Ищи по названию, raw ID вроде minecraft:diamond или legacy ID." type="search" value={itemSearch} onChange={(event) => setItemSearch(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
               <div className="auction-item-picker">
                 {filteredItems.map((item) => (
-                  <button key={`${item.raw}-${item.legacyId ?? 'x'}-${item.meta}`} type="button" title={item.hasNbt ? 'NBT-предмет добавится только визуально и будет исключён из команд.' : 'Добавить этот предмет в выбранный аукцион.'} className="auction-picker-row" onClick={() => addItemToAuction(item)}>
+                  <button
+                    key={`${item.raw}-${item.legacyId ?? 'x'}-${item.meta}`}
+                    type="button"
+                    title={selectedAuctionFull ? 'Лимит предметов в этом аукционе уже заполнен.' : item.hasNbt ? 'NBT-предмет добавится только визуально и будет исключён из команд.' : 'Добавить этот предмет в выбранный аукцион.'}
+                    className="auction-picker-row"
+                    disabled={selectedAuctionFull}
+                    onClick={() => addItemToAuction(item)}
+                  >
                     <span className="auction-item-icon">{renderItemIcon(item)}</span>
                     <span><strong>{item.title}</strong><br /><small>{item.raw}</small></span>
                     {item.hasNbt ? <span className="auction-warning">!</span> : null}

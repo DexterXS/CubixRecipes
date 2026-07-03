@@ -6,6 +6,7 @@
 - Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
 - Changed Auctions pricing so each item stores its own lot price and the 90-day graph applies a percentage multiplier to all non-NBT item prices for the matching currency/day.
 - Added auction-only hover/focus help popovers for panels and fields, including explanations and examples for local labels, server IDs, graph percentages, item prices, and command-file steps.
+- Added an auction plan inventory preview plus an auction-local admin setting that caps how many items can be added to one auction.
 - Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
 - Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
 - Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.

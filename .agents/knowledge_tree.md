@@ -412,8 +412,10 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Owns the auction command generator workspace: install-existing workflow switching, planned/repeating auction config, server-ID entry step, timezone selection, item picking from the item catalog, per-item lot prices, NBT warnings, selected-step preview, and extensionless command-file download modal.
+  - Owns the auction command generator workspace: install-existing workflow switching, planned/repeating auction config, server-ID entry step, timezone selection, item picking from the item catalog, per-item lot prices, NBT warnings, selected-step preview, max-items enforcement, and extensionless command-file download modal.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/AuctionPlanPanel.tsx`
+  - Owns the auction plan sidebar, auction-local admin setting for maximum items per auction, and the internal inventory preview showing filled and future empty item slots for each auction.
 - `frontend/src/features/auctions/AuctionHelpTip.tsx`
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
