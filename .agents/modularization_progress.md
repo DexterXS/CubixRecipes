@@ -103,6 +103,7 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Added auction-local hover/focus help popovers so confusing fields such as local labels, server IDs, graph percentages, item prices, and staged downloads explain their purpose with examples.
   - Extracted the auction plan sidebar into `AuctionPlanPanel.tsx`, added the auction-local admin max-items setting, and showed an internal inventory preview with filled and future empty item slots for each auction.
   - Reworked the auction price graph from a 90-day polyline with sharp baseline spikes into a smooth Bezier/equalizer-style curve through auction date control points with a soft SVG fill.
+  - Extracted the items/file mode into `AuctionItemsWorkspace.tsx` and replaced the awkward split panels with one right-side workspace: NEI catalog on the left, selected-auction internal inventory on the right.
   - Why this shape: auctions are a new product area, so the page shell should only route to the feature and adapt item catalog/icon data.
 
 ## Still Needed

@@ -8,6 +8,7 @@
 - Changed the Auctions price graph to draw a smooth equalizer-style curve through auction date control points instead of sharp 90-day spike segments.
 - Added auction-only hover/focus help popovers for panels and fields, including explanations and examples for local labels, server IDs, graph percentages, item prices, and command-file steps.
 - Added an auction plan inventory preview plus an auction-local admin setting that caps how many items can be added to one auction.
+- Changed the Auctions items/file view into a single workspace with the NEI catalog beside the selected auction's internal inventory.
 - Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
 - Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
 - Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.

@@ -11,6 +11,7 @@ import {
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { AuctionHelpTip } from './AuctionHelpTip';
+import { AuctionItemsWorkspace } from './AuctionItemsWorkspace';
 import { AuctionPlanPanel } from './AuctionPlanPanel';
 import { AuctionPriceGraph } from './AuctionPriceGraph';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionWorkflowMode } from './auctionTypes';
@@ -253,80 +254,23 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         ) : null}
 
         {selectedAuction && mode === 'items' ? (
-          <>
-            <Panel
-              title="Предметы аукциона"
-              subtitle="NBT предметы видны, но не попадут в файл команд"
-              actions={(
-                <AuctionHelpTip label="Подсказка: Предметы аукциона">
-                  Здесь собирается содержимое выбранного аукциона. Каждый предмет имеет количество и базовую цену.
-                  Итоговая стартовая цена аукциона = сумма цен предметов без NBT, умноженная на процент графика для даты запуска.
-                </AuctionHelpTip>
-              )}
-            >
-              <div className="auction-toolbar-row">
-                <div className="auction-id-mode">
-                  <button type="button" title="В командах /give будет использоваться буквенный ID предмета и meta, например minecraft:stone 1." className={idMode === 'raw' ? 'active' : ''} onClick={() => setIdMode('raw')}>mod:item + meta</button>
-                  <button type="button" title="В командах /give будет использоваться числовой legacy ID и meta, например 1 0." className={idMode === 'legacy' ? 'active' : ''} onClick={() => setIdMode('legacy')}>id:meta</button>
-                </div>
-                <label className="field-block compact-field"><HelpLabel text="Игрок выдачи">Кому временно выдаётся предмет перед добавлением в аукцион. Обычно `@p`, но можно вписать ник администратора.</HelpLabel><input value={commandPlayer} onChange={(event) => setCommandPlayer(event.target.value)} /></label>
-              </div>
-              <div className="auction-lot-list">
-                {selectedAuction.items.map((item) => (
-                  <div key={item.uid} className={`auction-lot-row ${item.hasNbt ? 'has-warning' : ''}`.trim()}>
-                    <span className="auction-item-icon">{renderItemIcon(item)}</span>
-                    <div>
-                      <strong>{item.title}</strong>
-                      <span>{item.raw}</span>
-                      {item.hasNbt ? <div className="auction-warning">! NBT нельзя выдать командой, лот не попадёт в файл</div> : null}
-                    </div>
-                    <div className="auction-lot-controls">
-                      <label className="field-block compact-field">
-                        <HelpLabel text="Кол-во">Количество предметов в команде `/give`. Пример: 64 алмаза в одном лоте.</HelpLabel>
-                        <input aria-label={`auction-item-qty-${item.uid}`} type="number" min={1} value={item.quantity} onChange={(event) => updateLotItem(item.uid, { quantity: Number(event.target.value) })} />
-                      </label>
-                      <label className="field-block compact-field">
-                        <HelpLabel text="Цена">Базовая цена именно этого предмета до графика. Пример: предмет стоит 2000, а график на дату +25%, значит в расчёте будет 2500.</HelpLabel>
-                        <input aria-label={`auction-item-price-${item.uid}`} type="number" min={0} value={item.basePrice} onChange={(event) => updateLotItem(item.uid, { basePrice: Number(event.target.value) })} />
-                      </label>
-                      <button type="button" className="ghost-button" title="Убирает предмет из текущей локальной заготовки аукциона." onClick={() => removeLotItem(item.uid)}>Удалить</button>
-                    </div>
-                  </div>
-                ))}
-                {!selectedAuction.items.length ? <div className="inline-hint">Выбери предмет из списка NEI справа.</div> : null}
-                {selectedAuctionFull ? <div className="inline-status inline-status-warning">Лимит предметов для этого аукциона заполнен: {selectedAuction.items.length}/{maxItemsPerAuction}</div> : null}
-              </div>
-              {nbtSkippedCount ? <div className="inline-status inline-status-warning">NBT предметов будет пропущено при генерации: {nbtSkippedCount}</div> : null}
-            </Panel>
-            <Panel
-              title="NEI предметы"
-              subtitle="Поиск и добавление в аукцион"
-              actions={(
-                <AuctionHelpTip label="Подсказка: NEI предметы">
-                  Это список предметов из каталога NEI. Нажатие добавляет предмет в текущий аукцион визуально.
-                  Если у предмета есть NBT, он будет помечен восклицательным знаком и не попадёт в файл команд.
-                </AuctionHelpTip>
-              )}
-            >
-              <input aria-label="auction-item-search" title="Ищи по названию, raw ID вроде minecraft:diamond или legacy ID." type="search" value={itemSearch} onChange={(event) => setItemSearch(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
-              <div className="auction-item-picker">
-                {filteredItems.map((item) => (
-                  <button
-                    key={`${item.raw}-${item.legacyId ?? 'x'}-${item.meta}`}
-                    type="button"
-                    title={selectedAuctionFull ? 'Лимит предметов в этом аукционе уже заполнен.' : item.hasNbt ? 'NBT-предмет добавится только визуально и будет исключён из команд.' : 'Добавить этот предмет в выбранный аукцион.'}
-                    className="auction-picker-row"
-                    disabled={selectedAuctionFull}
-                    onClick={() => addItemToAuction(item)}
-                  >
-                    <span className="auction-item-icon">{renderItemIcon(item)}</span>
-                    <span><strong>{item.title}</strong><br /><small>{item.raw}</small></span>
-                    {item.hasNbt ? <span className="auction-warning">!</span> : null}
-                  </button>
-                ))}
-              </div>
-            </Panel>
-          </>
+          <AuctionItemsWorkspace
+            selectedAuction={selectedAuction}
+            idMode={idMode}
+            commandPlayer={commandPlayer}
+            itemSearch={itemSearch}
+            filteredItems={filteredItems}
+            selectedAuctionFull={selectedAuctionFull}
+            maxItemsPerAuction={maxItemsPerAuction}
+            nbtSkippedCount={nbtSkippedCount}
+            renderItemIcon={renderItemIcon}
+            onIdModeChange={setIdMode}
+            onCommandPlayerChange={setCommandPlayer}
+            onItemSearchChange={setItemSearch}
+            onAddItem={addItemToAuction}
+            onUpdateItem={updateLotItem}
+            onRemoveItem={removeLotItem}
+          />
         ) : null}
       </div>
 

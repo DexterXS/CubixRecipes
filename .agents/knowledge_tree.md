@@ -416,6 +416,8 @@ Last full rebuild: 2026-06-29
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/AuctionPlanPanel.tsx`
   - Owns the auction plan sidebar, auction-local admin setting for maximum items per auction, and the internal inventory preview showing filled and future empty item slots for each auction.
+- `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`
+  - Owns the auction items workspace for the items/file mode: NEI catalog search/addition, selected-auction internal inventory editing, command ID mode, give-player input, item quantities/prices, NBT warnings, and max-items full-state messaging.
 - `frontend/src/features/auctions/AuctionHelpTip.tsx`
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
