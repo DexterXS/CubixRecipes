@@ -14,8 +14,8 @@ describe('buildWorkspaceNavigation', () => {
   test('returns product-oriented Russian workspace labels', () => {
     const tabs = buildWorkspaceNavigation('ru', allPermissions);
 
-    expect(tabs.map((tab) => tab.id)).toEqual(['editor', 'recipe', 'tasks', 'cloud', 'technical']);
-    expect(tabs.map((tab) => tab.label)).toEqual(['Крафты', 'Черновики', 'Задачи', 'Файлы', 'Техраздел']);
+    expect(tabs.map((tab) => tab.id)).toEqual(['editor', 'recipe', 'auctions', 'tasks', 'cloud', 'technical']);
+    expect(tabs.map((tab) => tab.label)).toEqual(['Крафты', 'Черновики', 'Аукционы', 'Задачи', 'Файлы', 'Техраздел']);
   });
 
   test('hides restricted sections without hiding the recipe editor', () => {

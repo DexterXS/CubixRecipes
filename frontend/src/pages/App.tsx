@@ -10,6 +10,8 @@ import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
+import { AuctionBuilder } from '../features/auctions/AuctionBuilder';
+import type { AuctionItemOption } from '../features/auctions/auctionTypes';
 import { AppSettingsModal } from '../features/settings/AppSettingsModal';
 import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
@@ -832,9 +834,11 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
       ? 'tasks'
       : value.workspaceTab === 'cloud'
         ? 'cloud'
-        : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
-          ? 'technical'
-          : 'editor';
+        : value.workspaceTab === 'auctions'
+          ? 'auctions'
+          : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
+            ? 'technical'
+            : 'editor';
   const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
   const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
   const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
@@ -1761,6 +1765,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canUseNeiFavorites = can(authUser, 'nei-favorites:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
   const canManageTasks = can(authUser, 'tasks:manage');
+  const canUseAuctions = canEditRecipes;
   const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
   const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
   const canOpenSettings = canManageSettings || canUseNeiFavorites;
@@ -2433,6 +2438,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setWorkspaceTab('editor');
     }
   }, [workspaceTab, canUseTechnicalPanel]);
+
+  useEffect(() => {
+    if (workspaceTab === 'auctions' && !canUseAuctions) {
+      setWorkspaceTab('editor');
+    }
+  }, [workspaceTab, canUseAuctions]);
 
   useEffect(() => {
     if (workspaceTab === 'cloud' && canManageCloudFiles) {
@@ -3517,6 +3528,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       })
       .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
   }, [itemPanelTranslations.entries, itemSearchIcons]);
+  const auctionItemOptions = useMemo<AuctionItemOption[]>(() => itemPanelTranslations.entries.map((entry) => {
+    const raw = itemPanelRaw(entry);
+    return {
+      raw,
+      title: entry.displayRu || entry.displayEn || raw,
+      legacyId: entry.legacyId,
+      meta: entry.meta,
+      hasNbt: itemPanelEntryHasNbtTag(entry)
+    };
+  }), [itemPanelTranslations.entries]);
 
   useEffect(() => {
     setSelectedTextureMods((current) => {
@@ -7936,6 +7957,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
           renderItemTooltip={renderItemTooltip}
           resolveItemTitle={resolveCellTitle}
+        />
+      );
+    }
+    if (workspaceTab === 'auctions' && canUseAuctions) {
+      return (
+        <AuctionBuilder
+          itemOptions={auctionItemOptions}
+          renderItemIcon={(item) => renderCraftItemIcon(item.raw, getCachedItemIconUrl(item.raw), false, undefined, item.title)}
         />
       );
     }

@@ -410,6 +410,18 @@ Last full rebuild: 2026-06-29
   - Owns the global settings modal presentation for UI scale, NEI page size, shared craft draft mode, hotkey debug filters, and NEI favorite/filter preferences.
   - Receives state and persistence callbacks from `pages/App.tsx`; persistence still belongs to the page shell until settings state is split further.
 
+### Auctions Feature
+- `frontend/src/features/auctions/AuctionBuilder.tsx`
+  - Owns the auction command generator workspace: planned/repeating auction config, timezone selection, item picking from the item catalog, NBT warnings, preview, and extensionless command-file download modal.
+  - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/auctionCommands.ts`
+  - Owns deterministic auction command generation for `/aca create`, `/aca setName`, `/aca setDescription`, `/aca setState`, `/clear`, `/give`, `/aca addItem`, and `/aca scheduleCreate`.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day price curves, and excludes NBT items from generated commands.
+- `frontend/src/features/auctions/AuctionPriceGraph.tsx`
+  - Owns the draggable 90-day price multiplier graph used by planned auction days.
+- `frontend/src/features/auctions/AuctionBuilder.css`
+  - Scoped presentation for the auction builder workspace, item picker, graph, warnings, and command preview.
+
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
   - Shared icon-cell component for NEI and favorite items.
@@ -476,6 +488,8 @@ Last full rebuild: 2026-06-29
 - Diagnostics access panel behavior is covered through `frontend/src/App.test.tsx`.
 - Mod replacement technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Item case-alias technical-panel behavior is covered through `frontend/src/App.test.tsx`.
+- Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
+- Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

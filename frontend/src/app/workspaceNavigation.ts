@@ -1,6 +1,6 @@
 import type { UiLanguage } from '../types';
 
-export type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
+export type WorkspaceTab = 'editor' | 'recipe' | 'auctions' | 'tasks' | 'technical' | 'cloud';
 
 export type WorkspaceNavigationPermissions = {
   canCreateTemplates: boolean;
@@ -13,7 +13,7 @@ export type WorkspaceNavigationPermissions = {
 export type WorkspaceNavigationItem = {
   id: WorkspaceTab;
   label: string;
-  area: 'recipes' | 'files' | 'tasks' | 'diagnostics';
+  area: 'recipes' | 'files' | 'tasks' | 'auctions' | 'diagnostics';
   description: string;
 };
 
@@ -25,11 +25,13 @@ const labels = {
   ru: {
     recipes: 'Крафты',
     drafts: 'Черновики',
+    auctions: 'Аукционы',
     tasks: 'Задачи',
     technical: 'Техраздел',
     cloud: 'Файлы',
     recipesDescription: 'Редактор и NEI',
     draftsDescription: 'Шаблоны и заготовки',
+    auctionsDescription: 'План и команды',
     tasksDescription: 'Рабочая доска',
     technicalDescription: 'Диагностика и админ-панели',
     cloudDescription: 'Облако .zs'
@@ -37,11 +39,13 @@ const labels = {
   en: {
     recipes: 'Recipes',
     drafts: 'Drafts',
+    auctions: 'Auctions',
     tasks: 'Tasks',
     technical: 'Tech',
     cloud: 'Files',
     recipesDescription: 'Editor and NEI',
     draftsDescription: 'Templates and drafts',
+    auctionsDescription: 'Schedule and commands',
     tasksDescription: 'Work board',
     technicalDescription: 'Diagnostics and admin panels',
     cloudDescription: 'Cloud .zs'
@@ -67,6 +71,13 @@ export function buildWorkspaceNavigation(
       area: 'recipes',
       description: text.draftsDescription,
       visible: permissions.canCreateTemplates || permissions.canEditRecipes
+    },
+    {
+      id: 'auctions',
+      label: text.auctions,
+      area: 'auctions',
+      description: text.auctionsDescription,
+      visible: permissions.canEditRecipes
     },
     {
       id: 'tasks',

@@ -95,6 +95,10 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel item case-alias report UI out of `App.tsx`, including report controls, FML log upload, manual alias form, alias table, and missing itempanel list.
   - Kept report generation, refresh, upload, and manual-save orchestration in `App.tsx` for now and passed those callbacks into the panel.
   - Why this shape: case-alias reporting is a complete diagnostics/admin surface and removes more than 100 lines from the page shell without changing API behavior.
+- Created `frontend/src/features/auctions/`.
+  - Added the auction workspace as a new feature module instead of placing auction UI/generation logic in `App.tsx`.
+  - Added planned/repeating auction config, timezone-aware UTC+0 command formatting, draggable 90-day price curves, NEI/catalog item picking, NBT visual warnings with command exclusion, extensionless download, and focused command-generation tests.
+  - Why this shape: auctions are a new product area, so the page shell should only route to the feature and adapt item catalog/icon data.
 
 ## Still Needed
 - Continue splitting `frontend/src/pages/App.tsx` into feature modules.
