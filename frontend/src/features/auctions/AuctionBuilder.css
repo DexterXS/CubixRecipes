@@ -238,6 +238,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
   background: var(--surface-sunken);
+  color: var(--accent, #7aa2ff);
 }
 
 .auction-price-graph line {
@@ -255,7 +256,17 @@
 
 .auction-graph-line {
   stroke: var(--accent, #7aa2ff);
-  stroke-width: 2.5;
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent, #7aa2ff) 62%, transparent));
+}
+
+.auction-graph-fill {
+  fill: url("#auctionGraphFill");
+  stroke: none;
+  color: var(--accent, #7aa2ff);
 }
 
 .auction-graph-point {
