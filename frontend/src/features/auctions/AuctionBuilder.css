@@ -22,10 +22,21 @@
   gap: 8px;
 }
 
+.auction-builder .panel {
+  position: relative;
+  overflow: visible;
+}
+
+.auction-builder .panel:has(.auction-help-tip:hover),
+.auction-builder .panel:has(.auction-help-tip:focus-within) {
+  z-index: 30;
+}
+
 .auction-help-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
 }
 
 .auction-help-tip {
@@ -54,14 +65,14 @@
 .auction-help-tip .auction-help-popover {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 0;
   width: min(340px, calc(100vw - 32px));
   padding: 10px 12px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid #f59e0b;
   border-radius: 8px;
-  background: var(--surface-raised);
-  color: var(--text);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+  background: #0f172a;
+  color: #e5eefc;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.52);
   font-size: 13px;
   line-height: 1.45;
   white-space: normal;
@@ -69,6 +80,11 @@
   pointer-events: none;
   transform: translateY(-4px);
   transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.panel-actions .auction-help-tip .auction-help-popover {
+  left: auto;
+  right: 0;
 }
 
 .auction-help-tip:hover .auction-help-popover,
