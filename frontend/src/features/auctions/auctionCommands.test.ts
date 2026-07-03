@@ -1,10 +1,11 @@
 import { describe, expect, test } from 'vitest';
 
-import { buildAuctionCommands, createDefaultAuctionCurve, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
+import { buildAuctionCommandStages, createDefaultAuctionCurve, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
 import type { AuctionDraft } from './auctionTypes';
 
 const baseAuction: AuctionDraft = {
-  id: '27',
+  id: 'local-1',
+  serverIds: { 0: '27' },
   name: 'Test auction',
   description: 'rare item',
   startLocal: '2026-03-31T23:10',
@@ -29,20 +30,41 @@ describe('auction command generation', () => {
     expect(formatAuctionUtcDate('2026-03-31T23:10', 180)).toBe('31.03.2026_20:10');
   });
 
-  test('generates auction commands and skips NBT items', () => {
-    const commands = buildAuctionCommands({
+  test('generates staged auction commands and skips NBT items', () => {
+    const stages = buildAuctionCommandStages({
       auctions: [baseAuction],
       curve: createDefaultAuctionCurve(),
       idMode: 'legacy',
       timezoneOffsetMinutes: 180,
       commandPlayer: '@p',
-      graphStartLocal: '2026-03-01T00:00'
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'install'
     });
 
-    expect(commands).toContain('/aca create 31.03.2026_20:10 31.03.2026_20:20 100 10 DONATE');
-    expect(commands).toContain('/give @p 1 2 1');
-    expect(commands).toContain('/aca scheduleCreate 27 31.03.2026_20:10 31.03.2026_20:09 604800 600');
-    expect(commands).not.toContain('chest');
+    expect(stages.create).toBe('/aca create 31.03.2026_20:10 31.03.2026_20:20 100 10 DONATE');
+    expect(stages.ids).toContain('Test auction -> 27');
+    expect(stages.items).toContain('/give @p 1 2 1');
+    expect(stages.items).toContain('/aca addItem 27');
+    expect(stages.settings).toContain('/aca setStartDate 27 31.03.2026_20:10');
+    expect(stages.settings).toContain('/aca scheduleCreate 27 31.03.2026_20:10 31.03.2026_20:09 604800 600');
+    expect(stages.all).not.toContain('chest');
+  });
+
+  test('does not generate item or setting commands without server ids', () => {
+    const stages = buildAuctionCommandStages({
+      auctions: [{ ...baseAuction, serverIds: {} }],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      commandPlayer: '@p',
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'install'
+    });
+
+    expect(stages.create).toContain('/aca create');
+    expect(stages.ids).toContain('<впиши ID с сервера>');
+    expect(stages.items).toContain('сначала впиши серверные ID');
+    expect(stages.settings).toContain('сначала впиши серверные ID');
   });
 
   test('strips file extensions from generated filenames', () => {

@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.
+- Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
 - Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
 - Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
 - Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.

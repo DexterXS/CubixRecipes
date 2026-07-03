@@ -98,6 +98,7 @@ Temporary file. Keep this file while the modular structure migration is in progr
 - Created `frontend/src/features/auctions/`.
   - Added the auction workspace as a new feature module instead of placing auction UI/generation logic in `App.tsx`.
   - Added planned/repeating auction config, timezone-aware UTC+0 command formatting, draggable 90-day price curves, NEI/catalog item picking, NBT visual warnings with command exclusion, extensionless download, and focused command-generation tests.
+  - Updated the generator after server-ID clarification: new installs now generate step 1 empty slot creation, step 2 server-ID mapping, step 3 item insertion, and step 4 final configuration/schedule commands; existing auctions can skip slot creation and start from entered server IDs.
   - Why this shape: auctions are a new product area, so the page shell should only route to the feature and adapt item catalog/icon data.
 
 ## Still Needed

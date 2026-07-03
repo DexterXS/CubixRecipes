@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 
 export type AuctionCurrency = 'VAULT' | 'DONATE' | 'BONUS';
 export type AuctionBuilderMode = 'config' | 'items';
+export type AuctionWorkflowMode = 'install' | 'existing';
+export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionItemIdMode = 'raw' | 'legacy';
 export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED';
 
@@ -20,6 +22,7 @@ export type AuctionLotItem = AuctionItemOption & {
 
 export type AuctionDraft = {
   id: string;
+  serverIds: Record<string, string>;
   name: string;
   description: string;
   startLocal: string;

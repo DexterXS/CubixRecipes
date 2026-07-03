@@ -1,4 +1,4 @@
-import type { AuctionCurve, AuctionCurrency, AuctionDraft, AuctionItemIdMode } from './auctionTypes';
+import type { AuctionCommandStage, AuctionCurve, AuctionCurrency, AuctionDraft, AuctionItemIdMode, AuctionWorkflowMode } from './auctionTypes';
 
 export const auctionCurrencies: AuctionCurrency[] = ['VAULT', 'DONATE', 'BONUS'];
 
@@ -74,53 +74,109 @@ export function formatAuctionItemId(raw: string, legacyId: number | null | undef
   return `${cleaned} ${meta}`;
 }
 
-export function buildAuctionCommands(params: {
+export type AuctionCommandStages = Record<AuctionCommandStage, string> & {
+  all: string;
+  missingServerIds: string[];
+};
+
+function auctionRunLabel(auction: AuctionDraft, index: number) {
+  const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
+  return repeats > 1 ? `${auction.name || auction.id} #${index + 1}` : auction.name || auction.id;
+}
+
+function getServerAuctionId(auction: AuctionDraft, index: number): string {
+  return auction.serverIds[String(index)]?.trim() ?? '';
+}
+
+export function buildAuctionCommandStages(params: {
   auctions: AuctionDraft[];
   curve: AuctionCurve;
   idMode: AuctionItemIdMode;
   timezoneOffsetMinutes: number;
   commandPlayer: string;
   graphStartLocal: string;
-}): string {
+  workflowMode: AuctionWorkflowMode;
+}): AuctionCommandStages {
   const player = params.commandPlayer.trim() || '@p';
-  const lines: string[] = [];
+  const createLines: string[] = [];
+  const idLines: string[] = [];
+  const itemLines: string[] = [];
+  const settingsLines: string[] = [];
+  const missingServerIds: string[] = [];
 
   params.auctions.forEach((auction) => {
     const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
     for (let index = 0; index < repeats; index += 1) {
+      const label = auctionRunLabel(auction, index);
       const startLocal = index === 0 ? auction.startLocal : addDaysToLocalDateTime(auction.startLocal, auction.repeatEveryDays * index);
       const endLocal = addMinutesToLocalDateTime(startLocal, auction.durationMinutes);
       const dayIndex = dayIndexFromStart(startLocal, params.graphStartLocal);
       const multiplier = params.curve[auction.currency]?.[dayIndex] ?? 1;
       const startPrice = Math.max(1, Math.round(auction.baseStartPrice * multiplier));
       const stepPrice = Math.max(1, Math.round(auction.baseStepPrice * multiplier));
-      const auctionId = repeats > 1 ? `${auction.id}_${index + 1}` : auction.id;
+      const serverId = getServerAuctionId(auction, index);
 
-      lines.push(`/aca create ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)} ${formatAuctionUtcDate(endLocal, params.timezoneOffsetMinutes)} ${startPrice} ${stepPrice} ${auction.currency}`);
-      lines.push(`/aca setName ${auctionId} ${auction.name || `auction_${auctionId}`}`);
-      if (auction.description.trim()) {
-        lines.push(`/aca setDescription ${auctionId} ${auction.description.trim()}`);
+      if (params.workflowMode === 'install') {
+        createLines.push(`/aca create ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)} ${formatAuctionUtcDate(endLocal, params.timezoneOffsetMinutes)} ${startPrice} ${stepPrice} ${auction.currency}`);
       }
-      lines.push(`/aca setState ${auctionId} ${auction.planned ? 'SETUP' : auction.state}`);
+
+      idLines.push(`${label} -> ${serverId || '<впиши ID с сервера>'}`);
+      if (!serverId) {
+        missingServerIds.push(label);
+      }
+
+      if (serverId) {
+        settingsLines.push(`/aca setName ${serverId} ${auction.name || `auction_${serverId}`}`);
+        if (auction.description.trim()) {
+          settingsLines.push(`/aca setDescription ${serverId} ${auction.description.trim()}`);
+        }
+        settingsLines.push(`/aca setStartDate ${serverId} ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)}`);
+        settingsLines.push(`/aca setEndDate ${serverId} ${formatAuctionUtcDate(endLocal, params.timezoneOffsetMinutes)}`);
+        settingsLines.push(`/aca setCurrency ${serverId} ${auction.currency}`);
+        settingsLines.push(`/aca setStartPrice ${serverId} ${startPrice}`);
+        settingsLines.push(`/aca setStepPrice ${serverId} ${stepPrice}`);
+        settingsLines.push(`/aca setState ${serverId} ${auction.planned ? 'SETUP' : auction.state}`);
+      }
 
       auction.items.filter((item) => !item.hasNbt).forEach((item) => {
+        if (!serverId) return;
         const [itemId, itemMeta] = formatAuctionItemId(item.raw, item.legacyId, item.meta, params.idMode).split(' ');
-        lines.push(`/clear ${player}`);
-        lines.push(`/give ${player} ${itemId} ${Math.max(1, item.quantity)} ${itemMeta ?? item.meta}`);
-        lines.push(`/aca addItem ${auctionId}`);
+        itemLines.push(`/clear ${player}`);
+        itemLines.push(`/give ${player} ${itemId} ${Math.max(1, item.quantity)} ${itemMeta ?? item.meta}`);
+        itemLines.push(`/aca addItem ${serverId}`);
       });
 
-      if (auction.planned) {
+      if (serverId && auction.planned) {
         const rescheduleLocal = addMinutesToLocalDateTime(startLocal, -Math.max(0, auction.scheduleLeadMinutes));
         const intervalSec = Math.max(60, auction.repeatEveryDays * 86_400);
         const durationSec = Math.max(60, auction.durationMinutes * 60);
-        lines.push(`/aca scheduleCreate ${auctionId} ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)} ${formatAuctionUtcDate(rescheduleLocal, params.timezoneOffsetMinutes)} ${intervalSec} ${durationSec}`);
+        settingsLines.push(`/aca scheduleCreate ${serverId} ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)} ${formatAuctionUtcDate(rescheduleLocal, params.timezoneOffsetMinutes)} ${intervalSec} ${durationSec}`);
       }
-      lines.push('');
+      if (serverId) {
+        itemLines.push('');
+        settingsLines.push('');
+      }
     }
   });
 
-  return lines.join('\n').trimEnd();
+  const create = params.workflowMode === 'install'
+    ? createLines.join('\n').trimEnd()
+    : 'Для существующих аукционов шаг создания не нужен. Заполни серверные ID и скачай шаги 3-4.';
+  const ids = idLines.join('\n').trimEnd();
+  const items = itemLines.join('\n').trimEnd() || 'Нет команд предметов: сначала впиши серверные ID и добавь предметы без NBT.';
+  const settings = settingsLines.join('\n').trimEnd() || 'Нет команд настроек: сначала впиши серверные ID.';
+  const all = [
+    params.workflowMode === 'install' ? `# Шаг 1. Создание пустых слотов\n${create}` : '',
+    `# Шаг 2. Выпиши ID, которые сервер выдал после /aca create\n${ids}`,
+    `# Шаг 3. Закинуть предметы в аукционы\n${items}`,
+    `# Шаг 4. Настройка времени, цены, длительности и расписания\n${settings}`
+  ].filter(Boolean).join('\n\n');
+
+  return { create, ids, items, settings, all, missingServerIds };
+}
+
+export function buildAuctionCommands(params: Parameters<typeof buildAuctionCommandStages>[0]): string {
+  return buildAuctionCommandStages(params).all;
 }
 
 export function sanitizeAuctionFilename(value: string): string {

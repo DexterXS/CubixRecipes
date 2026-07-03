@@ -412,11 +412,11 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Owns the auction command generator workspace: planned/repeating auction config, timezone selection, item picking from the item catalog, NBT warnings, preview, and extensionless command-file download modal.
+  - Owns the auction command generator workspace: install-existing workflow switching, planned/repeating auction config, server-ID entry step, timezone selection, item picking from the item catalog, NBT warnings, selected-step preview, and extensionless command-file download modal.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/auctionCommands.ts`
-  - Owns deterministic auction command generation for `/aca create`, `/aca setName`, `/aca setDescription`, `/aca setState`, `/clear`, `/give`, `/aca addItem`, and `/aca scheduleCreate`.
-  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day price curves, and excludes NBT items from generated commands.
+  - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day price curves, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
   - Owns the draggable 90-day price multiplier graph used by planned auction days.
 - `frontend/src/features/auctions/AuctionBuilder.css`

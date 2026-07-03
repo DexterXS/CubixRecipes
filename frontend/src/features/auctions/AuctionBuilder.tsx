@@ -4,14 +4,14 @@ import {
   addDaysToLocalDateTime,
   auctionCurrencies,
   auctionCurrencyLabels,
-  buildAuctionCommands,
+  buildAuctionCommandStages,
   createDefaultAuctionCurve,
   dayIndexFromStart,
   localDateTimeInputFromUtcMs,
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { AuctionPriceGraph } from './AuctionPriceGraph';
-import type { AuctionBuilderMode, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon } from './auctionTypes';
+import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
 type AuctionBuilderProps = {
@@ -34,6 +34,7 @@ function timezoneLabel(offset: number) {
 function createAuction(index: number, startLocal: string): AuctionDraft {
   return {
     id: String(index),
+    serverIds: {},
     name: `Аукцион ${index}`,
     description: '',
     startLocal,
@@ -65,7 +66,9 @@ function downloadTextWithoutExtension(filename: string, text: string) {
 
 export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderProps) {
   const now = Date.now();
+  const [workflowMode, setWorkflowMode] = useState<AuctionWorkflowMode>('install');
   const [mode, setMode] = useState<AuctionBuilderMode>('config');
+  const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
   const [timezoneOffset, setTimezoneOffset] = useState(defaultTimezoneOffset());
   const [graphCurrency, setGraphCurrency] = useState<AuctionCurrency>('DONATE');
   const [idMode, setIdMode] = useState<AuctionItemIdMode>('raw');
@@ -79,7 +82,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
 
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
-  const commands = useMemo(() => buildAuctionCommands({ auctions, curve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal }), [auctions, curve, idMode, timezoneOffset, commandPlayer, graphStartLocal]);
+  const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, curve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
+  const commands = commandStages[commandStage];
   const activeGraphDays = useMemo(() => auctions.filter((auction) => auction.currency === graphCurrency).flatMap((auction) => {
     const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
     return Array.from({ length: repeats }, (_, index) => dayIndexFromStart(index === 0 ? auction.startLocal : addDaysToLocalDateTime(auction.startLocal, auction.repeatEveryDays * index), graphStartLocal));
@@ -93,6 +97,17 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
   const updateAuction = (id: string, patch: Partial<AuctionDraft>) => {
     setAuctions((current) => current.map((auction) => auction.id === id ? { ...auction, ...patch } : auction));
+  };
+
+  const renameAuction = (id: string, nextId: string) => {
+    setAuctions((current) => current.map((auction) => auction.id === id ? { ...auction, id: nextId } : auction));
+    setSelectedAuctionId(nextId);
+  };
+
+  const updateServerId = (id: string, runIndex: number, serverId: string) => {
+    const auction = auctions.find((item) => item.id === id);
+    if (!auction) return;
+    updateAuction(id, { serverIds: { ...auction.serverIds, [String(runIndex)]: serverId } });
   };
 
   const addAuction = () => {
@@ -121,9 +136,15 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   return (
     <div className="auction-builder">
       <div className="auction-builder-toolbar">
-        <div className="auction-mode-tabs" aria-label="auction-builder-mode">
-          <button type="button" className={mode === 'config' ? 'active' : ''} onClick={() => setMode('config')}>Конфиги и графики</button>
-          <button type="button" className={mode === 'items' ? 'active' : ''} onClick={() => setMode('items')}>Предметы и файл</button>
+        <div className="auction-mode-stack">
+          <div className="auction-mode-tabs" aria-label="auction-workflow-mode">
+            <button type="button" className={workflowMode === 'install' ? 'active' : ''} onClick={() => { setWorkflowMode('install'); setCommandStage('create'); }}>Установка новых</button>
+            <button type="button" className={workflowMode === 'existing' ? 'active' : ''} onClick={() => { setWorkflowMode('existing'); setCommandStage('ids'); }}>Настройка существующих</button>
+          </div>
+          <div className="auction-mode-tabs" aria-label="auction-builder-mode">
+            <button type="button" className={mode === 'config' ? 'active' : ''} onClick={() => setMode('config')}>Конфиги и графики</button>
+            <button type="button" className={mode === 'items' ? 'active' : ''} onClick={() => setMode('items')}>Предметы и файл</button>
+          </div>
         </div>
         <div className="inline-actions">
           <label className="field-block compact-field">
@@ -153,7 +174,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         {selectedAuction && mode === 'config' ? (
           <Panel title="Настройка аукциона" subtitle="График меняет цены в день запуска аукциона">
             <div className="auction-form-grid">
-              <label className="field-block"><span>ID аукциона</span><input value={selectedAuction.id} onChange={(event) => updateAuction(selectedAuction.id, { id: event.target.value })} /></label>
+              <label className="field-block"><span>Локальная метка</span><input value={selectedAuction.id} onChange={(event) => renameAuction(selectedAuction.id, event.target.value)} /></label>
               <label className="field-block"><span>Валюта</span><select value={selectedAuction.currency} onChange={(event) => updateAuction(selectedAuction.id, { currency: event.target.value as AuctionCurrency })}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>)}</select></label>
               <label className="field-block wide"><span>Название</span><input value={selectedAuction.name} onChange={(event) => updateAuction(selectedAuction.id, { name: event.target.value })} /></label>
               <label className="field-block wide"><span>Описание</span><input value={selectedAuction.description} onChange={(event) => updateAuction(selectedAuction.id, { description: event.target.value })} /></label>
@@ -166,6 +187,25 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               <label className="field-block"><span>Повторов</span><input type="number" min={1} max={90} value={selectedAuction.repeatCount} onChange={(event) => updateAuction(selectedAuction.id, { repeatCount: Number(event.target.value) })} /></label>
               <label className="field-block"><span>Интервал, дней</span><input type="number" min={1} value={selectedAuction.repeatEveryDays} onChange={(event) => updateAuction(selectedAuction.id, { repeatEveryDays: Number(event.target.value) })} /></label>
             </div>
+            <section className="auction-server-id-section">
+              <div className="settings-section-title compact">
+                <h3>Шаг 2: ID с сервера</h3>
+                <span>После выполнения `/aca create` сервер выдаст ID. Впиши его сюда для каждого запуска.</span>
+              </div>
+              <div className="auction-server-id-grid">
+                {Array.from({ length: selectedAuction.repeatEnabled ? Math.max(1, selectedAuction.repeatCount) : 1 }, (_, index) => (
+                  <label key={index} className="field-block">
+                    <span>{index === 0 ? selectedAuction.name : `${selectedAuction.name} #${index + 1}`}</span>
+                    <input
+                      value={selectedAuction.serverIds[String(index)] ?? ''}
+                      onChange={(event) => updateServerId(selectedAuction.id, index, event.target.value)}
+                      placeholder="ID, который выдал сервер"
+                    />
+                  </label>
+                ))}
+              </div>
+              {commandStages.missingServerIds.length ? <div className="inline-hint inline-hint-warning">Без этих ID шаги предметов и настроек будут пропущены: {commandStages.missingServerIds.join(', ')}</div> : null}
+            </section>
             <div className="auction-toolbar-row">
               <label className="field-block compact-field"><span>График</span><select value={graphCurrency} onChange={(event) => setGraphCurrency(event.target.value as AuctionCurrency)}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{auctionCurrencyLabels[currency]}</option>)}</select></label>
               <span>Тащи точку вверх/вниз: множитель меняет цену всех аукционов этой валюты в этот день.</span>
@@ -224,6 +264,12 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       </div>
 
       <Panel title="Предпросмотр файла" subtitle="Файл скачивается без расширения">
+        <div className="auction-step-tabs" aria-label="auction-command-stage">
+          {workflowMode === 'install' ? <button type="button" className={commandStage === 'create' ? 'active' : ''} onClick={() => setCommandStage('create')}>1. Создать слоты</button> : null}
+          <button type="button" className={commandStage === 'ids' ? 'active' : ''} onClick={() => setCommandStage('ids')}>2. Выписать ID</button>
+          <button type="button" className={commandStage === 'items' ? 'active' : ''} onClick={() => setCommandStage('items')}>3. Закинуть предметы</button>
+          <button type="button" className={commandStage === 'settings' ? 'active' : ''} onClick={() => setCommandStage('settings')}>4. Настроить и запустить</button>
+        </div>
         <pre className="raw-block auction-command-preview">{commands || 'Команды появятся после настройки аукциона.'}</pre>
       </Panel>
 
