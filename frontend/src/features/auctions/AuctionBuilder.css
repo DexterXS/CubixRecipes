@@ -129,9 +129,21 @@
 .auction-picker-row,
 .auction-lot-row {
   display: grid;
-  grid-template-columns: 42px 1fr auto;
+  grid-template-columns: 42px minmax(180px, 1fr) auto;
   align-items: center;
   gap: 10px;
+}
+
+.auction-lot-controls {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.auction-lot-controls input {
+  width: 90px;
 }
 
 .auction-item-icon {
@@ -162,5 +174,15 @@
   .auction-form-grid,
   .auction-server-id-grid {
     grid-template-columns: 1fr;
+  }
+
+  .auction-lot-row,
+  .auction-picker-row {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .auction-lot-controls {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
   }
 }

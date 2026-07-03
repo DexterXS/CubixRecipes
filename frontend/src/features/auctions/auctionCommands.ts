@@ -88,6 +88,12 @@ function getServerAuctionId(auction: AuctionDraft, index: number): string {
   return auction.serverIds[String(index)]?.trim() ?? '';
 }
 
+function getAuctionBaseItemPrice(auction: AuctionDraft): number {
+  return auction.items
+    .filter((item) => !item.hasNbt)
+    .reduce((total, item) => total + Math.max(0, item.basePrice), 0);
+}
+
 export function buildAuctionCommandStages(params: {
   auctions: AuctionDraft[];
   curve: AuctionCurve;
@@ -112,7 +118,7 @@ export function buildAuctionCommandStages(params: {
       const endLocal = addMinutesToLocalDateTime(startLocal, auction.durationMinutes);
       const dayIndex = dayIndexFromStart(startLocal, params.graphStartLocal);
       const multiplier = params.curve[auction.currency]?.[dayIndex] ?? 1;
-      const startPrice = Math.max(1, Math.round(auction.baseStartPrice * multiplier));
+      const startPrice = Math.max(1, Math.round(getAuctionBaseItemPrice(auction) * multiplier));
       const stepPrice = Math.max(1, Math.round(auction.baseStepPrice * multiplier));
       const serverId = getServerAuctionId(auction, index);
 

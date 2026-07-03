@@ -26,6 +26,11 @@ function valueFromY(y: number) {
   return Math.max(minValue, Math.min(maxValue, minValue + normalized * (maxValue - minValue)));
 }
 
+function percentLabel(value: number) {
+  const percent = Math.round((value - 1) * 100);
+  return percent > 0 ? `+${percent}%` : `${percent}%`;
+}
+
 export function AuctionPriceGraph({ values, activeDays, onChangeDay }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [dragDay, setDragDay] = useState<number | null>(null);
@@ -59,7 +64,7 @@ export function AuctionPriceGraph({ values, activeDays, onChangeDay }: AuctionPr
       {[0.5, 1, 1.5, 2, 2.5, 3].map((value) => (
         <g key={value}>
           <line className="auction-graph-grid" x1={padding} y1={yForValue(value)} x2={width - padding} y2={yForValue(value)} />
-          <text x={4} y={yForValue(value) + 4}>{value.toFixed(1)}x</text>
+          <text x={4} y={yForValue(value) + 4}>{percentLabel(value)}</text>
         </g>
       ))}
       <polyline className="auction-graph-line" points={line} fill="none" />

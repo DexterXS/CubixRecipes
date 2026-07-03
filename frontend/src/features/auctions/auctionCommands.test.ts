@@ -11,7 +11,6 @@ const baseAuction: AuctionDraft = {
   startLocal: '2026-03-31T23:10',
   durationMinutes: 10,
   currency: 'DONATE',
-  baseStartPrice: 100,
   baseStepPrice: 10,
   state: 'ACTIVE',
   planned: true,
@@ -20,8 +19,8 @@ const baseAuction: AuctionDraft = {
   repeatCount: 1,
   scheduleLeadMinutes: 1,
   items: [
-    { uid: 'a', raw: '<minecraft:stone:1>', title: 'Stone', legacyId: 1, meta: 1, hasNbt: false, quantity: 2 },
-    { uid: 'b', raw: '<minecraft:chest>.withTag({tag:1})', title: 'NBT Chest', legacyId: 54, meta: 0, hasNbt: true, quantity: 1 }
+    { uid: 'a', raw: '<minecraft:stone:1>', title: 'Stone', legacyId: 1, meta: 1, hasNbt: false, quantity: 2, basePrice: 100 },
+    { uid: 'b', raw: '<minecraft:chest>.withTag({tag:1})', title: 'NBT Chest', legacyId: 54, meta: 0, hasNbt: true, quantity: 1, basePrice: 5000 }
   ]
 };
 
@@ -65,6 +64,23 @@ describe('auction command generation', () => {
     expect(stages.ids).toContain('<впиши ID с сервера>');
     expect(stages.items).toContain('сначала впиши серверные ID');
     expect(stages.settings).toContain('сначала впиши серверные ID');
+  });
+
+  test('uses the graph multiplier on item prices for the auction date', () => {
+    const curve = createDefaultAuctionCurve();
+    curve.DONATE[30] = 1.25;
+    const stages = buildAuctionCommandStages({
+      auctions: [baseAuction],
+      curve,
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      commandPlayer: '@p',
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'install'
+    });
+
+    expect(stages.create).toContain('125 13 DONATE');
+    expect(stages.create).not.toContain('6375');
   });
 
   test('strips file extensions from generated filenames', () => {

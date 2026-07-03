@@ -40,7 +40,6 @@ function createAuction(index: number, startLocal: string): AuctionDraft {
     startLocal,
     durationMinutes: 10,
     currency: 'DONATE',
-    baseStartPrice: 100,
     baseStepPrice: 10,
     state: 'ACTIVE',
     planned: true,
@@ -119,7 +118,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
   const addItemToAuction = (option: AuctionItemOption) => {
     if (!selectedAuction) return;
-    const item: AuctionLotItem = { ...option, uid: `${option.raw}-${Date.now()}-${Math.random().toString(36).slice(2)}`, quantity: 1 };
+    const item: AuctionLotItem = { ...option, uid: `${option.raw}-${Date.now()}-${Math.random().toString(36).slice(2)}`, quantity: 1, basePrice: 100 };
     updateAuction(selectedAuction.id, { items: [...selectedAuction.items, item] });
   };
 
@@ -172,7 +171,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         </Panel>
 
         {selectedAuction && mode === 'config' ? (
-          <Panel title="Настройка аукциона" subtitle="График меняет цены в день запуска аукциона">
+          <Panel title="Настройка аукциона" subtitle="График меняет процент цены предметов в день запуска аукциона">
             <div className="auction-form-grid">
               <label className="field-block"><span>Локальная метка</span><input value={selectedAuction.id} onChange={(event) => renameAuction(selectedAuction.id, event.target.value)} /></label>
               <label className="field-block"><span>Валюта</span><select value={selectedAuction.currency} onChange={(event) => updateAuction(selectedAuction.id, { currency: event.target.value as AuctionCurrency })}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>)}</select></label>
@@ -180,7 +179,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               <label className="field-block wide"><span>Описание</span><input value={selectedAuction.description} onChange={(event) => updateAuction(selectedAuction.id, { description: event.target.value })} /></label>
               <label className="field-block"><span>Старт</span><input type="datetime-local" value={selectedAuction.startLocal} onChange={(event) => updateAuction(selectedAuction.id, { startLocal: event.target.value })} /></label>
               <label className="field-block"><span>Длительность, мин</span><input type="number" min={1} value={selectedAuction.durationMinutes} onChange={(event) => updateAuction(selectedAuction.id, { durationMinutes: Number(event.target.value) })} /></label>
-              <label className="field-block"><span>Стартовая цена</span><input type="number" min={1} value={selectedAuction.baseStartPrice} onChange={(event) => updateAuction(selectedAuction.id, { baseStartPrice: Number(event.target.value) })} /></label>
               <label className="field-block"><span>Шаг ставки</span><input type="number" min={1} value={selectedAuction.baseStepPrice} onChange={(event) => updateAuction(selectedAuction.id, { baseStepPrice: Number(event.target.value) })} /></label>
               <label className="field-block switch-field"><span>Плановый запуск</span><input type="checkbox" checked={selectedAuction.planned} onChange={(event) => updateAuction(selectedAuction.id, { planned: event.target.checked })} /></label>
               <label className="field-block switch-field"><span>Повторять</span><input type="checkbox" checked={selectedAuction.repeatEnabled} onChange={(event) => updateAuction(selectedAuction.id, { repeatEnabled: event.target.checked })} /></label>
@@ -208,7 +206,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
             </section>
             <div className="auction-toolbar-row">
               <label className="field-block compact-field"><span>График</span><select value={graphCurrency} onChange={(event) => setGraphCurrency(event.target.value as AuctionCurrency)}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{auctionCurrencyLabels[currency]}</option>)}</select></label>
-              <span>Тащи точку вверх/вниз: множитель меняет цену всех аукционов этой валюты в этот день.</span>
+              <span>Тащи точку вверх/вниз: процент меняет цены всех предметов этой валюты в этот день.</span>
             </div>
             <AuctionPriceGraph
               values={curve[graphCurrency]}
@@ -237,8 +235,15 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                       <span>{item.raw}</span>
                       {item.hasNbt ? <div className="auction-warning">! NBT нельзя выдать командой, лот не попадёт в файл</div> : null}
                     </div>
-                    <div className="inline-actions">
-                      <input aria-label={`auction-item-qty-${item.uid}`} type="number" min={1} value={item.quantity} onChange={(event) => updateLotItem(item.uid, { quantity: Number(event.target.value) })} />
+                    <div className="auction-lot-controls">
+                      <label className="field-block compact-field">
+                        <span>Кол-во</span>
+                        <input aria-label={`auction-item-qty-${item.uid}`} type="number" min={1} value={item.quantity} onChange={(event) => updateLotItem(item.uid, { quantity: Number(event.target.value) })} />
+                      </label>
+                      <label className="field-block compact-field">
+                        <span>Цена</span>
+                        <input aria-label={`auction-item-price-${item.uid}`} type="number" min={0} value={item.basePrice} onChange={(event) => updateLotItem(item.uid, { basePrice: Number(event.target.value) })} />
+                      </label>
                       <button type="button" className="ghost-button" onClick={() => removeLotItem(item.uid)}>Удалить</button>
                     </div>
                   </div>

@@ -18,6 +18,7 @@ export type AuctionItemOption = {
 export type AuctionLotItem = AuctionItemOption & {
   uid: string;
   quantity: number;
+  basePrice: number;
 };
 
 export type AuctionDraft = {
@@ -28,7 +29,6 @@ export type AuctionDraft = {
   startLocal: string;
   durationMinutes: number;
   currency: AuctionCurrency;
-  baseStartPrice: number;
   baseStepPrice: number;
   state: AuctionState;
   planned: boolean;
