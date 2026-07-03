@@ -321,6 +321,80 @@
   text-anchor: middle;
 }
 
+.auction-graph-point-count {
+  text-anchor: middle;
+  font-weight: 700;
+  fill: var(--text-strong, #f8fafc);
+  paint-order: stroke;
+  stroke: var(--surface-sunken);
+  stroke-width: 4px;
+}
+
+.auction-graph-repeat-marker line {
+  stroke: var(--accent, #7aa2ff);
+  stroke-dasharray: 4 5;
+  opacity: 0.45;
+}
+
+.auction-graph-repeat-marker circle {
+  fill: var(--surface-sunken);
+  stroke: var(--accent, #7aa2ff);
+  stroke-width: 2;
+  opacity: 0.9;
+}
+
+.auction-graph-repeat-marker text {
+  text-anchor: middle;
+  font-weight: 700;
+  fill: var(--text-muted);
+  paint-order: stroke;
+  stroke: var(--surface-sunken);
+  stroke-width: 4px;
+}
+
+.auction-run-price-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.auction-run-price-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.auction-run-price-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 70px 110px 90px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+
+.auction-run-price-row div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auction-run-price-row strong,
+.auction-run-price-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auction-run-price-row span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.auction-run-price-row b {
+  color: var(--accent, #7aa2ff);
+}
+
 .auction-picker-row,
 .auction-lot-row {
   display: grid;
@@ -380,5 +454,13 @@
   .auction-lot-controls {
     grid-column: 1 / -1;
     justify-content: flex-start;
+  }
+
+  .auction-run-price-row {
+    grid-template-columns: 1fr 58px;
+  }
+
+  .auction-run-price-row > span {
+    white-space: normal;
   }
 }

@@ -6,6 +6,7 @@
 - Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
 - Changed Auctions pricing so each item stores its own lot price and the 90-day graph applies a percentage multiplier to all non-NBT item prices for the matching currency/day.
 - Changed the Auctions price graph to draw a smooth equalizer-style curve through auction date control points instead of sharp 90-day spike segments.
+- Added an Auctions graph price preview: repeat occurrences are shown as read-only markers, while repeating auctions keep a constant price from the first graph point because the server repeat command cannot change price per occurrence.
 - Added auction-only hover/focus help popovers for panels and fields, including explanations and examples for local labels, server IDs, graph percentages, item prices, and command-file steps.
 - Added an auction plan inventory preview plus an auction-local admin setting that caps how many items can be added to one auction.
 - Changed the Auctions items/file view into a single workspace with the NEI catalog beside the selected auction's internal inventory.

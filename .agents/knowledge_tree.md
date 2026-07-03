@@ -422,9 +422,11 @@ Last full rebuild: 2026-06-29
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
-  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to per-item lot prices, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands and price totals.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to per-item lot prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands and price totals.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
-  - Owns the draggable 90-day percentage graph used by planned auction days, including the smooth Bezier/equalizer-style curve through real auction date control points only and the soft SVG fill under the curve.
+  - Owns the draggable 90-day percentage graph used by planned auction days, including the smooth Bezier/equalizer-style curve through real auction date control points only, the soft SVG fill under the curve, and read-only repeat markers that show server-repeat occurrences without implying per-repeat price changes.
+- `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
+  - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.
 - `frontend/src/features/auctions/AuctionBuilder.css`
   - Scoped presentation for the auction builder workspace, item picker, graph, warnings, and command preview.
 

@@ -1,19 +1,19 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Panel } from '../../components/Panel';
 import {
-  addDaysToLocalDateTime,
   auctionCurrencies,
   auctionCurrencyLabels,
   buildAuctionCommandStages,
+  buildAuctionRunPricePreviews,
   createDefaultAuctionCurve,
-  dayIndexFromStart,
   localDateTimeInputFromUtcMs,
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { AuctionHelpTip } from './AuctionHelpTip';
 import { AuctionItemsWorkspace } from './AuctionItemsWorkspace';
 import { AuctionPlanPanel } from './AuctionPlanPanel';
-import { AuctionPriceGraph } from './AuctionPriceGraph';
+import { AuctionPriceGraph, type AuctionPriceGraphPointDetail, type AuctionPriceGraphRepeatMarker } from './AuctionPriceGraph';
+import { AuctionRunPricePreviewList } from './AuctionRunPricePreviewList';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
@@ -96,10 +96,32 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
   const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, curve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
   const commands = commandStages[commandStage];
-  const activeGraphDays = useMemo(() => auctions.filter((auction) => auction.currency === graphCurrency).flatMap((auction) => {
-    const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
-    return Array.from({ length: repeats }, (_, index) => dayIndexFromStart(index === 0 ? auction.startLocal : addDaysToLocalDateTime(auction.startLocal, auction.repeatEveryDays * index), graphStartLocal));
-  }), [auctions, graphCurrency, graphStartLocal]);
+  const runPricePreviews = useMemo(() => buildAuctionRunPricePreviews({ auctions, curve, graphStartLocal }), [auctions, curve, graphStartLocal]);
+  const graphRunPricePreviews = useMemo(() => runPricePreviews.filter((preview) => preview.currency === graphCurrency), [runPricePreviews, graphCurrency]);
+  const activeGraphDays = useMemo(() => graphRunPricePreviews.filter((preview) => preview.dayIndex === preview.priceDayIndex).map((preview) => preview.priceDayIndex), [graphRunPricePreviews]);
+  const graphPointDetails = useMemo(() => graphRunPricePreviews.reduce<Record<number, AuctionPriceGraphPointDetail[]>>((details, preview) => {
+    if (preview.dayIndex !== preview.priceDayIndex) return details;
+    details[preview.priceDayIndex] = [
+      ...(details[preview.priceDayIndex] ?? []),
+      {
+        label: preview.label,
+        startPrice: preview.startPrice,
+        stepPrice: preview.stepPrice,
+        multiplier: preview.multiplier
+      }
+    ];
+    return details;
+  }, {}), [graphRunPricePreviews]);
+  const graphRepeatMarkers = useMemo(() => graphRunPricePreviews
+    .filter((preview) => preview.dayIndex !== preview.priceDayIndex)
+    .map<AuctionPriceGraphRepeatMarker>((preview) => ({
+      day: preview.dayIndex,
+      priceDay: preview.priceDayIndex,
+      label: preview.label,
+      startPrice: preview.startPrice,
+      stepPrice: preview.stepPrice,
+      multiplier: preview.multiplier
+    })), [graphRunPricePreviews]);
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
     if (!query) return itemOptions.slice(0, 80);
@@ -248,8 +270,11 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
             <AuctionPriceGraph
               values={curve[graphCurrency]}
               activeDays={activeGraphDays}
+              pointDetails={graphPointDetails}
+              repeatMarkers={graphRepeatMarkers}
               onChangeDay={(day, value) => setCurve((current) => ({ ...current, [graphCurrency]: current[graphCurrency].map((item, index) => index === day ? value : item) }))}
             />
+            <AuctionRunPricePreviewList previews={graphRunPricePreviews} />
           </Panel>
         ) : null}
 

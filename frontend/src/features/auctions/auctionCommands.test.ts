@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { buildAuctionCommandStages, createDefaultAuctionCurve, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
+import { buildAuctionCommandStages, buildAuctionRunPricePreviews, createDefaultAuctionCurve, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
 import type { AuctionDraft } from './auctionTypes';
 
 const baseAuction: AuctionDraft = {
@@ -81,6 +81,31 @@ describe('auction command generation', () => {
 
     expect(stages.create).toContain('125 13 DONATE');
     expect(stages.create).not.toContain('6375');
+  });
+
+  test('keeps repeated auction prices locked to the first graph day', () => {
+    const curve = createDefaultAuctionCurve();
+    curve.DONATE[30] = 1.25;
+    curve.DONATE[40] = 1.5;
+    curve.DONATE[50] = 0.5;
+
+    const previews = buildAuctionRunPricePreviews({
+      auctions: [{
+        ...baseAuction,
+        serverIds: { 0: '27', 1: '28', 2: '29' },
+        repeatEnabled: true,
+        repeatCount: 3,
+        repeatEveryDays: 10
+      }],
+      curve,
+      graphStartLocal: '2026-03-01T00:00'
+    });
+
+    expect(previews.map((preview) => preview.dayIndex)).toEqual([30, 40, 50]);
+    expect(previews.map((preview) => preview.priceDayIndex)).toEqual([30, 30, 30]);
+    expect(previews.map((preview) => preview.label)).toEqual(['Test auction #1', 'Test auction #2', 'Test auction #3']);
+    expect(previews.map((preview) => preview.startPrice)).toEqual([125, 125, 125]);
+    expect(previews.map((preview) => preview.stepPrice)).toEqual([13, 13, 13]);
   });
 
   test('strips file extensions from generated filenames', () => {

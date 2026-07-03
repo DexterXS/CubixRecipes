@@ -3,7 +3,21 @@ import { useRef, useState } from 'react';
 type AuctionPriceGraphProps = {
   values: number[];
   activeDays: number[];
+  pointDetails?: Record<number, AuctionPriceGraphPointDetail[]>;
+  repeatMarkers?: AuctionPriceGraphRepeatMarker[];
   onChangeDay: (day: number, value: number) => void;
+};
+
+export type AuctionPriceGraphPointDetail = {
+  label: string;
+  startPrice: number;
+  stepPrice: number;
+  multiplier: number;
+};
+
+export type AuctionPriceGraphRepeatMarker = AuctionPriceGraphPointDetail & {
+  day: number;
+  priceDay: number;
 };
 
 const width = 760;
@@ -35,6 +49,16 @@ function valueFromY(y: number) {
 function percentLabel(value: number) {
   const percent = Math.round((value - 1) * 100);
   return percent > 0 ? `+${percent}%` : `${percent}%`;
+}
+
+function pointTitle(day: number, details: AuctionPriceGraphPointDetail[] | undefined, value: number) {
+  const multiplier = percentLabel(value);
+  if (!details?.length) return `D${day + 1}: ${multiplier}`;
+  return details.map((detail) => `${detail.label}: ${percentLabel(detail.multiplier)}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`).join('\n');
+}
+
+function repeatMarkerTitle(marker: AuctionPriceGraphRepeatMarker) {
+  return `${marker.label}: повтор D${marker.day + 1}, цена как в D${marker.priceDay + 1} (${percentLabel(marker.multiplier)}), старт ${marker.startPrice}, шаг ${marker.stepPrice}`;
 }
 
 function controlPoints(values: number[], activeDays: number[]): GraphPoint[] {
@@ -71,7 +95,7 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ values, activeDays, onChangeDay }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ values, activeDays, pointDetails, repeatMarkers = [], onChangeDay }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [dragDay, setDragDay] = useState<number | null>(null);
   const uniqueActiveDays = Array.from(new Set(activeDays)).filter((day) => day >= 0 && day <= 89).sort((a, b) => a - b);
@@ -117,8 +141,17 @@ export function AuctionPriceGraph({ values, activeDays, onChangeDay }: AuctionPr
       ))}
       <path className="auction-graph-fill" d={fill} />
       <path className="auction-graph-line" d={line} />
+      {repeatMarkers.map((marker) => (
+        <g key={`${marker.label}-${marker.day}-${marker.priceDay}`} className="auction-graph-repeat-marker">
+          <title>{repeatMarkerTitle(marker)}</title>
+          <line x1={xForDay(marker.day)} y1={yForValue(values[marker.priceDay] ?? 1) - 18} x2={xForDay(marker.day)} y2={height - padding} />
+          <circle cx={xForDay(marker.day)} cy={yForValue(values[marker.priceDay] ?? 1)} r={5} />
+          <text x={xForDay(marker.day)} y={yForValue(values[marker.priceDay] ?? 1) - 22}>R{marker.day + 1}</text>
+        </g>
+      ))}
       {uniqueActiveDays.map((day) => (
         <g key={day}>
+          <title>{pointTitle(day, pointDetails?.[day], values[day] ?? 1)}</title>
           <circle
             className="auction-graph-point"
             cx={xForDay(day)}
@@ -131,6 +164,11 @@ export function AuctionPriceGraph({ values, activeDays, onChangeDay }: AuctionPr
               updateFromPointer(event.clientY, day);
             }}
           />
+          {pointDetails?.[day]?.length ? (
+            <text className="auction-graph-point-count" x={xForDay(day)} y={yForValue(values[day] ?? 1) - 12}>
+              {pointDetails[day].length > 1 ? `x${pointDetails[day].length}` : percentLabel(values[day] ?? 1)}
+            </text>
+          ) : null}
           <text className="auction-graph-day" x={xForDay(day)} y={height - 8}>D{day + 1}</text>
         </g>
       ))}

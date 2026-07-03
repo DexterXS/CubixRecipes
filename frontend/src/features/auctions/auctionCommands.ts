@@ -79,6 +79,23 @@ export type AuctionCommandStages = Record<AuctionCommandStage, string> & {
   missingServerIds: string[];
 };
 
+export type AuctionRunPricePreview = {
+  auctionId: string;
+  auctionName: string;
+  label: string;
+  runIndex: number;
+  startLocal: string;
+  endLocal: string;
+  dayIndex: number;
+  priceDayIndex: number;
+  currency: AuctionCurrency;
+  multiplier: number;
+  baseItemPrice: number;
+  startPrice: number;
+  stepPrice: number;
+  serverId: string;
+};
+
 function auctionRunLabel(auction: AuctionDraft, index: number) {
   const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
   return repeats > 1 ? `${auction.name || auction.id} #${index + 1}` : auction.name || auction.id;
@@ -88,10 +105,46 @@ function getServerAuctionId(auction: AuctionDraft, index: number): string {
   return auction.serverIds[String(index)]?.trim() ?? '';
 }
 
-function getAuctionBaseItemPrice(auction: AuctionDraft): number {
+export function getAuctionBaseItemPrice(auction: AuctionDraft): number {
   return auction.items
     .filter((item) => !item.hasNbt)
     .reduce((total, item) => total + Math.max(0, item.basePrice), 0);
+}
+
+function buildAuctionRunPricePreview(auction: AuctionDraft, index: number, curve: AuctionCurve, graphStartLocal: string): AuctionRunPricePreview {
+  const baseItemPrice = getAuctionBaseItemPrice(auction);
+  const startLocal = index === 0 ? auction.startLocal : addDaysToLocalDateTime(auction.startLocal, auction.repeatEveryDays * index);
+  const endLocal = addMinutesToLocalDateTime(startLocal, auction.durationMinutes);
+  const dayIndex = dayIndexFromStart(startLocal, graphStartLocal);
+  const priceDayIndex = auction.repeatEnabled ? dayIndexFromStart(auction.startLocal, graphStartLocal) : dayIndex;
+  const multiplier = curve[auction.currency]?.[priceDayIndex] ?? 1;
+  return {
+    auctionId: auction.id,
+    auctionName: auction.name,
+    label: auctionRunLabel(auction, index),
+    runIndex: index,
+    startLocal,
+    endLocal,
+    dayIndex,
+    priceDayIndex,
+    currency: auction.currency,
+    multiplier,
+    baseItemPrice,
+    startPrice: Math.max(1, Math.round(baseItemPrice * multiplier)),
+    stepPrice: Math.max(1, Math.round(auction.baseStepPrice * multiplier)),
+    serverId: getServerAuctionId(auction, index)
+  };
+}
+
+export function buildAuctionRunPricePreviews(params: {
+  auctions: AuctionDraft[];
+  curve: AuctionCurve;
+  graphStartLocal: string;
+}): AuctionRunPricePreview[] {
+  return params.auctions.flatMap((auction) => {
+    const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
+    return Array.from({ length: repeats }, (_, index) => buildAuctionRunPricePreview(auction, index, params.curve, params.graphStartLocal));
+  });
 }
 
 export function buildAuctionCommandStages(params: {
@@ -113,14 +166,8 @@ export function buildAuctionCommandStages(params: {
   params.auctions.forEach((auction) => {
     const repeats = auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
     for (let index = 0; index < repeats; index += 1) {
-      const label = auctionRunLabel(auction, index);
-      const startLocal = index === 0 ? auction.startLocal : addDaysToLocalDateTime(auction.startLocal, auction.repeatEveryDays * index);
-      const endLocal = addMinutesToLocalDateTime(startLocal, auction.durationMinutes);
-      const dayIndex = dayIndexFromStart(startLocal, params.graphStartLocal);
-      const multiplier = params.curve[auction.currency]?.[dayIndex] ?? 1;
-      const startPrice = Math.max(1, Math.round(getAuctionBaseItemPrice(auction) * multiplier));
-      const stepPrice = Math.max(1, Math.round(auction.baseStepPrice * multiplier));
-      const serverId = getServerAuctionId(auction, index);
+      const preview = buildAuctionRunPricePreview(auction, index, params.curve, params.graphStartLocal);
+      const { label, startLocal, endLocal, startPrice, stepPrice, serverId } = preview;
 
       if (params.workflowMode === 'install') {
         createLines.push(`/aca create ${formatAuctionUtcDate(startLocal, params.timezoneOffsetMinutes)} ${formatAuctionUtcDate(endLocal, params.timezoneOffsetMinutes)} ${startPrice} ${stepPrice} ${auction.currency}`);
