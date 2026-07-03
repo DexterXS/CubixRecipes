@@ -424,7 +424,7 @@ Last full rebuild: 2026-06-29
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to per-item lot prices, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands and price totals.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
-  - Owns the draggable 90-day percentage graph used by planned auction days, including the smooth Bezier/equalizer-style curve through auction date control points and the soft SVG fill under the curve.
+  - Owns the draggable 90-day percentage graph used by planned auction days, including the smooth Bezier/equalizer-style curve through real auction date control points only and the soft SVG fill under the curve.
 - `frontend/src/features/auctions/AuctionBuilder.css`
   - Scoped presentation for the auction builder workspace, item picker, graph, warnings, and command preview.
 

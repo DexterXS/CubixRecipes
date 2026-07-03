@@ -39,7 +39,7 @@ function percentLabel(value: number) {
 
 function controlPoints(values: number[], activeDays: number[]): GraphPoint[] {
   const active = Array.from(new Set(activeDays)).filter((day) => day >= 0 && day <= 89).sort((a, b) => a - b);
-  const days = Array.from(new Set([0, ...active, 89])).sort((a, b) => a - b);
+  const days = active.length ? active : [0, 89];
   return days.map((day) => ({ day, x: xForDay(day), y: yForValue(values[day] ?? 1) }));
 }
 
