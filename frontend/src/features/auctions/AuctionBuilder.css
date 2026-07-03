@@ -115,6 +115,12 @@
   padding: 10px;
 }
 
+.auction-card {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+
 .auction-card.active {
   border-color: var(--accent, #7aa2ff);
 }
