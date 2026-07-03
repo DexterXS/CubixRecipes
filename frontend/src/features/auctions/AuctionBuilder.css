@@ -22,6 +22,62 @@
   gap: 8px;
 }
 
+.auction-help-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auction-help-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  z-index: 5;
+}
+
+.auction-help-trigger {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: help;
+  user-select: none;
+}
+
+.auction-help-tip .auction-help-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(340px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--text);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.auction-help-tip:hover .auction-help-popover,
+.auction-help-tip:focus-within .auction-help-popover {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .auction-mode-tabs button.active,
 .auction-id-mode button.active,
 .auction-step-tabs button.active {

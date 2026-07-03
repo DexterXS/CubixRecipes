@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Panel } from '../../components/Panel';
 import {
   addDaysToLocalDateTime,
@@ -10,6 +10,7 @@ import {
   localDateTimeInputFromUtcMs,
   sanitizeAuctionFilename
 } from './auctionCommands';
+import { AuctionHelpTip } from './AuctionHelpTip';
 import { AuctionPriceGraph } from './AuctionPriceGraph';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
@@ -18,6 +19,15 @@ type AuctionBuilderProps = {
   itemOptions: AuctionItemOption[];
   renderItemIcon: AuctionRenderItemIcon;
 };
+
+function HelpLabel({ text, children }: { text: string; children: ReactNode }) {
+  return (
+    <span className="auction-help-label">
+      {text}
+      <AuctionHelpTip label={`Подсказка: ${text}`}>{children}</AuctionHelpTip>
+    </span>
+  );
+}
 
 function defaultTimezoneOffset() {
   return -new Date().getTimezoneOffset();
@@ -137,8 +147,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       <div className="auction-builder-toolbar">
         <div className="auction-mode-stack">
           <div className="auction-mode-tabs" aria-label="auction-workflow-mode">
-            <button type="button" className={workflowMode === 'install' ? 'active' : ''} onClick={() => { setWorkflowMode('install'); setCommandStage('create'); }}>Установка новых</button>
-            <button type="button" className={workflowMode === 'existing' ? 'active' : ''} onClick={() => { setWorkflowMode('existing'); setCommandStage('ids'); }}>Настройка существующих</button>
+            <button type="button" title="Для новых аукционов: сначала создаём пустые слоты, потом вписываем ID, затем добавляем предметы и настройки." className={workflowMode === 'install' ? 'active' : ''} onClick={() => { setWorkflowMode('install'); setCommandStage('create'); }}>Установка новых</button>
+            <button type="button" title="Для уже созданных аукционов: создание слотов пропускается, работа начинается с ввода серверных ID." className={workflowMode === 'existing' ? 'active' : ''} onClick={() => { setWorkflowMode('existing'); setCommandStage('ids'); }}>Настройка существующих</button>
           </div>
           <div className="auction-mode-tabs" aria-label="auction-builder-mode">
             <button type="button" className={mode === 'config' ? 'active' : ''} onClick={() => setMode('config')}>Конфиги и графики</button>
@@ -147,17 +157,29 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         </div>
         <div className="inline-actions">
           <label className="field-block compact-field">
-            <span>Часовой пояс</span>
+            <HelpLabel text="Часовой пояс">
+              Выбирает локальный часовой пояс, в котором ты задаёшь дату старта. В файл команды попадут в UTC+0, как требует серверная команда.
+              Пример: если старт 10.07.2026 20:00 в UTC+03:00, в команде будет 10.07.2026_17:00.
+            </HelpLabel>
             <select value={timezoneOffset} onChange={(event) => setTimezoneOffset(Number(event.target.value))}>
               {Array.from({ length: 27 }, (_, index) => (index - 12) * 60).map((offset) => <option key={offset} value={offset}>{timezoneLabel(offset)}</option>)}
             </select>
           </label>
-          <button type="button" onClick={() => setDownloadModalOpen(true)}>Скачать файл команд</button>
+          <button type="button" title="Открывает окно имени файла и скачивает текущий выбранный шаг команд без расширения .txt." onClick={() => setDownloadModalOpen(true)}>Скачать файл команд</button>
         </div>
       </div>
 
       <div className="auction-layout">
-        <Panel title="План аукционов" subtitle="По умолчанию горизонт ограничен 3 месяцами">
+        <Panel
+          title="План аукционов"
+          subtitle="По умолчанию горизонт ограничен 3 месяцами"
+          actions={(
+            <AuctionHelpTip label="Подсказка: План аукционов">
+              Здесь список локальных заготовок аукционов. Это ещё не серверные аукционы: серверный ID появится только после выполнения `/aca create`.
+              Пример: можно сделать заготовку “Донат блоки июль”, включить повторы и потом получить несколько ID с сервера.
+            </AuctionHelpTip>
+          )}
+        >
           <div className="auction-list">
             {auctions.map((auction) => (
               <button key={auction.id} type="button" className={`auction-card ${selectedAuction?.id === auction.id ? 'active' : ''}`.trim()} onClick={() => setSelectedAuctionId(auction.id)}>
@@ -166,34 +188,51 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                 {auction.repeatEnabled ? <span>Повтор: {auction.repeatCount} раз, каждые {auction.repeatEveryDays} дн.</span> : null}
               </button>
             ))}
-            <button type="button" className="secondary-button" onClick={addAuction}>Добавить аукцион</button>
+            <button type="button" className="secondary-button" title="Создаёт ещё одну локальную заготовку аукциона в текущем плане." onClick={addAuction}>Добавить аукцион</button>
           </div>
         </Panel>
 
         {selectedAuction && mode === 'config' ? (
-          <Panel title="Настройка аукциона" subtitle="График меняет процент цены предметов в день запуска аукциона">
+          <Panel
+            title="Настройка аукциона"
+            subtitle="График меняет процент цены предметов в день запуска аукциона"
+            actions={(
+              <AuctionHelpTip label="Подсказка: Настройка аукциона">
+                Это настройки выбранной локальной заготовки: дата, длительность, валюта, повторы и серверные ID.
+                Цены предметов задаются во вкладке “Предметы и файл”, а график здесь меняет их процентом по дню запуска.
+              </AuctionHelpTip>
+            )}
+          >
             <div className="auction-form-grid">
-              <label className="field-block"><span>Локальная метка</span><input value={selectedAuction.id} onChange={(event) => renameAuction(selectedAuction.id, event.target.value)} /></label>
-              <label className="field-block"><span>Валюта</span><select value={selectedAuction.currency} onChange={(event) => updateAuction(selectedAuction.id, { currency: event.target.value as AuctionCurrency })}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>)}</select></label>
-              <label className="field-block wide"><span>Название</span><input value={selectedAuction.name} onChange={(event) => updateAuction(selectedAuction.id, { name: event.target.value })} /></label>
-              <label className="field-block wide"><span>Описание</span><input value={selectedAuction.description} onChange={(event) => updateAuction(selectedAuction.id, { description: event.target.value })} /></label>
-              <label className="field-block"><span>Старт</span><input type="datetime-local" value={selectedAuction.startLocal} onChange={(event) => updateAuction(selectedAuction.id, { startLocal: event.target.value })} /></label>
-              <label className="field-block"><span>Длительность, мин</span><input type="number" min={1} value={selectedAuction.durationMinutes} onChange={(event) => updateAuction(selectedAuction.id, { durationMinutes: Number(event.target.value) })} /></label>
-              <label className="field-block"><span>Шаг ставки</span><input type="number" min={1} value={selectedAuction.baseStepPrice} onChange={(event) => updateAuction(selectedAuction.id, { baseStepPrice: Number(event.target.value) })} /></label>
-              <label className="field-block switch-field"><span>Плановый запуск</span><input type="checkbox" checked={selectedAuction.planned} onChange={(event) => updateAuction(selectedAuction.id, { planned: event.target.checked })} /></label>
-              <label className="field-block switch-field"><span>Повторять</span><input type="checkbox" checked={selectedAuction.repeatEnabled} onChange={(event) => updateAuction(selectedAuction.id, { repeatEnabled: event.target.checked })} /></label>
-              <label className="field-block"><span>Повторов</span><input type="number" min={1} max={90} value={selectedAuction.repeatCount} onChange={(event) => updateAuction(selectedAuction.id, { repeatCount: Number(event.target.value) })} /></label>
-              <label className="field-block"><span>Интервал, дней</span><input type="number" min={1} value={selectedAuction.repeatEveryDays} onChange={(event) => updateAuction(selectedAuction.id, { repeatEveryDays: Number(event.target.value) })} /></label>
+              <label className="field-block"><HelpLabel text="Локальная метка">Внутреннее имя заготовки внутри сайта. Это не ID сервера и не попадает в `/aca addItem`. Нужно только чтобы различать строки до того, как сервер выдаст настоящий ID. Пример: `donate_july_01`.</HelpLabel><input value={selectedAuction.id} onChange={(event) => renameAuction(selectedAuction.id, event.target.value)} /></label>
+              <label className="field-block"><HelpLabel text="Валюта">Валюта аукциона. От неё зависит, какой график процента будет применён: кубиксы, кристаллы или бонусы.</HelpLabel><select value={selectedAuction.currency} onChange={(event) => updateAuction(selectedAuction.id, { currency: event.target.value as AuctionCurrency })}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>)}</select></label>
+              <label className="field-block wide"><HelpLabel text="Название">Название, которое будет отправлено в команду настройки аукциона. Пример: “Июльский набор кристаллов”.</HelpLabel><input value={selectedAuction.name} onChange={(event) => updateAuction(selectedAuction.id, { name: event.target.value })} /></label>
+              <label className="field-block wide"><HelpLabel text="Описание">Дополнительный текст для аукциона. Если поле пустое, команда описания не будет добавлена.</HelpLabel><input value={selectedAuction.description} onChange={(event) => updateAuction(selectedAuction.id, { description: event.target.value })} /></label>
+              <label className="field-block"><HelpLabel text="Старт">Локальная дата и время запуска. Эта дата выбирает точку на графике, поэтому процент цены берётся именно для этого дня.</HelpLabel><input type="datetime-local" value={selectedAuction.startLocal} onChange={(event) => updateAuction(selectedAuction.id, { startLocal: event.target.value })} /></label>
+              <label className="field-block"><HelpLabel text="Длительность, мин">Сколько минут аукцион будет активен. Конец считается автоматически: старт плюс длительность.</HelpLabel><input type="number" min={1} value={selectedAuction.durationMinutes} onChange={(event) => updateAuction(selectedAuction.id, { durationMinutes: Number(event.target.value) })} /></label>
+              <label className="field-block"><HelpLabel text="Шаг ставки">Базовый шаг повышения ставки. Он тоже умножается на процент графика для даты запуска. Пример: шаг 10 и график +25% дадут 13.</HelpLabel><input type="number" min={1} value={selectedAuction.baseStepPrice} onChange={(event) => updateAuction(selectedAuction.id, { baseStepPrice: Number(event.target.value) })} /></label>
+              <label className="field-block switch-field"><HelpLabel text="Плановый запуск">Если включено, аукцион остаётся в SETUP и добавляется команда расписания. Если выключено, используется выбранное состояние запуска.</HelpLabel><input type="checkbox" checked={selectedAuction.planned} onChange={(event) => updateAuction(selectedAuction.id, { planned: event.target.checked })} /></label>
+              <label className="field-block switch-field"><HelpLabel text="Повторять">Создаёт несколько запусков этой же заготовки. Для каждого запуска сервер выдаст отдельный ID, и каждый ID нужно вписать в шаге 2.</HelpLabel><input type="checkbox" checked={selectedAuction.repeatEnabled} onChange={(event) => updateAuction(selectedAuction.id, { repeatEnabled: event.target.checked })} /></label>
+              <label className="field-block"><HelpLabel text="Повторов">Количество запусков в пределах 3 месяцев. Пример: 4 повтора с интервалом 7 дней создадут 4 строки ID.</HelpLabel><input type="number" min={1} max={90} value={selectedAuction.repeatCount} onChange={(event) => updateAuction(selectedAuction.id, { repeatCount: Number(event.target.value) })} /></label>
+              <label className="field-block"><HelpLabel text="Интервал, дней">Через сколько дней повторяется запуск. Пример: старт 10.07 и интервал 30 дней даст следующий запуск 09.08.</HelpLabel><input type="number" min={1} value={selectedAuction.repeatEveryDays} onChange={(event) => updateAuction(selectedAuction.id, { repeatEveryDays: Number(event.target.value) })} /></label>
             </div>
             <section className="auction-server-id-section">
               <div className="settings-section-title compact">
-                <h3>Шаг 2: ID с сервера</h3>
+                <h3>
+                  Шаг 2: ID с сервера
+                  <AuctionHelpTip label="Подсказка: ID с сервера">
+                    Серверный ID появляется только после выполнения команды `/aca create`. Его нужно скопировать из ответа сервера и вписать сюда.
+                    Пример: сервер выдал `27`, значит команды предметов будут использовать `/aca addItem 27`.
+                  </AuctionHelpTip>
+                </h3>
                 <span>После выполнения `/aca create` сервер выдаст ID. Впиши его сюда для каждого запуска.</span>
               </div>
               <div className="auction-server-id-grid">
                 {Array.from({ length: selectedAuction.repeatEnabled ? Math.max(1, selectedAuction.repeatCount) : 1 }, (_, index) => (
                   <label key={index} className="field-block">
-                    <span>{index === 0 ? selectedAuction.name : `${selectedAuction.name} #${index + 1}`}</span>
+                    <HelpLabel text={index === 0 ? selectedAuction.name : `${selectedAuction.name} #${index + 1}`}>
+                      Поле для настоящего ID, который сгенерировал сервер. Для повторов каждый запуск получает свой отдельный ID.
+                    </HelpLabel>
                     <input
                       value={selectedAuction.serverIds[String(index)] ?? ''}
                       onChange={(event) => updateServerId(selectedAuction.id, index, event.target.value)}
@@ -205,7 +244,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               {commandStages.missingServerIds.length ? <div className="inline-hint inline-hint-warning">Без этих ID шаги предметов и настроек будут пропущены: {commandStages.missingServerIds.join(', ')}</div> : null}
             </section>
             <div className="auction-toolbar-row">
-              <label className="field-block compact-field"><span>График</span><select value={graphCurrency} onChange={(event) => setGraphCurrency(event.target.value as AuctionCurrency)}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{auctionCurrencyLabels[currency]}</option>)}</select></label>
+              <label className="field-block compact-field"><HelpLabel text="График">Выбирает валюту графика. Точки на графике меняют процент цены для всех предметов этой валюты в день запуска.</HelpLabel><select value={graphCurrency} onChange={(event) => setGraphCurrency(event.target.value as AuctionCurrency)}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{auctionCurrencyLabels[currency]}</option>)}</select></label>
               <span>Тащи точку вверх/вниз: процент меняет цены всех предметов этой валюты в этот день.</span>
             </div>
             <AuctionPriceGraph
@@ -218,13 +257,22 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
         {selectedAuction && mode === 'items' ? (
           <>
-            <Panel title="Предметы аукциона" subtitle="NBT предметы видны, но не попадут в файл команд">
+            <Panel
+              title="Предметы аукциона"
+              subtitle="NBT предметы видны, но не попадут в файл команд"
+              actions={(
+                <AuctionHelpTip label="Подсказка: Предметы аукциона">
+                  Здесь собирается содержимое выбранного аукциона. Каждый предмет имеет количество и базовую цену.
+                  Итоговая стартовая цена аукциона = сумма цен предметов без NBT, умноженная на процент графика для даты запуска.
+                </AuctionHelpTip>
+              )}
+            >
               <div className="auction-toolbar-row">
                 <div className="auction-id-mode">
-                  <button type="button" className={idMode === 'raw' ? 'active' : ''} onClick={() => setIdMode('raw')}>mod:item + meta</button>
-                  <button type="button" className={idMode === 'legacy' ? 'active' : ''} onClick={() => setIdMode('legacy')}>id:meta</button>
+                  <button type="button" title="В командах /give будет использоваться буквенный ID предмета и meta, например minecraft:stone 1." className={idMode === 'raw' ? 'active' : ''} onClick={() => setIdMode('raw')}>mod:item + meta</button>
+                  <button type="button" title="В командах /give будет использоваться числовой legacy ID и meta, например 1 0." className={idMode === 'legacy' ? 'active' : ''} onClick={() => setIdMode('legacy')}>id:meta</button>
                 </div>
-                <label className="field-block compact-field"><span>Игрок выдачи</span><input value={commandPlayer} onChange={(event) => setCommandPlayer(event.target.value)} /></label>
+                <label className="field-block compact-field"><HelpLabel text="Игрок выдачи">Кому временно выдаётся предмет перед добавлением в аукцион. Обычно `@p`, но можно вписать ник администратора.</HelpLabel><input value={commandPlayer} onChange={(event) => setCommandPlayer(event.target.value)} /></label>
               </div>
               <div className="auction-lot-list">
                 {selectedAuction.items.map((item) => (
@@ -237,14 +285,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                     </div>
                     <div className="auction-lot-controls">
                       <label className="field-block compact-field">
-                        <span>Кол-во</span>
+                        <HelpLabel text="Кол-во">Количество предметов в команде `/give`. Пример: 64 алмаза в одном лоте.</HelpLabel>
                         <input aria-label={`auction-item-qty-${item.uid}`} type="number" min={1} value={item.quantity} onChange={(event) => updateLotItem(item.uid, { quantity: Number(event.target.value) })} />
                       </label>
                       <label className="field-block compact-field">
-                        <span>Цена</span>
+                        <HelpLabel text="Цена">Базовая цена именно этого предмета до графика. Пример: предмет стоит 2000, а график на дату +25%, значит в расчёте будет 2500.</HelpLabel>
                         <input aria-label={`auction-item-price-${item.uid}`} type="number" min={0} value={item.basePrice} onChange={(event) => updateLotItem(item.uid, { basePrice: Number(event.target.value) })} />
                       </label>
-                      <button type="button" className="ghost-button" onClick={() => removeLotItem(item.uid)}>Удалить</button>
+                      <button type="button" className="ghost-button" title="Убирает предмет из текущей локальной заготовки аукциона." onClick={() => removeLotItem(item.uid)}>Удалить</button>
                     </div>
                   </div>
                 ))}
@@ -252,11 +300,20 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               </div>
               {nbtSkippedCount ? <div className="inline-status inline-status-warning">NBT предметов будет пропущено при генерации: {nbtSkippedCount}</div> : null}
             </Panel>
-            <Panel title="NEI предметы" subtitle="Поиск и добавление в аукцион">
-              <input aria-label="auction-item-search" type="search" value={itemSearch} onChange={(event) => setItemSearch(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
+            <Panel
+              title="NEI предметы"
+              subtitle="Поиск и добавление в аукцион"
+              actions={(
+                <AuctionHelpTip label="Подсказка: NEI предметы">
+                  Это список предметов из каталога NEI. Нажатие добавляет предмет в текущий аукцион визуально.
+                  Если у предмета есть NBT, он будет помечен восклицательным знаком и не попадёт в файл команд.
+                </AuctionHelpTip>
+              )}
+            >
+              <input aria-label="auction-item-search" title="Ищи по названию, raw ID вроде minecraft:diamond или legacy ID." type="search" value={itemSearch} onChange={(event) => setItemSearch(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
               <div className="auction-item-picker">
                 {filteredItems.map((item) => (
-                  <button key={`${item.raw}-${item.legacyId ?? 'x'}-${item.meta}`} type="button" className="auction-picker-row" onClick={() => addItemToAuction(item)}>
+                  <button key={`${item.raw}-${item.legacyId ?? 'x'}-${item.meta}`} type="button" title={item.hasNbt ? 'NBT-предмет добавится только визуально и будет исключён из команд.' : 'Добавить этот предмет в выбранный аукцион.'} className="auction-picker-row" onClick={() => addItemToAuction(item)}>
                     <span className="auction-item-icon">{renderItemIcon(item)}</span>
                     <span><strong>{item.title}</strong><br /><small>{item.raw}</small></span>
                     {item.hasNbt ? <span className="auction-warning">!</span> : null}
@@ -268,12 +325,21 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         ) : null}
       </div>
 
-      <Panel title="Предпросмотр файла" subtitle="Файл скачивается без расширения">
+      <Panel
+        title="Предпросмотр файла"
+        subtitle="Файл скачивается без расширения"
+        actions={(
+          <AuctionHelpTip label="Подсказка: Предпросмотр файла">
+            Здесь показывается выбранный шаг команд. Скачивание сохраняет именно активный шаг: создание слотов, список ID, добавление предметов или финальную настройку.
+            Для полного процесса выполняй шаги по порядку.
+          </AuctionHelpTip>
+        )}
+      >
         <div className="auction-step-tabs" aria-label="auction-command-stage">
-          {workflowMode === 'install' ? <button type="button" className={commandStage === 'create' ? 'active' : ''} onClick={() => setCommandStage('create')}>1. Создать слоты</button> : null}
-          <button type="button" className={commandStage === 'ids' ? 'active' : ''} onClick={() => setCommandStage('ids')}>2. Выписать ID</button>
-          <button type="button" className={commandStage === 'items' ? 'active' : ''} onClick={() => setCommandStage('items')}>3. Закинуть предметы</button>
-          <button type="button" className={commandStage === 'settings' ? 'active' : ''} onClick={() => setCommandStage('settings')}>4. Настроить и запустить</button>
+          {workflowMode === 'install' ? <button type="button" title="Команды /aca create создают пустые серверные аукционы. После этого сервер выдаст ID." className={commandStage === 'create' ? 'active' : ''} onClick={() => setCommandStage('create')}>1. Создать слоты</button> : null}
+          <button type="button" title="Шпаргалка, куда вписать ID, которые сервер выдал после создания слотов." className={commandStage === 'ids' ? 'active' : ''} onClick={() => setCommandStage('ids')}>2. Выписать ID</button>
+          <button type="button" title="Команды /clear, /give и /aca addItem для добавления предметов в уже известные серверные ID." className={commandStage === 'items' ? 'active' : ''} onClick={() => setCommandStage('items')}>3. Закинуть предметы</button>
+          <button type="button" title="Команды финальной настройки: название, даты, валюта, цена, шаг ставки, состояние и расписание." className={commandStage === 'settings' ? 'active' : ''} onClick={() => setCommandStage('settings')}>4. Настроить и запустить</button>
         </div>
         <pre className="raw-block auction-command-preview">{commands || 'Команды появятся после настройки аукциона.'}</pre>
       </Panel>
@@ -301,7 +367,10 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
-                <span>Имя файла</span>
+                <HelpLabel text="Имя файла">
+                  Имя итогового файла команд. Расширение удаляется автоматически, даже если вписать `.txt`.
+                  Пример: `auction_step_3` скачается как файл без расширения.
+                </HelpLabel>
                 <input autoFocus value={filenameDraft} onChange={(event) => setFilenameDraft(event.target.value)} />
               </label>
               <div className="cloud-save-preview"><span>Итог</span><strong>{sanitizeAuctionFilename(filenameDraft)}</strong></div>
