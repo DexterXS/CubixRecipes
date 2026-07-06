@@ -11,7 +11,9 @@
 - Added an auction plan inventory preview plus an auction-local admin setting that caps how many items can be added to one auction.
 - Changed the Auctions items/file view into a single workspace with the NEI catalog beside the selected auction's internal inventory.
 - Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
+- Added a diagnostics mod-icons panel component, moving archive upload/status and atlas preview UI out of the main app page shell.
 - Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
+- Added an item-catalog texture tools component, moving itempanel icon-cache mod selection and loading controls out of the main app page shell.
 - Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.
 - Added a diagnostics recipe panel component, moving the technical-panel recipe/grid/output diagnostics section out of the main app page shell.
 - Added a diagnostics overview panel component, moving the technical-panel status/quick-debug overview out of the main app page shell.

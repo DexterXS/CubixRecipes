@@ -17,6 +17,7 @@ import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
+import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
 import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
@@ -26,6 +27,7 @@ import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSect
 import { DiagnosticsAccessPanel } from '../features/diagnostics/DiagnosticsAccessPanel';
 import { ItemCaseAliasPanel } from '../features/diagnostics/ItemCaseAliasPanel';
 import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
+import { DiagnosticsModIconsPanel } from '../features/diagnostics/DiagnosticsModIconsPanel';
 import { DiagnosticsOverviewPanel } from '../features/diagnostics/DiagnosticsOverviewPanel';
 import { DiagnosticsRecipePanel } from '../features/diagnostics/DiagnosticsRecipePanel';
 import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRuntimePanel';
@@ -36,6 +38,7 @@ import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTe
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { formatFileSize } from '../utils/formatFileSize';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -136,13 +139,6 @@ type ItemPanelEntry = {
   customOwnerEmail?: string | null;
   customStorage?: 'local' | 'backend';
   customComment?: string;
-};
-
-type ItemPanelModSummary = {
-  modid: string;
-  itemCount: number;
-  loadedCount: number;
-  completionText: string;
 };
 
 type UploadedDraft = {
@@ -1032,12 +1028,6 @@ function collectRecipeBlocks(source: string): string[] {
 
 function elapsedMs(startedAt: number): number {
   return Math.round((performance.now() - startedAt) * 10) / 10;
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function mergeRecipeMatches(...groups: RecipeView[][]): RecipeView[] {
@@ -6734,100 +6724,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderModIconsPanel() {
-    const manifest = modIconStatus?.manifest ?? modIconManifest;
-    const atlasEntries = manifest ? [...Object.values(manifest.entries.x32), ...Object.values(manifest.entries.x256)] : [];
     return (
-      <div className="workspace-layout workspace-layout-admin">
-        <div className="workspace-column workspace-left">
-          <div className="workspace-panel-shell panel-admin-mod-icons">
-            <Panel title="Атласы" subtitle="ZIP архивы формата modid_x32.zip или modid_x256.zip с PNG внутри">
-              <label
-                className="file-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleModIconArchiveFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".zip,application/zip"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleModIconArchiveFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить ZIP архив иконок</strong>
-                <span>Например: energyadditions_x32.zip с папкой energyadditions_x32/ и PNG-файлами внутри</span>
-              </label>
-              <div className="file-actions">
-                <button type="button" disabled={modIconUploading || Boolean(modIconArchiveAction)} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
-                <button type="button" className="secondary-button" disabled={modIconGenerating || Boolean(modIconArchiveAction) || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
-              </div>
-              {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
-              <div className="admin-file-list">
-                {(modIconStatus?.archives ?? []).map((archive) => (
-                  <div key={archive.name} className="admin-file-row">
-                    <div>
-                      <strong>{archive.name}</strong>
-                      <span>{formatFileSize(archive.size)}</span>
-                    </div>
-                    <div className="admin-file-actions">
-                      <span>{archive.modifiedAt ? new Date(archive.modifiedAt).toLocaleString() : '-'}</span>
-                      <div className="inline-actions">
-                        <button type="button" className="ghost-button" onClick={() => handleDownloadModIconArchive(archive.name)}>Скачать</button>
-                        <button type="button" className="secondary-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleCleanModIconArchive(archive.name)}>
-                          {modIconArchiveAction === `clean:${archive.name}` ? 'Очистка...' : 'Очистить лишнее'}
-                        </button>
-                        <button type="button" className="ghost-button danger-lite-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleDeleteModIconArchive(archive.name)}>
-                          {modIconArchiveAction === `delete:${archive.name}` ? 'Удаление...' : 'Удалить'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {modIconStatus && !modIconStatus.archives.length ? <div className="inline-hint inline-hint-warning">Архивы ещё не загружены.</div> : null}
-              </div>
-            </Panel>
-          </div>
-        </div>
-        <div className="workspace-column workspace-right">
-          <div className="workspace-panel-shell panel-admin-mod-atlases">
-            <Panel title="Атласы" subtitle="4096x4096 максимум, дополнительные страницы создаются автоматически">
-              <div className="kv-grid">
-                <div><span>Модов</span><strong>{manifest?.totalMods ?? 0}</strong></div>
-                <div><span>Иконок</span><strong>{manifest?.totalIcons ?? atlasEntries.length}</strong></div>
-                <div><span>Атласов</span><strong>{manifest?.atlases.length ?? 0}</strong></div>
-                <div><span>Fallback</span><strong>itempanel atlas</strong></div>
-              </div>
-              {manifest?.rejected.length ? (
-                <div className="inline-status inline-status-warning">Отклонено иконок: {manifest.rejected.length}</div>
-              ) : null}
-              <div className="mod-icon-preview-grid">
-                {atlasEntries.map((entry) => {
-                  const atlas = manifest?.atlases.find((item) => item.file === entry.atlasFile);
-                  const previewScale = 40 / entry.w;
-                  return (
-                    <span
-                      key={`${entry.size}-${entry.key ?? entry.modid}-${entry.x}-${entry.y}`}
-                      className="mod-icon-preview"
-                      title={`${entry.modid}: ${entry.iconName ?? entry.modid} x${entry.size}`}
-                      style={{
-                        backgroundImage: `url(${normalizeModIconImageUrl(entry.image_url)})`,
-                        backgroundPosition: `-${entry.x * previewScale}px -${entry.y * previewScale}px`,
-                        backgroundSize: `${(atlas?.columns ?? 1) * entry.w * previewScale}px ${(atlas?.rows ?? 1) * entry.h * previewScale}px`
-                      }}
-                      aria-label={`mod-icon-${entry.key ?? entry.modid}-x${entry.size}`}
-                    />
-                  );
-                })}
-              </div>
-            </Panel>
-          </div>
-        </div>
-      </div>
+      <DiagnosticsModIconsPanel
+        status={modIconStatus}
+        manifest={modIconManifest}
+        message={modIconMessage}
+        uploading={modIconUploading}
+        generating={modIconGenerating}
+        archiveAction={modIconArchiveAction}
+        normalizeImageUrl={normalizeModIconImageUrl}
+        onArchiveFiles={(files) => void handleModIconArchiveFiles(files)}
+        onRefreshStatus={() => void refreshModIconStatus()}
+        onGenerateAtlases={() => void handleGenerateModIconAtlases()}
+        onDownloadArchive={handleDownloadModIconArchive}
+        onCleanArchive={(filename) => void handleCleanModIconArchive(filename)}
+        onDeleteArchive={(filename) => void handleDeleteModIconArchive(filename)}
+      />
     );
   }
 
@@ -7436,57 +7348,36 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderTextureToolsPanel() {
     return (
-      <div className="workspace-panel-shell panel-textures">
-        <Panel title={t('textures.modsDropdown')} subtitle={uiPreferences.language === 'ru' ? 'Кэш иконок из itempanel.csv' : 'Icon cache from itempanel.csv'} className="texture-panel">
-          <div className="texture-toolbar">
-            <button type="button" className="secondary-button" aria-expanded={isTextureModsOpen} onClick={() => setIsTextureModsOpen((value) => !value)}>{t('textures.modsDropdown')}</button>
-            <button type="button" onClick={() => void loadSelectedTextures()} disabled={textureLoadState === 'running' || textureLoadState === 'paused'}>{t('textures.loadSelected')}</button>
-            {textureLoadState === 'running' ? (
-              <button type="button" className="ghost-button" onClick={handlePauseTextureLoading}>{t('textures.stop')}</button>
-            ) : null}
-            {textureLoadState === 'paused' ? (
-              <button type="button" className="ghost-button" onClick={handleResumeTextureLoading}>{t('textures.resume')}</button>
-            ) : null}
-            {textureLoadState !== 'idle' ? (
-              <button type="button" className="ghost-button" onClick={handleCancelTextureLoading}>{t('textures.cancel')}</button>
-            ) : null}
-          </div>
-          {textureLoadStatus ? <div className="inline-status inline-status-default texture-status-line">{textureLoadStatus}</div> : null}
-          <div className="texture-menu-header">
-            <strong>{uiPreferences.language === 'ru' ? 'Моды' : 'Mods'}</strong>
-            <div className="view-menu-actions">
-              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(true)}>{t('textures.selectAll')}</button>
-              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(false)}>{t('textures.clearAll')}</button>
-            </div>
-          </div>
-          {isTextureModsOpen && itemPanelModSummaries.length ? (
-            <ul className="toolbar-texture-list texture-list-panel">
-              {itemPanelModSummaries.map((summary) => (
-                <li key={summary.modid} className="toolbar-texture-item">
-                  <label className="view-toggle" aria-label={`select-mod-${summary.modid}`}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTextureMods[summary.modid] ?? true}
-                      onChange={(event) => toggleTextureModSelection(summary.modid, event.target.checked)}
-                    />
-                    <span>{summary.modid}</span>
-                  </label>
-                  <span>{summary.itemCount}</span>
-                  <span>{t('textures.progress')}: {summary.completionText}</span>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          {isTextureModsOpen && !itemPanelModSummaries.length ? <p className="toolbar-texture-empty">{t('textures.empty')}</p> : null}
-          {!isTextureModsOpen ? (
-            <div className="kv-grid">
-              <div><span>{uiPreferences.language === 'ru' ? 'Модов' : 'Mods'}</span><strong>{itemPanelModSummaries.length}</strong></div>
-              <div><span>{t('status.icons')}</span><strong>{iconsResolved}/{iconTotal}</strong></div>
-              <div><span>{t('textures.progress')}</span><strong>{itemPanelModSummaries.find((summary) => selectedTextureMods[summary.modid] ?? true)?.completionText ?? '0%'}</strong></div>
-            </div>
-          ) : null}
-        </Panel>
-      </div>
+      <ItemTextureToolsPanel
+        language={uiPreferences.language}
+        title={t('textures.modsDropdown')}
+        subtitle={uiPreferences.language === 'ru' ? 'Кэш иконок из itempanel.csv' : 'Icon cache from itempanel.csv'}
+        modsLabel={t('textures.modsDropdown')}
+        loadSelectedLabel={t('textures.loadSelected')}
+        stopLabel={t('textures.stop')}
+        resumeLabel={t('textures.resume')}
+        cancelLabel={t('textures.cancel')}
+        selectAllLabel={t('textures.selectAll')}
+        clearAllLabel={t('textures.clearAll')}
+        progressLabel={t('textures.progress')}
+        iconsLabel={t('status.icons')}
+        emptyLabel={t('textures.empty')}
+        isOpen={isTextureModsOpen}
+        loadState={textureLoadState}
+        loadStatus={textureLoadStatus}
+        mods={itemPanelModSummaries}
+        selectedMods={selectedTextureMods}
+        iconsResolved={iconsResolved}
+        iconTotal={iconTotal}
+        onToggleOpen={() => setIsTextureModsOpen((value) => !value)}
+        onLoadSelected={() => void loadSelectedTextures()}
+        onPause={handlePauseTextureLoading}
+        onResume={handleResumeTextureLoading}
+        onCancel={handleCancelTextureLoading}
+        onSelectAll={() => setAllTextureModSelections(true)}
+        onClearAll={() => setAllTextureModSelections(false)}
+        onToggleMod={toggleTextureModSelection}
+      />
     );
   }
 

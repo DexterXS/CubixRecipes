@@ -386,12 +386,20 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/diagnostics/DiagnosticsAccessPanel.tsx`
   - Owns the technical-panel access section layout for personnel roles, whitelist, and static role permission reference.
   - Receives role-management and whitelist content from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsModIconsPanel.tsx`
+  - Owns the technical-panel mod icon archive upload/status UI and generated atlas preview grid.
+  - Receives mod-icon archive actions, status, manifest data, and image URL normalization from `pages/App.tsx`; API orchestration remains in the page shell until a later diagnostics service split.
 - `frontend/src/features/diagnostics/ModReplacementPanel.tsx`
   - Owns the technical-panel mod replacement UI for choosing a source mod, mapping recipe items to replacements, and embedding the NEI picker column.
   - Receives scan/replace state, item icon renderers, and callbacks from `pages/App.tsx`; scanning and persistence remain in the page shell until a later state/service split.
 - `frontend/src/features/diagnostics/ItemCaseAliasPanel.tsx`
   - Owns the technical-panel item case-alias report UI: generation controls, FML log upload, manual alias form, alias table, and missing itempanel list.
   - Receives report data and persistence callbacks from `pages/App.tsx`; report API orchestration remains in the page shell until a later diagnostics service split.
+
+### Item Catalog Feature
+- `frontend/src/features/item-catalog/ItemTextureToolsPanel.tsx`
+  - Owns the itempanel texture/icon cache panel presentation: mod selection, load/pause/resume/cancel controls, status text, and selected-mod progress summaries.
+  - Receives texture loading state and callbacks from `pages/App.tsx`; item catalog loading and localStorage cache ownership remain in the page shell until a later item-catalog state split.
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
@@ -441,6 +449,8 @@ Last full rebuild: 2026-06-29
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
 
 ### Frontend Services and Types
+- `frontend/src/utils/formatFileSize.ts`
+  - Shared frontend file-size formatter used by admin/cloud/mod-icon presentation components.
 - `frontend/src/services/api/`
   - Modular frontend API client with stable barrel export at `frontend/src/services/api/index.ts`.
   - `client.ts`: shared request wrapper, conflict error, active-server header injection, JSON validation, backend-unavailable messages, blob download filename parsing.
@@ -578,14 +588,14 @@ Last full rebuild: 2026-06-29
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 
 ### Icon Indexing and Resolver
 - Backend files: `indexer/asset_index.py`, `indexer/itempanel_icon_catalog.py`, `resolver/item_resolver.py`, `services/mod_icon_atlas_service.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api/*`.
+- Frontend files: `pages/App.tsx`, `features/diagnostics/DiagnosticsModIconsPanel.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api/*`.
 - Data files: `mods_json/*.json`, `itempanel_icons/`, mod icon ZIP archives, generated atlases.
 - APIs: `/index/scan`, `/index/status/{scan_id}`, `/items/resolve`, `/icons/{icon_asset_id:path}`, `/admin/mod-icons*`, `/mod-icons/atlas`, `/mod-icons/atlases/{filename}`.
 - Tests: `test_resolver.py`, `test_asset_index_performance.py`, `test_itempanel_icon_catalog.py`, `test_mod_icon_atlas_service.py`, `test_mods_json_manifests.py`.

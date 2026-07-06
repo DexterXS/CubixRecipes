@@ -95,6 +95,14 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Moved the technical-panel item case-alias report UI out of `App.tsx`, including report controls, FML log upload, manual alias form, alias table, and missing itempanel list.
   - Kept report generation, refresh, upload, and manual-save orchestration in `App.tsx` for now and passed those callbacks into the panel.
   - Why this shape: case-alias reporting is a complete diagnostics/admin surface and removes more than 100 lines from the page shell without changing API behavior.
+- Created `frontend/src/features/diagnostics/DiagnosticsModIconsPanel.tsx`.
+  - Moved the technical-panel mod icon archive upload/status UI and generated atlas preview grid out of `App.tsx`.
+  - Kept archive upload/clean/delete/generate orchestration in `App.tsx` for now and passed those callbacks into the panel.
+  - Why this shape: mod icon archive management is a complete diagnostics/admin surface and can move without changing icon resolver state.
+- Created `frontend/src/features/item-catalog/ItemTextureToolsPanel.tsx`.
+  - Moved the itempanel texture/icon cache controls out of `App.tsx`, including mod selection, load/pause/resume/cancel controls, and progress summary.
+  - Kept texture loading and cache state in `App.tsx` for now because it still coordinates NEI item catalog visibility and localStorage.
+  - Why this shape: texture loading presentation is item-catalog ownership, while the underlying cache workflow can be split later.
 - Created `frontend/src/features/auctions/`.
   - Added the auction workspace as a new feature module instead of placing auction UI/generation logic in `App.tsx`.
   - Added planned/repeating auction config, timezone-aware UTC+0 command formatting, draggable 90-day price curves, NEI/catalog item picking, NBT visual warnings with command exclusion, extensionless download, and focused command-generation tests.
