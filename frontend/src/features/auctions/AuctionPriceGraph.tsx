@@ -163,7 +163,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       {[0.5, 1, 1.5, 2, 2.5, 3].map((value) => (
         <g key={value}>
           <line className="auction-graph-grid" x1={padding} y1={yForValue(value)} x2={width - padding} y2={yForValue(value)} />
-          <text x={4} y={yForValue(value) + 4}>{percentLabel(value)}</text>
+          <text className="auction-graph-axis-label" x={8} y={yForValue(value) + 4}>{percentLabel(value)}</text>
         </g>
       ))}
       {series.map((item) => {
@@ -197,10 +197,10 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
                       updateFromPointer(event.clientX, event.clientY);
                     }}
                   />
-                  <text className="auction-graph-point-count" x={xForDay(point.day)} y={yForValue(value) - 12}>
+                  <text className="auction-graph-point-count" x={xForDay(point.day)} y={Math.max(18, yForValue(value) - 12)}>
                     {point.details.length > 1 ? `x${point.details.length}` : percentLabel(value)}
                   </text>
-                  <text className="auction-graph-day" x={xForDay(point.day)} y={height - 8}>D{point.day + 1}</text>
+                  <text className="auction-graph-day" x={xForDay(point.day)} y={height - 10}>D{point.day + 1}</text>
                 </g>
               );
             })}

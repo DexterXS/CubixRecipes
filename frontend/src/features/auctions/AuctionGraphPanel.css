@@ -81,21 +81,23 @@
   min-height: 240px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: var(--surface-sunken);
+  background:
+    linear-gradient(180deg, rgba(6, 20, 45, 0.98), rgba(3, 12, 29, 0.96)),
+    var(--surface-sunken);
   color: var(--accent, #7aa2ff);
 }
 
 .auction-price-graph line {
-  stroke: var(--border-subtle);
+  stroke: rgba(126, 166, 226, 0.24);
 }
 
 .auction-price-graph text {
-  fill: var(--text-muted);
+  fill: #d8e7ff;
   font-size: 11px;
 }
 
 .auction-graph-grid {
-  opacity: 0.5;
+  opacity: 0.58;
 }
 
 .auction-graph-line {
@@ -113,29 +115,45 @@
 
 .auction-graph-point {
   fill: currentColor;
-  stroke: var(--surface);
+  stroke: #071326;
   stroke-width: 2;
   cursor: move;
+  filter: drop-shadow(0 0 7px currentColor);
 }
 
 .auction-graph-point-wrap.readonly .auction-graph-point {
-  fill: var(--surface-sunken);
+  fill: #071326;
   stroke: currentColor;
   stroke-dasharray: 3 3;
   cursor: context-menu;
+  filter: drop-shadow(0 0 6px currentColor);
 }
 
 .auction-graph-day {
   text-anchor: middle;
+  fill: #bcd0f2;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
 }
 
 .auction-graph-point-count {
   text-anchor: middle;
   font-weight: 700;
-  fill: var(--text-strong, #f8fafc);
+  fill: #f4f8ff;
   paint-order: stroke;
-  stroke: var(--surface-sunken);
-  stroke-width: 4px;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.auction-graph-axis-label {
+  fill: #9fb6d8;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
 }
 
 .auction-graph-point-menu {
