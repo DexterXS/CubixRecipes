@@ -1,8 +1,5 @@
-﻿import { useMemo, useState, type ReactNode } from 'react';
-import { Panel } from '../../components/Panel';
+﻿import { useMemo, useState } from 'react';
 import {
-  auctionCurrencies,
-  auctionCurrencyLabels,
   buildAuctionCommandStages,
   buildAuctionRunPricePreviews,
   createDefaultAuctionCurve,
@@ -10,13 +7,14 @@ import {
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
+import { AuctionCommandPreview } from './AuctionCommandPreview';
+import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
-import { AuctionHelpTip } from './AuctionHelpTip';
+import { AuctionDraftEditorPanel } from './AuctionDraftEditorPanel';
 import { AuctionItemsWorkspace } from './AuctionItemsWorkspace';
-import { AuctionPriceGraph, type AuctionPriceGraphPointDetail, type AuctionPriceGraphRepeatMarker } from './AuctionPriceGraph';
+import type { AuctionPriceGraphPointDetail, AuctionPriceGraphRepeatMarker } from './AuctionPriceGraph';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
-import { AuctionRunPricePreviewList } from './AuctionRunPricePreviewList';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
@@ -24,15 +22,6 @@ type AuctionBuilderProps = {
   itemOptions: AuctionItemOption[];
   renderItemIcon: AuctionRenderItemIcon;
 };
-
-function HelpLabel({ text, children }: { text: string; children: ReactNode }) {
-  return (
-    <span className="auction-help-label">
-      {text}
-      <AuctionHelpTip label={`РџРѕРґСЃРєР°Р·РєР°: ${text}`}>{children}</AuctionHelpTip>
-    </span>
-  );
-}
 
 function downloadTextWithoutExtension(filename: string, text: string) {
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -50,6 +39,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const now = Date.now();
   const [workflowMode, setWorkflowMode] = useState<AuctionWorkflowMode>('install');
   const [mode, setMode] = useState<AuctionBuilderMode>('config');
+  const [dayViewMode, setDayViewMode] = useState<'days' | 'folder'>('days');
   const [ribbonTab, setRibbonTab] = useState<AuctionRibbonTab>('auctions');
   const [uiMode, setUiMode] = useState<AuctionUiMode>('normal');
   const [graphExpanded, setGraphExpanded] = useState(false);
@@ -126,6 +116,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     if (!folder) return;
     setSelectedDayFolderId(id);
     setSelectedAuctionId(folder.auctions[0]?.id ?? '');
+    setDayViewMode('folder');
   };
 
   const addDayFolder = () => {
@@ -156,7 +147,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
   const deleteSelectedDayFolder = () => {
     if (!selectedDayFolder || dayFolders.length <= 1) return;
-    const confirmed = window.confirm(`РЈРґР°Р»РёС‚СЊ РїР°РїРєСѓ "${selectedDayFolder.title}" РІРјРµСЃС‚Рµ СЃРѕ РІСЃРµРјРё Р»РѕРєР°Р»СЊРЅС‹РјРё Р°СѓРєС†РёРѕРЅР°РјРё?`);
+    const confirmed = window.confirm(`Удалить папку "${selectedDayFolder.title}" вместе со всеми локальными аукционами?`);
     if (!confirmed) return;
     const remaining = dayFolders.filter((folder) => folder.id !== selectedDayFolder.id);
     setDayFolders(remaining);
@@ -247,6 +238,43 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     const next = createAuctionDraft(nextIndex, localDateTimeInputFromUtcMs(now + nextIndex * 86_400_000, timezoneOffset));
     updateSelectedDayAuctions((current) => [...current, next].slice(0, 90));
     setSelectedAuctionId(next.id);
+    setDayViewMode('folder');
+  };
+
+  const copyAuction = (id: string) => {
+    const source = auctions.find((auction) => auction.id === id);
+    if (!source) return;
+    const nextIndex = auctions.length + 1;
+    const copy: AuctionDraft = {
+      ...source,
+      id: `${source.id}-copy-${nextIndex}`,
+      name: `${source.name} копия`,
+      serverIds: {},
+      items: source.items.map((item) => ({ ...item, uid: `${item.uid}-copy-${Date.now()}` }))
+    };
+    updateSelectedDayAuctions((current) => [...current, copy].slice(0, 90));
+    setSelectedAuctionId(copy.id);
+    setMode('config');
+    setDayViewMode('folder');
+  };
+
+  const deleteAuction = (id: string) => {
+    if (auctions.length <= 1) return;
+    updateSelectedDayAuctions((current) => current.filter((auction) => auction.id !== id));
+    if (selectedAuctionId === id) {
+      const next = auctions.find((auction) => auction.id !== id);
+      setSelectedAuctionId(next?.id ?? '');
+    }
+  };
+
+  const openAuctionSettings = (id: string) => {
+    setSelectedAuctionId(id);
+    setMode('config');
+  };
+
+  const openAuctionItems = (id: string) => {
+    setSelectedAuctionId(id);
+    setMode('items');
   };
 
   const addItemToAuction = (option: AuctionItemOption) => {
@@ -303,15 +331,34 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       />
 
       <div className="auction-layout">
-        <AuctionDayFolderGrid
-          folders={dayFolders}
-          selectedFolderId={selectedDayFolder?.id ?? ''}
-          summaries={dayFolderSummaries}
-          onSelectFolder={selectDayFolder}
-          onCopyFolder={copySelectedDayFolder}
-          onSetBuilderMode={setMode}
-          onSetCommandStage={setCommandStage}
-        />
+        {selectedDayFolder && dayViewMode === 'folder' ? (
+          <AuctionDayContentsPanel
+            folder={selectedDayFolder}
+            selectedAuctionId={selectedAuctionId}
+            maxItemsPerAuction={maxItemsPerAuction}
+            onBackToDays={() => setDayViewMode('days')}
+            onSelectAuction={setSelectedAuctionId}
+            onAddAuction={addAuction}
+            onCopyAuction={copyAuction}
+            onDeleteAuction={deleteAuction}
+            onOpenItems={openAuctionItems}
+            onOpenSettings={openAuctionSettings}
+            onOpenCommands={(id, stage) => {
+              setSelectedAuctionId(id);
+              setCommandStage(stage);
+            }}
+          />
+        ) : (
+          <AuctionDayFolderGrid
+            folders={dayFolders}
+            selectedFolderId={selectedDayFolder?.id ?? ''}
+            summaries={dayFolderSummaries}
+            onSelectFolder={selectDayFolder}
+            onCopyFolder={copySelectedDayFolder}
+            onSetBuilderMode={setMode}
+            onSetCommandStage={setCommandStage}
+          />
+        )}
 
         <AuctionDayDetailsPanel
           folder={selectedDayFolder}
@@ -334,78 +381,23 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         />
 
         {selectedAuction && mode === 'config' ? (
-          <Panel
-            title="РќР°СЃС‚СЂРѕР№РєР° Р°СѓРєС†РёРѕРЅР°"
-            subtitle="Р“СЂР°С„РёРє РјРµРЅСЏРµС‚ РїСЂРѕС†РµРЅС‚ С†РµРЅС‹ РїСЂРµРґРјРµС‚РѕРІ РІ РґРµРЅСЊ Р·Р°РїСѓСЃРєР° Р°СѓРєС†РёРѕРЅР°"
-            actions={(
-              <AuctionHelpTip label="РџРѕРґСЃРєР°Р·РєР°: РќР°СЃС‚СЂРѕР№РєР° Р°СѓРєС†РёРѕРЅР°">
-                Р­С‚Рѕ РЅР°СЃС‚СЂРѕР№РєРё РІС‹Р±СЂР°РЅРЅРѕР№ Р»РѕРєР°Р»СЊРЅРѕР№ Р·Р°РіРѕС‚РѕРІРєРё: РґР°С‚Р°, РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ, РІР°Р»СЋС‚Р°, РїРѕРІС‚РѕСЂС‹ Рё СЃРµСЂРІРµСЂРЅС‹Рµ ID.
-                Р¦РµРЅС‹ РїСЂРµРґРјРµС‚РѕРІ Р·Р°РґР°СЋС‚СЃСЏ РІРѕ РІРєР»Р°РґРєРµ вЂњРџСЂРµРґРјРµС‚С‹ Рё С„Р°Р№Р»вЂќ, Р° РіСЂР°С„РёРє Р·РґРµСЃСЊ РјРµРЅСЏРµС‚ РёС… РїСЂРѕС†РµРЅС‚РѕРј РїРѕ РґРЅСЋ Р·Р°РїСѓСЃРєР°.
-              </AuctionHelpTip>
-            )}
-          >
-            <div className="auction-form-grid">
-              <label className="field-block"><HelpLabel text="Р›РѕРєР°Р»СЊРЅР°СЏ РјРµС‚РєР°">Р’РЅСѓС‚СЂРµРЅРЅРµРµ РёРјСЏ Р·Р°РіРѕС‚РѕРІРєРё РІРЅСѓС‚СЂРё СЃР°Р№С‚Р°. Р­С‚Рѕ РЅРµ ID СЃРµСЂРІРµСЂР° Рё РЅРµ РїРѕРїР°РґР°РµС‚ РІ `/aca addItem`. РќСѓР¶РЅРѕ С‚РѕР»СЊРєРѕ С‡С‚РѕР±С‹ СЂР°Р·Р»РёС‡Р°С‚СЊ СЃС‚СЂРѕРєРё РґРѕ С‚РѕРіРѕ, РєР°Рє СЃРµСЂРІРµСЂ РІС‹РґР°СЃС‚ РЅР°СЃС‚РѕСЏС‰РёР№ ID. РџСЂРёРјРµСЂ: `donate_july_01`.</HelpLabel><input value={selectedAuction.id} onChange={(event) => renameAuction(selectedAuction.id, event.target.value)} /></label>
-              <label className="field-block"><HelpLabel text="Р’Р°Р»СЋС‚Р°">Р’Р°Р»СЋС‚Р° Р°СѓРєС†РёРѕРЅР°. РћС‚ РЅРµС‘ Р·Р°РІРёСЃРёС‚, РєР°РєРѕР№ РіСЂР°С„РёРє РїСЂРѕС†РµРЅС‚Р° Р±СѓРґРµС‚ РїСЂРёРјРµРЅС‘РЅ: РєСѓР±РёРєСЃС‹, РєСЂРёСЃС‚Р°Р»Р»С‹ РёР»Рё Р±РѕРЅСѓСЃС‹.</HelpLabel><select value={selectedAuction.currency} onChange={(event) => updateAuction(selectedAuction.id, { currency: event.target.value as AuctionCurrency })}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} В· {auctionCurrencyLabels[currency]}</option>)}</select></label>
-              <label className="field-block wide"><HelpLabel text="РќР°Р·РІР°РЅРёРµ">РќР°Р·РІР°РЅРёРµ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РѕС‚РїСЂР°РІР»РµРЅРѕ РІ РєРѕРјР°РЅРґСѓ РЅР°СЃС‚СЂРѕР№РєРё Р°СѓРєС†РёРѕРЅР°. РџСЂРёРјРµСЂ: вЂњРСЋР»СЊСЃРєРёР№ РЅР°Р±РѕСЂ РєСЂРёСЃС‚Р°Р»Р»РѕРІвЂќ.</HelpLabel><input value={selectedAuction.name} onChange={(event) => updateAuction(selectedAuction.id, { name: event.target.value })} /></label>
-              <label className="field-block wide"><HelpLabel text="РћРїРёСЃР°РЅРёРµ">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ С‚РµРєСЃС‚ РґР»СЏ Р°СѓРєС†РёРѕРЅР°. Р•СЃР»Рё РїРѕР»Рµ РїСѓСЃС‚РѕРµ, РєРѕРјР°РЅРґР° РѕРїРёСЃР°РЅРёСЏ РЅРµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅР°.</HelpLabel><input value={selectedAuction.description} onChange={(event) => updateAuction(selectedAuction.id, { description: event.target.value })} /></label>
-              <label className="field-block"><HelpLabel text="РЎС‚Р°СЂС‚">Р›РѕРєР°Р»СЊРЅР°СЏ РґР°С‚Р° Рё РІСЂРµРјСЏ Р·Р°РїСѓСЃРєР°. Р­С‚Р° РґР°С‚Р° РІС‹Р±РёСЂР°РµС‚ С‚РѕС‡РєСѓ РЅР° РіСЂР°С„РёРєРµ, РїРѕСЌС‚РѕРјСѓ РїСЂРѕС†РµРЅС‚ С†РµРЅС‹ Р±РµСЂС‘С‚СЃСЏ РёРјРµРЅРЅРѕ РґР»СЏ СЌС‚РѕРіРѕ РґРЅСЏ.</HelpLabel><input type="datetime-local" value={selectedAuction.startLocal} onChange={(event) => updateAuction(selectedAuction.id, { startLocal: event.target.value })} /></label>
-              <label className="field-block"><HelpLabel text="Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ, РјРёРЅ">РЎРєРѕР»СЊРєРѕ РјРёРЅСѓС‚ Р°СѓРєС†РёРѕРЅ Р±СѓРґРµС‚ Р°РєС‚РёРІРµРЅ. РљРѕРЅРµС† СЃС‡РёС‚Р°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё: СЃС‚Р°СЂС‚ РїР»СЋСЃ РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ.</HelpLabel><input type="number" min={1} value={selectedAuction.durationMinutes} onChange={(event) => updateAuction(selectedAuction.id, { durationMinutes: Number(event.target.value) })} /></label>
-              <label className="field-block"><HelpLabel text="РЁР°Рі СЃС‚Р°РІРєРё">Р‘Р°Р·РѕРІС‹Р№ С€Р°Рі РїРѕРІС‹С€РµРЅРёСЏ СЃС‚Р°РІРєРё. РћРЅ С‚РѕР¶Рµ СѓРјРЅРѕР¶Р°РµС‚СЃСЏ РЅР° РїСЂРѕС†РµРЅС‚ РіСЂР°С„РёРєР° РґР»СЏ РґР°С‚С‹ Р·Р°РїСѓСЃРєР°. РџСЂРёРјРµСЂ: С€Р°Рі 10 Рё РіСЂР°С„РёРє +25% РґР°РґСѓС‚ 13.</HelpLabel><input type="number" min={1} value={selectedAuction.baseStepPrice} onChange={(event) => updateAuction(selectedAuction.id, { baseStepPrice: Number(event.target.value) })} /></label>
-              <label className="field-block switch-field"><HelpLabel text="РџР»Р°РЅРѕРІС‹Р№ Р·Р°РїСѓСЃРє">Р•СЃР»Рё РІРєР»СЋС‡РµРЅРѕ, Р°СѓРєС†РёРѕРЅ РѕСЃС‚Р°С‘С‚СЃСЏ РІ SETUP Рё РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РєРѕРјР°РЅРґР° СЂР°СЃРїРёСЃР°РЅРёСЏ. Р•СЃР»Рё РІС‹РєР»СЋС‡РµРЅРѕ, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІС‹Р±СЂР°РЅРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РїСѓСЃРєР°.</HelpLabel><input type="checkbox" checked={selectedAuction.planned} onChange={(event) => updateAuction(selectedAuction.id, { planned: event.target.checked })} /></label>
-              <label className="field-block switch-field"><HelpLabel text="РџРѕРІС‚РѕСЂСЏС‚СЊ">РЎРѕР·РґР°С‘С‚ РЅРµСЃРєРѕР»СЊРєРѕ Р·Р°РїСѓСЃРєРѕРІ СЌС‚РѕР№ Р¶Рµ Р·Р°РіРѕС‚РѕРІРєРё. Р”Р»СЏ РєР°Р¶РґРѕРіРѕ Р·Р°РїСѓСЃРєР° СЃРµСЂРІРµСЂ РІС‹РґР°СЃС‚ РѕС‚РґРµР»СЊРЅС‹Р№ ID, Рё РєР°Р¶РґС‹Р№ ID РЅСѓР¶РЅРѕ РІРїРёСЃР°С‚СЊ РІ С€Р°РіРµ 2.</HelpLabel><input type="checkbox" checked={selectedAuction.repeatEnabled} onChange={(event) => updateAuction(selectedAuction.id, { repeatEnabled: event.target.checked })} /></label>
-              <label className="field-block"><HelpLabel text="РџРѕРІС‚РѕСЂРѕРІ">РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїСѓСЃРєРѕРІ РІ РїСЂРµРґРµР»Р°С… 3 РјРµСЃСЏС†РµРІ. РџСЂРёРјРµСЂ: 4 РїРѕРІС‚РѕСЂР° СЃ РёРЅС‚РµСЂРІР°Р»РѕРј 7 РґРЅРµР№ СЃРѕР·РґР°РґСѓС‚ 4 СЃС‚СЂРѕРєРё ID.</HelpLabel><input type="number" min={1} max={90} value={selectedAuction.repeatCount} onChange={(event) => updateAuction(selectedAuction.id, { repeatCount: Number(event.target.value) })} /></label>
-              <label className="field-block"><HelpLabel text="РРЅС‚РµСЂРІР°Р», РґРЅРµР№">Р§РµСЂРµР· СЃРєРѕР»СЊРєРѕ РґРЅРµР№ РїРѕРІС‚РѕСЂСЏРµС‚СЃСЏ Р·Р°РїСѓСЃРє. РџСЂРёРјРµСЂ: СЃС‚Р°СЂС‚ 10.07 Рё РёРЅС‚РµСЂРІР°Р» 30 РґРЅРµР№ РґР°СЃС‚ СЃР»РµРґСѓСЋС‰РёР№ Р·Р°РїСѓСЃРє 09.08.</HelpLabel><input type="number" min={1} value={selectedAuction.repeatEveryDays} onChange={(event) => updateAuction(selectedAuction.id, { repeatEveryDays: Number(event.target.value) })} /></label>
-            </div>
-            <section className="auction-server-id-section">
-              <div className="settings-section-title compact">
-                <h3>
-                  РЁР°Рі 2: ID СЃ СЃРµСЂРІРµСЂР°
-                  <AuctionHelpTip label="РџРѕРґСЃРєР°Р·РєР°: ID СЃ СЃРµСЂРІРµСЂР°">
-                    РЎРµСЂРІРµСЂРЅС‹Р№ ID РїРѕСЏРІР»СЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРѕРјР°РЅРґС‹ `/aca create`. Р•РіРѕ РЅСѓР¶РЅРѕ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РёР· РѕС‚РІРµС‚Р° СЃРµСЂРІРµСЂР° Рё РІРїРёСЃР°С‚СЊ СЃСЋРґР°.
-                    РџСЂРёРјРµСЂ: СЃРµСЂРІРµСЂ РІС‹РґР°Р» `27`, Р·РЅР°С‡РёС‚ РєРѕРјР°РЅРґС‹ РїСЂРµРґРјРµС‚РѕРІ Р±СѓРґСѓС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ `/aca addItem 27`.
-                  </AuctionHelpTip>
-                </h3>
-                <span>РџРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ `/aca create` СЃРµСЂРІРµСЂ РІС‹РґР°СЃС‚ ID. Р’РїРёС€Рё РµРіРѕ СЃСЋРґР° РґР»СЏ РєР°Р¶РґРѕРіРѕ Р·Р°РїСѓСЃРєР°.</span>
-              </div>
-              <div className="auction-server-id-grid">
-                {Array.from({ length: selectedAuction.repeatEnabled ? Math.max(1, selectedAuction.repeatCount) : 1 }, (_, index) => (
-                  <label key={index} className="field-block">
-                    <HelpLabel text={index === 0 ? selectedAuction.name : `${selectedAuction.name} #${index + 1}`}>
-                      РџРѕР»Рµ РґР»СЏ РЅР°СЃС‚РѕСЏС‰РµРіРѕ ID, РєРѕС‚РѕСЂС‹Р№ СЃРіРµРЅРµСЂРёСЂРѕРІР°Р» СЃРµСЂРІРµСЂ. Р”Р»СЏ РїРѕРІС‚РѕСЂРѕРІ РєР°Р¶РґС‹Р№ Р·Р°РїСѓСЃРє РїРѕР»СѓС‡Р°РµС‚ СЃРІРѕР№ РѕС‚РґРµР»СЊРЅС‹Р№ ID.
-                    </HelpLabel>
-                    <input
-                      value={selectedAuction.serverIds[String(index)] ?? ''}
-                      onChange={(event) => updateServerId(selectedAuction.id, index, event.target.value)}
-                      placeholder="ID, РєРѕС‚РѕСЂС‹Р№ РІС‹РґР°Р» СЃРµСЂРІРµСЂ"
-                    />
-                  </label>
-                ))}
-              </div>
-              {commandStages.missingServerIds.length ? <div className="inline-hint inline-hint-warning">Р‘РµР· СЌС‚РёС… ID С€Р°РіРё РїСЂРµРґРјРµС‚РѕРІ Рё РЅР°СЃС‚СЂРѕРµРє Р±СѓРґСѓС‚ РїСЂРѕРїСѓС‰РµРЅС‹: {commandStages.missingServerIds.join(', ')}</div> : null}
-            </section>
-            <div className="auction-toolbar-row">
-              <label className="field-block compact-field"><HelpLabel text="Р“СЂР°С„РёРє">Р’С‹Р±РёСЂР°РµС‚ РІР°Р»СЋС‚Сѓ РіСЂР°С„РёРєР°. РўРѕС‡РєРё РЅР° РіСЂР°С„РёРєРµ РјРµРЅСЏСЋС‚ РїСЂРѕС†РµРЅС‚ С†РµРЅС‹ РґР»СЏ РІСЃРµС… РїСЂРµРґРјРµС‚РѕРІ СЌС‚РѕР№ РІР°Р»СЋС‚С‹ РІ РґРµРЅСЊ Р·Р°РїСѓСЃРєР°.</HelpLabel><select value={graphCurrency} onChange={(event) => setGraphCurrency(event.target.value as AuctionCurrency)}>{auctionCurrencies.map((currency) => <option key={currency} value={currency}>{auctionCurrencyLabels[currency]}</option>)}</select></label>
-              <span>РўР°С‰Рё С‚РѕС‡РєСѓ РІРІРµСЂС…/РІРЅРёР·: РїСЂРѕС†РµРЅС‚ РјРµРЅСЏРµС‚ С†РµРЅС‹ РІСЃРµС… РїСЂРµРґРјРµС‚РѕРІ СЌС‚РѕР№ РІР°Р»СЋС‚С‹ РІ СЌС‚РѕС‚ РґРµРЅСЊ.</span>
-            </div>
-            {shouldRenderPriceGraph ? (
-              <>
-                <AuctionPriceGraph
-                  values={curve[graphCurrency]}
-                  activeDays={activeGraphDays}
-                  pointDetails={graphPointDetails}
-                  repeatMarkers={graphRepeatMarkers}
-                  onChangeDay={(day, value) => setCurve((current) => ({ ...current, [graphCurrency]: current[graphCurrency].map((item, index) => index === day ? value : item) }))}
-                />
-                <AuctionRunPricePreviewList previews={graphRunPricePreviews} />
-              </>
-            ) : (
-              <div className="inline-hint auction-graph-lazy-note">
-                Р“СЂР°С„РёРє РЅРµ СЃС‚СЂРѕРёС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РІ РѕР±С‹С‡РЅРѕРј СЂРµР¶РёРјРµ. Р­С‚Рѕ СѓСЃРєРѕСЂСЏРµС‚ СЂР°Р±РѕС‚Сѓ СЃ РїР°РїРєР°РјРё; РѕС‚РєСЂРѕР№ РіСЂР°С„РёРє С‚РѕР»СЊРєРѕ РєРѕРіРґР° РЅСѓР¶РЅРѕ РјРµРЅСЏС‚СЊ РјРЅРѕР¶РёС‚РµР»Рё.
-                <button type="button" className="secondary-button" onClick={() => setGraphExpanded(true)}>РћС‚РєСЂС‹С‚СЊ РіСЂР°С„РёРє</button>
-              </div>
-            )}
-          </Panel>
+          <AuctionDraftEditorPanel
+            auction={selectedAuction}
+            graphCurrency={graphCurrency}
+            graphValues={curve[graphCurrency]}
+            graphActiveDays={activeGraphDays}
+            graphPointDetails={graphPointDetails}
+            graphRepeatMarkers={graphRepeatMarkers}
+            graphRunPricePreviews={graphRunPricePreviews}
+            shouldRenderPriceGraph={shouldRenderPriceGraph}
+            missingServerIds={commandStages.missingServerIds}
+            onRenameAuction={renameAuction}
+            onUpdateAuction={updateAuction}
+            onUpdateServerId={updateServerId}
+            onGraphCurrencyChange={setGraphCurrency}
+            onGraphDayChange={(day, value) => setCurve((current) => ({ ...current, [graphCurrency]: current[graphCurrency].map((item, index) => index === day ? value : item) }))}
+            onOpenGraph={() => setGraphExpanded(true)}
+          />
         ) : null}
 
         {selectedAuction && mode === 'items' ? (
@@ -429,24 +421,13 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         ) : null}
       </div>
 
-      <Panel
-        title="РџСЂРµРґРїСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»Р°"
-        subtitle="Р¤Р°Р№Р» СЃРєР°С‡РёРІР°РµС‚СЃСЏ Р±РµР· СЂР°СЃС€РёСЂРµРЅРёСЏ"
-        actions={(
-          <AuctionHelpTip label="РџРѕРґСЃРєР°Р·РєР°: РџСЂРµРґРїСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»Р°">
-            Р—РґРµСЃСЊ РїРѕРєР°Р·С‹РІР°РµС‚СЃСЏ РІС‹Р±СЂР°РЅРЅС‹Р№ С€Р°Рі РєРѕРјР°РЅРґ. РЎРєР°С‡РёРІР°РЅРёРµ СЃРѕС…СЂР°РЅСЏРµС‚ РёРјРµРЅРЅРѕ Р°РєС‚РёРІРЅС‹Р№ С€Р°Рі: СЃРѕР·РґР°РЅРёРµ СЃР»РѕС‚РѕРІ, СЃРїРёСЃРѕРє ID, РґРѕР±Р°РІР»РµРЅРёРµ РїСЂРµРґРјРµС‚РѕРІ РёР»Рё С„РёРЅР°Р»СЊРЅСѓСЋ РЅР°СЃС‚СЂРѕР№РєСѓ.
-            Р”Р»СЏ РїРѕР»РЅРѕРіРѕ РїСЂРѕС†РµСЃСЃР° РІС‹РїРѕР»РЅСЏР№ С€Р°РіРё РїРѕ РїРѕСЂСЏРґРєСѓ.
-          </AuctionHelpTip>
-        )}
-      >
-        <div className="auction-step-tabs" aria-label="auction-command-stage">
-          {workflowMode === 'install' ? <button type="button" title="РљРѕРјР°РЅРґС‹ /aca create СЃРѕР·РґР°СЋС‚ РїСѓСЃС‚С‹Рµ СЃРµСЂРІРµСЂРЅС‹Рµ Р°СѓРєС†РёРѕРЅС‹. РџРѕСЃР»Рµ СЌС‚РѕРіРѕ СЃРµСЂРІРµСЂ РІС‹РґР°СЃС‚ ID." className={commandStage === 'create' ? 'active' : ''} onClick={() => setCommandStage('create')}>1. РЎРѕР·РґР°С‚СЊ СЃР»РѕС‚С‹</button> : null}
-          <button type="button" title="РЁРїР°СЂРіР°Р»РєР°, РєСѓРґР° РІРїРёСЃР°С‚СЊ ID, РєРѕС‚РѕСЂС‹Рµ СЃРµСЂРІРµСЂ РІС‹РґР°Р» РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ СЃР»РѕС‚РѕРІ." className={commandStage === 'ids' ? 'active' : ''} onClick={() => setCommandStage('ids')}>2. Р’С‹РїРёСЃР°С‚СЊ ID</button>
-          <button type="button" title="РљРѕРјР°РЅРґС‹ /clear, /give Рё /aca addItem РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРґРјРµС‚РѕРІ РІ СѓР¶Рµ РёР·РІРµСЃС‚РЅС‹Рµ СЃРµСЂРІРµСЂРЅС‹Рµ ID." className={commandStage === 'items' ? 'active' : ''} onClick={() => setCommandStage('items')}>3. Р—Р°РєРёРЅСѓС‚СЊ РїСЂРµРґРјРµС‚С‹</button>
-          <button type="button" title="РљРѕРјР°РЅРґС‹ С„РёРЅР°Р»СЊРЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРё: РЅР°Р·РІР°РЅРёРµ, РґР°С‚С‹, РІР°Р»СЋС‚Р°, С†РµРЅР°, С€Р°Рі СЃС‚Р°РІРєРё, СЃРѕСЃС‚РѕСЏРЅРёРµ Рё СЂР°СЃРїРёСЃР°РЅРёРµ." className={commandStage === 'settings' ? 'active' : ''} onClick={() => setCommandStage('settings')}>4. РќР°СЃС‚СЂРѕРёС‚СЊ Рё Р·Р°РїСѓСЃС‚РёС‚СЊ</button>
-        </div>
-        <pre className="raw-block auction-command-preview">{commands || 'РљРѕРјР°РЅРґС‹ РїРѕСЏРІСЏС‚СЃСЏ РїРѕСЃР»Рµ РЅР°СЃС‚СЂРѕР№РєРё Р°СѓРєС†РёРѕРЅР°.'}</pre>
-      </Panel>
+      <AuctionCommandPreview
+        workflowMode={workflowMode}
+        commandStage={commandStage}
+        commandStages={commandStages}
+        commands={commands}
+        onCommandStageChange={setCommandStage}
+      />
 
       {downloadModalOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setDownloadModalOpen(false)}>
@@ -464,23 +445,20 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
           >
             <div className="modal-header">
               <div>
-                <h2>РЎРєР°С‡Р°С‚СЊ С„Р°Р№Р» РєРѕРјР°РЅРґ</h2>
-                <span className="modal-subtitle">Р Р°СЃС€РёСЂРµРЅРёРµ РЅРµ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ: РёС‚РѕРіРѕРІС‹Р№ С„Р°Р№Р» Р±СѓРґРµС‚ Р±РµР· .txt.</span>
+                <h2>Скачать файл команд</h2>
+                <span className="modal-subtitle">Расширение не добавляется: итоговый файл будет без .txt.</span>
               </div>
-              <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>Р—Р°РєСЂС‹С‚СЊ</button>
+              <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>Закрыть</button>
             </div>
             <div className="settings-modal-body">
               <label className="field-block">
-                <HelpLabel text="РРјСЏ С„Р°Р№Р»Р°">
-                  РРјСЏ РёС‚РѕРіРѕРІРѕРіРѕ С„Р°Р№Р»Р° РєРѕРјР°РЅРґ. Р Р°СЃС€РёСЂРµРЅРёРµ СѓРґР°Р»СЏРµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё, РґР°Р¶Рµ РµСЃР»Рё РІРїРёСЃР°С‚СЊ `.txt`.
-                  РџСЂРёРјРµСЂ: `auction_step_3` СЃРєР°С‡Р°РµС‚СЃСЏ РєР°Рє С„Р°Р№Р» Р±РµР· СЂР°СЃС€РёСЂРµРЅРёСЏ.
-                </HelpLabel>
+                <span>Имя файла</span>
                 <input autoFocus value={filenameDraft} onChange={(event) => setFilenameDraft(event.target.value)} />
               </label>
-              <div className="cloud-save-preview"><span>РС‚РѕРі</span><strong>{sanitizeAuctionFilename(filenameDraft)}</strong></div>
+              <div className="cloud-save-preview"><span>Итог</span><strong>{sanitizeAuctionFilename(filenameDraft)}</strong></div>
               <div className="inline-actions cloud-save-actions">
-                <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>РћС‚РјРµРЅР°</button>
-                <button type="submit" disabled={!commands.trim()}>РЎРєР°С‡Р°С‚СЊ</button>
+                <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>Отмена</button>
+                <button type="submit" disabled={!commands.trim()}>Скачать</button>
               </div>
             </div>
           </form>

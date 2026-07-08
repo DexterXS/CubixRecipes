@@ -429,14 +429,18 @@ Last full rebuild: 2026-06-29
   - Owns the Word/Excel-style ribbon shell for the Auctions workspace: top tabs, day creation/copy/delete, day defaults, price mode, lot shortcuts, server-ID shortcuts, command workflow mode, planner shortcuts, and normal/expert mode.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
   - Owns the central day-folder card grid. Cards show folder summaries, price ranges, item counts, price mode, missing-ID/NBT indicators, and quick actions for copy/edit/prices/graph/commands.
+- `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
+  - Owns the opened day-folder view: back-to-days navigation, auction rows inside the selected folder, selected-auction switching, add/copy/delete actions, item/settings shortcuts, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
   - Owns the selected-day right panel: base folder fields, auction selection/addition, max-items control, selected-day command status, and expert-only metadata.
+- `frontend/src/features/auctions/AuctionDraftEditorPanel.tsx`
+  - Owns the selected-auction configuration form that replaced the old inline builder block: local label, currency, name, description, start/duration/step, repeat/planner fields, server-ID inputs, lazy graph opening, and run-price previews.
 - `frontend/src/features/auctions/AuctionPriceModePanel.tsx`
   - Owns the selected-day price-mode panel and lightweight manual price preview without loading the graph.
 - `frontend/src/features/auctions/AuctionServerIdPanel.tsx`
   - Owns selected-day server-ID lifecycle messaging and missing-ID summary.
 - `frontend/src/features/auctions/AuctionCommandPreview.tsx`
-  - Prepared command-preview owner for a later safe JSX extraction from the legacy preview block.
+  - Owns the staged command preview below the workspace, including server-ID warnings and create/ID/items/settings stage switching.
 - `frontend/src/features/auctions/AuctionPlanPanel.tsx`
   - Legacy auction plan sidebar retained for compatibility/reference but no longer used by the main day-folder workspace.
 - `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`

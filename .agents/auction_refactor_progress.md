@@ -9,8 +9,10 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 3. Done: added ribbon shell and day actions.
 4. Done: replaced the old auction plan sidebar with day-folder cards.
 5. Done: added selected-day details panel.
-6. Done: split server ID and price detail blocks into focused panels; command preview component is prepared for a later safe JSX swap.
+6. Done: split server ID and price detail blocks into focused panels; command preview component now owns the live staged command preview.
 7. Done: added normal/expert mode and lazy graph rendering.
-8. Done: polished responsive CSS without starting a local dev server.
-9. Done: frontend tests, frontend build, file-size report, and `git diff --check`.
-10. Done: docs/tree/changelog updated; changes committed and pushed through the project `test` delivery flow.
+8. Done: added opened-folder mode so a day folder can be opened to inspect, select, add, copy, delete, configure, edit items, and open commands for its internal auctions.
+9. Done: replaced the old inline selected-auction editor with `AuctionDraftEditorPanel` and removed the remaining mojibake UI strings from the auction workspace.
+10. Done: polished responsive CSS without starting a local dev server.
+11. Done: frontend tests, frontend build, file-size report, and `git diff --check`.
+12. Done: docs/tree/changelog updated for this continuation; changes are ready for the project `test` delivery flow.
