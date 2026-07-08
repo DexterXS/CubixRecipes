@@ -433,14 +433,10 @@ Last full rebuild: 2026-06-29
   - Owns the opened day-folder view: back-to-days navigation, auction rows inside the selected folder, selected-auction switching, add/copy/delete actions, item/settings shortcuts, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
   - Owns the selected-day right panel: base folder fields, auction selection/addition, max-items control, selected-day command status, and expert-only metadata.
-- `frontend/src/features/auctions/AuctionDraftEditorPanel.tsx`
-  - Owns the selected-auction configuration form that replaced the old inline builder block: local label, currency, name, description, start/duration/step, repeat/planner fields, server-ID inputs, lazy graph opening, and run-price previews.
 - `frontend/src/features/auctions/AuctionPriceModePanel.tsx`
   - Owns the selected-day price-mode panel and lightweight manual price preview without loading the graph.
 - `frontend/src/features/auctions/AuctionServerIdPanel.tsx`
   - Owns selected-day server-ID lifecycle messaging and missing-ID summary.
-- `frontend/src/features/auctions/AuctionCommandPreview.tsx`
-  - Owns the staged command preview below the workspace, including server-ID warnings and create/ID/items/settings stage switching.
 - `frontend/src/features/auctions/AuctionPlanPanel.tsx`
   - Legacy auction plan sidebar retained for compatibility/reference but no longer used by the main day-folder workspace.
 - `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`
@@ -455,7 +451,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
   - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.
 - `frontend/src/features/auctions/AuctionBuilder.css`
-  - Scoped presentation for the auction builder workspace, item picker, graph, warnings, and command preview.
+  - Scoped presentation for the auction builder workspace, item picker, graph, and warnings. The old permanent lower editor/command-preview area is not part of the current Auctions screen.
 
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`

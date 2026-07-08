@@ -1,19 +1,15 @@
 ﻿import { useMemo, useState } from 'react';
 import {
   buildAuctionCommandStages,
-  buildAuctionRunPricePreviews,
   createDefaultAuctionCurve,
   localDateTimeInputFromUtcMs,
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
-import { AuctionCommandPreview } from './AuctionCommandPreview';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
-import { AuctionDraftEditorPanel } from './AuctionDraftEditorPanel';
 import { AuctionItemsWorkspace } from './AuctionItemsWorkspace';
-import type { AuctionPriceGraphPointDetail, AuctionPriceGraphRepeatMarker } from './AuctionPriceGraph';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
@@ -42,16 +38,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const [dayViewMode, setDayViewMode] = useState<'days' | 'folder'>('days');
   const [ribbonTab, setRibbonTab] = useState<AuctionRibbonTab>('auctions');
   const [uiMode, setUiMode] = useState<AuctionUiMode>('normal');
-  const [graphExpanded, setGraphExpanded] = useState(false);
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
-  const [graphCurrency, setGraphCurrency] = useState<AuctionCurrency>('DONATE');
   const [idMode, setIdMode] = useState<AuctionItemIdMode>('raw');
   const [commandPlayer, setCommandPlayer] = useState('@p');
   const [graphStartLocal] = useState(() => localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()));
   const [dayFolders, setDayFolders] = useState<AuctionDayFolder[]>(() => [createInitialAuctionDayFolder(now, defaultTimezoneOffset())]);
   const [selectedDayFolderId, setSelectedDayFolderId] = useState('day-1');
   const [selectedAuctionId, setSelectedAuctionId] = useState('1');
-  const [curve, setCurve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
+  const [curve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
   const [itemSearch, setItemSearch] = useState('');
   const [maxItemsPerAuction, setMaxItemsPerAuction] = useState(4);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
@@ -67,33 +61,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
   const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, curve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
   const commands = commandStages[commandStage];
-  const runPricePreviews = useMemo(() => buildAuctionRunPricePreviews({ auctions, curve, graphStartLocal }), [auctions, curve, graphStartLocal]);
-  const graphRunPricePreviews = useMemo(() => runPricePreviews.filter((preview) => preview.currency === graphCurrency), [runPricePreviews, graphCurrency]);
-  const activeGraphDays = useMemo(() => graphRunPricePreviews.filter((preview) => preview.dayIndex === preview.priceDayIndex).map((preview) => preview.priceDayIndex), [graphRunPricePreviews]);
-  const graphPointDetails = useMemo(() => graphRunPricePreviews.reduce<Record<number, AuctionPriceGraphPointDetail[]>>((details, preview) => {
-    if (preview.dayIndex !== preview.priceDayIndex) return details;
-    details[preview.priceDayIndex] = [
-      ...(details[preview.priceDayIndex] ?? []),
-      {
-        label: preview.label,
-        startPrice: preview.startPrice,
-        stepPrice: preview.stepPrice,
-        multiplier: preview.multiplier
-      }
-    ];
-    return details;
-  }, {}), [graphRunPricePreviews]);
-  const graphRepeatMarkers = useMemo(() => graphRunPricePreviews
-    .filter((preview) => preview.dayIndex !== preview.priceDayIndex)
-    .map<AuctionPriceGraphRepeatMarker>((preview) => ({
-      day: preview.dayIndex,
-      priceDay: preview.priceDayIndex,
-      label: preview.label,
-      startPrice: preview.startPrice,
-      stepPrice: preview.stepPrice,
-      multiplier: preview.multiplier
-    })), [graphRunPricePreviews]);
-  const shouldRenderPriceGraph = uiMode === 'expert' || graphExpanded;
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
     if (!query) return itemOptions.slice(0, 80);
@@ -380,26 +347,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
           onSetCommandStage={setCommandStage}
         />
 
-        {selectedAuction && mode === 'config' ? (
-          <AuctionDraftEditorPanel
-            auction={selectedAuction}
-            graphCurrency={graphCurrency}
-            graphValues={curve[graphCurrency]}
-            graphActiveDays={activeGraphDays}
-            graphPointDetails={graphPointDetails}
-            graphRepeatMarkers={graphRepeatMarkers}
-            graphRunPricePreviews={graphRunPricePreviews}
-            shouldRenderPriceGraph={shouldRenderPriceGraph}
-            missingServerIds={commandStages.missingServerIds}
-            onRenameAuction={renameAuction}
-            onUpdateAuction={updateAuction}
-            onUpdateServerId={updateServerId}
-            onGraphCurrencyChange={setGraphCurrency}
-            onGraphDayChange={(day, value) => setCurve((current) => ({ ...current, [graphCurrency]: current[graphCurrency].map((item, index) => index === day ? value : item) }))}
-            onOpenGraph={() => setGraphExpanded(true)}
-          />
-        ) : null}
-
         {selectedAuction && mode === 'items' ? (
           <AuctionItemsWorkspace
             selectedAuction={selectedAuction}
@@ -420,14 +367,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
           />
         ) : null}
       </div>
-
-      <AuctionCommandPreview
-        workflowMode={workflowMode}
-        commandStage={commandStage}
-        commandStages={commandStages}
-        commands={commands}
-        onCommandStageChange={setCommandStage}
-      />
 
       {downloadModalOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setDownloadModalOpen(false)}>

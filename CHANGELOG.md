@@ -4,7 +4,7 @@
 ### Added
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Added an opened day-folder view for Auctions so a day folder can show its internal auction drafts, selected draft, item/setting/command shortcuts, missing server-ID status, and NBT warnings.
-- Replaced the remaining inline Auctions editor/preview blocks with focused selected-auction and command-preview components, removing the broken mojibake UI text visible below the new day-folder workspace.
+- Removed the old permanent lower Auctions editor/command-preview area so the day-folder workspace no longer renders legacy panels below the main layout.
 - Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.
 - Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
 - Changed Auctions pricing so each item stores its own lot price and the 90-day graph applies a percentage multiplier to all non-NBT item prices for the matching currency/day.
