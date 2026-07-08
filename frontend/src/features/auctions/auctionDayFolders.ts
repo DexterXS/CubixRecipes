@@ -95,6 +95,7 @@ export function createAuctionDayFolder(params: {
     dateLocal: params.dateLocal,
     title: params.title ?? categoryTitle(category, params.dateLocal),
     category,
+    tag: null,
     currency: auctions[0]?.currency ?? 'DONATE',
     defaultDurationMinutes,
     defaultStartPrice,

@@ -93,6 +93,42 @@
   background: rgba(24, 95, 190, 0.32);
 }
 
+.auction-day-tag-picker {
+  display: grid;
+  gap: 6px;
+}
+
+.auction-day-tag-picker > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auction-day-tag-picker > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.auction-day-tag-picker button {
+  min-height: 28px;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.56);
+  color: var(--text);
+  padding: 4px 8px;
+}
+
+.auction-day-tag-picker button:not(:first-child) {
+  width: 28px;
+  padding: 0;
+  background: var(--tag-color);
+}
+
+.auction-day-tag-picker button.active {
+  outline: 2px solid #f4f8ff;
+  outline-offset: 1px;
+}
+
 .auction-day-items-table {
   display: grid;
   gap: 4px;

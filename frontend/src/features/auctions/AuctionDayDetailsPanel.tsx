@@ -1,8 +1,10 @@
 import { auctionCurrencies, type AuctionCommandStages } from './auctionCommands';
+import { auctionFolderTagColors, auctionFolderTagLabels, auctionFolderTags } from './auctionFolderTags';
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
+import type { CSSProperties } from 'react';
 import { AuctionPriceModePanel } from './AuctionPriceModePanel';
 import { AuctionServerIdPanel } from './AuctionServerIdPanel';
-import type { AuctionCurrency, AuctionDayFolder, AuctionFolderCategory, AuctionPriceMode, AuctionState, AuctionUiMode } from './auctionTypes';
+import type { AuctionCurrency, AuctionDayFolder, AuctionFolderCategory, AuctionFolderTag, AuctionPriceMode, AuctionState, AuctionUiMode } from './auctionTypes';
 import './AuctionDayDetailsPanel.css';
 
 type AuctionDayDetailsPanelProps = {
@@ -16,6 +18,7 @@ type AuctionDayDetailsPanelProps = {
   onTitleChange: (title: string) => void;
   onDateChange: (dateLocal: string) => void;
   onCategoryChange: (category: AuctionFolderCategory) => void;
+  onTagChange: (tag: AuctionFolderTag | null) => void;
   onCurrencyChange: (currency: AuctionCurrency) => void;
   onDurationChange: (minutes: number) => void;
   onStepPriceChange: (step: number) => void;
@@ -57,6 +60,7 @@ export function AuctionDayDetailsPanel({
   onTitleChange,
   onDateChange,
   onCategoryChange,
+  onTagChange,
   onCurrencyChange,
   onDurationChange,
   onStepPriceChange,
@@ -101,6 +105,22 @@ export function AuctionDayDetailsPanel({
             <option value="planned">Планируемые / повтор</option>
           </select>
         </label>
+        <div className="auction-day-tag-picker">
+          <span>Цветной тег</span>
+          <div>
+            <button type="button" className={!folder.tag ? 'active' : ''} onClick={() => onTagChange(null)}>Без тега</button>
+            {auctionFolderTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={folder.tag === tag ? 'active' : ''}
+                title={auctionFolderTagLabels[tag]}
+                style={{ '--tag-color': auctionFolderTagColors[tag] } as CSSProperties}
+                onClick={() => onTagChange(tag)}
+              />
+            ))}
+          </div>
+        </div>
         {!isPlanned ? (
           <label className="field-block compact-field">
             <span>Дата дня</span>

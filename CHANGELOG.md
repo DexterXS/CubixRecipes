@@ -9,6 +9,7 @@
 - Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
 - Updated Auctions graphs to show all currencies together or one currency at a time, include static planned-folder points, show point dates on hover, open auction lists from graph points with right click, and allow editable points to move by day and percentage.
 - Improved Auctions graph readability in dark theme with brighter SVG labels, label backplates, clearer grid contrast, and cleaner point captions.
+- Added graph point management for merged auction dates: right-click lists folders/auctions, individual auctions can be dragged out to another day, opened for editing, duplicated into a new folder, and folders can receive one color tag that tints graph points.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.

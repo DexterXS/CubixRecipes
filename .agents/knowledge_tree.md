@@ -465,9 +465,11 @@ Last full rebuild: 2026-06-29
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
-  - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, and selected graph series wiring across all auction folders.
+  - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, dragging one auction out of a merged point, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
+- `frontend/src/features/auctions/auctionFolderTags.ts`
+  - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
-  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, and horizontal point movement shifts only editable regular auctions by whole days while preserving local time.
+  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, horizontal point movement shifts editable regular auctions by whole days while preserving local time, and single-auction graph moves/duplicates handle merged points.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
   - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally.
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
@@ -548,7 +550,7 @@ Last full rebuild: 2026-06-29
 - Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
 - Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
 - Auction lot first-item naming and item ordering helpers are covered by `frontend/src/features/auctions/auctionLotItems.test.ts`.
-- Auction graph point aggregation and day movement are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
+- Auction graph point aggregation, tags, day movement, merged-point separation, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
 - Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.

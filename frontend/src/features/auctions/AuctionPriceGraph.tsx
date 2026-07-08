@@ -5,6 +5,8 @@ export type AuctionPriceGraphPointDetail = {
   label: string;
   folderTitle: string;
   folderCategory: 'regular' | 'planned';
+  folderTagLabel: string | null;
+  folderTagColor: string | null;
   startPrice: number;
   stepPrice: number;
   multiplier: number;
@@ -15,6 +17,7 @@ export type AuctionPriceGraphPoint = {
   dateLabel: string;
   editable: boolean;
   value: number;
+  color: string | null;
   details: AuctionPriceGraphPointDetail[];
 };
 
@@ -30,6 +33,7 @@ type AuctionPriceGraphProps = {
   series: AuctionPriceGraphSeries[];
   onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
   onOpenPoint: (currency: AuctionCurrency, day: number, x: number, y: number) => void;
+  onDropAuction: (currency: AuctionCurrency, folderId: string, auctionId: string, targetDay: number) => void;
 };
 
 const width = 760;
@@ -76,7 +80,8 @@ function percentLabel(value: number) {
 function pointTitle(point: AuctionPriceGraphPoint, value: number) {
   const rows = [`${point.dateLabel} · D${point.day + 1} · ${percentLabel(value)}`];
   point.details.forEach((detail) => {
-    rows.push(`${detail.folderTitle}: ${detail.label}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`);
+    const tag = detail.folderTagLabel ? ` [${detail.folderTagLabel}]` : '';
+    rows.push(`${detail.folderTitle}${tag}: ${detail.label}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`);
   });
   if (!point.editable) rows.push('Статическая точка: фиолетовая/фиксированная папка не меняет график.');
   return rows.join('\n');
@@ -116,7 +121,7 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropAuction }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
 
@@ -149,6 +154,17 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       onPointerMove={(event) => updateFromPointer(event.clientX, event.clientY)}
       onPointerUp={() => { dragRef.current = null; }}
       onPointerCancel={() => { dragRef.current = null; }}
+      onDragOver={(event) => {
+        if (event.dataTransfer.types.includes('application/x-auction-graph-auction')) event.preventDefault();
+      }}
+      onDrop={(event) => {
+        const raw = event.dataTransfer.getData('application/x-auction-graph-auction');
+        const point = pointerToGraph(event.clientX, event.clientY);
+        if (!raw || !point) return;
+        event.preventDefault();
+        const payload = JSON.parse(raw) as { currency: AuctionCurrency; folderId: string; auctionId: string };
+        onDropAuction(payload.currency, payload.folderId, payload.auctionId, dayFromX(point.x));
+      }}
     >
       <defs>
         {series.map((item) => (
@@ -178,7 +194,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
             {item.points.map((point) => {
               const value = point.editable ? (item.values[point.day] ?? 1) : point.value;
               return (
-                <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'}>
+                <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'} style={{ color: point.color ?? item.color }}>
                   <title>{pointTitle(point, value)}</title>
                   <circle
                     className="auction-graph-point"

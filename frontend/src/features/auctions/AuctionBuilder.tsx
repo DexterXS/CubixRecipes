@@ -1,13 +1,8 @@
 ﻿import { useMemo, useState } from 'react';
-import {
-  buildAuctionCommandStages,
-  createDefaultAuctionCurve,
-  localDateTimeInputFromUtcMs,
-  sanitizeAuctionFilename
-} from './auctionCommands';
+import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInputFromUtcMs } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
-import { moveAuctionGraphPointFolders } from './auctionGraphModel';
+import { duplicateAuctionGraphFolder, moveAuctionGraphAuction, moveAuctionGraphPointFolders } from './auctionGraphModel';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
@@ -17,27 +12,10 @@ import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
 import { useAuctionPlannerPersistence } from './useAuctionPlannerPersistence';
-import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionFolderTag, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
-type AuctionBuilderProps = {
-  itemOptions: AuctionItemOption[];
-  renderItemIcon: AuctionRenderItemIcon;
-};
-
-function downloadTextWithoutExtension(filename: string, text: string) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = sanitizeAuctionFilename(filename);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderProps) {
+export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: AuctionItemOption[]; renderItemIcon: AuctionRenderItemIcon }) {
   const now = Date.now();
   const [workflowMode, setWorkflowMode] = useState<AuctionWorkflowMode>('install');
   const [workspaceView, setWorkspaceView] = useState<'folders' | 'folder' | 'lot'>('folders');
@@ -201,6 +179,19 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     setCurve((current) => ({ ...current, [currency]: current[currency].map((point, index) => index === targetDay ? value : point) }));
     if (sourceDay !== targetDay) setDayFolders((current) => moveAuctionGraphPointFolders({ folders: current, currency, sourceDay, targetDay, graphStartLocal }));
   };
+
+  const moveGraphAuction = (currency: AuctionCurrency, folderId: string, auctionId: string, targetDay: number) => setDayFolders((current) => moveAuctionGraphAuction({ folders: current, currency, folderId, auctionId, targetDay, graphStartLocal }));
+
+  const duplicateGraphAuctionFolder = (folderId: string, auctionId: string) => {
+    setDayFolders((current) => {
+      const result = duplicateAuctionGraphFolder({ folders: current, folderId, auctionId });
+      setSelectedDayFolderId(result.folderId); setSelectedAuctionId(result.auctionId);
+      return result.folders;
+    });
+    setWorkspaceView('lot');
+  };
+
+  const setGraphFolderTag = (folderId: string, tag: AuctionFolderTag | null) => setDayFolders((current) => current.map((folder) => folder.id === folderId ? { ...folder, tag } : folder));
 
   const updateDayTitle = (title: string) => {
     updateSelectedDayFolder((folder) => ({ ...folder, title }));
@@ -424,6 +415,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                 curve={curve}
                 graphStartLocal={graphStartLocal}
                 onMovePoint={updateGraphPoint}
+                onMoveAuction={moveGraphAuction}
+                onDuplicateAuctionFolder={duplicateGraphAuctionFolder}
+                onSetFolderTag={setGraphFolderTag}
+                onOpenAuction={(folderId, auctionId) => {
+                  setSelectedDayFolderId(folderId);
+                  setSelectedAuctionId(auctionId);
+                  setWorkspaceView('lot');
+                }}
               />
             ) : selectedDayFolder && workspaceView === 'folder' ? (
               <AuctionDayContentsPanel
@@ -463,6 +462,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               onTitleChange={updateDayTitle}
               onDateChange={updateDayDate}
               onCategoryChange={updateDayCategory}
+              onTagChange={(tag) => updateSelectedDayFolder((folder) => ({ ...folder, tag }))}
               onCurrencyChange={updateDayCurrency}
               onDurationChange={updateDayDuration}
               onStepPriceChange={updateDayStepPrice}
@@ -489,7 +489,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
           commands={commands}
           onFilenameChange={setFilenameDraft}
           onClose={() => setDownloadModalOpen(false)}
-          onDownload={downloadTextWithoutExtension}
         />
       ) : null}
     </div>

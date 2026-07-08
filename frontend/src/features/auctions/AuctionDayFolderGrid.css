@@ -97,6 +97,16 @@
   min-height: 17px;
 }
 
+.auction-folder-tag {
+  justify-self: start;
+  border: 1px solid color-mix(in srgb, var(--tag-color) 70%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tag-color) 18%, transparent);
+  color: #f4f8ff;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
 .auction-folder-card-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

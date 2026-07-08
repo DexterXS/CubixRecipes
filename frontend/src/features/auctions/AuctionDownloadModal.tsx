@@ -5,10 +5,21 @@ type AuctionDownloadModalProps = {
   commands: string;
   onFilenameChange: (value: string) => void;
   onClose: () => void;
-  onDownload: (filename: string, text: string) => void;
 };
 
-export function AuctionDownloadModal({ filenameDraft, commands, onFilenameChange, onClose, onDownload }: AuctionDownloadModalProps) {
+function downloadTextWithoutExtension(filename: string, text: string) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = sanitizeAuctionFilename(filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+export function AuctionDownloadModal({ filenameDraft, commands, onFilenameChange, onClose }: AuctionDownloadModalProps) {
   return (
     <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <form
@@ -19,7 +30,7 @@ export function AuctionDownloadModal({ filenameDraft, commands, onFilenameChange
         onClick={(event) => event.stopPropagation()}
         onSubmit={(event) => {
           event.preventDefault();
-          onDownload(filenameDraft, commands);
+          downloadTextWithoutExtension(filenameDraft, commands);
           onClose();
         }}
       >

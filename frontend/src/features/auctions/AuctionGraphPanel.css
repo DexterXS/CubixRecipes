@@ -193,11 +193,60 @@
 
 .auction-graph-point-menu-list article {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 3px;
+  align-items: center;
   border: 1px solid rgba(104, 142, 204, 0.18);
   border-radius: 6px;
   padding: 8px;
   background: rgba(8, 27, 60, 0.44);
+}
+
+.auction-graph-point-menu-list article[draggable="true"] {
+  cursor: grab;
+}
+
+.auction-graph-point-menu-list article[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.auction-graph-point-menu-list article button {
+  min-height: 30px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(24, 95, 190, 0.28);
+  color: var(--text);
+  padding: 5px 9px;
+}
+
+.auction-graph-point-menu-actions {
+  display: grid;
+  gap: 5px;
+}
+
+.auction-graph-tag-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.auction-graph-tag-row button {
+  min-width: 26px;
+  min-height: 24px;
+  padding: 3px 6px;
+}
+
+.auction-graph-tag-row button:not(:first-child) {
+  width: 26px;
+  padding: 0;
+  background: var(--tag-color);
+}
+
+.auction-graph-tag-row button.active {
+  outline: 2px solid #f4f8ff;
+  outline-offset: 1px;
 }
 
 .auction-graph-point-menu-list span,

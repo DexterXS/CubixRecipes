@@ -1,6 +1,7 @@
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { AuctionDayFolder, AuctionState } from './auctionTypes';
+import { auctionFolderTagColors, auctionFolderTagLabels } from './auctionFolderTags';
 import './AuctionDayFolderGrid.css';
 
 type AuctionDayFolderGridProps = {
@@ -99,6 +100,7 @@ export function AuctionDayFolderGrid({
                 <span>{summary?.auctionCount ?? folder.auctions.length} аукционов</span>
               </div>
               <div className="auction-folder-kind">{folderKindLabel(folder)}</div>
+              {folder.tag ? <span className="auction-folder-tag" style={{ '--tag-color': auctionFolderTagColors[folder.tag] } as CSSProperties}>{auctionFolderTagLabels[folder.tag]}</span> : null}
               <div className="auction-folder-card-body">
                 <div className="auction-folder-icon" aria-hidden="true">
                   <span />

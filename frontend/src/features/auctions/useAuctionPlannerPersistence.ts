@@ -35,6 +35,7 @@ function normalizeLoadedFolder(folder: AuctionDayFolder): AuctionDayFolder {
   const normalizedFolder: AuctionDayFolder = {
     ...folder,
     currency: folder.currency ?? 'DONATE',
+    tag: folder.tag ?? null,
     defaultDurationMinutes: Number.isFinite(folder.defaultDurationMinutes) ? folder.defaultDurationMinutes : 10,
     defaultStartPrice,
     defaultStepPrice: Number.isFinite(folder.defaultStepPrice) ? folder.defaultStepPrice : 10,
