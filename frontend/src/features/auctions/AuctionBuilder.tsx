@@ -7,6 +7,7 @@ import {
 } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
+import { moveAuctionGraphPointFolders } from './auctionGraphModel';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
@@ -196,13 +197,9 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     }));
   };
 
-  const updateGraphDay = (day: number, value: number) => {
-    if (!selectedDayFolder) return;
-    const currency = selectedDayFolder.currency;
-    setCurve((current) => ({
-      ...current,
-      [currency]: current[currency].map((point, index) => index === day ? value : point)
-    }));
+  const updateGraphPoint = (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => {
+    setCurve((current) => ({ ...current, [currency]: current[currency].map((point, index) => index === targetDay ? value : point) }));
+    if (sourceDay !== targetDay) setDayFolders((current) => moveAuctionGraphPointFolders({ folders: current, currency, sourceDay, targetDay, graphStartLocal }));
   };
 
   const updateDayTitle = (title: string) => {
@@ -421,12 +418,12 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
           />
         ) : (
           <>
-            {selectedDayFolder && ribbonTab === 'graphs' ? (
+            {ribbonTab === 'graphs' ? (
               <AuctionGraphPanel
-                folder={selectedDayFolder}
+                folders={dayFolders}
                 curve={curve}
                 graphStartLocal={graphStartLocal}
-                onChangeDay={updateGraphDay}
+                onMovePoint={updateGraphPoint}
               />
             ) : selectedDayFolder && workspaceView === 'folder' ? (
               <AuctionDayContentsPanel

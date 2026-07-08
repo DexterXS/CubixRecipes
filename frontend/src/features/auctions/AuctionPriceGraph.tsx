@@ -1,23 +1,35 @@
-import { useRef, useState } from 'react';
-
-type AuctionPriceGraphProps = {
-  values: number[];
-  activeDays: number[];
-  pointDetails?: Record<number, AuctionPriceGraphPointDetail[]>;
-  repeatMarkers?: AuctionPriceGraphRepeatMarker[];
-  onChangeDay: (day: number, value: number) => void;
-};
+import { useRef } from 'react';
+import type { AuctionCurrency } from './auctionTypes';
 
 export type AuctionPriceGraphPointDetail = {
   label: string;
+  folderTitle: string;
+  folderCategory: 'regular' | 'planned';
   startPrice: number;
   stepPrice: number;
   multiplier: number;
 };
 
-export type AuctionPriceGraphRepeatMarker = AuctionPriceGraphPointDetail & {
+export type AuctionPriceGraphPoint = {
   day: number;
-  priceDay: number;
+  dateLabel: string;
+  editable: boolean;
+  value: number;
+  details: AuctionPriceGraphPointDetail[];
+};
+
+export type AuctionPriceGraphSeries = {
+  currency: AuctionCurrency;
+  label: string;
+  color: string;
+  values: number[];
+  points: AuctionPriceGraphPoint[];
+};
+
+type AuctionPriceGraphProps = {
+  series: AuctionPriceGraphSeries[];
+  onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
+  onOpenPoint: (currency: AuctionCurrency, day: number, x: number, y: number) => void;
 };
 
 const width = 760;
@@ -32,8 +44,18 @@ type GraphPoint = {
   y: number;
 };
 
+type DragState = {
+  currency: AuctionCurrency;
+  day: number;
+};
+
 function xForDay(day: number) {
   return padding + (day / 89) * (width - padding * 2);
+}
+
+function dayFromX(x: number) {
+  const normalized = (x - padding) / (width - padding * 2);
+  return Math.max(0, Math.min(89, Math.round(normalized * 89)));
 }
 
 function yForValue(value: number) {
@@ -51,14 +73,13 @@ function percentLabel(value: number) {
   return percent > 0 ? `+${percent}%` : `${percent}%`;
 }
 
-function pointTitle(day: number, details: AuctionPriceGraphPointDetail[] | undefined, value: number) {
-  const multiplier = percentLabel(value);
-  if (!details?.length) return `D${day + 1}: ${multiplier}`;
-  return details.map((detail) => `${detail.label}: ${percentLabel(detail.multiplier)}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`).join('\n');
-}
-
-function repeatMarkerTitle(marker: AuctionPriceGraphRepeatMarker) {
-  return `${marker.label}: повтор D${marker.day + 1}, цена как в D${marker.priceDay + 1} (${percentLabel(marker.multiplier)}), старт ${marker.startPrice}, шаг ${marker.stepPrice}`;
+function pointTitle(point: AuctionPriceGraphPoint, value: number) {
+  const rows = [`${point.dateLabel} · D${point.day + 1} · ${percentLabel(value)}`];
+  point.details.forEach((detail) => {
+    rows.push(`${detail.folderTitle}: ${detail.label}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`);
+  });
+  if (!point.editable) rows.push('Статическая точка: фиолетовая/фиксированная папка не меняет график.');
+  return rows.join('\n');
 }
 
 function controlPoints(values: number[], activeDays: number[]): GraphPoint[] {
@@ -95,19 +116,27 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ values, activeDays, pointDetails, repeatMarkers = [], onChangeDay }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const [dragDay, setDragDay] = useState<number | null>(null);
-  const uniqueActiveDays = Array.from(new Set(activeDays)).filter((day) => day >= 0 && day <= 89).sort((a, b) => a - b);
-  const points = controlPoints(values, uniqueActiveDays);
-  const line = smoothPath(points);
-  const fill = areaPath(line, points);
+  const dragRef = useRef<DragState | null>(null);
 
-  const updateFromPointer = (clientY: number, day: number) => {
+  const pointerToGraph = (clientX: number, clientY: number) => {
     const rect = svgRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const y = ((clientY - rect.top) / rect.height) * height;
-    onChangeDay(day, Number(valueFromY(y).toFixed(2)));
+    if (!rect) return null;
+    return {
+      x: ((clientX - rect.left) / rect.width) * width,
+      y: ((clientY - rect.top) / rect.height) * height
+    };
+  };
+
+  const updateFromPointer = (clientX: number, clientY: number) => {
+    const drag = dragRef.current;
+    const point = pointerToGraph(clientX, clientY);
+    if (!drag || !point) return;
+    const targetDay = dayFromX(point.x);
+    const value = Number(valueFromY(point.y).toFixed(2));
+    onMovePoint(drag.currency, drag.day, targetDay, value);
+    dragRef.current = { currency: drag.currency, day: targetDay };
   };
 
   return (
@@ -117,19 +146,17 @@ export function AuctionPriceGraph({ values, activeDays, pointDetails, repeatMark
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label="auction-price-graph"
-      onPointerMove={(event) => {
-        if (dragDay !== null) {
-          updateFromPointer(event.clientY, dragDay);
-        }
-      }}
-      onPointerUp={() => setDragDay(null)}
-      onPointerCancel={() => setDragDay(null)}
+      onPointerMove={(event) => updateFromPointer(event.clientX, event.clientY)}
+      onPointerUp={() => { dragRef.current = null; }}
+      onPointerCancel={() => { dragRef.current = null; }}
     >
       <defs>
-        <linearGradient id="auctionGraphFill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.34" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.02" />
-        </linearGradient>
+        {series.map((item) => (
+          <linearGradient key={item.currency} id={`auctionGraphFill-${item.currency}`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={item.color} stopOpacity="0.24" />
+            <stop offset="100%" stopColor={item.color} stopOpacity="0.02" />
+          </linearGradient>
+        ))}
       </defs>
       <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} />
       <line x1={padding} y1={padding} x2={padding} y2={height - padding} />
@@ -139,39 +166,47 @@ export function AuctionPriceGraph({ values, activeDays, pointDetails, repeatMark
           <text x={4} y={yForValue(value) + 4}>{percentLabel(value)}</text>
         </g>
       ))}
-      <path className="auction-graph-fill" d={fill} />
-      <path className="auction-graph-line" d={line} />
-      {repeatMarkers.map((marker) => (
-        <g key={`${marker.label}-${marker.day}-${marker.priceDay}`} className="auction-graph-repeat-marker">
-          <title>{repeatMarkerTitle(marker)}</title>
-          <line x1={xForDay(marker.day)} y1={yForValue(values[marker.priceDay] ?? 1) - 18} x2={xForDay(marker.day)} y2={height - padding} />
-          <circle cx={xForDay(marker.day)} cy={yForValue(values[marker.priceDay] ?? 1)} r={5} />
-          <text x={xForDay(marker.day)} y={yForValue(values[marker.priceDay] ?? 1) - 22}>R{marker.day + 1}</text>
-        </g>
-      ))}
-      {uniqueActiveDays.map((day) => (
-        <g key={day}>
-          <title>{pointTitle(day, pointDetails?.[day], values[day] ?? 1)}</title>
-          <circle
-            className="auction-graph-point"
-            cx={xForDay(day)}
-            cy={yForValue(values[day] ?? 1)}
-            r={7}
-            tabIndex={0}
-            onPointerDown={(event) => {
-              event.currentTarget.setPointerCapture(event.pointerId);
-              setDragDay(day);
-              updateFromPointer(event.clientY, day);
-            }}
-          />
-          {pointDetails?.[day]?.length ? (
-            <text className="auction-graph-point-count" x={xForDay(day)} y={yForValue(values[day] ?? 1) - 12}>
-              {pointDetails[day].length > 1 ? `x${pointDetails[day].length}` : percentLabel(values[day] ?? 1)}
-            </text>
-          ) : null}
-          <text className="auction-graph-day" x={xForDay(day)} y={height - 8}>D{day + 1}</text>
-        </g>
-      ))}
+      {series.map((item) => {
+        const activeDays = item.points.map((point) => point.day);
+        const points = controlPoints(item.values, activeDays);
+        const line = smoothPath(points);
+        const fill = areaPath(line, points);
+        return (
+          <g key={item.currency} className="auction-graph-series" style={{ color: item.color }}>
+            <path className="auction-graph-fill" d={fill} fill={`url(#auctionGraphFill-${item.currency})`} />
+            <path className="auction-graph-line" d={line} />
+            {item.points.map((point) => {
+              const value = point.editable ? (item.values[point.day] ?? 1) : point.value;
+              return (
+                <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'}>
+                  <title>{pointTitle(point, value)}</title>
+                  <circle
+                    className="auction-graph-point"
+                    cx={xForDay(point.day)}
+                    cy={yForValue(value)}
+                    r={point.editable ? 7 : 6}
+                    tabIndex={0}
+                    onContextMenu={(event) => {
+                      event.preventDefault();
+                      onOpenPoint(item.currency, point.day, event.clientX, event.clientY);
+                    }}
+                    onPointerDown={(event) => {
+                      if (!point.editable || event.button !== 0) return;
+                      event.currentTarget.setPointerCapture(event.pointerId);
+                      dragRef.current = { currency: item.currency, day: point.day };
+                      updateFromPointer(event.clientX, event.clientY);
+                    }}
+                  />
+                  <text className="auction-graph-point-count" x={xForDay(point.day)} y={yForValue(value) - 12}>
+                    {point.details.length > 1 ? `x${point.details.length}` : percentLabel(value)}
+                  </text>
+                  <text className="auction-graph-day" x={xForDay(point.day)} y={height - 8}>D{point.day + 1}</text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
     </svg>
   );
 }

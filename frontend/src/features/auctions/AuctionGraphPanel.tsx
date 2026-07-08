@@ -1,67 +1,113 @@
-import { buildAuctionRunPricePreviews } from './auctionCommands';
-import { AuctionPriceGraph, type AuctionPriceGraphPointDetail, type AuctionPriceGraphRepeatMarker } from './AuctionPriceGraph';
-import { AuctionRunPricePreviewList } from './AuctionRunPricePreviewList';
-import type { AuctionCurve, AuctionDayFolder } from './auctionTypes';
+import { useMemo, useState } from 'react';
+import { auctionCurrencies, auctionCurrencyLabels } from './auctionCommands';
+import { buildAuctionGraphPoints } from './auctionGraphModel';
+import { AuctionPriceGraph, type AuctionPriceGraphPoint, type AuctionPriceGraphSeries } from './AuctionPriceGraph';
+import type { AuctionCurrency, AuctionCurve, AuctionDayFolder } from './auctionTypes';
 import './AuctionGraphPanel.css';
 
 type AuctionGraphPanelProps = {
-  folder: AuctionDayFolder;
+  folders: AuctionDayFolder[];
   curve: AuctionCurve;
   graphStartLocal: string;
-  onChangeDay: (day: number, value: number) => void;
+  onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
+};
+
+type CurrencyTab = AuctionCurrency | 'all';
+
+const currencyColors: Record<AuctionCurrency, string> = {
+  DONATE: '#54d8ff',
+  VAULT: '#f7c948',
+  BONUS: '#a879ff'
 };
 
 function percent(value: number) {
   return `${Math.round(value * 100)}%`;
 }
 
-export function AuctionGraphPanel({ folder, curve, graphStartLocal, onChangeDay }: AuctionGraphPanelProps) {
-  const previews = buildAuctionRunPricePreviews({ auctions: folder.auctions, curve, graphStartLocal })
-    .filter((preview) => preview.currency === folder.currency);
-  const pointDetails: Record<number, AuctionPriceGraphPointDetail[]> = {};
-  const repeatMarkers: AuctionPriceGraphRepeatMarker[] = [];
-  previews.forEach((preview) => {
-    const detail = {
-      label: preview.label,
-      startPrice: preview.startPrice,
-      stepPrice: preview.stepPrice,
-      multiplier: preview.multiplier
-    };
-    if (preview.dayIndex !== preview.priceDayIndex) {
-      repeatMarkers.push({ ...detail, day: preview.dayIndex, priceDay: preview.priceDayIndex });
-      return;
-    }
-    pointDetails[preview.dayIndex] = [...(pointDetails[preview.dayIndex] ?? []), detail];
-  });
-  const activeDays = Object.keys(pointDetails).map(Number);
-  const graphDays = activeDays.length ? activeDays : [0, 89];
-  const values = curve[folder.currency];
-  const isEditable = folder.category !== 'planned' && folder.priceMode === 'graph';
+function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[number]): AuctionPriceGraphPoint {
+  return {
+    day: point.day,
+    dateLabel: point.dateLabel,
+    editable: point.editable,
+    value: point.value,
+    details: point.auctions.map((auction) => ({
+      label: auction.label,
+      folderTitle: auction.folderTitle,
+      folderCategory: auction.folderCategory,
+      startPrice: auction.startPrice,
+      stepPrice: auction.stepPrice,
+      multiplier: auction.multiplier
+    }))
+  };
+}
+
+export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint }: AuctionGraphPanelProps) {
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyTab>('all');
+  const [menu, setMenu] = useState<{ currency: AuctionCurrency; day: number; x: number; y: number } | null>(null);
+  const pointsByCurrency = useMemo(() => Object.fromEntries(auctionCurrencies.map((currency) => [
+    currency,
+    buildAuctionGraphPoints({ folders, curve, graphStartLocal, currency })
+  ])) as Record<AuctionCurrency, ReturnType<typeof buildAuctionGraphPoints>>, [folders, curve, graphStartLocal]);
+  const visibleCurrencies = selectedCurrency === 'all' ? auctionCurrencies : [selectedCurrency];
+  const regularCount = folders.filter((folder) => folder.category !== 'planned').length;
+  const plannedCount = folders.length - regularCount;
+  const series: AuctionPriceGraphSeries[] = visibleCurrencies.map((currency) => ({
+    currency,
+    label: auctionCurrencyLabels[currency],
+    color: currencyColors[currency],
+    values: curve[currency],
+    points: pointsByCurrency[currency].map(pointToGraphPoint)
+  }));
+  const activeMenuPoint = menu ? pointsByCurrency[menu.currency].find((point) => point.day === menu.day) : null;
 
   return (
-    <section className="auction-graph-panel" aria-label="auction-graph-panel">
+    <section className="auction-graph-panel" aria-label="auction-graph-panel" onClick={() => setMenu(null)}>
       <div className="auction-graph-panel-header">
         <div>
           <h2>График цен</h2>
-          <span>{folder.title}: {folder.currency}, текущий множитель для первой точки {percent(values[graphDays[0]] ?? 1)}</span>
+          <span>Обычные папки можно менять. Фиолетовые планируемые папки показаны статическими точками.</span>
         </div>
-        <strong>{isEditable ? 'Можно менять' : 'Только просмотр'}</strong>
+        <strong>{regularCount} обычных · {plannedCount} статичных</strong>
       </div>
-      {folder.category === 'planned' ? (
-        <div className="inline-hint">Планируемые папки используют фиксированные цены. График доступен для обычных папок.</div>
-      ) : folder.priceMode !== 'graph' ? (
-        <div className="inline-hint">Включи режим «По графику» во вкладке «Графики», чтобы менять множители.</div>
-      ) : null}
+
+      <div className="auction-graph-tabs" onClick={(event) => event.stopPropagation()}>
+        <button type="button" className={selectedCurrency === 'all' ? 'active' : ''} onClick={() => setSelectedCurrency('all')}>Все валюты</button>
+        {auctionCurrencies.map((currency) => (
+          <button key={currency} type="button" className={selectedCurrency === currency ? 'active' : ''} onClick={() => setSelectedCurrency(currency)}>
+            {currency}
+          </button>
+        ))}
+      </div>
+
+      <div className="auction-graph-legend">
+        {visibleCurrencies.map((currency) => (
+          <span key={currency}><i style={{ background: currencyColors[currency] }} />{currency} · первая точка {percent(curve[currency][series.find((item) => item.currency === currency)?.points[0]?.day ?? 0] ?? 1)}</span>
+        ))}
+      </div>
+
       <AuctionPriceGraph
-        values={values}
-        activeDays={graphDays}
-        pointDetails={pointDetails}
-        repeatMarkers={repeatMarkers}
-        onChangeDay={(day, value) => {
-          if (isEditable) onChangeDay(day, value);
-        }}
+        series={series}
+        onMovePoint={onMovePoint}
+        onOpenPoint={(currency, day, x, y) => setMenu({ currency, day, x, y })}
       />
-      <AuctionRunPricePreviewList previews={previews} />
+
+      {activeMenuPoint && menu ? (
+        <div className="auction-graph-point-menu" style={{ left: menu.x, top: menu.y }} onClick={(event) => event.stopPropagation()}>
+          <div className="auction-graph-point-menu-header">
+            <strong>{menu.currency} · {activeMenuPoint.dateLabel}</strong>
+            <button type="button" onClick={() => setMenu(null)}>×</button>
+          </div>
+          <div className="auction-graph-point-menu-list">
+            {activeMenuPoint.auctions.map((auction) => (
+              <article key={`${auction.folderId}-${auction.auctionId}-${auction.label}`}>
+                <span>{auction.folderCategory === 'planned' ? 'Статично' : 'Можно менять'}</span>
+                <strong>{auction.label}</strong>
+                <small>{auction.folderTitle} · старт {auction.startPrice} · шаг {auction.stepPrice}</small>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

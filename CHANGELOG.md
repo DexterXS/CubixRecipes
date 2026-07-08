@@ -7,6 +7,7 @@
 - Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.
 - Changed the Auctions ribbon so each top tab shows only its relevant groups instead of dumping creation, prices, lots, IDs, commands, planner, and mode controls together.
 - Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
+- Updated Auctions graphs to show all currencies together or one currency at a time, include static planned-folder points, show point dates on hover, open auction lists from graph points with right click, and allow editable points to move by day and percentage.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
