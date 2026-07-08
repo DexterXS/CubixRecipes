@@ -6,6 +6,9 @@ export type AuctionWorkflowMode = 'install' | 'existing';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionItemIdMode = 'raw' | 'legacy';
 export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED';
+export type AuctionPriceMode = 'graph' | 'manual';
+export type AuctionGraphMode = 'linear' | 'fixed' | 'custom';
+export type AuctionUiMode = 'normal' | 'expert';
 
 export type AuctionItemOption = {
   raw: string;
@@ -37,6 +40,24 @@ export type AuctionDraft = {
   repeatCount: number;
   scheduleLeadMinutes: number;
   items: AuctionLotItem[];
+};
+
+export type AuctionDayFolder = {
+  id: string;
+  dateLocal: string;
+  title: string;
+  currency: AuctionCurrency;
+  defaultDurationMinutes: number;
+  defaultStepPrice: number;
+  timezoneOffsetMinutes: number;
+  priceMode: AuctionPriceMode;
+  graphMode: AuctionGraphMode;
+  planned: boolean;
+  repeatEnabled: boolean;
+  repeatEveryDays: number;
+  repeatCount: number;
+  scheduleLeadMinutes: number;
+  auctions: AuctionDraft[];
 };
 
 export type AuctionCurve = Record<AuctionCurrency, number[]>;

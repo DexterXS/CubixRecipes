@@ -420,10 +420,25 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Owns the auction command generator workspace: install-existing workflow switching, planned/repeating auction config, server-ID entry step, timezone selection, item picking from the item catalog, per-item lot prices, NBT warnings, selected-step preview, max-items enforcement, and extensionless command-file download modal.
+  - Coordinates the local auction day-folder command planner: ribbon state, selected day folder, selected auction, command-stage state, graph visibility, item picking state, and extensionless command-file download modal.
+  - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/auctionDayFolders.ts`
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/ID/NBT warnings, and date helpers.
+- `frontend/src/features/auctions/AuctionRibbon.tsx`
+  - Owns the Word/Excel-style ribbon shell for the Auctions workspace: top tabs, day creation/copy/delete, day defaults, price mode, lot shortcuts, server-ID shortcuts, command workflow mode, planner shortcuts, and normal/expert mode.
+- `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
+  - Owns the central day-folder card grid. Cards show folder summaries, price ranges, item counts, price mode, missing-ID/NBT indicators, and quick actions for copy/edit/prices/graph/commands.
+- `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
+  - Owns the selected-day right panel: base folder fields, auction selection/addition, max-items control, selected-day command status, and expert-only metadata.
+- `frontend/src/features/auctions/AuctionPriceModePanel.tsx`
+  - Owns the selected-day price-mode panel and lightweight manual price preview without loading the graph.
+- `frontend/src/features/auctions/AuctionServerIdPanel.tsx`
+  - Owns selected-day server-ID lifecycle messaging and missing-ID summary.
+- `frontend/src/features/auctions/AuctionCommandPreview.tsx`
+  - Prepared command-preview owner for a later safe JSX extraction from the legacy preview block.
 - `frontend/src/features/auctions/AuctionPlanPanel.tsx`
-  - Owns the auction plan sidebar, auction-local admin setting for maximum items per auction, and the internal inventory preview showing filled and future empty item slots for each auction.
+  - Legacy auction plan sidebar retained for compatibility/reference but no longer used by the main day-folder workspace.
 - `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`
   - Owns the auction items workspace for the items/file mode: NEI catalog search/addition, selected-auction internal inventory editing, command ID mode, give-player input, item quantities/prices, NBT warnings, and max-items full-state messaging.
 - `frontend/src/features/auctions/AuctionHelpTip.tsx`
@@ -507,6 +522,7 @@ Last full rebuild: 2026-06-29
 - Mod replacement technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Item case-alias technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
+- Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.

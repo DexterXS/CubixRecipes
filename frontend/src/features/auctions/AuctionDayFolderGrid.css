@@ -1,0 +1,176 @@
+.auction-day-folder-grid-panel {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 8px;
+  background: rgba(5, 18, 42, 0.72);
+  padding: 18px;
+  min-width: 0;
+}
+
+.auction-folder-grid-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.auction-folder-grid-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.auction-folder-grid-header span,
+.auction-folder-tip {
+  color: var(--muted);
+}
+
+.auction-folder-grid-count {
+  border: 1px solid rgba(104, 142, 204, 0.28);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.auction-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.auction-day-folder-card {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  min-height: 214px;
+  padding: 22px 16px 14px;
+  text-align: left;
+  border: 1px solid rgba(68, 139, 255, 0.34);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(25, 73, 148, 0.52), rgba(7, 21, 54, 0.78)),
+    rgba(7, 21, 54, 0.88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.auction-day-folder-card.active {
+  border-color: rgba(71, 176, 255, 0.94);
+  box-shadow: 0 0 0 1px rgba(71, 176, 255, 0.26), 0 0 22px rgba(44, 135, 255, 0.24);
+}
+
+.auction-folder-tab {
+  position: absolute;
+  top: -1px;
+  left: 18px;
+  width: 86px;
+  height: 20px;
+  border: 1px solid rgba(71, 176, 255, 0.42);
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+  background: rgba(31, 132, 225, 0.42);
+}
+
+.auction-folder-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.auction-folder-card-header strong {
+  font-size: 20px;
+}
+
+.auction-folder-card-header span,
+.auction-folder-indicators span {
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auction-folder-card-body {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.auction-folder-icon {
+  display: grid;
+  width: 62px;
+  height: 54px;
+  place-items: end center;
+  border: 1px solid rgba(71, 176, 255, 0.38);
+  border-radius: 6px;
+  background: rgba(9, 47, 110, 0.74);
+}
+
+.auction-folder-icon span {
+  width: 42px;
+  height: 32px;
+  border: 2px solid rgba(71, 176, 255, 0.72);
+  border-radius: 4px;
+  background: rgba(22, 113, 221, 0.45);
+}
+
+.auction-folder-card-body dl {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.auction-folder-card-body div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.auction-folder-card-body dt {
+  color: var(--muted);
+}
+
+.auction-folder-card-body dd {
+  margin: 0;
+}
+
+.auction-folder-indicators,
+.auction-folder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.auction-folder-indicators span.warning {
+  border-color: rgba(255, 190, 84, 0.42);
+  color: #ffd18a;
+}
+
+.auction-folder-action {
+  min-height: 30px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(4, 15, 36, 0.52);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12px;
+}
+
+.auction-folder-tip {
+  border: 1px solid rgba(104, 142, 204, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: rgba(8, 28, 60, 0.54);
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .auction-folder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auction-folder-card-header {
+    align-items: start;
+  }
+}

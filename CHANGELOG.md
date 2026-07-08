@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.
 - Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
 - Changed Auctions pricing so each item stores its own lot price and the 90-day graph applies a percentage multiplier to all non-NBT item prices for the matching currency/day.

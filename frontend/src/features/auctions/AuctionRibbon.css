@@ -1,0 +1,138 @@
+.auction-ribbon {
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 8px;
+  background: rgba(7, 18, 40, 0.86);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+  overflow: hidden;
+}
+
+.auction-ribbon-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 10px 0;
+  border-bottom: 1px solid rgba(104, 142, 204, 0.18);
+}
+
+.auction-ribbon-tabs button {
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 14px;
+}
+
+.auction-ribbon-tabs button.active {
+  background: rgba(45, 105, 220, 0.22);
+  border-color: rgba(104, 142, 204, 0.28);
+  color: var(--text);
+}
+
+.auction-ribbon-content {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  overflow-x: auto;
+  padding: 12px;
+}
+
+.auction-ribbon-group {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-width: max-content;
+  padding-right: 10px;
+  border-right: 1px solid rgba(104, 142, 204, 0.18);
+}
+
+.auction-ribbon-group:last-child {
+  border-right: 0;
+}
+
+.auction-ribbon-group > strong {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.auction-ribbon-group-body {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.auction-ribbon-button {
+  display: grid;
+  grid-template-rows: 24px auto;
+  gap: 4px;
+  min-width: 66px;
+  min-height: 68px;
+  align-items: center;
+  justify-items: center;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(9, 25, 56, 0.72);
+  color: var(--text);
+  padding: 8px;
+  font-size: 12px;
+}
+
+.auction-ribbon-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.auction-ribbon-icon {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 6px;
+  background: rgba(27, 120, 255, 0.16);
+  color: #69b7ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.auction-ribbon-field {
+  display: grid;
+  gap: 4px;
+  min-width: 112px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auction-ribbon-field input,
+.auction-ribbon-field select {
+  min-height: 30px;
+}
+
+.auction-ribbon-status {
+  align-self: center;
+  color: var(--muted);
+  font-size: 12px;
+  max-width: 92px;
+}
+
+.auction-ribbon-placeholder {
+  display: grid;
+  gap: 4px;
+  min-height: 74px;
+  align-content: center;
+  color: var(--muted);
+}
+
+.auction-ribbon-placeholder strong {
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .auction-ribbon-tabs {
+    overflow-x: auto;
+  }
+
+  .auction-ribbon-content {
+    padding: 10px;
+  }
+}
