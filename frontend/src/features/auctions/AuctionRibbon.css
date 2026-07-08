@@ -11,6 +11,7 @@
   gap: 2px;
   padding: 8px 10px 0;
   border-bottom: 1px solid rgba(104, 142, 204, 0.18);
+  overflow-x: auto;
 }
 
 .auction-ribbon-tabs button {
@@ -20,6 +21,7 @@
   background: transparent;
   color: var(--muted);
   padding: 8px 14px;
+  white-space: nowrap;
 }
 
 .auction-ribbon-tabs button.active {
@@ -30,17 +32,17 @@
 
 .auction-ribbon-content {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: stretch;
   overflow-x: auto;
-  padding: 12px;
+  padding: 12px 14px;
 }
 
 .auction-ribbon-group {
   display: grid;
   grid-template-rows: 1fr auto;
   min-width: max-content;
-  padding-right: 10px;
+  padding-right: 12px;
   border-right: 1px solid rgba(104, 142, 204, 0.18);
 }
 
@@ -53,12 +55,13 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.2;
   text-align: center;
 }
 
 .auction-ribbon-group-body {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: stretch;
 }
 
@@ -66,16 +69,18 @@
   display: grid;
   grid-template-rows: 24px auto;
   gap: 4px;
-  min-width: 66px;
-  min-height: 68px;
+  min-width: 72px;
+  min-height: 70px;
   align-items: center;
   justify-items: center;
   border: 1px solid rgba(104, 142, 204, 0.24);
   border-radius: 6px;
   background: rgba(9, 25, 56, 0.72);
   color: var(--text);
-  padding: 8px;
+  padding: 8px 9px;
   font-size: 12px;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .auction-ribbon-button:disabled {
@@ -98,14 +103,16 @@
 .auction-ribbon-field {
   display: grid;
   gap: 4px;
-  min-width: 112px;
+  min-width: 132px;
   color: var(--muted);
   font-size: 12px;
+  line-height: 1.2;
 }
 
 .auction-ribbon-field input,
 .auction-ribbon-field select {
-  min-height: 30px;
+  min-height: 34px;
+  min-width: 0;
 }
 
 .auction-ribbon-status {

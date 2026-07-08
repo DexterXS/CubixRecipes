@@ -118,7 +118,7 @@
 
 .auction-layout {
   display: grid;
-  grid-template-columns: minmax(520px, 1.5fr) minmax(300px, 0.8fr);
+  grid-template-columns: minmax(680px, 1fr) minmax(360px, 420px);
   gap: 14px;
   align-items: start;
 }

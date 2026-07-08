@@ -1,11 +1,11 @@
 .auction-day-details-panel {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   align-content: start;
   border: 1px solid rgba(104, 142, 204, 0.22);
   border-radius: 8px;
   background: rgba(7, 19, 42, 0.82);
-  padding: 16px;
+  padding: 16px 18px;
   min-width: 280px;
 }
 
@@ -13,22 +13,24 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .auction-day-details-header h2 {
   margin: 0;
   font-size: 22px;
+  line-height: 1.15;
 }
 
 .auction-day-details-header span,
 .auction-day-details-section p {
   color: var(--muted);
+  line-height: 1.35;
 }
 
 .auction-day-details-section {
   display: grid;
-  gap: 10px;
+  gap: 9px;
   border-top: 1px solid rgba(104, 142, 204, 0.16);
   padding-top: 12px;
 }
@@ -36,12 +38,13 @@
 .auction-day-details-section h3 {
   margin: 0;
   font-size: 14px;
+  line-height: 1.2;
 }
 
 .auction-day-details-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
 }
 
 .auction-day-auction-list {
@@ -80,7 +83,9 @@
   border-radius: 6px;
   background: rgba(8, 27, 60, 0.56);
   color: var(--text);
-  padding: 8px;
+  min-height: 34px;
+  padding: 8px 10px;
+  line-height: 1.2;
 }
 
 .auction-day-segmented button.active {
@@ -119,6 +124,7 @@
 }
 
 .auction-day-details-actions .danger-button {
+  grid-column: 1 / -1;
   border-color: rgba(255, 88, 88, 0.45);
   color: #ff9a9a;
 }
@@ -130,21 +136,43 @@
 }
 
 .auction-day-details-stats div {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(120px, auto) minmax(0, 1fr);
   gap: 10px;
+  align-items: baseline;
 }
 
 .auction-day-details-stats dt {
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .auction-day-details-stats dd {
   margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+.auction-day-details-panel .field-block {
+  min-width: 0;
+}
+
+.auction-day-details-panel .field-block > span {
+  line-height: 1.2;
+}
+
+.auction-day-details-panel input,
+.auction-day-details-panel select {
+  min-width: 0;
+  min-height: 34px;
 }
 
 @media (max-width: 1100px) {
   .auction-day-details-panel {
     min-width: 0;
+  }
+
+  .auction-day-details-fields {
+    grid-template-columns: 1fr;
   }
 }

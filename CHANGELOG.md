@@ -8,6 +8,7 @@
 - Changed the Auctions ribbon so each top tab shows only its relevant groups instead of dumping creation, prices, lots, IDs, commands, planner, and mode controls together.
 - Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
+- Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
 - Added regular blue vs planned purple auction folder categories; planned folders hide fixed dates, use repeat settings, and ignore global price graphs.
 - Added a context-only Auctions status bar for folder list, opened folder, and opened lot views without technical CPU/memory-style metrics.
