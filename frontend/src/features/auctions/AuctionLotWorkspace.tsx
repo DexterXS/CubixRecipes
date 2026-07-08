@@ -24,8 +24,10 @@ type AuctionLotWorkspaceProps = {
 
 const stateLabels: Record<AuctionState, string> = {
   SETUP: 'Подготовка',
-  ACTIVE: 'Активен',
-  PAUSED: 'Пауза'
+  ACTIVE: 'Запустить',
+  PAUSED: 'Пауза',
+  CLOSED: 'Закрыт',
+  ENDED: 'Завершён'
 };
 
 const currencyIcons: Record<AuctionCurrency, string> = {
@@ -129,10 +131,6 @@ export function AuctionLotWorkspace({
                     <span>Кол-во</span>
                     <input type="number" min={1} value={item.quantity} onChange={(event) => onUpdateItem(item.uid, { quantity: Number(event.target.value) })} />
                   </label>
-                  <label>
-                    <span>Цена</span>
-                    <input type="number" min={0} value={item.basePrice} onChange={(event) => onUpdateItem(item.uid, { basePrice: Number(event.target.value) })} />
-                  </label>
                   <button type="button" title="Настройки предмета">⚙</button>
                   <button type="button" title="Удалить предмет" onClick={() => onRemoveItem(item.uid)}>×</button>
                 </div>
@@ -161,19 +159,11 @@ export function AuctionLotWorkspace({
           </label>
           <label className="field-block compact-field">
             <span>Стартовая цена</span>
-            <input type="number" min={0} value={startPrice} readOnly />
+            <input type="number" min={0} value={startPrice} onChange={(event) => onUpdateAuction(auction.id, { baseStartPrice: Number(event.target.value) })} />
           </label>
           <label className="field-block compact-field">
             <span>Шаг ставки</span>
             <input type="number" min={1} value={auction.baseStepPrice} onChange={(event) => onUpdateAuction(auction.id, { baseStepPrice: Number(event.target.value) })} />
-          </label>
-          <label className="field-block compact-field">
-            <span>Состояние</span>
-            <select value={auction.state} onChange={(event) => onUpdateAuction(auction.id, { state: event.target.value as AuctionState })}>
-              <option value="SETUP">Подготовка</option>
-              <option value="ACTIVE">Запустить</option>
-              <option value="PAUSED">Пауза</option>
-            </select>
           </label>
           <label className="field-block compact-field">
             <span>ID сервера</span>
@@ -185,7 +175,6 @@ export function AuctionLotWorkspace({
             <button type="button" onClick={() => onSetCommandStage('settings')}>Установить описание</button>
             <button type="button" onClick={() => onSetCommandStage('settings')}>Установить валюту</button>
             <button type="button" onClick={() => onSetCommandStage('settings')}>Установить цены</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Установить состояние</button>
             <button type="button" onClick={() => onSetCommandStage('settings')}>Показать команду</button>
             <button type="button" onClick={onOpenDownload}>Скачать файл</button>
             <button type="button" onClick={() => onSetCommandStage(serverId ? 'settings' : 'ids')}>Проверить ID</button>

@@ -5,7 +5,7 @@ export type AuctionBuilderMode = 'config' | 'items';
 export type AuctionWorkflowMode = 'install' | 'existing';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionItemIdMode = 'raw' | 'legacy';
-export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED';
+export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED' | 'CLOSED' | 'ENDED';
 export type AuctionPriceMode = 'graph' | 'manual';
 export type AuctionGraphMode = 'linear' | 'fixed' | 'custom';
 export type AuctionUiMode = 'normal' | 'expert';
@@ -33,6 +33,7 @@ export type AuctionDraft = {
   startLocal: string;
   durationMinutes: number;
   currency: AuctionCurrency;
+  baseStartPrice: number;
   baseStepPrice: number;
   state: AuctionState;
   planned: boolean;
@@ -50,7 +51,9 @@ export type AuctionDayFolder = {
   category: AuctionFolderCategory;
   currency: AuctionCurrency;
   defaultDurationMinutes: number;
+  defaultStartPrice: number;
   defaultStepPrice: number;
+  state: AuctionState;
   timezoneOffsetMinutes: number;
   priceMode: AuctionPriceMode;
   graphMode: AuctionGraphMode;
@@ -60,6 +63,15 @@ export type AuctionDayFolder = {
   repeatCount: number;
   scheduleLeadMinutes: number;
   auctions: AuctionDraft[];
+};
+
+export type AuctionPlannerState = {
+  dayFolders: AuctionDayFolder[];
+  selectedDayFolderId: string;
+  selectedAuctionId: string;
+  workflowMode: AuctionWorkflowMode;
+  uiMode: AuctionUiMode;
+  commandStage: AuctionCommandStage;
 };
 
 export type AuctionCurve = Record<AuctionCurrency, number[]>;

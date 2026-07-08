@@ -1,5 +1,6 @@
 export * from './aliases';
 export * from './auth';
+export * from './auctions';
 export * from './client';
 export * from './favorites';
 export * from './itempanel';

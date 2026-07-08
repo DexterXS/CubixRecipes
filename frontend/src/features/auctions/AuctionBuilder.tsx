@@ -12,7 +12,8 @@ import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
 import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
-import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import { useAuctionPlannerPersistence } from './useAuctionPlannerPersistence';
+import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
 type AuctionBuilderProps = {
@@ -68,6 +69,23 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     return itemOptions.filter((item) => `${item.raw} ${item.title} ${item.legacyId ?? ''}`.toLowerCase().includes(query)).slice(0, 120);
   }, [itemOptions, itemSearch]);
   const selectedAuctionFull = selectedAuction ? selectedAuction.items.length >= maxItemsPerAuction : false;
+
+  useAuctionPlannerPersistence({
+    dayFolders,
+    selectedDayFolderId: selectedDayFolder?.id ?? selectedDayFolderId,
+    selectedAuctionId: selectedAuction?.id ?? selectedAuctionId,
+    workflowMode,
+    uiMode,
+    commandStage,
+    onLoad: (state) => {
+      setDayFolders(state.dayFolders);
+      setSelectedDayFolderId(state.selectedDayFolderId);
+      setSelectedAuctionId(state.selectedAuctionId);
+      setWorkflowMode(state.workflowMode);
+      setUiMode(state.uiMode);
+      setCommandStage(state.commandStage);
+    }
+  });
 
   const updateSelectedDayFolder = (updater: (folder: AuctionDayFolder) => AuctionDayFolder) => {
     if (!selectedDayFolder) return;
@@ -163,6 +181,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     }));
   };
 
+  const updateDayState = (state: AuctionState) => {
+    updateSelectedDayFolder((folder) => ({
+      ...folder,
+      state,
+      auctions: folder.auctions.map((auction) => ({ ...auction, state }))
+    }));
+  };
+
   const updateDayTitle = (title: string) => {
     updateSelectedDayFolder((folder) => ({ ...folder, title }));
   };
@@ -219,7 +245,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const resetSelectedDayPrices = () => {
     updateSelectedDayAuctions((current) => current.map((auction) => ({
       ...auction,
-      items: auction.items.map((item) => ({ ...item, basePrice: 100 }))
+      baseStartPrice: 100
     })));
   };
 
@@ -249,7 +275,20 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
 
   const addAuction = () => {
     const nextIndex = auctions.length + 1;
-    const next = createAuctionDraft(nextIndex, localDateTimeInputFromUtcMs(now + nextIndex * 86_400_000, timezoneOffset));
+    const nextStartLocal = selectedDayFolder
+      ? localDateTimeForDay(selectedDayFolder.dateLocal, '10:00')
+      : localDateTimeInputFromUtcMs(now + nextIndex * 86_400_000, timezoneOffset);
+    const next = createAuctionDraft(nextIndex, nextStartLocal, {
+      currency: selectedDayFolder?.currency ?? 'DONATE',
+      durationMinutes: selectedDayFolder?.defaultDurationMinutes ?? 10,
+      baseStartPrice: selectedDayFolder?.defaultStartPrice ?? 100,
+      baseStepPrice: selectedDayFolder?.defaultStepPrice ?? 10,
+      state: selectedDayFolder?.state ?? 'ACTIVE',
+      repeatEnabled: selectedDayFolder?.repeatEnabled ?? false,
+      repeatEveryDays: selectedDayFolder?.repeatEveryDays ?? 7,
+      repeatCount: selectedDayFolder?.repeatCount ?? 1,
+      scheduleLeadMinutes: selectedDayFolder?.scheduleLeadMinutes ?? 1
+    });
     updateSelectedDayAuctions((current) => [...current, next].slice(0, 90));
     setSelectedAuctionId(next.id);
     setWorkspaceView('folder');
@@ -403,6 +442,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
               onCurrencyChange={updateDayCurrency}
               onDurationChange={updateDayDuration}
               onStepPriceChange={updateDayStepPrice}
+              onStateChange={updateDayState}
               onRepeatEveryDaysChange={updateDayRepeatEveryDays}
               onRepeatCountChange={updateDayRepeatCount}
               onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}

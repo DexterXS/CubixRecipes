@@ -11,6 +11,7 @@ const baseAuction: AuctionDraft = {
   startLocal: '2026-03-31T23:10',
   durationMinutes: 10,
   currency: 'DONATE',
+  baseStartPrice: 100,
   baseStepPrice: 10,
   state: 'ACTIVE',
   planned: true,
@@ -45,6 +46,7 @@ describe('auction command generation', () => {
     expect(stages.items).toContain('/give @p 1 2 1');
     expect(stages.items).toContain('/aca addItem 27');
     expect(stages.settings).toContain('/aca setStartDate 27 31.03.2026_20:10');
+    expect(stages.settings).toContain('/aca setState 27 ACTIVE');
     expect(stages.settings).toContain('/aca scheduleCreate 27 31.03.2026_20:10 31.03.2026_20:09 604800 600');
     expect(stages.all).not.toContain('chest');
   });
@@ -66,7 +68,7 @@ describe('auction command generation', () => {
     expect(stages.settings).toContain('сначала впиши серверные ID');
   });
 
-  test('uses the graph multiplier on item prices for the auction date', () => {
+  test('uses the graph multiplier on the lot start price for the auction date', () => {
     const curve = createDefaultAuctionCurve();
     curve.DONATE[30] = 1.25;
     const stages = buildAuctionCommandStages({
@@ -81,6 +83,25 @@ describe('auction command generation', () => {
 
     expect(stages.create).toContain('125 13 DONATE');
     expect(stages.create).not.toContain('6375');
+  });
+
+  test('does not treat item prices as the lot price', () => {
+    const stages = buildAuctionCommandStages({
+      auctions: [{
+        ...baseAuction,
+        baseStartPrice: 240,
+        items: baseAuction.items.map((item) => ({ ...item, basePrice: 9999 }))
+      }],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      commandPlayer: '@p',
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'install'
+    });
+
+    expect(stages.create).toContain('240 10 DONATE');
+    expect(stages.create).not.toContain('9999');
   });
 
   test('keeps repeated auction prices locked to the first graph day', () => {

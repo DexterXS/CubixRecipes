@@ -2,7 +2,7 @@ import { auctionCurrencies, type AuctionCommandStages } from './auctionCommands'
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
 import { AuctionPriceModePanel } from './AuctionPriceModePanel';
 import { AuctionServerIdPanel } from './AuctionServerIdPanel';
-import type { AuctionCurrency, AuctionDayFolder, AuctionFolderCategory, AuctionPriceMode, AuctionUiMode } from './auctionTypes';
+import type { AuctionCurrency, AuctionDayFolder, AuctionFolderCategory, AuctionPriceMode, AuctionState, AuctionUiMode } from './auctionTypes';
 import './AuctionDayDetailsPanel.css';
 
 type AuctionDayDetailsPanelProps = {
@@ -19,6 +19,7 @@ type AuctionDayDetailsPanelProps = {
   onCurrencyChange: (currency: AuctionCurrency) => void;
   onDurationChange: (minutes: number) => void;
   onStepPriceChange: (step: number) => void;
+  onStateChange: (state: AuctionState) => void;
   onRepeatEveryDaysChange: (days: number) => void;
   onRepeatCountChange: (count: number) => void;
   onPriceModeChange: (mode: AuctionPriceMode) => void;
@@ -28,6 +29,14 @@ const currencyDisplayLabels: Record<AuctionCurrency, string> = {
   DONATE: 'DONATE',
   VAULT: 'ИГРОВАЯ',
   BONUS: 'БОНУС'
+};
+
+const stateDisplayLabels: Record<AuctionState, string> = {
+  SETUP: 'Подготовка',
+  ACTIVE: 'Запустить',
+  PAUSED: 'Пауза',
+  CLOSED: 'Закрыт',
+  ENDED: 'Завершён'
 };
 
 function commandStatusText(commandStages: AuctionCommandStages) {
@@ -58,6 +67,7 @@ export function AuctionDayDetailsPanel({
   onCurrencyChange,
   onDurationChange,
   onStepPriceChange,
+  onStateChange,
   onRepeatEveryDaysChange,
   onRepeatCountChange,
   onPriceModeChange
@@ -124,6 +134,14 @@ export function AuctionDayDetailsPanel({
             <input type="number" min={1} value={folder.defaultDurationMinutes} onChange={(event) => onDurationChange(Number(event.target.value))} />
           </label>
         </div>
+        <label className="field-block compact-field">
+          <span>Состояние всех лотов</span>
+          <select value={folder.state} onChange={(event) => onStateChange(event.target.value as AuctionState)}>
+            {Object.entries(stateDisplayLabels).map(([state, label]) => (
+              <option key={state} value={state}>{label}</option>
+            ))}
+          </select>
+        </label>
         {isPlanned ? (
           <div className="auction-day-details-fields">
             <label className="field-block compact-field">
@@ -143,6 +161,7 @@ export function AuctionDayDetailsPanel({
         <dl className="auction-day-details-stats">
           <div><dt>Аукционов</dt><dd>{summary?.auctionCount ?? folder.auctions.length}</dd></div>
           <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
+          <div><dt>Состояние</dt><dd>{stateDisplayLabels[folder.state]}</dd></div>
           <div><dt>Нет ID</dt><dd>{summary?.missingServerIdCount ?? 0}</dd></div>
           <div><dt>NBT предупреждения</dt><dd>{summary?.nbtItemCount ?? 0}</dd></div>
         </dl>

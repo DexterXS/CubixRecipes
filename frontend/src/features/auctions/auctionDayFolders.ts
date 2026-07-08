@@ -1,5 +1,5 @@
 import { buildAuctionRunPricePreviews, createDefaultAuctionCurve, localDateTimeInputFromUtcMs, parseLocalDateTime } from './auctionCommands';
-import type { AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory } from './auctionTypes';
+import type { AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionState } from './auctionTypes';
 
 export type AuctionDayFolderSummary = {
   auctionCount: number;
@@ -49,6 +49,7 @@ export function createAuctionDraft(index: number, startLocal: string, patch: Par
     startLocal,
     durationMinutes: 10,
     currency: 'DONATE',
+    baseStartPrice: 100,
     baseStepPrice: 10,
     state: 'ACTIVE',
     planned: true,
@@ -69,16 +70,22 @@ export function createAuctionDayFolder(params: {
   auctions?: AuctionDraft[];
   title?: string;
   defaultDurationMinutes?: number;
+  defaultStartPrice?: number;
   defaultStepPrice?: number;
+  state?: AuctionState;
 }): AuctionDayFolder {
   const timezoneOffsetMinutes = params.timezoneOffsetMinutes ?? defaultTimezoneOffset();
   const defaultDurationMinutes = params.defaultDurationMinutes ?? 10;
+  const defaultStartPrice = params.defaultStartPrice ?? params.auctions?.[0]?.baseStartPrice ?? 100;
   const defaultStepPrice = params.defaultStepPrice ?? 10;
+  const state = params.state ?? params.auctions?.[0]?.state ?? 'ACTIVE';
   const category = params.category ?? 'regular';
   const auctions = params.auctions ?? [
     createAuctionDraft(1, localDateTimeForDay(params.dateLocal), {
       durationMinutes: defaultDurationMinutes,
+      baseStartPrice: defaultStartPrice,
       baseStepPrice: defaultStepPrice,
+      state,
       repeatEnabled: category === 'planned'
     })
   ];
@@ -90,7 +97,9 @@ export function createAuctionDayFolder(params: {
     category,
     currency: auctions[0]?.currency ?? 'DONATE',
     defaultDurationMinutes,
+    defaultStartPrice,
     defaultStepPrice,
+    state: auctions[0]?.state ?? state,
     timezoneOffsetMinutes,
     priceMode: category === 'planned' ? 'manual' : 'graph',
     graphMode: category === 'planned' ? 'fixed' : 'linear',
@@ -141,7 +150,9 @@ export function applyDayDefaultsToAuctions(folder: AuctionDayFolder): AuctionDay
       ...auction,
       currency: folder.currency,
       durationMinutes: folder.defaultDurationMinutes,
+      baseStartPrice: folder.defaultStartPrice,
       baseStepPrice: folder.defaultStepPrice,
+      state: folder.state,
       planned: folder.planned,
       repeatEnabled: folder.repeatEnabled,
       repeatEveryDays: folder.repeatEveryDays,

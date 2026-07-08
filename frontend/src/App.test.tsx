@@ -36,6 +36,7 @@ let mockRecipeTasks: any[] = [];
 let mockRecipeTaskBoardMode = 'free';
 let mockRecipeTaskCounter = 1;
 let mockNeiFavorites: any;
+let mockAuctionPlannerState: any;
 
 function projectSettings() {
   return {
@@ -169,6 +170,14 @@ beforeEach(() => {
     hiddenPatterns: [],
     tabs: [{ id: 'default', name: 'Основное', items: [] }]
   };
+  mockAuctionPlannerState = {
+    dayFolders: [],
+    selectedDayFolderId: '',
+    selectedAuctionId: '',
+    workflowMode: 'install',
+    uiMode: 'normal',
+    commandStage: 'create'
+  };
   class MockImage {
     onload: null | (() => void) = null;
     set src(_value: string) {
@@ -287,6 +296,14 @@ beforeEach(() => {
     }
     if (url === '/api/admin/users') {
       return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/auction-planner' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ schemaVersion: 1, savedAt: 0, state: mockAuctionPlannerState }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/auction-planner' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      mockAuctionPlannerState = body.state ?? mockAuctionPlannerState;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, schemaVersion: 1, savedAt: 1770000000000, state: mockAuctionPlannerState }) }) as Promise<Response>;
     }
     if (url === '/api/admin/tasks' && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
@@ -804,10 +821,10 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
   expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
   fireEvent.click(screen.getByLabelText('icon-settings-profile-mobile'));
   expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);

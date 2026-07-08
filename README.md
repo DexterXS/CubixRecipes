@@ -68,7 +68,7 @@ VITE_API_BASE=https://your-backend.example/api
 
 `APP_PUBLIC_URL` must use the same backend host as `VITE_API_BASE`; otherwise Google can complete the callback on one Railway domain while the frontend checks `/api/auth/me` on another domain and the session cookie will not match. `GOOGLE_REDIRECT_URI` can override the callback URL only when that exact host is also the API host used by the frontend.
 
-For Railway persistent backend files, attach a volume to the backend service at `/data`. When `CUBIXRECIPES_DATA_DIR=/data` or Railway exposes a volume mount env, the backend stores `cubixrecipes.config.json`, default `.zs` scripts, `.zs` backups, mod icon uploads/atlases, shared recipe draft templates, and backend custom items under `/data`. Custom items use `.cubixrecipes_admin/custom_items` and are separate from cloud `.zs` scripts.
+For Railway persistent backend files, attach a volume to the backend service at `/data`. When `CUBIXRECIPES_DATA_DIR=/data` or Railway exposes a volume mount env, the backend stores `cubixrecipes.config.json`, default `.zs` scripts, `.zs` backups, mod icon uploads/atlases, shared recipe draft templates, the Auctions planner, and backend custom items under `/data`. Custom items use `.cubixrecipes_admin/custom_items` and are separate from cloud `.zs` scripts.
 
 ### Frontend
 ```bash

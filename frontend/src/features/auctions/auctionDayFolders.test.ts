@@ -26,7 +26,9 @@ describe('auction day folders', () => {
     expect(folder.auctions[0]).toMatchObject({
       id: '1',
       serverIds: {},
-      startLocal: '2026-07-12T10:00'
+      startLocal: '2026-07-12T10:00',
+      baseStartPrice: 100,
+      state: 'ACTIVE'
     });
   });
 
@@ -144,7 +146,9 @@ describe('auction day folders', () => {
     expect(updated.auctions[0]).toMatchObject({
       currency: 'BONUS',
       durationMinutes: 60,
+      baseStartPrice: 100,
       baseStepPrice: 25,
+      state: 'ACTIVE',
       repeatEnabled: true,
       repeatCount: 3
     });

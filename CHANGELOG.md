@@ -4,13 +4,15 @@
 ### Added
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
+- Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.
+- Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
 - Added regular blue vs planned purple auction folder categories; planned folders hide fixed dates, use repeat settings, and ignore global price graphs.
 - Added a context-only Auctions status bar for folder list, opened folder, and opened lot views without technical CPU/memory-style metrics.
 - Added an opened day-folder view for Auctions so a day folder can show its internal auction drafts, selected draft, item/setting/command shortcuts, missing server-ID status, and NBT warnings.
 - Removed the old permanent lower Auctions editor/command-preview area so the day-folder workspace no longer renders legacy panels below the main layout.
 - Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.
 - Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
-- Changed Auctions pricing so each item stores its own lot price and the 90-day graph applies a percentage multiplier to all non-NBT item prices for the matching currency/day.
+- Changed Auctions pricing so start price belongs to the whole lot, not to individual items; the 90-day graph applies its multiplier to the lot start price.
 - Changed the Auctions price graph to draw a smooth equalizer-style curve through auction date control points instead of sharp 90-day spike segments.
 - Added an Auctions graph price preview: repeat occurrences are shown as read-only markers, while repeating auctions keep a constant price from the first graph point because the server repeat command cannot change price per occurrence.
 - Added auction-only hover/focus help popovers for panels and fields, including explanations and examples for local labels, server IDs, graph percentages, item prices, and command-file steps.

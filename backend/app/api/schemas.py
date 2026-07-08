@@ -115,6 +115,10 @@ class RecipeTaskBoardRequest(BaseModel):
     boardMode: Literal['free', 'priority', 'deadline', 'created'] = 'free'
 
 
+class AuctionPlannerRequest(BaseModel):
+    state: dict = Field(default_factory=dict)
+
+
 class NeiFavoriteItemRequest(BaseModel):
     raw: str = Field(min_length=1, max_length=4096)
     addedAt: int = Field(default=0, ge=0)

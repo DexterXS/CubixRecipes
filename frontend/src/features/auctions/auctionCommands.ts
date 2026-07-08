@@ -106,6 +106,9 @@ function getServerAuctionId(auction: AuctionDraft, index: number): string {
 }
 
 export function getAuctionBaseItemPrice(auction: AuctionDraft): number {
+  if (Number.isFinite(auction.baseStartPrice)) {
+    return Math.max(0, auction.baseStartPrice);
+  }
   return auction.items
     .filter((item) => !item.hasNbt)
     .reduce((total, item) => total + Math.max(0, item.basePrice), 0);
@@ -188,7 +191,7 @@ export function buildAuctionCommandStages(params: {
         settingsLines.push(`/aca setCurrency ${serverId} ${auction.currency}`);
         settingsLines.push(`/aca setStartPrice ${serverId} ${startPrice}`);
         settingsLines.push(`/aca setStepPrice ${serverId} ${stepPrice}`);
-        settingsLines.push(`/aca setState ${serverId} ${auction.planned ? 'SETUP' : auction.state}`);
+        settingsLines.push(`/aca setState ${serverId} ${auction.state}`);
       }
 
       auction.items.filter((item) => !item.hasNbt).forEach((item) => {

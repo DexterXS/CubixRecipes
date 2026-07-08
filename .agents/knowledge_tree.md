@@ -30,6 +30,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`: admin task board.
+  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, and command stage.
   - `.cubixrecipes_admin/servers/{server_id}/custom_items/`: backend custom item files.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_archives/`: uploaded icon ZIP archives.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_atlases/`: generated mod icon atlas manifests and PNG pages.
@@ -153,6 +154,10 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/recipe_tasks.py`
   - JSON-backed admin task board.
   - Class: `RecipeTaskStore`.
+- `backend/app/storage/auction_planner.py`
+  - JSON-backed per-server Auctions planner state for frontend day folders and lots.
+  - Class: `AuctionPlannerStore`.
+  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists, and keeps the full local planner state across page reloads and deploys.
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
@@ -209,6 +214,8 @@ Last full rebuild: 2026-06-29
 - `PUT /api/admin/tasks/order`
 - `PUT /api/admin/tasks/board`
 - `DELETE /api/admin/tasks/{task_id}`
+- `GET /api/admin/auction-planner`
+- `PUT /api/admin/auction-planner`
 - `GET /api/nei/favorites`
 - `PUT /api/nei/favorites`
 
@@ -403,7 +410,7 @@ Last full rebuild: 2026-06-29
 
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
-  - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, held item, and mobile inspection.
+  - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, Auctions preview/lot/NEI surfaces, held item, and mobile inspection.
   - Builds shared CSS custom properties, desktop/mobile default profiles, and dynamic craft-grid fitting from viewport size.
 - `frontend/src/features/icon-settings/useIconViewport.ts`
   - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.
@@ -423,8 +430,11 @@ Last full rebuild: 2026-06-29
   - Coordinates the local auction command planner as a three-level workspace: folder list, opened folder, and opened auction lot. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, and extensionless command-file download modal.
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
+  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
+  - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, and folder defaults do not break after deploys.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
-  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers.
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
   - Owns the Word/Excel-style ribbon shell for the Auctions workspace: top tabs including `Графики`, day creation/copy/delete, day defaults, price mode, lot shortcuts, server-ID shortcuts, command workflow mode, planner shortcuts, and normal/expert mode.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
@@ -432,9 +442,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/edit/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
-  - Owns the selected-folder right panel. It manages folder-level actions and fields only: open/copy/delete folder, regular/planned category, regular folder date, planned repeat settings, currency/duration/step, price mode, statistics, server-ID status, graph applicability, and expert-only folder metadata.
+  - Owns the selected-folder right panel. It manages folder-level actions and fields only: open/copy/delete folder, regular/planned category, regular folder date, planned repeat settings, currency/duration/step/state, price mode, statistics, server-ID status, graph applicability, and expert-only folder metadata.
 - `frontend/src/features/auctions/AuctionLotWorkspace.tsx`
-  - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/price/NBT controls, auction command-control panel without start/end date editing, and NEI catalog for adding items to the current lot.
+  - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/NBT controls, auction command-control panel without state or start/end date editing, editable whole-lot start price, and NEI catalog for adding items to the current lot.
 - `frontend/src/features/auctions/AuctionStatusBar.tsx`
   - Owns the context status row for folder list, opened folder, and opened lot views. It shows only useful counts such as folder totals, planned/regular counts, item counts, missing IDs, and warnings.
 - `frontend/src/features/auctions/AuctionPriceModePanel.tsx`
@@ -449,7 +459,7 @@ Last full rebuild: 2026-06-29
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
-  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to per-item lot prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands and price totals.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
   - Owns the draggable 90-day percentage graph used by planned auction days, including the smooth Bezier/equalizer-style curve through real auction date control points only, the soft SVG fill under the curve, and read-only repeat markers that show server-repeat occurrences without implying per-repeat price changes.
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
@@ -527,6 +537,7 @@ Last full rebuild: 2026-06-29
 - Item case-alias technical-panel behavior is covered through `frontend/src/App.test.tsx`.
 - Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
 - Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
+- Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
@@ -569,6 +580,8 @@ Last full rebuild: 2026-06-29
 - `reorderRecipeTasks` -> `PUT /api/admin/tasks/order`
 - `updateRecipeTaskBoardMode` -> `PUT /api/admin/tasks/board`
 - `deleteRecipeTask` -> `DELETE /api/admin/tasks/{task_id}`
+- `getAuctionPlannerState` -> `GET /api/admin/auction-planner`
+- `saveAuctionPlannerState` -> `PUT /api/admin/auction-planner`
 - `getNeiFavorites` -> `GET /api/nei/favorites`
 - `saveNeiFavorites` -> `PUT /api/nei/favorites`
 - `getModIconAdminStatus` -> `GET /api/admin/mod-icons`
