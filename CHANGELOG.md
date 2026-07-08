@@ -5,6 +5,9 @@
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
 - Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.
+- Changed the Auctions ribbon so each top tab shows only its relevant groups instead of dumping creation, prices, lots, IDs, commands, planner, and mode controls together.
+- Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
+- Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
 - Added regular blue vs planned purple auction folder categories; planned folders hide fixed dates, use repeat settings, and ignore global price graphs.
 - Added a context-only Auctions status bar for folder list, opened folder, and opened lot views without technical CPU/memory-style metrics.

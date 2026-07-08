@@ -17,9 +17,9 @@ type AuctionLotWorkspaceProps = {
   onItemSearchChange: (query: string) => void;
   onAddItem: (item: AuctionItemOption) => void;
   onUpdateItem: (uid: string, patch: Partial<AuctionLotItem>) => void;
+  onMoveItem: (uid: string, direction: -1 | 1) => void;
   onRemoveItem: (uid: string) => void;
   onSetCommandStage: (stage: AuctionCommandStage) => void;
-  onOpenDownload: () => void;
 };
 
 const stateLabels: Record<AuctionState, string> = {
@@ -70,9 +70,9 @@ export function AuctionLotWorkspace({
   onItemSearchChange,
   onAddItem,
   onUpdateItem,
+  onMoveItem,
   onRemoveItem,
-  onSetCommandStage,
-  onOpenDownload
+  onSetCommandStage
 }: AuctionLotWorkspaceProps) {
   const startPrice = getAuctionBaseItemPrice(auction);
   const serverId = firstServerId(auction);
@@ -117,7 +117,7 @@ export function AuctionLotWorkspace({
             <span>{auction.items.length}/{maxItemsPerAuction} предметов</span>
           </div>
           <div className="auction-lot-item-list">
-            {auction.items.map((item) => (
+            {auction.items.map((item, index) => (
               <article key={item.uid} className={`auction-lot-item-row ${item.hasNbt ? 'has-warning' : ''}`.trim()}>
                 <span className="auction-lot-item-icon">{renderItemIcon(item)}</span>
                 <div className="auction-lot-item-name">
@@ -131,7 +131,8 @@ export function AuctionLotWorkspace({
                     <span>Кол-во</span>
                     <input type="number" min={1} value={item.quantity} onChange={(event) => onUpdateItem(item.uid, { quantity: Number(event.target.value) })} />
                   </label>
-                  <button type="button" title="Настройки предмета">⚙</button>
+                  <button type="button" title="Выше" disabled={index === 0} onClick={() => onMoveItem(item.uid, -1)}>↑</button>
+                  <button type="button" title="Ниже" disabled={index === auction.items.length - 1} onClick={() => onMoveItem(item.uid, 1)}>↓</button>
                   <button type="button" title="Удалить предмет" onClick={() => onRemoveItem(item.uid)}>×</button>
                 </div>
               </article>
@@ -170,14 +171,8 @@ export function AuctionLotWorkspace({
             <input value={serverId} onChange={(event) => onUpdateServerId(auction.id, 0, event.target.value)} placeholder="после /aca create" />
           </label>
           <div className="auction-lot-command-buttons">
-            <button type="button" onClick={() => onSetCommandStage('items')}>Добавить предмет</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Установить имя</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Установить описание</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Установить валюту</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Установить цены</button>
-            <button type="button" onClick={() => onSetCommandStage('settings')}>Показать команду</button>
-            <button type="button" onClick={onOpenDownload}>Скачать файл</button>
-            <button type="button" onClick={() => onSetCommandStage(serverId ? 'settings' : 'ids')}>Проверить ID</button>
+            <button type="button" onClick={() => onSetCommandStage(serverId ? 'settings' : 'ids')}>Применить</button>
+            <button type="button" className="ghost-button" onClick={onBackToFolder}>Отмена</button>
           </div>
           {nbtCount ? <div className="inline-hint inline-hint-warning">NBT-предметов в лоте: {nbtCount}. Они не попадут в /give.</div> : null}
         </aside>

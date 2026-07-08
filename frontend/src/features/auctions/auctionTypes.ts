@@ -72,6 +72,8 @@ export type AuctionPlannerState = {
   workflowMode: AuctionWorkflowMode;
   uiMode: AuctionUiMode;
   commandStage: AuctionCommandStage;
+  curve?: AuctionCurve;
+  graphStartLocal?: string;
 };
 
 export type AuctionCurve = Record<AuctionCurrency, number[]>;

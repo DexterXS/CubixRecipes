@@ -6,9 +6,12 @@ import {
   sanitizeAuctionFilename
 } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
+import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
+import { AuctionDownloadModal } from './AuctionDownloadModal';
+import { AuctionGraphPanel } from './AuctionGraphPanel';
 import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
@@ -42,11 +45,11 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
   const [idMode] = useState<AuctionItemIdMode>('raw');
   const [commandPlayer] = useState('@p');
-  const [graphStartLocal] = useState(() => localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()));
+  const [graphStartLocal, setGraphStartLocal] = useState(() => localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()));
   const [dayFolders, setDayFolders] = useState<AuctionDayFolder[]>(() => [createInitialAuctionDayFolder(now, defaultTimezoneOffset())]);
   const [selectedDayFolderId, setSelectedDayFolderId] = useState('day-1');
   const [selectedAuctionId, setSelectedAuctionId] = useState('1');
-  const [curve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
+  const [curve, setCurve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
   const [itemSearch, setItemSearch] = useState('');
   const [maxItemsPerAuction] = useState(16);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
@@ -77,6 +80,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     workflowMode,
     uiMode,
     commandStage,
+    curve,
+    graphStartLocal,
     onLoad: (state) => {
       setDayFolders(state.dayFolders);
       setSelectedDayFolderId(state.selectedDayFolderId);
@@ -84,6 +89,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       setWorkflowMode(state.workflowMode);
       setUiMode(state.uiMode);
       setCommandStage(state.commandStage);
+      if (state.curve) setCurve(state.curve);
+      if (state.graphStartLocal) setGraphStartLocal(state.graphStartLocal);
     }
   });
 
@@ -186,6 +193,15 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       ...folder,
       state,
       auctions: folder.auctions.map((auction) => ({ ...auction, state }))
+    }));
+  };
+
+  const updateGraphDay = (day: number, value: number) => {
+    if (!selectedDayFolder) return;
+    const currency = selectedDayFolder.currency;
+    setCurve((current) => ({
+      ...current,
+      [currency]: current[currency].map((point, index) => index === day ? value : point)
     }));
   };
 
@@ -319,10 +335,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     }
   };
 
-  const openAuctionSettings = (id: string) => {
-    openAuctionLot(id);
-  };
-
   const setBuilderMode = (nextMode: AuctionBuilderMode) => {
     if (nextMode === 'items' && selectedAuction) {
       setWorkspaceView('lot');
@@ -333,17 +345,26 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     if (!selectedAuction) return;
     if (selectedAuction.items.length >= maxItemsPerAuction) return;
     const item: AuctionLotItem = { ...option, uid: `${option.raw}-${Date.now()}-${Math.random().toString(36).slice(2)}`, quantity: 1, basePrice: 100 };
-    updateAuction(selectedAuction.id, { items: [...selectedAuction.items, item] });
+    const items = [...selectedAuction.items, item];
+    updateAuction(selectedAuction.id, { items, name: auctionNameFromItems(items, selectedAuction.name) });
   };
 
   const updateLotItem = (uid: string, patch: Partial<AuctionLotItem>) => {
     if (!selectedAuction) return;
-    updateAuction(selectedAuction.id, { items: selectedAuction.items.map((item) => item.uid === uid ? { ...item, ...patch } : item) });
+    const items = selectedAuction.items.map((item) => item.uid === uid ? { ...item, ...patch } : item);
+    updateAuction(selectedAuction.id, { items, name: auctionNameFromItems(items, selectedAuction.name) });
+  };
+
+  const moveSelectedLotItem = (uid: string, direction: -1 | 1) => {
+    if (!selectedAuction) return;
+    const items = moveLotItem(selectedAuction.items, uid, direction);
+    updateAuction(selectedAuction.id, { items, name: auctionNameFromItems(items, selectedAuction.name) });
   };
 
   const removeLotItem = (uid: string) => {
     if (!selectedAuction) return;
-    updateAuction(selectedAuction.id, { items: selectedAuction.items.filter((item) => item.uid !== uid) });
+    const items = selectedAuction.items.filter((item) => item.uid !== uid);
+    updateAuction(selectedAuction.id, { items, name: auctionNameFromItems(items, selectedAuction.name) });
   };
 
   return (
@@ -394,13 +415,20 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
             onItemSearchChange={setItemSearch}
             onAddItem={addItemToAuction}
             onUpdateItem={updateLotItem}
+            onMoveItem={moveSelectedLotItem}
             onRemoveItem={removeLotItem}
             onSetCommandStage={setCommandStage}
-            onOpenDownload={() => setDownloadModalOpen(true)}
           />
         ) : (
           <>
-            {selectedDayFolder && workspaceView === 'folder' ? (
+            {selectedDayFolder && ribbonTab === 'graphs' ? (
+              <AuctionGraphPanel
+                folder={selectedDayFolder}
+                curve={curve}
+                graphStartLocal={graphStartLocal}
+                onChangeDay={updateGraphDay}
+              />
+            ) : selectedDayFolder && workspaceView === 'folder' ? (
               <AuctionDayContentsPanel
                 folder={selectedDayFolder}
                 selectedAuctionId={selectedAuctionId}
@@ -411,7 +439,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
                 onOpenAuction={openAuctionLot}
                 onCopyAuction={copyAuction}
                 onDeleteAuction={deleteAuction}
-                onEditAuction={openAuctionSettings}
                 onOpenCommands={(id, stage) => {
                   setSelectedAuctionId(id);
                   setCommandStage(stage);
@@ -460,39 +487,13 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
       />
 
       {downloadModalOpen ? (
-        <div className="modal-backdrop" role="presentation" onClick={() => setDownloadModalOpen(false)}>
-          <form
-            className="modal cloud-save-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="auction-download-file"
-            onClick={(event) => event.stopPropagation()}
-            onSubmit={(event) => {
-              event.preventDefault();
-              downloadTextWithoutExtension(filenameDraft, commands);
-              setDownloadModalOpen(false);
-            }}
-          >
-            <div className="modal-header">
-              <div>
-                <h2>Скачать файл команд</h2>
-                <span className="modal-subtitle">Расширение не добавляется: итоговый файл будет без .txt.</span>
-              </div>
-              <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>Закрыть</button>
-            </div>
-            <div className="settings-modal-body">
-              <label className="field-block">
-                <span>Имя файла</span>
-                <input autoFocus value={filenameDraft} onChange={(event) => setFilenameDraft(event.target.value)} />
-              </label>
-              <div className="cloud-save-preview"><span>Итог</span><strong>{sanitizeAuctionFilename(filenameDraft)}</strong></div>
-              <div className="inline-actions cloud-save-actions">
-                <button type="button" className="ghost-button" onClick={() => setDownloadModalOpen(false)}>Отмена</button>
-                <button type="submit" disabled={!commands.trim()}>Скачать</button>
-              </div>
-            </div>
-          </form>
-        </div>
+        <AuctionDownloadModal
+          filenameDraft={filenameDraft}
+          commands={commands}
+          onFilenameChange={setFilenameDraft}
+          onClose={() => setDownloadModalOpen(false)}
+          onDownload={downloadTextWithoutExtension}
+        />
       ) : null}
     </div>
   );

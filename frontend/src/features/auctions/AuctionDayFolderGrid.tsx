@@ -1,6 +1,6 @@
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
 import type { ReactNode } from 'react';
-import type { AuctionDayFolder } from './auctionTypes';
+import type { AuctionDayFolder, AuctionState } from './auctionTypes';
 import './AuctionDayFolderGrid.css';
 
 type AuctionDayFolderGridProps = {
@@ -20,6 +20,20 @@ function priceModeLabel(folder: AuctionDayFolder) {
   if (folder.category === 'planned') return 'фиксированные';
   return folder.priceMode === 'graph' ? 'по графику' : 'вручную';
 }
+
+const stateLabels: Record<AuctionState, string> = {
+  SETUP: 'Подготовка',
+  ACTIVE: 'Запустить',
+  PAUSED: 'Пауза',
+  CLOSED: 'Закрыт',
+  ENDED: 'Завершён'
+};
+
+const currencyLabels = {
+  DONATE: 'DONATE',
+  VAULT: 'ИГРОВАЯ',
+  BONUS: 'БОНУС'
+} as const;
 
 function warningLabel(summary: AuctionDayFolderSummary) {
   const warnings: string[] = [];
@@ -90,22 +104,13 @@ export function AuctionDayFolderGrid({
                   <span />
                 </div>
                 <dl>
-                  <div>
-                    <dt>{isPlanned ? 'Повтор' : 'Дата'}</dt>
-                    <dd>{isPlanned ? `каждые ${folder.repeatEveryDays} дн.` : folder.dateLocal}</dd>
-                  </div>
-                  <div>
-                    <dt>Предметов</dt>
-                    <dd>{summary?.itemCount ?? 0}</dd>
-                  </div>
-                  <div>
-                    <dt>{isPlanned ? 'Длительность' : 'Цены'}</dt>
-                    <dd>{isPlanned ? `${folder.defaultDurationMinutes} мин.` : (summary?.priceRangeLabel ?? 'нет цен')}</dd>
-                  </div>
-                  <div>
-                    <dt>Режим цен</dt>
-                    <dd>{priceModeLabel(folder)}</dd>
-                  </div>
+                  <div><dt>Дата начала</dt><dd>{isPlanned ? 'по расписанию' : folder.dateLocal}</dd></div>
+                  <div><dt>Длительность</dt><dd>{folder.defaultDurationMinutes} мин.</dd></div>
+                  <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
+                  <div><dt>Цены</dt><dd>{summary?.priceRangeLabel ?? 'нет цен'}</dd></div>
+                  <div><dt>Режим цен</dt><dd>{priceModeLabel(folder)}</dd></div>
+                  <div><dt>Валюта</dt><dd>{currencyLabels[folder.currency]}</dd></div>
+                  <div><dt>Статус</dt><dd>{stateLabels[folder.state]}</dd></div>
                 </dl>
               </div>
               <div className="auction-folder-indicators">

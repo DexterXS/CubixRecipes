@@ -46,13 +46,6 @@ function commandStatusText(commandStages: AuctionCommandStages) {
   return 'ID заполнены: команды предметов и настройки готовы к выгрузке.';
 }
 
-function visibleItems(folder: AuctionDayFolder | undefined) {
-  return (folder?.auctions.flatMap((auction) => auction.items.map((item) => ({
-    ...item,
-    auctionName: auction.name
-  }))) ?? []).slice(0, 3);
-}
-
 export function AuctionDayDetailsPanel({
   folder,
   summary,
@@ -72,8 +65,6 @@ export function AuctionDayDetailsPanel({
   onRepeatCountChange,
   onPriceModeChange
 }: AuctionDayDetailsPanelProps) {
-  const items = visibleItems(folder);
-
   if (!folder) {
     return <aside className="auction-day-details-panel">Выбери папку.</aside>;
   }
@@ -167,7 +158,7 @@ export function AuctionDayDetailsPanel({
         </dl>
       </section>
 
-      <AuctionPriceModePanel folder={folder} items={items} onPriceModeChange={onPriceModeChange} />
+      <AuctionPriceModePanel folder={folder} onPriceModeChange={onPriceModeChange} />
 
       <section className="auction-day-details-section">
         <h3>Глобальный график</h3>

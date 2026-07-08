@@ -12,7 +12,6 @@ type AuctionDayContentsPanelProps = {
   onOpenAuction: (id: string) => void;
   onCopyAuction: (id: string) => void;
   onDeleteAuction: (id: string) => void;
-  onEditAuction: (id: string) => void;
   onOpenCommands: (id: string, stage: AuctionCommandStage) => void;
 };
 
@@ -43,7 +42,6 @@ export function AuctionDayContentsPanel({
   onOpenAuction,
   onCopyAuction,
   onDeleteAuction,
-  onEditAuction,
   onOpenCommands
 }: AuctionDayContentsPanelProps) {
   return (
@@ -84,10 +82,8 @@ export function AuctionDayContentsPanel({
                 </div>
                 <div className="auction-day-auction-actions">
                   <button type="button" onClick={() => onOpenAuction(auction.id)}>Открыть</button>
-                  <button type="button" onClick={() => onEditAuction(auction.id)}>Редактировать</button>
                   <button type="button" onClick={() => onCopyAuction(auction.id)}>Копировать</button>
                   <button type="button" onClick={() => onOpenCommands(auction.id, 'settings')}>Команды</button>
-                  <button type="button" aria-label="auction-more">...</button>
                   <button type="button" onClick={() => onDeleteAuction(auction.id)} disabled={folder.auctions.length <= 1}>Удалить</button>
                 </div>
               </div>

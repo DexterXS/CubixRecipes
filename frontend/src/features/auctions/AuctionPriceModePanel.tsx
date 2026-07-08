@@ -1,12 +1,12 @@
+import { getAuctionBaseItemPrice } from './auctionCommands';
 import type { AuctionDayFolder } from './auctionTypes';
 
 type AuctionPriceModePanelProps = {
   folder: AuctionDayFolder;
-  items: Array<{ uid: string; title: string; quantity: number; basePrice: number }>;
   onPriceModeChange: (mode: AuctionDayFolder['priceMode']) => void;
 };
 
-export function AuctionPriceModePanel({ folder, items, onPriceModeChange }: AuctionPriceModePanelProps) {
+export function AuctionPriceModePanel({ folder, onPriceModeChange }: AuctionPriceModePanelProps) {
   const isPlanned = folder.category === 'planned';
 
   return (
@@ -22,15 +22,15 @@ export function AuctionPriceModePanel({ folder, items, onPriceModeChange }: Auct
         <div className="inline-hint">График управляется в отдельной вкладке «Графики». Здесь показано только правило применения к папке.</div>
       ) : (
         <div className="auction-day-items-table">
-          <div><span>Предмет</span><span>Кол-во</span><span>Цена</span></div>
-          {items.map((item) => (
-            <div key={item.uid}>
-              <span>{item.title}</span>
-              <span>{item.quantity}</span>
-              <span>{item.basePrice}</span>
+          <div><span>Лот</span><span>Предметов</span><span>Цена лота</span></div>
+          {folder.auctions.slice(0, 5).map((auction) => (
+            <div key={auction.id}>
+              <span>{auction.name}</span>
+              <span>{auction.items.length}</span>
+              <span>{getAuctionBaseItemPrice(auction)}</span>
             </div>
           ))}
-          {!items.length ? <p>Предметы ещё не добавлены.</p> : null}
+          {!folder.auctions.length ? <p>Лоты ещё не добавлены.</p> : null}
         </div>
       )}
     </section>

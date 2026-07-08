@@ -95,15 +95,6 @@ function RibbonField({ label, children }: { label: string; children: ReactNode }
   );
 }
 
-function GraphsRibbon() {
-  return (
-    <div className="auction-ribbon-placeholder">
-      <strong>Глобальные графики цен</strong>
-      <span>Глобальный график применяется только к обычным синим папкам. Планируемые фиолетовые папки используют фиксированные цены.</span>
-    </div>
-  );
-}
-
 export function AuctionRibbon({
   activeTab,
   selectedFolder,
@@ -132,6 +123,125 @@ export function AuctionRibbon({
   const hasFolder = Boolean(selectedFolder);
   const isPlanned = selectedFolder?.category === 'planned';
 
+  const renderTabContent = () => {
+    if (activeTab === 'home') {
+      return (
+        <>
+          <RibbonGroup title="Создание">
+            <RibbonButton icon="+" label="Новый день" onClick={onNewDay} />
+            <RibbonButton icon="CP" label="Копия дня" disabled={!hasFolder} onClick={onCopyDay} />
+            <RibbonButton icon="T" label="Из шаблона" disabled title="Шаблоны будут подключены отдельным шагом" onClick={() => undefined} />
+            <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
+          </RibbonGroup>
+          <RibbonGroup title="Работа">
+            <RibbonButton icon="A" label="Применить" disabled={!hasFolder} onClick={onApplyDayDefaults} />
+            <RibbonButton icon="!" label="Проверить" disabled={!hasFolder} onClick={onCheckErrors} />
+          </RibbonGroup>
+        </>
+      );
+    }
+
+    if (activeTab === 'auctions') {
+      return (
+        <>
+          <RibbonGroup title="Параметры дня">
+            <RibbonField label="Валюта">
+              <select value={selectedFolder?.currency ?? 'DONATE'} disabled={!hasFolder} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
+                {auctionCurrencies.map((currency) => (
+                  <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>
+                ))}
+              </select>
+            </RibbonField>
+            <RibbonField label="Длительность">
+              <input type="number" min={1} value={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={(event) => onDurationChange(Number(event.target.value))} />
+            </RibbonField>
+            <RibbonField label="Шаг ставки">
+              <input type="number" min={1} value={selectedFolder?.defaultStepPrice ?? 10} disabled={!hasFolder} onChange={(event) => onStepPriceChange(Number(event.target.value))} />
+            </RibbonField>
+            <RibbonField label="Часовой пояс">
+              <select value={timezoneOffset} disabled={!hasFolder} onChange={(event) => onTimezoneOffsetChange(Number(event.target.value))}>
+                {Array.from({ length: 27 }, (_, index) => (index - 12) * 60).map((offset) => <option key={offset} value={offset}>{timezoneLabel(offset)}</option>)}
+              </select>
+            </RibbonField>
+          </RibbonGroup>
+          <RibbonGroup title="Папка">
+            <RibbonButton icon="A" label="Применить" disabled={!hasFolder} onClick={onApplyDayDefaults} />
+            <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
+          </RibbonGroup>
+        </>
+      );
+    }
+
+    if (activeTab === 'items') {
+      return (
+        <RibbonGroup title="Лоты">
+          <RibbonButton icon="+" label="Открыть лот" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
+          <RibbonButton icon="Q" label="Количество" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
+          <RibbonButton icon="!" label="NBT-фильтр" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
+        </RibbonGroup>
+      );
+    }
+
+    if (activeTab === 'commands') {
+      return (
+        <>
+          <RibbonGroup title="Серверные ID">
+            <RibbonButton icon="ID" label="Вставить ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
+            <RibbonButton icon="OK" label="Проверить ID" disabled={!hasFolder} onClick={onCheckErrors} />
+            <RibbonButton icon="#" label="Список ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
+            <RibbonButton icon="CL" label="Очистить ID" disabled={!hasFolder} onClick={onClearServerIds} />
+          </RibbonGroup>
+          <RibbonGroup title="Команды">
+            <RibbonButton icon="N" label="Новые" disabled={!hasFolder} onClick={() => onWorkflowModeChange('install')} />
+            <RibbonButton icon="E" label="Существующие" disabled={!hasFolder} onClick={() => onWorkflowModeChange('existing')} />
+            <RibbonButton icon=">" label="Генерировать" disabled={!hasFolder} onClick={() => onSetCommandStage('create')} />
+            <RibbonButton icon="DL" label="Скачать файл" disabled={!hasFolder} onClick={onOpenDownload} />
+            <RibbonButton icon="SH" label="Показать" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
+            <span className="auction-ribbon-status">{workflowMode === 'install' ? 'Новые слоты' : 'По готовым ID'}</span>
+          </RibbonGroup>
+        </>
+      );
+    }
+
+    if (activeTab === 'graphs') {
+      return (
+        <RibbonGroup title="Цены и график">
+          <RibbonButton icon="G" label="По графику" disabled={!hasFolder || isPlanned} title="Глобальный график применяется только к обычным папкам" onClick={() => onPriceModeChange('graph')} />
+          <RibbonButton icon="M" label="Вручную" disabled={!hasFolder} onClick={() => onPriceModeChange('manual')} />
+          <RibbonButton icon="S" label="Сбросить цены" disabled={!hasFolder || isPlanned} onClick={onResetPrices} />
+        </RibbonGroup>
+      );
+    }
+
+    if (activeTab === 'tools') {
+      return (
+        <RibbonGroup title="Планировщик">
+          <RibbonButton icon="R" label="Повторы" disabled={!hasFolder} onClick={() => onSetBuilderMode('config')} />
+          <RibbonButton icon="I" label="Интервал" disabled={!hasFolder} onClick={() => onSetBuilderMode('config')} />
+          <RibbonButton icon="SC" label="Расписание" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
+          <RibbonButton icon="C" label="Проверка" disabled={!hasFolder} onClick={onCheckErrors} />
+        </RibbonGroup>
+      );
+    }
+
+    if (activeTab === 'view') {
+      return (
+        <RibbonGroup title="Режим">
+          <RibbonButton icon="N" label="Обычный" disabled={!hasFolder} onClick={() => onUiModeChange('normal')} />
+          <RibbonButton icon="E" label="Экспертный" disabled={!hasFolder} onClick={() => onUiModeChange('expert')} />
+          <span className="auction-ribbon-status">{uiMode === 'expert' ? 'Экспертный режим' : 'Обычный режим'}</span>
+        </RibbonGroup>
+      );
+    }
+
+    return (
+      <div className="auction-ribbon-placeholder">
+        <strong>{ribbonTabs.find((tab) => tab.id === activeTab)?.label}</strong>
+        <span>Раздел будет заполнен следующим структурным шагом.</span>
+      </div>
+    );
+  };
+
   return (
     <div className="auction-ribbon" aria-label="auction-ribbon">
       <div className="auction-ribbon-tabs">
@@ -148,88 +258,7 @@ export function AuctionRibbon({
       </div>
 
       <div className="auction-ribbon-content">
-        {activeTab === 'graphs' ? <GraphsRibbon /> : null}
-        {activeTab === 'auctions' ? (
-          <>
-            <RibbonGroup title="Создание">
-              <RibbonButton icon="+" label="Новый день" onClick={onNewDay} />
-              <RibbonButton icon="CP" label="Копия дня" disabled={!hasFolder} onClick={onCopyDay} />
-              <RibbonButton icon="T" label="Из шаблона" disabled title="Шаблоны будут подключены отдельным шагом" onClick={() => undefined} />
-              <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
-            </RibbonGroup>
-
-            <RibbonGroup title="Параметры дня">
-              <RibbonField label="Валюта">
-                <select value={selectedFolder?.currency ?? 'DONATE'} disabled={!hasFolder} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
-                  {auctionCurrencies.map((currency) => (
-                    <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>
-                  ))}
-                </select>
-              </RibbonField>
-              <RibbonField label="Длительность">
-                <input type="number" min={1} value={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={(event) => onDurationChange(Number(event.target.value))} />
-              </RibbonField>
-              <RibbonField label="Шаг ставки">
-                <input type="number" min={1} value={selectedFolder?.defaultStepPrice ?? 10} disabled={!hasFolder} onChange={(event) => onStepPriceChange(Number(event.target.value))} />
-              </RibbonField>
-              <RibbonField label="Часовой пояс">
-                <select value={timezoneOffset} disabled={!hasFolder} onChange={(event) => onTimezoneOffsetChange(Number(event.target.value))}>
-                  {Array.from({ length: 27 }, (_, index) => (index - 12) * 60).map((offset) => <option key={offset} value={offset}>{timezoneLabel(offset)}</option>)}
-                </select>
-              </RibbonField>
-            </RibbonGroup>
-
-            <RibbonGroup title="Цены">
-              <RibbonButton icon="G" label="По графику" disabled={!hasFolder || isPlanned} title="Глобальный график применяется только к обычным папкам" onClick={() => onPriceModeChange('graph')} />
-              <RibbonButton icon="M" label="Вручную" disabled={!hasFolder} onClick={() => onPriceModeChange('manual')} />
-              <RibbonButton icon="A" label="Применить к дню" disabled={!hasFolder} onClick={onApplyDayDefaults} />
-              <RibbonButton icon="S" label="Сбросить цены" disabled={!hasFolder || isPlanned} onClick={onResetPrices} />
-            </RibbonGroup>
-
-            <RibbonGroup title="Лоты">
-              <RibbonButton icon="+" label="Добавить предмет" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
-              <RibbonButton icon="Q" label="Количество" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
-              <RibbonButton icon="$" label="Цена предмета" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
-              <RibbonButton icon="!" label="NBT-фильтр" disabled={!hasFolder} onClick={() => onSetBuilderMode('items')} />
-            </RibbonGroup>
-
-            <RibbonGroup title="Серверные ID">
-              <RibbonButton icon="ID" label="Вставить ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
-              <RibbonButton icon="OK" label="Проверить заполнение" disabled={!hasFolder} onClick={onCheckErrors} />
-              <RibbonButton icon="#" label="Список ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
-              <RibbonButton icon="CL" label="Очистить ID" disabled={!hasFolder} onClick={onClearServerIds} />
-            </RibbonGroup>
-
-            <RibbonGroup title="Команды">
-              <RibbonButton icon="N" label="Новые" disabled={!hasFolder} onClick={() => onWorkflowModeChange('install')} />
-              <RibbonButton icon="E" label="Существующие" disabled={!hasFolder} onClick={() => onWorkflowModeChange('existing')} />
-              <RibbonButton icon=">" label="Генерировать" disabled={!hasFolder} onClick={() => onSetCommandStage('create')} />
-              <RibbonButton icon="DL" label="Скачать файл" disabled={!hasFolder} onClick={onOpenDownload} />
-              <RibbonButton icon="SH" label="Показать команды" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
-              <RibbonButton icon="!" label="Проверить ошибки" disabled={!hasFolder} onClick={onCheckErrors} />
-              <span className="auction-ribbon-status">{workflowMode === 'install' ? 'Новые слоты' : 'По готовым ID'}</span>
-            </RibbonGroup>
-
-            <RibbonGroup title="Планировщик">
-              <RibbonButton icon="R" label="Повторы" disabled={!hasFolder} onClick={() => onSetBuilderMode('config')} />
-              <RibbonButton icon="I" label="Интервал" disabled={!hasFolder} onClick={() => onSetBuilderMode('config')} />
-              <RibbonButton icon="SC" label="Расписание" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
-              <RibbonButton icon="C" label="Проверка перед стартом" disabled={!hasFolder} onClick={onCheckErrors} />
-            </RibbonGroup>
-
-            <RibbonGroup title="Режим">
-              <RibbonButton icon="N" label="Обычный" disabled={!hasFolder} onClick={() => onUiModeChange('normal')} />
-              <RibbonButton icon="E" label="Экспертный" disabled={!hasFolder} onClick={() => onUiModeChange('expert')} />
-              <span className="auction-ribbon-status">{uiMode === 'expert' ? 'Экспертный режим' : 'Обычный режим'}</span>
-            </RibbonGroup>
-          </>
-        ) : null}
-        {activeTab !== 'auctions' && activeTab !== 'graphs' ? (
-          <div className="auction-ribbon-placeholder">
-            <strong>{ribbonTabs.find((tab) => tab.id === activeTab)?.label}</strong>
-            <span>Раздел будет заполнен следующим структурным шагом.</span>
-          </div>
-        ) : null}
+        {renderTabContent()}
       </div>
     </div>
   );

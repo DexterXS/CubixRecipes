@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { getAuctionPlannerState, saveAuctionPlannerState } from '../../services/api/auctions';
-import type { AuctionCommandStage, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import type { AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 
 type AuctionPlannerPersistenceParams = {
   dayFolders: AuctionDayFolder[];
@@ -9,6 +9,8 @@ type AuctionPlannerPersistenceParams = {
   workflowMode: AuctionWorkflowMode;
   uiMode: AuctionUiMode;
   commandStage: AuctionCommandStage;
+  curve: AuctionCurve;
+  graphStartLocal: string;
   onLoad: (state: AuctionPlannerState) => void;
 };
 
@@ -71,7 +73,9 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
             : nextFolder.auctions[0]?.id ?? '',
           workflowMode: payload.state.workflowMode ?? 'install',
           uiMode: payload.state.uiMode ?? 'normal',
-          commandStage: payload.state.commandStage ?? 'create'
+          commandStage: payload.state.commandStage ?? 'create',
+          curve: payload.state.curve,
+          graphStartLocal: payload.state.graphStartLocal
         });
       })
       .catch(() => {
@@ -95,7 +99,9 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
       selectedAuctionId: params.selectedAuctionId,
       workflowMode: params.workflowMode,
       uiMode: params.uiMode,
-      commandStage: params.commandStage
+      commandStage: params.commandStage,
+      curve: params.curve,
+      graphStartLocal: params.graphStartLocal
     };
     if (saveTimerRef.current !== null) {
       window.clearTimeout(saveTimerRef.current);
@@ -110,5 +116,5 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
         window.clearTimeout(saveTimerRef.current);
       }
     };
-  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage]);
+  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage, params.curve, params.graphStartLocal]);
 }
