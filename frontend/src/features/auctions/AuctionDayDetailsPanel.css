@@ -118,6 +118,31 @@
   gap: 6px;
 }
 
+.auction-day-details-actions .danger-button {
+  border-color: rgba(255, 88, 88, 0.45);
+  color: #ff9a9a;
+}
+
+.auction-day-details-stats {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.auction-day-details-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.auction-day-details-stats dt {
+  color: var(--muted);
+}
+
+.auction-day-details-stats dd {
+  margin: 0;
+}
+
 @media (max-width: 1100px) {
   .auction-day-details-panel {
     min-width: 0;

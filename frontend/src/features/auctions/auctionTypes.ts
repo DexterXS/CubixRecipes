@@ -9,6 +9,7 @@ export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED';
 export type AuctionPriceMode = 'graph' | 'manual';
 export type AuctionGraphMode = 'linear' | 'fixed' | 'custom';
 export type AuctionUiMode = 'normal' | 'expert';
+export type AuctionFolderCategory = 'regular' | 'planned';
 
 export type AuctionItemOption = {
   raw: string;
@@ -46,6 +47,7 @@ export type AuctionDayFolder = {
   id: string;
   dateLocal: string;
   title: string;
+  category: AuctionFolderCategory;
   currency: AuctionCurrency;
   defaultDurationMinutes: number;
   defaultStepPrice: number;

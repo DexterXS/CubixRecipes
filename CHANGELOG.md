@@ -3,6 +3,9 @@
 ## [Unreleased]
 ### Added
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
+- Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
+- Added regular blue vs planned purple auction folder categories; planned folders hide fixed dates, use repeat settings, and ignore global price graphs.
+- Added a context-only Auctions status bar for folder list, opened folder, and opened lot views without technical CPU/memory-style metrics.
 - Added an opened day-folder view for Auctions so a day folder can show its internal auction drafts, selected draft, item/setting/command shortcuts, missing server-ID status, and NBT warnings.
 - Removed the old permanent lower Auctions editor/command-preview area so the day-folder workspace no longer renders legacy panels below the main layout.
 - Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.

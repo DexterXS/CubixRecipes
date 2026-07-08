@@ -58,6 +58,18 @@
   box-shadow: 0 0 0 1px rgba(71, 176, 255, 0.26), 0 0 22px rgba(44, 135, 255, 0.24);
 }
 
+.auction-day-folder-card.planned {
+  border-color: rgba(163, 94, 255, 0.46);
+  background:
+    linear-gradient(180deg, rgba(88, 45, 150, 0.62), rgba(28, 18, 58, 0.8)),
+    rgba(21, 16, 46, 0.9);
+}
+
+.auction-day-folder-card.planned.active {
+  border-color: rgba(180, 112, 255, 0.95);
+  box-shadow: 0 0 0 1px rgba(180, 112, 255, 0.28), 0 0 22px rgba(141, 73, 255, 0.24);
+}
+
 .auction-folder-tab {
   position: absolute;
   top: -1px;
@@ -68,6 +80,16 @@
   border-bottom: 0;
   border-radius: 7px 7px 0 0;
   background: rgba(31, 132, 225, 0.42);
+}
+
+.auction-day-folder-card.planned .auction-folder-tab {
+  border-color: rgba(180, 112, 255, 0.55);
+  background: rgba(119, 65, 211, 0.48);
+}
+
+.auction-folder-kind {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .auction-folder-card-header {

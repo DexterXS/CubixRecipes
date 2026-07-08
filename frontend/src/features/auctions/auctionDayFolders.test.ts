@@ -12,7 +12,7 @@ import {
 } from './auctionDayFolders';
 
 describe('auction day folders', () => {
-  test('creates a day folder around existing auction drafts without changing the draft shape', () => {
+  test('creates a regular day folder around existing auction drafts without changing the draft shape', () => {
     const auction = createAuctionDraft(1, '2026-07-12T10:00');
     const folder = createAuctionDayFolder({
       id: 'day-12',
@@ -22,6 +22,7 @@ describe('auction day folders', () => {
     });
 
     expect(folder.title).toBe('12 июля');
+    expect(folder.category).toBe('regular');
     expect(folder.auctions[0]).toMatchObject({
       id: '1',
       serverIds: {},
@@ -81,6 +82,30 @@ describe('auction day folders', () => {
       minStartPrice: 150,
       maxStartPrice: 150
     });
+  });
+
+  test('creates planned folders without a date title and ignores the global price graph', () => {
+    const curve = createDefaultAuctionCurve();
+    curve.DONATE[0] = 2;
+    const folder = createAuctionDayFolder({
+      id: 'planned-1',
+      dateLocal: '2026-07-12',
+      category: 'planned',
+      auctions: [
+        createAuctionDraft(1, '2026-07-12T10:00', {
+          items: [
+            { uid: 'diamond', raw: '<minecraft:diamond>', title: 'Diamond', legacyId: 264, meta: 0, hasNbt: false, quantity: 1, basePrice: 100 }
+          ]
+        })
+      ]
+    });
+
+    const summary = summarizeAuctionDayFolder({ folder, curve, graphStartLocal: '2026-07-12T00:00' });
+
+    expect(folder.title).toBe('Планируемая папка');
+    expect(folder.priceMode).toBe('manual');
+    expect(folder.repeatEnabled).toBe(true);
+    expect(summary.minStartPrice).toBe(100);
   });
 
   test('reports server id lifecycle states', () => {

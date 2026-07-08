@@ -16,3 +16,6 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 10. Done: polished responsive CSS without starting a local dev server.
 11. Done: frontend tests, frontend build, file-size report, and `git diff --check`.
 12. Done: docs/tree/changelog updated for this continuation; changes are ready for the project `test` delivery flow.
+13. Done: added the first structural pass from the supplemental plan: explicit folder list -> opened folder -> opened lot navigation.
+14. Done: added regular/planned folder categories, planned-folder graph isolation, opened-lot zones, and context status bar.
+15. Next: refine visuals and complete the dedicated global graphs workspace after the structural screens are stable.

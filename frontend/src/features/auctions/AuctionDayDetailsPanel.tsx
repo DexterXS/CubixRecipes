@@ -1,35 +1,40 @@
-import { auctionCurrencies, auctionCurrencyLabels, type AuctionCommandStages } from './auctionCommands';
+import { auctionCurrencies, type AuctionCommandStages } from './auctionCommands';
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
 import { AuctionPriceModePanel } from './AuctionPriceModePanel';
 import { AuctionServerIdPanel } from './AuctionServerIdPanel';
-import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionDayFolder, AuctionPriceMode, AuctionUiMode } from './auctionTypes';
+import type { AuctionCurrency, AuctionDayFolder, AuctionFolderCategory, AuctionPriceMode, AuctionUiMode } from './auctionTypes';
 import './AuctionDayDetailsPanel.css';
 
 type AuctionDayDetailsPanelProps = {
   folder: AuctionDayFolder | undefined;
   summary: AuctionDayFolderSummary | undefined;
-  selectedAuctionId: string;
-  maxItemsPerAuction: number;
   uiMode: AuctionUiMode;
   commandStages: AuctionCommandStages;
-  onSelectAuction: (id: string) => void;
-  onAddAuction: () => void;
+  onOpenFolder: () => void;
+  onCopyFolder: () => void;
+  onDeleteFolder: () => void;
   onTitleChange: (title: string) => void;
   onDateChange: (dateLocal: string) => void;
+  onCategoryChange: (category: AuctionFolderCategory) => void;
   onCurrencyChange: (currency: AuctionCurrency) => void;
   onDurationChange: (minutes: number) => void;
   onStepPriceChange: (step: number) => void;
+  onRepeatEveryDaysChange: (days: number) => void;
+  onRepeatCountChange: (count: number) => void;
   onPriceModeChange: (mode: AuctionPriceMode) => void;
-  onMaxItemsChange: (value: number) => void;
-  onSetBuilderMode: (mode: AuctionBuilderMode) => void;
-  onSetCommandStage: (stage: AuctionCommandStage) => void;
+};
+
+const currencyDisplayLabels: Record<AuctionCurrency, string> = {
+  DONATE: 'DONATE',
+  VAULT: 'ИГРОВАЯ',
+  BONUS: 'БОНУС'
 };
 
 function commandStatusText(commandStages: AuctionCommandStages) {
   if (commandStages.missingServerIds.length) {
-    return 'Команды предметов и настройки заблокированы до ввода ID';
+    return 'Есть незаполненные серверные ID. Команды предметов и настройки будут неполными.';
   }
-  return 'Команды создания, предметов и настройки готовы';
+  return 'ID заполнены: команды предметов и настройки готовы к выгрузке.';
 }
 
 function visibleItems(folder: AuctionDayFolder | undefined) {
@@ -42,52 +47,71 @@ function visibleItems(folder: AuctionDayFolder | undefined) {
 export function AuctionDayDetailsPanel({
   folder,
   summary,
-  selectedAuctionId,
-  maxItemsPerAuction,
   uiMode,
   commandStages,
-  onSelectAuction,
-  onAddAuction,
+  onOpenFolder,
+  onCopyFolder,
+  onDeleteFolder,
   onTitleChange,
   onDateChange,
+  onCategoryChange,
   onCurrencyChange,
   onDurationChange,
   onStepPriceChange,
-  onPriceModeChange,
-  onMaxItemsChange,
-  onSetBuilderMode,
-  onSetCommandStage
+  onRepeatEveryDaysChange,
+  onRepeatCountChange,
+  onPriceModeChange
 }: AuctionDayDetailsPanelProps) {
   const items = visibleItems(folder);
 
   if (!folder) {
-    return <aside className="auction-day-details-panel">Выбери папку дня.</aside>;
+    return <aside className="auction-day-details-panel">Выбери папку.</aside>;
   }
+
+  const isPlanned = folder.category === 'planned';
 
   return (
     <aside className="auction-day-details-panel" aria-label="auction-day-details">
       <div className="auction-day-details-header">
         <div>
-          <h2>{folder.title}</h2>
-          <span>{summary?.auctionCount ?? folder.auctions.length} аукционов</span>
+          <h2>Управление папкой</h2>
+          <span>{folder.title}</span>
         </div>
-        <button type="button" className="secondary-button" onClick={onAddAuction}>+ аукцион</button>
       </div>
 
       <section className="auction-day-details-section">
-        <h3>Базовые поля</h3>
+        <div className="auction-day-details-actions">
+          <button type="button" onClick={onOpenFolder}>Открыть папку</button>
+          <button type="button" onClick={onCopyFolder}>Копировать</button>
+          <button type="button" className="danger-button" onClick={onDeleteFolder}>Удалить</button>
+        </div>
+      </section>
+
+      <section className="auction-day-details-section">
+        <h3>Параметры папки</h3>
         <label className="field-block compact-field">
           <span>Название папки</span>
           <input value={folder.title} onChange={(event) => onTitleChange(event.target.value)} />
         </label>
         <label className="field-block compact-field">
-          <span>Дата дня</span>
-          <input type="date" value={folder.dateLocal} onChange={(event) => onDateChange(event.target.value)} />
+          <span>Категория папки</span>
+          <select value={folder.category} onChange={(event) => onCategoryChange(event.target.value as AuctionFolderCategory)}>
+            <option value="regular">Обычные аукционы</option>
+            <option value="planned">Планируемые / повтор</option>
+          </select>
         </label>
+        {!isPlanned ? (
+          <label className="field-block compact-field">
+            <span>Дата дня</span>
+            <input type="date" value={folder.dateLocal} onChange={(event) => onDateChange(event.target.value)} />
+          </label>
+        ) : (
+          <div className="inline-hint">У планируемой фиолетовой папки нет фиксированной даты.</div>
+        )}
         <label className="field-block compact-field">
           <span>Валюта</span>
           <select value={folder.currency} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
-            {auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>)}
+            {auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>)}
           </select>
         </label>
         <div className="auction-day-details-fields">
@@ -100,49 +124,48 @@ export function AuctionDayDetailsPanel({
             <input type="number" min={1} value={folder.defaultDurationMinutes} onChange={(event) => onDurationChange(Number(event.target.value))} />
           </label>
         </div>
-        <label className="field-block compact-field">
-          <span>Лимит предметов в аукционе</span>
-          <input type="number" min={1} max={27} value={maxItemsPerAuction} onChange={(event) => onMaxItemsChange(Number(event.target.value))} />
-        </label>
+        {isPlanned ? (
+          <div className="auction-day-details-fields">
+            <label className="field-block compact-field">
+              <span>Повтор каждые, дней</span>
+              <input type="number" min={1} value={folder.repeatEveryDays} onChange={(event) => onRepeatEveryDaysChange(Number(event.target.value))} />
+            </label>
+            <label className="field-block compact-field">
+              <span>Повторов</span>
+              <input type="number" min={1} max={90} value={folder.repeatCount} onChange={(event) => onRepeatCountChange(Number(event.target.value))} />
+            </label>
+          </div>
+        ) : null}
       </section>
 
       <section className="auction-day-details-section">
-        <h3>Аукционы дня</h3>
-        <div className="auction-day-auction-list">
-          {folder.auctions.map((auction) => (
-            <button
-              key={auction.id}
-              type="button"
-              className={auction.id === selectedAuctionId ? 'active' : ''}
-              onClick={() => onSelectAuction(auction.id)}
-            >
-              <strong>{auction.name}</strong>
-              <span>{auction.items.length}/{maxItemsPerAuction} предметов</span>
-            </button>
-          ))}
-        </div>
+        <h3>Статистика папки</h3>
+        <dl className="auction-day-details-stats">
+          <div><dt>Аукционов</dt><dd>{summary?.auctionCount ?? folder.auctions.length}</dd></div>
+          <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
+          <div><dt>Нет ID</dt><dd>{summary?.missingServerIdCount ?? 0}</dd></div>
+          <div><dt>NBT предупреждения</dt><dd>{summary?.nbtItemCount ?? 0}</dd></div>
+        </dl>
       </section>
 
       <AuctionPriceModePanel folder={folder} items={items} onPriceModeChange={onPriceModeChange} />
+
+      <section className="auction-day-details-section">
+        <h3>Глобальный график</h3>
+        <p>{isPlanned ? 'Глобальный график цен не применяется.' : 'Папка подключена к глобальному графику цен.'}</p>
+      </section>
 
       <AuctionServerIdPanel folder={folder} summary={summary} />
 
       <section className="auction-day-details-section">
         <h3>Команды</h3>
         <p>{commandStatusText(commandStages)}</p>
-        <div className="auction-day-details-actions">
-          <button type="button" onClick={() => onSetCommandStage('create')}>Создание</button>
-          <button type="button" onClick={() => onSetCommandStage('ids')}>ID</button>
-          <button type="button" onClick={() => onSetCommandStage('items')}>Предметы</button>
-          <button type="button" onClick={() => onSetCommandStage('settings')}>Настройки</button>
-        </div>
       </section>
 
       {uiMode === 'expert' ? (
         <section className="auction-day-details-section">
           <h3>Экспертно</h3>
-          <p>timezone offset: {folder.timezoneOffsetMinutes}; graph mode: {folder.graphMode}; repeats: {folder.repeatEnabled ? folder.repeatCount : 1}</p>
-          <button type="button" onClick={() => onSetBuilderMode('items')}>Raw ID, legacy/meta и NBT</button>
+          <p>timezone offset: {folder.timezoneOffsetMinutes}; graph mode: {folder.graphMode}; repeat: {folder.repeatEnabled ? folder.repeatCount : 1}</p>
         </section>
       ) : null}
     </aside>

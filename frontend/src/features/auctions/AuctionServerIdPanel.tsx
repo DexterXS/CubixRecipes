@@ -8,10 +8,10 @@ type AuctionServerIdPanelProps = {
 
 function serverIdStatusText(folder: AuctionDayFolder) {
   const status = getDayServerIdStatus(folder, 'ids');
-  if (status === 'not-needed-yet') return 'ID пока не нужны: сначала создай слоты';
-  if (status === 'waiting') return 'ID ожидаются после `/aca create`';
-  if (status === 'missing') return 'Есть пропущенные ID';
-  return 'ID заполнены';
+  if (status === 'not-needed-yet') return 'ID пока не нужны: сначала создай слоты.';
+  if (status === 'waiting') return 'ID ожидаются после /aca create.';
+  if (status === 'missing') return 'Есть пропущенные ID.';
+  return 'ID заполнены.';
 }
 
 export function AuctionServerIdPanel({ folder, summary }: AuctionServerIdPanelProps) {

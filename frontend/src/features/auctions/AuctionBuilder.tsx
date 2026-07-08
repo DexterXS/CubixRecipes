@@ -9,9 +9,10 @@ import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFold
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
-import { AuctionItemsWorkspace } from './AuctionItemsWorkspace';
+import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
-import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import { AuctionStatusBar } from './AuctionStatusBar';
+import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
 
 type AuctionBuilderProps = {
@@ -34,20 +35,19 @@ function downloadTextWithoutExtension(filename: string, text: string) {
 export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderProps) {
   const now = Date.now();
   const [workflowMode, setWorkflowMode] = useState<AuctionWorkflowMode>('install');
-  const [mode, setMode] = useState<AuctionBuilderMode>('config');
-  const [dayViewMode, setDayViewMode] = useState<'days' | 'folder'>('days');
+  const [workspaceView, setWorkspaceView] = useState<'folders' | 'folder' | 'lot'>('folders');
   const [ribbonTab, setRibbonTab] = useState<AuctionRibbonTab>('auctions');
   const [uiMode, setUiMode] = useState<AuctionUiMode>('normal');
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
-  const [idMode, setIdMode] = useState<AuctionItemIdMode>('raw');
-  const [commandPlayer, setCommandPlayer] = useState('@p');
+  const [idMode] = useState<AuctionItemIdMode>('raw');
+  const [commandPlayer] = useState('@p');
   const [graphStartLocal] = useState(() => localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()));
   const [dayFolders, setDayFolders] = useState<AuctionDayFolder[]>(() => [createInitialAuctionDayFolder(now, defaultTimezoneOffset())]);
   const [selectedDayFolderId, setSelectedDayFolderId] = useState('day-1');
   const [selectedAuctionId, setSelectedAuctionId] = useState('1');
   const [curve] = useState<AuctionCurve>(() => createDefaultAuctionCurve());
   const [itemSearch, setItemSearch] = useState('');
-  const [maxItemsPerAuction, setMaxItemsPerAuction] = useState(4);
+  const [maxItemsPerAuction] = useState(16);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
 
@@ -59,14 +59,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     summarizeAuctionDayFolder({ folder, curve, graphStartLocal })
   ])), [dayFolders, curve, graphStartLocal]);
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
-  const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, curve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
+  const commandCurve = useMemo(() => selectedDayFolder?.category === 'planned' ? createDefaultAuctionCurve() : curve, [selectedDayFolder?.category, curve]);
+  const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
   const commands = commandStages[commandStage];
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
     if (!query) return itemOptions.slice(0, 80);
     return itemOptions.filter((item) => `${item.raw} ${item.title} ${item.legacyId ?? ''}`.toLowerCase().includes(query)).slice(0, 120);
   }, [itemOptions, itemSearch]);
-  const nbtSkippedCount = auctions.flatMap((auction) => auction.items).filter((item) => item.hasNbt).length;
   const selectedAuctionFull = selectedAuction ? selectedAuction.items.length >= maxItemsPerAuction : false;
 
   const updateSelectedDayFolder = (updater: (folder: AuctionDayFolder) => AuctionDayFolder) => {
@@ -83,7 +83,19 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     if (!folder) return;
     setSelectedDayFolderId(id);
     setSelectedAuctionId(folder.auctions[0]?.id ?? '');
-    setDayViewMode('folder');
+  };
+
+  const openDayFolder = (id = selectedDayFolder?.id) => {
+    const folder = dayFolders.find((item) => item.id === id);
+    if (!folder) return;
+    setSelectedDayFolderId(folder.id);
+    setSelectedAuctionId(folder.auctions[0]?.id ?? '');
+    setWorkspaceView('folder');
+  };
+
+  const openAuctionLot = (id: string) => {
+    setSelectedAuctionId(id);
+    setWorkspaceView('lot');
   };
 
   const addDayFolder = () => {
@@ -97,6 +109,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     setDayFolders((current) => [...current, next]);
     setSelectedDayFolderId(next.id);
     setSelectedAuctionId(next.auctions[0]?.id ?? '');
+    setWorkspaceView('folders');
   };
 
   const copySelectedDayFolder = (sourceId = selectedDayFolder?.id) => {
@@ -110,6 +123,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     setDayFolders((current) => [...current, copy]);
     setSelectedDayFolderId(copy.id);
     setSelectedAuctionId(copy.auctions[0]?.id ?? '');
+    setWorkspaceView('folders');
   };
 
   const deleteSelectedDayFolder = () => {
@@ -120,6 +134,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     setDayFolders(remaining);
     setSelectedDayFolderId(remaining[0]?.id ?? '');
     setSelectedAuctionId(remaining[0]?.auctions[0]?.id ?? '');
+    setWorkspaceView('folders');
   };
 
   const updateDayCurrency = (currency: AuctionCurrency) => {
@@ -165,6 +180,38 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     }));
   };
 
+  const updateDayCategory = (category: AuctionFolderCategory) => {
+    updateSelectedDayFolder((folder) => ({
+      ...folder,
+      category,
+      title: folder.title === formatAuctionDayTitle(folder.dateLocal) || folder.title === 'Планируемая папка'
+        ? (category === 'planned' ? 'Планируемая папка' : formatAuctionDayTitle(folder.dateLocal))
+        : folder.title,
+      priceMode: category === 'planned' ? 'manual' : folder.priceMode,
+      graphMode: category === 'planned' ? 'fixed' : 'linear',
+      repeatEnabled: category === 'planned',
+      auctions: folder.auctions.map((auction) => ({ ...auction, repeatEnabled: category === 'planned' ? true : auction.repeatEnabled }))
+    }));
+  };
+
+  const updateDayRepeatEveryDays = (days: number) => {
+    const repeatEveryDays = Math.max(1, Math.round(Number.isFinite(days) ? days : 1));
+    updateSelectedDayFolder((folder) => ({
+      ...folder,
+      repeatEveryDays,
+      auctions: folder.auctions.map((auction) => ({ ...auction, repeatEveryDays }))
+    }));
+  };
+
+  const updateDayRepeatCount = (count: number) => {
+    const repeatCount = Math.max(1, Math.min(90, Math.round(Number.isFinite(count) ? count : 1)));
+    updateSelectedDayFolder((folder) => ({
+      ...folder,
+      repeatCount,
+      auctions: folder.auctions.map((auction) => ({ ...auction, repeatCount }))
+    }));
+  };
+
   const applySelectedDayDefaults = () => {
     updateSelectedDayFolder((folder) => applyDayDefaultsToAuctions(folder));
   };
@@ -205,7 +252,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     const next = createAuctionDraft(nextIndex, localDateTimeInputFromUtcMs(now + nextIndex * 86_400_000, timezoneOffset));
     updateSelectedDayAuctions((current) => [...current, next].slice(0, 90));
     setSelectedAuctionId(next.id);
-    setDayViewMode('folder');
+    setWorkspaceView('folder');
   };
 
   const copyAuction = (id: string) => {
@@ -221,8 +268,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     };
     updateSelectedDayAuctions((current) => [...current, copy].slice(0, 90));
     setSelectedAuctionId(copy.id);
-    setMode('config');
-    setDayViewMode('folder');
+    setWorkspaceView('folder');
   };
 
   const deleteAuction = (id: string) => {
@@ -235,13 +281,13 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
   };
 
   const openAuctionSettings = (id: string) => {
-    setSelectedAuctionId(id);
-    setMode('config');
+    openAuctionLot(id);
   };
 
-  const openAuctionItems = (id: string) => {
-    setSelectedAuctionId(id);
-    setMode('items');
+  const setBuilderMode = (nextMode: AuctionBuilderMode) => {
+    if (nextMode === 'items' && selectedAuction) {
+      setWorkspaceView('lot');
+    }
   };
 
   const addItemToAuction = (option: AuctionItemOption) => {
@@ -249,11 +295,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
     if (selectedAuction.items.length >= maxItemsPerAuction) return;
     const item: AuctionLotItem = { ...option, uid: `${option.raw}-${Date.now()}-${Math.random().toString(36).slice(2)}`, quantity: 1, basePrice: 100 };
     updateAuction(selectedAuction.id, { items: [...selectedAuction.items, item] });
-  };
-
-  const updateMaxItemsPerAuction = (value: number) => {
-    const normalized = Math.max(1, Math.min(27, Math.round(Number.isFinite(value) ? value : 1)));
-    setMaxItemsPerAuction(normalized);
   };
 
   const updateLotItem = (uid: string, patch: Partial<AuctionLotItem>) => {
@@ -292,81 +333,91 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: AuctionBuilderPr
         onResetPrices={resetSelectedDayPrices}
         onClearServerIds={clearSelectedDayServerIds}
         onCheckErrors={checkSelectedDayErrors}
-        onSetBuilderMode={setMode}
+        onSetBuilderMode={setBuilderMode}
         onSetCommandStage={setCommandStage}
         onOpenDownload={() => setDownloadModalOpen(true)}
       />
 
-      <div className="auction-layout">
-        {selectedDayFolder && dayViewMode === 'folder' ? (
-          <AuctionDayContentsPanel
+      <div className={`auction-layout ${workspaceView === 'lot' ? 'lot-view' : ''}`}>
+        {selectedDayFolder && selectedAuction && workspaceView === 'lot' ? (
+          <AuctionLotWorkspace
             folder={selectedDayFolder}
-            selectedAuctionId={selectedAuctionId}
-            maxItemsPerAuction={maxItemsPerAuction}
-            onBackToDays={() => setDayViewMode('days')}
-            onSelectAuction={setSelectedAuctionId}
-            onAddAuction={addAuction}
-            onCopyAuction={copyAuction}
-            onDeleteAuction={deleteAuction}
-            onOpenItems={openAuctionItems}
-            onOpenSettings={openAuctionSettings}
-            onOpenCommands={(id, stage) => {
-              setSelectedAuctionId(id);
-              setCommandStage(stage);
-            }}
-          />
-        ) : (
-          <AuctionDayFolderGrid
-            folders={dayFolders}
-            selectedFolderId={selectedDayFolder?.id ?? ''}
-            summaries={dayFolderSummaries}
-            onSelectFolder={selectDayFolder}
-            onCopyFolder={copySelectedDayFolder}
-            onSetBuilderMode={setMode}
-            onSetCommandStage={setCommandStage}
-          />
-        )}
-
-        <AuctionDayDetailsPanel
-          folder={selectedDayFolder}
-          summary={selectedDayFolder ? dayFolderSummaries[selectedDayFolder.id] : undefined}
-          selectedAuctionId={selectedAuctionId}
-          maxItemsPerAuction={maxItemsPerAuction}
-          uiMode={uiMode}
-          commandStages={commandStages}
-          onSelectAuction={setSelectedAuctionId}
-          onAddAuction={addAuction}
-          onTitleChange={updateDayTitle}
-          onDateChange={updateDayDate}
-          onCurrencyChange={updateDayCurrency}
-          onDurationChange={updateDayDuration}
-          onStepPriceChange={updateDayStepPrice}
-          onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}
-          onMaxItemsChange={updateMaxItemsPerAuction}
-          onSetBuilderMode={setMode}
-          onSetCommandStage={setCommandStage}
-        />
-
-        {selectedAuction && mode === 'items' ? (
-          <AuctionItemsWorkspace
-            selectedAuction={selectedAuction}
-            idMode={idMode}
-            commandPlayer={commandPlayer}
+            auction={selectedAuction}
+            uiMode={uiMode}
             itemSearch={itemSearch}
             filteredItems={filteredItems}
             selectedAuctionFull={selectedAuctionFull}
             maxItemsPerAuction={maxItemsPerAuction}
-            nbtSkippedCount={nbtSkippedCount}
             renderItemIcon={renderItemIcon}
-            onIdModeChange={setIdMode}
-            onCommandPlayerChange={setCommandPlayer}
+            onBackToFolder={() => setWorkspaceView('folder')}
+            onUpdateAuction={updateAuction}
+            onUpdateServerId={updateServerId}
             onItemSearchChange={setItemSearch}
             onAddItem={addItemToAuction}
             onUpdateItem={updateLotItem}
             onRemoveItem={removeLotItem}
+            onSetCommandStage={setCommandStage}
+            onOpenDownload={() => setDownloadModalOpen(true)}
           />
-        ) : null}
+        ) : (
+          <>
+            {selectedDayFolder && workspaceView === 'folder' ? (
+              <AuctionDayContentsPanel
+                folder={selectedDayFolder}
+                selectedAuctionId={selectedAuctionId}
+                renderItemIcon={renderItemIcon}
+                onBackToDays={() => setWorkspaceView('folders')}
+                onSelectAuction={setSelectedAuctionId}
+                onAddAuction={addAuction}
+                onOpenAuction={openAuctionLot}
+                onCopyAuction={copyAuction}
+                onDeleteAuction={deleteAuction}
+                onEditAuction={openAuctionSettings}
+                onOpenCommands={(id, stage) => {
+                  setSelectedAuctionId(id);
+                  setCommandStage(stage);
+                }}
+              />
+            ) : (
+              <AuctionDayFolderGrid
+                folders={dayFolders}
+                selectedFolderId={selectedDayFolder?.id ?? ''}
+                summaries={dayFolderSummaries}
+                onSelectFolder={selectDayFolder}
+                onOpenFolder={openDayFolder}
+                onCopyFolder={copySelectedDayFolder}
+              />
+            )}
+
+            <AuctionDayDetailsPanel
+              folder={selectedDayFolder}
+              summary={selectedDayFolder ? dayFolderSummaries[selectedDayFolder.id] : undefined}
+              uiMode={uiMode}
+              commandStages={commandStages}
+              onOpenFolder={() => openDayFolder()}
+              onCopyFolder={() => copySelectedDayFolder()}
+              onDeleteFolder={deleteSelectedDayFolder}
+              onTitleChange={updateDayTitle}
+              onDateChange={updateDayDate}
+              onCategoryChange={updateDayCategory}
+              onCurrencyChange={updateDayCurrency}
+              onDurationChange={updateDayDuration}
+              onStepPriceChange={updateDayStepPrice}
+              onRepeatEveryDaysChange={updateDayRepeatEveryDays}
+              onRepeatCountChange={updateDayRepeatCount}
+              onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}
+            />
+          </>
+        )}
       </div>
+
+      <AuctionStatusBar
+        view={workspaceView}
+        folders={dayFolders}
+        summaries={dayFolderSummaries}
+        selectedFolder={selectedDayFolder}
+        selectedAuction={selectedAuction}
+      />
 
       {downloadModalOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setDownloadModalOpen(false)}>

@@ -1,12 +1,9 @@
-import {
-  auctionCurrencies,
-  auctionCurrencyLabels
-} from './auctionCommands';
+import { auctionCurrencies } from './auctionCommands';
 import type { ReactNode } from 'react';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionDayFolder, AuctionPriceMode, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionRibbon.css';
 
-export type AuctionRibbonTab = 'home' | 'auctions' | 'items' | 'commands' | 'templates' | 'view' | 'tools';
+export type AuctionRibbonTab = 'home' | 'auctions' | 'items' | 'commands' | 'graphs' | 'templates' | 'view' | 'tools';
 
 type AuctionRibbonProps = {
   activeTab: AuctionRibbonTab;
@@ -39,10 +36,17 @@ const ribbonTabs: Array<{ id: AuctionRibbonTab; label: string }> = [
   { id: 'auctions', label: 'Аукционы' },
   { id: 'items', label: 'Предметы' },
   { id: 'commands', label: 'Команды' },
+  { id: 'graphs', label: 'Графики' },
   { id: 'templates', label: 'Шаблоны' },
   { id: 'view', label: 'Вид' },
   { id: 'tools', label: 'Инструменты' }
 ];
+
+const currencyDisplayLabels: Record<AuctionCurrency, string> = {
+  DONATE: 'DONATE',
+  VAULT: 'ИГРОВАЯ',
+  BONUS: 'БОНУС'
+};
 
 function timezoneLabel(offset: number) {
   const sign = offset >= 0 ? '+' : '-';
@@ -91,6 +95,15 @@ function RibbonField({ label, children }: { label: string; children: ReactNode }
   );
 }
 
+function GraphsRibbon() {
+  return (
+    <div className="auction-ribbon-placeholder">
+      <strong>Глобальные графики цен</strong>
+      <span>Глобальный график применяется только к обычным синим папкам. Планируемые фиолетовые папки используют фиксированные цены.</span>
+    </div>
+  );
+}
+
 export function AuctionRibbon({
   activeTab,
   selectedFolder,
@@ -117,7 +130,7 @@ export function AuctionRibbon({
   onOpenDownload
 }: AuctionRibbonProps) {
   const hasFolder = Boolean(selectedFolder);
-  const priceMode = selectedFolder?.priceMode ?? 'graph';
+  const isPlanned = selectedFolder?.category === 'planned';
 
   return (
     <div className="auction-ribbon" aria-label="auction-ribbon">
@@ -135,6 +148,7 @@ export function AuctionRibbon({
       </div>
 
       <div className="auction-ribbon-content">
+        {activeTab === 'graphs' ? <GraphsRibbon /> : null}
         {activeTab === 'auctions' ? (
           <>
             <RibbonGroup title="Создание">
@@ -148,7 +162,7 @@ export function AuctionRibbon({
               <RibbonField label="Валюта">
                 <select value={selectedFolder?.currency ?? 'DONATE'} disabled={!hasFolder} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
                   {auctionCurrencies.map((currency) => (
-                    <option key={currency} value={currency}>{currency} · {auctionCurrencyLabels[currency]}</option>
+                    <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>
                   ))}
                 </select>
               </RibbonField>
@@ -166,10 +180,10 @@ export function AuctionRibbon({
             </RibbonGroup>
 
             <RibbonGroup title="Цены">
-              <RibbonButton icon="G" label="По графику" disabled={!hasFolder} title="Цены считаются через множитель графика" onClick={() => onPriceModeChange('graph')} />
-              <RibbonButton icon="M" label="Вручную" disabled={!hasFolder} title="Цены задаются для каждого предмета" onClick={() => onPriceModeChange('manual')} />
+              <RibbonButton icon="G" label="По графику" disabled={!hasFolder || isPlanned} title="Глобальный график применяется только к обычным папкам" onClick={() => onPriceModeChange('graph')} />
+              <RibbonButton icon="M" label="Вручную" disabled={!hasFolder} onClick={() => onPriceModeChange('manual')} />
               <RibbonButton icon="A" label="Применить к дню" disabled={!hasFolder} onClick={onApplyDayDefaults} />
-              <RibbonButton icon="S" label="Сбросить цены" disabled={!hasFolder || priceMode === 'manual'} onClick={onResetPrices} />
+              <RibbonButton icon="S" label="Сбросить цены" disabled={!hasFolder || isPlanned} onClick={onResetPrices} />
             </RibbonGroup>
 
             <RibbonGroup title="Лоты">
@@ -187,10 +201,9 @@ export function AuctionRibbon({
             </RibbonGroup>
 
             <RibbonGroup title="Команды">
-              <RibbonButton icon="N" label="Новые" disabled={!hasFolder} title="Сначала создать пустые слоты через /aca create" onClick={() => onWorkflowModeChange('install')} />
-              <RibbonButton icon="E" label="Существующие" disabled={!hasFolder} title="Пропустить /aca create и работать от введённых ID" onClick={() => onWorkflowModeChange('existing')} />
+              <RibbonButton icon="N" label="Новые" disabled={!hasFolder} onClick={() => onWorkflowModeChange('install')} />
+              <RibbonButton icon="E" label="Существующие" disabled={!hasFolder} onClick={() => onWorkflowModeChange('existing')} />
               <RibbonButton icon=">" label="Генерировать" disabled={!hasFolder} onClick={() => onSetCommandStage('create')} />
-              <RibbonButton icon="CP" label="Копировать" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
               <RibbonButton icon="DL" label="Скачать файл" disabled={!hasFolder} onClick={onOpenDownload} />
               <RibbonButton icon="SH" label="Показать команды" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
               <RibbonButton icon="!" label="Проверить ошибки" disabled={!hasFolder} onClick={onCheckErrors} />
@@ -210,12 +223,13 @@ export function AuctionRibbon({
               <span className="auction-ribbon-status">{uiMode === 'expert' ? 'Экспертный режим' : 'Обычный режим'}</span>
             </RibbonGroup>
           </>
-        ) : (
+        ) : null}
+        {activeTab !== 'auctions' && activeTab !== 'graphs' ? (
           <div className="auction-ribbon-placeholder">
             <strong>{ribbonTabs.find((tab) => tab.id === activeTab)?.label}</strong>
-            <span>Этот раздел ribbon будет наполнен после переноса основной дневной рабочей области.</span>
+            <span>Раздел будет заполнен следующим структурным шагом.</span>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

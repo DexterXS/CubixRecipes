@@ -1,5 +1,5 @@
 import { buildAuctionRunPricePreviews, createDefaultAuctionCurve, localDateTimeInputFromUtcMs, parseLocalDateTime } from './auctionCommands';
-import type { AuctionCurve, AuctionDayFolder, AuctionDraft } from './auctionTypes';
+import type { AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory } from './auctionTypes';
 
 export type AuctionDayFolderSummary = {
   auctionCount: number;
@@ -36,6 +36,10 @@ export function formatAuctionDayTitle(dateLocal: string): string {
   return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(date);
 }
 
+export function categoryTitle(category: AuctionFolderCategory, dateLocal: string): string {
+  return category === 'planned' ? 'Планируемая папка' : formatAuctionDayTitle(dateLocal);
+}
+
 export function createAuctionDraft(index: number, startLocal: string, patch: Partial<AuctionDraft> = {}): AuctionDraft {
   return {
     id: String(index),
@@ -60,6 +64,7 @@ export function createAuctionDraft(index: number, startLocal: string, patch: Par
 export function createAuctionDayFolder(params: {
   id: string;
   dateLocal: string;
+  category?: AuctionFolderCategory;
   timezoneOffsetMinutes?: number;
   auctions?: AuctionDraft[];
   title?: string;
@@ -69,29 +74,32 @@ export function createAuctionDayFolder(params: {
   const timezoneOffsetMinutes = params.timezoneOffsetMinutes ?? defaultTimezoneOffset();
   const defaultDurationMinutes = params.defaultDurationMinutes ?? 10;
   const defaultStepPrice = params.defaultStepPrice ?? 10;
+  const category = params.category ?? 'regular';
   const auctions = params.auctions ?? [
     createAuctionDraft(1, localDateTimeForDay(params.dateLocal), {
       durationMinutes: defaultDurationMinutes,
-      baseStepPrice: defaultStepPrice
+      baseStepPrice: defaultStepPrice,
+      repeatEnabled: category === 'planned'
     })
   ];
 
   return {
     id: params.id,
     dateLocal: params.dateLocal,
-    title: params.title ?? formatAuctionDayTitle(params.dateLocal),
+    title: params.title ?? categoryTitle(category, params.dateLocal),
+    category,
     currency: auctions[0]?.currency ?? 'DONATE',
     defaultDurationMinutes,
     defaultStepPrice,
     timezoneOffsetMinutes,
-    priceMode: 'graph',
-    graphMode: 'linear',
+    priceMode: category === 'planned' ? 'manual' : 'graph',
+    graphMode: category === 'planned' ? 'fixed' : 'linear',
     planned: true,
-    repeatEnabled: false,
+    repeatEnabled: category === 'planned',
     repeatEveryDays: 7,
     repeatCount: 1,
     scheduleLeadMinutes: 1,
-    auctions,
+    auctions
   };
 }
 
@@ -110,11 +118,12 @@ function timeFromLocalDateTime(value: string): string {
 }
 
 export function cloneAuctionDayFolder(source: AuctionDayFolder, params: { id: string; dateLocal: string; title?: string }): AuctionDayFolder {
+  const title = params.title ?? categoryTitle(source.category, params.dateLocal);
   return {
     ...source,
     id: params.id,
     dateLocal: params.dateLocal,
-    title: params.title ?? formatAuctionDayTitle(params.dateLocal),
+    title,
     auctions: source.auctions.map((auction, index) => ({
       ...auction,
       id: `${params.id}-auction-${index + 1}`,
@@ -177,7 +186,7 @@ export function summarizeAuctionDayFolder(params: {
   curve?: AuctionCurve;
   graphStartLocal?: string;
 }): AuctionDayFolderSummary {
-  const curve = params.curve ?? createDefaultAuctionCurve();
+  const curve = params.folder.category === 'planned' ? createDefaultAuctionCurve() : (params.curve ?? createDefaultAuctionCurve());
   const graphStartLocal = params.graphStartLocal ?? localDateTimeForDay(params.folder.dateLocal, '00:00');
   const itemCount = params.folder.auctions.reduce((total, auction) => total + auction.items.length, 0);
   const nbtItemCount = params.folder.auctions.reduce((total, auction) => total + auction.items.filter((item) => item.hasNbt).length, 0);
