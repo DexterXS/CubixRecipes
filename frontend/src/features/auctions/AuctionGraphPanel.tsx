@@ -11,7 +11,7 @@ type AuctionGraphPanelProps = {
   curve: AuctionCurve;
   graphStartLocal: string;
   onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
-  onMoveAuction: (currency: AuctionCurrency, folderId: string, auctionId: string, targetDay: number) => void;
+  onMoveFolder: (folderId: string, targetDay: number) => void;
   onOpenAuction: (folderId: string, auctionId: string) => void;
   onDuplicateAuctionFolder: (folderId: string, auctionId: string) => void;
   onSetFolderTag: (folderId: string, tag: AuctionFolderTag | null) => void;
@@ -74,7 +74,7 @@ function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[num
   };
 }
 
-export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint, onMoveAuction, onOpenAuction, onDuplicateAuctionFolder, onSetFolderTag }: AuctionGraphPanelProps) {
+export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint, onMoveFolder, onOpenAuction, onDuplicateAuctionFolder, onSetFolderTag }: AuctionGraphPanelProps) {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyTab>('all');
   const [menu, setMenu] = useState<{ currency: AuctionCurrency; day: number; x: number; y: number } | null>(null);
   const pointsByCurrency = useMemo(() => Object.fromEntries(auctionCurrencies.map((currency) => [
@@ -123,8 +123,8 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
         series={series}
         onMovePoint={onMovePoint}
         onOpenPoint={(currency, day, x, y) => setMenu({ currency, day, x, y })}
-        onDropAuction={(currency, folderId, auctionId, targetDay) => {
-          onMoveAuction(currency, folderId, auctionId, targetDay);
+        onDropFolder={(folderId, targetDay) => {
+          onMoveFolder(folderId, targetDay);
           setMenu(null);
         }}
       />
@@ -138,9 +138,19 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
           <div className="auction-graph-point-menu-list">
             {activeMenuGroups.map((group) => (
               <section key={group.folderId} className="auction-graph-point-menu-folder">
-                <header className="auction-graph-point-menu-folder-header">
+                <header
+                  className="auction-graph-point-menu-folder-header"
+                  draggable={group.folderCategory !== 'planned'}
+                  onDragStart={(event) => {
+                    if (group.folderCategory === 'planned') return;
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('application/x-auction-graph-folder', JSON.stringify({
+                      folderId: group.folderId
+                    }));
+                  }}
+                >
                   <div>
-                    <span>{group.folderCategory === 'planned' ? 'Статическая папка' : 'Папка'}</span>
+                    <span>{group.folderCategory === 'planned' ? 'Статическая папка' : 'Перетащи папку за этот блок'}</span>
                     <strong>{group.folderTitle}</strong>
                     <small>{group.auctions.length} лот(ов)</small>
                   </div>
@@ -163,19 +173,9 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
                   {group.auctions.map((auction) => (
                     <article
                       key={`${auction.folderId}-${auction.auctionId}-${auction.label}`}
-                      draggable={auction.folderCategory !== 'planned'}
-                      onDragStart={(event) => {
-                        if (auction.folderCategory === 'planned') return;
-                        event.dataTransfer.effectAllowed = 'move';
-                        event.dataTransfer.setData('application/x-auction-graph-auction', JSON.stringify({
-                          currency: menu.currency,
-                          folderId: auction.folderId,
-                          auctionId: auction.auctionId
-                        }));
-                      }}
                     >
                       <div>
-                        <span>{auction.folderCategory === 'planned' ? 'Статично' : 'Можно перетащить на график'}</span>
+                        <span>{auction.folderCategory === 'planned' ? 'Статично' : 'Лот внутри папки'}</span>
                         <strong>{auction.label}</strong>
                         <small>Старт {auction.startPrice} · шаг {auction.stepPrice}</small>
                       </div>

@@ -2,7 +2,7 @@
 import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInputFromUtcMs } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
-import { duplicateAuctionGraphFolder, moveAuctionGraphAuction, moveAuctionGraphPointFolders } from './auctionGraphModel';
+import { duplicateAuctionGraphFolder, moveAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
@@ -180,7 +180,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     if (sourceDay !== targetDay) setDayFolders((current) => moveAuctionGraphPointFolders({ folders: current, currency, sourceDay, targetDay, graphStartLocal }));
   };
 
-  const moveGraphAuction = (currency: AuctionCurrency, folderId: string, auctionId: string, targetDay: number) => setDayFolders((current) => moveAuctionGraphAuction({ folders: current, currency, folderId, auctionId, targetDay, graphStartLocal }));
+  const moveGraphFolder = (folderId: string, targetDay: number) => setDayFolders((current) => moveAuctionGraphFolder({ folders: current, folderId, targetDay, graphStartLocal }));
 
   const duplicateGraphAuctionFolder = (folderId: string, auctionId: string) => {
     setDayFolders((current) => {
@@ -415,7 +415,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
                 curve={curve}
                 graphStartLocal={graphStartLocal}
                 onMovePoint={updateGraphPoint}
-                onMoveAuction={moveGraphAuction}
+                onMoveFolder={moveGraphFolder}
                 onDuplicateAuctionFolder={duplicateGraphAuctionFolder}
                 onSetFolderTag={setGraphFolderTag}
                 onOpenAuction={(folderId, auctionId) => {

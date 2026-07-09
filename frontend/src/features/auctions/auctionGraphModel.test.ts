@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { createDefaultAuctionCurve } from './auctionCommands';
 import { createAuctionDayFolder } from './auctionDayFolders';
-import { buildAuctionGraphPoints, duplicateAuctionGraphFolder, moveAuctionGraphAuction, moveAuctionGraphPointFolders } from './auctionGraphModel';
+import { buildAuctionGraphPoints, duplicateAuctionGraphFolder, moveAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
 
 describe('auction graph model', () => {
   test('shows regular folders as editable points and planned folders as static points', () => {
@@ -38,7 +38,7 @@ describe('auction graph model', () => {
     expect(points[0].auctions[0].folderTag).toBe('green');
   });
 
-  test('moves only editable regular auctions by day while preserving time', () => {
+  test('moves editable regular folders by day while preserving auction times', () => {
     const regular = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
     const planned = createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-09', category: 'planned' });
 
@@ -51,31 +51,33 @@ describe('auction graph model', () => {
     });
 
     expect(moved[0].dateLocal).toBe('2026-07-12');
+    expect(moved[0].title).toBe('12 июля');
     expect(moved[0].auctions[0].startLocal).toBe('2026-07-12T10:00');
     expect(moved[1].dateLocal).toBe('2026-07-09');
     expect(moved[1].auctions[0].startLocal).toBe('2026-07-09T10:00');
   });
 
-  test('moves one auction out of a merged point without moving siblings', () => {
+  test('moves a whole folder out of a merged point and renames it to the graph day', () => {
     const folder = createAuctionDayFolder({
       id: 'day-1',
       dateLocal: '2026-07-09',
+      title: '9 июля',
       auctions: [
         { ...createAuctionDayFolder({ id: 'a', dateLocal: '2026-07-09' }).auctions[0], id: '1' },
         { ...createAuctionDayFolder({ id: 'b', dateLocal: '2026-07-09' }).auctions[0], id: '2' }
       ]
     });
 
-    const moved = moveAuctionGraphAuction({
+    const moved = moveAuctionGraphFolder({
       folders: [folder],
-      currency: 'DONATE',
       folderId: 'day-1',
-      auctionId: '2',
       targetDay: 4,
       graphStartLocal: '2026-07-08T00:00'
     });
 
-    expect(moved[0].auctions[0].startLocal).toBe('2026-07-09T10:00');
+    expect(moved[0].dateLocal).toBe('2026-07-12');
+    expect(moved[0].title).toBe('12 июля');
+    expect(moved[0].auctions[0].startLocal).toBe('2026-07-12T10:00');
     expect(moved[0].auctions[1].startLocal).toBe('2026-07-12T10:00');
   });
 

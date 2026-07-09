@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { getAuctionPlannerState, saveAuctionPlannerState } from '../../services/api/auctions';
+import { dateInputFromLocalDateTime, formatAuctionDayTitle } from './auctionDayFolders';
 import type { AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 
 type AuctionPlannerPersistenceParams = {
@@ -44,6 +45,16 @@ function normalizeLoadedFolder(folder: AuctionDayFolder): AuctionDayFolder {
   };
   normalizedFolder.auctions = (Array.isArray(folder.auctions) ? folder.auctions : [])
     .map((auction) => normalizeLoadedAuction(auction, normalizedFolder));
+  const auctionDates = new Set(normalizedFolder.auctions.map((auction) => dateInputFromLocalDateTime(auction.startLocal)).filter(Boolean));
+  const [auctionDateLocal] = Array.from(auctionDates);
+  if (normalizedFolder.category !== 'planned' && auctionDates.size === 1 && auctionDateLocal) {
+    const previousTitle = normalizedFolder.title;
+    const previousDateTitle = formatAuctionDayTitle(normalizedFolder.dateLocal);
+    normalizedFolder.dateLocal = auctionDateLocal;
+    if (!previousTitle || previousTitle === previousDateTitle) {
+      normalizedFolder.title = formatAuctionDayTitle(auctionDateLocal);
+    }
+  }
   return normalizedFolder;
 }
 

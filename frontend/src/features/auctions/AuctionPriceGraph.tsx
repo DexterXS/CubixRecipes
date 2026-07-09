@@ -34,7 +34,7 @@ type AuctionPriceGraphProps = {
   series: AuctionPriceGraphSeries[];
   onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
   onOpenPoint: (currency: AuctionCurrency, day: number, x: number, y: number) => void;
-  onDropAuction: (currency: AuctionCurrency, folderId: string, auctionId: string, targetDay: number) => void;
+  onDropFolder: (folderId: string, targetDay: number) => void;
 };
 
 const width = 760;
@@ -126,7 +126,7 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropAuction }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropFolder }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
 
@@ -160,15 +160,15 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropAuct
       onPointerUp={() => { dragRef.current = null; }}
       onPointerCancel={() => { dragRef.current = null; }}
       onDragOver={(event) => {
-        if (event.dataTransfer.types.includes('application/x-auction-graph-auction')) event.preventDefault();
+        if (event.dataTransfer.types.includes('application/x-auction-graph-folder')) event.preventDefault();
       }}
       onDrop={(event) => {
-        const raw = event.dataTransfer.getData('application/x-auction-graph-auction');
+        const raw = event.dataTransfer.getData('application/x-auction-graph-folder');
         const point = pointerToGraph(event.clientX, event.clientY);
         if (!raw || !point) return;
         event.preventDefault();
-        const payload = JSON.parse(raw) as { currency: AuctionCurrency; folderId: string; auctionId: string };
-        onDropAuction(payload.currency, payload.folderId, payload.auctionId, dayFromX(point.x));
+        const payload = JSON.parse(raw) as { folderId: string };
+        onDropFolder(payload.folderId, dayFromX(point.x));
       }}
     >
       <defs>

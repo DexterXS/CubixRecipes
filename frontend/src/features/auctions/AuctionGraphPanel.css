@@ -223,6 +223,14 @@
   white-space: nowrap;
 }
 
+.auction-graph-point-menu-folder-header[draggable="true"] {
+  cursor: grab;
+}
+
+.auction-graph-point-menu-folder-header[draggable="true"]:active {
+  cursor: grabbing;
+}
+
 .auction-graph-point-menu-auctions {
   display: grid;
   gap: 6px;
@@ -241,14 +249,6 @@
 
 .auction-graph-point-menu-auctions article {
   background: rgba(4, 14, 33, 0.46);
-}
-
-.auction-graph-point-menu-list article[draggable="true"] {
-  cursor: grab;
-}
-
-.auction-graph-point-menu-list article[draggable="true"]:active {
-  cursor: grabbing;
 }
 
 .auction-graph-point-menu-list article button {

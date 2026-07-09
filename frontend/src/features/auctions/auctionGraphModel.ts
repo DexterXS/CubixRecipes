@@ -35,6 +35,29 @@ function graphDateLabel(startLocal: string) {
   return time ? `${formatted}, ${time}` : formatted;
 }
 
+function timeFromLocalDateTime(value: string) {
+  return value.includes('T') ? value.slice(11, 16) : '10:00';
+}
+
+function dateLocalForGraphDay(graphStartLocal: string, day: number) {
+  return dateInputFromLocalDateTime(addDaysToLocalDateTime(graphStartLocal, day));
+}
+
+function moveFolderToGraphDay(folder: AuctionDayFolder, targetDay: number, graphStartLocal: string): AuctionDayFolder {
+  if (folder.category === 'planned') return folder;
+  const nextDateLocal = dateLocalForGraphDay(graphStartLocal, targetDay);
+
+  return {
+    ...folder,
+    dateLocal: nextDateLocal,
+    title: formatAuctionDayTitle(nextDateLocal),
+    auctions: folder.auctions.map((auction) => ({
+      ...auction,
+      startLocal: localDateTimeForDay(nextDateLocal, timeFromLocalDateTime(auction.startLocal))
+    }))
+  };
+}
+
 export function getRegularAuctionFolders(folders: AuctionDayFolder[]) {
   return folders.filter((folder) => folder.category !== 'planned');
 }
@@ -101,52 +124,24 @@ export function moveAuctionGraphPointFolders(params: {
   return params.folders.map((folder) => {
     if (folder.category === 'planned') return folder;
 
-    let movedAuctionCount = 0;
-    const auctions = folder.auctions.map((auction) => {
+    const hasSourceAuction = folder.auctions.some((auction) => {
       const auctionDay = dayIndexFromStart(auction.startLocal, params.graphStartLocal);
-      if (auction.currency !== params.currency || auctionDay !== params.sourceDay) return auction;
-      movedAuctionCount += 1;
-      return { ...auction, startLocal: addDaysToLocalDateTime(auction.startLocal, deltaDays) };
+      return auction.currency === params.currency && auctionDay === params.sourceDay;
     });
 
-    if (!movedAuctionCount) return folder;
-
-    const folderDay = dayIndexFromStart(localDateTimeForDay(folder.dateLocal, '00:00'), params.graphStartLocal);
-    const nextDateLocal = folderDay === params.sourceDay
-      ? dateInputFromLocalDateTime(addDaysToLocalDateTime(localDateTimeForDay(folder.dateLocal, '00:00'), deltaDays))
-      : folder.dateLocal;
-
-    return {
-      ...folder,
-      dateLocal: nextDateLocal,
-      title: folder.title === formatAuctionDayTitle(folder.dateLocal) ? formatAuctionDayTitle(nextDateLocal) : folder.title,
-      auctions
-    };
+    return hasSourceAuction ? moveFolderToGraphDay(folder, params.targetDay, params.graphStartLocal) : folder;
   });
 }
 
-export function moveAuctionGraphAuction(params: {
+export function moveAuctionGraphFolder(params: {
   folders: AuctionDayFolder[];
-  currency: AuctionCurrency;
   folderId: string;
-  auctionId: string;
   targetDay: number;
   graphStartLocal: string;
 }): AuctionDayFolder[] {
   return params.folders.map((folder) => {
     if (folder.id !== params.folderId || folder.category === 'planned') return folder;
-
-    let changed = false;
-    const auctions = folder.auctions.map((auction) => {
-      if (auction.id !== params.auctionId || auction.currency !== params.currency) return auction;
-      const sourceDay = dayIndexFromStart(auction.startLocal, params.graphStartLocal);
-      const deltaDays = params.targetDay - sourceDay;
-      if (!deltaDays) return auction;
-      changed = true;
-      return { ...auction, startLocal: addDaysToLocalDateTime(auction.startLocal, deltaDays) };
-    });
-
-    return changed ? { ...folder, auctions } : folder;
+    return moveFolderToGraphDay(folder, params.targetDay, params.graphStartLocal);
   });
 }
 

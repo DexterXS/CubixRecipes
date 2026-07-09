@@ -465,7 +465,7 @@ Last full rebuild: 2026-06-29
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
-  - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, dragging one auction out of a merged point, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
+  - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, dragging whole folders out of merged points, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
 - `frontend/src/features/auctions/auctionFolderTags.ts`
   - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
@@ -550,7 +550,7 @@ Last full rebuild: 2026-06-29
 - Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
 - Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
 - Auction lot first-item naming and item ordering helpers are covered by `frontend/src/features/auctions/auctionLotItems.test.ts`.
-- Auction graph point aggregation, tags, day movement, merged-point separation, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
+- Auction graph point aggregation, tags, day movement, folder-level merged-point movement, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
 - Auction graph point folder-count labels and point-menu folder grouping are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
 - Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
