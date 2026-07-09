@@ -52,6 +52,37 @@
   background: rgba(24, 95, 190, 0.34);
 }
 
+.auction-graph-wipe-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid rgba(104, 142, 204, 0.18);
+  border-radius: 8px;
+  background: rgba(8, 27, 60, 0.34);
+  padding: 9px 10px;
+}
+
+.auction-graph-wipe-controls label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.auction-graph-wipe-controls input {
+  min-height: 32px;
+  border: 1px solid rgba(104, 142, 204, 0.28);
+  border-radius: 6px;
+  background: rgba(4, 14, 33, 0.76);
+  color: var(--text);
+  padding: 5px 8px;
+}
+
+.auction-graph-wipe-controls > span {
+  color: #b9cff0;
+}
+
 .auction-graph-legend {
   display: flex;
   gap: 10px;
@@ -100,6 +131,22 @@
   opacity: 0.58;
 }
 
+.auction-graph-month-separator {
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1.4;
+  stroke-dasharray: 6 7;
+}
+
+.auction-graph-month-label {
+  text-anchor: middle;
+  fill: #c9dcfb;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
 .auction-graph-line {
   stroke: currentColor;
   stroke-width: 3;
@@ -111,6 +158,20 @@
 
 .auction-graph-fill {
   stroke: none;
+}
+
+.auction-graph-duration-line {
+  stroke: #ffb85c;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.72;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(255, 184, 92, 0.48));
+}
+
+.auction-graph-duration-line.readonly {
+  stroke-dasharray: 5 5;
+  opacity: 0.48;
 }
 
 .auction-graph-point {
@@ -127,15 +188,6 @@
   stroke-dasharray: 3 3;
   cursor: context-menu;
   filter: drop-shadow(0 0 6px currentColor);
-}
-
-.auction-graph-day {
-  text-anchor: middle;
-  fill: #bcd0f2;
-  paint-order: stroke;
-  stroke: #061126;
-  stroke-width: 5px;
-  stroke-linejoin: round;
 }
 
 .auction-graph-point-count {

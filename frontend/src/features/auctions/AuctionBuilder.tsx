@@ -24,7 +24,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
   const [idMode] = useState<AuctionItemIdMode>('raw');
   const [commandPlayer] = useState('@p');
-  const [graphStartLocal, setGraphStartLocal] = useState(() => localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()));
+  const [graphStartLocal, setGraphStartLocal] = useState(() => `${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).slice(0, 10)}T00:00`);
   const [dayFolders, setDayFolders] = useState<AuctionDayFolder[]>(() => [createInitialAuctionDayFolder(now, defaultTimezoneOffset())]);
   const [selectedDayFolderId, setSelectedDayFolderId] = useState('day-1');
   const [selectedAuctionId, setSelectedAuctionId] = useState('1');
@@ -52,7 +52,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     return itemOptions.filter((item) => `${item.raw} ${item.title} ${item.legacyId ?? ''}`.toLowerCase().includes(query)).slice(0, 120);
   }, [itemOptions, itemSearch]);
   const selectedAuctionFull = selectedAuction ? selectedAuction.items.length >= maxItemsPerAuction : false;
-
   useAuctionPlannerPersistence({
     dayFolders,
     selectedDayFolderId: selectedDayFolder?.id ?? selectedDayFolderId,
@@ -418,6 +417,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
                 folders={dayFolders}
                 curve={curve}
                 graphStartLocal={graphStartLocal}
+                onGraphStartLocalChange={setGraphStartLocal}
                 onMovePoint={updateGraphPoint}
                 onDuplicateAuctionFolder={duplicateGraphAuctionFolder}
                 onSetFolderTag={setGraphFolderTag}

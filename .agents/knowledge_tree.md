@@ -465,12 +465,15 @@ Last full rebuild: 2026-06-29
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
+  - Also owns the wipe-start date control and approximate wipe-end window shown above the graph.
   - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
 - `frontend/src/features/auctions/auctionFolderTags.ts`
   - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
+  - Also aggregates per-point auction duration spans for graph occupancy rendering.
   - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
+  - Also renders three calendar zones, date-range x-axis labels, and duration occupancy lines.
   - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally through a local preview with pointer grab-offset preservation; release commits the last visible preview state, while expensive app state and placement checks run once on pointerup.
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
   - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.

@@ -10,6 +10,7 @@ type AuctionGraphPanelProps = {
   folders: AuctionDayFolder[];
   curve: AuctionCurve;
   graphStartLocal: string;
+  onGraphStartLocalChange: (value: string) => void;
   onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => number;
   onOpenAuction: (folderId: string, auctionId: string) => void;
   onDuplicateAuctionFolder: (folderId: string, auctionId: string) => void;
@@ -26,6 +27,31 @@ const currencyColors: Record<AuctionCurrency, string> = {
 
 function percent(value: number) {
   return `${Math.round(value * 100)}%`;
+}
+
+function graphDateInput(value: string) {
+  return value.slice(0, 10);
+}
+
+function dateFromInput(value: string, dayOffset: number) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const [, year, month, day] = match;
+  return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day) + dayOffset));
+}
+
+function formatDate(value: Date | null) {
+  if (!value) return '-';
+  return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(value).replace('.', '');
+}
+
+function wipeEndSummary(graphStartLocal: string) {
+  const startDate = graphDateInput(graphStartLocal);
+  return {
+    target: formatDate(dateFromInput(startDate, 90)),
+    early: formatDate(dateFromInput(startDate, 76)),
+    late: formatDate(dateFromInput(startDate, 104))
+  };
 }
 
 export function groupPointAuctionsByFolder(auctions: AuctionGraphPointAuction[]) {
@@ -58,6 +84,8 @@ function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[num
     dateLabel: point.dateLabel,
     editable: point.editable,
     value: point.value,
+    durationEndDay: point.durationEndDay,
+    durationLabel: point.durationLabel,
     color: point.tag ? auctionFolderTagColors[point.tag] : null,
     details: point.auctions.map((auction) => ({
       folderId: auction.folderId,
@@ -73,9 +101,10 @@ function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[num
   };
 }
 
-export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint, onOpenAuction, onDuplicateAuctionFolder, onSetFolderTag }: AuctionGraphPanelProps) {
+export function AuctionGraphPanel({ folders, curve, graphStartLocal, onGraphStartLocalChange, onMovePoint, onOpenAuction, onDuplicateAuctionFolder, onSetFolderTag }: AuctionGraphPanelProps) {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyTab>('all');
   const [menu, setMenu] = useState<{ currency: AuctionCurrency; day: number; x: number; y: number } | null>(null);
+  const wipeWindow = wipeEndSummary(graphStartLocal);
   const pointsByCurrency = useMemo(() => Object.fromEntries(auctionCurrencies.map((currency) => [
     currency,
     buildAuctionGraphPoints({ folders, curve, graphStartLocal, currency })
@@ -112,6 +141,20 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
         ))}
       </div>
 
+      <div className="auction-graph-wipe-controls" onClick={(event) => event.stopPropagation()}>
+        <label>
+          <span>Дата вайпа</span>
+          <input
+            type="date"
+            value={graphDateInput(graphStartLocal)}
+            onChange={(event) => {
+              if (event.target.value) onGraphStartLocalChange(`${event.target.value}T00:00`);
+            }}
+          />
+        </label>
+        <span>Ориентир конца: {wipeWindow.target}. Окно: {wipeWindow.early} - {wipeWindow.late}</span>
+      </div>
+
       <div className="auction-graph-legend">
         {visibleCurrencies.map((currency) => (
           <span key={currency}><i style={{ background: currencyColors[currency] }} />{currency} · первая точка {percent(curve[currency][series.find((item) => item.currency === currency)?.points[0]?.day ?? 0] ?? 1)}</span>
@@ -120,6 +163,7 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
 
       <AuctionPriceGraph
         series={series}
+        graphStartLocal={graphStartLocal}
         onMovePoint={onMovePoint}
         onOpenPoint={(currency, day, x, y) => setMenu({ currency, day, x, y })}
       />

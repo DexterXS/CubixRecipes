@@ -53,6 +53,24 @@ describe('auction graph model', () => {
     expect(points.map((point) => [point.day, point.value])).toEqual([[1, 2.38]]);
   });
 
+  test('adds a duration span to graph points', () => {
+    const curve = createDefaultAuctionCurve();
+    const folder = createAuctionDayFolder({
+      id: 'day-1',
+      dateLocal: '2026-07-09',
+      defaultDurationMinutes: 3 * 24 * 60
+    });
+
+    const points = buildAuctionGraphPoints({
+      folders: [folder],
+      curve,
+      graphStartLocal: '2026-07-08T00:00',
+      currency: 'DONATE'
+    });
+
+    expect(points.map((point) => [point.day, point.durationEndDay, point.durationLabel])).toEqual([[1, 4, '3 дн.']]);
+  });
+
   test('moves editable regular folders by day while preserving auction times', () => {
     const regular = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
     const planned = createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-09', category: 'planned' });

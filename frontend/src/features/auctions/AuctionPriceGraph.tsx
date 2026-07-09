@@ -18,6 +18,8 @@ export type AuctionPriceGraphPoint = {
   dateLabel: string;
   editable: boolean;
   value: number;
+  durationEndDay: number;
+  durationLabel: string;
   color: string | null;
   details: AuctionPriceGraphPointDetail[];
 };
@@ -32,12 +34,13 @@ export type AuctionPriceGraphSeries = {
 
 type AuctionPriceGraphProps = {
   series: AuctionPriceGraphSeries[];
+  graphStartLocal: string;
   onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => number;
   onOpenPoint: (currency: AuctionCurrency, day: number, x: number, y: number) => void;
 };
 
 const width = 760;
-const height = 260;
+const height = 280;
 const padding = 28;
 const minValue = 0.2;
 const maxValue = 3;
@@ -93,12 +96,36 @@ function percentLabel(value: number) {
   return percent > 0 ? `+${percent}%` : `${percent}%`;
 }
 
+function graphDateAtDay(graphStartLocal: string, day: number) {
+  const match = graphStartLocal.slice(0, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const [, year, month, dayOfMonth] = match;
+  return new Date(Date.UTC(Number(year), Number(month) - 1, Number(dayOfMonth) + day));
+}
+
+function formatGraphDate(value: Date | null) {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(value).replace('.', '');
+}
+
+function buildGraphMonthZones(graphStartLocal: string) {
+  return [
+    { start: 0, end: 29 },
+    { start: 30, end: 59 },
+    { start: 60, end: 89 }
+  ].map((zone) => ({
+    ...zone,
+    label: `${formatGraphDate(graphDateAtDay(graphStartLocal, zone.start))} - ${formatGraphDate(graphDateAtDay(graphStartLocal, zone.end))}`
+  }));
+}
+
 export function countAuctionGraphPointFolders(point: Pick<AuctionPriceGraphPoint, 'details'>) {
   return new Set(point.details.map((detail) => detail.folderId)).size;
 }
 
 function pointTitle(point: AuctionPriceGraphPoint, value: number) {
   const rows = [`${point.dateLabel} · D${point.day + 1} · ${percentLabel(value)}`];
+  if (point.durationLabel) rows.push(`Длительность: ${point.durationLabel}`);
   point.details.forEach((detail) => {
     const tag = detail.folderTagLabel ? ` [${detail.folderTagLabel}]` : '';
     rows.push(`${detail.folderTitle}${tag}: ${detail.label}, старт ${detail.startPrice}, шаг ${detail.stepPrice}`);
@@ -141,7 +168,7 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ series, graphStartLocal, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
   const dragPreviewRef = useRef<DragState | null>(null);
@@ -255,6 +282,9 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       </defs>
       <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} />
       <line x1={padding} y1={padding} x2={padding} y2={height - padding} />
+      {[30, 60].map((day) => (
+        <line key={day} className="auction-graph-month-separator" x1={xForDay(day)} y1={padding} x2={xForDay(day)} y2={height - padding} />
+      ))}
       {[0.5, 1, 1.5, 2, 2.5, 3].map((value) => (
         <g key={value}>
           <line className="auction-graph-grid" x1={padding} y1={yForValue(value)} x2={width - padding} y2={yForValue(value)} />
@@ -280,10 +310,22 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
               const renderDay = isPreviewPoint ? dragPreview.day : point.day;
               const previewValue = isPreviewPoint ? dragPreview.value : null;
               const value = previewValue ?? (point.editable ? (item.values[point.day] ?? 1) : point.value);
+              const durationSpan = Math.max(0, point.durationEndDay - point.day);
+              const durationEndDay = Math.min(89, renderDay + durationSpan);
+              const hasDuration = durationEndDay > renderDay;
               const folderCount = countAuctionGraphPointFolders(point);
               return (
                 <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'} style={{ color: point.color ?? item.color }}>
                   <title>{pointTitle(point, value)}</title>
+                  {hasDuration ? (
+                    <line
+                      className={point.editable ? 'auction-graph-duration-line' : 'auction-graph-duration-line readonly'}
+                      x1={xForDay(renderDay)}
+                      y1={yForValue(value)}
+                      x2={xForDay(durationEndDay)}
+                      y2={yForValue(value)}
+                    />
+                  ) : null}
                   <circle
                     className="auction-graph-point"
                     cx={xForDay(renderDay)}
@@ -299,13 +341,17 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
                   <text className="auction-graph-point-count" x={xForDay(renderDay)} y={Math.max(18, yForValue(value) - 12)}>
                     {folderCount > 1 ? `x${folderCount}` : percentLabel(value)}
                   </text>
-                  <text className="auction-graph-day" x={xForDay(renderDay)} y={height - 10}>D{renderDay + 1}</text>
                 </g>
               );
             })}
           </g>
         );
       })}
+      {buildGraphMonthZones(graphStartLocal).map((zone) => (
+        <text key={zone.start} className="auction-graph-month-label" x={(xForDay(zone.start) + xForDay(zone.end)) / 2} y={height - 8}>
+          {zone.label}
+        </text>
+      ))}
     </svg>
   );
 }

@@ -1,4 +1,4 @@
-import { addDaysToLocalDateTime, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart } from './auctionCommands';
+import { addDaysToLocalDateTime, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart, parseLocalDateTime } from './auctionCommands';
 import { categoryTitle, dateInputFromLocalDateTime, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal } from './auctionDayFolders';
 import type { AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionFolderCategory, AuctionFolderTag } from './auctionTypes';
 
@@ -21,6 +21,8 @@ export type AuctionGraphPoint = {
   dateLabel: string;
   editable: boolean;
   value: number;
+  durationEndDay: number;
+  durationLabel: string;
   tag: AuctionFolderTag | null;
   auctions: AuctionGraphPointAuction[];
 };
@@ -45,6 +47,18 @@ function dateLocalForGraphDay(graphStartLocal: string, day: number) {
 
 function graphFolderKey(folder: AuctionDayFolder) {
   return `${folder.category}:${folder.currency}`;
+}
+
+function durationDays(startLocal: string, endLocal: string) {
+  const startMs = parseLocalDateTime(startLocal);
+  const endMs = parseLocalDateTime(endLocal);
+  if (startMs === null || endMs === null || endMs <= startMs) return 0;
+  return (endMs - startMs) / 86_400_000;
+}
+
+function formatDurationLabel(days: number) {
+  if (days >= 1) return `${Math.ceil(days)} дн.`;
+  return `${Math.max(1, Math.round(days * 24))} ч.`;
 }
 
 function canPlaceGraphFolders(params: {
@@ -110,11 +124,20 @@ export function buildAuctionGraphPoints(params: {
           dateLabel: graphDateLabel(preview.startLocal),
           editable: false,
           value: preview.multiplier,
+          durationEndDay: preview.dayIndex,
+          durationLabel: '',
           tag: null,
           auctions: []
         };
+        const days = durationDays(preview.startLocal, preview.endLocal);
+        const visibleDays = Math.max(days, days > 0 ? 0.5 : 0);
+        const durationEndDay = Math.min(89, preview.dayIndex + visibleDays);
         current.editable = current.editable || editable;
         if (editable) current.value = params.curve[params.currency]?.[preview.dayIndex] ?? preview.multiplier;
+        if (durationEndDay > current.durationEndDay) {
+          current.durationEndDay = durationEndDay;
+          current.durationLabel = days > 0 ? formatDurationLabel(days) : '';
+        }
         current.tag = current.tag ?? folder.tag ?? null;
         current.auctions.push({
           folderId: folder.id,

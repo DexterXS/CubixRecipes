@@ -8,6 +8,7 @@
 - Changed the Auctions ribbon so each top tab shows only its relevant groups instead of dumping creation, prices, lots, IDs, commands, planner, and mode controls together.
 - Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
 - Updated Auctions graphs to show all currencies together or one currency at a time, include static planned-folder points, show point dates on hover, open auction lists from graph points with right click, and allow editable points to move by day and percentage.
+- Added Auctions graph wipe-date controls, three 30-day calendar zones with date-range labels, and per-point duration lines that show how long auction lots occupy the wipe timeline.
 - Improved Auctions graph readability in dark theme with brighter SVG labels, label backplates, clearer grid contrast, and cleaner point captions.
 - Added graph point management for merged auction dates: right-click lists folders/auctions, graph points can be moved by day/percentage, auctions can be opened for editing or duplicated into a new folder, and folders can receive one color tag that tints graph points.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
