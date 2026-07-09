@@ -9,7 +9,7 @@
 - Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
 - Updated Auctions graphs to show all currencies together or one currency at a time, include static planned-folder points, show point dates on hover, open auction lists from graph points with right click, and allow editable points to move by day and percentage.
 - Improved Auctions graph readability in dark theme with brighter SVG labels, label backplates, clearer grid contrast, and cleaner point captions.
-- Added graph point management for merged auction dates: right-click lists folders/auctions, whole folders can be dragged to another day, auctions can be opened for editing or duplicated into a new folder, and folders can receive one color tag that tints graph points.
+- Added graph point management for merged auction dates: right-click lists folders/auctions, graph points can be moved by day/percentage, auctions can be opened for editing or duplicated into a new folder, and folders can receive one color tag that tints graph points.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
@@ -55,7 +55,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
-- Fixed Auctions graph drag/drop so merged points can only move whole folders; moved folders now sync their date/title to the target graph day and saved regular folders are repaired on load when their lot dates drifted.
+- Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.
 - Fixed Auctions graph point badges so merged points count unique folders, not auctions inside those folders, and the point context menu now groups lots under their folder.
 - Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
 - Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import type { AuctionCurrency } from './auctionTypes';
 
 export type AuctionPriceGraphPointDetail = {
@@ -32,9 +32,8 @@ export type AuctionPriceGraphSeries = {
 
 type AuctionPriceGraphProps = {
   series: AuctionPriceGraphSeries[];
-  onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => void;
+  onMovePoint: (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => number;
   onOpenPoint: (currency: AuctionCurrency, day: number, x: number, y: number) => void;
-  onDropFolder: (folderId: string, targetDay: number) => void;
 };
 
 const width = 760;
@@ -126,9 +125,16 @@ function areaPath(linePath: string, points: GraphPoint[]) {
   return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
 }
 
-export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropFolder }: AuctionPriceGraphProps) {
+export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
+  const cleanupDragRef = useRef<(() => void) | null>(null);
+  const onMovePointRef = useRef(onMovePoint);
+  onMovePointRef.current = onMovePoint;
+
+  useEffect(() => () => {
+    cleanupDragRef.current?.();
+  }, []);
 
   const pointerToGraph = (clientX: number, clientY: number) => {
     const rect = svgRef.current?.getBoundingClientRect();
@@ -145,8 +151,28 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropFold
     if (!drag || !point) return;
     const targetDay = dayFromX(point.x);
     const value = Number(valueFromY(point.y).toFixed(2));
-    onMovePoint(drag.currency, drag.day, targetDay, value);
-    dragRef.current = { currency: drag.currency, day: targetDay };
+    const appliedDay = onMovePointRef.current(drag.currency, drag.day, targetDay, value);
+    dragRef.current = { currency: drag.currency, day: appliedDay };
+  };
+
+  const startPointDrag = (event: ReactPointerEvent<SVGCircleElement>, currency: AuctionCurrency, day: number) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    cleanupDragRef.current?.();
+    dragRef.current = { currency, day };
+    const handleMove = (moveEvent: PointerEvent) => updateFromPointer(moveEvent.clientX, moveEvent.clientY);
+    const stopDrag = () => {
+      dragRef.current = null;
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', stopDrag);
+      window.removeEventListener('pointercancel', stopDrag);
+      cleanupDragRef.current = null;
+    };
+    cleanupDragRef.current = stopDrag;
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', stopDrag);
+    window.addEventListener('pointercancel', stopDrag);
+    updateFromPointer(event.clientX, event.clientY);
   };
 
   return (
@@ -156,20 +182,6 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropFold
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label="auction-price-graph"
-      onPointerMove={(event) => updateFromPointer(event.clientX, event.clientY)}
-      onPointerUp={() => { dragRef.current = null; }}
-      onPointerCancel={() => { dragRef.current = null; }}
-      onDragOver={(event) => {
-        if (event.dataTransfer.types.includes('application/x-auction-graph-folder')) event.preventDefault();
-      }}
-      onDrop={(event) => {
-        const raw = event.dataTransfer.getData('application/x-auction-graph-folder');
-        const point = pointerToGraph(event.clientX, event.clientY);
-        if (!raw || !point) return;
-        event.preventDefault();
-        const payload = JSON.parse(raw) as { folderId: string };
-        onDropFolder(payload.folderId, dayFromX(point.x));
-      }}
     >
       <defs>
         {series.map((item) => (
@@ -212,12 +224,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropFold
                       event.preventDefault();
                       onOpenPoint(item.currency, point.day, event.clientX, event.clientY);
                     }}
-                    onPointerDown={(event) => {
-                      if (!point.editable || event.button !== 0) return;
-                      event.currentTarget.setPointerCapture(event.pointerId);
-                      dragRef.current = { currency: item.currency, day: point.day };
-                      updateFromPointer(event.clientX, event.clientY);
-                    }}
+                    onPointerDown={(event) => point.editable && startPointDrag(event, item.currency, point.day)}
                   />
                   <text className="auction-graph-point-count" x={xForDay(point.day)} y={Math.max(18, yForValue(value) - 12)}>
                     {folderCount > 1 ? `x${folderCount}` : percentLabel(value)}

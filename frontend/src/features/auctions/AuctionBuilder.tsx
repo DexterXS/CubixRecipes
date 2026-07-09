@@ -1,8 +1,8 @@
-﻿import { useMemo, useState } from 'react';
+﻿import { useMemo, useRef, useState } from 'react';
 import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInputFromUtcMs } from './auctionCommands';
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
-import { duplicateAuctionGraphFolder, moveAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
+import { duplicateAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
 import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
@@ -33,6 +33,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const [maxItemsPerAuction] = useState(16);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
+  const dayFoldersRef = useRef(dayFolders); dayFoldersRef.current = dayFolders;
 
   const selectedDayFolder = dayFolders.find((folder) => folder.id === selectedDayFolderId) ?? dayFolders[0];
   const auctions = selectedDayFolder?.auctions ?? [];
@@ -176,11 +177,13 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   };
 
   const updateGraphPoint = (currency: AuctionCurrency, sourceDay: number, targetDay: number, value: number) => {
-    setCurve((current) => ({ ...current, [currency]: current[currency].map((point, index) => index === targetDay ? value : point) }));
-    if (sourceDay !== targetDay) setDayFolders((current) => moveAuctionGraphPointFolders({ folders: current, currency, sourceDay, targetDay, graphStartLocal }));
+    const currentFolders = dayFoldersRef.current;
+    const nextFolders = sourceDay === targetDay ? currentFolders : moveAuctionGraphPointFolders({ folders: currentFolders, currency, sourceDay, targetDay, graphStartLocal });
+    const appliedDay = nextFolders === currentFolders ? sourceDay : targetDay;
+    setCurve((current) => ({ ...current, [currency]: current[currency].map((point, index) => index === appliedDay ? value : point) }));
+    if (nextFolders !== currentFolders) { dayFoldersRef.current = nextFolders; setDayFolders(nextFolders); }
+    return appliedDay;
   };
-
-  const moveGraphFolder = (folderId: string, targetDay: number) => setDayFolders((current) => moveAuctionGraphFolder({ folders: current, folderId, targetDay, graphStartLocal }));
 
   const duplicateGraphAuctionFolder = (folderId: string, auctionId: string) => {
     setDayFolders((current) => {
@@ -415,7 +418,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
                 curve={curve}
                 graphStartLocal={graphStartLocal}
                 onMovePoint={updateGraphPoint}
-                onMoveFolder={moveGraphFolder}
                 onDuplicateAuctionFolder={duplicateGraphAuctionFolder}
                 onSetFolderTag={setGraphFolderTag}
                 onOpenAuction={(folderId, auctionId) => {

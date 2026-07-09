@@ -43,6 +43,31 @@ function dateLocalForGraphDay(graphStartLocal: string, day: number) {
   return dateInputFromLocalDateTime(addDaysToLocalDateTime(graphStartLocal, day));
 }
 
+function graphFolderKey(folder: AuctionDayFolder) {
+  return `${folder.category}:${folder.currency}`;
+}
+
+function canPlaceGraphFolders(params: {
+  folders: AuctionDayFolder[];
+  movingFolders: AuctionDayFolder[];
+  targetDateLocal: string;
+}) {
+  const movingIds = new Set(params.movingFolders.map((folder) => folder.id));
+  const movingKeys = new Set<string>();
+  for (const folder of params.movingFolders) {
+    const key = graphFolderKey(folder);
+    if (movingKeys.has(key)) return false;
+    movingKeys.add(key);
+    const hasTargetConflict = params.folders.some((candidate) => (
+      !movingIds.has(candidate.id)
+      && candidate.dateLocal === params.targetDateLocal
+      && graphFolderKey(candidate) === key
+    ));
+    if (hasTargetConflict) return false;
+  }
+  return true;
+}
+
 function moveFolderToGraphDay(folder: AuctionDayFolder, targetDay: number, graphStartLocal: string): AuctionDayFolder {
   if (folder.category === 'planned') return folder;
   const nextDateLocal = dateLocalForGraphDay(graphStartLocal, targetDay);
@@ -121,27 +146,22 @@ export function moveAuctionGraphPointFolders(params: {
   const deltaDays = params.targetDay - params.sourceDay;
   if (!deltaDays) return params.folders;
 
-  return params.folders.map((folder) => {
-    if (folder.category === 'planned') return folder;
-
-    const hasSourceAuction = folder.auctions.some((auction) => {
+  const movingFolders = params.folders.filter((folder) => {
+    if (folder.category === 'planned') return false;
+    return folder.auctions.some((auction) => {
       const auctionDay = dayIndexFromStart(auction.startLocal, params.graphStartLocal);
       return auction.currency === params.currency && auctionDay === params.sourceDay;
     });
-
-    return hasSourceAuction ? moveFolderToGraphDay(folder, params.targetDay, params.graphStartLocal) : folder;
   });
-}
 
-export function moveAuctionGraphFolder(params: {
-  folders: AuctionDayFolder[];
-  folderId: string;
-  targetDay: number;
-  graphStartLocal: string;
-}): AuctionDayFolder[] {
+  const targetDateLocal = dateLocalForGraphDay(params.graphStartLocal, params.targetDay);
+  if (!movingFolders.length || !canPlaceGraphFolders({ folders: params.folders, movingFolders, targetDateLocal })) {
+    return params.folders;
+  }
+
+  const movingIds = new Set(movingFolders.map((folder) => folder.id));
   return params.folders.map((folder) => {
-    if (folder.id !== params.folderId || folder.category === 'planned') return folder;
-    return moveFolderToGraphDay(folder, params.targetDay, params.graphStartLocal);
+    return movingIds.has(folder.id) ? moveFolderToGraphDay(folder, params.targetDay, params.graphStartLocal) : folder;
   });
 }
 
