@@ -56,7 +56,7 @@
 
 ### Fixed
 - Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.
-- Optimized Auctions graph dragging by rendering percentage changes through a local SVG preview and committing expensive planner state only on day changes or drag end.
+- Optimized Auctions graph dragging by rendering movement through a local SVG preview and running the placement check only once on pointer release.
 - Fixed Auctions graph point badges so merged points count unique folders, not auctions inside those folders, and the point context menu now groups lots under their folder.
 - Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
 - Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.

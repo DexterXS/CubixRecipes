@@ -50,9 +50,9 @@ type GraphPoint = {
 
 type DragState = {
   currency: AuctionCurrency;
+  sourceDay: number;
   day: number;
   value: number;
-  blockedDay?: number;
 };
 
 type PendingPointer = {
@@ -161,6 +161,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     const previous = dragPreviewRef.current;
     const samePreview = previous && next
       && previous.currency === next.currency
+      && previous.sourceDay === next.sourceDay
       && previous.day === next.day
       && previous.value === next.value;
     if (samePreview) return;
@@ -174,13 +175,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     if (!drag || !point) return;
     const targetDay = dayFromX(point.x);
     const value = Number(valueFromY(point.y).toFixed(2));
-    let appliedDay = drag.day;
-    let blockedDay = targetDay === drag.day ? undefined : drag.blockedDay;
-    if (targetDay !== drag.day && drag.blockedDay !== targetDay) {
-      appliedDay = onMovePointRef.current(drag.currency, drag.day, targetDay, value);
-      blockedDay = appliedDay === drag.day ? targetDay : undefined;
-    }
-    const next = { currency: drag.currency, day: appliedDay, value, blockedDay };
+    const next = { currency: drag.currency, sourceDay: drag.sourceDay, day: targetDay, value };
     dragRef.current = next;
     updateDragPreview(next);
   };
@@ -210,23 +205,30 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     if (event.button !== 0) return;
     event.preventDefault();
     cleanupDragRef.current?.();
-    dragRef.current = { currency, day, value: 1 };
+    dragRef.current = { currency, sourceDay: day, day, value: 1 };
     const handleMove = (moveEvent: PointerEvent) => schedulePointerUpdate(moveEvent.clientX, moveEvent.clientY);
-    const stopDrag = () => {
-      flushPointerUpdate();
+    const finishDrag = (commit: boolean) => {
+      if (commit) flushPointerUpdate();
+      else {
+        if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+        pendingPointerRef.current = null;
+      }
       const drag = dragRef.current;
-      if (drag) onMovePointRef.current(drag.currency, drag.day, drag.day, drag.value);
+      if (commit && drag) onMovePointRef.current(drag.currency, drag.sourceDay, drag.day, drag.value);
       dragRef.current = null;
       updateDragPreview(null);
       window.removeEventListener('pointermove', handleMove);
-      window.removeEventListener('pointerup', stopDrag);
-      window.removeEventListener('pointercancel', stopDrag);
+      window.removeEventListener('pointerup', commitDrag);
+      window.removeEventListener('pointercancel', cancelDrag);
       cleanupDragRef.current = null;
     };
-    cleanupDragRef.current = stopDrag;
+    const commitDrag = () => finishDrag(true);
+    const cancelDrag = () => finishDrag(false);
+    cleanupDragRef.current = cancelDrag;
     window.addEventListener('pointermove', handleMove);
-    window.addEventListener('pointerup', stopDrag);
-    window.addEventListener('pointercancel', stopDrag);
+    window.addEventListener('pointerup', commitDrag);
+    window.addEventListener('pointercancel', cancelDrag);
     updateFromPointer(event.clientX, event.clientY);
   };
 
@@ -255,7 +257,9 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
         </g>
       ))}
       {series.map((item) => {
-        const activeDays = item.points.map((point) => point.day);
+        const activeDays = item.points.map((point) => (
+          dragPreview?.currency === item.currency && point.day === dragPreview.sourceDay ? dragPreview.day : point.day
+        ));
         const displayValues = dragPreview?.currency === item.currency
           ? item.values.map((value, index) => index === dragPreview.day ? dragPreview.value : value)
           : item.values;
@@ -267,7 +271,9 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
             <path className="auction-graph-fill" d={fill} fill={`url(#auctionGraphFill-${item.currency})`} />
             <path className="auction-graph-line" d={line} />
             {item.points.map((point) => {
-              const previewValue = dragPreview?.currency === item.currency && dragPreview.day === point.day ? dragPreview.value : null;
+              const isPreviewPoint = dragPreview?.currency === item.currency && point.day === dragPreview.sourceDay;
+              const renderDay = isPreviewPoint ? dragPreview.day : point.day;
+              const previewValue = isPreviewPoint ? dragPreview.value : null;
               const value = previewValue ?? (point.editable ? (item.values[point.day] ?? 1) : point.value);
               const folderCount = countAuctionGraphPointFolders(point);
               return (
@@ -275,7 +281,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
                   <title>{pointTitle(point, value)}</title>
                   <circle
                     className="auction-graph-point"
-                    cx={xForDay(point.day)}
+                    cx={xForDay(renderDay)}
                     cy={yForValue(value)}
                     r={point.editable ? 7 : 6}
                     tabIndex={0}
@@ -285,10 +291,10 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
                     }}
                     onPointerDown={(event) => point.editable && startPointDrag(event, item.currency, point.day)}
                   />
-                  <text className="auction-graph-point-count" x={xForDay(point.day)} y={Math.max(18, yForValue(value) - 12)}>
+                  <text className="auction-graph-point-count" x={xForDay(renderDay)} y={Math.max(18, yForValue(value) - 12)}>
                     {folderCount > 1 ? `x${folderCount}` : percentLabel(value)}
                   </text>
-                  <text className="auction-graph-day" x={xForDay(point.day)} y={height - 10}>D{point.day + 1}</text>
+                  <text className="auction-graph-day" x={xForDay(renderDay)} y={height - 10}>D{renderDay + 1}</text>
                 </g>
               );
             })}
