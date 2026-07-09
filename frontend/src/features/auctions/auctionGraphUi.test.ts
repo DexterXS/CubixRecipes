@@ -1,6 +1,11 @@
 import { describe, expect, test } from 'vitest';
 import { groupPointAuctionsByFolder } from './AuctionGraphPanel';
-import { countAuctionGraphPointFolders, type AuctionPriceGraphPointDetail } from './AuctionPriceGraph';
+import {
+  calculateAuctionGraphDragValue,
+  countAuctionGraphPointFolders,
+  createAuctionGraphGrabOffset,
+  type AuctionPriceGraphPointDetail
+} from './AuctionPriceGraph';
 import type { AuctionGraphPointAuction } from './auctionGraphModel';
 
 function detail(folderId: string): AuctionPriceGraphPointDetail {
@@ -56,5 +61,15 @@ describe('auction graph UI helpers', () => {
       ['day-1', ['auction-1', 'auction-2']],
       ['day-2', ['auction-3']]
     ]);
+  });
+
+  test('keeps graph percentage stable when the pointer starts away from point center', () => {
+    const pointerY = 120;
+    const initialValue = 1.8;
+    const grabOffsetY = createAuctionGraphGrabOffset(pointerY, initialValue);
+
+    expect(calculateAuctionGraphDragValue(pointerY, grabOffsetY)).toBe(initialValue);
+    expect(calculateAuctionGraphDragValue(pointerY + 20, grabOffsetY)).toBeLessThan(initialValue);
+    expect(calculateAuctionGraphDragValue(pointerY - 20, grabOffsetY)).toBeGreaterThan(initialValue);
   });
 });

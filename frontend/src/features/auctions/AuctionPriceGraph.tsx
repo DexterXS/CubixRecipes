@@ -53,6 +53,7 @@ type DragState = {
   sourceDay: number;
   day: number;
   value: number;
+  grabOffsetY: number;
 };
 
 type PendingPointer = {
@@ -77,6 +78,14 @@ function yForValue(value: number) {
 function valueFromY(y: number) {
   const normalized = (height - padding - y) / (height - padding * 2);
   return Math.max(minValue, Math.min(maxValue, minValue + normalized * (maxValue - minValue)));
+}
+
+export function createAuctionGraphGrabOffset(pointerY: number, currentValue: number) {
+  return yForValue(currentValue) - pointerY;
+}
+
+export function calculateAuctionGraphDragValue(pointerY: number, grabOffsetY: number) {
+  return Number(valueFromY(pointerY + grabOffsetY).toFixed(2));
 }
 
 function percentLabel(value: number) {
@@ -174,8 +183,8 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     const point = pointerToGraph(clientX, clientY);
     if (!drag || !point) return;
     const targetDay = dayFromX(point.x);
-    const value = Number(valueFromY(point.y).toFixed(2));
-    const next = { currency: drag.currency, sourceDay: drag.sourceDay, day: targetDay, value };
+    const value = calculateAuctionGraphDragValue(point.y, drag.grabOffsetY);
+    const next = { currency: drag.currency, sourceDay: drag.sourceDay, day: targetDay, value, grabOffsetY: drag.grabOffsetY };
     dragRef.current = next;
     updateDragPreview(next);
   };
@@ -201,11 +210,15 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     if (pending) updateFromPointer(pending.clientX, pending.clientY);
   };
 
-  const startPointDrag = (event: ReactPointerEvent<SVGCircleElement>, currency: AuctionCurrency, day: number) => {
+  const startPointDrag = (event: ReactPointerEvent<SVGCircleElement>, currency: AuctionCurrency, day: number, value: number) => {
     if (event.button !== 0) return;
     event.preventDefault();
     cleanupDragRef.current?.();
-    dragRef.current = { currency, sourceDay: day, day, value: 1 };
+    const graphPoint = pointerToGraph(event.clientX, event.clientY);
+    const grabOffsetY = graphPoint ? createAuctionGraphGrabOffset(graphPoint.y, value) : 0;
+    const initialDrag = { currency, sourceDay: day, day, value, grabOffsetY };
+    dragRef.current = initialDrag;
+    updateDragPreview(initialDrag);
     const handleMove = (moveEvent: PointerEvent) => schedulePointerUpdate(moveEvent.clientX, moveEvent.clientY);
     const finishDrag = (commit: boolean) => {
       if (commit) flushPointerUpdate();
@@ -229,7 +242,6 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     window.addEventListener('pointermove', handleMove);
     window.addEventListener('pointerup', commitDrag);
     window.addEventListener('pointercancel', cancelDrag);
-    updateFromPointer(event.clientX, event.clientY);
   };
 
   return (
@@ -289,7 +301,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
                       event.preventDefault();
                       onOpenPoint(item.currency, point.day, event.clientX, event.clientY);
                     }}
-                    onPointerDown={(event) => point.editable && startPointDrag(event, item.currency, point.day)}
+                    onPointerDown={(event) => point.editable && startPointDrag(event, item.currency, point.day, value)}
                   />
                   <text className="auction-graph-point-count" x={xForDay(renderDay)} y={Math.max(18, yForValue(value) - 12)}>
                     {folderCount > 1 ? `x${folderCount}` : percentLabel(value)}
