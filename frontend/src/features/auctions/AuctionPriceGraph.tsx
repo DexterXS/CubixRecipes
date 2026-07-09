@@ -1,4 +1,4 @@
-import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import type { AuctionCurrency } from './auctionTypes';
 
 export type AuctionPriceGraphPointDetail = {
@@ -51,6 +51,13 @@ type GraphPoint = {
 type DragState = {
   currency: AuctionCurrency;
   day: number;
+  value: number;
+  blockedDay?: number;
+};
+
+type PendingPointer = {
+  clientX: number;
+  clientY: number;
 };
 
 function xForDay(day: number) {
@@ -128,11 +135,16 @@ function areaPath(linePath: string, points: GraphPoint[]) {
 export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionPriceGraphProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
+  const dragPreviewRef = useRef<DragState | null>(null);
+  const pendingPointerRef = useRef<PendingPointer | null>(null);
+  const frameRef = useRef<number | null>(null);
   const cleanupDragRef = useRef<(() => void) | null>(null);
   const onMovePointRef = useRef(onMovePoint);
+  const [dragPreview, setDragPreview] = useState<DragState | null>(null);
   onMovePointRef.current = onMovePoint;
 
   useEffect(() => () => {
+    if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
     cleanupDragRef.current?.();
   }, []);
 
@@ -145,24 +157,67 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     };
   };
 
+  const updateDragPreview = (next: DragState | null) => {
+    const previous = dragPreviewRef.current;
+    const samePreview = previous && next
+      && previous.currency === next.currency
+      && previous.day === next.day
+      && previous.value === next.value;
+    if (samePreview) return;
+    dragPreviewRef.current = next;
+    setDragPreview(next);
+  };
+
   const updateFromPointer = (clientX: number, clientY: number) => {
     const drag = dragRef.current;
     const point = pointerToGraph(clientX, clientY);
     if (!drag || !point) return;
     const targetDay = dayFromX(point.x);
     const value = Number(valueFromY(point.y).toFixed(2));
-    const appliedDay = onMovePointRef.current(drag.currency, drag.day, targetDay, value);
-    dragRef.current = { currency: drag.currency, day: appliedDay };
+    let appliedDay = drag.day;
+    let blockedDay = targetDay === drag.day ? undefined : drag.blockedDay;
+    if (targetDay !== drag.day && drag.blockedDay !== targetDay) {
+      appliedDay = onMovePointRef.current(drag.currency, drag.day, targetDay, value);
+      blockedDay = appliedDay === drag.day ? targetDay : undefined;
+    }
+    const next = { currency: drag.currency, day: appliedDay, value, blockedDay };
+    dragRef.current = next;
+    updateDragPreview(next);
+  };
+
+  const schedulePointerUpdate = (clientX: number, clientY: number) => {
+    pendingPointerRef.current = { clientX, clientY };
+    if (frameRef.current !== null) return;
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null;
+      const pending = pendingPointerRef.current;
+      pendingPointerRef.current = null;
+      if (pending) updateFromPointer(pending.clientX, pending.clientY);
+    });
+  };
+
+  const flushPointerUpdate = () => {
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+    const pending = pendingPointerRef.current;
+    pendingPointerRef.current = null;
+    if (pending) updateFromPointer(pending.clientX, pending.clientY);
   };
 
   const startPointDrag = (event: ReactPointerEvent<SVGCircleElement>, currency: AuctionCurrency, day: number) => {
     if (event.button !== 0) return;
     event.preventDefault();
     cleanupDragRef.current?.();
-    dragRef.current = { currency, day };
-    const handleMove = (moveEvent: PointerEvent) => updateFromPointer(moveEvent.clientX, moveEvent.clientY);
+    dragRef.current = { currency, day, value: 1 };
+    const handleMove = (moveEvent: PointerEvent) => schedulePointerUpdate(moveEvent.clientX, moveEvent.clientY);
     const stopDrag = () => {
+      flushPointerUpdate();
+      const drag = dragRef.current;
+      if (drag) onMovePointRef.current(drag.currency, drag.day, drag.day, drag.value);
       dragRef.current = null;
+      updateDragPreview(null);
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerup', stopDrag);
       window.removeEventListener('pointercancel', stopDrag);
@@ -201,7 +256,10 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       ))}
       {series.map((item) => {
         const activeDays = item.points.map((point) => point.day);
-        const points = controlPoints(item.values, activeDays);
+        const displayValues = dragPreview?.currency === item.currency
+          ? item.values.map((value, index) => index === dragPreview.day ? dragPreview.value : value)
+          : item.values;
+        const points = controlPoints(displayValues, activeDays);
         const line = smoothPath(points);
         const fill = areaPath(line, points);
         return (
@@ -209,7 +267,8 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
             <path className="auction-graph-fill" d={fill} fill={`url(#auctionGraphFill-${item.currency})`} />
             <path className="auction-graph-line" d={line} />
             {item.points.map((point) => {
-              const value = point.editable ? (item.values[point.day] ?? 1) : point.value;
+              const previewValue = dragPreview?.currency === item.currency && dragPreview.day === point.day ? dragPreview.value : null;
+              const value = previewValue ?? (point.editable ? (item.values[point.day] ?? 1) : point.value);
               const folderCount = countAuctionGraphPointFolders(point);
               return (
                 <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'} style={{ color: point.color ?? item.color }}>

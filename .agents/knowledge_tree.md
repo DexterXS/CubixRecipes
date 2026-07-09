@@ -469,9 +469,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionFolderTags.ts`
   - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
-  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, horizontal point movement shifts editable regular auctions by whole days while preserving local time, and single-auction graph moves/duplicates handle merged points.
+  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
-  - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally.
+  - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally using a local drag preview before committing expensive app state.
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
   - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.
 - `frontend/src/features/auctions/AuctionBuilder.css`

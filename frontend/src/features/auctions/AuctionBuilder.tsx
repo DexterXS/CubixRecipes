@@ -180,7 +180,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     const currentFolders = dayFoldersRef.current;
     const nextFolders = sourceDay === targetDay ? currentFolders : moveAuctionGraphPointFolders({ folders: currentFolders, currency, sourceDay, targetDay, graphStartLocal });
     const appliedDay = nextFolders === currentFolders ? sourceDay : targetDay;
-    setCurve((current) => ({ ...current, [currency]: current[currency].map((point, index) => index === appliedDay ? value : point) }));
+    setCurve((current) => current[currency][appliedDay] === value ? current : { ...current, [currency]: current[currency].map((point, index) => index === appliedDay ? value : point) });
     if (nextFolders !== currentFolders) { dayFoldersRef.current = nextFolders; setDayFolders(nextFolders); }
     return appliedDay;
   };
