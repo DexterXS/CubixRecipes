@@ -200,14 +200,12 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     });
   };
 
-  const flushPointerUpdate = () => {
+  const cancelPendingPointerUpdate = () => {
     if (frameRef.current !== null) {
       window.cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
     }
-    const pending = pendingPointerRef.current;
     pendingPointerRef.current = null;
-    if (pending) updateFromPointer(pending.clientX, pending.clientY);
   };
 
   const startPointDrag = (event: ReactPointerEvent<SVGCircleElement>, currency: AuctionCurrency, day: number, value: number) => {
@@ -220,19 +218,8 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     dragRef.current = initialDrag;
     updateDragPreview(initialDrag);
     const handleMove = (moveEvent: PointerEvent) => schedulePointerUpdate(moveEvent.clientX, moveEvent.clientY);
-    const finishDrag = (commit: boolean, finalPointer?: PendingPointer) => {
-      if (commit && finalPointer) {
-        if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
-        frameRef.current = null;
-        pendingPointerRef.current = null;
-        updateFromPointer(finalPointer.clientX, finalPointer.clientY);
-      } else if (commit) {
-        flushPointerUpdate();
-      } else {
-        if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
-        frameRef.current = null;
-        pendingPointerRef.current = null;
-      }
+    const finishDrag = (commit: boolean) => {
+      cancelPendingPointerUpdate();
       const drag = dragRef.current;
       if (commit && drag) onMovePointRef.current(drag.currency, drag.sourceDay, drag.day, drag.value);
       dragRef.current = null;
@@ -242,7 +229,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       window.removeEventListener('pointercancel', cancelDrag);
       cleanupDragRef.current = null;
     };
-    const commitDrag = (upEvent: PointerEvent) => finishDrag(true, { clientX: upEvent.clientX, clientY: upEvent.clientY });
+    const commitDrag = () => finishDrag(true);
     const cancelDrag = () => finishDrag(false);
     cleanupDragRef.current = cancelDrag;
     window.addEventListener('pointermove', handleMove);
