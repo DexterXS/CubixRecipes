@@ -220,9 +220,15 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
     dragRef.current = initialDrag;
     updateDragPreview(initialDrag);
     const handleMove = (moveEvent: PointerEvent) => schedulePointerUpdate(moveEvent.clientX, moveEvent.clientY);
-    const finishDrag = (commit: boolean) => {
-      if (commit) flushPointerUpdate();
-      else {
+    const finishDrag = (commit: boolean, finalPointer?: PendingPointer) => {
+      if (commit && finalPointer) {
+        if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+        pendingPointerRef.current = null;
+        updateFromPointer(finalPointer.clientX, finalPointer.clientY);
+      } else if (commit) {
+        flushPointerUpdate();
+      } else {
         if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
         frameRef.current = null;
         pendingPointerRef.current = null;
@@ -236,7 +242,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint }: AuctionP
       window.removeEventListener('pointercancel', cancelDrag);
       cleanupDragRef.current = null;
     };
-    const commitDrag = () => finishDrag(true);
+    const commitDrag = (upEvent: PointerEvent) => finishDrag(true, { clientX: upEvent.clientX, clientY: upEvent.clientY });
     const cancelDrag = () => finishDrag(false);
     cleanupDragRef.current = cancelDrag;
     window.addEventListener('pointermove', handleMove);

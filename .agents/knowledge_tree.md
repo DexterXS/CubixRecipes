@@ -471,7 +471,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionGraphModel.ts`
   - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
-  - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally through a local preview with pointer grab-offset preservation; expensive app state and placement checks run once on pointerup.
+  - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally through a local preview with pointer grab-offset preservation and final pointer-up commit; expensive app state and placement checks run once on pointerup.
 - `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
   - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.
 - `frontend/src/features/auctions/AuctionBuilder.css`
