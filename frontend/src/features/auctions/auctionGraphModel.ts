@@ -1,5 +1,5 @@
 import { addDaysToLocalDateTime, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart, parseLocalDateTime } from './auctionCommands';
-import { categoryTitle, dateInputFromLocalDateTime, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal } from './auctionDayFolders';
+import { categoryTitle, dateInputFromLocalDateTime, formatAuctionDayTitle, getAuctionFolderCurrencies, localDateTimeForDay, nextDayLocal } from './auctionDayFolders';
 import type { AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionFolderCategory, AuctionFolderTag } from './auctionTypes';
 
 export type AuctionGraphPointAuction = {
@@ -45,8 +45,8 @@ function dateLocalForGraphDay(graphStartLocal: string, day: number) {
   return dateInputFromLocalDateTime(addDaysToLocalDateTime(graphStartLocal, day));
 }
 
-function graphFolderKey(folder: AuctionDayFolder) {
-  return `${folder.category}:${folder.currency}`;
+function graphFolderKeys(folder: AuctionDayFolder) {
+  return getAuctionFolderCurrencies(folder).map((currency) => `${folder.category}:${currency}`);
 }
 
 function durationDays(startLocal: string, endLocal: string) {
@@ -69,15 +69,16 @@ function canPlaceGraphFolders(params: {
   const movingIds = new Set(params.movingFolders.map((folder) => folder.id));
   const movingKeys = new Set<string>();
   for (const folder of params.movingFolders) {
-    const key = graphFolderKey(folder);
-    if (movingKeys.has(key)) return false;
-    movingKeys.add(key);
-    const hasTargetConflict = params.folders.some((candidate) => (
-      !movingIds.has(candidate.id)
-      && candidate.dateLocal === params.targetDateLocal
-      && graphFolderKey(candidate) === key
-    ));
-    if (hasTargetConflict) return false;
+    for (const key of graphFolderKeys(folder)) {
+      if (movingKeys.has(key)) return false;
+      movingKeys.add(key);
+      const hasTargetConflict = params.folders.some((candidate) => (
+        !movingIds.has(candidate.id)
+        && candidate.dateLocal === params.targetDateLocal
+        && graphFolderKeys(candidate).includes(key)
+      ));
+      if (hasTargetConflict) return false;
+    }
   }
   return true;
 }

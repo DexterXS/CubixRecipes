@@ -86,6 +86,27 @@ describe('auction day folders', () => {
     });
   });
 
+  test('reports mixed currencies from auctions inside one folder', () => {
+    const folder = createAuctionDayFolder({
+      id: 'day-12',
+      dateLocal: '2026-07-12',
+      auctions: [
+        createAuctionDraft(1, '2026-07-12T10:00', { currency: 'DONATE' }),
+        createAuctionDraft(2, '2026-07-12T12:00', { currency: 'VAULT' })
+      ]
+    });
+
+    const summary = summarizeAuctionDayFolder({
+      folder: { ...folder, currency: 'BONUS' },
+      curve: createDefaultAuctionCurve(),
+      graphStartLocal: '2026-07-12T00:00'
+    });
+
+    expect(summary.currencies).toEqual(['DONATE', 'VAULT']);
+    expect(summary.isMixedCurrency).toBe(true);
+    expect(summary.currencyLabel).toBe('Смешанная: DONATE · VAULT');
+  });
+
   test('creates planned folders without a date title and ignores the global price graph', () => {
     const curve = createDefaultAuctionCurve();
     curve.DONATE[0] = 2;

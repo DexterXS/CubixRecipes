@@ -144,8 +144,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const updateDayCurrency = (currency: AuctionCurrency) => {
     updateSelectedDayFolder((folder) => ({
       ...folder,
-      currency,
-      auctions: folder.auctions.map((auction) => ({ ...auction, currency }))
+      currency
     }));
   };
 

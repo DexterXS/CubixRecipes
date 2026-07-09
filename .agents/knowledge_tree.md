@@ -436,11 +436,11 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
-  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
   - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters, item/lot actions, commands/server IDs, graphs/prices, tools/planner, and view mode.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
-  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, currency, folder state, missing-ID/NBT indicators, and quick open/copy actions.
+  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
@@ -471,7 +471,7 @@ Last full rebuild: 2026-06-29
   - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
   - Also aggregates per-point auction duration spans for graph occupancy rendering.
-  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
+  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, actual lot currencies drive placement conflicts, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
 - `frontend/src/features/auctions/AuctionPriceGraph.tsx`
   - Also renders three calendar zones, date-range x-axis labels, and duration occupancy lines.
   - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally through a local preview with pointer grab-offset preservation; release commits the last visible preview state, while expensive app state and placement checks run once on pointerup.

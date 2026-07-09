@@ -145,7 +145,7 @@ export function AuctionRibbon({
       return (
         <>
           <RibbonGroup title="Параметры дня">
-            <RibbonField label="Валюта">
+            <RibbonField label="Валюта новых">
               <select value={selectedFolder?.currency ?? 'DONATE'} disabled={!hasFolder} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
                 {auctionCurrencies.map((currency) => (
                   <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>

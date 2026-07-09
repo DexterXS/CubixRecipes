@@ -1,11 +1,14 @@
 import { buildAuctionRunPricePreviews, createDefaultAuctionCurve, localDateTimeInputFromUtcMs, parseLocalDateTime } from './auctionCommands';
-import type { AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionState } from './auctionTypes';
+import type { AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionState } from './auctionTypes';
 
 export type AuctionDayFolderSummary = {
   auctionCount: number;
   itemCount: number;
   nonNbtItemCount: number;
   nbtItemCount: number;
+  currencies: AuctionCurrency[];
+  isMixedCurrency: boolean;
+  currencyLabel: string;
   missingServerIdCount: number;
   hasMissingServerIds: boolean;
   hasNbtWarnings: boolean;
@@ -15,6 +18,8 @@ export type AuctionDayFolderSummary = {
 };
 
 export type AuctionDayServerIdStatus = 'not-needed-yet' | 'waiting' | 'complete' | 'missing';
+
+const currencyOrder: AuctionCurrency[] = ['DONATE', 'VAULT', 'BONUS'];
 
 export function defaultTimezoneOffset() {
   return -new Date().getTimezoneOffset();
@@ -163,6 +168,16 @@ export function applyDayDefaultsToAuctions(folder: AuctionDayFolder): AuctionDay
   };
 }
 
+export function getAuctionFolderCurrencies(folder: AuctionDayFolder): AuctionCurrency[] {
+  const currencies = new Set(folder.auctions.map((auction) => auction.currency));
+  if (!currencies.size) currencies.add(folder.currency);
+  return currencyOrder.filter((currency) => currencies.has(currency));
+}
+
+function formatCurrencySummary(currencies: AuctionCurrency[]) {
+  return currencies.length > 1 ? `Смешанная: ${currencies.join(' · ')}` : currencies[0] ?? 'DONATE';
+}
+
 export function countExpectedServerIds(auction: AuctionDraft): number {
   return auction.repeatEnabled ? Math.max(1, auction.repeatCount) : 1;
 }
@@ -202,6 +217,7 @@ export function summarizeAuctionDayFolder(params: {
   const graphStartLocal = params.graphStartLocal ?? localDateTimeForDay(params.folder.dateLocal, '00:00');
   const itemCount = params.folder.auctions.reduce((total, auction) => total + auction.items.length, 0);
   const nbtItemCount = params.folder.auctions.reduce((total, auction) => total + auction.items.filter((item) => item.hasNbt).length, 0);
+  const currencies = getAuctionFolderCurrencies(params.folder);
   const previews = buildAuctionRunPricePreviews({
     auctions: params.folder.auctions,
     curve,
@@ -217,6 +233,9 @@ export function summarizeAuctionDayFolder(params: {
     itemCount,
     nonNbtItemCount: itemCount - nbtItemCount,
     nbtItemCount,
+    currencies,
+    isMixedCurrency: currencies.length > 1,
+    currencyLabel: formatCurrencySummary(currencies),
     missingServerIdCount,
     hasMissingServerIds: missingServerIdCount > 0,
     hasNbtWarnings: nbtItemCount > 0,

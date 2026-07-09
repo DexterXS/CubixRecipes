@@ -111,7 +111,7 @@ export function AuctionDayFolderGrid({
                   <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
                   <div><dt>Цены</dt><dd>{summary?.priceRangeLabel ?? 'нет цен'}</dd></div>
                   <div><dt>Режим цен</dt><dd>{priceModeLabel(folder)}</dd></div>
-                  <div><dt>Валюта</dt><dd>{currencyLabels[folder.currency]}</dd></div>
+                  <div><dt>Валюты</dt><dd>{summary?.currencyLabel ?? currencyLabels[folder.currency]}</dd></div>
                   <div><dt>Статус</dt><dd>{stateLabels[folder.state]}</dd></div>
                 </dl>
               </div>
@@ -123,6 +123,9 @@ export function AuctionDayFolderGrid({
                   itemCount: 0,
                   nonNbtItemCount: 0,
                   nbtItemCount: 0,
+                  currencies: [folder.currency],
+                  isMixedCurrency: false,
+                  currencyLabel: currencyLabels[folder.currency],
                   missingServerIdCount: 0,
                   hasMissingServerIds: false,
                   hasNbtWarnings: false,

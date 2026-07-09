@@ -139,6 +139,56 @@ describe('auction graph model', () => {
     expect(moved[1].currency).toBe('VAULT');
   });
 
+  test('uses auction currencies instead of stale folder currency for graph conflicts', () => {
+    const source = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
+    const vaultAuction = {
+      ...createAuctionDayFolder({ id: 'vault', dateLocal: '2026-07-12' }).auctions[0],
+      currency: 'VAULT' as const
+    };
+    const target = {
+      ...createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-12', auctions: [vaultAuction] }),
+      currency: 'DONATE' as const
+    };
+
+    const moved = moveAuctionGraphPointFolders({
+      folders: [source, target],
+      currency: 'DONATE',
+      sourceDay: 1,
+      targetDay: 4,
+      graphStartLocal: '2026-07-08T00:00'
+    });
+
+    expect(moved[0].dateLocal).toBe('2026-07-12');
+  });
+
+  test('blocks moving mixed-currency folders when any contained currency would conflict', () => {
+    const donateAuction = createAuctionDayFolder({ id: 'donate', dateLocal: '2026-07-09' }).auctions[0];
+    const vaultAuction = {
+      ...createAuctionDayFolder({ id: 'vault', dateLocal: '2026-07-09' }).auctions[0],
+      currency: 'VAULT' as const
+    };
+    const source = createAuctionDayFolder({
+      id: 'day-1',
+      dateLocal: '2026-07-09',
+      auctions: [donateAuction, vaultAuction]
+    });
+    const targetVault = {
+      ...createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-12' }),
+      currency: 'VAULT' as const,
+      auctions: [createAuctionDayFolder({ id: 'target-vault', dateLocal: '2026-07-12' }).auctions[0]].map((auction) => ({ ...auction, currency: 'VAULT' as const }))
+    };
+
+    const moved = moveAuctionGraphPointFolders({
+      folders: [source, targetVault],
+      currency: 'DONATE',
+      sourceDay: 1,
+      targetDay: 4,
+      graphStartLocal: '2026-07-08T00:00'
+    });
+
+    expect(moved).toEqual([source, targetVault]);
+  });
+
   test('duplicates one auction into a new day folder from the graph menu', () => {
     const folder = createAuctionDayFolder({
       id: 'day-1',

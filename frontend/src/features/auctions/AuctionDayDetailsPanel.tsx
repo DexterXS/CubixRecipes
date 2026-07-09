@@ -74,6 +74,8 @@ export function AuctionDayDetailsPanel({
   }
 
   const isPlanned = folder.category === 'planned';
+  const currencyLabel = summary?.currencyLabel ?? currencyDisplayLabels[folder.currency];
+  const isMixedCurrency = summary?.isMixedCurrency ?? false;
 
   return (
     <aside className="auction-day-details-panel" aria-label="auction-day-details">
@@ -130,11 +132,14 @@ export function AuctionDayDetailsPanel({
           <div className="inline-hint">У планируемой фиолетовой папки нет фиксированной даты.</div>
         )}
         <label className="field-block compact-field">
-          <span>Валюта</span>
+          <span>Валюта новых лотов</span>
           <select value={folder.currency} onChange={(event) => onCurrencyChange(event.target.value as AuctionCurrency)}>
             {auctionCurrencies.map((currency) => <option key={currency} value={currency}>{currency} · {currencyDisplayLabels[currency]}</option>)}
           </select>
         </label>
+        {isMixedCurrency ? (
+          <div className="inline-hint">В папке смешанные валюты: {currencyLabel}. Это поле задает валюту для новых лотов; кнопка «Применить» перенесет настройки на все лоты.</div>
+        ) : null}
         <div className="auction-day-details-fields">
           <label className="field-block compact-field">
             <span>Шаг ставки</span>
@@ -171,6 +176,7 @@ export function AuctionDayDetailsPanel({
         <h3>Статистика папки</h3>
         <dl className="auction-day-details-stats">
           <div><dt>Аукционов</dt><dd>{summary?.auctionCount ?? folder.auctions.length}</dd></div>
+          <div><dt>Валюты</dt><dd>{currencyLabel}</dd></div>
           <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
           <div><dt>Состояние</dt><dd>{stateDisplayLabels[folder.state]}</dd></div>
           <div><dt>Нет ID</dt><dd>{summary?.missingServerIdCount ?? 0}</dd></div>
