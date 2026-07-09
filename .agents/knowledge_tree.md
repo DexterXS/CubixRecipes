@@ -463,7 +463,7 @@ Last full rebuild: 2026-06-29
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
   - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
-  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
   - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
 - `frontend/src/features/auctions/auctionFolderTags.ts`

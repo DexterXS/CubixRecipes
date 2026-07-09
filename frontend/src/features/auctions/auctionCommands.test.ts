@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { buildAuctionCommandStages, buildAuctionRunPricePreviews, createDefaultAuctionCurve, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
+import { buildAuctionCommandStages, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
 import type { AuctionDraft } from './auctionTypes';
 
 const baseAuction: AuctionDraft = {
@@ -83,6 +83,10 @@ describe('auction command generation', () => {
 
     expect(stages.create).toContain('125 13 DONATE');
     expect(stages.create).not.toContain('6375');
+  });
+
+  test('uses calendar days for graph indexes instead of graph start clock time', () => {
+    expect(dayIndexFromStart('2026-07-12T10:00', '2026-07-08T13:46')).toBe(4);
   });
 
   test('does not treat item prices as the lot price', () => {

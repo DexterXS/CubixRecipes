@@ -53,9 +53,16 @@ export function addDaysToLocalDateTime(value: string, days: number): string {
   return addMinutesToLocalDateTime(value, days * 24 * 60);
 }
 
+function parseLocalDateStart(value: string): number | null {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return null;
+  const [, year, month, day] = match;
+  return Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0, 0);
+}
+
 export function dayIndexFromStart(value: string, startValue: string): number {
-  const valueMs = parseLocalDateTime(value);
-  const startMs = parseLocalDateTime(startValue);
+  const valueMs = parseLocalDateStart(value);
+  const startMs = parseLocalDateStart(startValue);
   if (valueMs === null || startMs === null) return 0;
   return Math.max(0, Math.min(89, Math.floor((valueMs - startMs) / 86_400_000)));
 }

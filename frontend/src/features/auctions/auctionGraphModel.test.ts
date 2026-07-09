@@ -38,6 +38,21 @@ describe('auction graph model', () => {
     expect(points[0].auctions[0].folderTag).toBe('green');
   });
 
+  test('keeps graph point values on the same calendar day when graph start has a time', () => {
+    const curve = createDefaultAuctionCurve();
+    curve.DONATE[1] = 2.38;
+    const folder = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
+
+    const points = buildAuctionGraphPoints({
+      folders: [folder],
+      curve,
+      graphStartLocal: '2026-07-08T13:46',
+      currency: 'DONATE'
+    });
+
+    expect(points.map((point) => [point.day, point.value])).toEqual([[1, 2.38]]);
+  });
+
   test('moves editable regular folders by day while preserving auction times', () => {
     const regular = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
     const planned = createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-09', category: 'planned' });

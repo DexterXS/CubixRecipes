@@ -56,6 +56,7 @@
 
 ### Fixed
 - Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.
+- Fixed Auctions graph day indexing so graph percentages are read from the same calendar day after releasing a dragged point, even when the graph start value contains a non-midnight time.
 - Optimized Auctions graph dragging by rendering movement through a local SVG preview, preserving the pointer grab offset, committing the last visible preview instead of recalculating on pointer-up, keeping percentage changes when an invalid day drop snaps back, and running the placement check only once on pointer release.
 - Fixed Auctions graph point badges so merged points count unique folders, not auctions inside those folders, and the point context menu now groups lots under their folder.
 - Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
