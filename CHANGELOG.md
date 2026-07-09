@@ -55,6 +55,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed Auctions graph point badges so merged points count unique folders, not auctions inside those folders, and the point context menu now groups lots under their folder.
 - Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
 - Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.
 - Fixed mobile craft output atlas icons being cropped by icon-size settings, which could make the real phone view appear offset compared with the mobile icon-settings preview.

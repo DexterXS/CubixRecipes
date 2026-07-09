@@ -551,6 +551,7 @@ Last full rebuild: 2026-06-29
 - Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
 - Auction lot first-item naming and item ordering helpers are covered by `frontend/src/features/auctions/auctionLotItems.test.ts`.
 - Auction graph point aggregation, tags, day movement, merged-point separation, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
+- Auction graph point folder-count labels and point-menu folder grouping are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
 - Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.

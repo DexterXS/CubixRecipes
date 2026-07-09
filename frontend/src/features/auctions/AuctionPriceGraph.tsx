@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import type { AuctionCurrency } from './auctionTypes';
 
 export type AuctionPriceGraphPointDetail = {
+  folderId: string;
   label: string;
   folderTitle: string;
   folderCategory: 'regular' | 'planned';
@@ -75,6 +76,10 @@ function valueFromY(y: number) {
 function percentLabel(value: number) {
   const percent = Math.round((value - 1) * 100);
   return percent > 0 ? `+${percent}%` : `${percent}%`;
+}
+
+export function countAuctionGraphPointFolders(point: Pick<AuctionPriceGraphPoint, 'details'>) {
+  return new Set(point.details.map((detail) => detail.folderId)).size;
 }
 
 function pointTitle(point: AuctionPriceGraphPoint, value: number) {
@@ -193,6 +198,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropAuct
             <path className="auction-graph-line" d={line} />
             {item.points.map((point) => {
               const value = point.editable ? (item.values[point.day] ?? 1) : point.value;
+              const folderCount = countAuctionGraphPointFolders(point);
               return (
                 <g key={`${item.currency}-${point.day}`} className={point.editable ? 'auction-graph-point-wrap editable' : 'auction-graph-point-wrap readonly'} style={{ color: point.color ?? item.color }}>
                   <title>{pointTitle(point, value)}</title>
@@ -214,7 +220,7 @@ export function AuctionPriceGraph({ series, onMovePoint, onOpenPoint, onDropAuct
                     }}
                   />
                   <text className="auction-graph-point-count" x={xForDay(point.day)} y={Math.max(18, yForValue(value) - 12)}>
-                    {point.details.length > 1 ? `x${point.details.length}` : percentLabel(value)}
+                    {folderCount > 1 ? `x${folderCount}` : percentLabel(value)}
                   </text>
                   <text className="auction-graph-day" x={xForDay(point.day)} y={height - 10}>D{point.day + 1}</text>
                 </g>

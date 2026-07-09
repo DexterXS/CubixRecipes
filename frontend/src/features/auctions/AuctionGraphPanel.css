@@ -159,7 +159,7 @@
 .auction-graph-point-menu {
   position: fixed;
   z-index: 80;
-  width: min(360px, calc(100vw - 24px));
+  width: min(440px, calc(100vw - 24px));
   max-height: min(420px, calc(100vh - 24px));
   overflow: auto;
   border: 1px solid rgba(104, 142, 204, 0.36);
@@ -191,6 +191,43 @@
   gap: 7px;
 }
 
+.auction-graph-point-menu-folder {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 8px;
+  padding: 9px;
+  background: rgba(8, 27, 60, 0.34);
+}
+
+.auction-graph-point-menu-folder-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.auction-graph-point-menu-folder-header div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auction-graph-point-menu-folder-header b {
+  border: 1px solid color-mix(in srgb, var(--tag-color) 60%, transparent);
+  border-radius: 999px;
+  padding: 4px 7px;
+  background: color-mix(in srgb, var(--tag-color) 18%, transparent);
+  color: #f4f8ff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.auction-graph-point-menu-auctions {
+  display: grid;
+  gap: 6px;
+}
+
 .auction-graph-point-menu-list article {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -200,6 +237,10 @@
   border-radius: 6px;
   padding: 8px;
   background: rgba(8, 27, 60, 0.44);
+}
+
+.auction-graph-point-menu-auctions article {
+  background: rgba(4, 14, 33, 0.46);
 }
 
 .auction-graph-point-menu-list article[draggable="true"] {
@@ -230,6 +271,10 @@
   gap: 5px;
   flex-wrap: wrap;
   margin-top: 5px;
+}
+
+.auction-graph-point-menu-folder > .auction-graph-tag-row {
+  margin-top: 0;
 }
 
 .auction-graph-tag-row button {

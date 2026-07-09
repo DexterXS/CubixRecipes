@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 import { auctionCurrencies, auctionCurrencyLabels } from './auctionCommands';
 import { auctionFolderTagColors, auctionFolderTagLabels, auctionFolderTags } from './auctionFolderTags';
-import { buildAuctionGraphPoints } from './auctionGraphModel';
+import { buildAuctionGraphPoints, type AuctionGraphPointAuction } from './auctionGraphModel';
 import { AuctionPriceGraph, type AuctionPriceGraphPoint, type AuctionPriceGraphSeries } from './AuctionPriceGraph';
 import type { AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionFolderTag } from './auctionTypes';
 import './AuctionGraphPanel.css';
@@ -29,6 +29,30 @@ function percent(value: number) {
   return `${Math.round(value * 100)}%`;
 }
 
+export function groupPointAuctionsByFolder(auctions: AuctionGraphPointAuction[]) {
+  const groups = new Map<string, {
+    folderId: string;
+    folderTitle: string;
+    folderCategory: AuctionGraphPointAuction['folderCategory'];
+    folderTag: AuctionFolderTag | null;
+    auctions: AuctionGraphPointAuction[];
+  }>();
+
+  auctions.forEach((auction) => {
+    const current = groups.get(auction.folderId) ?? {
+      folderId: auction.folderId,
+      folderTitle: auction.folderTitle,
+      folderCategory: auction.folderCategory,
+      folderTag: auction.folderTag,
+      auctions: []
+    };
+    current.auctions.push(auction);
+    groups.set(auction.folderId, current);
+  });
+
+  return Array.from(groups.values());
+}
+
 function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[number]): AuctionPriceGraphPoint {
   return {
     day: point.day,
@@ -37,6 +61,7 @@ function pointToGraphPoint(point: ReturnType<typeof buildAuctionGraphPoints>[num
     value: point.value,
     color: point.tag ? auctionFolderTagColors[point.tag] : null,
     details: point.auctions.map((auction) => ({
+      folderId: auction.folderId,
       label: auction.label,
       folderTitle: auction.folderTitle,
       folderCategory: auction.folderCategory,
@@ -67,6 +92,7 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
     points: pointsByCurrency[currency].map(pointToGraphPoint)
   }));
   const activeMenuPoint = menu ? pointsByCurrency[menu.currency].find((point) => point.day === menu.day) : null;
+  const activeMenuGroups = activeMenuPoint ? groupPointAuctionsByFolder(activeMenuPoint.auctions) : [];
 
   return (
     <section className="auction-graph-panel" aria-label="auction-graph-panel" onClick={() => setMenu(null)}>
@@ -110,44 +136,57 @@ export function AuctionGraphPanel({ folders, curve, graphStartLocal, onMovePoint
             <button type="button" onClick={() => setMenu(null)}>×</button>
           </div>
           <div className="auction-graph-point-menu-list">
-            {activeMenuPoint.auctions.map((auction) => (
-              <article
-                key={`${auction.folderId}-${auction.auctionId}-${auction.label}`}
-                draggable={auction.folderCategory !== 'planned'}
-                onDragStart={(event) => {
-                  if (auction.folderCategory === 'planned') return;
-                  event.dataTransfer.effectAllowed = 'move';
-                  event.dataTransfer.setData('application/x-auction-graph-auction', JSON.stringify({
-                    currency: menu.currency,
-                    folderId: auction.folderId,
-                    auctionId: auction.auctionId
-                  }));
-                }}
-              >
-                <div>
-                  <span>{auction.folderCategory === 'planned' ? 'Статично' : 'Можно перетащить на график'}</span>
-                  <strong>{auction.label}</strong>
-                  <small>{auction.folderTitle} · старт {auction.startPrice} · шаг {auction.stepPrice}</small>
-                  {auction.folderTag ? <small>Тег: {auctionFolderTagLabels[auction.folderTag]}</small> : null}
-                </div>
-                <div className="auction-graph-point-menu-actions">
-                  <button type="button" onClick={() => onOpenAuction(auction.folderId, auction.auctionId)}>Открыть</button>
-                  <button type="button" onClick={() => onDuplicateAuctionFolder(auction.folderId, auction.auctionId)}>Дублировать</button>
-                </div>
+            {activeMenuGroups.map((group) => (
+              <section key={group.folderId} className="auction-graph-point-menu-folder">
+                <header className="auction-graph-point-menu-folder-header">
+                  <div>
+                    <span>{group.folderCategory === 'planned' ? 'Статическая папка' : 'Папка'}</span>
+                    <strong>{group.folderTitle}</strong>
+                    <small>{group.auctions.length} лот(ов)</small>
+                  </div>
+                  {group.folderTag ? <b style={{ '--tag-color': auctionFolderTagColors[group.folderTag] } as CSSProperties}>{auctionFolderTagLabels[group.folderTag]}</b> : null}
+                </header>
                 <div className="auction-graph-tag-row">
-                  <button type="button" className={!auction.folderTag ? 'active' : ''} onClick={() => onSetFolderTag(auction.folderId, null)}>Без тега</button>
+                  <button type="button" className={!group.folderTag ? 'active' : ''} onClick={() => onSetFolderTag(group.folderId, null)}>Без тега</button>
                   {auctionFolderTags.map((tag) => (
                     <button
                       key={tag}
                       type="button"
-                      className={auction.folderTag === tag ? 'active' : ''}
+                      className={group.folderTag === tag ? 'active' : ''}
                       title={auctionFolderTagLabels[tag]}
                       style={{ '--tag-color': auctionFolderTagColors[tag] } as CSSProperties}
-                      onClick={() => onSetFolderTag(auction.folderId, tag)}
+                      onClick={() => onSetFolderTag(group.folderId, tag)}
                     />
                   ))}
                 </div>
-              </article>
+                <div className="auction-graph-point-menu-auctions">
+                  {group.auctions.map((auction) => (
+                    <article
+                      key={`${auction.folderId}-${auction.auctionId}-${auction.label}`}
+                      draggable={auction.folderCategory !== 'planned'}
+                      onDragStart={(event) => {
+                        if (auction.folderCategory === 'planned') return;
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('application/x-auction-graph-auction', JSON.stringify({
+                          currency: menu.currency,
+                          folderId: auction.folderId,
+                          auctionId: auction.auctionId
+                        }));
+                      }}
+                    >
+                      <div>
+                        <span>{auction.folderCategory === 'planned' ? 'Статично' : 'Можно перетащить на график'}</span>
+                        <strong>{auction.label}</strong>
+                        <small>Старт {auction.startPrice} · шаг {auction.stepPrice}</small>
+                      </div>
+                      <div className="auction-graph-point-menu-actions">
+                        <button type="button" onClick={() => onOpenAuction(auction.folderId, auction.auctionId)}>Открыть</button>
+                        <button type="button" onClick={() => onDuplicateAuctionFolder(auction.folderId, auction.auctionId)}>Дублировать</button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </div>
