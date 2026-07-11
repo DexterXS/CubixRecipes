@@ -12,6 +12,7 @@
 - Improved Auctions graph readability in dark theme with brighter SVG labels, label backplates, clearer grid contrast, and cleaner point captions.
 - Added graph point management for merged auction dates: right-click lists folders/auctions, graph points can be moved by day/percentage, auctions can be opened for editing or duplicated into a new folder, and folders can receive one color tag that tints graph points.
 - Added a dedicated Auctions global graph workspace with a folder queue/status sidebar so the `Графики` tab no longer mixes in the selected-day detail panel.
+- Extracted the Auctions central workspace composition into `AuctionWorkspaceView`, keeping `/aca` generation in the builder while reducing the oversized builder module.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.

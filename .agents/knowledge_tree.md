@@ -427,9 +427,11 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Coordinates the local auction command planner as a three-level workspace plus the global graph tab: folder list, opened folder, opened auction lot, and graph workspace routing. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, and extensionless command-file download modal.
+  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, and graph workspace. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, and extensionless command-file download modal.
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
+  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, and selected-folder details. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
   - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
   - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
@@ -558,7 +560,7 @@ Last full rebuild: 2026-06-29
 - Auction graph point aggregation, tags, day movement, same-day conflict blocking, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
 - Auction graph point folder-count labels, point-menu folder grouping, and graph-workspace summary helpers are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
 - Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
-- Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
+- Auction workspace navigation and composition are covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.

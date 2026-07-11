@@ -3,14 +3,10 @@ import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInpu
 import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
 import { duplicateAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
-import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
-import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
-import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
 import { AuctionDownloadModal } from './AuctionDownloadModal';
-import { AuctionGraphsWorkspace } from './AuctionGraphsWorkspace';
-import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
+import { AuctionWorkspaceView, type AuctionWorkspaceViewMode } from './AuctionWorkspaceView';
 import { useAuctionPlannerPersistence } from './useAuctionPlannerPersistence';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionFolderTag, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
@@ -18,7 +14,7 @@ import './AuctionBuilder.css';
 export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: AuctionItemOption[]; renderItemIcon: AuctionRenderItemIcon }) {
   const now = Date.now();
   const [workflowMode, setWorkflowMode] = useState<AuctionWorkflowMode>('install');
-  const [workspaceView, setWorkspaceView] = useState<'folders' | 'folder' | 'lot'>('folders');
+  const [workspaceView, setWorkspaceView] = useState<AuctionWorkspaceViewMode>('folders');
   const [ribbonTab, setRibbonTab] = useState<AuctionRibbonTab>('auctions');
   const [uiMode, setUiMode] = useState<AuctionUiMode>('normal');
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
@@ -385,98 +381,67 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
       />
 
       <div className={`auction-layout ${workspaceView === 'lot' ? 'lot-view' : ''}`}>
-        {selectedDayFolder && selectedAuction && workspaceView === 'lot' ? (
-          <AuctionLotWorkspace
-            folder={selectedDayFolder}
-            auction={selectedAuction}
-            uiMode={uiMode}
-            itemSearch={itemSearch}
-            filteredItems={filteredItems}
-            selectedAuctionFull={selectedAuctionFull}
-            maxItemsPerAuction={maxItemsPerAuction}
-            renderItemIcon={renderItemIcon}
-            onBackToFolder={() => setWorkspaceView('folder')}
-            onUpdateAuction={updateAuction}
-            onUpdateServerId={updateServerId}
-            onItemSearchChange={setItemSearch}
-            onAddItem={addItemToAuction}
-            onUpdateItem={updateLotItem}
-            onMoveItem={moveSelectedLotItem}
-            onRemoveItem={removeLotItem}
-            onSetCommandStage={setCommandStage}
-          />
-        ) : (
-          <>
-            {ribbonTab === 'graphs' ? (
-              <AuctionGraphsWorkspace
-                folders={dayFolders}
-                summaries={dayFolderSummaries}
-                selectedFolderId={selectedDayFolder?.id ?? ''}
-                curve={curve}
-                graphStartLocal={graphStartLocal}
-                onGraphStartLocalChange={setGraphStartLocal}
-                onMovePoint={updateGraphPoint}
-                onOpenFolder={openDayFolder}
-                onDuplicateAuctionFolder={duplicateGraphAuctionFolder}
-                onSetFolderTag={setGraphFolderTag}
-                onOpenAuction={(folderId, auctionId) => {
-                  setSelectedDayFolderId(folderId);
-                  setSelectedAuctionId(auctionId);
-                  setWorkspaceView('lot');
-                }}
-              />
-            ) : (
-              <>
-                {selectedDayFolder && workspaceView === 'folder' ? (
-                  <AuctionDayContentsPanel
-                    folder={selectedDayFolder}
-                    selectedAuctionId={selectedAuctionId}
-                    renderItemIcon={renderItemIcon}
-                    onBackToDays={() => setWorkspaceView('folders')}
-                    onSelectAuction={setSelectedAuctionId}
-                    onAddAuction={addAuction}
-                    onOpenAuction={openAuctionLot}
-                    onCopyAuction={copyAuction}
-                    onDeleteAuction={deleteAuction}
-                    onOpenCommands={(id, stage) => {
-                      setSelectedAuctionId(id);
-                      setCommandStage(stage);
-                    }}
-                  />
-                ) : (
-                  <AuctionDayFolderGrid
-                    folders={dayFolders}
-                    selectedFolderId={selectedDayFolder?.id ?? ''}
-                    summaries={dayFolderSummaries}
-                    onSelectFolder={selectDayFolder}
-                    onOpenFolder={openDayFolder}
-                    onCopyFolder={copySelectedDayFolder}
-                  />
-                )}
-                <AuctionDayDetailsPanel
-                  folder={selectedDayFolder}
-                  summary={selectedDayFolder ? dayFolderSummaries[selectedDayFolder.id] : undefined}
-                  uiMode={uiMode}
-                  commandStages={commandStages}
-                  onOpenFolder={() => openDayFolder()}
-                  onCopyFolder={() => copySelectedDayFolder()}
-                  onDeleteFolder={deleteSelectedDayFolder}
-                  onTitleChange={updateDayTitle}
-                  onDateChange={updateDayDate}
-                  onCategoryChange={updateDayCategory}
-                  onTagChange={(tag) => updateSelectedDayFolder((folder) => ({ ...folder, tag }))}
-                  onCurrencyChange={updateDayCurrency}
-                  onDurationChange={updateDayDuration}
-                  onStepPriceChange={updateDayStepPrice}
-                  onStateChange={updateDayState}
-                  onRepeatEveryDaysChange={updateDayRepeatEveryDays}
-                  onRepeatCountChange={updateDayRepeatCount}
-                  onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}
-                />
-              </>
-            )}
-          </>
-        )}
+        <AuctionWorkspaceView
+          workspaceView={workspaceView}
+          ribbonTab={ribbonTab}
+          dayFolders={dayFolders}
+          summaries={dayFolderSummaries}
+          selectedFolder={selectedDayFolder}
+          selectedAuction={selectedAuction}
+          selectedAuctionId={selectedAuctionId}
+          uiMode={uiMode}
+          itemSearch={itemSearch}
+          filteredItems={filteredItems}
+          selectedAuctionFull={selectedAuctionFull}
+          maxItemsPerAuction={maxItemsPerAuction}
+          renderItemIcon={renderItemIcon}
+          curve={curve}
+          graphStartLocal={graphStartLocal}
+          commandStages={commandStages}
+          onBackToFolder={() => setWorkspaceView('folder')}
+          onBackToDays={() => setWorkspaceView('folders')}
+          onUpdateAuction={updateAuction}
+          onUpdateServerId={updateServerId}
+          onItemSearchChange={setItemSearch}
+          onAddItem={addItemToAuction}
+          onUpdateItem={updateLotItem}
+          onMoveItem={moveSelectedLotItem}
+          onRemoveItem={removeLotItem}
+          onSetCommandStage={setCommandStage}
+          onGraphStartLocalChange={setGraphStartLocal}
+          onMoveGraphPoint={updateGraphPoint}
+          onOpenFolder={openDayFolder}
+          onSelectFolder={selectDayFolder}
+          onCopyFolder={copySelectedDayFolder}
+          onOpenGraphAuction={(folderId, auctionId) => {
+            setSelectedDayFolderId(folderId);
+            setSelectedAuctionId(auctionId);
+            setWorkspaceView('lot');
+          }}
+          onDuplicateGraphAuctionFolder={duplicateGraphAuctionFolder}
+          onSetGraphFolderTag={setGraphFolderTag}
+          onSelectAuction={setSelectedAuctionId}
+          onAddAuction={addAuction}
+          onOpenAuctionLot={openAuctionLot}
+          onCopyAuction={copyAuction}
+          onDeleteAuction={deleteAuction}
+          onOpenCommands={(id, stage) => {
+            setSelectedAuctionId(id);
+            setCommandStage(stage);
+          }}
+          onDeleteFolder={deleteSelectedDayFolder}
+          onTitleChange={updateDayTitle}
+          onDateChange={updateDayDate}
+          onCategoryChange={updateDayCategory}
+          onTagChange={(tag) => updateSelectedDayFolder((folder) => ({ ...folder, tag }))}
+          onCurrencyChange={updateDayCurrency}
+          onDurationChange={updateDayDuration}
+          onStepPriceChange={updateDayStepPrice}
+          onStateChange={updateDayState}
+          onRepeatEveryDaysChange={updateDayRepeatEveryDays}
+          onRepeatCountChange={updateDayRepeatCount}
+          onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}
+        />
       </div>
 
       <AuctionStatusBar
