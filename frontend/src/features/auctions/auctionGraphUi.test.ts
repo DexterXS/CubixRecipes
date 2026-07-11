@@ -1,11 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import { groupPointAuctionsByFolder } from './AuctionGraphPanel';
+import { buildAuctionGraphsWorkspaceSummary } from './AuctionGraphsWorkspace';
 import {
   calculateAuctionGraphDragValue,
   countAuctionGraphPointFolders,
   createAuctionGraphGrabOffset,
   type AuctionPriceGraphPointDetail
 } from './AuctionPriceGraph';
+import { createAuctionDayFolder, summarizeAuctionDayFolder } from './auctionDayFolders';
 import type { AuctionGraphPointAuction } from './auctionGraphModel';
 
 function detail(folderId: string): AuctionPriceGraphPointDetail {
@@ -71,5 +73,19 @@ describe('auction graph UI helpers', () => {
     expect(calculateAuctionGraphDragValue(pointerY, grabOffsetY)).toBe(initialValue);
     expect(calculateAuctionGraphDragValue(pointerY + 20, grabOffsetY)).toBeLessThan(initialValue);
     expect(calculateAuctionGraphDragValue(pointerY - 20, grabOffsetY)).toBeGreaterThan(initialValue);
+  });
+
+  test('summarizes the dedicated graph workspace across regular and planned folders', () => {
+    const regular = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-09' });
+    const planned = createAuctionDayFolder({ id: 'day-2', dateLocal: '2026-07-10', category: 'planned' });
+    const folders = [regular, planned];
+    const summaries = Object.fromEntries(folders.map((folder) => [folder.id, summarizeAuctionDayFolder({ folder })]));
+
+    expect(buildAuctionGraphsWorkspaceSummary(folders, summaries)).toMatchObject({
+      folderCount: 2,
+      regularCount: 1,
+      plannedCount: 1,
+      auctionCount: 2
+    });
   });
 });

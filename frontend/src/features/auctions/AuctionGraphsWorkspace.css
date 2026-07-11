@@ -1,0 +1,105 @@
+.auction-graphs-workspace {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(620px, 1fr) minmax(300px, 360px);
+  gap: 14px;
+  align-items: start;
+  min-width: 0;
+}
+
+.auction-graphs-sidebar {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 8px;
+  background: rgba(5, 18, 42, 0.72);
+  padding: 14px;
+  min-width: 0;
+}
+
+.auction-graphs-sidebar header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.auction-graphs-sidebar header span,
+.auction-graphs-sidebar small {
+  color: var(--muted);
+}
+
+.auction-graphs-sidebar header strong {
+  color: #9dc8ff;
+  white-space: nowrap;
+}
+
+.auction-graphs-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.auction-graphs-stat-grid span,
+.auction-graphs-alerts span {
+  border: 1px solid rgba(104, 142, 204, 0.2);
+  border-radius: 8px;
+  background: rgba(8, 27, 60, 0.38);
+  padding: 8px;
+  color: var(--muted);
+}
+
+.auction-graphs-stat-grid b {
+  display: block;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.auction-graphs-alerts {
+  display: grid;
+  gap: 7px;
+}
+
+.auction-graphs-alerts .ok {
+  color: #a7f3d0;
+}
+
+.auction-graphs-alerts .warning {
+  border-color: rgba(245, 197, 66, 0.42);
+  color: var(--warning, #f5c542);
+}
+
+.auction-graphs-folder-list {
+  display: grid;
+  gap: 7px;
+  max-height: min(48vh, 520px);
+  overflow: auto;
+  padding-right: 3px;
+}
+
+.auction-graphs-folder-list button {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  border: 1px solid rgba(104, 142, 204, 0.2);
+  border-radius: 8px;
+  background: rgba(8, 27, 60, 0.42);
+  color: var(--text);
+  padding: 9px;
+}
+
+.auction-graphs-folder-list button.active {
+  border-color: rgba(71, 176, 255, 0.78);
+  background: rgba(24, 95, 190, 0.26);
+}
+
+.auction-graphs-folder-list span {
+  color: #9dc8ff;
+  font-size: 12px;
+}
+
+@media (max-width: 980px) {
+  .auction-graphs-workspace {
+    grid-template-columns: 1fr;
+  }
+}

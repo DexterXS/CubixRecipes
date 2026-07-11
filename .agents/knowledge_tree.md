@@ -427,7 +427,7 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Coordinates the local auction command planner as a three-level workspace: folder list, opened folder, and opened auction lot. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, and extensionless command-file download modal.
+  - Coordinates the local auction command planner as a three-level workspace plus the global graph tab: folder list, opened folder, opened auction lot, and graph workspace routing. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, and extensionless command-file download modal.
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
@@ -466,7 +466,9 @@ Last full rebuild: 2026-06-29
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
   - Also owns the wipe-start date control and approximate wipe-end window shown above the graph.
-  - Owns the graph workspace opened from the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
+  - Owns the graph panel inside the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
+- `frontend/src/features/auctions/AuctionGraphsWorkspace.tsx`
+  - Owns the dedicated global graph workspace that wraps `AuctionGraphPanel` with graph-wide folder totals, regular/planned counts, missing server-ID/NBT status, and a sorted folder queue. It is the graph-tab screen owner; the selected-day details panel is not rendered in this mode.
 - `frontend/src/features/auctions/auctionFolderTags.ts`
   - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
 - `frontend/src/features/auctions/auctionGraphModel.ts`
@@ -554,7 +556,7 @@ Last full rebuild: 2026-06-29
 - Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
 - Auction lot first-item naming and item ordering helpers are covered by `frontend/src/features/auctions/auctionLotItems.test.ts`.
 - Auction graph point aggregation, tags, day movement, same-day conflict blocking, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
-- Auction graph point folder-count labels and point-menu folder grouping are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
+- Auction graph point folder-count labels, point-menu folder grouping, and graph-workspace summary helpers are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
 - Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
 - Auction workspace navigation is covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.

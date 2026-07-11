@@ -113,6 +113,7 @@ Temporary file. Keep this file while the modular structure migration is in progr
   - Reworked the auction price graph from a 90-day polyline with sharp baseline spikes into a smooth Bezier/equalizer-style curve through auction date control points with a soft SVG fill.
   - Extracted the items/file mode into `AuctionItemsWorkspace.tsx` and replaced the awkward split panels with one right-side workspace: NEI catalog on the left, selected-auction internal inventory on the right.
   - Added shared run-price previews and `AuctionRunPricePreviewList.tsx`; repeat occurrences render on the graph as read-only markers, while repeating auctions keep the first-run price because the server repeat command does not support per-occurrence price changes.
+  - Added `AuctionGraphsWorkspace.tsx` as the global graph-tab owner, combining the editable graph with a folder queue/status sidebar so `AuctionBuilder.tsx` only routes to the graph workspace.
   - Why this shape: auctions are a new product area, so the page shell should only route to the feature and adapt item catalog/icon data.
 
 ## Still Needed

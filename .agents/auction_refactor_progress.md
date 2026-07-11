@@ -18,4 +18,5 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 12. Done: docs/tree/changelog updated for this continuation; changes are ready for the project `test` delivery flow.
 13. Done: added the first structural pass from the supplemental plan: explicit folder list -> opened folder -> opened lot navigation.
 14. Done: added regular/planned folder categories, planned-folder graph isolation, opened-lot zones, and context status bar.
-15. Next: refine visuals and complete the dedicated global graphs workspace after the structural screens are stable.
+15. Done: added the dedicated global graphs workspace with graph summary, folder queue, and graph-only routing instead of mixing the selected-day detail panel into the graph tab.
+16. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
