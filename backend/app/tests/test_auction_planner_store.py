@@ -55,3 +55,47 @@ def test_auction_planner_store_bounds_nested_lists(tmp_path):
     assert len(saved["state"]["dayFolders"]) == 365
     assert len(saved["state"]["dayFolders"][0]["auctions"]) == 120
     assert len(saved["state"]["dayFolders"][0]["auctions"][0]["items"]) == 64
+
+
+def test_auction_planner_store_persists_command_profile_modes(tmp_path):
+    store = AuctionPlannerStore(tmp_path / "auction_planner.json")
+    state = {
+        "dayFolders": [],
+        "commandProfile": {
+            "mode": "existing",
+            "playerName": "DexterXS",
+            "stateFilters": ["ACTIVE", "PAUSED"],
+            "modes": {
+                "existing": {
+                    "entries": [
+                        {
+                            "id": "giveItem",
+                            "kind": "template",
+                            "command": "giveItem",
+                            "label": "Give with nick",
+                            "template": "/give {player} {itemId} {quantity} {meta}",
+                            "scope": "item",
+                            "enabled": True,
+                        },
+                        {
+                            "id": "custom-1",
+                            "kind": "custom",
+                            "label": "Say done",
+                            "template": "/say done",
+                            "scope": "file",
+                            "enabled": True,
+                        },
+                    ],
+                }
+            },
+        },
+    }
+
+    saved = store.save_state(state)
+    profile = saved["state"]["commandProfile"]
+
+    assert profile["mode"] == "existing"
+    assert profile["playerName"] == "DexterXS"
+    assert profile["stateFilters"] == ["ACTIVE", "PAUSED"]
+    assert profile["modes"]["existing"]["entries"][0]["template"].startswith("/give {player}")
+    assert any(entry["kind"] == "custom" for entry in profile["modes"]["existing"]["entries"])

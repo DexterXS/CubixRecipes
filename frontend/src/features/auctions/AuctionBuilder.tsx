@@ -1,6 +1,6 @@
 ﻿import { useMemo, useRef, useState } from 'react';
 import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInputFromUtcMs } from './auctionCommands';
-import { buildAuctionCommandsFromProfile, createDefaultAuctionCommandProfile, normalizeAuctionCommandProfile } from './auctionCommandProfile';
+import { buildAuctionCommandsFromProfile, createDefaultAuctionCommandProfile, filterAuctionsForCommandProfile, normalizeAuctionCommandProfile } from './auctionCommandProfile';
 import { AuctionCommandModals } from './AuctionCommandModals';
 import { cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, durationMinutesBetweenTimes, endTimeFromStartAndDuration, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder, timeInputFromLocalDateTime } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
@@ -21,7 +21,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const [commandStage, setCommandStage] = useState<AuctionCommandStage>('create');
   const [commandProfile, setCommandProfile] = useState(() => createDefaultAuctionCommandProfile());
   const [idMode] = useState<AuctionItemIdMode>('raw');
-  const [commandPlayer] = useState('@p');
   const [graphStartLocal, setGraphStartLocal] = useState(() => `${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).slice(0, 10)}T00:00`);
   const [dayFolders, setDayFolders] = useState<AuctionDayFolder[]>(() => [createInitialAuctionDayFolder(now, defaultTimezoneOffset())]);
   const [selectedDayFolderId, setSelectedDayFolderId] = useState('day-1');
@@ -44,12 +43,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const selectedDayStartTime = selectedDayFolder?.auctions[0] ? timeInputFromLocalDateTime(selectedDayFolder.auctions[0].startLocal) : '10:00';
   const selectedDayEndTime = endTimeFromStartAndDuration(selectedDayStartTime, selectedDayFolder?.defaultDurationMinutes ?? 10);
   const commandCurve = useMemo(() => selectedDayFolder?.category === 'planned' ? createDefaultAuctionCurve() : curve, [selectedDayFolder?.category, curve]);
+  const commandAuctions = useMemo(() => filterAuctionsForCommandProfile(auctions, commandProfile), [auctions, commandProfile]);
+  const commandPlayer = commandProfile.playerName.trim() || '@p';
   const commandStagesByMode = useMemo(() => ({
-    install: buildAuctionCommandStages({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'install' }),
-    existing: buildAuctionCommandStages({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'existing' })
-  }), [auctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal]);
+    install: buildAuctionCommandStages({ auctions: commandAuctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'install' }),
+    existing: buildAuctionCommandStages({ auctions: commandAuctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'existing' })
+  }), [commandAuctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal]);
   const commandStages = commandStagesByMode[commandProfile.mode];
-  const commands = useMemo(() => buildAuctionCommandsFromProfile(commandStages, commandProfile), [commandStages, commandProfile]);
+  const commands = useMemo(() => buildAuctionCommandsFromProfile({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal, profile: commandProfile }), [auctions, commandCurve, idMode, timezoneOffset, graphStartLocal, commandProfile]);
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
     if (!query) return itemOptions.slice(0, 80);
@@ -443,11 +444,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
           onOpenFolder={openDayFolder}
           onSelectFolder={selectDayFolder}
           onCopyFolder={copySelectedDayFolder}
-          onOpenGraphAuction={(folderId, auctionId) => {
-            setSelectedDayFolderId(folderId);
-            setSelectedAuctionId(auctionId);
-            setWorkspaceView('lot');
-          }}
+          onOpenGraphAuction={(folderId, auctionId) => { setSelectedDayFolderId(folderId); setSelectedAuctionId(auctionId); setWorkspaceView('lot'); }}
           onDuplicateGraphAuctionFolder={duplicateGraphAuctionFolder}
           onSetGraphFolderTag={setGraphFolderTag}
           onSelectAuction={setSelectedAuctionId}
@@ -489,7 +486,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         filenameDraft={filenameDraft}
         commands={commands}
         commandProfile={commandProfile}
-        commandStagesByMode={commandStagesByMode}
+        commandContext={{ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal }}
         onFilenameChange={setFilenameDraft}
         onSaveProfile={saveCommandProfile}
         onCloseDownload={() => setDownloadModalOpen(false)}

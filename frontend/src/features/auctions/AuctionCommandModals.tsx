@@ -1,7 +1,14 @@
-import type { AuctionCommandStages } from './auctionCommands';
 import { AuctionCommandGeneratorModal } from './AuctionCommandGeneratorModal';
 import { AuctionDownloadModal, downloadTextWithoutExtension } from './AuctionDownloadModal';
-import type { AuctionCommandProfile, AuctionWorkflowMode } from './auctionTypes';
+import type { AuctionCommandProfile, AuctionCurve, AuctionDraft, AuctionItemIdMode } from './auctionTypes';
+
+type AuctionCommandGeneratorContext = {
+  auctions: AuctionDraft[];
+  curve: AuctionCurve;
+  idMode: AuctionItemIdMode;
+  timezoneOffsetMinutes: number;
+  graphStartLocal: string;
+};
 
 type AuctionCommandModalsProps = {
   downloadOpen: boolean;
@@ -9,7 +16,7 @@ type AuctionCommandModalsProps = {
   filenameDraft: string;
   commands: string;
   commandProfile: AuctionCommandProfile;
-  commandStagesByMode: Record<AuctionWorkflowMode, AuctionCommandStages>;
+  commandContext: AuctionCommandGeneratorContext;
   onFilenameChange: (value: string) => void;
   onSaveProfile: (profile: AuctionCommandProfile) => void;
   onCloseDownload: () => void;
@@ -22,7 +29,7 @@ export function AuctionCommandModals({
   filenameDraft,
   commands,
   commandProfile,
-  commandStagesByMode,
+  commandContext,
   onFilenameChange,
   onSaveProfile,
   onCloseDownload,
@@ -43,7 +50,7 @@ export function AuctionCommandModals({
         <AuctionCommandGeneratorModal
           filenameDraft={filenameDraft}
           profile={commandProfile}
-          stagesByMode={commandStagesByMode}
+          {...commandContext}
           onFilenameChange={onFilenameChange}
           onSave={onSaveProfile}
           onDownload={(nextCommands) => downloadTextWithoutExtension(filenameDraft, nextCommands)}

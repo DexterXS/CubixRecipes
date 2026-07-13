@@ -65,8 +65,8 @@ describe('auction command generation', () => {
 
     expect(stages.create).toContain('/aca create');
     expect(stages.ids).toContain('<впиши ID с сервера>');
-    expect(stages.items).toContain('сначала впиши серверные ID');
-    expect(stages.settings).toContain('сначала впиши серверные ID');
+    expect(stages.items).toBe('');
+    expect(stages.settings).toBe('');
   });
 
   test('uses the graph multiplier on the lot start price for the auction date', () => {
@@ -138,35 +138,42 @@ describe('auction command generation', () => {
     expect(sanitizeAuctionFilename('auction_pack.txt')).toBe('auction_pack');
   });
 
-  test('builds command output from a saved profile without duplicated built-in blocks', () => {
-    const stages = buildAuctionCommandStages({
+  test('builds command output from editable templates, selected statuses, and saved order', () => {
+    const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
+      mode: 'install',
+      playerName: 'DexterXS',
+      stateFilters: ['ACTIVE'],
+      modes: {
+        install: {
+          entries: [
+            { id: 'custom-start', kind: 'custom', label: 'Старт', template: '/say {player}', scope: 'file', enabled: true },
+            { id: 'create', kind: 'template', command: 'create', label: 'Создать', template: '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}', scope: 'auction', enabled: true },
+            { id: 'giveItem', kind: 'template', command: 'giveItem', label: 'Выдать', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
+            { id: 'setState', kind: 'template', command: 'setState', label: 'Статус', template: '/aca setState {serverId} {state}', scope: 'auction', enabled: true }
+          ]
+        },
+        existing: { entries: [] }
+      }
+    });
+
+    const output = buildAuctionCommandsFromProfile({
       auctions: [
         baseAuction,
-        { ...baseAuction, id: 'local-2', name: 'Second auction', currency: 'VAULT', baseStartPrice: 5000, baseStepPrice: 20 }
+        { ...baseAuction, id: 'paused', name: 'Paused auction', state: 'PAUSED', serverIds: { 0: '55' } }
       ],
       curve: createDefaultAuctionCurve(),
       idMode: 'legacy',
       timezoneOffsetMinutes: 180,
-      commandPlayer: '@p',
       graphStartLocal: '2026-03-01T00:00',
-      workflowMode: 'install'
+      profile
     });
-    const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
-      mode: 'install',
-      entries: [
-        { id: 'create', kind: 'builtin', block: 'create', enabled: true },
-        { id: 'create', kind: 'builtin', block: 'create', enabled: true },
-        { id: 'custom-end', kind: 'custom', label: 'Финал', command: '/say done', enabled: true },
-        { id: 'items', kind: 'builtin', block: 'items', enabled: false },
-        { id: 'settings', kind: 'builtin', block: 'settings', enabled: false }
-      ]
-    });
-
-    const output = buildAuctionCommandsFromProfile(stages, profile);
     const lines = output.split('\n');
 
-    expect(lines.filter((line) => line.startsWith('/aca create'))).toHaveLength(2);
-    expect(output).toMatch(/VAULT\n\/say done$/);
-    expect(output).not.toContain('/aca create 31.03.2026_20:20 31.03.2026_20:10');
+    expect(lines[0]).toBe('/say DexterXS');
+    expect(lines.filter((line) => line.startsWith('/aca create'))).toHaveLength(1);
+    expect(output).toContain('/give DexterXS 1 2 1');
+    expect(output).toContain('/aca setState 27 ACTIVE');
+    expect(output).not.toContain('Paused auction');
+    expect(output).not.toContain('сначала');
   });
 });

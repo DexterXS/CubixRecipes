@@ -1,4 +1,4 @@
-import type { AuctionDayFolderSummary } from './auctionDayFolders';
+import { formatDurationCompact, type AuctionDayFolderSummary } from './auctionDayFolders';
 import type { CSSProperties, ReactNode } from 'react';
 import type { AuctionDayFolder, AuctionState } from './auctionTypes';
 import { auctionFolderTagColors, auctionFolderTagLabels } from './auctionFolderTags';
@@ -107,7 +107,7 @@ export function AuctionDayFolderGrid({
                 </div>
                 <dl>
                   <div><dt>Дата начала</dt><dd>{isPlanned ? 'по расписанию' : folder.dateLocal}</dd></div>
-                  <div><dt>Длительность</dt><dd>{folder.defaultDurationMinutes} мин.</dd></div>
+                  <div><dt>Длительность</dt><dd>{formatDurationCompact(folder.defaultDurationMinutes)}</dd></div>
                   <div><dt>Предметов</dt><dd>{summary?.itemCount ?? 0}</dd></div>
                   <div><dt>Цены</dt><dd>{summary?.priceRangeLabel ?? 'нет цен'}</dd></div>
                   <div><dt>Режим цен</dt><dd>{priceModeLabel(folder)}</dd></div>

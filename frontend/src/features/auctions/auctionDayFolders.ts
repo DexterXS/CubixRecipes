@@ -91,6 +91,18 @@ export function durationMinutesFromUnitValue(value: number, unit: AuctionDuratio
   return safeValue;
 }
 
+export function formatDurationCompact(durationMinutes: number): string {
+  const safeDuration = Math.max(1, Math.round(Number.isFinite(durationMinutes) ? durationMinutes : 1));
+  const days = Math.floor(safeDuration / (24 * 60));
+  const hours = Math.floor((safeDuration % (24 * 60)) / 60);
+  const minutes = safeDuration % 60;
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days} дн.`);
+  if (hours > 0) parts.push(`${hours} ч.`);
+  if (minutes > 0) parts.push(`${minutes} мин.`);
+  return parts.join(' ');
+}
+
 export function formatAuctionDayTitle(dateLocal: string): string {
   const match = dateLocal.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return dateLocal;

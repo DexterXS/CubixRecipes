@@ -4,7 +4,22 @@ export type AuctionCurrency = 'VAULT' | 'DONATE' | 'BONUS';
 export type AuctionBuilderMode = 'config' | 'items';
 export type AuctionWorkflowMode = 'install' | 'existing';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
-export type AuctionCommandBuiltInBlock = 'create' | 'ids' | 'items' | 'settings';
+export type AuctionCommandTemplateKey =
+  | 'create'
+  | 'idList'
+  | 'clearPlayer'
+  | 'giveItem'
+  | 'addItem'
+  | 'setName'
+  | 'setDescription'
+  | 'setStartDate'
+  | 'setEndDate'
+  | 'setCurrency'
+  | 'setStartPrice'
+  | 'setStepPrice'
+  | 'setState'
+  | 'scheduleCreate';
+export type AuctionCommandEntryScope = 'file' | 'auction' | 'item';
 export type AuctionItemIdMode = 'raw' | 'legacy';
 export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED' | 'CLOSED' | 'ENDED';
 export type AuctionPriceMode = 'graph' | 'manual';
@@ -70,22 +85,32 @@ export type AuctionDayFolder = {
 
 export type AuctionCommandProfileEntry =
   | {
-    id: AuctionCommandBuiltInBlock;
-    kind: 'builtin';
-    block: AuctionCommandBuiltInBlock;
+    id: string;
+    kind: 'template';
+    command: AuctionCommandTemplateKey;
+    label: string;
+    template: string;
+    scope: AuctionCommandEntryScope;
     enabled: boolean;
   }
   | {
     id: string;
     kind: 'custom';
     label: string;
-    command: string;
+    template: string;
+    scope: AuctionCommandEntryScope;
     enabled: boolean;
   };
 
+export type AuctionCommandModeProfile = {
+  entries: AuctionCommandProfileEntry[];
+};
+
 export type AuctionCommandProfile = {
   mode: AuctionWorkflowMode;
-  entries: AuctionCommandProfileEntry[];
+  playerName: string;
+  stateFilters: AuctionState[];
+  modes: Record<AuctionWorkflowMode, AuctionCommandModeProfile>;
 };
 
 export type AuctionPlannerState = {
