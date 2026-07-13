@@ -19,6 +19,7 @@
 - Changed Auctions folder cards to display duration as compact days, hours, and minutes instead of raw minutes.
 - Added a saved Auctions command-generation profile stored in backend data, with one selected mode, status filters, player/nick target, editable command templates, per-command ordering, custom commands, generated preview, and direct download.
 - Polished the Auctions folder cards and command generator modal so folder rows read cleaner and the generator keeps controls/preview inside the visible dialog.
+- Made the Auctions command generator modal near full-screen and compacted command rows for denser editing.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
