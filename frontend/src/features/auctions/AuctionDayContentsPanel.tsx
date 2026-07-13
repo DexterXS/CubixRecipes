@@ -23,6 +23,19 @@ function nbtWarnings(auction: AuctionDraft) {
   return auction.items.filter((item) => item.hasNbt).length;
 }
 
+export function buildAuctionLotWarning(auction: AuctionDraft) {
+  const nbtCount = nbtWarnings(auction);
+  const missingDescription = !auction.description.trim();
+  const parts = [
+    missingDescription ? 'Высокий риск: не заполнено описание' : '',
+    nbtCount ? `NBT-предметов: ${nbtCount}` : ''
+  ].filter(Boolean);
+  return {
+    text: parts.length ? parts.join(' · ') : 'нет',
+    level: missingDescription ? 'danger' : nbtCount ? 'warning' : ''
+  };
+}
+
 function priceWithCurrency(value: number, auction: AuctionDraft) {
   return `${value} ${auction.currency} · ${auctionCurrencyLabels[auction.currency]}`;
 }
@@ -67,7 +80,7 @@ export function AuctionDayContentsPanel({
         {folder.auctions.map((auction) => {
           const isSelected = auction.id === selectedAuctionId;
           const serverId = firstServerId(auction);
-          const warnings = nbtWarnings(auction);
+          const warning = buildAuctionLotWarning(auction);
           return (
             <article key={auction.id} className={`auction-day-auction-card ${isSelected ? 'active' : ''}`.trim()} role="listitem" onClick={() => onSelectAuction(auction.id)}>
               <button type="button" className="auction-day-auction-preview" onClick={() => onOpenAuction(auction.id)}>
@@ -100,7 +113,7 @@ export function AuctionDayContentsPanel({
                 <div><dt>Длительность</dt><dd>{auction.durationMinutes} мин.</dd></div>
                 <div><dt>ID сервера</dt><dd>{serverId ? `ID: ${serverId}` : 'нет ID'}</dd></div>
                 <div><dt>Предметов</dt><dd>{auction.items.length}</dd></div>
-                <div><dt>Предупреждения</dt><dd className={warnings ? 'warning' : ''}>{warnings || 'нет'}</dd></div>
+                <div><dt>Предупреждения</dt><dd className={warning.level}>{warning.text}</dd></div>
               </dl>
             </article>
           );
