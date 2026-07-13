@@ -1,4 +1,5 @@
 import { auctionCurrencies } from './auctionCommands';
+import { AuctionDurationPicker } from './AuctionDurationPicker';
 import type { ReactNode } from 'react';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionDayFolder, AuctionPriceMode, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionRibbon.css';
@@ -14,9 +15,9 @@ type AuctionRibbonProps = {
   startTime: string;
   endTime: string;
   showDayDelete: boolean;
+  commandsEnabled: boolean;
   onTabChange: (tab: AuctionRibbonTab) => void;
   onUiModeChange: (mode: AuctionUiMode) => void;
-  onWorkflowModeChange: (mode: AuctionWorkflowMode) => void;
   onNewDay: () => void;
   onCopyDay: () => void;
   onDeleteDay: () => void;
@@ -28,10 +29,10 @@ type AuctionRibbonProps = {
   onEndTimeChange: (time: string) => void;
   onPriceModeChange: (mode: AuctionPriceMode) => void;
   onResetPrices: () => void;
-  onClearServerIds: () => void;
   onCheckErrors: () => void;
   onSetBuilderMode: (mode: AuctionBuilderMode) => void;
   onSetCommandStage: (stage: AuctionCommandStage) => void;
+  onOpenCommandGenerator: () => void;
   onOpenDownload: () => void;
 };
 
@@ -108,9 +109,9 @@ export function AuctionRibbon({
   startTime,
   endTime,
   showDayDelete,
+  commandsEnabled,
   onTabChange,
   onUiModeChange,
-  onWorkflowModeChange,
   onNewDay,
   onCopyDay,
   onDeleteDay,
@@ -122,14 +123,15 @@ export function AuctionRibbon({
   onEndTimeChange,
   onPriceModeChange,
   onResetPrices,
-  onClearServerIds,
   onCheckErrors,
   onSetBuilderMode,
   onSetCommandStage,
+  onOpenCommandGenerator,
   onOpenDownload
 }: AuctionRibbonProps) {
   const hasFolder = Boolean(selectedFolder);
   const isPlanned = selectedFolder?.category === 'planned';
+  const visibleRibbonTabs = commandsEnabled ? ribbonTabs : ribbonTabs.filter((tab) => tab.id !== 'commands');
 
   const renderTabContent = () => {
     if (activeTab === 'home') {
@@ -160,7 +162,7 @@ export function AuctionRibbon({
               </select>
             </RibbonField>
             <RibbonField label="Длительность">
-              <input type="number" min={1} value={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={(event) => onDurationChange(Number(event.target.value))} />
+              <AuctionDurationPicker minutes={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={onDurationChange} />
             </RibbonField>
             <RibbonField label="Шаг ставки">
               <input type="number" min={1} value={selectedFolder?.defaultStepPrice ?? 10} disabled={!hasFolder} onChange={(event) => onStepPriceChange(Number(event.target.value))} />
@@ -198,22 +200,11 @@ export function AuctionRibbon({
 
     if (activeTab === 'commands') {
       return (
-        <>
-          <RibbonGroup title="Серверные ID">
-            <RibbonButton icon="ID" label="Вставить ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
-            <RibbonButton icon="OK" label="Проверить ID" disabled={!hasFolder} onClick={onCheckErrors} />
-            <RibbonButton icon="#" label="Список ID" disabled={!hasFolder} onClick={() => onSetCommandStage('ids')} />
-            <RibbonButton icon="CL" label="Очистить ID" disabled={!hasFolder} onClick={onClearServerIds} />
-          </RibbonGroup>
-          <RibbonGroup title="Команды">
-            <RibbonButton icon="N" label="Новые" disabled={!hasFolder} onClick={() => onWorkflowModeChange('install')} />
-            <RibbonButton icon="E" label="Существующие" disabled={!hasFolder} onClick={() => onWorkflowModeChange('existing')} />
-            <RibbonButton icon=">" label="Генерировать" disabled={!hasFolder} onClick={() => onSetCommandStage('create')} />
-            <RibbonButton icon="DL" label="Скачать файл" disabled={!hasFolder} onClick={onOpenDownload} />
-            <RibbonButton icon="SH" label="Показать" disabled={!hasFolder} onClick={() => onSetCommandStage('settings')} />
-            <span className="auction-ribbon-status">{workflowMode === 'install' ? 'Новые слоты' : 'По готовым ID'}</span>
-          </RibbonGroup>
-        </>
+        <RibbonGroup title="Команды">
+          <RibbonButton icon=">" label="Генерировать" disabled={!hasFolder || !commandsEnabled} onClick={onOpenCommandGenerator} />
+          <RibbonButton icon="DL" label="Скачать файл" disabled={!hasFolder || !commandsEnabled} onClick={onOpenDownload} />
+          <span className="auction-ribbon-status">{workflowMode === 'install' ? 'Новые слоты' : 'По готовым ID'}</span>
+        </RibbonGroup>
       );
     }
 
@@ -259,7 +250,7 @@ export function AuctionRibbon({
   return (
     <div className="auction-ribbon" aria-label="auction-ribbon">
       <div className="auction-ribbon-tabs">
-        {ribbonTabs.map((tab) => (
+        {visibleRibbonTabs.map((tab) => (
           <button
             key={tab.id}
             type="button"

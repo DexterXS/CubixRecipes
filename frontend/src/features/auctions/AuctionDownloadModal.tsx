@@ -7,7 +7,7 @@ type AuctionDownloadModalProps = {
   onClose: () => void;
 };
 
-function downloadTextWithoutExtension(filename: string, text: string) {
+export function downloadTextWithoutExtension(filename: string, text: string) {
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

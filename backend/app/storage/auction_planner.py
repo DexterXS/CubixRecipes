@@ -11,6 +11,8 @@ from typing import Any
 MAX_AUCTION_DAYS = 365
 MAX_AUCTIONS_PER_DAY = 120
 MAX_ITEMS_PER_AUCTION = 64
+MAX_COMMAND_PROFILE_ENTRIES = 80
+MAX_CUSTOM_COMMAND_LENGTH = 4000
 
 
 class AuctionPlannerStore:
@@ -76,7 +78,53 @@ class AuctionPlannerStore:
                 if not isinstance(items, list):
                     items = []
                 auction['items'] = items[:MAX_ITEMS_PER_AUCTION]
+        state['commandProfile'] = self._coerce_command_profile(state.get('commandProfile'))
         return state
+
+    def _coerce_command_profile(self, raw_profile: Any) -> dict[str, Any]:
+        default_entries = [
+            {'id': 'create', 'kind': 'builtin', 'block': 'create', 'enabled': True},
+            {'id': 'ids', 'kind': 'builtin', 'block': 'ids', 'enabled': False},
+            {'id': 'items', 'kind': 'builtin', 'block': 'items', 'enabled': True},
+            {'id': 'settings', 'kind': 'builtin', 'block': 'settings', 'enabled': True},
+        ]
+        if not isinstance(raw_profile, dict):
+            return {'mode': 'install', 'entries': default_entries}
+        mode = raw_profile.get('mode') if raw_profile.get('mode') in {'install', 'existing'} else 'install'
+        entries = raw_profile.get('entries')
+        if not isinstance(entries, list):
+            entries = default_entries
+        safe_entries: list[dict[str, Any]] = []
+        seen_builtin: set[str] = set()
+        for entry in entries[:MAX_COMMAND_PROFILE_ENTRIES]:
+            if not isinstance(entry, dict):
+                continue
+            kind = entry.get('kind')
+            if kind == 'builtin':
+                block = entry.get('block')
+                if block not in {'create', 'ids', 'items', 'settings'} or block in seen_builtin:
+                    continue
+                seen_builtin.add(block)
+                safe_entries.append({
+                    'id': block,
+                    'kind': 'builtin',
+                    'block': block,
+                    'enabled': entry.get('enabled') is not False,
+                })
+            elif kind == 'custom':
+                entry_id = str(entry.get('id') or f'custom-{len(safe_entries) + 1}')[:80]
+                safe_entries.append({
+                    'id': entry_id,
+                    'kind': 'custom',
+                    'label': str(entry.get('label') or 'Кастомная команда')[:120],
+                    'command': str(entry.get('command') or '')[:MAX_CUSTOM_COMMAND_LENGTH],
+                    'enabled': entry.get('enabled') is not False,
+                })
+        for default_entry in default_entries:
+            block = default_entry['block']
+            if block not in seen_builtin:
+                safe_entries.append(default_entry)
+        return {'mode': mode, 'entries': safe_entries[:MAX_COMMAND_PROFILE_ENTRIES]}
 
     def _empty_state(self) -> dict[str, Any]:
         return {
@@ -86,6 +134,7 @@ class AuctionPlannerStore:
             'workflowMode': 'install',
             'uiMode': 'normal',
             'commandStage': 'create',
+            'commandProfile': self._coerce_command_profile(None),
         }
 
     def _now_ms(self) -> int:

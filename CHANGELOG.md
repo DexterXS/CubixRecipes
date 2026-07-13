@@ -15,6 +15,8 @@
 - Extracted the Auctions central workspace composition into `AuctionWorkspaceView`, keeping `/aca` generation in the builder while reducing the oversized builder module.
 - Added a selected-lot quick settings side panel for opened Auctions folders, with immediate apply/save for lot name, description, currency, price, duration, status, and server ID edits.
 - Added Auctions ribbon start/end time controls beside the timezone selector; the end time now drives the day duration, including overnight ranges.
+- Added a unit-aware Auctions duration picker with day/hour/minute modes that stays synced both ways with the end-time control.
+- Added a saved Auctions command-generation profile stored in backend data, with selectable blocks, ordering, custom commands, generated preview, and direct download.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
@@ -62,6 +64,7 @@
 ### Fixed
 - Made Auctions folder cards show currency beside start price and bid step, show each lot description directly in the opened-folder list, and mark missing descriptions as high-risk warnings.
 - Removed top-ribbon apply/delete clutter from opened Auctions lot lists: day deletion now appears only on the folder grid, and explicit apply lives on the selected-lot quick panel.
+- Simplified the Auctions command ribbon to working generate/download actions and shows the tab only on the day-folder grid.
 - Made the Auctions planner refresh newer server state in already-open tabs when they have no unsaved local edits, so explicit lot apply/save changes propagate without a manual page reload.
 - Fixed mixed-currency Auctions folders: folder currency is now treated as the default for new lots, folder cards/details show actual lot currencies, and graph placement conflicts use the real currencies inside lots.
 - Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.

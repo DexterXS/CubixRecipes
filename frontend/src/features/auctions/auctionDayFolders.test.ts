@@ -6,7 +6,10 @@ import {
   cloneAuctionDayFolder,
   createAuctionDayFolder,
   createAuctionDraft,
+  durationMinutesFromUnitValue,
   durationMinutesBetweenTimes,
+  durationUnitFromMinutes,
+  durationValueForUnit,
   endTimeFromStartAndDuration,
   getDayServerIdStatus,
   nextDayLocal,
@@ -189,7 +192,20 @@ describe('auction day folders', () => {
     expect(durationMinutesBetweenTimes('23:30', '01:00')).toBe(90);
     expect(durationMinutesBetweenTimes('10:00', '10:00')).toBe(1440);
     expect(durationMinutesBetweenTimes('10:00', '12:00', 4320)).toBe(4440);
+    expect(durationMinutesBetweenTimes('10:00', '09:00', 4320)).toBe(4260);
     expect(durationMinutesBetweenTimes('10:00', '10:00', 4320)).toBe(4320);
     expect(endTimeFromStartAndDuration('23:30', 90)).toBe('01:00');
+  });
+
+  test('formats picker duration values as days, hours, or minutes', () => {
+    expect(durationUnitFromMinutes(4320)).toBe('days');
+    expect(durationValueForUnit(4320, 'days')).toBe(3);
+    expect(durationUnitFromMinutes(180)).toBe('hours');
+    expect(durationValueForUnit(180, 'hours')).toBe(3);
+    expect(durationUnitFromMinutes(95)).toBe('minutes');
+    expect(durationValueForUnit(95, 'minutes')).toBe(95);
+    expect(durationMinutesFromUnitValue(2, 'days')).toBe(2880);
+    expect(durationMinutesFromUnitValue(6, 'hours')).toBe(360);
+    expect(durationMinutesFromUnitValue(45, 'minutes')).toBe(45);
   });
 });

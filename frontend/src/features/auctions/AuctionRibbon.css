@@ -3,7 +3,7 @@
   border-radius: 8px;
   background: rgba(7, 18, 40, 0.86);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .auction-ribbon-tabs {
@@ -36,6 +36,10 @@
   align-items: stretch;
   overflow-x: auto;
   padding: 12px 14px;
+}
+
+.auction-ribbon-content:has(.auction-duration-picker-popover) {
+  overflow: visible;
 }
 
 .auction-ribbon-group {

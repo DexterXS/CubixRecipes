@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { getAuctionPlannerState, saveAuctionPlannerState } from '../../services/api/auctions';
 import { dateInputFromLocalDateTime, formatAuctionDayTitle } from './auctionDayFolders';
-import type { AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import { normalizeAuctionCommandProfile } from './auctionCommandProfile';
+import type { AuctionCommandProfile, AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 
 type AuctionPlannerPersistenceParams = {
   dayFolders: AuctionDayFolder[];
@@ -10,6 +11,7 @@ type AuctionPlannerPersistenceParams = {
   workflowMode: AuctionWorkflowMode;
   uiMode: AuctionUiMode;
   commandStage: AuctionCommandStage;
+  commandProfile: AuctionCommandProfile;
   curve: AuctionCurve;
   graphStartLocal: string;
   onLoad: (state: AuctionPlannerState) => void;
@@ -25,6 +27,7 @@ function buildPlannerState(params: AuctionPlannerPersistenceParams): AuctionPlan
     workflowMode: params.workflowMode,
     uiMode: params.uiMode,
     commandStage: params.commandStage,
+    commandProfile: params.commandProfile,
     curve: params.curve,
     graphStartLocal: params.graphStartLocal
   };
@@ -96,6 +99,7 @@ function normalizePlannerState(payload: { state: AuctionPlannerState }, localSta
     workflowMode: localState?.workflowMode ?? payload.state.workflowMode ?? 'install',
     uiMode: localState?.uiMode ?? payload.state.uiMode ?? 'normal',
     commandStage: localState?.commandStage ?? payload.state.commandStage ?? 'create',
+    commandProfile: normalizeAuctionCommandProfile(payload.state.commandProfile),
     curve: payload.state.curve,
     graphStartLocal: payload.state.graphStartLocal
   };
@@ -189,7 +193,7 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
         window.clearTimeout(saveTimerRef.current);
       }
     };
-  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage, params.curve, params.graphStartLocal, saveNow]);
+  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage, params.commandProfile, params.curve, params.graphStartLocal, saveNow]);
 
   return { saveNow };
 }
