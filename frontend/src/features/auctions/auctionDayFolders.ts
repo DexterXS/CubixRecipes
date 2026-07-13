@@ -33,6 +33,39 @@ export function localDateTimeForDay(dateLocal: string, timeLocal = '10:00'): str
   return `${dateLocal}T${timeLocal}`;
 }
 
+export function timeInputFromLocalDateTime(value: string): string {
+  return value.includes('T') ? value.slice(11, 16) : '10:00';
+}
+
+export function minutesFromTimeInput(value: string): number | null {
+  const match = value.match(/^(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (!Number.isInteger(hours) || !Number.isInteger(minutes) || hours > 23 || minutes > 59) return null;
+  return hours * 60 + minutes;
+}
+
+export function durationMinutesBetweenTimes(startTime: string, endTime: string, baseDurationMinutes = 0): number | null {
+  const startMinutes = minutesFromTimeInput(startTime);
+  const endMinutes = minutesFromTimeInput(endTime);
+  if (startMinutes === null || endMinutes === null) return null;
+  const fullDays = Math.max(0, Math.floor((Number.isFinite(baseDurationMinutes) ? baseDurationMinutes : 0) / (24 * 60)));
+  let timeDelta = endMinutes - startMinutes;
+  if (timeDelta < 0) timeDelta += 24 * 60;
+  if (timeDelta === 0) return Math.max(24 * 60, fullDays * 24 * 60);
+  return fullDays * 24 * 60 + timeDelta;
+}
+
+export function endTimeFromStartAndDuration(startTime: string, durationMinutes: number): string {
+  const startMinutes = minutesFromTimeInput(startTime) ?? 10 * 60;
+  const safeDuration = Math.max(1, Math.round(Number.isFinite(durationMinutes) ? durationMinutes : 1));
+  const totalMinutes = (startMinutes + safeDuration) % (24 * 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
 export function formatAuctionDayTitle(dateLocal: string): string {
   const match = dateLocal.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return dateLocal;
@@ -128,10 +161,6 @@ export function createInitialAuctionDayFolder(nowMs = Date.now(), timezoneOffset
   });
 }
 
-function timeFromLocalDateTime(value: string): string {
-  return value.includes('T') ? value.slice(11, 16) : '10:00';
-}
-
 export function cloneAuctionDayFolder(source: AuctionDayFolder, params: { id: string; dateLocal: string; title?: string }): AuctionDayFolder {
   const title = params.title ?? categoryTitle(source.category, params.dateLocal);
   return {
@@ -143,7 +172,7 @@ export function cloneAuctionDayFolder(source: AuctionDayFolder, params: { id: st
       ...auction,
       id: `${params.id}-auction-${index + 1}`,
       serverIds: {},
-      startLocal: localDateTimeForDay(params.dateLocal, timeFromLocalDateTime(auction.startLocal)),
+      startLocal: localDateTimeForDay(params.dateLocal, timeInputFromLocalDateTime(auction.startLocal)),
       items: auction.items.map((item) => ({ ...item }))
     }))
   };

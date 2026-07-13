@@ -431,22 +431,25 @@ Last full rebuild: 2026-06-29
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
-  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, and selected-folder details. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
+  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, selected-folder details, and the selected-lot quick settings panel. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
   - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
   - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
+  - Provides immediate save for explicit lot apply actions and periodically refreshes newer server planner state when the local tab has no unsaved edits.
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
-  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
-  - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters, item/lot actions, commands/server IDs, graphs/prices, tools/planner, and view mode.
+  - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters with timezone/start/end time controls, item/lot actions, commands/server IDs, graphs/prices, tools/planner, and view mode. Day deletion is shown only while the folder grid is visible.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
   - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
   - Owns the selected-folder right panel. It manages folder-level actions and fields only: open/copy/delete folder, regular/planned category, regular folder date, planned repeat settings, currency/duration/step/state, price mode, statistics, server-ID status, graph applicability, and expert-only folder metadata.
+- `frontend/src/features/auctions/AuctionLotQuickPanel.tsx`
+  - Owns the selected-lot quick settings panel shown beside the opened-folder lot list: lot name, description, currency, prices, duration, state, primary server ID, command shortcut, full-lot open action, and explicit apply/save.
 - `frontend/src/features/auctions/AuctionLotWorkspace.tsx`
   - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/order/NBT controls, simplified apply/cancel action row, auction command-control panel without state or start/end date editing, editable whole-lot start price, and NEI catalog for adding items to the current lot.
 - `frontend/src/features/auctions/AuctionDownloadModal.tsx`
