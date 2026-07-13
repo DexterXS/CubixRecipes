@@ -157,7 +157,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/auction_planner.py`
   - JSON-backed per-server Auctions planner state for frontend day folders and lots.
   - Class: `AuctionPlannerStore`.
-  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists, and keeps the full local planner state across page reloads and deploys.
+  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists plus command-generation profile entries, and keeps the full local planner state across page reloads and deploys.
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
@@ -435,15 +435,19 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
   - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
   - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
-  - Provides immediate save for explicit lot apply actions and periodically refreshes newer server planner state when the local tab has no unsaved edits.
+  - Provides immediate save for explicit lot apply actions and periodically refreshes newer server planner state when the local tab has no unsaved edits. Command generation profiles are saved in the same backend data file.
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
   - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
-  - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters with duration picker plus timezone/start/end time controls, item/lot actions, commands/server IDs, graphs/prices, tools/planner, and view mode. Day deletion is shown only while the folder grid is visible.
+  - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters with duration picker plus timezone/start/end time controls, item/lot actions, simplified command generation/download actions, graphs/prices, tools/planner, and view mode. Day deletion and the Commands tab are shown only while the folder grid is visible.
 - `frontend/src/features/auctions/AuctionDurationPicker.tsx`
   - Owns the ribbon duration popover for day/hour/minute selection. It stores the planner value as minutes while presenting a compact unit-aware selector that stays synced with the end-time control.
+- `frontend/src/features/auctions/auctionCommandProfile.ts`
+  - Owns command-generation profile defaults, normalization, block labels, and assembling selected built-in/custom command blocks in saved order.
+- `frontend/src/features/auctions/AuctionCommandGeneratorModal.tsx`
+  - Owns the command generation menu opened from the ribbon: saved mode, enabled blocks, block order, custom command entries, generated preview, profile save, and direct download.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
   - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
@@ -469,7 +473,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionHelpTip.tsx`
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
-  - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
+  - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule. User-selectable profile assembly lives in `auctionCommandProfile.ts`.
   - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
   - Also owns the wipe-start date control and approximate wipe-end window shown above the graph.

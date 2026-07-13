@@ -4,6 +4,7 @@ export type AuctionCurrency = 'VAULT' | 'DONATE' | 'BONUS';
 export type AuctionBuilderMode = 'config' | 'items';
 export type AuctionWorkflowMode = 'install' | 'existing';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
+export type AuctionCommandBuiltInBlock = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionItemIdMode = 'raw' | 'legacy';
 export type AuctionState = 'SETUP' | 'ACTIVE' | 'PAUSED' | 'CLOSED' | 'ENDED';
 export type AuctionPriceMode = 'graph' | 'manual';
@@ -67,6 +68,26 @@ export type AuctionDayFolder = {
   auctions: AuctionDraft[];
 };
 
+export type AuctionCommandProfileEntry =
+  | {
+    id: AuctionCommandBuiltInBlock;
+    kind: 'builtin';
+    block: AuctionCommandBuiltInBlock;
+    enabled: boolean;
+  }
+  | {
+    id: string;
+    kind: 'custom';
+    label: string;
+    command: string;
+    enabled: boolean;
+  };
+
+export type AuctionCommandProfile = {
+  mode: AuctionWorkflowMode;
+  entries: AuctionCommandProfileEntry[];
+};
+
 export type AuctionPlannerState = {
   dayFolders: AuctionDayFolder[];
   selectedDayFolderId: string;
@@ -74,6 +95,7 @@ export type AuctionPlannerState = {
   workflowMode: AuctionWorkflowMode;
   uiMode: AuctionUiMode;
   commandStage: AuctionCommandStage;
+  commandProfile?: AuctionCommandProfile;
   curve?: AuctionCurve;
   graphStartLocal?: string;
 };

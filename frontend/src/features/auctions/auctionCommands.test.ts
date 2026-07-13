@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
 import { buildAuctionCommandStages, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
-import type { AuctionDraft } from './auctionTypes';
+import { buildAuctionCommandsFromProfile, normalizeAuctionCommandProfile } from './auctionCommandProfile';
+import type { AuctionCommandProfile, AuctionDraft } from './auctionTypes';
 
 const baseAuction: AuctionDraft = {
   id: 'local-1',
@@ -135,5 +136,37 @@ describe('auction command generation', () => {
 
   test('strips file extensions from generated filenames', () => {
     expect(sanitizeAuctionFilename('auction_pack.txt')).toBe('auction_pack');
+  });
+
+  test('builds command output from a saved profile without duplicated built-in blocks', () => {
+    const stages = buildAuctionCommandStages({
+      auctions: [
+        baseAuction,
+        { ...baseAuction, id: 'local-2', name: 'Second auction', currency: 'VAULT', baseStartPrice: 5000, baseStepPrice: 20 }
+      ],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      commandPlayer: '@p',
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'install'
+    });
+    const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
+      mode: 'install',
+      entries: [
+        { id: 'create', kind: 'builtin', block: 'create', enabled: true },
+        { id: 'create', kind: 'builtin', block: 'create', enabled: true },
+        { id: 'custom-end', kind: 'custom', label: 'Финал', command: '/say done', enabled: true },
+        { id: 'items', kind: 'builtin', block: 'items', enabled: false },
+        { id: 'settings', kind: 'builtin', block: 'settings', enabled: false }
+      ]
+    });
+
+    const output = buildAuctionCommandsFromProfile(stages, profile);
+    const lines = output.split('\n');
+
+    expect(lines.filter((line) => line.startsWith('/aca create'))).toHaveLength(2);
+    expect(output).toMatch(/VAULT\n\/say done$/);
+    expect(output).not.toContain('/aca create 31.03.2026_20:20 31.03.2026_20:10');
   });
 });
