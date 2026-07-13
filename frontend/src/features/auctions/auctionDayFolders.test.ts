@@ -11,6 +11,7 @@ import {
   durationUnitFromMinutes,
   durationValueForUnit,
   endTimeFromStartAndDuration,
+  formatDurationCompact,
   getDayServerIdStatus,
   nextDayLocal,
   summarizeAuctionDayFolder,
@@ -207,5 +208,12 @@ describe('auction day folders', () => {
     expect(durationMinutesFromUnitValue(2, 'days')).toBe(2880);
     expect(durationMinutesFromUnitValue(6, 'hours')).toBe(360);
     expect(durationMinutesFromUnitValue(45, 'minutes')).toBe(45);
+  });
+
+  test('formats card durations with only non-zero parts', () => {
+    expect(formatDurationCompact(4860)).toBe('3 дн. 9 ч.');
+    expect(formatDurationCompact(4320)).toBe('3 дн.');
+    expect(formatDurationCompact(150)).toBe('2 ч. 30 мин.');
+    expect(formatDurationCompact(45)).toBe('45 мин.');
   });
 });

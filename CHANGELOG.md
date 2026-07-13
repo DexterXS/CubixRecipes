@@ -16,6 +16,7 @@
 - Added a selected-lot quick settings side panel for opened Auctions folders, with immediate apply/save for lot name, description, currency, price, duration, status, and server ID edits.
 - Added Auctions ribbon start/end time controls beside the timezone selector; the end time now drives the day duration, including overnight ranges.
 - Added a unit-aware Auctions duration picker with day/hour/minute modes that stays synced both ways with the end-time control.
+- Changed Auctions folder cards to display duration as compact days, hours, and minutes instead of raw minutes.
 - Added a saved Auctions command-generation profile stored in backend data, with selectable blocks, ordering, custom commands, generated preview, and direct download.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.

@@ -439,7 +439,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
-  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, compact duration display, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
   - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters with duration picker plus timezone/start/end time controls, item/lot actions, simplified command generation/download actions, graphs/prices, tools/planner, and view mode. Day deletion and the Commands tab are shown only while the folder grid is visible.
 - `frontend/src/features/auctions/AuctionDurationPicker.tsx`
@@ -449,7 +449,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionCommandGeneratorModal.tsx`
   - Owns the command generation menu opened from the ribbon: saved mode, enabled blocks, block order, custom command entries, generated preview, profile save, and direct download.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
-  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
+  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
