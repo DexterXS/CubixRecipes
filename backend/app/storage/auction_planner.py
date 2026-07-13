@@ -12,7 +12,37 @@ MAX_AUCTION_DAYS = 365
 MAX_AUCTIONS_PER_DAY = 120
 MAX_ITEMS_PER_AUCTION = 64
 MAX_COMMAND_PROFILE_ENTRIES = 80
-MAX_CUSTOM_COMMAND_LENGTH = 4000
+MAX_COMMAND_TEMPLATE_LENGTH = 4000
+
+AUCTION_COMMAND_STATES = {'SETUP', 'ACTIVE', 'PAUSED', 'CLOSED', 'ENDED'}
+AUCTION_COMMAND_MODES = {'install', 'existing'}
+AUCTION_COMMAND_SCOPES = {'file', 'auction', 'item'}
+AUCTION_COMMAND_TEMPLATES = {
+    'create': ('Создать слот', 'auction', '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}'),
+    'idList': ('Строка ID', 'auction', '{auctionName} -> {serverId}'),
+    'clearPlayer': ('Очистить инвентарь', 'item', '/clear {player}'),
+    'giveItem': ('Выдать предмет', 'item', '/give {player} {itemId} {quantity} {meta}'),
+    'addItem': ('Добавить предмет', 'item', '/aca addItem {serverId}'),
+    'setName': ('Название', 'auction', '/aca setName {serverId} {auctionName}'),
+    'setDescription': ('Описание', 'auction', '/aca setDescription {serverId} {description}'),
+    'setStartDate': ('Старт', 'auction', '/aca setStartDate {serverId} {startDate}'),
+    'setEndDate': ('Конец', 'auction', '/aca setEndDate {serverId} {endDate}'),
+    'setCurrency': ('Валюта', 'auction', '/aca setCurrency {serverId} {currency}'),
+    'setStartPrice': ('Стартовая цена', 'auction', '/aca setStartPrice {serverId} {startPrice}'),
+    'setStepPrice': ('Шаг ставки', 'auction', '/aca setStepPrice {serverId} {stepPrice}'),
+    'setState': ('Статус', 'auction', '/aca setState {serverId} {state}'),
+    'scheduleCreate': ('Расписание', 'auction', '/aca scheduleCreate {serverId} {startDate} {scheduleLeadDate} {repeatIntervalSeconds} {durationSeconds}'),
+}
+INSTALL_COMMAND_ORDER = [
+    'create', 'idList', 'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription',
+    'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState',
+    'scheduleCreate',
+]
+EXISTING_COMMAND_ORDER = [
+    'idList', 'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate',
+    'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate',
+    'create',
+]
 
 
 class AuctionPlannerStore:
@@ -81,50 +111,146 @@ class AuctionPlannerStore:
         state['commandProfile'] = self._coerce_command_profile(state.get('commandProfile'))
         return state
 
-    def _coerce_command_profile(self, raw_profile: Any) -> dict[str, Any]:
-        default_entries = [
-            {'id': 'create', 'kind': 'builtin', 'block': 'create', 'enabled': True},
-            {'id': 'ids', 'kind': 'builtin', 'block': 'ids', 'enabled': False},
-            {'id': 'items', 'kind': 'builtin', 'block': 'items', 'enabled': True},
-            {'id': 'settings', 'kind': 'builtin', 'block': 'settings', 'enabled': True},
-        ]
-        if not isinstance(raw_profile, dict):
-            return {'mode': 'install', 'entries': default_entries}
-        mode = raw_profile.get('mode') if raw_profile.get('mode') in {'install', 'existing'} else 'install'
-        entries = raw_profile.get('entries')
-        if not isinstance(entries, list):
-            entries = default_entries
-        safe_entries: list[dict[str, Any]] = []
-        seen_builtin: set[str] = set()
-        for entry in entries[:MAX_COMMAND_PROFILE_ENTRIES]:
+    def _default_command_entry(self, command: str, enabled: bool) -> dict[str, Any]:
+        label, scope, template = AUCTION_COMMAND_TEMPLATES[command]
+        return {
+            'id': command,
+            'kind': 'template',
+            'command': command,
+            'label': label,
+            'template': template,
+            'scope': scope,
+            'enabled': enabled,
+        }
+
+    def _default_command_entries(self, mode: str) -> list[dict[str, Any]]:
+        if mode == 'install':
+            enabled = {'create'}
+            order = INSTALL_COMMAND_ORDER
+        else:
+            enabled = {
+                'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription',
+                'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice',
+                'setState', 'scheduleCreate',
+            }
+            order = EXISTING_COMMAND_ORDER
+        return [self._default_command_entry(command, command in enabled) for command in order]
+
+    def _coerce_command_entry(self, raw_entry: Any, index: int) -> dict[str, Any] | None:
+        if not isinstance(raw_entry, dict):
+            return None
+        kind = raw_entry.get('kind')
+        if kind == 'template':
+            command = raw_entry.get('command')
+            if command not in AUCTION_COMMAND_TEMPLATES:
+                return None
+            label, scope, template = AUCTION_COMMAND_TEMPLATES[command]
+            return {
+                'id': command,
+                'kind': 'template',
+                'command': command,
+                'label': str(raw_entry.get('label') or label)[:120],
+                'template': str(raw_entry.get('template') or template)[:MAX_COMMAND_TEMPLATE_LENGTH],
+                'scope': scope,
+                'enabled': raw_entry.get('enabled') is not False,
+            }
+        if kind == 'custom':
+            scope = raw_entry.get('scope') if raw_entry.get('scope') in AUCTION_COMMAND_SCOPES else 'file'
+            return {
+                'id': str(raw_entry.get('id') or f'custom-{index + 1}')[:80],
+                'kind': 'custom',
+                'label': str(raw_entry.get('label') or 'Своя команда')[:120],
+                'template': str(raw_entry.get('template') or raw_entry.get('command') or '')[:MAX_COMMAND_TEMPLATE_LENGTH],
+                'scope': scope,
+                'enabled': raw_entry.get('enabled') is not False,
+            }
+        return None
+
+    def _legacy_command_entries(self, raw_entries: Any) -> list[dict[str, Any]]:
+        if not isinstance(raw_entries, list):
+            return []
+        migrated: list[dict[str, Any]] = []
+        for index, entry in enumerate(raw_entries[:MAX_COMMAND_PROFILE_ENTRIES]):
             if not isinstance(entry, dict):
                 continue
-            kind = entry.get('kind')
-            if kind == 'builtin':
-                block = entry.get('block')
-                if block not in {'create', 'ids', 'items', 'settings'} or block in seen_builtin:
+            if entry.get('kind') == 'custom':
+                custom_entry = self._coerce_command_entry(entry, index)
+                if custom_entry is not None:
+                    migrated.append(custom_entry)
+                continue
+            if entry.get('kind') != 'builtin':
+                continue
+            enabled = entry.get('enabled') is not False
+            block = entry.get('block')
+            if block == 'create':
+                migrated.append(self._default_command_entry('create', enabled))
+            elif block == 'ids':
+                migrated.append(self._default_command_entry('idList', enabled))
+            elif block == 'items':
+                for command in ['clearPlayer', 'giveItem', 'addItem']:
+                    migrated.append(self._default_command_entry(command, enabled))
+            elif block == 'settings':
+                for command in [
+                    'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency',
+                    'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate',
+                ]:
+                    migrated.append(self._default_command_entry(command, enabled))
+        return migrated
+
+    def _coerce_command_entries(self, raw_entries: Any, mode: str) -> list[dict[str, Any]]:
+        source = raw_entries if isinstance(raw_entries, list) else self._default_command_entries(mode)
+        safe_entries: list[dict[str, Any]] = []
+        seen_templates: set[str] = set()
+        for index, entry in enumerate(source[:MAX_COMMAND_PROFILE_ENTRIES]):
+            safe_entry = self._coerce_command_entry(entry, index)
+            if safe_entry is None:
+                continue
+            if safe_entry['kind'] == 'template':
+                command = safe_entry['command']
+                if command in seen_templates:
                     continue
-                seen_builtin.add(block)
-                safe_entries.append({
-                    'id': block,
-                    'kind': 'builtin',
-                    'block': block,
-                    'enabled': entry.get('enabled') is not False,
-                })
-            elif kind == 'custom':
-                entry_id = str(entry.get('id') or f'custom-{len(safe_entries) + 1}')[:80]
-                safe_entries.append({
-                    'id': entry_id,
-                    'kind': 'custom',
-                    'label': str(entry.get('label') or 'Кастомная команда')[:120],
-                    'command': str(entry.get('command') or '')[:MAX_CUSTOM_COMMAND_LENGTH],
-                    'enabled': entry.get('enabled') is not False,
-                })
-        for default_entry in default_entries:
-            block = default_entry['block']
-            if block not in seen_builtin:
+                seen_templates.add(command)
+            safe_entries.append(safe_entry)
+        for default_entry in self._default_command_entries(mode):
+            command = default_entry['command']
+            if command not in seen_templates:
                 safe_entries.append(default_entry)
-        return {'mode': mode, 'entries': safe_entries[:MAX_COMMAND_PROFILE_ENTRIES]}
+        return safe_entries[:MAX_COMMAND_PROFILE_ENTRIES]
+
+    def _coerce_command_profile(self, raw_profile: Any) -> dict[str, Any]:
+        if not isinstance(raw_profile, dict):
+            return {
+                'mode': 'install',
+                'playerName': '@p',
+                'stateFilters': ['ACTIVE'],
+                'modes': {
+                    'install': {'entries': self._default_command_entries('install')},
+                    'existing': {'entries': self._default_command_entries('existing')},
+                },
+            }
+        mode = raw_profile.get('mode') if raw_profile.get('mode') in AUCTION_COMMAND_MODES else 'install'
+        player_name = str(raw_profile.get('playerName') or '@p')[:80].strip() or '@p'
+        raw_state_filters = raw_profile.get('stateFilters')
+        state_filters = []
+        if isinstance(raw_state_filters, list):
+            state_filters = [state for state in raw_state_filters if state in AUCTION_COMMAND_STATES]
+        if not state_filters:
+            state_filters = ['ACTIVE']
+        legacy_entries = self._legacy_command_entries(raw_profile.get('entries'))
+        raw_modes = raw_profile.get('modes') if isinstance(raw_profile.get('modes'), dict) else {}
+        modes: dict[str, dict[str, Any]] = {}
+        for profile_mode in ['install', 'existing']:
+            mode_payload = raw_modes.get(profile_mode)
+            raw_entries = mode_payload.get('entries') if isinstance(mode_payload, dict) else None
+            if legacy_entries and profile_mode == mode:
+                raw_entries = legacy_entries
+            modes[profile_mode] = {'entries': self._coerce_command_entries(raw_entries, profile_mode)}
+        return {
+            'mode': mode,
+            'playerName': player_name,
+            'stateFilters': list(dict.fromkeys(state_filters)),
+            'modes': modes,
+        }
 
     def _empty_state(self) -> dict[str, Any]:
         return {

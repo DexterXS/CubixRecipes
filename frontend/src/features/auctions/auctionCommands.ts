@@ -222,12 +222,10 @@ export function buildAuctionCommandStages(params: {
     }
   });
 
-  const create = params.workflowMode === 'install'
-    ? createLines.join('\n').trimEnd()
-    : 'Для существующих аукционов шаг создания не нужен. Заполни серверные ID и скачай шаги 3-4.';
+  const create = params.workflowMode === 'install' ? createLines.join('\n').trimEnd() : '';
   const ids = idLines.join('\n').trimEnd();
-  const items = itemLines.join('\n').trimEnd() || 'Нет команд предметов: сначала впиши серверные ID и добавь предметы без NBT.';
-  const settings = settingsLines.join('\n').trimEnd() || 'Нет команд настроек: сначала впиши серверные ID.';
+  const items = itemLines.join('\n').trimEnd();
+  const settings = settingsLines.join('\n').trimEnd();
   const all = [
     params.workflowMode === 'install' ? `# Шаг 1. Создание пустых слотов\n${create}` : '',
     `# Шаг 2. Выпиши ID, которые сервер выдал после /aca create\n${ids}`,
