@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 export type AuctionCurrency = 'VAULT' | 'DONATE' | 'BONUS';
 export type AuctionBuilderMode = 'config' | 'items';
 export type AuctionWorkflowMode = 'install' | 'existing';
+export type AuctionCommandModeId = string;
+export type AuctionCommandOrderMode = 'grouped' | 'perLot';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionCommandTemplateKey =
   | 'create'
-  | 'idList'
-  | 'clearPlayer'
   | 'giveItem'
   | 'addItem'
   | 'setName'
@@ -103,14 +103,18 @@ export type AuctionCommandProfileEntry =
   };
 
 export type AuctionCommandModeProfile = {
+  id: AuctionCommandModeId;
+  title: string;
+  orderMode: AuctionCommandOrderMode;
   entries: AuctionCommandProfileEntry[];
 };
 
 export type AuctionCommandProfile = {
-  mode: AuctionWorkflowMode;
+  mode: AuctionCommandModeId;
   playerName: string;
   stateFilters: AuctionState[];
-  modes: Record<AuctionWorkflowMode, AuctionCommandModeProfile>;
+  modeOrder: AuctionCommandModeId[];
+  modes: Record<AuctionCommandModeId, AuctionCommandModeProfile>;
 };
 
 export type AuctionPlannerState = {

@@ -1,23 +1,27 @@
 import { useMemo, useState } from 'react';
 import { sanitizeAuctionFilename } from './auctionCommands';
 import {
+  auctionCommandOrderModeLabels,
   auctionCommandScopeLabels,
   auctionStateFilterLabels,
-  auctionWorkflowModeLabels,
   buildAuctionCommandsFromProfile,
+  createAuctionCommandMode,
+  deleteAuctionCommandMode,
   getAuctionCommandModeEntries,
   normalizeAuctionCommandProfile,
+  renameAuctionCommandMode,
+  setAuctionCommandModeOrder,
   setAuctionCommandModeEntries
 } from './auctionCommandProfile';
 import type {
   AuctionCommandEntryScope,
+  AuctionCommandOrderMode,
   AuctionCommandProfile,
   AuctionCommandProfileEntry,
   AuctionCurve,
   AuctionDraft,
   AuctionItemIdMode,
-  AuctionState,
-  AuctionWorkflowMode
+  AuctionState
 } from './auctionTypes';
 import './AuctionCommandGeneratorModal.css';
 
@@ -36,6 +40,7 @@ type AuctionCommandGeneratorModalProps = {
 };
 
 const stateFilterOrder: AuctionState[] = ['ACTIVE', 'SETUP', 'PAUSED', 'CLOSED', 'ENDED'];
+const commandOrderModes: AuctionCommandOrderMode[] = ['grouped', 'perLot'];
 
 function moveEntry(entries: AuctionCommandProfileEntry[], index: number, direction: -1 | 1) {
   const target = index + direction;
@@ -81,7 +86,9 @@ export function AuctionCommandGeneratorModal({
     profile: draft
   }), [auctions, curve, idMode, timezoneOffsetMinutes, graphStartLocal, draft]);
 
-  const setMode = (mode: AuctionWorkflowMode) => {
+  const currentMode = draft.modes[draft.mode];
+
+  const setMode = (mode: string) => {
     setDraft((current) => normalizeAuctionCommandProfile({ ...current, mode }));
   };
 
@@ -91,6 +98,13 @@ export function AuctionCommandGeneratorModal({
 
   const updateEntry = (id: string, updater: (entry: AuctionCommandProfileEntry) => AuctionCommandProfileEntry) => {
     setEntries(entries.map((entry) => entry.id === id ? updater(entry) : entry));
+  };
+
+  const addMode = () => setDraft((current) => createAuctionCommandMode(current));
+  const deleteMode = () => setDraft((current) => deleteAuctionCommandMode(current, current.mode));
+  const renameMode = (title: string) => setDraft((current) => renameAuctionCommandMode(current, current.mode, title));
+  const setOrderMode = (orderMode: AuctionCommandOrderMode) => {
+    setDraft((current) => setAuctionCommandModeOrder(current, current.mode, orderMode));
   };
 
   const toggleState = (state: AuctionState, checked: boolean) => {
@@ -128,96 +142,133 @@ export function AuctionCommandGeneratorModal({
           <section className="auction-command-generator-panel controls">
             <div className="auction-command-control-row">
               <h3>Режим</h3>
-              <div className="auction-command-generator-segmented">
-                {(['install', 'existing'] as AuctionWorkflowMode[]).map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    className={draft.mode === mode ? 'active' : ''}
-                    onClick={() => setMode(mode)}
-                  >
-                    {auctionWorkflowModeLabels[mode]}
-                  </button>
-                ))}
+              <div className="auction-command-mode-bar">
+                <div className="auction-command-generator-segmented">
+                  {draft.modeOrder.map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      className={draft.mode === mode ? 'active' : ''}
+                      onClick={() => setMode(mode)}
+                    >
+                      {draft.modes[mode]?.title ?? mode}
+                    </button>
+                  ))}
+                </div>
+                <button type="button" className="auction-command-mode-button" onClick={addMode}>+ Режим</button>
+                <button type="button" className="auction-command-mode-button danger" disabled={!draft.mode} onClick={deleteMode}>Удалить</button>
               </div>
+              {currentMode ? (
+                <label className="field-block compact-field">
+                  <span>Название режима</span>
+                  <input value={currentMode.title} onChange={(event) => renameMode(event.target.value)} />
+                </label>
+              ) : null}
             </div>
 
-            <div className="auction-command-control-row">
-              <h3>Статусы</h3>
-              <div className="auction-command-status-filter">
-                {stateFilterOrder.map((state) => (
-                  <label key={state}>
-                    <input
-                      type="checkbox"
-                      checked={draft.stateFilters.includes(state)}
-                      onChange={(event) => toggleState(state, event.target.checked)}
-                    />
-                    <span>{auctionStateFilterLabels[state]}</span>
-                  </label>
-                ))}
+            {!currentMode ? (
+              <div className="auction-command-empty-mode">
+                <span>Нет режимов</span>
+                <button type="button" onClick={addMode}>Создать режим</button>
               </div>
-            </div>
+            ) : null}
 
-            <label className="field-block compact-field">
-              <span>Ник / цель</span>
-              <input
-                value={draft.playerName}
-                onChange={(event) => setDraft((current) => normalizeAuctionCommandProfile({ ...current, playerName: event.target.value }))}
-              />
-            </label>
-
-            <div className="auction-command-entry-list">
-              {entries.map((entry, index) => (
-                <article key={entry.id} className={`auction-command-entry ${entry.enabled ? 'enabled' : ''}`}>
-                  <div className="auction-command-entry-top">
-                    <label className="auction-command-entry-check">
-                      <input
-                        type="checkbox"
-                        checked={entry.enabled}
-                        onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, enabled: event.target.checked }))}
-                      />
-                      <span />
-                    </label>
-                    <input
-                      className="auction-command-entry-name"
-                      value={entry.label}
-                      onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, label: event.target.value }))}
-                    />
-                    <div className="auction-command-entry-actions">
-                      <button type="button" title="Выше" disabled={index === 0} onClick={() => setEntries(moveEntry(entries, index, -1))}>↑</button>
-                      <button type="button" title="Ниже" disabled={index === entries.length - 1} onClick={() => setEntries(moveEntry(entries, index, 1))}>↓</button>
-                      {entry.kind === 'custom' ? (
-                        <button type="button" title="Удалить" onClick={() => setEntries(entries.filter((item) => item.id !== entry.id))}>×</button>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="auction-command-entry-meta">
-                    {entry.kind === 'custom' ? (
-                      <select
-                        value={entry.scope}
-                        onChange={(event) => updateEntry(entry.id, (item) => item.kind === 'custom'
-                          ? { ...item, scope: event.target.value as AuctionCommandEntryScope }
-                          : item)}
+            {currentMode ? (
+              <>
+                <div className="auction-command-control-row">
+                  <h3>Порядок</h3>
+                  <div className="auction-command-order-toggle">
+                    {commandOrderModes.map((orderMode) => (
+                      <button
+                        key={orderMode}
+                        type="button"
+                        className={currentMode.orderMode === orderMode ? 'active' : ''}
+                        onClick={() => setOrderMode(orderMode)}
                       >
-                        {Object.entries(auctionCommandScopeLabels).map(([scope, label]) => (
-                          <option key={scope} value={scope}>{label}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span>{auctionCommandScopeLabels[entry.scope]}</span>
-                    )}
+                        {auctionCommandOrderModeLabels[orderMode]}
+                      </button>
+                    ))}
                   </div>
-                  <textarea
-                    value={entry.template}
-                    rows={entry.scope === 'file' ? 2 : 3}
-                    onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, template: event.target.value }))}
+                </div>
+
+                <div className="auction-command-control-row">
+                  <h3>Статусы</h3>
+                  <div className="auction-command-status-filter">
+                    {stateFilterOrder.map((state) => (
+                      <label key={state}>
+                        <input
+                          type="checkbox"
+                          checked={draft.stateFilters.includes(state)}
+                          onChange={(event) => toggleState(state, event.target.checked)}
+                        />
+                        <span>{auctionStateFilterLabels[state]}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <label className="field-block compact-field">
+                  <span>Ник / цель</span>
+                  <input
+                    value={draft.playerName}
+                    onChange={(event) => setDraft((current) => normalizeAuctionCommandProfile({ ...current, playerName: event.target.value }))}
                   />
-                </article>
-              ))}
-            </div>
-            <button type="button" className="auction-command-add-custom" onClick={() => setEntries([...entries, createCustomEntry()])}>
-              + Команда
-            </button>
+                </label>
+
+                <div className="auction-command-entry-list">
+                  {entries.map((entry, index) => (
+                    <article key={entry.id} className={`auction-command-entry ${entry.enabled ? 'enabled' : ''}`}>
+                      <div className="auction-command-entry-top">
+                        <label className="auction-command-entry-check">
+                          <input
+                            type="checkbox"
+                            checked={entry.enabled}
+                            onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, enabled: event.target.checked }))}
+                          />
+                          <span />
+                        </label>
+                        <input
+                          className="auction-command-entry-name"
+                          value={entry.label}
+                          onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, label: event.target.value }))}
+                        />
+                        <div className="auction-command-entry-actions">
+                          <button type="button" title="Выше" disabled={index === 0} onClick={() => setEntries(moveEntry(entries, index, -1))}>↑</button>
+                          <button type="button" title="Ниже" disabled={index === entries.length - 1} onClick={() => setEntries(moveEntry(entries, index, 1))}>↓</button>
+                          {entry.kind === 'custom' ? (
+                            <button type="button" title="Удалить" onClick={() => setEntries(entries.filter((item) => item.id !== entry.id))}>×</button>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="auction-command-entry-meta">
+                        {entry.kind === 'custom' ? (
+                          <select
+                            value={entry.scope}
+                            onChange={(event) => updateEntry(entry.id, (item) => item.kind === 'custom'
+                              ? { ...item, scope: event.target.value as AuctionCommandEntryScope }
+                              : item)}
+                          >
+                            {Object.entries(auctionCommandScopeLabels).map(([scope, label]) => (
+                              <option key={scope} value={scope}>{label}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span>{auctionCommandScopeLabels[entry.scope]}</span>
+                        )}
+                      </div>
+                      <textarea
+                        value={entry.template}
+                        rows={entry.scope === 'file' ? 2 : 3}
+                        onChange={(event) => updateEntry(entry.id, (item) => ({ ...item, template: event.target.value }))}
+                      />
+                    </article>
+                  ))}
+                </div>
+                <button type="button" className="auction-command-add-custom" onClick={() => setEntries([...entries, createCustomEntry()])}>
+                  + Команда
+                </button>
+              </>
+            ) : null}
           </section>
 
           <section className="auction-command-generator-panel preview">

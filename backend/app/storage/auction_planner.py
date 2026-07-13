@@ -15,12 +15,9 @@ MAX_COMMAND_PROFILE_ENTRIES = 80
 MAX_COMMAND_TEMPLATE_LENGTH = 4000
 
 AUCTION_COMMAND_STATES = {'SETUP', 'ACTIVE', 'PAUSED', 'CLOSED', 'ENDED'}
-AUCTION_COMMAND_MODES = {'install', 'existing'}
 AUCTION_COMMAND_SCOPES = {'file', 'auction', 'item'}
 AUCTION_COMMAND_TEMPLATES = {
     'create': ('Создать слот', 'auction', '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}'),
-    'idList': ('Строка ID', 'auction', '{auctionName} -> {serverId}'),
-    'clearPlayer': ('Очистить инвентарь', 'item', '/clear {player}'),
     'giveItem': ('Выдать предмет', 'item', '/give {player} {itemId} {quantity} {meta}'),
     'addItem': ('Добавить предмет', 'item', '/aca addItem {serverId}'),
     'setName': ('Название', 'auction', '/aca setName {serverId} {auctionName}'),
@@ -34,12 +31,12 @@ AUCTION_COMMAND_TEMPLATES = {
     'scheduleCreate': ('Расписание', 'auction', '/aca scheduleCreate {serverId} {startDate} {scheduleLeadDate} {repeatIntervalSeconds} {durationSeconds}'),
 }
 INSTALL_COMMAND_ORDER = [
-    'create', 'idList', 'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription',
+    'create', 'giveItem', 'addItem', 'setName', 'setDescription',
     'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState',
     'scheduleCreate',
 ]
 EXISTING_COMMAND_ORDER = [
-    'idList', 'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate',
+    'giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate',
     'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate',
     'create',
 ]
@@ -129,12 +126,16 @@ class AuctionPlannerStore:
             order = INSTALL_COMMAND_ORDER
         else:
             enabled = {
-                'clearPlayer', 'giveItem', 'addItem', 'setName', 'setDescription',
+                'giveItem', 'addItem', 'setName', 'setDescription',
                 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice',
                 'setState', 'scheduleCreate',
             }
             order = EXISTING_COMMAND_ORDER
         return [self._default_command_entry(command, command in enabled) for command in order]
+
+    def _default_command_mode(self, mode: str) -> dict[str, Any]:
+        title = 'Новые слоты' if mode == 'install' else 'По готовым ID' if mode == 'existing' else 'Новый режим'
+        return {'id': mode, 'title': title, 'orderMode': 'grouped', 'entries': self._default_command_entries(mode)}
 
     def _coerce_command_entry(self, raw_entry: Any, index: int) -> dict[str, Any] | None:
         if not isinstance(raw_entry, dict):
@@ -184,10 +185,8 @@ class AuctionPlannerStore:
             block = entry.get('block')
             if block == 'create':
                 migrated.append(self._default_command_entry('create', enabled))
-            elif block == 'ids':
-                migrated.append(self._default_command_entry('idList', enabled))
             elif block == 'items':
-                for command in ['clearPlayer', 'giveItem', 'addItem']:
+                for command in ['giveItem', 'addItem']:
                     migrated.append(self._default_command_entry(command, enabled))
             elif block == 'settings':
                 for command in [
@@ -198,7 +197,8 @@ class AuctionPlannerStore:
         return migrated
 
     def _coerce_command_entries(self, raw_entries: Any, mode: str) -> list[dict[str, Any]]:
-        source = raw_entries if isinstance(raw_entries, list) else self._default_command_entries(mode)
+        has_entries = isinstance(raw_entries, list)
+        source = raw_entries if has_entries else self._default_command_entries(mode)
         safe_entries: list[dict[str, Any]] = []
         seen_templates: set[str] = set()
         for index, entry in enumerate(source[:MAX_COMMAND_PROFILE_ENTRIES]):
@@ -211,10 +211,11 @@ class AuctionPlannerStore:
                     continue
                 seen_templates.add(command)
             safe_entries.append(safe_entry)
-        for default_entry in self._default_command_entries(mode):
-            command = default_entry['command']
-            if command not in seen_templates:
-                safe_entries.append(default_entry)
+        if not has_entries:
+            for default_entry in self._default_command_entries(mode):
+                command = default_entry['command']
+                if command not in seen_templates:
+                    safe_entries.append(default_entry)
         return safe_entries[:MAX_COMMAND_PROFILE_ENTRIES]
 
     def _coerce_command_profile(self, raw_profile: Any) -> dict[str, Any]:
@@ -223,12 +224,12 @@ class AuctionPlannerStore:
                 'mode': 'install',
                 'playerName': '@p',
                 'stateFilters': ['ACTIVE'],
+                'modeOrder': ['install', 'existing'],
                 'modes': {
-                    'install': {'entries': self._default_command_entries('install')},
-                    'existing': {'entries': self._default_command_entries('existing')},
+                    'install': self._default_command_mode('install'),
+                    'existing': self._default_command_mode('existing'),
                 },
             }
-        mode = raw_profile.get('mode') if raw_profile.get('mode') in AUCTION_COMMAND_MODES else 'install'
         player_name = str(raw_profile.get('playerName') or '@p')[:80].strip() or '@p'
         raw_state_filters = raw_profile.get('stateFilters')
         state_filters = []
@@ -238,17 +239,39 @@ class AuctionPlannerStore:
             state_filters = ['ACTIVE']
         legacy_entries = self._legacy_command_entries(raw_profile.get('entries'))
         raw_modes = raw_profile.get('modes') if isinstance(raw_profile.get('modes'), dict) else {}
+        raw_mode_order = raw_profile.get('modeOrder')
+        if isinstance(raw_mode_order, list):
+            mode_order = [str(mode_id)[:80] for mode_id in raw_mode_order if str(mode_id) in raw_modes]
+        elif raw_modes:
+            mode_order = [str(mode_id)[:80] for mode_id in raw_modes.keys()]
+        else:
+            mode_order = []
+        if not mode_order and 'modes' not in raw_profile and 'modeOrder' not in raw_profile:
+            mode_order = ['install', 'existing']
         modes: dict[str, dict[str, Any]] = {}
-        for profile_mode in ['install', 'existing']:
+        for profile_mode in list(dict.fromkeys(mode_order)):
             mode_payload = raw_modes.get(profile_mode)
             raw_entries = mode_payload.get('entries') if isinstance(mode_payload, dict) else None
-            if legacy_entries and profile_mode == mode:
+            if legacy_entries and raw_profile.get('mode') == profile_mode:
                 raw_entries = legacy_entries
-            modes[profile_mode] = {'entries': self._coerce_command_entries(raw_entries, profile_mode)}
+            title = str(mode_payload.get('title') if isinstance(mode_payload, dict) else '')[:80].strip()
+            if not title:
+                title = 'Новые слоты' if profile_mode == 'install' else 'По готовым ID' if profile_mode == 'existing' else 'Новый режим'
+            order_mode = mode_payload.get('orderMode') if isinstance(mode_payload, dict) else ''
+            order_mode = 'perLot' if order_mode == 'perLot' else 'grouped'
+            modes[profile_mode] = {
+                'id': profile_mode,
+                'title': title,
+                'orderMode': order_mode,
+                'entries': self._coerce_command_entries(raw_entries, profile_mode),
+            }
+        requested_mode = raw_profile.get('mode') if isinstance(raw_profile.get('mode'), str) else ''
+        mode = requested_mode if requested_mode in modes else mode_order[0] if mode_order else ''
         return {
             'mode': mode,
             'playerName': player_name,
             'stateFilters': list(dict.fromkeys(state_filters)),
+            'modeOrder': list(modes.keys()),
             'modes': modes,
         }
 

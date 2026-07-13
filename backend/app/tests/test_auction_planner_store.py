@@ -65,8 +65,10 @@ def test_auction_planner_store_persists_command_profile_modes(tmp_path):
             "mode": "existing",
             "playerName": "DexterXS",
             "stateFilters": ["ACTIVE", "PAUSED"],
+            "modeOrder": ["existing"],
             "modes": {
                 "existing": {
+                    "orderMode": "perLot",
                     "entries": [
                         {
                             "id": "giveItem",
@@ -97,5 +99,70 @@ def test_auction_planner_store_persists_command_profile_modes(tmp_path):
     assert profile["mode"] == "existing"
     assert profile["playerName"] == "DexterXS"
     assert profile["stateFilters"] == ["ACTIVE", "PAUSED"]
+    assert profile["modeOrder"] == ["existing"]
+    assert profile["modes"]["existing"]["orderMode"] == "perLot"
     assert profile["modes"]["existing"]["entries"][0]["template"].startswith("/give {player}")
     assert any(entry["kind"] == "custom" for entry in profile["modes"]["existing"]["entries"])
+
+
+def test_auction_planner_store_allows_empty_command_modes(tmp_path):
+    store = AuctionPlannerStore(tmp_path / "auction_planner.json")
+
+    saved = store.save_state({
+        "dayFolders": [],
+        "commandProfile": {
+            "mode": "",
+            "playerName": "@p",
+            "stateFilters": ["ACTIVE"],
+            "modeOrder": [],
+            "modes": {},
+        },
+    })
+    profile = saved["state"]["commandProfile"]
+
+    assert profile["mode"] == ""
+    assert profile["modeOrder"] == []
+    assert profile["modes"] == {}
+
+
+def test_auction_planner_store_drops_removed_command_templates(tmp_path):
+    store = AuctionPlannerStore(tmp_path / "auction_planner.json")
+
+    saved = store.save_state({
+        "dayFolders": [],
+        "commandProfile": {
+            "mode": "existing",
+            "playerName": "@p",
+            "stateFilters": ["ACTIVE"],
+            "modeOrder": ["existing"],
+            "modes": {
+                "existing": {
+                    "entries": [
+                        {
+                            "id": "clearPlayer",
+                            "kind": "template",
+                            "command": "clearPlayer",
+                            "label": "Clear",
+                            "template": "/clear {player}",
+                            "scope": "item",
+                            "enabled": True,
+                        },
+                        {
+                            "id": "giveItem",
+                            "kind": "template",
+                            "command": "giveItem",
+                            "label": "Give",
+                            "template": "/give {player} {itemId} {quantity} {meta}",
+                            "scope": "item",
+                            "enabled": True,
+                        },
+                    ],
+                }
+            },
+        },
+    })
+    entries = saved["state"]["commandProfile"]["modes"]["existing"]["entries"]
+    commands = [entry["command"] for entry in entries if entry["kind"] == "template"]
+
+    assert "clearPlayer" not in commands
+    assert commands == ["giveItem"]

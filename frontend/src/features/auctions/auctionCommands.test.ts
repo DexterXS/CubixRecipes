@@ -1,7 +1,12 @@
 import { describe, expect, test } from 'vitest';
 
 import { buildAuctionCommandStages, buildAuctionRunPricePreviews, createDefaultAuctionCurve, dayIndexFromStart, formatAuctionUtcDate, sanitizeAuctionFilename } from './auctionCommands';
-import { buildAuctionCommandsFromProfile, normalizeAuctionCommandProfile } from './auctionCommandProfile';
+import {
+  buildAuctionCommandsFromProfile,
+  createDefaultAuctionCommandProfile,
+  getAuctionCommandModeEntries,
+  normalizeAuctionCommandProfile
+} from './auctionCommandProfile';
 import type { AuctionCommandProfile, AuctionDraft } from './auctionTypes';
 
 const baseAuction: AuctionDraft = {
@@ -138,6 +143,27 @@ describe('auction command generation', () => {
     expect(sanitizeAuctionFilename('auction_pack.txt')).toBe('auction_pack');
   });
 
+  test('drops removed command templates and allows an empty mode list', () => {
+    const defaults = createDefaultAuctionCommandProfile();
+    const serializedDefaults = JSON.stringify(defaults);
+
+    expect(serializedDefaults).not.toContain('clearPlayer');
+    expect(serializedDefaults).not.toContain('idList');
+
+    const emptyProfile = normalizeAuctionCommandProfile({
+      mode: '',
+      playerName: '@p',
+      stateFilters: ['ACTIVE'],
+      modeOrder: [],
+      modes: {}
+    });
+
+    expect(emptyProfile.mode).toBe('');
+    expect(emptyProfile.modeOrder).toEqual([]);
+    expect(emptyProfile.modes).toEqual({});
+    expect(getAuctionCommandModeEntries(emptyProfile)).toEqual([]);
+  });
+
   test('builds command output from editable templates, selected statuses, and saved order', () => {
     const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
       mode: 'install',
@@ -175,5 +201,47 @@ describe('auction command generation', () => {
     expect(output).toContain('/aca setState 27 ACTIVE');
     expect(output).not.toContain('Paused auction');
     expect(output).not.toContain('сначала');
+  });
+
+  test('can generate selected commands as a cycle per lot', () => {
+    const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
+      mode: 'cycle',
+      playerName: '@p',
+      stateFilters: ['ACTIVE'],
+      modeOrder: ['cycle'],
+      modes: {
+        cycle: {
+          id: 'cycle',
+          title: 'Cycle',
+          orderMode: 'perLot',
+          entries: [
+            { id: 'giveItem', kind: 'template', command: 'giveItem', label: 'Give', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
+            { id: 'addItem', kind: 'template', command: 'addItem', label: 'Add', template: '/aca addItem {serverId}', scope: 'item', enabled: true },
+            { id: 'setName', kind: 'template', command: 'setName', label: 'Name', template: '/aca setName {serverId} {auctionName}', scope: 'auction', enabled: true }
+          ]
+        }
+      }
+    });
+
+    const output = buildAuctionCommandsFromProfile({
+      auctions: [
+        baseAuction,
+        { ...baseAuction, id: 'local-2', name: 'Second auction', serverIds: { 0: '28' } }
+      ],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      graphStartLocal: '2026-03-01T00:00',
+      profile
+    });
+
+    expect(output.split('\n')).toEqual([
+      '/give @p 1 2 1',
+      '/aca addItem 27',
+      '/aca setName 27 Test auction',
+      '/give @p 1 2 1',
+      '/aca addItem 28',
+      '/aca setName 28 Second auction'
+    ]);
   });
 });

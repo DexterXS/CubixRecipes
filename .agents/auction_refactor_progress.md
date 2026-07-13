@@ -22,6 +22,7 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 16. Done: extracted `AuctionWorkspaceView` so the main builder routes state/actions while a dedicated view component owns the lot, graph, folder, and folder-list composition.
 17. Done: refined the opened-folder lot workflow with ribbon start/end time controls, folder-delete visibility limited to the folder grid, a selected-lot quick settings panel, and explicit lot apply/save refresh behavior without changing `/aca` command behavior.
 18. Done: replaced raw minute entry in the Auctions ribbon with a day/hour/minute duration picker that stays bidirectionally synced with the end-time control.
-19. Done: replaced the mostly inert Commands ribbon with folder-grid-only generate/download actions, added a saved backend command-generation profile, then refined it into a single-mode command template editor with status filters, player target, per-command ordering, custom commands, and live preview.
+19. Done: replaced the mostly inert Commands ribbon with folder-grid-only generate/download actions, added a saved backend command-generation profile, then refined it into dynamic create/rename/delete modes with status filters, player target, per-command ordering, custom commands, grouped/per-lot generation, and live preview.
 20. Done: polished the Auctions folder cards and resized the command generator modal so controls and preview stay within the visible dialog.
-21. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
+21. Done: removed the unused ID-row and inventory-clear command templates from the generator while preserving migration safety for old saved profiles.
+22. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
