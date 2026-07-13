@@ -18,6 +18,7 @@ export type AuctionDayFolderSummary = {
 };
 
 export type AuctionDayServerIdStatus = 'not-needed-yet' | 'waiting' | 'complete' | 'missing';
+export type AuctionDurationUnit = 'days' | 'hours' | 'minutes';
 
 const currencyOrder: AuctionCurrency[] = ['DONATE', 'VAULT', 'BONUS'];
 
@@ -52,7 +53,10 @@ export function durationMinutesBetweenTimes(startTime: string, endTime: string, 
   if (startMinutes === null || endMinutes === null) return null;
   const fullDays = Math.max(0, Math.floor((Number.isFinite(baseDurationMinutes) ? baseDurationMinutes : 0) / (24 * 60)));
   let timeDelta = endMinutes - startMinutes;
-  if (timeDelta < 0) timeDelta += 24 * 60;
+  if (timeDelta < 0) {
+    timeDelta += 24 * 60;
+    return Math.max(0, fullDays - 1) * 24 * 60 + timeDelta;
+  }
   if (timeDelta === 0) return Math.max(24 * 60, fullDays * 24 * 60);
   return fullDays * 24 * 60 + timeDelta;
 }
@@ -64,6 +68,27 @@ export function endTimeFromStartAndDuration(startTime: string, durationMinutes: 
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+export function durationUnitFromMinutes(durationMinutes: number): AuctionDurationUnit {
+  const safeDuration = Math.max(1, Math.round(Number.isFinite(durationMinutes) ? durationMinutes : 1));
+  if (safeDuration % (24 * 60) === 0) return 'days';
+  if (safeDuration % 60 === 0) return 'hours';
+  return 'minutes';
+}
+
+export function durationValueForUnit(durationMinutes: number, unit: AuctionDurationUnit): number {
+  const safeDuration = Math.max(1, Math.round(Number.isFinite(durationMinutes) ? durationMinutes : 1));
+  if (unit === 'days') return Math.max(1, Math.round(safeDuration / (24 * 60)));
+  if (unit === 'hours') return Math.max(1, Math.round(safeDuration / 60));
+  return safeDuration;
+}
+
+export function durationMinutesFromUnitValue(value: number, unit: AuctionDurationUnit): number {
+  const safeValue = Math.max(1, Math.round(Number.isFinite(value) ? value : 1));
+  if (unit === 'days') return safeValue * 24 * 60;
+  if (unit === 'hours') return safeValue * 60;
+  return safeValue;
 }
 
 export function formatAuctionDayTitle(dateLocal: string): string {

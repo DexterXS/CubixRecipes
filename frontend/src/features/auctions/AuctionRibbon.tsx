@@ -1,4 +1,5 @@
 import { auctionCurrencies } from './auctionCommands';
+import { AuctionDurationPicker } from './AuctionDurationPicker';
 import type { ReactNode } from 'react';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionDayFolder, AuctionPriceMode, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionRibbon.css';
@@ -160,7 +161,7 @@ export function AuctionRibbon({
               </select>
             </RibbonField>
             <RibbonField label="Длительность">
-              <input type="number" min={1} value={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={(event) => onDurationChange(Number(event.target.value))} />
+              <AuctionDurationPicker minutes={selectedFolder?.defaultDurationMinutes ?? 10} disabled={!hasFolder} onChange={onDurationChange} />
             </RibbonField>
             <RibbonField label="Шаг ставки">
               <input type="number" min={1} value={selectedFolder?.defaultStepPrice ?? 10} disabled={!hasFolder} onChange={(event) => onStepPriceChange(Number(event.target.value))} />

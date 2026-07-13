@@ -21,4 +21,5 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 15. Done: added the dedicated global graphs workspace with graph summary, folder queue, and graph-only routing instead of mixing the selected-day detail panel into the graph tab.
 16. Done: extracted `AuctionWorkspaceView` so the main builder routes state/actions while a dedicated view component owns the lot, graph, folder, and folder-list composition.
 17. Done: refined the opened-folder lot workflow with ribbon start/end time controls, folder-delete visibility limited to the folder grid, a selected-lot quick settings panel, and explicit lot apply/save refresh behavior without changing `/aca` command behavior.
-18. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
+18. Done: replaced raw minute entry in the Auctions ribbon with a day/hour/minute duration picker that stays bidirectionally synced with the end-time control.
+19. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
