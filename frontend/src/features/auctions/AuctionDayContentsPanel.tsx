@@ -1,4 +1,4 @@
-import { getAuctionBaseItemPrice } from './auctionCommands';
+import { auctionCurrencyLabels, getAuctionBaseItemPrice } from './auctionCommands';
 import type { AuctionCommandStage, AuctionDayFolder, AuctionDraft, AuctionRenderItemIcon } from './auctionTypes';
 import './AuctionDayContentsPanel.css';
 
@@ -21,6 +21,10 @@ function firstServerId(auction: AuctionDraft) {
 
 function nbtWarnings(auction: AuctionDraft) {
   return auction.items.filter((item) => item.hasNbt).length;
+}
+
+function priceWithCurrency(value: number, auction: AuctionDraft) {
+  return `${value} ${auction.currency} · ${auctionCurrencyLabels[auction.currency]}`;
 }
 
 function itemSlots(auction: AuctionDraft, renderItemIcon: AuctionRenderItemIcon) {
@@ -75,6 +79,9 @@ export function AuctionDayContentsPanel({
                   <strong>{auction.name}</strong>
                   <span className={`auction-day-auction-state ${auction.state.toLowerCase()}`}>{auction.state}</span>
                 </div>
+                <p className="auction-day-auction-description">
+                  {auction.description.trim() ? auction.description.trim() : 'Описание лота не заполнено'}
+                </p>
                 <div className="auction-day-auction-items">
                   {itemSlots(auction, renderItemIcon)}
                   {auction.items.length > 5 ? <span className="auction-day-auction-more">+{auction.items.length - 5}</span> : null}
@@ -88,8 +95,8 @@ export function AuctionDayContentsPanel({
                 </div>
               </div>
               <dl className="auction-day-auction-metrics">
-                <div><dt>Стартовая цена</dt><dd>{getAuctionBaseItemPrice(auction)}</dd></div>
-                <div><dt>Шаг ставки</dt><dd>{auction.baseStepPrice}</dd></div>
+                <div><dt>Стартовая цена</dt><dd>{priceWithCurrency(getAuctionBaseItemPrice(auction), auction)}</dd></div>
+                <div><dt>Шаг ставки</dt><dd>{priceWithCurrency(auction.baseStepPrice, auction)}</dd></div>
                 <div><dt>Длительность</dt><dd>{auction.durationMinutes} мин.</dd></div>
                 <div><dt>ID сервера</dt><dd>{serverId ? `ID: ${serverId}` : 'нет ID'}</dd></div>
                 <div><dt>Предметов</dt><dd>{auction.items.length}</dd></div>
