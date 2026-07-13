@@ -3,6 +3,7 @@ import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
 import { AuctionGraphsWorkspace } from './AuctionGraphsWorkspace';
+import { AuctionLotQuickPanel } from './AuctionLotQuickPanel';
 import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import type { AuctionRibbonTab } from './AuctionRibbon';
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
@@ -65,6 +66,7 @@ type AuctionWorkspaceViewProps = {
   onDeleteAuction: (auctionId: string) => void;
   onOpenCommands: (auctionId: string, stage: AuctionCommandStage) => void;
   onDeleteFolder: () => void;
+  onApplyLotSettings: () => void;
   onTitleChange: (title: string) => void;
   onDateChange: (dateLocal: string) => void;
   onCategoryChange: (category: AuctionFolderCategory) => void;
@@ -120,6 +122,7 @@ export function AuctionWorkspaceView({
   onDeleteAuction,
   onOpenCommands,
   onDeleteFolder,
+  onApplyLotSettings,
   onTitleChange,
   onDateChange,
   onCategoryChange,
@@ -200,26 +203,38 @@ export function AuctionWorkspaceView({
         />
       )}
 
-      <AuctionDayDetailsPanel
-        folder={selectedFolder}
-        summary={selectedFolder ? summaries[selectedFolder.id] : undefined}
-        uiMode={uiMode}
-        commandStages={commandStages}
-        onOpenFolder={() => onOpenFolder()}
-        onCopyFolder={() => onCopyFolder()}
-        onDeleteFolder={onDeleteFolder}
-        onTitleChange={onTitleChange}
-        onDateChange={onDateChange}
-        onCategoryChange={onCategoryChange}
-        onTagChange={onTagChange}
-        onCurrencyChange={onCurrencyChange}
-        onDurationChange={onDurationChange}
-        onStepPriceChange={onStepPriceChange}
-        onStateChange={onStateChange}
-        onRepeatEveryDaysChange={onRepeatEveryDaysChange}
-        onRepeatCountChange={onRepeatCountChange}
-        onPriceModeChange={onPriceModeChange}
-      />
+      {workspaceView === 'folder' ? (
+        <AuctionLotQuickPanel
+          auction={selectedAuction}
+          renderItemIcon={renderItemIcon}
+          onOpenLot={onOpenAuctionLot}
+          onUpdateAuction={onUpdateAuction}
+          onUpdateServerId={onUpdateServerId}
+          onOpenCommands={onOpenCommands}
+          onApply={onApplyLotSettings}
+        />
+      ) : (
+        <AuctionDayDetailsPanel
+          folder={selectedFolder}
+          summary={selectedFolder ? summaries[selectedFolder.id] : undefined}
+          uiMode={uiMode}
+          commandStages={commandStages}
+          onOpenFolder={() => onOpenFolder()}
+          onCopyFolder={() => onCopyFolder()}
+          onDeleteFolder={onDeleteFolder}
+          onTitleChange={onTitleChange}
+          onDateChange={onDateChange}
+          onCategoryChange={onCategoryChange}
+          onTagChange={onTagChange}
+          onCurrencyChange={onCurrencyChange}
+          onDurationChange={onDurationChange}
+          onStepPriceChange={onStepPriceChange}
+          onStateChange={onStateChange}
+          onRepeatEveryDaysChange={onRepeatEveryDaysChange}
+          onRepeatCountChange={onRepeatCountChange}
+          onPriceModeChange={onPriceModeChange}
+        />
+      )}
     </>
   );
 }

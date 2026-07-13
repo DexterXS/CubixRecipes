@@ -1,6 +1,6 @@
 ﻿import { useMemo, useRef, useState } from 'react';
 import { buildAuctionCommandStages, createDefaultAuctionCurve, localDateTimeInputFromUtcMs } from './auctionCommands';
-import { applyDayDefaultsToAuctions, cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder } from './auctionDayFolders';
+import { cloneAuctionDayFolder, createAuctionDayFolder, createAuctionDraft, createInitialAuctionDayFolder, defaultTimezoneOffset, durationMinutesBetweenTimes, endTimeFromStartAndDuration, formatAuctionDayTitle, localDateTimeForDay, nextDayLocal, summarizeAuctionDayFolder, timeInputFromLocalDateTime } from './auctionDayFolders';
 import { auctionNameFromItems, moveLotItem } from './auctionLotItems';
 import { duplicateAuctionGraphFolder, moveAuctionGraphPointFolders } from './auctionGraphModel';
 import { AuctionDownloadModal } from './AuctionDownloadModal';
@@ -38,6 +38,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     summarizeAuctionDayFolder({ folder, curve, graphStartLocal })
   ])), [dayFolders, curve, graphStartLocal]);
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
+  const selectedDayStartTime = selectedDayFolder?.auctions[0] ? timeInputFromLocalDateTime(selectedDayFolder.auctions[0].startLocal) : '10:00';
+  const selectedDayEndTime = endTimeFromStartAndDuration(selectedDayStartTime, selectedDayFolder?.defaultDurationMinutes ?? 10);
   const commandCurve = useMemo(() => selectedDayFolder?.category === 'planned' ? createDefaultAuctionCurve() : curve, [selectedDayFolder?.category, curve]);
   const commandStages = useMemo(() => buildAuctionCommandStages({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode }), [auctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal, workflowMode]);
   const commands = commandStages[commandStage];
@@ -47,7 +49,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     return itemOptions.filter((item) => `${item.raw} ${item.title} ${item.legacyId ?? ''}`.toLowerCase().includes(query)).slice(0, 120);
   }, [itemOptions, itemSearch]);
   const selectedAuctionFull = selectedAuction ? selectedAuction.items.length >= maxItemsPerAuction : false;
-  useAuctionPlannerPersistence({
+  const { saveNow: saveAuctionPlannerNow } = useAuctionPlannerPersistence({
     dayFolders,
     selectedDayFolderId: selectedDayFolder?.id ?? selectedDayFolderId,
     selectedAuctionId: selectedAuction?.id ?? selectedAuctionId,
@@ -199,9 +201,26 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
       title: folder.title === formatAuctionDayTitle(folder.dateLocal) ? formatAuctionDayTitle(dateLocal) : folder.title,
       auctions: folder.auctions.map((auction) => ({
         ...auction,
-        startLocal: localDateTimeForDay(dateLocal, auction.startLocal.includes('T') ? auction.startLocal.slice(11, 16) : '10:00')
+        startLocal: localDateTimeForDay(dateLocal, timeInputFromLocalDateTime(auction.startLocal))
       }))
     }));
+  };
+
+  const updateDayStartTime = (timeLocal: string) => {
+    if (durationMinutesBetweenTimes(timeLocal, selectedDayEndTime) === null) return;
+    updateSelectedDayFolder((folder) => ({
+      ...folder,
+      auctions: folder.auctions.map((auction) => ({
+        ...auction,
+        startLocal: localDateTimeForDay(folder.dateLocal, timeLocal)
+      }))
+    }));
+  };
+
+  const updateDayEndTime = (timeLocal: string) => {
+    const durationMinutes = durationMinutesBetweenTimes(selectedDayStartTime, timeLocal, selectedDayFolder?.defaultDurationMinutes ?? 0);
+    if (durationMinutes === null) return;
+    updateDayDuration(durationMinutes);
   };
 
   const updateDayCategory = (category: AuctionFolderCategory) => {
@@ -236,10 +255,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     }));
   };
 
-  const applySelectedDayDefaults = () => {
-    updateSelectedDayFolder((folder) => applyDayDefaultsToAuctions(folder));
-  };
-
   const resetSelectedDayPrices = () => {
     updateSelectedDayAuctions((current) => current.map((auction) => ({
       ...auction,
@@ -254,6 +269,12 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
 
   const checkSelectedDayErrors = () => {
     setCommandStage(commandStages.missingServerIds.length ? 'ids' : 'settings');
+  };
+
+  const applySelectedLotSettings = () => {
+    const nextStage: AuctionCommandStage = selectedAuction?.serverIds['0']?.trim() ? 'settings' : 'ids';
+    setCommandStage(nextStage);
+    void saveAuctionPlannerNow({ commandStage: nextStage });
   };
 
   const updateAuction = (id: string, patch: Partial<AuctionDraft>) => {
@@ -274,7 +295,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const addAuction = () => {
     const nextIndex = auctions.length + 1;
     const nextStartLocal = selectedDayFolder
-      ? localDateTimeForDay(selectedDayFolder.dateLocal, '10:00')
+      ? localDateTimeForDay(selectedDayFolder.dateLocal, selectedDayStartTime)
       : localDateTimeInputFromUtcMs(now + nextIndex * 86_400_000, timezoneOffset);
     const next = createAuctionDraft(nextIndex, nextStartLocal, {
       currency: selectedDayFolder?.currency ?? 'DONATE',
@@ -357,6 +378,9 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         uiMode={uiMode}
         workflowMode={workflowMode}
         timezoneOffset={timezoneOffset}
+        startTime={selectedDayStartTime}
+        endTime={selectedDayEndTime}
+        showDayDelete={workspaceView === 'folders'}
         onTabChange={setRibbonTab}
         onUiModeChange={setUiMode}
         onWorkflowModeChange={(nextMode) => {
@@ -370,8 +394,9 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         onDurationChange={updateDayDuration}
         onStepPriceChange={updateDayStepPrice}
         onTimezoneOffsetChange={(offset) => updateSelectedDayFolder((folder) => ({ ...folder, timezoneOffsetMinutes: offset }))}
+        onStartTimeChange={updateDayStartTime}
+        onEndTimeChange={updateDayEndTime}
         onPriceModeChange={(priceMode) => updateSelectedDayFolder((folder) => ({ ...folder, priceMode }))}
-        onApplyDayDefaults={applySelectedDayDefaults}
         onResetPrices={resetSelectedDayPrices}
         onClearServerIds={clearSelectedDayServerIds}
         onCheckErrors={checkSelectedDayErrors}
@@ -430,6 +455,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
             setCommandStage(stage);
           }}
           onDeleteFolder={deleteSelectedDayFolder}
+          onApplyLotSettings={applySelectedLotSettings}
           onTitleChange={updateDayTitle}
           onDateChange={updateDayDate}
           onCategoryChange={updateDayCategory}

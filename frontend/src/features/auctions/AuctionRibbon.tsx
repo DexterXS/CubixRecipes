@@ -11,6 +11,9 @@ type AuctionRibbonProps = {
   uiMode: AuctionUiMode;
   workflowMode: AuctionWorkflowMode;
   timezoneOffset: number;
+  startTime: string;
+  endTime: string;
+  showDayDelete: boolean;
   onTabChange: (tab: AuctionRibbonTab) => void;
   onUiModeChange: (mode: AuctionUiMode) => void;
   onWorkflowModeChange: (mode: AuctionWorkflowMode) => void;
@@ -21,8 +24,9 @@ type AuctionRibbonProps = {
   onDurationChange: (minutes: number) => void;
   onStepPriceChange: (step: number) => void;
   onTimezoneOffsetChange: (offset: number) => void;
+  onStartTimeChange: (time: string) => void;
+  onEndTimeChange: (time: string) => void;
   onPriceModeChange: (mode: AuctionPriceMode) => void;
-  onApplyDayDefaults: () => void;
   onResetPrices: () => void;
   onClearServerIds: () => void;
   onCheckErrors: () => void;
@@ -86,9 +90,9 @@ function RibbonGroup({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-function RibbonField({ label, children }: { label: string; children: ReactNode }) {
+function RibbonField({ label, className = '', children }: { label: string; className?: string; children: ReactNode }) {
   return (
-    <label className="auction-ribbon-field">
+    <label className={`auction-ribbon-field ${className}`.trim()}>
       <span>{label}</span>
       {children}
     </label>
@@ -101,6 +105,9 @@ export function AuctionRibbon({
   uiMode,
   workflowMode,
   timezoneOffset,
+  startTime,
+  endTime,
+  showDayDelete,
   onTabChange,
   onUiModeChange,
   onWorkflowModeChange,
@@ -111,8 +118,9 @@ export function AuctionRibbon({
   onDurationChange,
   onStepPriceChange,
   onTimezoneOffsetChange,
+  onStartTimeChange,
+  onEndTimeChange,
   onPriceModeChange,
-  onApplyDayDefaults,
   onResetPrices,
   onClearServerIds,
   onCheckErrors,
@@ -131,10 +139,9 @@ export function AuctionRibbon({
             <RibbonButton icon="+" label="Новый день" onClick={onNewDay} />
             <RibbonButton icon="CP" label="Копия дня" disabled={!hasFolder} onClick={onCopyDay} />
             <RibbonButton icon="T" label="Из шаблона" disabled title="Шаблоны будут подключены отдельным шагом" onClick={() => undefined} />
-            <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
+            {showDayDelete ? <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} /> : null}
           </RibbonGroup>
           <RibbonGroup title="Работа">
-            <RibbonButton icon="A" label="Применить" disabled={!hasFolder} onClick={onApplyDayDefaults} />
             <RibbonButton icon="!" label="Проверить" disabled={!hasFolder} onClick={onCheckErrors} />
           </RibbonGroup>
         </>
@@ -163,11 +170,18 @@ export function AuctionRibbon({
                 {Array.from({ length: 27 }, (_, index) => (index - 12) * 60).map((offset) => <option key={offset} value={offset}>{timezoneLabel(offset)}</option>)}
               </select>
             </RibbonField>
+            <RibbonField label="Время старта" className="auction-ribbon-time-field">
+              <input type="time" value={startTime} disabled={!hasFolder} onChange={(event) => onStartTimeChange(event.target.value)} />
+            </RibbonField>
+            <RibbonField label="Время конца" className="auction-ribbon-time-field">
+              <input type="time" value={endTime} disabled={!hasFolder} onChange={(event) => onEndTimeChange(event.target.value)} />
+            </RibbonField>
           </RibbonGroup>
-          <RibbonGroup title="Папка">
-            <RibbonButton icon="A" label="Применить" disabled={!hasFolder} onClick={onApplyDayDefaults} />
-            <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
-          </RibbonGroup>
+          {showDayDelete ? (
+            <RibbonGroup title="Папка">
+              <RibbonButton icon="X" label="Удалить день" disabled={!hasFolder} onClick={onDeleteDay} />
+            </RibbonGroup>
+          ) : null}
         </>
       );
     }

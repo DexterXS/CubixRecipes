@@ -6,9 +6,12 @@ import {
   cloneAuctionDayFolder,
   createAuctionDayFolder,
   createAuctionDraft,
+  durationMinutesBetweenTimes,
+  endTimeFromStartAndDuration,
   getDayServerIdStatus,
   nextDayLocal,
-  summarizeAuctionDayFolder
+  summarizeAuctionDayFolder,
+  timeInputFromLocalDateTime
 } from './auctionDayFolders';
 
 describe('auction day folders', () => {
@@ -177,5 +180,16 @@ describe('auction day folders', () => {
 
   test('calculates the next local day without relying on the browser timezone', () => {
     expect(nextDayLocal('2026-07-12')).toBe('2026-07-13');
+  });
+
+  test('converts folder start and end time controls into stable duration values', () => {
+    expect(timeInputFromLocalDateTime('2026-07-12T09:30')).toBe('09:30');
+    expect(timeInputFromLocalDateTime('bad-value')).toBe('10:00');
+    expect(durationMinutesBetweenTimes('10:00', '12:30')).toBe(150);
+    expect(durationMinutesBetweenTimes('23:30', '01:00')).toBe(90);
+    expect(durationMinutesBetweenTimes('10:00', '10:00')).toBe(1440);
+    expect(durationMinutesBetweenTimes('10:00', '12:00', 4320)).toBe(4440);
+    expect(durationMinutesBetweenTimes('10:00', '10:00', 4320)).toBe(4320);
+    expect(endTimeFromStartAndDuration('23:30', 90)).toBe('01:00');
   });
 });
