@@ -49,7 +49,7 @@ class PathProxy:
         return os.fspath(self._get_path_fn())
 
 
-from app.api.schemas import AccessControlRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, AuctionPlannerRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -69,6 +69,7 @@ from app.services.mod_icon_atlas_service import ArchiveAlreadyExistsError, Archi
 from app.services.recipe_service import RecipeService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.storage.nei_favorites import NeiFavoritesStore
+from app.storage.auction_planner import AuctionPlannerStore
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
 from app.storage.recipe_tasks import RecipeTaskStore
 from app.storage.zs_storage import ZsStorage
@@ -292,7 +293,8 @@ def _cookie_https_only(same_site: str) -> bool:
 def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) -> FastAPI:
     parser = RecipeParser()
     config_service_base = ProjectConfigService(Path(config_path) if config_path else None)
-    admin_data_dir = config_service_base.config_path.resolve(strict=False).parent / '.cubixrecipes_admin'
+    admin_data_root = config_service_base.data_dir if config_service_base.data_dir is not None else config_service_base.config_path.resolve(strict=False).parent
+    admin_data_dir = admin_data_root / '.cubixrecipes_admin'
     runtime_data_dir_base = config_service_base.data_dir if config_service_base.data_dir is not None else config_service_base.config_path.resolve(strict=False).parent / 'data'
     
     # Initialize ServerManager
@@ -320,6 +322,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
     recipe_draft_store = ContextProxy(_current_context, 'recipe_draft_store')
     recipe_task_store = ContextProxy(_current_context, 'recipe_task_store')
+    auction_planner_store = ContextProxy(_current_context, 'auction_planner_store')
     nei_favorites_store = ContextProxy(_current_context, 'nei_favorites_store')
     resolver = ContextProxy(_current_context, 'resolver')
     custom_item_service = ContextProxy(_current_context, 'custom_item_service')
@@ -526,6 +529,20 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except KeyError as exc:
             raise HTTPException(status_code=404, detail='Task not found') from exc
         return {'ok': True}
+
+    @router.get('/admin/auction-planner')
+    def admin_get_auction_planner():
+        return auction_planner_store.get_state()
+
+    @router.put('/admin/auction-planner')
+    def admin_save_auction_planner(request: Request, payload: AuctionPlannerRequest):
+        user = request.state.auth_user
+        saved = auction_planner_store.save_state(payload.state)
+        log_service.log('BACKEND', 'INFO', 'AUCTIONS', 'Auction planner saved', {
+            'updated_by': user['email'],
+            'day_folders': len(saved.get('state', {}).get('dayFolders', [])),
+        })
+        return {'ok': True, **saved}
 
     @router.get('/nei/favorites')
     def get_nei_favorites(request: Request):

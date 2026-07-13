@@ -13,6 +13,9 @@ export type IconSurfaceId =
   | 'draftPreview9'
   | 'draftSelected'
   | 'tasks'
+  | 'auctionPreview'
+  | 'auctionLotItems'
+  | 'auctionNei'
   | 'touchHeld'
   | 'mobileInspection';
 
@@ -47,6 +50,9 @@ export const iconSurfaceDefinitions: IconSurfaceDefinition[] = [
   { id: 'draftPreview9', label: 'Превью 9x9', description: 'Предпросмотр черновиков 9x9', defaults: { cell: 36, icon: 14, gap: 2, mode: 'scale' }, minCell: 20, maxCell: 44, minIcon: 8, maxIcon: 28 },
   { id: 'draftSelected', label: 'Выбранный черновик', description: 'Большая иконка выбранного предмета', defaults: { cell: 72, icon: 42, gap: 0, mode: 'scale' }, minCell: 44, maxCell: 96, minIcon: 20, maxIcon: 72 },
   { id: 'tasks', label: 'Задачи', description: 'Иконки в карточках задач', defaults: { cell: 42, icon: 32, gap: 6, mode: 'scale' }, minCell: 28, maxCell: 72, minIcon: 14, maxIcon: 56 },
+  { id: 'auctionPreview', label: 'Аукционы: превью', description: 'Главная иконка лота и карточки аукциона', defaults: { cell: 84, icon: 40, gap: 8, mode: 'scale' }, minCell: 48, maxCell: 120, minIcon: 18, maxIcon: 72 },
+  { id: 'auctionLotItems', label: 'Аукционы: предметы', description: 'Предметы внутри открытого лота', defaults: { cell: 42, icon: 28, gap: 6, mode: 'scale' }, minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 48 },
+  { id: 'auctionNei', label: 'Аукционы: NEI', description: 'Каталог предметов в рабочей области лота', defaults: { cell: 40, icon: 26, gap: 6, mode: 'scale' }, minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 48 },
   { id: 'touchHeld', label: 'Предмет под пальцем', description: 'Панель выбранного предмета на телефоне', defaults: { cell: 44, icon: 32, gap: 8, mode: 'scale' }, minCell: 32, maxCell: 72, minIcon: 16, maxIcon: 56 },
   { id: 'mobileInspection', label: 'Мобильная подсказка', description: 'Иконки внутри мобильной подсказки', defaults: { cell: 36, icon: 28, gap: 8, mode: 'scale' }, minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 48 }
 ];
@@ -65,6 +71,9 @@ export const defaultMobileIconSurfaceSettings: IconSurfaceSettingsMap = {
   craftGrid9: { cell: 25, icon: 14, gap: 1, mode: 'scale' },
   craftOutput: { cell: 36, icon: 24, gap: 0, mode: 'scale' },
   draftPreview9: { cell: 30, icon: 12, gap: 1, mode: 'scale' },
+  auctionPreview: { cell: 72, icon: 34, gap: 8, mode: 'scale' },
+  auctionLotItems: { cell: 40, icon: 26, gap: 6, mode: 'scale' },
+  auctionNei: { cell: 42, icon: 30, gap: 7, mode: 'scale' },
   touchHeld: { cell: 44, icon: 32, gap: 8, mode: 'scale' },
   mobileInspection: { cell: 36, icon: 28, gap: 8, mode: 'scale' }
 };

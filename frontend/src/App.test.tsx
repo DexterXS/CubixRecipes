@@ -36,6 +36,7 @@ let mockRecipeTasks: any[] = [];
 let mockRecipeTaskBoardMode = 'free';
 let mockRecipeTaskCounter = 1;
 let mockNeiFavorites: any;
+let mockAuctionPlannerState: any;
 
 function projectSettings() {
   return {
@@ -169,6 +170,14 @@ beforeEach(() => {
     hiddenPatterns: [],
     tabs: [{ id: 'default', name: 'Основное', items: [] }]
   };
+  mockAuctionPlannerState = {
+    dayFolders: [],
+    selectedDayFolderId: '',
+    selectedAuctionId: '',
+    workflowMode: 'install',
+    uiMode: 'normal',
+    commandStage: 'create'
+  };
   class MockImage {
     onload: null | (() => void) = null;
     set src(_value: string) {
@@ -287,6 +296,14 @@ beforeEach(() => {
     }
     if (url === '/api/admin/users') {
       return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ users: [adminUser, moderatorUser, defaultUser] }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/auction-planner' && (!init?.method || init.method === 'GET')) {
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ schemaVersion: 1, savedAt: 0, state: mockAuctionPlannerState }) }) as Promise<Response>;
+    }
+    if (url === '/api/admin/auction-planner' && init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body ?? '{}'));
+      mockAuctionPlannerState = body.state ?? mockAuctionPlannerState;
+      return Promise.resolve({ ok: true, headers: new Headers({ 'content-type': 'application/json' }), json: async () => ({ ok: true, schemaVersion: 1, savedAt: 1770000000000, state: mockAuctionPlannerState }) }) as Promise<Response>;
     }
     if (url === '/api/admin/tasks' && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
@@ -774,10 +791,10 @@ afterEach(() => {
 test('renders the cleaned static workspace for admins', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  expect(screen.getByRole('button', { name: 'Главное меню' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Крафты' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'Техническая панель' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'Облако' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Техраздел' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Файлы' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Иконки модов' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Отладка' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Предметы' })).toBeFalsy();
@@ -804,10 +821,10 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
   expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
   fireEvent.click(screen.getByLabelText('icon-settings-profile-mobile'));
   expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(12);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);
@@ -881,7 +898,7 @@ test('dropdown menus close after actions and outside clicks', async () => {
 test('admin mod icons tab shows archive and atlas status', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Техническая панель' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Техраздел' }));
   fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
 
   expect(screen.getAllByText('Атласы').length).toBeGreaterThan(0);
@@ -1039,7 +1056,7 @@ test('NEI insertion applies item case aliases before writing the recipe output',
 test('cloud storage shows files and root backup only after Ctrl+B', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Облако' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Файлы' }));
 
   expect(await screen.findByText('test.zs')).toBeTruthy();
   expect(screen.queryByText('ROOT backup')).toBeFalsy();
@@ -1068,15 +1085,15 @@ test('shows drafts for moderators but keeps debug/admin settings hidden from vie
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: 'Задачи' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Техраздел' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Файлы' })).toBeFalsy();
   cleanup();
 
   render(<App authUser={defaultUser} onLogout={vi.fn()} />);
   expect(screen.queryByRole('button', { name: 'Черновики' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Задачи' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Техническая панель' })).toBeFalsy();
-  expect(screen.queryByRole('button', { name: 'Облако' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Техраздел' })).toBeFalsy();
+  expect(screen.queryByRole('button', { name: 'Файлы' })).toBeFalsy();
   expect(screen.queryByRole('button', { name: 'Настройки' })).toBeFalsy();
 });
 
@@ -1203,7 +1220,7 @@ test('admin can create compact expandable recipe task cards', async () => {
   fireEvent.change(taskPanel.getByLabelText('Помощники'), { target: { value: 'viewer' } });
   const helperSuggestions = await taskPanel.findByLabelText('task-helper-suggestions');
   fireEvent.mouseDown(within(helperSuggestions).getByText(defaultUser.email).closest('button') as HTMLElement);
-  fireEvent.change(taskPanel.getByLabelText('Дедлайн'), { target: { value: '2026-06-30' } });
+  fireEvent.change(taskPanel.getByLabelText('Дедлайн'), { target: { value: '2026-07-30' } });
   fireEvent.click(taskPanel.getByRole('button', { name: 'Создать' }));
 
   const card = await screen.findByLabelText('task-card-task-1');
@@ -1447,7 +1464,7 @@ test('local save can append current recipe into uploaded site file with remove t
 test('admin can enable whitelist mode', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Техническая панель' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Техраздел' }));
   fireEvent.click(screen.getByLabelText('debug-section-access'));
   fireEvent.change(await screen.findByLabelText('whitelist-emails'), { target: { value: 'viewer@example.com' } });
   fireEvent.click(screen.getByLabelText('whitelist-enabled'));

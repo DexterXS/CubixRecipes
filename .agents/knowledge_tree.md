@@ -30,6 +30,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`: admin task board.
+  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, and command stage.
   - `.cubixrecipes_admin/servers/{server_id}/custom_items/`: backend custom item files.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_archives/`: uploaded icon ZIP archives.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_atlases/`: generated mod icon atlas manifests and PNG pages.
@@ -153,6 +154,10 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/recipe_tasks.py`
   - JSON-backed admin task board.
   - Class: `RecipeTaskStore`.
+- `backend/app/storage/auction_planner.py`
+  - JSON-backed per-server Auctions planner state for frontend day folders and lots.
+  - Class: `AuctionPlannerStore`.
+  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists, and keeps the full local planner state across page reloads and deploys.
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
@@ -209,6 +214,8 @@ Last full rebuild: 2026-06-29
 - `PUT /api/admin/tasks/order`
 - `PUT /api/admin/tasks/board`
 - `DELETE /api/admin/tasks/{task_id}`
+- `GET /api/admin/auction-planner`
+- `PUT /api/admin/auction-planner`
 - `GET /api/nei/favorites`
 - `PUT /api/nei/favorites`
 
@@ -299,9 +306,18 @@ Last full rebuild: 2026-06-29
   - Renders auth gate, server gate, and main `App`.
   - Components/types: `ServerGate`, `ServerGateProps`.
   - Depends on `AuthGate`, `ServerSelect`, `App`, global styles, mobile styles, debug logging, and shared types.
+- `frontend/src/app/workspaceNavigation.ts`
+  - App-shell owner for top-level workspace tab IDs, product-oriented labels, section areas, descriptions, and permission-based visibility.
+  - Exports shared `WorkspaceTab` so the page shell and navigation components do not redefine the workspace-tab contract.
+- `frontend/src/app/AppWorkspaceNav.tsx`
+  - Desktop workspace navigation component for the global product sections currently backed by existing workspaces: recipes, drafts, tasks, files, and tech.
+  - Preserves `workspace-tab-*` test IDs for existing workflow tests.
+- `frontend/src/app/ServerContextChip.tsx`
+  - Global active-server chip in the app shell, including the quick change-server action.
+  - Keeps server context visible outside recipe-specific UI.
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
-  - Owns workspace tabs, editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted icon-surface settings.
+  - Owns editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted app-shell navigation and icon-surface settings.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
@@ -355,9 +371,46 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/icon-lab/IconScaleLab.css`
   - Scoped presentation for the icon lab preview grid and per-variant scaling/centering modes.
 
+### Diagnostics Feature
+- `frontend/src/features/diagnostics/TechnicalPanelShell.tsx`
+  - Owns the technical panel shell, sidebar navigation, diagnostics section IDs, visible section rendering, and wipe-update sidebar action.
+  - Receives active section state and rendered section content from `pages/App.tsx`; section content still lives in the page shell until later diagnostics splits.
+- `frontend/src/features/diagnostics/DebugEventsList.tsx`
+  - Owns technical-panel debug event list rendering and the shared debug event/category/level types used by `pages/App.tsx`.
+  - Receives filtered event data and category labels from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsLogsPanel.tsx`
+  - Owns the technical-panel logs section presentation: category filters, level filters, event count, and `DebugEventsList` composition.
+  - Receives debug filter state and callbacks from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsRuntimePanel.tsx`
+  - Owns the technical-panel runtime section presentation for UI state, backend/loading state, and computed action availability.
+  - Receives runtime values from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsOverviewPanel.tsx`
+  - Owns the technical-panel overview section presentation for status, current recipe diagnostics, and quick debug values.
+  - Receives computed status and recipe state from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsRecipePanel.tsx`
+  - Owns the technical-panel recipe diagnostics section presentation for grid state, output status, and output icon display slot.
+  - Receives computed recipe values and a pre-rendered output icon from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsAccessPanel.tsx`
+  - Owns the technical-panel access section layout for personnel roles, whitelist, and static role permission reference.
+  - Receives role-management and whitelist content from `pages/App.tsx`.
+- `frontend/src/features/diagnostics/DiagnosticsModIconsPanel.tsx`
+  - Owns the technical-panel mod icon archive upload/status UI and generated atlas preview grid.
+  - Receives mod-icon archive actions, status, manifest data, and image URL normalization from `pages/App.tsx`; API orchestration remains in the page shell until a later diagnostics service split.
+- `frontend/src/features/diagnostics/ModReplacementPanel.tsx`
+  - Owns the technical-panel mod replacement UI for choosing a source mod, mapping recipe items to replacements, and embedding the NEI picker column.
+  - Receives scan/replace state, item icon renderers, and callbacks from `pages/App.tsx`; scanning and persistence remain in the page shell until a later state/service split.
+- `frontend/src/features/diagnostics/ItemCaseAliasPanel.tsx`
+  - Owns the technical-panel item case-alias report UI: generation controls, FML log upload, manual alias form, alias table, and missing itempanel list.
+  - Receives report data and persistence callbacks from `pages/App.tsx`; report API orchestration remains in the page shell until a later diagnostics service split.
+
+### Item Catalog Feature
+- `frontend/src/features/item-catalog/ItemTextureToolsPanel.tsx`
+  - Owns the itempanel texture/icon cache panel presentation: mod selection, load/pause/resume/cancel controls, status text, and selected-mod progress summaries.
+  - Receives texture loading state and callbacks from `pages/App.tsx`; item catalog loading and localStorage cache ownership remain in the page shell until a later item-catalog state split.
+
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
-  - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, held item, and mobile inspection.
+  - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, Auctions preview/lot/NEI surfaces, held item, and mobile inspection.
   - Builds shared CSS custom properties, desktop/mobile default profiles, and dynamic craft-grid fitting from viewport size.
 - `frontend/src/features/icon-settings/useIconViewport.ts`
   - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.
@@ -366,6 +419,72 @@ Last full rebuild: 2026-06-29
   - On phone-width viewports, `pages/App.tsx` opens this panel on the mobile icon profile so preview values match the active runtime CSS profile.
 - `frontend/src/features/icon-settings/IconSettingsPanel.css`
   - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
+
+### Settings Feature
+- `frontend/src/features/settings/AppSettingsModal.tsx`
+  - Owns the global settings modal presentation for UI scale, NEI page size, shared craft draft mode, hotkey debug filters, and NEI favorite/filter preferences.
+  - Receives state and persistence callbacks from `pages/App.tsx`; persistence still belongs to the page shell until settings state is split further.
+
+### Auctions Feature
+- `frontend/src/features/auctions/AuctionBuilder.tsx`
+  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, and graph workspace. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, and extensionless command-file download modal.
+  - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
+  - Receives item catalog options and icon renderer from `pages/App.tsx`.
+- `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
+  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, and selected-folder details. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
+- `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
+  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
+  - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
+- `frontend/src/features/auctions/auctionLotItems.ts`
+  - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
+- `frontend/src/features/auctions/auctionDayFolders.ts`
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, and date helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
+- `frontend/src/features/auctions/AuctionRibbon.tsx`
+  - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters, item/lot actions, commands/server IDs, graphs/prices, tools/planner, and view mode.
+- `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
+  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
+- `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
+  - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
+- `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
+  - Owns the selected-folder right panel. It manages folder-level actions and fields only: open/copy/delete folder, regular/planned category, regular folder date, planned repeat settings, currency/duration/step/state, price mode, statistics, server-ID status, graph applicability, and expert-only folder metadata.
+- `frontend/src/features/auctions/AuctionLotWorkspace.tsx`
+  - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/order/NBT controls, simplified apply/cancel action row, auction command-control panel without state or start/end date editing, editable whole-lot start price, and NEI catalog for adding items to the current lot.
+- `frontend/src/features/auctions/AuctionDownloadModal.tsx`
+  - Owns the extensionless auction command-file download dialog.
+- `frontend/src/features/auctions/AuctionStatusBar.tsx`
+  - Owns the context status row for folder list, opened folder, and opened lot views. It shows only useful counts such as folder totals, planned/regular counts, item counts, missing IDs, and warnings.
+- `frontend/src/features/auctions/AuctionPriceModePanel.tsx`
+  - Owns the selected-day price-mode panel and lightweight manual price preview without loading the graph.
+- `frontend/src/features/auctions/AuctionServerIdPanel.tsx`
+  - Owns selected-day server-ID lifecycle messaging and missing-ID summary.
+- `frontend/src/features/auctions/AuctionPlanPanel.tsx`
+  - Legacy auction plan sidebar retained for compatibility/reference but no longer used by the main day-folder workspace.
+- `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`
+  - Legacy auction item workspace retained for compatibility/reference but no longer used by the main three-level Auctions workspace.
+- `frontend/src/features/auctions/AuctionHelpTip.tsx`
+  - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
+- `frontend/src/features/auctions/auctionCommands.ts`
+  - Owns deterministic staged auction command generation: step 1 creates empty auction slots, step 2 lists server-generated ID mapping, step 3 adds items, and step 4 applies final timing/prices/state/schedule.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
+- `frontend/src/features/auctions/AuctionGraphPanel.tsx`
+  - Also owns the wipe-start date control and approximate wipe-end window shown above the graph.
+  - Owns the graph panel inside the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.
+- `frontend/src/features/auctions/AuctionGraphsWorkspace.tsx`
+  - Owns the dedicated global graph workspace that wraps `AuctionGraphPanel` with graph-wide folder totals, regular/planned counts, missing server-ID/NBT status, and a sorted folder queue. It is the graph-tab screen owner; the selected-day details panel is not rendered in this mode.
+- `frontend/src/features/auctions/auctionFolderTags.ts`
+  - Owns the one-tag-per-folder color palette used by folder cards, folder details, and graph point tinting.
+- `frontend/src/features/auctions/auctionGraphModel.ts`
+  - Also aggregates per-point auction duration spans for graph occupancy rendering.
+  - Owns graph point aggregation across day folders: regular folders produce editable graph points, planned purple folders produce static points, folder tags flow into point colors, actual lot currencies drive placement conflicts, and horizontal point movement shifts editable regular auctions by whole days while preserving local time and blocking same-category/same-currency day conflicts.
+- `frontend/src/features/auctions/AuctionPriceGraph.tsx`
+  - Also renders three calendar zones, date-range x-axis labels, and duration occupancy lines.
+  - Owns the draggable multi-currency 90-day SVG graph, including hover date titles, right-click point opening, static planned-folder points, and pointer dragging that changes percentage vertically and day horizontally through a local preview with pointer grab-offset preservation; release commits the last visible preview state, while expensive app state and placement checks run once on pointerup.
+- `frontend/src/features/auctions/AuctionRunPricePreviewList.tsx`
+  - Owns the immediate price preview under the auction graph, showing each auction run/repeat date, graph multiplier, start price, and bid step using the same calculation as command generation.
+- `frontend/src/features/auctions/AuctionBuilder.css`
+  - Scoped presentation for the auction builder workspace shell, item picker, and warnings. The old permanent lower editor/command-preview area is not part of the current Auctions screen.
+- `frontend/src/features/auctions/AuctionGraphPanel.css`
+  - Scoped presentation for the graph workspace, draggable graph SVG, and run-price preview list.
 
 ### NEI and Favorites Features
 - `frontend/src/features/nei/NeiIconItem.tsx`
@@ -378,6 +497,8 @@ Last full rebuild: 2026-06-29
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
 
 ### Frontend Services and Types
+- `frontend/src/utils/formatFileSize.ts`
+  - Shared frontend file-size formatter used by admin/cloud/mod-icon presentation components.
 - `frontend/src/services/api/`
   - Modular frontend API client with stable barrel export at `frontend/src/services/api/index.ts`.
   - `client.ts`: shared request wrapper, conflict error, active-server header injection, JSON validation, backend-unavailable messages, blob download filename parsing.
@@ -422,6 +543,24 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
+- `frontend/src/app/workspaceNavigation.test.ts`: app-shell workspace tab map, labels, and permission filtering.
+- Global settings modal behavior is covered through `frontend/src/App.test.tsx`.
+- Technical panel shell/sidebar behavior is covered through `frontend/src/App.test.tsx`.
+- Debug event list behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics logs panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics runtime panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics overview panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics recipe panel behavior is covered through `frontend/src/App.test.tsx`.
+- Diagnostics access panel behavior is covered through `frontend/src/App.test.tsx`.
+- Mod replacement technical-panel behavior is covered through `frontend/src/App.test.tsx`.
+- Item case-alias technical-panel behavior is covered through `frontend/src/App.test.tsx`.
+- Auction command generation is covered by `frontend/src/features/auctions/auctionCommands.test.ts`.
+- Auction day-folder creation/copy/defaults/summary/server-ID status are covered by `frontend/src/features/auctions/auctionDayFolders.test.ts`.
+- Auction lot first-item naming and item ordering helpers are covered by `frontend/src/features/auctions/auctionLotItems.test.ts`.
+- Auction graph point aggregation, tags, day movement, same-day conflict blocking, and graph duplication are covered by `frontend/src/features/auctions/auctionGraphModel.test.ts`.
+- Auction graph point folder-count labels, point-menu folder grouping, and graph-workspace summary helpers are covered by `frontend/src/features/auctions/auctionGraphUi.test.ts`.
+- Auction planner backend persistence is covered by `backend/app/tests/test_auction_planner_store.py`.
+- Auction workspace navigation and composition are covered by `frontend/src/app/workspaceNavigation.test.ts`; app integration is covered by `frontend/src/App.test.tsx`.
 - Icon settings technical-panel entry is covered by `frontend/src/App.test.tsx`.
 - `frontend/src/services/api.test.ts`: API helper behavior.
 - `frontend/src/components/AnimatedIcon.test.tsx`: animated icon behavior.
@@ -463,6 +602,8 @@ Last full rebuild: 2026-06-29
 - `reorderRecipeTasks` -> `PUT /api/admin/tasks/order`
 - `updateRecipeTaskBoardMode` -> `PUT /api/admin/tasks/board`
 - `deleteRecipeTask` -> `DELETE /api/admin/tasks/{task_id}`
+- `getAuctionPlannerState` -> `GET /api/admin/auction-planner`
+- `saveAuctionPlannerState` -> `PUT /api/admin/auction-planner`
 - `getNeiFavorites` -> `GET /api/nei/favorites`
 - `saveNeiFavorites` -> `PUT /api/nei/favorites`
 - `getModIconAdminStatus` -> `GET /api/admin/mod-icons`
@@ -502,14 +643,14 @@ Last full rebuild: 2026-06-29
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 
 ### Icon Indexing and Resolver
 - Backend files: `indexer/asset_index.py`, `indexer/itempanel_icon_catalog.py`, `resolver/item_resolver.py`, `services/mod_icon_atlas_service.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api/*`.
+- Frontend files: `pages/App.tsx`, `features/diagnostics/DiagnosticsModIconsPanel.tsx`, `components/AnimatedIcon.tsx`, `components/RecipeGrid.tsx`, `services/api/*`.
 - Data files: `mods_json/*.json`, `itempanel_icons/`, mod icon ZIP archives, generated atlases.
 - APIs: `/index/scan`, `/index/status/{scan_id}`, `/items/resolve`, `/icons/{icon_asset_id:path}`, `/admin/mod-icons*`, `/mod-icons/atlas`, `/mod-icons/atlases/{filename}`.
 - Tests: `test_resolver.py`, `test_asset_index_performance.py`, `test_itempanel_icon_catalog.py`, `test_mod_icon_atlas_service.py`, `test_mods_json_manifests.py`.

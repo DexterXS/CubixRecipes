@@ -2,6 +2,45 @@
 
 ## [Unreleased]
 ### Added
+- Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
+- Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
+- Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.
+- Changed the Auctions ribbon so each top tab shows only its relevant groups instead of dumping creation, prices, lots, IDs, commands, planner, and mode controls together.
+- Added an editable Auctions graph panel under the `Графики` ribbon tab, with graph curve persistence in the planner state.
+- Updated Auctions graphs to show all currencies together or one currency at a time, include static planned-folder points, show point dates on hover, open auction lists from graph points with right click, and allow editable points to move by day and percentage.
+- Added Auctions graph wipe-date controls, three 30-day calendar zones with date-range labels, and per-point duration lines that show how long auction lots occupy the wipe timeline.
+- Improved Auctions graph readability in dark theme with brighter SVG labels, label backplates, clearer grid contrast, and cleaner point captions.
+- Added graph point management for merged auction dates: right-click lists folders/auctions, graph points can be moved by day/percentage, auctions can be opened for editing or duplicated into a new folder, and folders can receive one color tag that tints graph points.
+- Added a dedicated Auctions global graph workspace with a folder queue/status sidebar so the `Графики` tab no longer mixes in the selected-day detail panel.
+- Extracted the Auctions central workspace composition into `AuctionWorkspaceView`, keeping `/aca` generation in the builder while reducing the oversized builder module.
+- Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
+- Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
+- Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
+- Added regular blue vs planned purple auction folder categories; planned folders hide fixed dates, use repeat settings, and ignore global price graphs.
+- Added a context-only Auctions status bar for folder list, opened folder, and opened lot views without technical CPU/memory-style metrics.
+- Added an opened day-folder view for Auctions so a day folder can show its internal auction drafts, selected draft, item/setting/command shortcuts, missing server-ID status, and NBT warnings.
+- Removed the old permanent lower Auctions editor/command-preview area so the day-folder workspace no longer renders legacy panels below the main layout.
+- Added an Auctions workspace with planned/repeating auction setup, timezone-aware `/aca` command generation, draggable 90-day price curves for VAULT/DONATE/BONUS, NEI/catalog item picking, NBT item warnings with command exclusion, and extensionless command-file download.
+- Changed the Auctions generator to a staged server-ID workflow: create empty slots first, enter generated server IDs, then generate item insertion and final configuration/schedule commands for new or existing auctions.
+- Changed Auctions pricing so start price belongs to the whole lot, not to individual items; the 90-day graph applies its multiplier to the lot start price.
+- Changed the Auctions price graph to draw a smooth equalizer-style curve through auction date control points instead of sharp 90-day spike segments.
+- Added an Auctions graph price preview: repeat occurrences are shown as read-only markers, while repeating auctions keep a constant price from the first graph point because the server repeat command cannot change price per occurrence.
+- Added auction-only hover/focus help popovers for panels and fields, including explanations and examples for local labels, server IDs, graph percentages, item prices, and command-file steps.
+- Added an auction plan inventory preview plus an auction-local admin setting that caps how many items can be added to one auction.
+- Changed the Auctions items/file view into a single workspace with the NEI catalog beside the selected auction's internal inventory.
+- Added a diagnostics item case-alias panel component, moving the alias report, FML log upload, manual alias form, and missing-item list out of the main app page shell.
+- Added a diagnostics mod-icons panel component, moving archive upload/status and atlas preview UI out of the main app page shell.
+- Added a diagnostics mod replacement panel component, moving the bulk mod replacement UI and mapping table out of the main app page shell.
+- Added an item-catalog texture tools component, moving itempanel icon-cache mod selection and loading controls out of the main app page shell.
+- Added a diagnostics access panel component, moving the technical-panel personnel/whitelist/role-reference layout out of the main app page shell.
+- Added a diagnostics recipe panel component, moving the technical-panel recipe/grid/output diagnostics section out of the main app page shell.
+- Added a diagnostics overview panel component, moving the technical-panel status/quick-debug overview out of the main app page shell.
+- Added a diagnostics runtime panel component, moving the technical-panel runtime/status section out of the main app page shell.
+- Added a diagnostics logs panel component, moving the technical-panel logs section and its filter UI out of the main app page shell.
+- Added a diagnostics debug-events list component and moved debug event rendering/types out of the main app page shell.
+- Added a dedicated diagnostics technical-panel shell component, moving sidebar section navigation and the wipe-update action out of the main app page shell.
+- Added a dedicated settings feature component for the global settings modal, moving UI/debug/NEI preference presentation out of the main app page shell.
+- Added an app-shell navigation boundary with product-oriented workspace labels, a reusable desktop workspace nav component, and a dedicated active-server chip outside the recipe page shell.
 - Added mobile NEI item context-menu actions for opening an item's recipe and viewing where the item is used from the long-press `...` menu.
 - Added separate desktop and mobile icon-surface profiles, selectable from the admin icon settings panel.
 - Added admin-configurable icon surface settings for NEI, favorites, drafts, craft grids, outputs, tasks, and mobile held/inspection previews, with live previews and shared CSS variables.
@@ -19,6 +58,11 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed mixed-currency Auctions folders: folder currency is now treated as the default for new lots, folder cards/details show actual lot currencies, and graph placement conflicts use the real currencies inside lots.
+- Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.
+- Fixed Auctions graph day indexing so graph percentages are read from the same calendar day after releasing a dragged point, even when the graph start value contains a non-midnight time.
+- Optimized Auctions graph dragging by rendering movement through a local SVG preview, preserving the pointer grab offset, committing the last visible preview instead of recalculating on pointer-up, keeping percentage changes when an invalid day drop snaps back, and running the placement check only once on pointer release.
+- Fixed Auctions graph point badges so merged points count unique folders, not auctions inside those folders, and the point context menu now groups lots under their folder.
 - Fixed Android Chrome mobile craft-board icon centering by using explicit absolute centering for craft grid and output icons in touch layouts.
 - Fixed phone icon settings opening on the desktop profile and removed hidden narrow-screen caps that made 9x9 craft/output sizes differ from the mobile settings preview.
 - Fixed mobile craft output atlas icons being cropped by icon-size settings, which could make the real phone view appear offset compared with the mobile icon-settings preview.

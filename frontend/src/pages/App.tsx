@@ -1,4 +1,7 @@
-import { type CSSProperties, type MouseEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { AppWorkspaceNav } from '../app/AppWorkspaceNav';
+import { ServerContextChip } from '../app/ServerContextChip';
+import { buildWorkspaceNavigation, type WorkspaceTab } from '../app/workspaceNavigation';
 import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
@@ -7,20 +10,35 @@ import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
+import { AuctionBuilder } from '../features/auctions/AuctionBuilder';
+import type { AuctionItemOption } from '../features/auctions/auctionTypes';
+import { AppSettingsModal } from '../features/settings/AppSettingsModal';
 import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
+import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
+import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
 import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
+import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
+import { DiagnosticsAccessPanel } from '../features/diagnostics/DiagnosticsAccessPanel';
+import { ItemCaseAliasPanel } from '../features/diagnostics/ItemCaseAliasPanel';
+import { DiagnosticsLogsPanel } from '../features/diagnostics/DiagnosticsLogsPanel';
+import { DiagnosticsModIconsPanel } from '../features/diagnostics/DiagnosticsModIconsPanel';
+import { DiagnosticsOverviewPanel } from '../features/diagnostics/DiagnosticsOverviewPanel';
+import { DiagnosticsRecipePanel } from '../features/diagnostics/DiagnosticsRecipePanel';
+import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRuntimePanel';
+import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { formatFileSize } from '../utils/formatFileSize';
 
 const defaultMatrix: CellValue[][] = [
   [null, null, null],
@@ -57,7 +75,6 @@ const EMPTY_ITEM_CASE_ALIASES: Record<string, string> = {};
 const PERSISTENT_SCRIPTS_DIR = '/data/scripts';
 
 type ModalScaleKey = 'help' | 'layout' | 'craft' | 'nbtTree';
-type WorkspaceTab = 'editor' | 'recipe' | 'tasks' | 'technical' | 'cloud';
 type CraftBodyTemplate = {
   schemaVersion: 1;
   recipeType: string;
@@ -122,13 +139,6 @@ type ItemPanelEntry = {
   customOwnerEmail?: string | null;
   customStorage?: 'local' | 'backend';
   customComment?: string;
-};
-
-type ItemPanelModSummary = {
-  modid: string;
-  itemCount: number;
-  loadedCount: number;
-  completionText: string;
 };
 
 type UploadedDraft = {
@@ -310,20 +320,13 @@ type CloudUploadConflictState = {
   resolve: (mode: CloudUploadConflictMode) => void;
 };
 
-type HotkeyDebugLevel = 'info' | 'success' | 'warning' | 'error';
-type HotkeyDebugDetails = Record<string, string | number | boolean | null | undefined>;
-type DebugCategory = 'hotkeys' | 'ui' | 'recipe' | 'api' | 'storage';
-type HotkeyDebugEvent = {
-  id: number;
-  timestamp: string;
-  level: HotkeyDebugLevel;
-  category: DebugCategory;
-  message: string;
-  details?: HotkeyDebugDetails;
-};
+type HotkeyDebugLevel = DebugEventLevel;
+type HotkeyDebugDetails = DebugEventDetails;
+type DebugCategory = DebugEventCategory;
+type HotkeyDebugEvent = DebugEventItem;
 type DebugFilters = Record<DebugCategory, boolean>;
 type DebugLevelFilters = Record<HotkeyDebugLevel, boolean>;
-type DebugSection = 'overview' | 'modIcons' | 'iconSettings' | 'iconLab' | 'access' | 'caseAliases' | 'oreDictPriority' | 'modReplacement' | 'recipe' | 'runtime' | 'logs' | 'raw';
+type DebugSection = DiagnosticsSectionId;
 type IconSettingsProfile = 'desktop' | 'mobile';
 
 function initialIconSettingsProfile(): IconSettingsProfile {
@@ -827,9 +830,11 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
       ? 'tasks'
       : value.workspaceTab === 'cloud'
         ? 'cloud'
-        : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
-          ? 'technical'
-          : 'editor';
+        : value.workspaceTab === 'auctions'
+          ? 'auctions'
+          : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
+            ? 'technical'
+            : 'editor';
   const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
   const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
   const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
@@ -1023,12 +1028,6 @@ function collectRecipeBlocks(source: string): string[] {
 
 function elapsedMs(startedAt: number): number {
   return Math.round((performance.now() - startedAt) * 10) / 10;
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function mergeRecipeMatches(...groups: RecipeView[][]): RecipeView[] {
@@ -1756,19 +1755,20 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const canUseNeiFavorites = can(authUser, 'nei-favorites:manage');
   const canManageCloudFiles = can(authUser, 'files:manage');
   const canManageTasks = can(authUser, 'tasks:manage');
+  const canUseAuctions = canEditRecipes;
   const canUseTechnicalPanel = canManageModIcons || canManageRoles || canUseDebug;
   const canUseItemCaseAliases = canCreateTemplates || canEditRecipes || canManageModIcons;
   const canOpenSettings = canManageSettings || canUseNeiFavorites;
   const itemCaseAliases = itemCaseAliasReport?.itemAliases ?? EMPTY_ITEM_CASE_ALIASES;
   const isHotkeyDebugActive = canManageSettings && isHotkeyDebugEnabled;
   hotkeyDebugActiveRef.current = isHotkeyDebugActive;
-  const workspaceTabs = [
-    { id: 'editor' as const, label: uiPreferences.language === 'ru' ? 'Главное меню' : 'Main menu', visible: true },
-    { id: 'recipe' as const, label: uiPreferences.language === 'ru' ? 'Черновики' : 'Drafts', visible: canCreateTemplates || canEditRecipes },
-    { id: 'tasks' as const, label: uiPreferences.language === 'ru' ? 'Задачи' : 'Tasks', visible: canManageTasks },
-    { id: 'technical' as const, label: uiPreferences.language === 'ru' ? 'Техническая панель' : 'Technical panel', visible: canUseTechnicalPanel },
-    { id: 'cloud' as const, label: uiPreferences.language === 'ru' ? 'Облако' : 'Cloud', visible: canManageCloudFiles }
-  ].filter((tab) => tab.visible);
+  const workspaceTabs = buildWorkspaceNavigation(uiPreferences.language, {
+    canCreateTemplates,
+    canEditRecipes,
+    canManageCloudFiles,
+    canManageTasks,
+    canUseTechnicalPanel
+  });
 
   function logAppDebug(category: DebugCategory, message: string, details?: HotkeyDebugDetails, level: HotkeyDebugLevel = 'info') {
     if (!hotkeyDebugActiveRef.current) {
@@ -2428,6 +2428,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setWorkspaceTab('editor');
     }
   }, [workspaceTab, canUseTechnicalPanel]);
+
+  useEffect(() => {
+    if (workspaceTab === 'auctions' && !canUseAuctions) {
+      setWorkspaceTab('editor');
+    }
+  }, [workspaceTab, canUseAuctions]);
 
   useEffect(() => {
     if (workspaceTab === 'cloud' && canManageCloudFiles) {
@@ -3512,6 +3518,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       })
       .sort((a, b) => b.itemCount - a.itemCount || a.modid.localeCompare(b.modid));
   }, [itemPanelTranslations.entries, itemSearchIcons]);
+  const auctionItemOptions = useMemo<AuctionItemOption[]>(() => itemPanelTranslations.entries.map((entry) => {
+    const raw = itemPanelRaw(entry);
+    return {
+      raw,
+      title: entry.displayRu || entry.displayEn || raw,
+      legacyId: entry.legacyId,
+      meta: entry.meta,
+      hasNbt: itemPanelEntryHasNbtTag(entry)
+    };
+  }), [itemPanelTranslations.entries]);
 
   useEffect(() => {
     setSelectedTextureMods((current) => {
@@ -6708,100 +6724,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderModIconsPanel() {
-    const manifest = modIconStatus?.manifest ?? modIconManifest;
-    const atlasEntries = manifest ? [...Object.values(manifest.entries.x32), ...Object.values(manifest.entries.x256)] : [];
     return (
-      <div className="workspace-layout workspace-layout-admin">
-        <div className="workspace-column workspace-left">
-          <div className="workspace-panel-shell panel-admin-mod-icons">
-            <Panel title="Атласы" subtitle="ZIP архивы формата modid_x32.zip или modid_x256.zip с PNG внутри">
-              <label
-                className="file-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleModIconArchiveFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".zip,application/zip"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleModIconArchiveFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить ZIP архив иконок</strong>
-                <span>Например: energyadditions_x32.zip с папкой energyadditions_x32/ и PNG-файлами внутри</span>
-              </label>
-              <div className="file-actions">
-                <button type="button" disabled={modIconUploading || Boolean(modIconArchiveAction)} onClick={() => void refreshModIconStatus()}>Обновить статус</button>
-                <button type="button" className="secondary-button" disabled={modIconGenerating || Boolean(modIconArchiveAction) || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
-              </div>
-              {modIconMessage ? <div className="inline-status inline-status-default">{modIconMessage}</div> : null}
-              <div className="admin-file-list">
-                {(modIconStatus?.archives ?? []).map((archive) => (
-                  <div key={archive.name} className="admin-file-row">
-                    <div>
-                      <strong>{archive.name}</strong>
-                      <span>{formatFileSize(archive.size)}</span>
-                    </div>
-                    <div className="admin-file-actions">
-                      <span>{archive.modifiedAt ? new Date(archive.modifiedAt).toLocaleString() : '-'}</span>
-                      <div className="inline-actions">
-                        <button type="button" className="ghost-button" onClick={() => handleDownloadModIconArchive(archive.name)}>Скачать</button>
-                        <button type="button" className="secondary-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleCleanModIconArchive(archive.name)}>
-                          {modIconArchiveAction === `clean:${archive.name}` ? 'Очистка...' : 'Очистить лишнее'}
-                        </button>
-                        <button type="button" className="ghost-button danger-lite-button" disabled={Boolean(modIconArchiveAction)} onClick={() => void handleDeleteModIconArchive(archive.name)}>
-                          {modIconArchiveAction === `delete:${archive.name}` ? 'Удаление...' : 'Удалить'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {modIconStatus && !modIconStatus.archives.length ? <div className="inline-hint inline-hint-warning">Архивы ещё не загружены.</div> : null}
-              </div>
-            </Panel>
-          </div>
-        </div>
-        <div className="workspace-column workspace-right">
-          <div className="workspace-panel-shell panel-admin-mod-atlases">
-            <Panel title="Атласы" subtitle="4096x4096 максимум, дополнительные страницы создаются автоматически">
-              <div className="kv-grid">
-                <div><span>Модов</span><strong>{manifest?.totalMods ?? 0}</strong></div>
-                <div><span>Иконок</span><strong>{manifest?.totalIcons ?? atlasEntries.length}</strong></div>
-                <div><span>Атласов</span><strong>{manifest?.atlases.length ?? 0}</strong></div>
-                <div><span>Fallback</span><strong>itempanel atlas</strong></div>
-              </div>
-              {manifest?.rejected.length ? (
-                <div className="inline-status inline-status-warning">Отклонено иконок: {manifest.rejected.length}</div>
-              ) : null}
-              <div className="mod-icon-preview-grid">
-                {atlasEntries.map((entry) => {
-                  const atlas = manifest?.atlases.find((item) => item.file === entry.atlasFile);
-                  const previewScale = 40 / entry.w;
-                  return (
-                    <span
-                      key={`${entry.size}-${entry.key ?? entry.modid}-${entry.x}-${entry.y}`}
-                      className="mod-icon-preview"
-                      title={`${entry.modid}: ${entry.iconName ?? entry.modid} x${entry.size}`}
-                      style={{
-                        backgroundImage: `url(${normalizeModIconImageUrl(entry.image_url)})`,
-                        backgroundPosition: `-${entry.x * previewScale}px -${entry.y * previewScale}px`,
-                        backgroundSize: `${(atlas?.columns ?? 1) * entry.w * previewScale}px ${(atlas?.rows ?? 1) * entry.h * previewScale}px`
-                      }}
-                      aria-label={`mod-icon-${entry.key ?? entry.modid}-x${entry.size}`}
-                    />
-                  );
-                })}
-              </div>
-            </Panel>
-          </div>
-        </div>
-      </div>
+      <DiagnosticsModIconsPanel
+        status={modIconStatus}
+        manifest={modIconManifest}
+        message={modIconMessage}
+        uploading={modIconUploading}
+        generating={modIconGenerating}
+        archiveAction={modIconArchiveAction}
+        normalizeImageUrl={normalizeModIconImageUrl}
+        onArchiveFiles={(files) => void handleModIconArchiveFiles(files)}
+        onRefreshStatus={() => void refreshModIconStatus()}
+        onGenerateAtlases={() => void handleGenerateModIconAtlases()}
+        onDownloadArchive={handleDownloadModIconArchive}
+        onCleanArchive={(filename) => void handleCleanModIconArchive(filename)}
+        onDeleteArchive={(filename) => void handleDeleteModIconArchive(filename)}
+      />
     );
   }
 
@@ -7410,57 +7348,36 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderTextureToolsPanel() {
     return (
-      <div className="workspace-panel-shell panel-textures">
-        <Panel title={t('textures.modsDropdown')} subtitle={uiPreferences.language === 'ru' ? 'Кэш иконок из itempanel.csv' : 'Icon cache from itempanel.csv'} className="texture-panel">
-          <div className="texture-toolbar">
-            <button type="button" className="secondary-button" aria-expanded={isTextureModsOpen} onClick={() => setIsTextureModsOpen((value) => !value)}>{t('textures.modsDropdown')}</button>
-            <button type="button" onClick={() => void loadSelectedTextures()} disabled={textureLoadState === 'running' || textureLoadState === 'paused'}>{t('textures.loadSelected')}</button>
-            {textureLoadState === 'running' ? (
-              <button type="button" className="ghost-button" onClick={handlePauseTextureLoading}>{t('textures.stop')}</button>
-            ) : null}
-            {textureLoadState === 'paused' ? (
-              <button type="button" className="ghost-button" onClick={handleResumeTextureLoading}>{t('textures.resume')}</button>
-            ) : null}
-            {textureLoadState !== 'idle' ? (
-              <button type="button" className="ghost-button" onClick={handleCancelTextureLoading}>{t('textures.cancel')}</button>
-            ) : null}
-          </div>
-          {textureLoadStatus ? <div className="inline-status inline-status-default texture-status-line">{textureLoadStatus}</div> : null}
-          <div className="texture-menu-header">
-            <strong>{uiPreferences.language === 'ru' ? 'Моды' : 'Mods'}</strong>
-            <div className="view-menu-actions">
-              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(true)}>{t('textures.selectAll')}</button>
-              <button type="button" className="ghost-button" onClick={() => setAllTextureModSelections(false)}>{t('textures.clearAll')}</button>
-            </div>
-          </div>
-          {isTextureModsOpen && itemPanelModSummaries.length ? (
-            <ul className="toolbar-texture-list texture-list-panel">
-              {itemPanelModSummaries.map((summary) => (
-                <li key={summary.modid} className="toolbar-texture-item">
-                  <label className="view-toggle" aria-label={`select-mod-${summary.modid}`}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTextureMods[summary.modid] ?? true}
-                      onChange={(event) => toggleTextureModSelection(summary.modid, event.target.checked)}
-                    />
-                    <span>{summary.modid}</span>
-                  </label>
-                  <span>{summary.itemCount}</span>
-                  <span>{t('textures.progress')}: {summary.completionText}</span>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          {isTextureModsOpen && !itemPanelModSummaries.length ? <p className="toolbar-texture-empty">{t('textures.empty')}</p> : null}
-          {!isTextureModsOpen ? (
-            <div className="kv-grid">
-              <div><span>{uiPreferences.language === 'ru' ? 'Модов' : 'Mods'}</span><strong>{itemPanelModSummaries.length}</strong></div>
-              <div><span>{t('status.icons')}</span><strong>{iconsResolved}/{iconTotal}</strong></div>
-              <div><span>{t('textures.progress')}</span><strong>{itemPanelModSummaries.find((summary) => selectedTextureMods[summary.modid] ?? true)?.completionText ?? '0%'}</strong></div>
-            </div>
-          ) : null}
-        </Panel>
-      </div>
+      <ItemTextureToolsPanel
+        language={uiPreferences.language}
+        title={t('textures.modsDropdown')}
+        subtitle={uiPreferences.language === 'ru' ? 'Кэш иконок из itempanel.csv' : 'Icon cache from itempanel.csv'}
+        modsLabel={t('textures.modsDropdown')}
+        loadSelectedLabel={t('textures.loadSelected')}
+        stopLabel={t('textures.stop')}
+        resumeLabel={t('textures.resume')}
+        cancelLabel={t('textures.cancel')}
+        selectAllLabel={t('textures.selectAll')}
+        clearAllLabel={t('textures.clearAll')}
+        progressLabel={t('textures.progress')}
+        iconsLabel={t('status.icons')}
+        emptyLabel={t('textures.empty')}
+        isOpen={isTextureModsOpen}
+        loadState={textureLoadState}
+        loadStatus={textureLoadStatus}
+        mods={itemPanelModSummaries}
+        selectedMods={selectedTextureMods}
+        iconsResolved={iconsResolved}
+        iconTotal={iconTotal}
+        onToggleOpen={() => setIsTextureModsOpen((value) => !value)}
+        onLoadSelected={() => void loadSelectedTextures()}
+        onPause={handlePauseTextureLoading}
+        onResume={handleResumeTextureLoading}
+        onCancel={handleCancelTextureLoading}
+        onSelectAll={() => setAllTextureModSelections(true)}
+        onClearAll={() => setAllTextureModSelections(false)}
+        onToggleMod={toggleTextureModSelection}
+      />
     );
   }
 
@@ -7537,176 +7454,24 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
-  function renderDebugEventsList() {
-    if (!hotkeyDebugEvents.length) {
-      return <div className="inline-hint">Debug включен, но событий пока нет. Выполни действие в интерфейсе, чтобы оно появилось здесь.</div>;
-    }
-    return (
-      <ol className="debug-log-list">
-        {hotkeyDebugEvents.map((entry) => (
-          <li key={entry.id} className={`debug-log-event debug-log-${entry.level}`}>
-            <div className="debug-log-event-head">
-              <span>{entry.timestamp}</span>
-              <strong>{entry.message}</strong>
-              <em>{debugCategoryLabels[entry.category]}</em>
-              <code>{entry.level}</code>
-            </div>
-            {entry.details ? (
-              <dl>
-                {Object.entries(entry.details).map(([key, value]) => (
-                  <div key={key}>
-                    <dt>{key}</dt>
-                    <dd>{String(value)}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
-          </li>
-        ))}
-      </ol>
-    );
-  }
-
   function renderItemCaseAliasPanel() {
-    const report = itemCaseAliasReport;
-    const summary = report?.summary;
-    const manualAliases = report?.manualItemAliases ?? {};
-    const logAliases = report?.logItemAliases ?? {};
-    const matchedByKey = new Map((report?.matchedItems ?? []).map((item) => [item.lower_key, item]));
-    const missingByKey = new Map((report?.missingItems ?? []).map((item) => [item.lower_key, item]));
-    const aliasRows = report
-      ? Object.entries(report.itemAliases)
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([lowerKey, original]) => ({
-          lowerKey,
-          original,
-          source: manualAliases[lowerKey] ? 'manual' : logAliases[lowerKey] ? 'log' : 'auto',
-          item: matchedByKey.get(lowerKey) ?? missingByKey.get(lowerKey) ?? null
-        }))
-      : [];
     return (
-      <div className="debug-section-grid">
-        <section className="settings-section">
-          <div className="settings-section-title">
-            <h3>Словарь регистра</h3>
-            <span>Временный lowercase → original-case словарь из загруженных в Облако .zs и сверка с itempanel.csv.</span>
-          </div>
-          <div className="file-actions">
-            <button type="button" className="secondary-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void handleGenerateItemCaseAliasReport()}>Сгенерировать отчет</button>
-            <button type="button" className="ghost-button" disabled={!canManageModIcons || itemCaseAliasGenerating} onClick={() => void refreshItemCaseAliasReport()}>Обновить статус</button>
-          </div>
-          <label className="case-alias-log-upload">
-            <span>fml-client-latest.log</span>
-            <input aria-label="item-case-alias-fml-log" type="file" accept=".log,text/plain" disabled={!canManageModIcons || itemCaseAliasLogUploading} onChange={(event) => {
-              void handleItemCaseAliasLogFiles(event.target.files ?? []);
-              event.target.value = '';
-            }} />
-          </label>
-          {itemCaseAliasStatus ? <div className="inline-status inline-status-default">{itemCaseAliasStatus}</div> : null}
-          {summary ? (
-            <div className="kv-grid">
-              <div><span>Файлов .zs</span><strong>{summary.scriptFiles}</strong></div>
-              <div><span>Item refs</span><strong>{summary.scriptItemRefs}</strong></div>
-              <div><span>Уникальных ключей</span><strong>{summary.uniqueItemKeys}</strong></div>
-              <div><span>Mixed-case</span><strong>{summary.mixedCaseItemAliases}</strong></div>
-              <div><span>Совпало с itempanel</span><strong>{summary.matchedItemKeys}</strong></div>
-              <div><span>Не найдено</span><strong>{summary.missingItemKeys}</strong></div>
-              <div><span>Из FML log</span><strong>{summary.logItemAliases ?? Object.keys(logAliases).length}</strong></div>
-              <div><span>Ручных значений</span><strong>{summary.manualItemAliases ?? Object.keys(manualAliases).length}</strong></div>
-              <div><span>Конфликтов item</span><strong>{summary.itemConflicts}</strong></div>
-              <div><span>Мобов/NBT ids</span><strong>{summary.uniqueEntityKeys}</strong></div>
-            </div>
-          ) : (
-            <div className="inline-hint inline-hint-warning">Отчет еще не создан. Нажми генерацию, чтобы собрать словарь и список пропусков.</div>
-          )}
-          {report ? (
-            <div className="case-alias-paths">
-              <span>Источник: <code>{report.sourceLabel ?? summary?.sourceLabel ?? summary?.scriptsDir ?? 'Облако'}</code></span>
-              <span>Словарь: <code>{report.aliasesPath}</code></span>
-              <span>Отчет: <code>{report.reportPath}</code></span>
-              {report.fmlLogAliasesPath ? <span>FML log: <code>{report.fmlLogAliasesPath}</code></span> : null}
-              {report.fmlLogSummary ? <span>FML source: <code>{report.fmlLogSummary.sourceFilename ?? 'fml-client-latest.log'} ({report.fmlLogSummary.totalMatches} строк)</code></span> : null}
-              {report.manualAliasesPath ? <span>Ручные значения: <code>{report.manualAliasesPath}</code></span> : null}
-            </div>
-          ) : null}
-        </section>
-        <section className="settings-section">
-          <div className="settings-section-title">
-            <h3>Добавить вручную</h3>
-            <span>Ключ хранится в нижнем регистре, значение сохраняет оригинальный регистр из рецепта.</span>
-          </div>
-          <div className="case-alias-manual-form">
-            <label className="field-block">
-              <span>Ключ lowercase</span>
-              <input aria-label="manual-alias-key" type="text" value={manualAliasKey} onChange={(event) => setManualAliasKey(event.target.value)} placeholder="draconicevolution:customspawner" />
-            </label>
-            <label className="field-block">
-              <span>Значение original-case</span>
-              <input aria-label="manual-alias-value" type="text" value={manualAliasValue} onChange={(event) => setManualAliasValue(event.target.value)} placeholder="DraconicEvolution:customSpawner" />
-            </label>
-            <button type="button" className="secondary-button" aria-label="save-manual-alias" disabled={!canManageModIcons || manualAliasSaving} onClick={() => void handleSaveManualItemCaseAlias()}>Добавить в словарь</button>
-          </div>
-        </section>
-        <section className="settings-section">
-          <div className="settings-section-title">
-            <h3>Таблица словаря</h3>
-            <span>{aliasRows.length ? `${aliasRows.length} значений` : 'Словарь появится после генерации или ручного добавления.'}</span>
-          </div>
-          {aliasRows.length ? (
-            <div className="case-alias-table-wrap">
-              <table className="case-alias-table">
-                <thead>
-                  <tr>
-                    <th>lowercase key</th>
-                    <th>original-case</th>
-                    <th>Источник</th>
-                    <th>Файлы</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {aliasRows.map((row) => (
-                    <tr key={row.lowerKey}>
-                      <td><code>{row.lowerKey}</code></td>
-                      <td><code>{row.original}</code></td>
-                      <td><span className={`case-alias-source case-alias-source-${row.source}`}>{row.source === 'manual' ? 'ручной' : row.source === 'log' ? 'log' : 'cloud'}</span></td>
-                      <td>{row.item?.files.slice(0, 3).join(', ') ?? (row.source === 'log' ? report.fmlLogSummary?.sourceFilename ?? 'fml-client-latest.log' : '-')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : null}
-        </section>
-        <section className="settings-section">
-          <div className="settings-section-title">
-            <h3>Не найдено в itempanel</h3>
-            <span>{summary ? `${summary.missingItemKeys} ключей` : 'Список появится после генерации.'}</span>
-          </div>
-          {report?.missingByMod && report.missingByMod.length ? (
-            <div className="missing-mod-list">
-              {report.missingByMod.slice(0, 16).map((item) => (
-                <div key={item.modid} className="admin-file-row">
-                  <strong>{item.modid || 'unknown'}</strong>
-                  <span>{item.count}</span>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {report?.missingItems && report.missingItems.length ? (
-            <div className="admin-file-list case-alias-missing-list">
-              {report.missingItems.slice(0, 80).map((item) => (
-                <div key={item.lower_key} className="admin-file-row">
-                  <div>
-                    <strong>{item.original}</strong>
-                    <span>{item.lower_key}</span>
-                  </div>
-                  <span>{item.files[0] ?? ''}</span>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </section>
-      </div>
+      <ItemCaseAliasPanel
+        report={itemCaseAliasReport}
+        status={itemCaseAliasStatus}
+        canManage={canManageModIcons}
+        generating={itemCaseAliasGenerating}
+        logUploading={itemCaseAliasLogUploading}
+        manualSaving={manualAliasSaving}
+        manualAliasKey={manualAliasKey}
+        manualAliasValue={manualAliasValue}
+        onGenerate={() => void handleGenerateItemCaseAliasReport()}
+        onRefresh={() => void refreshItemCaseAliasReport()}
+        onLogFilesChange={(files) => void handleItemCaseAliasLogFiles(files)}
+        onManualAliasKeyChange={setManualAliasKey}
+        onManualAliasValueChange={setManualAliasValue}
+        onSaveManualAlias={() => void handleSaveManualItemCaseAlias()}
+      />
     );
   }
 
@@ -7773,33 +7538,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         );
       case 'access':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Персонал</h3>
-                <span>Роли пользователей и доступ по Google почте.</span>
-              </div>
-              {canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Whitelist</h3>
-                <span>Допуск операторов и админов на сайт.</span>
-              </div>
-              {canManageRoles ? renderAccessControlContent() : null}
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Доступ по ролям</h3>
-                <span>Справочник текущих ролей сайта.</span>
-              </div>
-              <div className="permissions-grid">
-                <div><strong>admin</strong><span>файлы, рецепты, настройки, роли, отладка</span></div>
-                <div><strong>moderator</strong><span>создание шаблонов и черновиков</span></div>
-                <div><strong>default</strong><span>только просмотр</span></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsAccessPanel
+            usersContent={canManageRoles ? renderAdminUsersContent() : <div className="inline-hint inline-hint-warning">Управление ролями доступно только администраторам.</div>}
+            whitelistContent={canManageRoles ? renderAccessControlContent() : null}
+          />
         );
       case 'caseAliases':
         return renderItemCaseAliasPanel();
@@ -7809,153 +7551,72 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         return renderModReplacementPanel();
       case 'recipe':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Рецепт</h3>
-                <span>Состояние текущей сетки и результата.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Тип</span><strong>{recipe.recipe_type}</strong></div>
-                <div><span>Позиция</span><strong>{recipeBindingMode}</strong></div>
-                <div><span>Размер</span><strong>{summary}</strong></div>
-                <div><span>Заполнено</span><strong>{filledCells}</strong></div>
-                <div><span>Пусто</span><strong>{nullCells}</strong></div>
-                <div><span>Проблемных ячеек</span><strong>{unresolvedCells}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Output</h3>
-                <span>{outputDisplayName ?? outputRaw}</span>
-              </div>
-              <div className="recipe-uses-output">
-                <span className="output-icon-slot">{renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}</span>
-                <div>
-                  <strong>{outputRaw}</strong>
-                  <span>{recipe.output_resolution?.icon_url ? 'Иконка найдена' : 'Иконка не найдена'}</span>
-                </div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsRecipePanel
+            recipeType={recipe.recipe_type}
+            bindingMode={recipeBindingMode}
+            summary={summary}
+            filledCells={filledCells}
+            nullCells={nullCells}
+            unresolvedCells={unresolvedCells}
+            outputRaw={outputRaw}
+            outputDisplayName={outputDisplayName}
+            outputIcon={renderCraftItemIcon(
+              outputRaw,
+              recipe.output_resolution?.icon_url,
+              recipe.output_resolution?.animated,
+              recipe.output_resolution?.animation_meta?.frametime,
+              outputDisplayName ?? outputRaw
+            )}
+            outputIconFound={Boolean(recipe.output_resolution?.icon_url)}
+          />
         );
       case 'runtime':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Интерфейс</h3>
-                <span>Текущие режимы и выбранные состояния.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Вкладка</span><strong>{workspaceTab}</strong></div>
-                <div><span>Тема</span><strong>{uiPreferences.theme_mode}</strong></div>
-                <div><span>Масштаб</span><strong>{Math.round(uiPreferences.ui_scale * 100)}%</strong></div>
-                <div><span>Режим редактора</span><strong>{uiPreferences.editor_mode}</strong></div>
-                <div><span>В мышке</span><strong>{heldItemRaw ?? 'нет'}</strong></div>
-                <div><span>Под курсором</span><strong>{hoveredItemRaw ?? 'нет'}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Загрузки</h3>
-                <span>API, облако, иконки и локальные данные.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Backend</span><strong>{backendAvailable ? 'online' : 'unavailable'}</strong></div>
-                <div><span>API</span><strong>{lastApiStatus}</strong></div>
-                <div><span>Texture loader</span><strong>{textureLoadState}</strong></div>
-                <div><span>Texture mods</span><strong>{selectedTextureCount}/{itemPanelModSummaries.length}</strong></div>
-                <div><span>Cloud</span><strong>{cloudStatus || 'idle'}</strong></div>
-                <div><span>Шаблонов</span><strong>{recipeDraftTemplates.length}</strong></div>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Кнопки</h3>
-                <span>Вычисленные состояния основных действий.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Save local</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Save cloud</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Save draft</span><strong>{canSaveActions ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Clear</span><strong>{canCreateTemplates || canEditRecipes ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Back</span><strong>{recipeBackHistory.length ? 'enabled' : 'disabled'}</strong></div>
-                <div><span>Forward</span><strong>{recipeForwardHistory.length ? 'enabled' : 'disabled'}</strong></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsRuntimePanel
+            workspaceTab={workspaceTab}
+            uiPreferences={uiPreferences}
+            heldItemRaw={heldItemRaw}
+            hoveredItemRaw={hoveredItemRaw}
+            backendAvailable={backendAvailable}
+            lastApiStatus={lastApiStatus}
+            textureLoadState={textureLoadState}
+            selectedTextureCount={selectedTextureCount}
+            totalTextureModCount={itemPanelModSummaries.length}
+            cloudStatus={cloudStatus}
+            recipeDraftTemplateCount={recipeDraftTemplates.length}
+            canSaveActions={canSaveActions}
+            canClear={canCreateTemplates || canEditRecipes}
+            canGoBack={recipeBackHistory.length > 0}
+            canGoForward={recipeForwardHistory.length > 0}
+          />
         );
       case 'logs':
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Фильтры вывода</h3>
-                <span>Эти же настройки доступны в модальном окне настроек.</span>
-              </div>
-              <div className="debug-filter-grid">
-                {Object.entries(debugCategoryLabels).map(([category, label]) => (
-                  <label key={category} className="view-toggle">
-                    <input type="checkbox" checked={debugFilters[category as DebugCategory]} onChange={(event) => toggleDebugFilter(category as DebugCategory, event.target.checked)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="debug-filter-grid">
-                {Object.entries(debugLevelLabels).map(([level, label]) => (
-                  <label key={level} className="view-toggle">
-                    <input type="checkbox" checked={debugLevelFilters[level as HotkeyDebugLevel]} onChange={(event) => toggleDebugLevel(level as HotkeyDebugLevel, event.target.checked)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Лента событий</h3>
-                <span>{isHotkeyDebugActive ? `Событий: ${hotkeyDebugEvents.length}` : 'Debug выключен в настройках.'}</span>
-              </div>
-              {renderDebugEventsList()}
-            </section>
-          </div>
+          <DiagnosticsLogsPanel
+            events={hotkeyDebugEvents}
+            categoryLabels={debugCategoryLabels}
+            levelLabels={debugLevelLabels}
+            categoryFilters={debugFilters}
+            levelFilters={debugLevelFilters}
+            debugActive={isHotkeyDebugActive}
+            onCategoryFilterChange={toggleDebugFilter}
+            onLevelFilterChange={toggleDebugLevel}
+          />
         );
       case 'raw':
         return <pre className="raw-block debug-raw-block">{JSON.stringify(rawPayload, null, 2)}</pre>;
       default:
         return (
-          <div className="debug-section-grid">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Статус</h3>
-                <span>{status}</span>
-              </div>
-              <StatusBar items={statusItems} />
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Диагностика</h3>
-                <span>Краткая проверка текущего рецепта.</span>
-              </div>
-              <ul className="diagnostics-list">
-                <li>Unresolved cells: {unresolvedCells}</li>
-                <li>Output icon: {recipe.output_resolution?.icon_url ?? 'not found'}</li>
-                <li>Current file: {recipe.source.path ?? 'unsaved'}</li>
-              </ul>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>Быстрый debug</h3>
-                <span>Последние ключевые состояния.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Последний API</span><strong>{lastApiStatus}</strong></div>
-                <div><span>Parse result</span><strong>{lastParseResult}</strong></div>
-                <div><span>Иконка output</span><strong>{recipe.output_resolution?.icon_url ? 'найдена' : 'нет'}</strong></div>
-                <div><span>Debug</span><strong>{isHotkeyDebugActive ? 'включен' : 'выключен'}</strong></div>
-              </div>
-            </section>
-          </div>
+          <DiagnosticsOverviewPanel
+            status={status}
+            statusItems={statusItems}
+            unresolvedCells={unresolvedCells}
+            outputIconUrl={recipe.output_resolution?.icon_url}
+            sourcePath={recipe.source.path}
+            lastApiStatus={lastApiStatus}
+            lastParseResult={lastParseResult}
+            debugActive={isHotkeyDebugActive}
+          />
         );
     }
   }
@@ -8112,159 +7773,32 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderModReplacementPanel() {
     return (
-      <div className="workspace-layout workspace-layout-admin" style={{ display: 'flex', gap: '16px', height: 'calc(100vh - 120px)' }}>
-        <div className="workspace-column workspace-left" style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <Panel title={uiPreferences.language === 'ru' ? 'Замена модификации' : 'Mod Replacement'} subtitle={uiPreferences.language === 'ru' ? 'Позволяет массово заменить все предметы выбранного мода на новые аналоги в рецептах' : 'Allows bulk replacing all items of the selected mod with new counterparts in recipes'}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ marginBottom: '16px' }}>
-                <label className="field-block">
-                  <span>{uiPreferences.language === 'ru' ? 'Выберите модификацию для замены:' : 'Select modification to replace:'}</span>
-                  <select
-                    value={selectedReplacementMod}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setSelectedReplacementMod(val);
-                      void handleScanReplacement(val);
-                    }}
-                    style={{ width: '100%', padding: '8px', background: 'var(--surface-sunken)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)', borderRadius: '4px' }}
-                  >
-                    <option value="">-- {uiPreferences.language === 'ru' ? 'Выберите мод' : 'Select mod'} --</option>
-                    {itemPanelModSummaries.map((mod) => (
-                      <option key={mod.modid} value={mod.modid}>
-                        {mod.modid} ({mod.itemCount} {uiPreferences.language === 'ru' ? 'предм.' : 'items'})
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              {replacementStatus ? (
-                <div className="inline-status inline-status-default" style={{ marginBottom: '16px' }}>
-                  <span>{replacementStatus}</span>
-                </div>
-              ) : null}
-
-              <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--border-subtle)', borderRadius: '4px', background: 'var(--surface-sunken)', minHeight: '300px' }}>
-                {scannedReplacementItems.length === 0 ? (
-                  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    {selectedReplacementMod ? (uiPreferences.language === 'ru' ? 'Нет предметов этого мода в рецептах.' : 'No items of this mod found in recipes.') : (uiPreferences.language === 'ru' ? 'Выберите мод для сканирования.' : 'Select a mod to scan.')}
-                  </div>
-                ) : (
-                  <table className="case-alias-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>
-                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Оригинальный предмет' : 'Original Item'}</th>
-                        <th style={{ padding: '8px', width: '40px', textAlign: 'center' }}></th>
-                        <th style={{ padding: '8px' }}>{uiPreferences.language === 'ru' ? 'Новый предмет (замена)' : 'New Item (replacement)'}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {scannedReplacementItems.map((item) => {
-                        const mapped = replacementMappings[item.raw] || '';
-                        
-                        const handleSlotClick = () => {
-                          if (heldItemRaw) {
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: heldItemRaw }));
-                            setHeldItemRaw(null);
-                          } else if (mapped) {
-                            setHeldItemRaw(mapped);
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
-                          }
-                        };
-
-                        const handleSlotContextMenu = (e: MouseEvent) => {
-                          e.preventDefault();
-                          setReplacementMappings(curr => ({ ...curr, [item.raw]: '' }));
-                        };
-
-                        const handleSlotDrop = (e: DragEvent) => {
-                          e.preventDefault();
-                          const value = e.dataTransfer.getData('text/plain');
-                          if (value) {
-                            setReplacementMappings(curr => ({ ...curr, [item.raw]: value }));
-                          }
-                        };
-
-                        return (
-                          <tr key={item.raw} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span className="output-icon-slot" style={{ display: 'inline-flex', padding: 0, border: 'none', background: 'transparent' }}>
-                                  {renderCraftItemIcon(item.raw, item.icon_url, item.animated, 1, item.display_name || item.raw)}
-                                </span>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                  <strong>{item.display_name || item.raw}</strong>
-                                  <code style={{ fontSize: '11px', opacity: 0.7 }}>{item.raw}</code>
-                                </div>
-                              </div>
-                            </td>
-                            <td style={{ padding: '8px', textAlign: 'center', verticalAlign: 'middle', fontSize: '18px', color: 'var(--text-muted)' }}>
-                              →
-                            </td>
-                            <td style={{ padding: '8px', verticalAlign: 'middle' }}>
-                              <div 
-                                className={`output-icon-slot ${mapped ? 'has-item' : 'is-empty-placeholder'}`}
-                                style={{ 
-                                  display: 'inline-flex', 
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  cursor: 'pointer', 
-                                  border: mapped ? '1px solid var(--border-subtle)' : '2px dashed var(--border-subtle)',
-                                  borderRadius: '4px',
-                                  background: mapped ? 'var(--surface-sunken)' : 'transparent',
-                                  padding: '4px',
-                                  minWidth: '34px',
-                                  minHeight: '34px',
-                                  verticalAlign: 'middle',
-                                  userSelect: 'none'
-                                }}
-                                onClick={handleSlotClick}
-                                onContextMenu={(e) => handleSlotContextMenu(e as any)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleSlotDrop(e as any)}
-                                title={mapped ? (uiPreferences.language === 'ru' ? 'Нажмите чтобы взять, правый клик чтобы очистить' : 'Click to pick up, right-click to clear') : (uiPreferences.language === 'ru' ? 'Положите предмет из NEI сюда' : 'Drop item from NEI here')}
-                              >
-                                {mapped ? (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {renderCraftItemIcon(mapped, getCachedItemIconUrl(mapped), false, 1, resolveCellTitle(mapped))}
-                                    <span style={{ fontSize: '13px' }}>{resolveCellTitle(mapped) || mapped}</span>
-                                  </div>
-                                ) : (
-                                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{uiPreferences.language === 'ru' ? 'Пусто' : 'Empty'}</span>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-
-              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  className="primary-button"
-                  disabled={replacementLoading || scannedReplacementItems.length === 0}
-                  onClick={() => void handleReplaceModItems()}
-                  style={{ padding: '10px 20px', fontWeight: 'bold' }}
-                >
-                  {replacementLoading ? (uiPreferences.language === 'ru' ? 'Замена...' : 'Replacing...') : (uiPreferences.language === 'ru' ? 'Заменить все предметы в рецептах' : 'Replace all items in recipes')}
-                </button>
-              </div>
-            </div>
-          </Panel>
-        </div>
-        <div className="workspace-column workspace-right" style={{ width: '380px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          {renderNeiPanel()}
-        </div>
-      </div>
+      <ModReplacementPanel
+        language={uiPreferences.language}
+        mods={itemPanelModSummaries}
+        selectedMod={selectedReplacementMod}
+        items={scannedReplacementItems}
+        mappings={replacementMappings}
+        loading={replacementLoading}
+        status={replacementStatus}
+        heldItemRaw={heldItemRaw}
+        neiPanel={renderNeiPanel()}
+        renderItemIcon={renderCraftItemIcon}
+        resolveItemTitle={resolveCellTitle}
+        getCachedItemIconUrl={getCachedItemIconUrl}
+        onSelectedModChange={(modid) => {
+          setSelectedReplacementMod(modid);
+          void handleScanReplacement(modid);
+        }}
+        onMappingChange={(raw, mapped) => setReplacementMappings((current) => ({ ...current, [raw]: mapped }))}
+        onHeldItemChange={setHeldItemRaw}
+        onReplace={() => void handleReplaceModItems()}
+      />
     );
   }
 
   function renderTechnicalWorkspace() {
-    const sections: Array<{ id: DebugSection; label: string; description: string; visible: boolean }> = [
+    const sections: TechnicalPanelSection[] = [
       { id: 'overview', label: 'Обзор', description: 'Статус и быстрые проверки', visible: true },
       { id: 'modIcons', label: 'Атласы', description: 'ZIP и атласы', visible: canManageModIcons },
       { id: 'iconSettings', label: 'Иконки', description: 'Размеры всех меню', visible: canManageSettings },
@@ -8280,32 +7814,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     ];
 
     return (
-      <div className="debug-shell" aria-label="debug-workspace">
-        <aside className="debug-sidebar" aria-label="debug-navigation">
-          <strong>Техническая панель</strong>
-          {sections.filter((section) => section.visible).map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              className={`debug-nav-button ${debugSection === section.id ? 'active' : ''}`.trim()}
-              aria-label={`debug-section-${section.id}`}
-              onClick={() => setDebugSection(section.id)}
-            >
-              <span>{section.label}</span>
-              <small>{section.description}</small>
-            </button>
-          ))}
-          {canManageModIcons ? (
-            <button type="button" className="debug-nav-button debug-nav-action" aria-label="Обновление вайпа" onClick={() => setIsWipeUpdateOpen(true)}>
-              <span>Обновление вайпа</span>
-              <small>CSV, SNBT, атласы</small>
-            </button>
-          ) : null}
-        </aside>
-        <section className="debug-content">
-          {renderDebugSectionContent()}
-        </section>
-      </div>
+      <TechnicalPanelShell
+        title="Техническая панель"
+        sections={sections}
+        activeSection={debugSection}
+        wipeUpdateVisible={canManageModIcons}
+        wipeUpdateLabel="Обновление вайпа"
+        wipeUpdateDescription="CSV, SNBT, атласы"
+        onSelectSection={setDebugSection}
+        onOpenWipeUpdate={() => setIsWipeUpdateOpen(true)}
+      >
+        {renderDebugSectionContent()}
+      </TechnicalPanelShell>
     );
   }
 
@@ -8328,6 +7848,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           renderItemIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
           renderItemTooltip={renderItemTooltip}
           resolveItemTitle={resolveCellTitle}
+        />
+      );
+    }
+    if (workspaceTab === 'auctions' && canUseAuctions) {
+      return (
+        <AuctionBuilder
+          itemOptions={auctionItemOptions}
+          renderItemIcon={(item) => renderCraftItemIcon(item.raw, getCachedItemIconUrl(item.raw), false, undefined, item.title)}
         />
       );
     }
@@ -8540,32 +8068,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         />
         <div className="brand-with-server">
           <strong>CubixRecipes</strong>
-          {activeServerId && (
-            <div className="active-server-chip" title="Активный сервер">
-              <span className="server-icon">🖥️</span>
-              <span className="server-name-label">
-                {activeServerName}
-              </span>
-              {onResetServer && (
-                <button
-                  type="button"
-                  className="change-server-inline-btn"
-                  onClick={onResetServer}
-                  title="Сменить сервер"
-                >
-                  🔁
-                </button>
-              )}
-            </div>
-          )}
+          {activeServerId ? <ServerContextChip serverName={activeServerName} onResetServer={onResetServer} /> : null}
         </div>
-        <nav className="main-tabs" aria-label="workspace-tabs">
-          {workspaceTabs.map((tab) => (
-            <button key={tab.id} type="button" data-testid={`workspace-tab-${tab.id}`} className={`main-tab-button ${workspaceTab === tab.id ? 'active' : ''}`} onClick={() => setWorkspaceTab(tab.id)}>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        <AppWorkspaceNav tabs={workspaceTabs} activeTab={workspaceTab} onSelectTab={setWorkspaceTab} />
         <div className="utility-actions">
           <div className="user-chip" title={authUser.email}>
             {authUser.avatar_url ? <img src={authUser.avatar_url} alt="" /> : null}
@@ -8602,118 +8107,29 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderCloudSaveModal()}
       {renderSaveConflictModal()}
 
-      {isLayoutSettingsOpen ? (
-        <div className="modal-backdrop" role="presentation" onClick={() => setIsLayoutSettingsOpen(false)}>
-          <div className="modal settings-modal" role="dialog" aria-modal="true" aria-label="Настройки" onClick={(event) => event.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Настройки</h2>
-              <div className="inline-actions">
-                <button type="button" onClick={() => setIsLayoutSettingsOpen(false)}>Закрыть</button>
-              </div>
-            </div>
-            <div className="settings-modal-body">
-              {canManageSettings ? (
-                <>
-              <label className="field-block settings-scale-control">
-                <span>Масштаб интерфейса</span>
-                <select aria-label="ui-scale" value={uiPreferences.ui_scale} onChange={(event) => patchUiPreferences({ ui_scale: Number(event.target.value) as UiScale })}>
-                  <option value={1}>100%</option>
-                  <option value={1.15}>115%</option>
-                  <option value={1.3}>130%</option>
-                  <option value={1.5}>150%</option>
-                </select>
-              </label>
-              <label className="field-block">
-                <span>Иконок NEI на страницу</span>
-                <select
-                  aria-label="nei-page-size"
-                  value={uiPreferences.nei_page_size}
-                  onChange={(event) => patchUiPreferences({ nei_page_size: clamp(Math.floor(Number(event.target.value) || 32), 16, 512) })}
-                >
-                  {[16, 32, 64, 96, 128, 256, 512].map((size) => (
-                    <option key={size} value={size}>{size}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="switch-field">
-                <span>Общий крафтовый стол между серверами</span>
-                <input
-                  aria-label="shared-craft-draft-enabled"
-                  type="checkbox"
-                  checked={sharedCraftDraftEnabled}
-                  onChange={(event) => setSharedCraftDraftMode(event.target.checked)}
-                />
-              </label>
-              <section className="settings-section">
-                <div className="settings-section-title">
-                  <h3>Debug режим</h3>
-                  <span>События интерфейса, рецепта, API и загрузок видны только админам. Фильтры защищают ленту от лишнего шума.</span>
-                </div>
-                <label className="switch-field">
-                  <span>Включить debug</span>
-                  <input
-                    aria-label="hotkey-debug-enabled"
-                    type="checkbox"
-                    checked={isHotkeyDebugEnabled}
-                    onChange={(event) => setHotkeyDebugEnabledForAdmin(event.target.checked)}
-                  />
-                </label>
-                <div className="settings-section-title compact">
-                  <h3>Категории</h3>
-                  <span>{Object.values(debugFilters).filter(Boolean).length}/{Object.keys(debugFilters).length}</span>
-                </div>
-                <div className="debug-filter-grid">
-                  {Object.entries(debugCategoryLabels).map(([category, label]) => (
-                    <label key={category} className="view-toggle">
-                      <input type="checkbox" checked={debugFilters[category as DebugCategory]} onChange={(event) => toggleDebugFilter(category as DebugCategory, event.target.checked)} />
-                      <span>{label}</span>
-                    </label>
-                  ))}
-                </div>
-                <div className="settings-section-title compact">
-                  <h3>Уровни</h3>
-                  <span>{Object.values(debugLevelFilters).filter(Boolean).length}/{Object.keys(debugLevelFilters).length}</span>
-                </div>
-                <div className="debug-filter-grid">
-                  {Object.entries(debugLevelLabels).map(([level, label]) => (
-                    <label key={level} className="view-toggle">
-                      <input type="checkbox" checked={debugLevelFilters[level as HotkeyDebugLevel]} onChange={(event) => toggleDebugLevel(level as HotkeyDebugLevel, event.target.checked)} />
-                      <span>{label}</span>
-                    </label>
-                  ))}
-                </div>
-              </section>
-                </>
-              ) : null}
-              {canUseNeiFavorites ? (
-                <section className="settings-section">
-                  <div className="settings-section-title">
-                    <h3>NEI избранное и фильтр</h3>
-                    <span>Сохраняется на backend в data по email пользователя.</span>
-                  </div>
-                  <label className="field-block">
-                    <span>Клавиша избранного</span>
-                    <input aria-label="nei-favorite-hotkey" type="text" value={neiFavorites.favoriteHotkey} onChange={(event) => updateFavoriteHotkey(event.target.value)} placeholder="A или Ctrl+A" />
-                  </label>
-                  <label className="field-block">
-                    <span>Скрывать из NEI</span>
-                    <textarea
-                      aria-label="nei-hidden-patterns"
-                      className="compact-textarea"
-                      value={neiHiddenPatternsDraft}
-                      onChange={(event) => updateNeiHiddenPatterns(event.target.value)}
-                      placeholder={'<botany:pigment:*>\n<mod:item:*>'}
-                    />
-                  </label>
-                  <div className="inline-status inline-status-default">
-                    <span>Фильтров: {neiFavorites.hiddenPatterns.length}. Вкладок: {neiFavorites.tabs.length}.</span>
-                  </div>
-                </section>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <AppSettingsModal
+        open={isLayoutSettingsOpen}
+        uiPreferences={uiPreferences}
+        canManageSettings={canManageSettings}
+        canUseNeiFavorites={canUseNeiFavorites}
+        sharedCraftDraftEnabled={sharedCraftDraftEnabled}
+        isHotkeyDebugEnabled={isHotkeyDebugEnabled}
+        debugFilters={debugFilters}
+        debugLevelFilters={debugLevelFilters}
+        debugCategoryLabels={debugCategoryLabels}
+        debugLevelLabels={debugLevelLabels}
+        neiFavorites={neiFavorites}
+        neiHiddenPatternsDraft={neiHiddenPatternsDraft}
+        onClose={() => setIsLayoutSettingsOpen(false)}
+        onUiScaleChange={(uiScale) => patchUiPreferences({ ui_scale: uiScale })}
+        onNeiPageSizeChange={(pageSize) => patchUiPreferences({ nei_page_size: clamp(Math.floor(pageSize || 32), 16, 512) })}
+        onSharedCraftDraftChange={setSharedCraftDraftMode}
+        onHotkeyDebugEnabledChange={setHotkeyDebugEnabledForAdmin}
+        onDebugFilterChange={(category, enabled) => toggleDebugFilter(category as DebugCategory, enabled)}
+        onDebugLevelChange={(level, enabled) => toggleDebugLevel(level as HotkeyDebugLevel, enabled)}
+        onFavoriteHotkeyChange={updateFavoriteHotkey}
+        onHiddenPatternsChange={updateNeiHiddenPatterns}
+      />
 
       {isCraftEditorOpen ? (
         <div className="modal-backdrop" role="presentation" onClick={() => { setIsCraftEditorOpen(false); setIsNbtEditorOpen(false); }}>

@@ -1,0 +1,409 @@
+.auction-graph-panel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 8px;
+  background: rgba(5, 18, 42, 0.72);
+  padding: 18px;
+  min-width: 0;
+}
+
+.auction-graph-panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.auction-graph-panel-header h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.auction-graph-panel-header span {
+  color: var(--muted);
+}
+
+.auction-graph-panel-header strong {
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: #9dc8ff;
+  white-space: nowrap;
+}
+
+.auction-graph-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.auction-graph-tabs button {
+  min-height: 32px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.56);
+  color: var(--text);
+  padding: 6px 12px;
+}
+
+.auction-graph-tabs button.active {
+  border-color: rgba(71, 176, 255, 0.78);
+  background: rgba(24, 95, 190, 0.34);
+}
+
+.auction-graph-wipe-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid rgba(104, 142, 204, 0.18);
+  border-radius: 8px;
+  background: rgba(8, 27, 60, 0.34);
+  padding: 9px 10px;
+}
+
+.auction-graph-wipe-controls label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.auction-graph-wipe-controls input {
+  min-height: 32px;
+  border: 1px solid rgba(104, 142, 204, 0.28);
+  border-radius: 6px;
+  background: rgba(4, 14, 33, 0.76);
+  color: var(--text);
+  padding: 5px 8px;
+}
+
+.auction-graph-wipe-controls > span {
+  color: #b9cff0;
+}
+
+.auction-graph-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auction-graph-legend span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid rgba(104, 142, 204, 0.18);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(8, 27, 60, 0.42);
+}
+
+.auction-graph-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.auction-price-graph {
+  width: 100%;
+  min-height: 240px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(6, 20, 45, 0.98), rgba(3, 12, 29, 0.96)),
+    var(--surface-sunken);
+  color: var(--accent, #7aa2ff);
+}
+
+.auction-price-graph line {
+  stroke: rgba(126, 166, 226, 0.24);
+}
+
+.auction-price-graph text {
+  fill: #d8e7ff;
+  font-size: 11px;
+}
+
+.auction-graph-grid {
+  opacity: 0.58;
+}
+
+.auction-graph-month-separator {
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1.4;
+  stroke-dasharray: 6 7;
+}
+
+.auction-graph-month-label {
+  text-anchor: middle;
+  fill: #c9dcfb;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.auction-graph-line {
+  stroke: currentColor;
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent, #7aa2ff) 62%, transparent));
+}
+
+.auction-graph-fill {
+  stroke: none;
+}
+
+.auction-graph-duration-line {
+  stroke: #ffb85c;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.72;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(255, 184, 92, 0.48));
+}
+
+.auction-graph-duration-line.readonly {
+  stroke-dasharray: 5 5;
+  opacity: 0.48;
+}
+
+.auction-graph-point {
+  fill: currentColor;
+  stroke: #071326;
+  stroke-width: 2;
+  cursor: move;
+  filter: drop-shadow(0 0 7px currentColor);
+}
+
+.auction-graph-point-wrap.readonly .auction-graph-point {
+  fill: #071326;
+  stroke: currentColor;
+  stroke-dasharray: 3 3;
+  cursor: context-menu;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.auction-graph-point-count {
+  text-anchor: middle;
+  font-weight: 700;
+  fill: #f4f8ff;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.auction-graph-axis-label {
+  fill: #9fb6d8;
+  paint-order: stroke;
+  stroke: #061126;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.auction-graph-point-menu {
+  position: fixed;
+  z-index: 80;
+  width: min(440px, calc(100vw - 24px));
+  max-height: min(420px, calc(100vh - 24px));
+  overflow: auto;
+  border: 1px solid rgba(104, 142, 204, 0.36);
+  border-radius: 8px;
+  background: #071326;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.52);
+  padding: 10px;
+}
+
+.auction-graph-point-menu-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.auction-graph-point-menu-header button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.56);
+  color: var(--text);
+}
+
+.auction-graph-point-menu-list {
+  display: grid;
+  gap: 7px;
+}
+
+.auction-graph-point-menu-folder {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 8px;
+  padding: 9px;
+  background: rgba(8, 27, 60, 0.34);
+}
+
+.auction-graph-point-menu-folder-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.auction-graph-point-menu-folder-header div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auction-graph-point-menu-folder-header b {
+  border: 1px solid color-mix(in srgb, var(--tag-color) 60%, transparent);
+  border-radius: 999px;
+  padding: 4px 7px;
+  background: color-mix(in srgb, var(--tag-color) 18%, transparent);
+  color: #f4f8ff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.auction-graph-point-menu-auctions {
+  display: grid;
+  gap: 6px;
+}
+
+.auction-graph-point-menu-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px;
+  align-items: center;
+  border: 1px solid rgba(104, 142, 204, 0.18);
+  border-radius: 6px;
+  padding: 8px;
+  background: rgba(8, 27, 60, 0.44);
+}
+
+.auction-graph-point-menu-auctions article {
+  background: rgba(4, 14, 33, 0.46);
+}
+
+.auction-graph-point-menu-list article button {
+  min-height: 30px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(24, 95, 190, 0.28);
+  color: var(--text);
+  padding: 5px 9px;
+}
+
+.auction-graph-point-menu-actions {
+  display: grid;
+  gap: 5px;
+}
+
+.auction-graph-tag-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.auction-graph-point-menu-folder > .auction-graph-tag-row {
+  margin-top: 0;
+}
+
+.auction-graph-tag-row button {
+  min-width: 26px;
+  min-height: 24px;
+  padding: 3px 6px;
+}
+
+.auction-graph-tag-row button:not(:first-child) {
+  width: 26px;
+  padding: 0;
+  background: var(--tag-color);
+}
+
+.auction-graph-tag-row button.active {
+  outline: 2px solid #f4f8ff;
+  outline-offset: 1px;
+}
+
+.auction-graph-point-menu-list span,
+.auction-graph-point-menu-list small {
+  color: var(--muted);
+}
+
+.auction-graph-repeat-marker line {
+  stroke: var(--accent, #7aa2ff);
+  stroke-dasharray: 4 5;
+  opacity: 0.45;
+}
+
+.auction-graph-repeat-marker circle {
+  fill: var(--surface-sunken);
+  stroke: var(--accent, #7aa2ff);
+  stroke-width: 2;
+  opacity: 0.9;
+}
+
+.auction-graph-repeat-marker text {
+  text-anchor: middle;
+  font-weight: 700;
+  fill: var(--text-muted);
+  paint-order: stroke;
+  stroke: var(--surface-sunken);
+  stroke-width: 4px;
+}
+
+.auction-run-price-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.auction-run-price-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.auction-run-price-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 70px 110px 90px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+
+.auction-run-price-row div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auction-run-price-row strong,
+.auction-run-price-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auction-run-price-row span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.auction-run-price-row b {
+  color: var(--accent, #7aa2ff);
+}

@@ -16,6 +16,7 @@ from app.resolver.item_resolver import ItemResolver
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
 from app.storage.recipe_tasks import RecipeTaskStore
 from app.storage.nei_favorites import NeiFavoritesStore
+from app.storage.auction_planner import AuctionPlannerStore
 from app.items.custom_items import CustomItemService
 from app.services.item_case_alias_service import ItemCaseAliasService
 from app.storage.zs_cloud import ZsCloudBackupService
@@ -91,6 +92,7 @@ class ServerContext:
         self.zs_backup_service = ZsCloudBackupService(self.admin_data_dir / 'secret_zs_backups')
         self.recipe_draft_store = RecipeDraftTemplateStore(self.admin_data_dir / 'recipe_draft_templates.json')
         self.recipe_task_store = RecipeTaskStore(self.admin_data_dir / 'recipe_tasks.json')
+        self.auction_planner_store = AuctionPlannerStore(self.admin_data_dir / 'auction_planner.json')
         self.nei_favorites_store = NeiFavoritesStore(self.runtime_data_dir / 'nei_favorites.json')
 
         self.resolver = ItemResolver(
