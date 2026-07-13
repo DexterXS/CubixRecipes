@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { buildAuctionLotWarning } from './AuctionDayContentsPanel';
 import { groupPointAuctionsByFolder } from './AuctionGraphPanel';
 import { buildAuctionGraphsWorkspaceSummary } from './AuctionGraphsWorkspace';
 import {
@@ -9,6 +10,7 @@ import {
 } from './AuctionPriceGraph';
 import { createAuctionDayFolder, summarizeAuctionDayFolder } from './auctionDayFolders';
 import type { AuctionGraphPointAuction } from './auctionGraphModel';
+import type { AuctionDraft } from './auctionTypes';
 
 function detail(folderId: string): AuctionPriceGraphPointDetail {
   return {
@@ -37,6 +39,28 @@ function auction(overrides: Partial<AuctionGraphPointAuction>): AuctionGraphPoin
     startPrice: 100,
     stepPrice: 10,
     multiplier: 1,
+    ...overrides
+  };
+}
+
+function draft(overrides: Partial<AuctionDraft>): AuctionDraft {
+  return {
+    id: 'auction-1',
+    serverIds: {},
+    name: 'Auction',
+    description: 'Filled',
+    startLocal: '2026-07-09T10:00',
+    durationMinutes: 10,
+    currency: 'DONATE',
+    baseStartPrice: 100,
+    baseStepPrice: 10,
+    state: 'ACTIVE',
+    planned: true,
+    repeatEnabled: false,
+    repeatEveryDays: 7,
+    repeatCount: 1,
+    scheduleLeadMinutes: 1,
+    items: [],
     ...overrides
   };
 }
@@ -86,6 +110,15 @@ describe('auction graph UI helpers', () => {
       regularCount: 1,
       plannedCount: 1,
       auctionCount: 2
+    });
+  });
+
+  test('marks missing auction descriptions as high-risk warnings', () => {
+    const warning = buildAuctionLotWarning(draft({ description: '   ' }));
+
+    expect(warning).toEqual({
+      text: 'Высокий риск: не заполнено описание',
+      level: 'danger'
     });
   });
 });

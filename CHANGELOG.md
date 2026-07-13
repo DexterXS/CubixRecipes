@@ -58,6 +58,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Made Auctions folder cards show currency beside start price and bid step, show each lot description directly in the opened-folder list, and mark missing descriptions as high-risk warnings.
 - Fixed mixed-currency Auctions folders: folder currency is now treated as the default for new lots, folder cards/details show actual lot currencies, and graph placement conflicts use the real currencies inside lots.
 - Fixed Auctions graph point movement so dragged points keep moving across rerenders, cannot merge onto an occupied day with the same folder category and currency, and no longer keep menu drag/drop code for splitting or merging folders.
 - Fixed Auctions graph day indexing so graph percentages are read from the same calendar day after releasing a dragged point, even when the graph start value contains a non-midnight time.
