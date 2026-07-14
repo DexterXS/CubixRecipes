@@ -123,6 +123,10 @@
   align-items: start;
 }
 
+.auction-layout.with-lot-library {
+  grid-template-columns: minmax(178px, 198px) minmax(520px, 1fr) minmax(360px, 420px);
+}
+
 .auction-layout > .panel {
   grid-column: 1 / -1;
 }

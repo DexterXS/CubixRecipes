@@ -117,6 +117,12 @@ export type AuctionCommandProfile = {
   modes: Record<AuctionCommandModeId, AuctionCommandModeProfile>;
 };
 
+export type AuctionLotLibraryRecord = {
+  id: string;
+  auction: AuctionDraft;
+  createdAt: number;
+};
+
 export type AuctionPlannerState = {
   dayFolders: AuctionDayFolder[];
   selectedDayFolderId: string;
@@ -127,6 +133,7 @@ export type AuctionPlannerState = {
   commandProfile?: AuctionCommandProfile;
   curve?: AuctionCurve;
   graphStartLocal?: string;
+  lotLibrary?: AuctionLotLibraryRecord[];
 };
 
 export type AuctionCurve = Record<AuctionCurrency, number[]>;

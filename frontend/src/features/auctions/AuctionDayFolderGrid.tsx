@@ -1,5 +1,6 @@
 import { formatDurationCompact, type AuctionDayFolderSummary } from './auctionDayFolders';
-import type { CSSProperties, ReactNode } from 'react';
+import { hasAuctionLotDrag, readAuctionLotDrag, type AuctionLotDragPayload } from './auctionDragDrop';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { AuctionDayFolder, AuctionState } from './auctionTypes';
 import { auctionFolderTagColors, auctionFolderTagLabels } from './auctionFolderTags';
 import './AuctionDayFolderGrid.css';
@@ -11,6 +12,7 @@ type AuctionDayFolderGridProps = {
   onSelectFolder: (id: string) => void;
   onOpenFolder: (id: string) => void;
   onCopyFolder: (id: string) => void;
+  onDropAuctionLot: (payload: AuctionLotDragPayload, targetFolderId: string) => void;
 };
 
 function folderKindLabel(folder: AuctionDayFolder) {
@@ -70,8 +72,11 @@ export function AuctionDayFolderGrid({
   summaries,
   onSelectFolder,
   onOpenFolder,
-  onCopyFolder
+  onCopyFolder,
+  onDropAuctionLot
 }: AuctionDayFolderGridProps) {
+  const [dropFolderId, setDropFolderId] = useState('');
+
   return (
     <PanelLikeDayFolderGrid>
       <div className="auction-folder-grid-header">
@@ -91,8 +96,23 @@ export function AuctionDayFolderGrid({
             <button
               key={folder.id}
               type="button"
-              className={`auction-day-folder-card ${selected ? 'active' : ''} ${isPlanned ? 'planned' : 'regular'}`.trim()}
+              className={`auction-day-folder-card ${selected ? 'active' : ''} ${isPlanned ? 'planned' : 'regular'} ${dropFolderId === folder.id ? 'drop-target' : ''}`.trim()}
               onClick={() => onSelectFolder(folder.id)}
+              onDragOver={(event) => {
+                if (!hasAuctionLotDrag(event.dataTransfer)) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy';
+                setDropFolderId(folder.id);
+              }}
+              onDragLeave={() => setDropFolderId((current) => current === folder.id ? '' : current)}
+              onDrop={(event) => {
+                const payload = readAuctionLotDrag(event.dataTransfer);
+                if (!payload) return;
+                event.preventDefault();
+                event.stopPropagation();
+                setDropFolderId('');
+                onDropAuctionLot(payload, folder.id);
+              }}
             >
               <div className="auction-folder-tab" aria-hidden="true" />
               <div className="auction-folder-card-header">

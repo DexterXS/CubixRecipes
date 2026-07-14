@@ -26,4 +26,5 @@ Rebuild the frontend Auctions workspace into a local day-folder command planner 
 20. Done: polished the Auctions folder cards and resized the command generator modal so controls and preview stay within the visible dialog.
 21. Done: removed the unused ID-row, inventory-clear, and built-in give-item command templates from the generator while preserving migration safety for old saved profiles.
 22. Done: added colored multi-status chips, a command variable help panel, and a per-lot `Добавить предмет` toggle that controls `/aca addItem` output for mixed ready/not-ready lots.
-23. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
+23. Done: added a persistent left-side lot database with deduped folder lots, detached lot records, search, 4x16 icon paging, hover details, and drag/drop into visible day folders.
+24. Next: refine visuals for the graph/sidebar balance and continue reducing oversized auction modules without changing `/aca` command behavior.
