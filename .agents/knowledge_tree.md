@@ -439,7 +439,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionLotLibrary.ts`
-  - Owns the persistent Auctions lot database model helpers: deduplicating equivalent lots across folders, updating existing folder records by `auction.id` during edits, keeping detached records after folders are deleted, filtering/searching records, creating unattached lots, deleting database records, and copying a database lot into a target day folder.
+  - Owns the persistent Auctions lot database model helpers: deduplicating equivalent lots across folders, auto-cleaning old description-edit clones by stable lot identity while keeping the newest record, updating existing folder records by `auction.id` during edits, keeping detached records after folders are deleted, filtering/searching records, creating unattached lots, deleting database records, and copying a database lot into a target day folder.
 - `frontend/src/features/auctions/useAuctionLotLibraryState.ts`
   - Owns frontend state/actions for the lot database: syncing current folder lots into `lotLibrary`, creating detached lots, deleting database records, opening the first live attached lot, and handling drag/drop from the database into a folder.
 - `frontend/src/features/auctions/auctionDayFolders.ts`

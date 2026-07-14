@@ -6,6 +6,7 @@ import {
   buildAuctionLotLibraryEntries,
   createDetachedAuctionLotRecord,
   mergeAuctionLotLibrary,
+  normalizeAuctionLotLibrary,
   removeAuctionLotLibraryRecord
 } from './auctionLotLibrary';
 
@@ -54,6 +55,28 @@ describe('auction lot library', () => {
 
     expect(updatedLibrary).toHaveLength(1);
     expect(updatedLibrary[0].auction.description).toBe('first plus one typed letter');
+  });
+
+  test('auto-cleans old description clones of the same lot and keeps the newest record', () => {
+    const auction = createAuctionDraft(1, '2026-07-14T09:00', {
+      id: 'auction-1',
+      name: 'Sword',
+      description: 'short'
+    });
+    const records = [
+      { id: 'clone-1', auction, createdAt: 100 },
+      { id: 'clone-2', auction: { ...auction, description: 'short plus' }, createdAt: 200 },
+      { id: 'clone-3', auction: { ...auction, description: 'short plus newest' }, createdAt: 300 }
+    ];
+
+    const normalized = normalizeAuctionLotLibrary(records);
+
+    expect(normalized).toHaveLength(1);
+    expect(normalized[0]).toMatchObject({
+      id: 'clone-3',
+      createdAt: 300,
+      auction: { description: 'short plus newest' }
+    });
   });
 
   test('removes a selected lot record from the database list', () => {

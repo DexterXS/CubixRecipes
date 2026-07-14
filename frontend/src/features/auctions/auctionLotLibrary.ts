@@ -41,6 +41,25 @@ export function auctionLotSignature(auction: AuctionDraft): string {
   });
 }
 
+function auctionLotCloneKey(auction: AuctionDraft): string {
+  const stableId = auction.id.trim();
+  if (!stableId) return auctionLotSignature(auction);
+  return JSON.stringify({
+    id: stableId,
+    currency: auction.currency,
+    startPrice: Math.max(0, Math.round(auction.baseStartPrice || 0)),
+    stepPrice: Math.max(0, Math.round(auction.baseStepPrice || 0)),
+    duration: Math.max(1, Math.round(auction.durationMinutes || 1)),
+    items: auction.items.map((item) => ({
+      raw: item.raw,
+      meta: item.meta,
+      hasNbt: item.hasNbt,
+      quantity: Math.max(1, Math.round(item.quantity || 1)),
+      basePrice: Math.max(0, Math.round(item.basePrice || 0))
+    }))
+  });
+}
+
 function cloneAuction(auction: AuctionDraft): AuctionDraft {
   return {
     ...auction,
@@ -64,19 +83,32 @@ function createRecordFromAuction(auction: AuctionDraft, index: number): AuctionL
 export function normalizeAuctionLotLibrary(value: unknown): AuctionLotLibraryRecord[] {
   if (!Array.isArray(value)) return [];
   const seen = new Set<string>();
+  const cloneIndexByKey = new Map<string, number>();
   const records: AuctionLotLibraryRecord[] = [];
   value.forEach((item, index) => {
     if (!item || typeof item !== 'object') return;
     const record = item as Partial<AuctionLotLibraryRecord>;
     if (!record.auction || typeof record.auction !== 'object') return;
-    const signature = auctionLotSignature(record.auction as AuctionDraft);
+    const auction = record.auction as AuctionDraft;
+    const signature = auctionLotSignature(auction);
     if (seen.has(signature)) return;
-    seen.add(signature);
-    records.push({
+    const nextRecord: AuctionLotLibraryRecord = {
       id: typeof record.id === 'string' && record.id.trim() ? record.id : `lot-import-${index + 1}`,
-      auction: cloneAuction(record.auction as AuctionDraft),
+      auction: cloneAuction(auction),
       createdAt: Number.isFinite(record.createdAt) ? Number(record.createdAt) : Date.now()
-    });
+    };
+    const cloneKey = auctionLotCloneKey(nextRecord.auction);
+    const existingIndex = cloneIndexByKey.get(cloneKey);
+    if (existingIndex !== undefined) {
+      if (nextRecord.createdAt >= records[existingIndex].createdAt) {
+        records[existingIndex] = nextRecord;
+      }
+      seen.add(signature);
+      return;
+    }
+    seen.add(signature);
+    cloneIndexByKey.set(cloneKey, records.length);
+    records.push(nextRecord);
   });
   return records.slice(0, 500);
 }

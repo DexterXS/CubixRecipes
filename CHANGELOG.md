@@ -25,6 +25,7 @@
 - Added a persistent left-side Auctions lot database with a compact 4x16 icon grid, search, currency-colored borders, hover details, detached lot creation, and drag/drop into any visible day folder.
 - Restyled Auctions folder cards into a neon folder-shaped shell with a real tab, stronger selected/normal states, and five lot-item preview slots.
 - Fixed Auctions lot database syncing so typing a lot description updates the existing record instead of creating duplicates, and moved database deletion into a right-click context menu.
+- Added automatic cleanup for old Auctions lot-database clones created by per-letter description edits, keeping the newest matching lot record.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.
