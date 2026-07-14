@@ -18,7 +18,6 @@ AUCTION_COMMAND_STATES = {'SETUP', 'ACTIVE', 'PAUSED', 'CLOSED', 'ENDED'}
 AUCTION_COMMAND_SCOPES = {'file', 'auction', 'item'}
 AUCTION_COMMAND_TEMPLATES = {
     'create': ('Создать слот', 'auction', '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}'),
-    'giveItem': ('Выдать предмет', 'item', '/give {player} {itemId} {quantity} {meta}'),
     'addItem': ('Добавить предмет', 'item', '/aca addItem {serverId}'),
     'setName': ('Название', 'auction', '/aca setName {serverId} {auctionName}'),
     'setDescription': ('Описание', 'auction', '/aca setDescription {serverId} {description}'),
@@ -31,12 +30,12 @@ AUCTION_COMMAND_TEMPLATES = {
     'scheduleCreate': ('Расписание', 'auction', '/aca scheduleCreate {serverId} {startDate} {scheduleLeadDate} {repeatIntervalSeconds} {durationSeconds}'),
 }
 INSTALL_COMMAND_ORDER = [
-    'create', 'giveItem', 'addItem', 'setName', 'setDescription',
+    'create', 'addItem', 'setName', 'setDescription',
     'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState',
     'scheduleCreate',
 ]
 EXISTING_COMMAND_ORDER = [
-    'giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate',
+    'addItem', 'setName', 'setDescription', 'setStartDate',
     'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate',
     'create',
 ]
@@ -126,7 +125,7 @@ class AuctionPlannerStore:
             order = INSTALL_COMMAND_ORDER
         else:
             enabled = {
-                'giveItem', 'addItem', 'setName', 'setDescription',
+                'addItem', 'setName', 'setDescription',
                 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice',
                 'setState', 'scheduleCreate',
             }
@@ -186,7 +185,7 @@ class AuctionPlannerStore:
             if block == 'create':
                 migrated.append(self._default_command_entry('create', enabled))
             elif block == 'items':
-                for command in ['giveItem', 'addItem']:
+                for command in ['addItem']:
                     migrated.append(self._default_command_entry(command, enabled))
             elif block == 'settings':
                 for command in [

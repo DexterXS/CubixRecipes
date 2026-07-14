@@ -8,7 +8,6 @@ export type AuctionCommandOrderMode = 'grouped' | 'perLot';
 export type AuctionCommandStage = 'create' | 'ids' | 'items' | 'settings';
 export type AuctionCommandTemplateKey =
   | 'create'
-  | 'giveItem'
   | 'addItem'
   | 'setName'
   | 'setDescription'
@@ -58,6 +57,7 @@ export type AuctionDraft = {
   repeatEveryDays: number;
   repeatCount: number;
   scheduleLeadMinutes: number;
+  addItemsToAuction: boolean;
   items: AuctionLotItem[];
 };
 

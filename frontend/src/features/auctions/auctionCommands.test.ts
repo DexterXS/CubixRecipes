@@ -25,6 +25,7 @@ const baseAuction: AuctionDraft = {
   repeatEveryDays: 7,
   repeatCount: 1,
   scheduleLeadMinutes: 1,
+  addItemsToAuction: true,
   items: [
     { uid: 'a', raw: '<minecraft:stone:1>', title: 'Stone', legacyId: 1, meta: 1, hasNbt: false, quantity: 2, basePrice: 100 },
     { uid: 'b', raw: '<minecraft:chest>.withTag({tag:1})', title: 'NBT Chest', legacyId: 54, meta: 0, hasNbt: true, quantity: 1, basePrice: 5000 }
@@ -49,8 +50,9 @@ describe('auction command generation', () => {
 
     expect(stages.create).toBe('/aca create 31.03.2026_20:10 31.03.2026_20:20 100 10 DONATE');
     expect(stages.ids).toContain('Test auction -> 27');
-    expect(stages.items).toContain('/give @p 1 2 1');
     expect(stages.items).toContain('/aca addItem 27');
+    expect(stages.items).not.toContain('/give');
+    expect(stages.items).not.toContain('/clear');
     expect(stages.settings).toContain('/aca setStartDate 27 31.03.2026_20:10');
     expect(stages.settings).toContain('/aca setState 27 ACTIVE');
     expect(stages.settings).toContain('/aca scheduleCreate 27 31.03.2026_20:10 31.03.2026_20:09 604800 600');
@@ -114,6 +116,20 @@ describe('auction command generation', () => {
     expect(stages.create).not.toContain('9999');
   });
 
+  test('skips addItem commands for lots that already have their items', () => {
+    const stages = buildAuctionCommandStages({
+      auctions: [{ ...baseAuction, addItemsToAuction: false }],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      commandPlayer: '@p',
+      graphStartLocal: '2026-03-01T00:00',
+      workflowMode: 'existing'
+    });
+
+    expect(stages.items).not.toContain('/aca addItem 27');
+  });
+
   test('keeps repeated auction prices locked to the first graph day', () => {
     const curve = createDefaultAuctionCurve();
     curve.DONATE[30] = 1.25;
@@ -149,6 +165,7 @@ describe('auction command generation', () => {
 
     expect(serializedDefaults).not.toContain('clearPlayer');
     expect(serializedDefaults).not.toContain('idList');
+    expect(serializedDefaults).not.toContain('giveItem');
 
     const emptyProfile = normalizeAuctionCommandProfile({
       mode: '',
@@ -174,7 +191,7 @@ describe('auction command generation', () => {
           entries: [
             { id: 'custom-start', kind: 'custom', label: 'Старт', template: '/say {player}', scope: 'file', enabled: true },
             { id: 'create', kind: 'template', command: 'create', label: 'Создать', template: '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}', scope: 'auction', enabled: true },
-            { id: 'giveItem', kind: 'template', command: 'giveItem', label: 'Выдать', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
+            { id: 'custom-give', kind: 'custom', label: 'Выдать', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
             { id: 'setState', kind: 'template', command: 'setState', label: 'Статус', template: '/aca setState {serverId} {state}', scope: 'auction', enabled: true }
           ]
         },
@@ -215,7 +232,7 @@ describe('auction command generation', () => {
           title: 'Cycle',
           orderMode: 'perLot',
           entries: [
-            { id: 'giveItem', kind: 'template', command: 'giveItem', label: 'Give', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
+            { id: 'custom-give', kind: 'custom', label: 'Give', template: '/give {player} {itemId} {quantity} {meta}', scope: 'item', enabled: true },
             { id: 'addItem', kind: 'template', command: 'addItem', label: 'Add', template: '/aca addItem {serverId}', scope: 'item', enabled: true },
             { id: 'setName', kind: 'template', command: 'setName', label: 'Name', template: '/aca setName {serverId} {auctionName}', scope: 'auction', enabled: true }
           ]
@@ -243,5 +260,39 @@ describe('auction command generation', () => {
       '/aca addItem 28',
       '/aca setName 28 Second auction'
     ]);
+  });
+
+  test('profile command output respects the per-lot add item flag', () => {
+    const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
+      mode: 'existing',
+      playerName: '@p',
+      stateFilters: ['ACTIVE'],
+      modeOrder: ['existing'],
+      modes: {
+        existing: {
+          id: 'existing',
+          title: 'Existing',
+          orderMode: 'grouped',
+          entries: [
+            { id: 'addItem', kind: 'template', command: 'addItem', label: 'Add', template: '/aca addItem {serverId}', scope: 'item', enabled: true }
+          ]
+        }
+      }
+    });
+
+    const output = buildAuctionCommandsFromProfile({
+      auctions: [
+        { ...baseAuction, id: 'ready', serverIds: { 0: '27' }, addItemsToAuction: false },
+        { ...baseAuction, id: 'needs-item', serverIds: { 0: '28' }, addItemsToAuction: true }
+      ],
+      curve: createDefaultAuctionCurve(),
+      idMode: 'legacy',
+      timezoneOffsetMinutes: 180,
+      graphStartLocal: '2026-03-01T00:00',
+      profile
+    });
+
+    expect(output).not.toContain('/aca addItem 27');
+    expect(output).toContain('/aca addItem 28');
   });
 });

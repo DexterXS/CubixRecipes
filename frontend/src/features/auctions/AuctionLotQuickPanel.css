@@ -95,6 +95,27 @@
   resize: vertical;
 }
 
+.auction-lot-quick-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  border: 1px solid rgba(104, 142, 204, 0.2);
+  border-radius: 6px;
+  background: rgba(4, 15, 36, 0.46);
+  color: var(--text);
+  padding: 7px 10px;
+}
+
+.auction-lot-quick-checkbox.enabled {
+  border-color: rgba(71, 176, 255, 0.46);
+  background: rgba(24, 95, 190, 0.24);
+}
+
+.auction-lot-quick-checkbox input {
+  accent-color: #47b0ff;
+}
+
 .auction-lot-quick-apply {
   border-color: rgba(71, 176, 255, 0.42) !important;
   background: rgba(24, 95, 190, 0.34) !important;

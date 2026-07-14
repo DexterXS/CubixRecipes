@@ -33,7 +33,6 @@ export const auctionCommandOrderModeLabels: Record<AuctionCommandOrderMode, stri
 
 export const auctionCommandTemplateLabels: Record<AuctionCommandTemplateKey, string> = {
   create: 'Создать слот',
-  giveItem: 'Выдать предмет',
   addItem: 'Добавить предмет',
   setName: 'Название',
   setDescription: 'Описание',
@@ -53,7 +52,6 @@ export const commandDefinitions: Record<AuctionCommandTemplateKey, {
   skipWhenEmptyDescription?: boolean;
 }> = {
   create: { scope: 'auction', template: '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}' },
-  giveItem: { scope: 'item', template: '/give {player} {itemId} {quantity} {meta}', requiresServerId: true },
   addItem: { scope: 'item', template: '/aca addItem {serverId}', requiresServerId: true },
   setName: { scope: 'auction', template: '/aca setName {serverId} {auctionName}', requiresServerId: true },
   setDescription: { scope: 'auction', template: '/aca setDescription {serverId} {description}', requiresServerId: true, skipWhenEmptyDescription: true },
@@ -66,8 +64,8 @@ export const commandDefinitions: Record<AuctionCommandTemplateKey, {
   scheduleCreate: { scope: 'auction', template: '/aca scheduleCreate {serverId} {startDate} {scheduleLeadDate} {repeatIntervalSeconds} {durationSeconds}', requiresServerId: true }
 };
 
-const installCommandOrder: AuctionCommandTemplateKey[] = ['create', 'giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate'];
-const existingCommandOrder: AuctionCommandTemplateKey[] = ['giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate', 'create'];
+const installCommandOrder: AuctionCommandTemplateKey[] = ['create', 'addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate'];
+const existingCommandOrder: AuctionCommandTemplateKey[] = ['addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate', 'create'];
 
 export function createTemplateEntry(command: AuctionCommandTemplateKey, enabled: boolean): AuctionCommandProfileEntry {
   const definition = commandDefinitions[command];
@@ -77,7 +75,7 @@ export function createTemplateEntry(command: AuctionCommandTemplateKey, enabled:
 export function defaultModeProfile(mode: string): AuctionCommandModeProfile {
   const enabledCommands = mode === 'install'
     ? new Set<AuctionCommandTemplateKey>(['create'])
-    : new Set<AuctionCommandTemplateKey>(['giveItem', 'addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate']);
+    : new Set<AuctionCommandTemplateKey>(['addItem', 'setName', 'setDescription', 'setStartDate', 'setEndDate', 'setCurrency', 'setStartPrice', 'setStepPrice', 'setState', 'scheduleCreate']);
   const order = mode === 'install' ? installCommandOrder : existingCommandOrder;
   return {
     id: mode,

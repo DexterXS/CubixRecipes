@@ -439,17 +439,19 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
-  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, compact duration display, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows.
+  - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, compact duration display, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows; new lots default to generating `addItem` commands until the per-lot toggle is disabled.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
   - Owns the Word/Excel-style ribbon shell for the Auctions workspace. Each top tab renders only its matching groups: home creation/work checks, auction day parameters with duration picker plus timezone/start/end time controls, item/lot actions, simplified command generation/download actions, graphs/prices, tools/planner, and view mode. Day deletion and the Commands tab are shown only while the folder grid is visible.
 - `frontend/src/features/auctions/AuctionDurationPicker.tsx`
   - Owns the ribbon duration popover for day/hour/minute selection. It stores the planner value as minutes while presenting a compact unit-aware selector that stays synced with the end-time control.
 - `frontend/src/features/auctions/auctionCommandProfile.ts`
-  - Owns command-generation profile normalization, status filtering, player target handling, legacy block-profile migration, dynamic create/rename/delete modes, empty-mode-list support, per-mode grouped/per-lot command assembly, and dropping removed command templates before preview/download.
+  - Owns command-generation profile normalization, status filtering, player target handling, legacy block-profile migration, dynamic create/rename/delete modes, empty-mode-list support, per-mode grouped/per-lot command assembly, per-lot `addItem` skipping, and dropping removed command templates before preview/download.
 - `frontend/src/features/auctions/auctionCommandDefinitions.ts`
-  - Owns command-generation labels, built-in editable command templates, default install/existing mode presets, scope labels, status labels, and grouped/per-lot order labels shared by profile normalization and the generator modal.
+  - Owns command-generation labels, built-in editable command templates, default install/existing mode presets, scope labels, status labels, and grouped/per-lot order labels shared by profile normalization and the generator modal. `/give` is not a built-in template; add it as a custom command when needed.
 - `frontend/src/features/auctions/AuctionCommandGeneratorModal.tsx`
-  - Owns the command generation menu opened from the ribbon: selected custom mode, mode create/rename/delete actions, grouped/per-lot order toggle, status filter, player/nick input, editable command templates, enabled command order, custom commands, generated preview, profile save, and direct download.
+  - Owns the command generation menu opened from the ribbon: selected custom mode, mode create/rename/delete actions, grouped/per-lot order toggle, colored multi-status filter chips, player/nick input, editable command templates, enabled command order, custom commands, generated preview, variable-help toggle, profile save, and direct download.
+- `frontend/src/features/auctions/AuctionCommandVariablesHelp.tsx`
+  - Owns the command-generator help panel listing supported template variables, their meanings, and example values.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
   - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions in the polished folder-card layout.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
@@ -457,7 +459,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`
   - Owns the selected-folder right panel. It manages folder-level actions and fields only: open/copy/delete folder, regular/planned category, regular folder date, planned repeat settings, currency/duration/step/state, price mode, statistics, server-ID status, graph applicability, and expert-only folder metadata.
 - `frontend/src/features/auctions/AuctionLotQuickPanel.tsx`
-  - Owns the selected-lot quick settings panel shown beside the opened-folder lot list: lot name, description, currency, prices, duration, state, primary server ID, command shortcut, full-lot open action, and explicit apply/save.
+  - Owns the selected-lot quick settings panel shown beside the opened-folder lot list: lot name, description, currency, prices, duration, state, primary server ID, per-lot `Добавить предмет` command toggle, command shortcut, full-lot open action, and explicit apply/save.
 - `frontend/src/features/auctions/AuctionLotWorkspace.tsx`
   - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/order/NBT controls, simplified apply/cancel action row, auction command-control panel without state or start/end date editing, editable whole-lot start price, and NEI catalog for adding items to the current lot.
 - `frontend/src/features/auctions/AuctionDownloadModal.tsx`
@@ -476,7 +478,7 @@ Last full rebuild: 2026-06-29
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`
   - Owns deterministic low-level auction command/date/price helpers and legacy staged command generation for workspace panels. User-selectable per-command template assembly, status filtering, and custom command rendering live in `auctionCommandProfile.ts`.
-  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, and excludes NBT items from generated commands.
+  - Formats configured timezone values into UTC+0 `dd.MM.yyyy_HH:mm`, strips filename extensions, applies 90-day percentage curves to whole-lot start prices by calendar-day graph index, exposes shared run-price previews for the UI, uses only entered server IDs for ID-dependent commands, skips `addItem` for lots with the per-lot toggle off, and excludes NBT items from generated commands.
 - `frontend/src/features/auctions/AuctionGraphPanel.tsx`
   - Also owns the wipe-start date control and approximate wipe-end window shown above the graph.
   - Owns the graph panel inside the `Графики` ribbon tab, including currency tabs, the all-currencies overlay, point context menus, opening/editing auctions from graph points, point dragging for graph day/percentage edits, same-day conflict blocking by folder category and currency, duplicating a single auction into a new folder, folder tag assignment, and selected graph series wiring across all auction folders.

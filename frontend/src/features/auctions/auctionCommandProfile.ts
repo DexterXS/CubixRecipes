@@ -109,7 +109,6 @@ function legacyEntriesToTemplateEntries(entries: unknown): AuctionCommandProfile
     const enabled = entry.enabled !== false;
     if (entry.block === 'create') result.push(createTemplateEntry('create', enabled));
     if (entry.block === 'items') {
-      result.push(createTemplateEntry('giveItem', enabled));
       result.push(createTemplateEntry('addItem', enabled));
     }
     if (entry.block === 'settings') {
@@ -347,6 +346,7 @@ function shouldSkipTemplate(entry: AuctionCommandProfileEntry, auction: AuctionD
   if (entry.kind !== 'template') return false;
   const definition = commandDefinitions[entry.command];
   if (definition.requiresServerId && !serverId) return true;
+  if (entry.command === 'addItem' && auction.addItemsToAuction === false) return true;
   if (definition.skipWhenEmptyDescription && !auction.description.trim()) return true;
   if (entry.command === 'scheduleCreate' && !auction.planned) return true;
   return false;

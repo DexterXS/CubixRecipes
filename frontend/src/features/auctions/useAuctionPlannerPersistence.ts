@@ -42,6 +42,7 @@ function normalizeLoadedAuction(auction: AuctionDraft, folder: AuctionDayFolder)
     durationMinutes: Number.isFinite(auction.durationMinutes) ? auction.durationMinutes : folder.defaultDurationMinutes,
     state: auction.state ?? folder.state,
     serverIds: auction.serverIds ?? {},
+    addItemsToAuction: auction.addItemsToAuction !== false,
     items: Array.isArray(auction.items) ? auction.items : []
   };
 }

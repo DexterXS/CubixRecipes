@@ -132,6 +132,7 @@ export function createAuctionDraft(index: number, startLocal: string, patch: Par
     repeatEveryDays: 7,
     repeatCount: 1,
     scheduleLeadMinutes: 1,
+    addItemsToAuction: true,
     items: [],
     ...patch
   };
