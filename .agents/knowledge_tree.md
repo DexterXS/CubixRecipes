@@ -439,9 +439,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
 - `frontend/src/features/auctions/auctionLotLibrary.ts`
-  - Owns the persistent Auctions lot database model helpers: deduplicating equivalent lots across folders, keeping detached records after folders are deleted, filtering/searching records, creating unattached lots, and copying a database lot into a target day folder.
+  - Owns the persistent Auctions lot database model helpers: deduplicating equivalent lots across folders, updating existing folder records by `auction.id` during edits, keeping detached records after folders are deleted, filtering/searching records, creating unattached lots, deleting database records, and copying a database lot into a target day folder.
 - `frontend/src/features/auctions/useAuctionLotLibraryState.ts`
-  - Owns frontend state/actions for the lot database: syncing current folder lots into `lotLibrary`, creating detached lots, opening the first live attached lot, and handling drag/drop from the database into a folder.
+  - Owns frontend state/actions for the lot database: syncing current folder lots into `lotLibrary`, creating detached lots, deleting database records, opening the first live attached lot, and handling drag/drop from the database into a folder.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
   - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, compact duration display, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows; new lots default to generating `addItem` commands until the per-lot toggle is disabled.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
@@ -457,9 +457,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionCommandVariablesHelp.tsx`
   - Owns the command-generator help panel listing supported template variables, their meanings, and example values.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
-  - Owns the central day-folder card grid. Cards select folders without opening them, accept lot-database drops, show regular blue vs planned purple categories, start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions in the polished folder-card layout.
+  - Owns the central day-folder card grid. Cards select folders without opening them, accept lot-database drops, show regular blue vs planned purple categories, use a neon folder-shaped shell with distinct selected/normal states, preview one item from up to five lots, show start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions.
 - `frontend/src/features/auctions/AuctionLotLibraryPanel.tsx`
-  - Owns the left-side lot database UI shown with the folder grid: collapsed/open state, 4x16 icon grid paging, search, currency-colored borders, hover detail tooltip, detached-date labels, detached lot creation, and drag payload creation for dropping lots into any visible folder.
+  - Owns the left-side lot database UI shown with the folder grid: collapsed/open state, 4x16 icon grid paging, search, currency-colored borders, hover detail tooltip, detached-date labels, detached lot creation, right-click deletion context menu, and drag payload creation for dropping lots into any visible folder.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`

@@ -18,6 +18,7 @@ type AuctionLotLibraryPanelProps = {
   records: AuctionLotLibraryRecord[];
   renderItemIcon: AuctionRenderItemIcon;
   onCreateLot: () => void;
+  onDeleteLot: (recordId: string) => void;
   onOpenAuction: (recordId: string, refs: { folderId: string; auctionId: string }[]) => void;
 };
 
@@ -36,10 +37,11 @@ function attachmentLabel(refs: { folderTitle: string; dateLocal: string }[]) {
   return `${refs.length} папок`;
 }
 
-export function AuctionLotLibraryPanel({ folders, records, renderItemIcon, onCreateLot, onOpenAuction }: AuctionLotLibraryPanelProps) {
+export function AuctionLotLibraryPanel({ folders, records, renderItemIcon, onCreateLot, onDeleteLot, onOpenAuction }: AuctionLotLibraryPanelProps) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(0);
   const [open, setOpen] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ recordId: string; x: number; y: number } | null>(null);
   const entries = useMemo(() => buildAuctionLotLibraryEntries(records, folders), [records, folders]);
   const filteredEntries = useMemo(() => filterAuctionLotLibraryEntries(entries, query), [entries, query]);
   const pageCount = Math.max(1, Math.ceil(filteredEntries.length / pageSize));
@@ -53,6 +55,20 @@ export function AuctionLotLibraryPanel({ folders, records, renderItemIcon, onCre
   useEffect(() => {
     setPage((current) => Math.min(current, pageCount - 1));
   }, [pageCount]);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const close = () => setContextMenu(null);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close();
+    };
+    window.addEventListener('click', close);
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('click', close);
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [contextMenu]);
 
   return (
     <aside className={`auction-lot-library-panel ${open ? 'open' : 'collapsed'}`} aria-label="auction-lot-library">
@@ -93,6 +109,10 @@ export function AuctionLotLibraryPanel({ folders, records, renderItemIcon, onCre
                   style={style}
                   draggable
                   onClick={() => onOpenAuction(record.id, refs)}
+                  onContextMenu={(event) => {
+                    event.preventDefault();
+                    setContextMenu({ recordId: record.id, x: event.clientX, y: event.clientY });
+                  }}
                   onDragStart={(event) => writeAuctionLotDrag(event.dataTransfer, { lotId: record.id })}
                 >
                   <span className="auction-lot-library-icon">
@@ -121,6 +141,23 @@ export function AuctionLotLibraryPanel({ folders, records, renderItemIcon, onCre
             <span>{page + 1}/{pageCount}</span>
             <button type="button" disabled={page >= pageCount - 1} onClick={() => setPage((current) => Math.min(pageCount - 1, current + 1))}>›</button>
           </div>
+          {contextMenu ? (
+            <div
+              className="auction-lot-library-context-menu"
+              style={{ left: contextMenu.x, top: contextMenu.y }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  onDeleteLot(contextMenu.recordId);
+                  setContextMenu(null);
+                }}
+              >
+                Удалить из базы
+              </button>
+            </div>
+          ) : null}
         </>
       ) : null}
     </aside>

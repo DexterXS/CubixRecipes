@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { addAuctionLotRecordToFolder, createDetachedAuctionLotRecord, mergeAuctionLotLibrary } from './auctionLotLibrary';
+import { addAuctionLotRecordToFolder, createDetachedAuctionLotRecord, mergeAuctionLotLibrary, removeAuctionLotLibraryRecord } from './auctionLotLibrary';
 import type { AuctionLotDragPayload } from './auctionDragDrop';
 import type { AuctionDayFolder, AuctionLotLibraryRecord } from './auctionTypes';
 import type { AuctionWorkspaceViewMode } from './AuctionWorkspaceView';
@@ -16,6 +16,7 @@ export type AuctionLotLibraryState = {
   records: AuctionLotLibraryRecord[];
   setRecords: Dispatch<SetStateAction<AuctionLotLibraryRecord[]>>;
   createDetachedLot: () => void;
+  deleteLotRecord: (recordId: string) => void;
   openFirstAttachedLot: (recordId: string, refs: { folderId: string; auctionId: string }[]) => void;
   dropLotOnFolder: (payload: AuctionLotDragPayload, targetFolderId: string) => void;
 };
@@ -40,6 +41,10 @@ export function useAuctionLotLibraryState({
     ], dayFolders));
   }, [dayFolders]);
 
+  const deleteLotRecord = useCallback((recordId: string) => {
+    setRecords((current) => removeAuctionLotLibraryRecord(current, recordId));
+  }, []);
+
   const openFirstAttachedLot = useCallback((_: string, refs: { folderId: string; auctionId: string }[]) => {
     const [firstRef] = refs;
     if (!firstRef) return;
@@ -59,5 +64,5 @@ export function useAuctionLotLibraryState({
     setWorkspaceView('folder');
   }, [dayFolders, records, setDayFolders, setSelectedAuctionId, setSelectedDayFolderId, setWorkspaceView]);
 
-  return { records, setRecords, createDetachedLot, openFirstAttachedLot, dropLotOnFolder };
+  return { records, setRecords, createDetachedLot, deleteLotRecord, openFirstAttachedLot, dropLotOnFolder };
 }

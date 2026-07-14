@@ -210,3 +210,30 @@
 .auction-lot-library-pages button:disabled {
   opacity: 0.42;
 }
+
+.auction-lot-library-context-menu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 148px;
+  border: 1px solid rgba(104, 142, 204, 0.38);
+  border-radius: 7px;
+  background: #07152e;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+.auction-lot-library-context-menu button {
+  width: 100%;
+  min-height: 30px;
+  border: 1px solid rgba(255, 111, 128, 0.45);
+  border-radius: 5px;
+  background: rgba(60, 10, 22, 0.82);
+  color: #ffd6dc;
+  text-align: left;
+  padding: 5px 8px;
+}
+
+.auction-lot-library-context-menu button:hover {
+  border-color: rgba(255, 111, 128, 0.85);
+  background: rgba(90, 14, 30, 0.92);
+}

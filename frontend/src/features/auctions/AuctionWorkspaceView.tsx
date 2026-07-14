@@ -189,6 +189,7 @@ export function AuctionWorkspaceView({
           records={lotLibraryState.records}
           renderItemIcon={renderItemIcon}
           onCreateLot={lotLibraryState.createDetachedLot}
+          onDeleteLot={lotLibraryState.deleteLotRecord}
           onOpenAuction={lotLibraryState.openFirstAttachedLot}
         />
       ) : null}
@@ -211,6 +212,7 @@ export function AuctionWorkspaceView({
           folders={dayFolders}
           selectedFolderId={selectedFolder?.id ?? ''}
           summaries={summaries}
+          renderItemIcon={renderItemIcon}
           onSelectFolder={onSelectFolder}
           onOpenFolder={onOpenFolder}
           onCopyFolder={onCopyFolder}
