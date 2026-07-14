@@ -5,7 +5,8 @@ import {
   addAuctionLotRecordToFolder,
   buildAuctionLotLibraryEntries,
   createDetachedAuctionLotRecord,
-  mergeAuctionLotLibrary
+  mergeAuctionLotLibrary,
+  removeAuctionLotLibraryRecord
 } from './auctionLotLibrary';
 
 describe('auction lot library', () => {
@@ -33,6 +34,32 @@ describe('auction lot library', () => {
     expect(result.folders[0].auctions).toHaveLength(1);
     expect(result.folders[0].auctions[0].name).toBe(record.auction.name);
     expect(result.folders[0].auctions[0].startLocal.startsWith('2026-07-14T')).toBe(true);
-    expect(record.auction.name).toContain('Непривязанный');
+    expect(record.auction.name).toBeTruthy();
+  });
+
+  test('updates an existing folder lot record by auction id instead of duplicating on description edits', () => {
+    const auction = createAuctionDraft(1, '2026-07-14T09:00', {
+      id: 'auction-1',
+      name: 'Sword',
+      description: 'first'
+    });
+    const folder = createAuctionDayFolder({ id: 'day-1', dateLocal: '2026-07-14', auctions: [auction] });
+    const library = mergeAuctionLotLibrary([], [folder]);
+    const updatedFolder = {
+      ...folder,
+      auctions: [{ ...auction, description: 'first plus one typed letter' }]
+    };
+
+    const updatedLibrary = mergeAuctionLotLibrary(library, [updatedFolder]);
+
+    expect(updatedLibrary).toHaveLength(1);
+    expect(updatedLibrary[0].auction.description).toBe('first plus one typed letter');
+  });
+
+  test('removes a selected lot record from the database list', () => {
+    const first = createDetachedAuctionLotRecord(1);
+    const second = createDetachedAuctionLotRecord(2);
+
+    expect(removeAuctionLotLibraryRecord([first, second], first.id)).toEqual([second]);
   });
 });

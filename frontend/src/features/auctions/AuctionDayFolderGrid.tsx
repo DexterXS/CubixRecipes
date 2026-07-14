@@ -1,7 +1,7 @@
 import { formatDurationCompact, type AuctionDayFolderSummary } from './auctionDayFolders';
 import { hasAuctionLotDrag, readAuctionLotDrag, type AuctionLotDragPayload } from './auctionDragDrop';
 import { useState, type CSSProperties, type ReactNode } from 'react';
-import type { AuctionDayFolder, AuctionState } from './auctionTypes';
+import type { AuctionDayFolder, AuctionRenderItemIcon, AuctionState } from './auctionTypes';
 import { auctionFolderTagColors, auctionFolderTagLabels } from './auctionFolderTags';
 import './AuctionDayFolderGrid.css';
 
@@ -9,6 +9,7 @@ type AuctionDayFolderGridProps = {
   folders: AuctionDayFolder[];
   selectedFolderId: string;
   summaries: Record<string, AuctionDayFolderSummary>;
+  renderItemIcon: AuctionRenderItemIcon;
   onSelectFolder: (id: string) => void;
   onOpenFolder: (id: string) => void;
   onCopyFolder: (id: string) => void;
@@ -70,6 +71,7 @@ export function AuctionDayFolderGrid({
   folders,
   selectedFolderId,
   summaries,
+  renderItemIcon,
   onSelectFolder,
   onOpenFolder,
   onCopyFolder,
@@ -92,6 +94,10 @@ export function AuctionDayFolderGrid({
           const summary = summaries[folder.id];
           const selected = folder.id === selectedFolderId;
           const isPlanned = folder.category === 'planned';
+          const previewItems = folder.auctions
+            .map((auction) => auction.items[0])
+            .filter(Boolean)
+            .slice(0, 5);
           return (
             <button
               key={folder.id}
@@ -121,6 +127,16 @@ export function AuctionDayFolderGrid({
               </div>
               <div className="auction-folder-kind">{folderKindLabel(folder)}</div>
               {folder.tag ? <span className="auction-folder-tag" style={{ '--tag-color': auctionFolderTagColors[folder.tag] } as CSSProperties}>{auctionFolderTagLabels[folder.tag]}</span> : null}
+              <div className="auction-folder-preview-strip" aria-label="Предпросмотр предметов">
+                {Array.from({ length: 5 }, (_, index) => {
+                  const item = previewItems[index];
+                  return (
+                    <span key={item?.uid ?? `empty-${index}`} className={`auction-folder-preview-slot ${item ? 'filled' : 'empty'}`}>
+                      {item ? renderItemIcon(item) : null}
+                    </span>
+                  );
+                })}
+              </div>
               <div className="auction-folder-card-body">
                 <div className="auction-folder-icon" aria-hidden="true">
                   <span />

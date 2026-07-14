@@ -49,6 +49,10 @@ function cloneAuction(auction: AuctionDraft): AuctionDraft {
   };
 }
 
+function sameAuctionSnapshot(first: AuctionDraft, second: AuctionDraft): boolean {
+  return JSON.stringify(cloneAuction(first)) === JSON.stringify(cloneAuction(second));
+}
+
 function createRecordFromAuction(auction: AuctionDraft, index: number): AuctionLotLibraryRecord {
   return {
     id: `lot-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
@@ -80,10 +84,25 @@ export function normalizeAuctionLotLibrary(value: unknown): AuctionLotLibraryRec
 export function mergeAuctionLotLibrary(records: AuctionLotLibraryRecord[], folders: AuctionDayFolder[]): AuctionLotLibraryRecord[] {
   const normalized = normalizeAuctionLotLibrary(records);
   const seen = new Set(normalized.map((record) => auctionLotSignature(record.auction)));
+  const recordIndexByAuctionId = new Map<string, number>();
+  normalized.forEach((record, index) => {
+    const id = record.auction.id.trim();
+    if (id && !recordIndexByAuctionId.has(id)) recordIndexByAuctionId.set(id, index);
+  });
   let changed = normalized.length !== records.length;
   const next = [...normalized];
   folders.forEach((folder) => {
     folder.auctions.forEach((auction) => {
+      const existingIndex = recordIndexByAuctionId.get(auction.id.trim());
+      if (existingIndex !== undefined) {
+        const record = next[existingIndex];
+        if (!sameAuctionSnapshot(record.auction, auction)) {
+          next[existingIndex] = { ...record, auction: cloneAuction(auction) };
+          changed = true;
+        }
+        seen.add(auctionLotSignature(auction));
+        return;
+      }
       const signature = auctionLotSignature(auction);
       if (seen.has(signature)) return;
       seen.add(signature);
@@ -92,6 +111,10 @@ export function mergeAuctionLotLibrary(records: AuctionLotLibraryRecord[], folde
     });
   });
   return changed ? next.slice(0, 500) : records;
+}
+
+export function removeAuctionLotLibraryRecord(records: AuctionLotLibraryRecord[], recordId: string): AuctionLotLibraryRecord[] {
+  return records.filter((record) => record.id !== recordId);
 }
 
 export function buildAuctionLotLibraryEntries(records: AuctionLotLibraryRecord[], folders: AuctionDayFolder[]): AuctionLotLibraryEntry[] {
