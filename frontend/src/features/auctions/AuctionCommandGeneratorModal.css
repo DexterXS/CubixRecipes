@@ -18,6 +18,12 @@
   margin: 0;
 }
 
+.auction-command-generator-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .auction-command-generator-grid {
   display: grid;
   grid-template-columns: minmax(560px, 1.15fr) minmax(520px, 1fr);
@@ -39,7 +45,7 @@
 }
 
 .auction-command-generator-panel.controls {
-  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto auto minmax(0, 1fr) auto;
 }
 
 .auction-command-generator-panel.preview {
@@ -136,21 +142,122 @@
 
 .auction-command-status-filter {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 5px;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 6px;
 }
 
-.auction-command-status-filter label {
+.auction-command-status-chip {
+  --status-accent: #7aa7ff;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
-  min-height: 30px;
-  border: 1px solid rgba(104, 142, 204, 0.18);
+  min-width: 0;
+  min-height: 32px;
+  border: 1px solid color-mix(in srgb, var(--status-accent) 40%, rgba(104, 142, 204, 0.18));
   border-radius: 6px;
-  background: rgba(4, 15, 36, 0.46);
+  background: color-mix(in srgb, var(--status-accent) 10%, rgba(4, 15, 36, 0.62));
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.auction-command-status-chip input {
+  flex: 0 0 auto;
+  accent-color: var(--status-accent);
+}
+
+.auction-command-status-chip span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auction-command-status-chip.selected {
+  border-color: color-mix(in srgb, var(--status-accent) 78%, white);
+  background: color-mix(in srgb, var(--status-accent) 22%, rgba(4, 15, 36, 0.72));
+}
+
+.auction-command-status-chip.active {
+  --status-accent: #4fd37a;
+}
+
+.auction-command-status-chip.setup {
+  --status-accent: #55c7ff;
+}
+
+.auction-command-status-chip.paused {
+  --status-accent: #ffc857;
+}
+
+.auction-command-status-chip.closed {
+  --status-accent: #ff6b7e;
+}
+
+.auction-command-status-chip.ended {
+  --status-accent: #a98bff;
+}
+
+.auction-command-help-panel {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 8px;
+  background: rgba(4, 15, 36, 0.62);
+  padding: 10px;
+  min-height: 0;
+}
+
+.auction-command-help-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.auction-command-help-head button {
+  min-height: 28px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.72);
+  color: var(--text);
+  padding: 4px 8px;
+}
+
+.auction-command-help-table {
+  display: grid;
+  gap: 4px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.auction-command-help-row {
+  display: grid;
+  grid-template-columns: minmax(145px, 0.75fr) minmax(220px, 1.25fr) minmax(160px, 1fr);
+  gap: 8px;
+  align-items: center;
+  border: 1px solid rgba(104, 142, 204, 0.14);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+.auction-command-help-row code {
+  color: #9ed8ff;
+  font-size: 12px;
+}
+
+.auction-command-help-row span {
   color: var(--text);
   font-size: 12px;
+}
+
+.auction-command-help-row em {
+  color: var(--muted);
+  font-style: normal;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .auction-command-entry-list {
@@ -324,6 +431,10 @@
 @media (max-width: 620px) {
   .auction-command-status-filter {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .auction-command-help-row {
+    grid-template-columns: 1fr;
   }
 
   .auction-command-entry-top {

@@ -166,7 +166,6 @@ export function buildAuctionCommandStages(params: {
   graphStartLocal: string;
   workflowMode: AuctionWorkflowMode;
 }): AuctionCommandStages {
-  const player = params.commandPlayer.trim() || '@p';
   const createLines: string[] = [];
   const idLines: string[] = [];
   const itemLines: string[] = [];
@@ -201,11 +200,8 @@ export function buildAuctionCommandStages(params: {
         settingsLines.push(`/aca setState ${serverId} ${auction.state}`);
       }
 
-      auction.items.filter((item) => !item.hasNbt).forEach((item) => {
-        if (!serverId) return;
-        const [itemId, itemMeta] = formatAuctionItemId(item.raw, item.legacyId, item.meta, params.idMode).split(' ');
-        itemLines.push(`/clear ${player}`);
-        itemLines.push(`/give ${player} ${itemId} ${Math.max(1, item.quantity)} ${itemMeta ?? item.meta}`);
+      auction.items.filter((item) => !item.hasNbt).forEach(() => {
+        if (!serverId || auction.addItemsToAuction === false) return;
         itemLines.push(`/aca addItem ${serverId}`);
       });
 

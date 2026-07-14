@@ -71,11 +71,11 @@ def test_auction_planner_store_persists_command_profile_modes(tmp_path):
                     "orderMode": "perLot",
                     "entries": [
                         {
-                            "id": "giveItem",
+                            "id": "addItem",
                             "kind": "template",
-                            "command": "giveItem",
-                            "label": "Give with nick",
-                            "template": "/give {player} {itemId} {quantity} {meta}",
+                            "command": "addItem",
+                            "label": "Add item",
+                            "template": "/aca addItem {serverId}",
                             "scope": "item",
                             "enabled": True,
                         },
@@ -101,7 +101,7 @@ def test_auction_planner_store_persists_command_profile_modes(tmp_path):
     assert profile["stateFilters"] == ["ACTIVE", "PAUSED"]
     assert profile["modeOrder"] == ["existing"]
     assert profile["modes"]["existing"]["orderMode"] == "perLot"
-    assert profile["modes"]["existing"]["entries"][0]["template"].startswith("/give {player}")
+    assert profile["modes"]["existing"]["entries"][0]["template"].startswith("/aca addItem")
     assert any(entry["kind"] == "custom" for entry in profile["modes"]["existing"]["entries"])
 
 
@@ -156,6 +156,15 @@ def test_auction_planner_store_drops_removed_command_templates(tmp_path):
                             "scope": "item",
                             "enabled": True,
                         },
+                        {
+                            "id": "addItem",
+                            "kind": "template",
+                            "command": "addItem",
+                            "label": "Add",
+                            "template": "/aca addItem {serverId}",
+                            "scope": "item",
+                            "enabled": True,
+                        },
                     ],
                 }
             },
@@ -165,4 +174,5 @@ def test_auction_planner_store_drops_removed_command_templates(tmp_path):
     commands = [entry["command"] for entry in entries if entry["kind"] == "template"]
 
     assert "clearPlayer" not in commands
-    assert commands == ["giveItem"]
+    assert "giveItem" not in commands
+    assert commands == ["addItem"]

@@ -100,6 +100,14 @@ export function AuctionLotQuickPanel({
           <span>ID сервера</span>
           <input value={serverId} onChange={(event) => onUpdateServerId(auction.id, 0, event.target.value)} placeholder="после /aca create" />
         </label>
+        <label className={`auction-lot-quick-checkbox ${auction.addItemsToAuction ? 'enabled' : ''}`}>
+          <input
+            type="checkbox"
+            checked={auction.addItemsToAuction}
+            onChange={(event) => onUpdateAuction(auction.id, { addItemsToAuction: event.target.checked })}
+          />
+          <span>Добавить предмет</span>
+        </label>
         <button type="button" className="auction-lot-quick-apply" onClick={onApply}>Применить</button>
       </section>
 

@@ -60,6 +60,7 @@ function draft(overrides: Partial<AuctionDraft>): AuctionDraft {
     repeatEveryDays: 7,
     repeatCount: 1,
     scheduleLeadMinutes: 1,
+    addItemsToAuction: true,
     items: [],
     ...overrides
   };

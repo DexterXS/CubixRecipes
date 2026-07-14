@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { sanitizeAuctionFilename } from './auctionCommands';
+import { AuctionCommandVariablesHelp } from './AuctionCommandVariablesHelp';
 import {
   auctionCommandOrderModeLabels,
   auctionCommandScopeLabels,
@@ -41,6 +42,13 @@ type AuctionCommandGeneratorModalProps = {
 
 const stateFilterOrder: AuctionState[] = ['ACTIVE', 'SETUP', 'PAUSED', 'CLOSED', 'ENDED'];
 const commandOrderModes: AuctionCommandOrderMode[] = ['grouped', 'perLot'];
+const stateChipClassNames: Record<AuctionState, string> = {
+  ACTIVE: 'active',
+  SETUP: 'setup',
+  PAUSED: 'paused',
+  CLOSED: 'closed',
+  ENDED: 'ended'
+};
 
 function moveEntry(entries: AuctionCommandProfileEntry[], index: number, direction: -1 | 1) {
   const target = index + direction;
@@ -75,6 +83,7 @@ export function AuctionCommandGeneratorModal({
   onClose
 }: AuctionCommandGeneratorModalProps) {
   const [draft, setDraft] = useState(() => normalizeAuctionCommandProfile(profile));
+  const [showHelp, setShowHelp] = useState(false);
   const entries = getAuctionCommandModeEntries(draft);
   const matchingLotCount = auctions.filter((auction) => draft.stateFilters.includes(auction.state)).length;
   const generatedCommands = useMemo(() => buildAuctionCommandsFromProfile({
@@ -135,7 +144,12 @@ export function AuctionCommandGeneratorModal({
       >
         <div className="modal-header auction-command-generator-header">
           <h2>Генерация команд</h2>
-          <button type="button" className="ghost-button" onClick={onClose}>Закрыть</button>
+          <div className="auction-command-generator-header-actions">
+            <button type="button" className="ghost-button" onClick={() => setShowHelp((value) => !value)}>
+              {showHelp ? 'Скрыть помощь' : 'Помощь'}
+            </button>
+            <button type="button" className="ghost-button" onClick={onClose}>Закрыть</button>
+          </div>
         </div>
 
         <div className="auction-command-generator-grid">
@@ -175,6 +189,8 @@ export function AuctionCommandGeneratorModal({
 
             {currentMode ? (
               <>
+                {showHelp ? <AuctionCommandVariablesHelp onClose={() => setShowHelp(false)} /> : null}
+
                 <div className="auction-command-control-row">
                   <h3>Порядок</h3>
                   <div className="auction-command-order-toggle">
@@ -195,7 +211,10 @@ export function AuctionCommandGeneratorModal({
                   <h3>Статусы</h3>
                   <div className="auction-command-status-filter">
                     {stateFilterOrder.map((state) => (
-                      <label key={state}>
+                      <label
+                        key={state}
+                        className={`auction-command-status-chip ${stateChipClassNames[state]} ${draft.stateFilters.includes(state) ? 'selected' : ''}`}
+                      >
                         <input
                           type="checkbox"
                           checked={draft.stateFilters.includes(state)}
