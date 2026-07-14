@@ -142,7 +142,7 @@
 
 .auction-command-status-filter {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
   gap: 6px;
 }
 
@@ -151,15 +151,17 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
-  min-height: 32px;
+  min-height: 30px;
   border: 1px solid color-mix(in srgb, var(--status-accent) 40%, rgba(104, 142, 204, 0.18));
   border-radius: 6px;
   background: color-mix(in srgb, var(--status-accent) 10%, rgba(4, 15, 36, 0.62));
   color: var(--text);
-  padding: 5px 8px;
-  font-size: 12px;
+  padding: 4px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -170,6 +172,7 @@
 }
 
 .auction-command-status-chip span {
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

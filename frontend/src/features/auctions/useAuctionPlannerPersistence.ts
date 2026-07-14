@@ -77,18 +77,28 @@ function normalizeLoadedFolder(folder: AuctionDayFolder): AuctionDayFolder {
   return normalizedFolder;
 }
 
-function normalizePlannerState(payload: { state: AuctionPlannerState }, localState?: AuctionPlannerState): AuctionPlannerState | null {
-  const loadedFolders = Array.isArray(payload.state?.dayFolders)
-    ? payload.state.dayFolders.map(normalizeLoadedFolder).filter((folder) => folder.auctions.length > 0)
+export function normalizePlannerState(payload: { state: Partial<AuctionPlannerState> }, localState?: AuctionPlannerState): AuctionPlannerState | null {
+  const remoteState = payload.state ?? {};
+  const commandProfile = normalizeAuctionCommandProfile(remoteState.commandProfile ?? localState?.commandProfile);
+  const loadedFolders = Array.isArray(remoteState.dayFolders)
+    ? remoteState.dayFolders.map(normalizeLoadedFolder).filter((folder) => folder.auctions.length > 0)
     : [];
-  if (!loadedFolders.length) return null;
+  if (!loadedFolders.length) {
+    if (!localState) return null;
+    return {
+      ...localState,
+      commandProfile,
+      curve: remoteState.curve ?? localState.curve,
+      graphStartLocal: remoteState.graphStartLocal ?? localState.graphStartLocal
+    };
+  }
 
-  const requestedFolderId = localState?.selectedDayFolderId ?? payload.state.selectedDayFolderId;
+  const requestedFolderId = localState?.selectedDayFolderId ?? remoteState.selectedDayFolderId;
   const nextFolderId = loadedFolders.some((folder) => folder.id === requestedFolderId)
     ? requestedFolderId
     : loadedFolders[0].id;
   const nextFolder = loadedFolders.find((folder) => folder.id === nextFolderId) ?? loadedFolders[0];
-  const requestedAuctionId = localState?.selectedAuctionId ?? payload.state.selectedAuctionId;
+  const requestedAuctionId = localState?.selectedAuctionId ?? remoteState.selectedAuctionId;
   const nextAuctionId = nextFolder.auctions.some((auction) => auction.id === requestedAuctionId)
     ? requestedAuctionId
     : nextFolder.auctions[0]?.id ?? '';
@@ -97,12 +107,12 @@ function normalizePlannerState(payload: { state: AuctionPlannerState }, localSta
     dayFolders: loadedFolders,
     selectedDayFolderId: nextFolderId,
     selectedAuctionId: nextAuctionId,
-    workflowMode: localState?.workflowMode ?? payload.state.workflowMode ?? 'install',
-    uiMode: localState?.uiMode ?? payload.state.uiMode ?? 'normal',
-    commandStage: localState?.commandStage ?? payload.state.commandStage ?? 'create',
-    commandProfile: normalizeAuctionCommandProfile(payload.state.commandProfile),
-    curve: payload.state.curve,
-    graphStartLocal: payload.state.graphStartLocal
+    workflowMode: localState?.workflowMode ?? remoteState.workflowMode ?? 'install',
+    uiMode: localState?.uiMode ?? remoteState.uiMode ?? 'normal',
+    commandStage: localState?.commandStage ?? remoteState.commandStage ?? 'create',
+    commandProfile,
+    curve: remoteState.curve ?? localState?.curve,
+    graphStartLocal: remoteState.graphStartLocal ?? localState?.graphStartLocal
   };
 }
 
@@ -138,7 +148,10 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
       .then((payload) => {
         if (cancelled) return;
         lastSavedAtRef.current = payload.savedAt;
-        const nextState = normalizePlannerState(payload);
+        let nextState = normalizePlannerState(payload);
+        if (!nextState) {
+          nextState = normalizePlannerState(payload, buildPlannerState(paramsRef.current));
+        }
         if (nextState) paramsRef.current.onLoad(nextState);
       })
       .catch(() => {

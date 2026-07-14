@@ -67,6 +67,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed saved Auctions command-generator modes after deploy/reload: disabled command checkboxes now stay disabled through frontend/backend normalization, and saved profiles are not dropped when remote day folders are empty.
 - Made Auctions folder cards show currency beside start price and bid step, show each lot description directly in the opened-folder list, and mark missing descriptions as high-risk warnings.
 - Removed top-ribbon apply/delete clutter from opened Auctions lot lists: day deletion now appears only on the folder grid, and explicit apply lives on the selected-lot quick panel.
 - Simplified the Auctions command ribbon to working generate/download actions and shows the tab only on the day-folder grid.

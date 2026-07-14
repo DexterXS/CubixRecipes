@@ -181,6 +181,34 @@ describe('auction command generation', () => {
     expect(getAuctionCommandModeEntries(emptyProfile)).toEqual([]);
   });
 
+  test('keeps command checkbox states when a saved profile is normalized', () => {
+    const profile = normalizeAuctionCommandProfile({
+      mode: 'install',
+      playerName: '@p',
+      stateFilters: ['ACTIVE'],
+      modeOrder: ['install'],
+      modes: {
+        install: {
+          entries: [
+            { id: 'create', kind: 'template', command: 'create', label: 'Create', template: '/aca create {startDate}', scope: 'auction', enabled: false },
+            { id: 'addItem', kind: 'template', command: 'addItem', label: 'Add', template: '/aca addItem {serverId}', scope: 'item', enabled: 'false' },
+            { id: 'setName', kind: 'template', command: 'setName', label: 'Name', template: '/aca setName {serverId} {auctionName}', scope: 'auction' }
+          ]
+        }
+      }
+    });
+
+    const entriesByCommand = Object.fromEntries(
+      getAuctionCommandModeEntries(profile)
+        .filter((entry) => entry.kind === 'template')
+        .map((entry) => [entry.command, entry])
+    );
+
+    expect(entriesByCommand.create.enabled).toBe(false);
+    expect(entriesByCommand.addItem.enabled).toBe(false);
+    expect(entriesByCommand.setName.enabled).toBe(false);
+  });
+
   test('builds command output from editable templates, selected statuses, and saved order', () => {
     const profile: AuctionCommandProfile = normalizeAuctionCommandProfile({
       mode: 'install',
