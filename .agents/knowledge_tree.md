@@ -427,7 +427,7 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, graph workspace, and persistent lot database. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, and extensionless command-file download modal.
+  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, graph workspace, and persistent lot database. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, full-folder command generation, per-lot command-generator scoping, and extensionless command-file download modal.
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
