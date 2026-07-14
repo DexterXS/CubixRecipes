@@ -31,6 +31,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const [maxItemsPerAuction] = useState(16);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [commandGeneratorOpen, setCommandGeneratorOpen] = useState(false);
+  const [commandGeneratorAuctionId, setCommandGeneratorAuctionId] = useState<string | null>(null);
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
   const lotLibraryState = useAuctionLotLibraryState({ dayFolders, setDayFolders, setSelectedDayFolderId, setSelectedAuctionId, setWorkspaceView });
   const dayFoldersRef = useRef(dayFolders); dayFoldersRef.current = dayFolders;
@@ -53,6 +54,10 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   }), [commandAuctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal]);
   const commandStages = commandStagesByMode[workflowMode];
   const commands = useMemo(() => buildAuctionCommandsFromProfile({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal, profile: commandProfile }), [auctions, commandCurve, idMode, timezoneOffset, graphStartLocal, commandProfile]);
+  const commandGeneratorAuctions = useMemo(
+    () => commandGeneratorAuctionId ? auctions.filter((auction) => auction.id === commandGeneratorAuctionId) : auctions,
+    [auctions, commandGeneratorAuctionId]
+  );
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
     if (!query) return itemOptions.slice(0, 80);
@@ -405,7 +410,10 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         onCheckErrors={checkSelectedDayErrors}
         onSetBuilderMode={setBuilderMode}
         onSetCommandStage={setCommandStage}
-        onOpenCommandGenerator={() => setCommandGeneratorOpen(true)}
+        onOpenCommandGenerator={() => {
+          setCommandGeneratorAuctionId(null);
+          setCommandGeneratorOpen(true);
+        }}
         onOpenDownload={() => setDownloadModalOpen(true)}
       />
 
@@ -454,6 +462,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
           onOpenCommands={(id, stage) => {
             setSelectedAuctionId(id);
             setCommandStage(stage);
+            setCommandGeneratorAuctionId(id);
+            setCommandGeneratorOpen(true);
           }}
           onDeleteFolder={deleteSelectedDayFolder}
           onApplyLotSettings={applySelectedLotSettings}
@@ -485,11 +495,14 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         filenameDraft={filenameDraft}
         commands={commands}
         commandProfile={commandProfile}
-        commandContext={{ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal }}
+        commandContext={{ auctions: commandGeneratorAuctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal }}
         onFilenameChange={setFilenameDraft}
         onSaveProfile={saveCommandProfile}
         onCloseDownload={() => setDownloadModalOpen(false)}
-        onCloseGenerator={() => setCommandGeneratorOpen(false)}
+        onCloseGenerator={() => {
+          setCommandGeneratorOpen(false);
+          setCommandGeneratorAuctionId(null);
+        }}
       />
     </div>
   );
