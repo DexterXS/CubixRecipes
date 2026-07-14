@@ -49,7 +49,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     install: buildAuctionCommandStages({ auctions: commandAuctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'install' }),
     existing: buildAuctionCommandStages({ auctions: commandAuctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, commandPlayer, graphStartLocal, workflowMode: 'existing' })
   }), [commandAuctions, commandCurve, idMode, timezoneOffset, commandPlayer, graphStartLocal]);
-  const commandStages = commandStagesByMode[commandProfile.mode];
+  const commandStages = commandStagesByMode[workflowMode];
   const commands = useMemo(() => buildAuctionCommandsFromProfile({ auctions, curve: commandCurve, idMode, timezoneOffsetMinutes: timezoneOffset, graphStartLocal, profile: commandProfile }), [auctions, commandCurve, idMode, timezoneOffset, graphStartLocal, commandProfile]);
   const filteredItems = useMemo(() => {
     const query = itemSearch.trim().toLowerCase();
@@ -76,7 +76,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
       setCommandStage(state.commandStage);
       const nextCommandProfile = normalizeAuctionCommandProfile(state.commandProfile);
       setCommandProfile(nextCommandProfile);
-      setWorkflowMode(nextCommandProfile.mode);
       if (state.curve) setCurve(state.curve);
       if (state.graphStartLocal) setGraphStartLocal(state.graphStartLocal);
     }
@@ -284,8 +283,8 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
 
   const saveCommandProfile = (profile: typeof commandProfile) => {
     const nextProfile = normalizeAuctionCommandProfile(profile);
-    setCommandProfile(nextProfile); setWorkflowMode(nextProfile.mode);
-    void saveAuctionPlannerNow({ commandProfile: nextProfile, workflowMode: nextProfile.mode });
+    setCommandProfile(nextProfile);
+    void saveAuctionPlannerNow({ commandProfile: nextProfile });
   };
 
   const updateAuction = (id: string, patch: Partial<AuctionDraft>) => {

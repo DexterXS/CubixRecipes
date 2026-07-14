@@ -7,207 +7,38 @@ import {
 import type {
   AuctionCommandEntryScope,
   AuctionCommandModeProfile,
+  AuctionCommandOrderMode,
   AuctionCommandProfile,
   AuctionCommandProfileEntry,
   AuctionCommandTemplateKey,
   AuctionCurve,
   AuctionDraft,
   AuctionItemIdMode,
-  AuctionState,
-  AuctionWorkflowMode
+  AuctionState
 } from './auctionTypes';
 
-export const auctionWorkflowModeLabels: Record<AuctionWorkflowMode, string> = {
-  install: 'Новые слоты',
-  existing: 'По готовым ID'
-};
+import {
+  auctionCommandTemplateLabels,
+  commandDefinitions,
+  createTemplateEntry,
+  defaultModeProfile,
+  defaultModeTitles
+} from './auctionCommandDefinitions';
 
-export const auctionStateFilterLabels: Record<AuctionState, string> = {
-  SETUP: 'Подготовка',
-  ACTIVE: 'Активный',
-  PAUSED: 'Пауза',
-  CLOSED: 'Закрыт',
-  ENDED: 'Завершен'
-};
+export {
+  auctionCommandOrderModeLabels,
+  auctionCommandScopeLabels,
+  auctionStateFilterLabels
+} from './auctionCommandDefinitions';
 
-export const auctionCommandScopeLabels: Record<AuctionCommandEntryScope, string> = {
-  file: 'Один раз',
-  auction: 'На лот',
-  item: 'На предмет'
-};
-
-export const auctionCommandTemplateLabels: Record<AuctionCommandTemplateKey, string> = {
-  create: 'Создать слот',
-  idList: 'Строка ID',
-  clearPlayer: 'Очистить инвентарь',
-  giveItem: 'Выдать предмет',
-  addItem: 'Добавить предмет',
-  setName: 'Название',
-  setDescription: 'Описание',
-  setStartDate: 'Старт',
-  setEndDate: 'Конец',
-  setCurrency: 'Валюта',
-  setStartPrice: 'Стартовая цена',
-  setStepPrice: 'Шаг ставки',
-  setState: 'Статус',
-  scheduleCreate: 'Расписание'
-};
-
-const workflowModes: AuctionWorkflowMode[] = ['install', 'existing'];
 const auctionStates: AuctionState[] = ['SETUP', 'ACTIVE', 'PAUSED', 'CLOSED', 'ENDED'];
-
-const commandDefinitions: Record<AuctionCommandTemplateKey, {
-  scope: AuctionCommandEntryScope;
-  template: string;
-  requiresServerId?: boolean;
-  skipWhenEmptyDescription?: boolean;
-}> = {
-  create: {
-    scope: 'auction',
-    template: '/aca create {startDate} {endDate} {startPrice} {stepPrice} {currency}'
-  },
-  idList: {
-    scope: 'auction',
-    template: '{auctionName} -> {serverId}'
-  },
-  clearPlayer: {
-    scope: 'item',
-    template: '/clear {player}',
-    requiresServerId: true
-  },
-  giveItem: {
-    scope: 'item',
-    template: '/give {player} {itemId} {quantity} {meta}',
-    requiresServerId: true
-  },
-  addItem: {
-    scope: 'item',
-    template: '/aca addItem {serverId}',
-    requiresServerId: true
-  },
-  setName: {
-    scope: 'auction',
-    template: '/aca setName {serverId} {auctionName}',
-    requiresServerId: true
-  },
-  setDescription: {
-    scope: 'auction',
-    template: '/aca setDescription {serverId} {description}',
-    requiresServerId: true,
-    skipWhenEmptyDescription: true
-  },
-  setStartDate: {
-    scope: 'auction',
-    template: '/aca setStartDate {serverId} {startDate}',
-    requiresServerId: true
-  },
-  setEndDate: {
-    scope: 'auction',
-    template: '/aca setEndDate {serverId} {endDate}',
-    requiresServerId: true
-  },
-  setCurrency: {
-    scope: 'auction',
-    template: '/aca setCurrency {serverId} {currency}',
-    requiresServerId: true
-  },
-  setStartPrice: {
-    scope: 'auction',
-    template: '/aca setStartPrice {serverId} {startPrice}',
-    requiresServerId: true
-  },
-  setStepPrice: {
-    scope: 'auction',
-    template: '/aca setStepPrice {serverId} {stepPrice}',
-    requiresServerId: true
-  },
-  setState: {
-    scope: 'auction',
-    template: '/aca setState {serverId} {state}',
-    requiresServerId: true
-  },
-  scheduleCreate: {
-    scope: 'auction',
-    template: '/aca scheduleCreate {serverId} {startDate} {scheduleLeadDate} {repeatIntervalSeconds} {durationSeconds}',
-    requiresServerId: true
-  }
-};
-
-const installCommandOrder: AuctionCommandTemplateKey[] = [
-  'create',
-  'idList',
-  'clearPlayer',
-  'giveItem',
-  'addItem',
-  'setName',
-  'setDescription',
-  'setStartDate',
-  'setEndDate',
-  'setCurrency',
-  'setStartPrice',
-  'setStepPrice',
-  'setState',
-  'scheduleCreate'
-];
-
-const existingCommandOrder: AuctionCommandTemplateKey[] = [
-  'idList',
-  'clearPlayer',
-  'giveItem',
-  'addItem',
-  'setName',
-  'setDescription',
-  'setStartDate',
-  'setEndDate',
-  'setCurrency',
-  'setStartPrice',
-  'setStepPrice',
-  'setState',
-  'scheduleCreate',
-  'create'
-];
-
-function createTemplateEntry(command: AuctionCommandTemplateKey, enabled: boolean): AuctionCommandProfileEntry {
-  const definition = commandDefinitions[command];
-  return {
-    id: command,
-    kind: 'template',
-    command,
-    label: auctionCommandTemplateLabels[command],
-    template: definition.template,
-    scope: definition.scope,
-    enabled
-  };
-}
-
-function defaultModeProfile(mode: AuctionWorkflowMode): AuctionCommandModeProfile {
-  const enabledCommands = mode === 'install'
-    ? new Set<AuctionCommandTemplateKey>(['create'])
-    : new Set<AuctionCommandTemplateKey>([
-      'clearPlayer',
-      'giveItem',
-      'addItem',
-      'setName',
-      'setDescription',
-      'setStartDate',
-      'setEndDate',
-      'setCurrency',
-      'setStartPrice',
-      'setStepPrice',
-      'setState',
-      'scheduleCreate'
-    ]);
-  const order = mode === 'install' ? installCommandOrder : existingCommandOrder;
-  return {
-    entries: order.map((command) => createTemplateEntry(command, enabledCommands.has(command)))
-  };
-}
 
 export function createDefaultAuctionCommandProfile(): AuctionCommandProfile {
   return {
     mode: 'install',
     playerName: '@p',
     stateFilters: ['ACTIVE'],
+    modeOrder: ['install', 'existing'],
     modes: {
       install: defaultModeProfile('install'),
       existing: defaultModeProfile('existing')
@@ -232,6 +63,10 @@ function normalizeStateFilters(value: unknown): AuctionState[] {
   if (!Array.isArray(value)) return ['ACTIVE'];
   const states = value.filter((state): state is AuctionState => auctionStates.includes(state as AuctionState));
   return states.length ? Array.from(new Set(states)) : ['ACTIVE'];
+}
+
+function normalizeOrderMode(value: unknown): AuctionCommandOrderMode {
+  return value === 'perLot' ? 'perLot' : 'grouped';
 }
 
 function normalizeTemplateEntry(entry: Record<string, unknown>): AuctionCommandProfileEntry | null {
@@ -273,9 +108,7 @@ function legacyEntriesToTemplateEntries(entries: unknown): AuctionCommandProfile
     if (entry.kind !== 'builtin') return;
     const enabled = entry.enabled !== false;
     if (entry.block === 'create') result.push(createTemplateEntry('create', enabled));
-    if (entry.block === 'ids') result.push(createTemplateEntry('idList', enabled));
     if (entry.block === 'items') {
-      result.push(createTemplateEntry('clearPlayer', enabled));
       result.push(createTemplateEntry('giveItem', enabled));
       result.push(createTemplateEntry('addItem', enabled));
     }
@@ -294,9 +127,10 @@ function legacyEntriesToTemplateEntries(entries: unknown): AuctionCommandProfile
   return result;
 }
 
-function normalizeEntries(entries: unknown, mode: AuctionWorkflowMode): AuctionCommandProfileEntry[] {
+function normalizeEntries(entries: unknown, mode: string): AuctionCommandProfileEntry[] {
   const defaults = defaultModeProfile(mode).entries;
-  const source = Array.isArray(entries) ? entries : defaults;
+  const hasEntries = Array.isArray(entries);
+  const source = hasEntries ? entries : defaults;
   const normalized: AuctionCommandProfileEntry[] = [];
   const seenTemplates = new Set<AuctionCommandTemplateKey>();
   source.forEach((entry, index) => {
@@ -309,56 +143,134 @@ function normalizeEntries(entries: unknown, mode: AuctionWorkflowMode): AuctionC
     }
     normalized.push(next);
   });
-  defaults.forEach((entry) => {
-    if (entry.kind === 'template' && !seenTemplates.has(entry.command)) {
-      normalized.push(entry);
-    }
-  });
+  if (!hasEntries) {
+    defaults.forEach((entry) => {
+      if (entry.kind === 'template' && !seenTemplates.has(entry.command)) {
+        normalized.push(entry);
+      }
+    });
+  }
   return normalized.slice(0, 80);
 }
 
-function normalizeModeProfile(value: unknown, mode: AuctionWorkflowMode, legacyEntries: AuctionCommandProfileEntry[]): AuctionCommandModeProfile {
+function normalizeModeProfile(value: unknown, mode: string, legacyEntries: AuctionCommandProfileEntry[]): AuctionCommandModeProfile {
+  const title = safeText(isRecord(value) ? value.title : undefined, defaultModeTitles[mode as keyof typeof defaultModeTitles] ?? 'Новый режим', 80).trim() || 'Новый режим';
+  const orderMode = normalizeOrderMode(isRecord(value) ? value.orderMode : undefined);
   if (legacyEntries.length) {
-    return { entries: normalizeEntries(legacyEntries, mode) };
+    return { id: mode, title, orderMode, entries: normalizeEntries(legacyEntries, mode) };
   }
   const entries = isRecord(value) ? value.entries : undefined;
-  return { entries: normalizeEntries(entries, mode) };
+  return { id: mode, title, orderMode, entries: normalizeEntries(entries, mode) };
 }
 
 export function normalizeAuctionCommandProfile(value: unknown): AuctionCommandProfile {
   const fallback = createDefaultAuctionCommandProfile();
   if (!isRecord(value)) return fallback;
-  const mode: AuctionWorkflowMode = value.mode === 'existing' ? 'existing' : 'install';
   const legacyEntries = legacyEntriesToTemplateEntries(value.entries);
   const modesSource = isRecord(value.modes) ? value.modes : {};
+  const modes: AuctionCommandProfile['modes'] = {};
+  const modeOrderSource = Array.isArray(value.modeOrder)
+    ? value.modeOrder.filter((item): item is string => typeof item === 'string')
+    : Object.keys(modesSource);
+  let modeOrder = Array.from(new Set(modeOrderSource)).filter((modeId) => isRecord(modesSource[modeId]));
+  if (!modeOrder.length && !isRecord(value.modes) && !Array.isArray(value.modeOrder)) {
+    modeOrder = ['install', 'existing'];
+  }
+  modeOrder.forEach((modeId) => {
+    modes[modeId] = normalizeModeProfile(modesSource[modeId], modeId, legacyEntries && value.mode === modeId ? legacyEntries : []);
+  });
+  const requestedMode = typeof value.mode === 'string' ? value.mode : '';
+  const mode = requestedMode && modes[requestedMode] ? requestedMode : modeOrder[0] ?? '';
   return {
     mode,
     playerName: safeText(value.playerName, '@p', 80).trim() || '@p',
     stateFilters: normalizeStateFilters(value.stateFilters),
-    modes: {
-      install: normalizeModeProfile(modesSource.install, 'install', mode === 'install' ? legacyEntries : []),
-      existing: normalizeModeProfile(modesSource.existing, 'existing', mode === 'existing' ? legacyEntries : [])
-    }
+    modeOrder,
+    modes
   };
 }
 
 export function getAuctionCommandModeEntries(profile: AuctionCommandProfile): AuctionCommandProfileEntry[] {
   const normalized = normalizeAuctionCommandProfile(profile);
-  return normalized.modes[normalized.mode].entries;
+  return normalized.modes[normalized.mode]?.entries ?? [];
 }
 
 export function setAuctionCommandModeEntries(
   profile: AuctionCommandProfile,
-  mode: AuctionWorkflowMode,
+  mode: string,
   entries: AuctionCommandProfileEntry[]
 ): AuctionCommandProfile {
   const normalized = normalizeAuctionCommandProfile(profile);
+  const targetMode = normalized.modes[mode];
+  if (!targetMode) return normalized;
   return {
     ...normalized,
     modes: {
       ...normalized.modes,
-      [mode]: { entries: normalizeEntries(entries, mode) }
+      [mode]: { ...targetMode, entries: normalizeEntries(entries, mode) }
     }
+  };
+}
+
+export function createAuctionCommandMode(profile: AuctionCommandProfile): AuctionCommandProfile {
+  const normalized = normalizeAuctionCommandProfile(profile);
+  const id = `mode-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return {
+    ...normalized,
+    mode: id,
+    modeOrder: [...normalized.modeOrder, id],
+    modes: {
+      ...normalized.modes,
+      [id]: {
+        id,
+        title: `Режим ${normalized.modeOrder.length + 1}`,
+        orderMode: 'grouped',
+        entries: []
+      }
+    }
+  };
+}
+
+export function renameAuctionCommandMode(profile: AuctionCommandProfile, mode: string, title: string): AuctionCommandProfile {
+  const normalized = normalizeAuctionCommandProfile(profile);
+  const targetMode = normalized.modes[mode];
+  if (!targetMode) return normalized;
+  return {
+    ...normalized,
+    modes: {
+      ...normalized.modes,
+      [mode]: { ...targetMode, title: title.slice(0, 80) }
+    }
+  };
+}
+
+export function setAuctionCommandModeOrder(
+  profile: AuctionCommandProfile,
+  mode: string,
+  orderMode: AuctionCommandOrderMode
+): AuctionCommandProfile {
+  const normalized = normalizeAuctionCommandProfile(profile);
+  const targetMode = normalized.modes[mode];
+  if (!targetMode) return normalized;
+  return {
+    ...normalized,
+    modes: {
+      ...normalized.modes,
+      [mode]: { ...targetMode, orderMode: normalizeOrderMode(orderMode) }
+    }
+  };
+}
+
+export function deleteAuctionCommandMode(profile: AuctionCommandProfile, mode: string): AuctionCommandProfile {
+  const normalized = normalizeAuctionCommandProfile(profile);
+  const nextModes = { ...normalized.modes };
+  delete nextModes[mode];
+  const nextOrder = normalized.modeOrder.filter((modeId) => modeId !== mode);
+  return {
+    ...normalized,
+    mode: normalized.mode === mode ? nextOrder[0] ?? '' : normalized.mode,
+    modeOrder: nextOrder,
+    modes: nextModes
   };
 }
 
@@ -451,45 +363,86 @@ export function buildAuctionCommandsFromProfile(params: AuctionCommandBuildConte
   });
   const byAuction = new Map(auctions.map((auction) => [auction.id, auction]));
   const lines: string[] = [];
+  const currentMode = profile.modes[profile.mode];
 
-  entries.forEach((entry) => {
+  const renderFileEntry = (entry: AuctionCommandProfileEntry) => {
     const template = entry.template.trim();
     if (!template) return;
-    if (entry.scope === 'file') {
-      const rendered = renderTemplate(template, {
-        player: profile.playerName,
-        mode: profile.mode,
-        statusFilters: profile.stateFilters.join(',')
-      }).trim();
+    const rendered = renderTemplate(template, {
+      player: profile.playerName,
+      mode: profile.mode,
+      modeTitle: currentMode?.title ?? profile.mode,
+      statusFilters: profile.stateFilters.join(',')
+    }).trim();
+    if (rendered) lines.push(rendered);
+  };
+
+  const renderAuctionEntry = (
+    entry: AuctionCommandProfileEntry,
+    auction: AuctionDraft,
+    preview: ReturnType<typeof buildAuctionRunPricePreviews>[number]
+  ) => {
+    const template = entry.template.trim();
+    if (!template || shouldSkipTemplate(entry, auction, preview.serverId)) return;
+    if (entry.scope === 'auction') {
+      const rendered = renderTemplate(template, contextForAuction({
+        auction,
+        profile,
+        preview,
+        timezoneOffsetMinutes: params.timezoneOffsetMinutes
+      })).trim();
       if (rendered) lines.push(rendered);
       return;
     }
-    previews.forEach((preview) => {
-      const auction = byAuction.get(preview.auctionId);
-      if (!auction || shouldSkipTemplate(entry, auction, preview.serverId)) return;
-      if (entry.scope === 'auction') {
-        const rendered = renderTemplate(template, contextForAuction({
-          auction,
-          profile,
-          preview,
-          timezoneOffsetMinutes: params.timezoneOffsetMinutes
-        })).trim();
-        if (rendered) lines.push(rendered);
+    auction.items.filter((item) => !item.hasNbt).forEach((item) => {
+      const rendered = renderTemplate(template, contextForItem({
+        auction,
+        idMode: params.idMode,
+        item,
+        profile,
+        preview,
+        timezoneOffsetMinutes: params.timezoneOffsetMinutes
+      })).trim();
+      if (rendered) lines.push(rendered);
+    });
+  };
+
+  if (currentMode?.orderMode === 'perLot') {
+    const renderedFileEntries = new Set<string>();
+    const renderFileOnce = (entry: AuctionCommandProfileEntry) => {
+      if (renderedFileEntries.has(entry.id)) return;
+      renderedFileEntries.add(entry.id);
+      renderFileEntry(entry);
+    };
+    if (!previews.length) {
+      entries.forEach((entry) => {
+        if (entry.scope === 'file') renderFileOnce(entry);
+      });
+    } else {
+      previews.forEach((preview) => {
+        const auction = byAuction.get(preview.auctionId);
+        if (!auction) return;
+        entries.forEach((entry) => {
+          if (entry.scope === 'file') {
+            renderFileOnce(entry);
+            return;
+          }
+          renderAuctionEntry(entry, auction, preview);
+        });
+      });
+    }
+  } else {
+    entries.forEach((entry) => {
+      if (entry.scope === 'file') {
+        renderFileEntry(entry);
         return;
       }
-      auction.items.filter((item) => !item.hasNbt).forEach((item) => {
-        const rendered = renderTemplate(template, contextForItem({
-          auction,
-          idMode: params.idMode,
-          item,
-          profile,
-          preview,
-          timezoneOffsetMinutes: params.timezoneOffsetMinutes
-        })).trim();
-        if (rendered) lines.push(rendered);
+      previews.forEach((preview) => {
+        const auction = byAuction.get(preview.auctionId);
+        if (auction) renderAuctionEntry(entry, auction, preview);
       });
     });
-  });
+  }
 
   return lines.join('\n').trim();
 }

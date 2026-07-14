@@ -39,7 +39,7 @@
 }
 
 .auction-command-generator-panel.controls {
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
 }
 
 .auction-command-generator-panel.preview {
@@ -58,11 +58,13 @@
 
 .auction-command-generator-segmented {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 6px;
 }
 
 .auction-command-generator-segmented button,
+.auction-command-mode-button,
+.auction-command-empty-mode button,
 .auction-command-entry-actions button,
 .auction-command-add-custom,
 .auction-command-generator-footer button {
@@ -77,6 +79,59 @@
 .auction-command-generator-segmented button.active {
   border-color: rgba(71, 176, 255, 0.72);
   background: rgba(24, 95, 190, 0.42);
+}
+
+.auction-command-order-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.auction-command-order-toggle button {
+  min-height: 32px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.72);
+  color: var(--text);
+  padding: 6px 10px;
+}
+
+.auction-command-order-toggle button.active {
+  border-color: rgba(71, 176, 255, 0.72);
+  background: rgba(24, 95, 190, 0.42);
+}
+
+.auction-command-mode-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 6px;
+  align-items: start;
+}
+
+.auction-command-mode-button {
+  white-space: nowrap;
+}
+
+.auction-command-mode-button.danger {
+  border-color: rgba(255, 99, 132, 0.34);
+  color: #ffb4c3;
+}
+
+.auction-command-mode-button:disabled {
+  opacity: 0.45;
+}
+
+.auction-command-empty-mode {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  border: 1px dashed rgba(104, 142, 204, 0.28);
+  border-radius: 8px;
+  background: rgba(4, 15, 36, 0.36);
+  padding: 12px;
+  color: var(--muted);
 }
 
 .auction-command-status-filter {
@@ -241,6 +296,10 @@
   .auction-command-generator-grid {
     grid-template-columns: 1fr;
     overflow: visible;
+  }
+
+  .auction-command-mode-bar {
+    grid-template-columns: 1fr;
   }
 
   .auction-command-generator-panel.controls,
