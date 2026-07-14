@@ -69,7 +69,18 @@ function normalizeOrderMode(value: unknown): AuctionCommandOrderMode {
   return value === 'perLot' ? 'perLot' : 'grouped';
 }
 
-function normalizeTemplateEntry(entry: Record<string, unknown>): AuctionCommandProfileEntry | null {
+function normalizeEnabled(value: unknown, fallback: boolean): boolean {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'false' || normalized === '0' || normalized === 'off' || normalized === 'no') return false;
+    if (normalized === 'true' || normalized === '1' || normalized === 'on' || normalized === 'yes') return true;
+  }
+  return fallback;
+}
+
+function normalizeTemplateEntry(entry: Record<string, unknown>, defaultEnabled: boolean): AuctionCommandProfileEntry | null {
   const command = entry.command;
   if (typeof command !== 'string' || !(command in commandDefinitions)) return null;
   const key = command as AuctionCommandTemplateKey;
@@ -81,7 +92,7 @@ function normalizeTemplateEntry(entry: Record<string, unknown>): AuctionCommandP
     label: safeText(entry.label, auctionCommandTemplateLabels[key], 120),
     template: safeText(entry.template, definition.template, 4000),
     scope: definition.scope,
-    enabled: entry.enabled !== false
+    enabled: normalizeEnabled(entry.enabled, defaultEnabled)
   };
 }
 
@@ -92,7 +103,7 @@ function normalizeCustomEntry(entry: Record<string, unknown>, index: number): Au
     label: safeText(entry.label, 'Своя команда', 120),
     template: safeText(entry.template ?? entry.command, '', 4000),
     scope: normalizeScope(entry.scope, 'file'),
-    enabled: entry.enabled !== false
+    enabled: normalizeEnabled(entry.enabled, true)
   };
 }
 
@@ -106,7 +117,7 @@ function legacyEntriesToTemplateEntries(entries: unknown): AuctionCommandProfile
       return;
     }
     if (entry.kind !== 'builtin') return;
-    const enabled = entry.enabled !== false;
+    const enabled = normalizeEnabled(entry.enabled, true);
     if (entry.block === 'create') result.push(createTemplateEntry('create', enabled));
     if (entry.block === 'items') {
       result.push(createTemplateEntry('addItem', enabled));
@@ -128,13 +139,21 @@ function legacyEntriesToTemplateEntries(entries: unknown): AuctionCommandProfile
 
 function normalizeEntries(entries: unknown, mode: string): AuctionCommandProfileEntry[] {
   const defaults = defaultModeProfile(mode).entries;
+  const defaultEnabledByCommand = new Map(
+    defaults
+      .filter((entry): entry is Extract<AuctionCommandProfileEntry, { kind: 'template' }> => entry.kind === 'template')
+      .map((entry) => [entry.command, entry.enabled])
+  );
   const hasEntries = Array.isArray(entries);
   const source = hasEntries ? entries : defaults;
   const normalized: AuctionCommandProfileEntry[] = [];
   const seenTemplates = new Set<AuctionCommandTemplateKey>();
   source.forEach((entry, index) => {
     if (!isRecord(entry)) return;
-    const next = entry.kind === 'custom' ? normalizeCustomEntry(entry, index) : normalizeTemplateEntry(entry);
+    const defaultEnabled = typeof entry.command === 'string'
+      ? defaultEnabledByCommand.get(entry.command as AuctionCommandTemplateKey) ?? true
+      : true;
+    const next = entry.kind === 'custom' ? normalizeCustomEntry(entry, index) : normalizeTemplateEntry(entry, defaultEnabled);
     if (!next) return;
     if (next.kind === 'template') {
       if (seenTemplates.has(next.command)) return;

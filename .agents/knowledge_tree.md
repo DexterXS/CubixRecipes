@@ -30,7 +30,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`: admin task board.
-  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, and command stage.
+  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, command stage, and saved command-generator modes with per-command enabled/disabled flags.
   - `.cubixrecipes_admin/servers/{server_id}/custom_items/`: backend custom item files.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_archives/`: uploaded icon ZIP archives.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_atlases/`: generated mod icon atlas manifests and PNG pages.
@@ -157,7 +157,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/auction_planner.py`
   - JSON-backed per-server Auctions planner state for frontend day folders and lots.
   - Class: `AuctionPlannerStore`.
-  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists plus dynamic command-generation profile modes, editable command templates, player target, status filters, and per-mode generation order (`grouped` or `perLot`), and keeps the full local planner state across page reloads and deploys.
+  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists plus dynamic command-generation profile modes, editable command templates, player target, status filters, per-command enabled flags, and per-mode generation order (`grouped` or `perLot`), and keeps the full local planner state across page reloads and deploys.
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
@@ -433,7 +433,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
   - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, selected-folder details, and the selected-lot quick settings panel. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
-  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`.
+  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`, including preserving saved command profiles when remote folders are empty so deploy/reload does not overwrite modes with defaults.
   - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
   - Provides immediate save for explicit lot apply actions and periodically refreshes newer server planner state when the local tab has no unsaved edits. Command generation profiles are saved in the same backend data file.
 - `frontend/src/features/auctions/auctionLotItems.ts`
@@ -445,9 +445,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionDurationPicker.tsx`
   - Owns the ribbon duration popover for day/hour/minute selection. It stores the planner value as minutes while presenting a compact unit-aware selector that stays synced with the end-time control.
 - `frontend/src/features/auctions/auctionCommandProfile.ts`
-  - Owns command-generation profile normalization, status filtering, player target handling, legacy block-profile migration, dynamic create/rename/delete modes, empty-mode-list support, per-mode grouped/per-lot command assembly, per-lot `addItem` skipping, and dropping removed command templates before preview/download.
+  - Owns command-generation profile normalization, status filtering, player target handling, legacy block-profile migration, strict enabled-flag normalization for saved checkboxes, dynamic create/rename/delete modes, empty-mode-list support, per-mode grouped/per-lot command assembly, per-lot `addItem` skipping, and dropping removed command templates before preview/download.
 - `frontend/src/features/auctions/auctionCommandDefinitions.ts`
-  - Owns command-generation labels, built-in editable command templates, default install/existing mode presets, scope labels, status labels, and grouped/per-lot order labels shared by profile normalization and the generator modal. `/give` is not a built-in template; add it as a custom command when needed.
+  - Owns command-generation labels, built-in editable command templates, default install/existing mode presets, scope labels, compact English status labels, and grouped/per-lot order labels shared by profile normalization and the generator modal. `/give` is not a built-in template; add it as a custom command when needed.
 - `frontend/src/features/auctions/AuctionCommandGeneratorModal.tsx`
   - Owns the command generation menu opened from the ribbon: selected custom mode, mode create/rename/delete actions, grouped/per-lot order toggle, colored multi-status filter chips, player/nick input, editable command templates, enabled command order, custom commands, generated preview, variable-help toggle, profile save, and direct download.
 - `frontend/src/features/auctions/AuctionCommandVariablesHelp.tsx`

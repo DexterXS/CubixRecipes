@@ -125,6 +125,58 @@ def test_auction_planner_store_allows_empty_command_modes(tmp_path):
     assert profile["modes"] == {}
 
 
+def test_auction_planner_store_preserves_disabled_command_entries(tmp_path):
+    store = AuctionPlannerStore(tmp_path / "auction_planner.json")
+
+    saved = store.save_state({
+        "dayFolders": [],
+        "commandProfile": {
+            "mode": "install",
+            "playerName": "@p",
+            "stateFilters": ["ACTIVE"],
+            "modeOrder": ["install"],
+            "modes": {
+                "install": {
+                    "entries": [
+                        {
+                            "id": "create",
+                            "kind": "template",
+                            "command": "create",
+                            "label": "Create",
+                            "template": "/aca create {startDate}",
+                            "scope": "auction",
+                            "enabled": False,
+                        },
+                        {
+                            "id": "addItem",
+                            "kind": "template",
+                            "command": "addItem",
+                            "label": "Add",
+                            "template": "/aca addItem {serverId}",
+                            "scope": "item",
+                            "enabled": "false",
+                        },
+                        {
+                            "id": "setName",
+                            "kind": "template",
+                            "command": "setName",
+                            "label": "Name",
+                            "template": "/aca setName {serverId} {auctionName}",
+                            "scope": "auction",
+                        },
+                    ],
+                },
+            },
+        },
+    })
+    entries = saved["state"]["commandProfile"]["modes"]["install"]["entries"]
+    entries_by_command = {entry["command"]: entry for entry in entries}
+
+    assert entries_by_command["create"]["enabled"] is False
+    assert entries_by_command["addItem"]["enabled"] is False
+    assert entries_by_command["setName"]["enabled"] is False
+
+
 def test_auction_planner_store_drops_removed_command_templates(tmp_path):
     store = AuctionPlannerStore(tmp_path / "auction_planner.json")
 

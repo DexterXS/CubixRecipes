@@ -13,11 +13,11 @@ export const defaultModeTitles = {
 };
 
 export const auctionStateFilterLabels: Record<AuctionState, string> = {
-  SETUP: 'Подготовка',
-  ACTIVE: 'Активный',
-  PAUSED: 'Пауза',
-  CLOSED: 'Закрыт',
-  ENDED: 'Завершен'
+  SETUP: 'SETUP',
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  CLOSED: 'CLOSED',
+  ENDED: 'ENDED'
 };
 
 export const auctionCommandScopeLabels: Record<AuctionCommandEntryScope, string> = {

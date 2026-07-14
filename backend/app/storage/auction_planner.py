@@ -132,11 +132,24 @@ class AuctionPlannerStore:
             order = EXISTING_COMMAND_ORDER
         return [self._default_command_entry(command, command in enabled) for command in order]
 
+    def _coerce_enabled(self, value: Any, default: bool) -> bool:
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return value != 0
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {'false', '0', 'off', 'no'}:
+                return False
+            if normalized in {'true', '1', 'on', 'yes'}:
+                return True
+        return default
+
     def _default_command_mode(self, mode: str) -> dict[str, Any]:
         title = 'Новые слоты' if mode == 'install' else 'По готовым ID' if mode == 'existing' else 'Новый режим'
         return {'id': mode, 'title': title, 'orderMode': 'grouped', 'entries': self._default_command_entries(mode)}
 
-    def _coerce_command_entry(self, raw_entry: Any, index: int) -> dict[str, Any] | None:
+    def _coerce_command_entry(self, raw_entry: Any, index: int, default_enabled: bool = True) -> dict[str, Any] | None:
         if not isinstance(raw_entry, dict):
             return None
         kind = raw_entry.get('kind')
@@ -152,7 +165,7 @@ class AuctionPlannerStore:
                 'label': str(raw_entry.get('label') or label)[:120],
                 'template': str(raw_entry.get('template') or template)[:MAX_COMMAND_TEMPLATE_LENGTH],
                 'scope': scope,
-                'enabled': raw_entry.get('enabled') is not False,
+                'enabled': self._coerce_enabled(raw_entry.get('enabled'), default_enabled),
             }
         if kind == 'custom':
             scope = raw_entry.get('scope') if raw_entry.get('scope') in AUCTION_COMMAND_SCOPES else 'file'
@@ -162,7 +175,7 @@ class AuctionPlannerStore:
                 'label': str(raw_entry.get('label') or 'Своя команда')[:120],
                 'template': str(raw_entry.get('template') or raw_entry.get('command') or '')[:MAX_COMMAND_TEMPLATE_LENGTH],
                 'scope': scope,
-                'enabled': raw_entry.get('enabled') is not False,
+                'enabled': self._coerce_enabled(raw_entry.get('enabled'), True),
             }
         return None
 
@@ -180,7 +193,7 @@ class AuctionPlannerStore:
                 continue
             if entry.get('kind') != 'builtin':
                 continue
-            enabled = entry.get('enabled') is not False
+            enabled = self._coerce_enabled(entry.get('enabled'), True)
             block = entry.get('block')
             if block == 'create':
                 migrated.append(self._default_command_entry('create', enabled))
@@ -196,12 +209,21 @@ class AuctionPlannerStore:
         return migrated
 
     def _coerce_command_entries(self, raw_entries: Any, mode: str) -> list[dict[str, Any]]:
+        default_entries = self._default_command_entries(mode)
+        default_enabled_by_command = {
+            entry['command']: entry['enabled']
+            for entry in default_entries
+            if entry.get('kind') == 'template'
+        }
         has_entries = isinstance(raw_entries, list)
-        source = raw_entries if has_entries else self._default_command_entries(mode)
+        source = raw_entries if has_entries else default_entries
         safe_entries: list[dict[str, Any]] = []
         seen_templates: set[str] = set()
         for index, entry in enumerate(source[:MAX_COMMAND_PROFILE_ENTRIES]):
-            safe_entry = self._coerce_command_entry(entry, index)
+            default_enabled = True
+            if isinstance(entry, dict) and entry.get('kind') == 'template':
+                default_enabled = default_enabled_by_command.get(entry.get('command'), True)
+            safe_entry = self._coerce_command_entry(entry, index, default_enabled)
             if safe_entry is None:
                 continue
             if safe_entry['kind'] == 'template':
