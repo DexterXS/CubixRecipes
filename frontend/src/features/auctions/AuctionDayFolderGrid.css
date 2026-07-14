@@ -67,6 +67,11 @@
   box-shadow: 0 0 0 1px rgba(71, 176, 255, 0.26), 0 16px 34px rgba(44, 135, 255, 0.18);
 }
 
+.auction-day-folder-card.drop-target {
+  border-color: rgba(85, 212, 131, 0.95);
+  box-shadow: 0 0 0 2px rgba(85, 212, 131, 0.28), 0 16px 34px rgba(44, 135, 255, 0.18);
+}
+
 .auction-day-folder-card.planned {
   border-color: rgba(163, 94, 255, 0.46);
   background:

@@ -30,7 +30,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`: admin task board.
-  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, command stage, and saved command-generator modes with per-command enabled/disabled flags.
+  - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, command stage, saved command-generator modes with per-command enabled/disabled flags, and the persistent lot database under `lotLibrary`.
   - `.cubixrecipes_admin/servers/{server_id}/custom_items/`: backend custom item files.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_archives/`: uploaded icon ZIP archives.
   - `.cubixrecipes_admin/servers/{server_id}/mod_icon_atlases/`: generated mod icon atlas manifests and PNG pages.
@@ -157,7 +157,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/auction_planner.py`
   - JSON-backed per-server Auctions planner state for frontend day folders and lots.
   - Class: `AuctionPlannerStore`.
-  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists plus dynamic command-generation profile modes, editable command templates, player target, status filters, per-command enabled flags, and per-mode generation order (`grouped` or `perLot`), and keeps the full local planner state across page reloads and deploys.
+  - Persists under the backend data-root (`/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` on Railway/data-volume setups), bounds nested folder/lot/item lists plus the persistent lot database, dynamic command-generation profile modes, editable command templates, player target, status filters, per-command enabled flags, and per-mode generation order (`grouped` or `perLot`), and keeps the full local planner state across page reloads and deploys.
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
@@ -427,17 +427,21 @@ Last full rebuild: 2026-06-29
 
 ### Auctions Feature
 - `frontend/src/features/auctions/AuctionBuilder.tsx`
-  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, and graph workspace. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, and extensionless command-file download modal.
+  - Coordinates the local auction command planner state and actions for the folder list, opened folder, opened auction lot, graph workspace, and persistent lot database. Owns ribbon state, selected folder, selected auction, command-stage state, item picking state, status bar context, persistence wiring, and extensionless command-file download modal.
   - Uses `AuctionDayFolder` state instead of a flat top-level auction array; selected-folder auctions are passed to existing command generation so `/aca` behavior remains stable.
   - Receives item catalog options and icon renderer from `pages/App.tsx`.
 - `frontend/src/features/auctions/AuctionWorkspaceView.tsx`
-  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid, selected-folder details, and the selected-lot quick settings panel. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
+  - Owns central Auctions view composition and routing between opened lot, global graph workspace, opened-folder contents, folder grid with the left lot database, selected-folder details, and the selected-lot quick settings panel. It receives state/actions from `AuctionBuilder.tsx` and does not own command generation or persistence.
 - `frontend/src/features/auctions/useAuctionPlannerPersistence.ts`
-  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`, including preserving saved command profiles when remote folders are empty so deploy/reload does not overwrite modes with defaults.
+  - Owns Auctions planner load/autosave against `/api/admin/auction-planner`, including preserving saved command profiles and the persistent lot database when remote folders are empty so deploy/reload does not overwrite modes or detached lots with defaults.
   - Normalizes older saved planner payloads so missing `baseStartPrice`, folder `state`, graph curve, and folder defaults do not break after deploys.
   - Provides immediate save for explicit lot apply actions and periodically refreshes newer server planner state when the local tab has no unsaved edits. Command generation profiles are saved in the same backend data file.
 - `frontend/src/features/auctions/auctionLotItems.ts`
   - Owns lot item ordering helpers and the rule that only the first item title drives the auction name.
+- `frontend/src/features/auctions/auctionLotLibrary.ts`
+  - Owns the persistent Auctions lot database model helpers: deduplicating equivalent lots across folders, keeping detached records after folders are deleted, filtering/searching records, creating unattached lots, and copying a database lot into a target day folder.
+- `frontend/src/features/auctions/useAuctionLotLibraryState.ts`
+  - Owns frontend state/actions for the lot database: syncing current folder lots into `lotLibrary`, creating detached lots, opening the first live attached lot, and handling drag/drop from the database into a folder.
 - `frontend/src/features/auctions/auctionDayFolders.ts`
   - Owns day-folder domain helpers for the frontend Auctions workspace: creating initial folders and drafts, regular/planned folder categories, copying days while clearing server IDs, applying folder defaults, summarizing folder prices/items/currencies/ID/NBT warnings, planned-folder fixed-price graph isolation, duration-unit conversion, compact duration display, and date/time helpers. Folder currency is a default for new lots; actual lot currencies can be mixed. Folder state controls auction states; lot start price belongs to the auction draft, not individual item rows; new lots default to generating `addItem` commands until the per-lot toggle is disabled.
 - `frontend/src/features/auctions/AuctionRibbon.tsx`
@@ -453,7 +457,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/auctions/AuctionCommandVariablesHelp.tsx`
   - Owns the command-generator help panel listing supported template variables, their meanings, and example values.
 - `frontend/src/features/auctions/AuctionDayFolderGrid.tsx`
-  - Owns the central day-folder card grid. Cards select folders without opening them, show regular blue vs planned purple categories, start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions in the polished folder-card layout.
+  - Owns the central day-folder card grid. Cards select folders without opening them, accept lot-database drops, show regular blue vs planned purple categories, start date, compact day/hour/minute duration, item count, price range, price mode, actual lot currency summary, folder state, missing-ID/NBT indicators, and quick open/copy actions in the polished folder-card layout.
+- `frontend/src/features/auctions/AuctionLotLibraryPanel.tsx`
+  - Owns the left-side lot database UI shown with the folder grid: collapsed/open state, 4x16 icon grid paging, search, currency-colored borders, hover detail tooltip, detached-date labels, detached lot creation, and drag payload creation for dropping lots into any visible folder.
 - `frontend/src/features/auctions/AuctionDayContentsPanel.tsx`
   - Owns the opened folder view: breadcrumb back to the folder list, auction lot cards inside the selected folder, selected-auction switching, lot preview item, start price/step/status/server-ID metrics, add/open/copy/delete actions, and command-stage shortcuts for a specific auction.
 - `frontend/src/features/auctions/AuctionDayDetailsPanel.tsx`

@@ -22,6 +22,7 @@
 - Made the Auctions command generator modal near full-screen and compacted command rows for denser editing.
 - Updated the Auctions command generator so modes can be created, renamed, and deleted down to zero; each mode can generate commands grouped or as a per-lot cycle; obsolete ID-row, inventory-clear, and built-in give-item templates are removed from saved profiles.
 - Added a command-generator variable help panel, colored multi-status filter chips, and a per-lot `Добавить предмет` quick setting that controls whether `/aca addItem` is generated for that specific lot.
+- Added a persistent left-side Auctions lot database with a compact 4x16 icon grid, search, currency-colored borders, hover details, detached lot creation, and drag/drop into any visible day folder.
 - Changed auction lot naming so the first item in the lot becomes the auction name; item order can be changed with up/down controls and later items do not affect the name.
 - Polished the Auctions day-folder screen: folder cards now use aligned label/value rows, wider readable columns, cleaner actions, and a steadier right-side folder settings panel.
 - Added admin-configurable icon surfaces for Auctions preview, lot items, and the Auctions NEI picker.

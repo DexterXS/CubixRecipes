@@ -3,10 +3,12 @@ import { AuctionDayContentsPanel } from './AuctionDayContentsPanel';
 import { AuctionDayDetailsPanel } from './AuctionDayDetailsPanel';
 import { AuctionDayFolderGrid } from './AuctionDayFolderGrid';
 import { AuctionGraphsWorkspace } from './AuctionGraphsWorkspace';
+import { AuctionLotLibraryPanel } from './AuctionLotLibraryPanel';
 import { AuctionLotQuickPanel } from './AuctionLotQuickPanel';
 import { AuctionLotWorkspace } from './AuctionLotWorkspace';
 import type { AuctionRibbonTab } from './AuctionRibbon';
 import type { AuctionDayFolderSummary } from './auctionDayFolders';
+import type { AuctionLotLibraryState } from './useAuctionLotLibraryState';
 import type {
   AuctionCommandStage,
   AuctionCurrency,
@@ -38,6 +40,7 @@ type AuctionWorkspaceViewProps = {
   selectedAuctionFull: boolean;
   maxItemsPerAuction: number;
   renderItemIcon: AuctionRenderItemIcon;
+  lotLibraryState: AuctionLotLibraryState;
   curve: AuctionCurve;
   graphStartLocal: string;
   commandStages: AuctionCommandStages;
@@ -94,6 +97,7 @@ export function AuctionWorkspaceView({
   selectedAuctionFull,
   maxItemsPerAuction,
   renderItemIcon,
+  lotLibraryState,
   curve,
   graphStartLocal,
   commandStages,
@@ -179,6 +183,16 @@ export function AuctionWorkspaceView({
 
   return (
     <>
+      {workspaceView === 'folders' ? (
+        <AuctionLotLibraryPanel
+          folders={dayFolders}
+          records={lotLibraryState.records}
+          renderItemIcon={renderItemIcon}
+          onCreateLot={lotLibraryState.createDetachedLot}
+          onOpenAuction={lotLibraryState.openFirstAttachedLot}
+        />
+      ) : null}
+
       {selectedFolder && workspaceView === 'folder' ? (
         <AuctionDayContentsPanel
           folder={selectedFolder}
@@ -200,6 +214,7 @@ export function AuctionWorkspaceView({
           onSelectFolder={onSelectFolder}
           onOpenFolder={onOpenFolder}
           onCopyFolder={onCopyFolder}
+          onDropAuctionLot={lotLibraryState.dropLotOnFolder}
         />
       )}
 

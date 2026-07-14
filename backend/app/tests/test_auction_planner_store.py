@@ -57,6 +57,30 @@ def test_auction_planner_store_bounds_nested_lists(tmp_path):
     assert len(saved["state"]["dayFolders"][0]["auctions"][0]["items"]) == 64
 
 
+def test_auction_planner_store_persists_detached_lot_library(tmp_path):
+    store = AuctionPlannerStore(tmp_path / "auction_planner.json")
+
+    saved = store.save_state({
+        "dayFolders": [],
+        "lotLibrary": [
+            {
+                "id": "lot-1",
+                "createdAt": 1,
+                "auction": {
+                    "id": "library-1",
+                    "name": "Detached",
+                    "items": [{"uid": str(index)} for index in range(80)],
+                },
+            }
+        ],
+    })
+    reloaded = AuctionPlannerStore(tmp_path / "auction_planner.json").get_state()
+
+    assert saved["state"]["lotLibrary"][0]["id"] == "lot-1"
+    assert reloaded["state"]["lotLibrary"][0]["auction"]["name"] == "Detached"
+    assert len(reloaded["state"]["lotLibrary"][0]["auction"]["items"]) == 64
+
+
 def test_auction_planner_store_persists_command_profile_modes(tmp_path):
     store = AuctionPlannerStore(tmp_path / "auction_planner.json")
     state = {

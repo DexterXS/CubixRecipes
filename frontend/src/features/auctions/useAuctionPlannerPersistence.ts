@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getAuctionPlannerState, saveAuctionPlannerState } from '../../services/api/auctions';
 import { dateInputFromLocalDateTime, formatAuctionDayTitle } from './auctionDayFolders';
 import { normalizeAuctionCommandProfile } from './auctionCommandProfile';
-import type { AuctionCommandProfile, AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
+import { mergeAuctionLotLibrary, normalizeAuctionLotLibrary } from './auctionLotLibrary';
+import type { AuctionCommandProfile, AuctionCommandStage, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionLotLibraryRecord, AuctionPlannerState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 
 type AuctionPlannerPersistenceParams = {
   dayFolders: AuctionDayFolder[];
@@ -14,6 +15,7 @@ type AuctionPlannerPersistenceParams = {
   commandProfile: AuctionCommandProfile;
   curve: AuctionCurve;
   graphStartLocal: string;
+  lotLibrary: AuctionLotLibraryRecord[];
   onLoad: (state: AuctionPlannerState) => void;
 };
 
@@ -29,7 +31,8 @@ function buildPlannerState(params: AuctionPlannerPersistenceParams): AuctionPlan
     commandStage: params.commandStage,
     commandProfile: params.commandProfile,
     curve: params.curve,
-    graphStartLocal: params.graphStartLocal
+    graphStartLocal: params.graphStartLocal,
+    lotLibrary: params.lotLibrary
   };
 }
 
@@ -83,13 +86,18 @@ export function normalizePlannerState(payload: { state: Partial<AuctionPlannerSt
   const loadedFolders = Array.isArray(remoteState.dayFolders)
     ? remoteState.dayFolders.map(normalizeLoadedFolder).filter((folder) => folder.auctions.length > 0)
     : [];
+  const lotLibrary = mergeAuctionLotLibrary(
+    normalizeAuctionLotLibrary(remoteState.lotLibrary ?? localState?.lotLibrary ?? []),
+    loadedFolders
+  );
   if (!loadedFolders.length) {
     if (!localState) return null;
     return {
       ...localState,
       commandProfile,
       curve: remoteState.curve ?? localState.curve,
-      graphStartLocal: remoteState.graphStartLocal ?? localState.graphStartLocal
+      graphStartLocal: remoteState.graphStartLocal ?? localState.graphStartLocal,
+      lotLibrary
     };
   }
 
@@ -112,7 +120,8 @@ export function normalizePlannerState(payload: { state: Partial<AuctionPlannerSt
     commandStage: localState?.commandStage ?? remoteState.commandStage ?? 'create',
     commandProfile,
     curve: remoteState.curve ?? localState?.curve,
-    graphStartLocal: remoteState.graphStartLocal ?? localState?.graphStartLocal
+    graphStartLocal: remoteState.graphStartLocal ?? localState?.graphStartLocal,
+    lotLibrary
   };
 }
 
@@ -207,7 +216,7 @@ export function useAuctionPlannerPersistence(params: AuctionPlannerPersistencePa
         window.clearTimeout(saveTimerRef.current);
       }
     };
-  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage, params.commandProfile, params.curve, params.graphStartLocal, saveNow]);
+  }, [params.dayFolders, params.selectedDayFolderId, params.selectedAuctionId, params.workflowMode, params.uiMode, params.commandStage, params.commandProfile, params.curve, params.graphStartLocal, params.lotLibrary, saveNow]);
 
   return { saveNow };
 }

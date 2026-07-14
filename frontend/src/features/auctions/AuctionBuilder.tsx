@@ -8,6 +8,7 @@ import { duplicateAuctionGraphFolder, moveAuctionGraphPointFolders } from './auc
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
 import { AuctionWorkspaceView, type AuctionWorkspaceViewMode } from './AuctionWorkspaceView';
+import { useAuctionLotLibraryState } from './useAuctionLotLibraryState';
 import { useAuctionPlannerPersistence } from './useAuctionPlannerPersistence';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionFolderTag, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
 import './AuctionBuilder.css';
@@ -31,6 +32,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [commandGeneratorOpen, setCommandGeneratorOpen] = useState(false);
   const [filenameDraft, setFilenameDraft] = useState(() => `auctions_${localDateTimeInputFromUtcMs(now, defaultTimezoneOffset()).replace(/[-:T]/g, '')}`);
+  const lotLibraryState = useAuctionLotLibraryState({ dayFolders, setDayFolders, setSelectedDayFolderId, setSelectedAuctionId, setWorkspaceView });
   const dayFoldersRef = useRef(dayFolders); dayFoldersRef.current = dayFolders;
   const selectedDayFolder = dayFolders.find((folder) => folder.id === selectedDayFolderId) ?? dayFolders[0];
   const auctions = selectedDayFolder?.auctions ?? [];
@@ -67,6 +69,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     commandProfile,
     curve,
     graphStartLocal,
+    lotLibrary: lotLibraryState.records,
     onLoad: (state) => {
       setDayFolders(state.dayFolders);
       setSelectedDayFolderId(state.selectedDayFolderId);
@@ -78,6 +81,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
       setCommandProfile(nextCommandProfile);
       if (state.curve) setCurve(state.curve);
       if (state.graphStartLocal) setGraphStartLocal(state.graphStartLocal);
+      lotLibraryState.setRecords(state.lotLibrary ?? []);
     }
   });
 
@@ -291,11 +295,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
     updateSelectedDayAuctions((current) => current.map((auction) => auction.id === id ? { ...auction, ...patch } : auction));
   };
 
-  const renameAuction = (id: string, nextId: string) => {
-    updateSelectedDayAuctions((current) => current.map((auction) => auction.id === id ? { ...auction, id: nextId } : auction));
-    setSelectedAuctionId(nextId);
-  };
-
   const updateServerId = (id: string, runIndex: number, serverId: string) => {
     updateSelectedDayAuctions((current) => current.map((auction) => auction.id === id
       ? { ...auction, serverIds: { ...auction.serverIds, [String(runIndex)]: serverId } }
@@ -410,7 +409,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         onOpenDownload={() => setDownloadModalOpen(true)}
       />
 
-      <div className={`auction-layout ${workspaceView === 'lot' ? 'lot-view' : ''}`}>
+      <div className={`auction-layout ${workspaceView === 'lot' ? 'lot-view' : ''} ${workspaceView === 'folders' ? 'with-lot-library' : ''}`.trim()}>
         <AuctionWorkspaceView
           workspaceView={workspaceView}
           ribbonTab={ribbonTab}
@@ -425,6 +424,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
           selectedAuctionFull={selectedAuctionFull}
           maxItemsPerAuction={maxItemsPerAuction}
           renderItemIcon={renderItemIcon}
+          lotLibraryState={lotLibraryState}
           curve={curve}
           graphStartLocal={graphStartLocal}
           commandStages={commandStages}

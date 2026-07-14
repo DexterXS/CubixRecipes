@@ -11,6 +11,7 @@ from typing import Any
 MAX_AUCTION_DAYS = 365
 MAX_AUCTIONS_PER_DAY = 120
 MAX_ITEMS_PER_AUCTION = 64
+MAX_LOT_LIBRARY_RECORDS = 500
 MAX_COMMAND_PROFILE_ENTRIES = 80
 MAX_COMMAND_TEMPLATE_LENGTH = 4000
 
@@ -104,6 +105,21 @@ class AuctionPlannerStore:
                 if not isinstance(items, list):
                     items = []
                 auction['items'] = items[:MAX_ITEMS_PER_AUCTION]
+        lot_library = state.get('lotLibrary')
+        if not isinstance(lot_library, list):
+            lot_library = []
+        state['lotLibrary'] = lot_library[:MAX_LOT_LIBRARY_RECORDS]
+        for record in state['lotLibrary']:
+            if not isinstance(record, dict):
+                continue
+            auction = record.get('auction')
+            if not isinstance(auction, dict):
+                record['auction'] = {}
+                continue
+            items = auction.get('items')
+            if not isinstance(items, list):
+                items = []
+            auction['items'] = items[:MAX_ITEMS_PER_AUCTION]
         state['commandProfile'] = self._coerce_command_profile(state.get('commandProfile'))
         return state
 
@@ -305,6 +321,7 @@ class AuctionPlannerStore:
             'uiMode': 'normal',
             'commandStage': 'create',
             'commandProfile': self._coerce_command_profile(None),
+            'lotLibrary': [],
         }
 
     def _now_ms(self) -> int:

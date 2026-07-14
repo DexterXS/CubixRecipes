@@ -1,0 +1,212 @@
+.auction-lot-library-panel {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  border: 1px solid rgba(104, 142, 204, 0.22);
+  border-radius: 8px;
+  background: rgba(5, 18, 42, 0.74);
+  padding: 10px;
+  position: relative;
+  z-index: 4;
+}
+
+.auction-lot-library-panel.collapsed {
+  align-self: start;
+}
+
+.auction-lot-library-head,
+.auction-lot-library-pages,
+.auction-lot-library-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auction-lot-library-head {
+  justify-content: space-between;
+}
+
+.auction-lot-library-head > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auction-lot-library-head span,
+.auction-lot-library-pages span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auction-lot-library-head button,
+.auction-lot-library-actions button,
+.auction-lot-library-pages button {
+  min-height: 30px;
+  border: 1px solid rgba(104, 142, 204, 0.24);
+  border-radius: 6px;
+  background: rgba(8, 27, 60, 0.72);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 12px;
+}
+
+.auction-lot-library-actions {
+  align-items: stretch;
+}
+
+.auction-lot-library-search {
+  min-width: 0;
+  min-height: 32px;
+  flex: 1 1 auto;
+}
+
+.auction-lot-library-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 34px);
+  grid-auto-rows: 34px;
+  gap: 5px;
+}
+
+.auction-lot-library-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px dashed rgba(104, 142, 204, 0.18);
+  border-radius: 6px;
+  background: rgba(4, 15, 36, 0.36);
+  padding: 0;
+}
+
+.auction-lot-library-slot.filled {
+  --lot-currency: #7aa7ff;
+  border: 2px solid var(--lot-currency);
+  background: color-mix(in srgb, var(--lot-currency) 16%, rgba(4, 15, 36, 0.72));
+  cursor: grab;
+}
+
+.auction-lot-library-slot.detached {
+  border-style: dashed;
+}
+
+.auction-lot-library-slot.filled:active {
+  cursor: grabbing;
+}
+
+.auction-lot-library-slot.filled:hover {
+  z-index: 20;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lot-currency) 32%, transparent);
+}
+
+.auction-lot-library-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
+}
+
+.auction-lot-library-icon .output-atlas-icon,
+.auction-lot-library-icon .animated-icon {
+  width: 24px;
+  height: 24px;
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
+.auction-lot-library-icon b {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.auction-lot-library-slot small {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  min-width: 13px;
+  border-radius: 999px;
+  background: rgba(3, 13, 32, 0.88);
+  color: #edf6ff;
+  font-size: 9px;
+  line-height: 12px;
+  text-align: center;
+}
+
+.auction-lot-library-tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: -8px;
+  display: none;
+  width: 284px;
+  border: 1px solid color-mix(in srgb, var(--lot-currency) 52%, rgba(104, 142, 204, 0.28));
+  border-radius: 8px;
+  background: #07152e;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.48);
+  color: var(--text);
+  padding: 10px;
+  text-align: left;
+  pointer-events: none;
+}
+
+.auction-lot-library-slot:hover .auction-lot-library-tooltip,
+.auction-lot-library-slot:focus-visible .auction-lot-library-tooltip {
+  display: grid;
+  gap: 8px;
+}
+
+.auction-lot-library-tooltip strong,
+.auction-lot-library-tooltip em {
+  overflow-wrap: anywhere;
+}
+
+.auction-lot-library-tooltip em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.auction-lot-library-tooltip dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border: 1px solid rgba(104, 142, 204, 0.14);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.auction-lot-library-tooltip div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px;
+  padding: 5px 7px;
+  border-bottom: 1px solid rgba(104, 142, 204, 0.1);
+}
+
+.auction-lot-library-tooltip div:last-child {
+  border-bottom: 0;
+}
+
+.auction-lot-library-tooltip dt {
+  color: var(--muted);
+}
+
+.auction-lot-library-tooltip dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+.auction-lot-library-pages {
+  justify-content: space-between;
+}
+
+.auction-lot-library-pages button {
+  min-width: 34px;
+  padding: 4px 7px;
+}
+
+.auction-lot-library-pages button:disabled {
+  opacity: 0.42;
+}
