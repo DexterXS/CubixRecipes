@@ -234,7 +234,8 @@
 
 .auction-lot-nei-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--icon-auction-nei-cell, 40px), 1fr));
+  grid-template-columns: repeat(auto-fill, var(--icon-auction-nei-cell, 40px));
+  justify-content: start;
   gap: var(--icon-auction-nei-gap, 6px);
   max-height: min(62vh, 650px);
   overflow: auto;
@@ -245,6 +246,8 @@
   position: relative;
   display: grid;
   place-items: center;
+  width: var(--icon-auction-nei-cell, 40px);
+  height: var(--icon-auction-nei-cell, 40px);
   min-height: var(--icon-auction-nei-cell, 40px);
   border: 1px solid rgba(104, 142, 204, 0.22);
   border-radius: 6px;

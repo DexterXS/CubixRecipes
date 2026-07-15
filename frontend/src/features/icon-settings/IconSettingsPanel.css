@@ -5,7 +5,7 @@
 
 .icon-settings-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
   gap: 10px;
 }
 
@@ -153,12 +153,13 @@
 }
 
 .icon-settings-mode-row {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
 }
 
 .icon-settings-mode-row button {
+  flex: 1 1 66px;
   min-height: 28px;
   padding: 4px 6px;
   border-radius: 6px;
