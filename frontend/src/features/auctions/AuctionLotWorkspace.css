@@ -246,18 +246,25 @@
   position: relative;
   display: grid;
   place-items: center;
+  box-sizing: border-box;
   width: var(--icon-auction-nei-cell, 40px);
   height: var(--icon-auction-nei-cell, 40px);
   min-height: var(--icon-auction-nei-cell, 40px);
+  padding: 0;
   border: 1px solid rgba(104, 142, 204, 0.22);
   border-radius: 6px;
   background: rgba(4, 15, 36, 0.52);
+  line-height: 1;
+  overflow: hidden;
 }
 
-.auction-lot-nei-grid .output-atlas-icon,
+.auction-lot-nei-grid .cell-atlas-icon.output-atlas-icon,
 .auction-lot-nei-grid .animated-icon {
+  display: block;
   width: 32px;
   height: 32px;
+  max-width: none;
+  max-height: none;
   transform: scale(var(--icon-auction-nei-scale, 0.8125));
   transform-origin: center;
 }
