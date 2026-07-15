@@ -419,6 +419,7 @@ Last full rebuild: 2026-06-29
   - On phone-width viewports, `pages/App.tsx` opens this panel on the mobile icon profile so preview values match the active runtime CSS profile.
 - `frontend/src/features/icon-settings/IconSettingsPanel.css`
   - Scoped presentation for icon settings cards, previews, sliders, and center-mode controls.
+  - Center-mode controls wrap inside each card so the technical panel remains readable at three-column desktop widths.
 
 ### Settings Feature
 - `frontend/src/features/settings/AppSettingsModal.tsx`
@@ -468,6 +469,7 @@ Last full rebuild: 2026-06-29
   - Owns the selected-lot quick settings panel shown beside the opened-folder lot list: lot name, description, currency, prices, duration, state, primary server ID, per-lot `Добавить предмет` command toggle, command shortcut, full-lot open action, and explicit apply/save.
 - `frontend/src/features/auctions/AuctionLotWorkspace.tsx`
   - Owns the opened auction lot screen: breadcrumb, read-only lot preview, item list with quantity/order/NBT controls, simplified apply/cancel action row, auction command-control panel without state or start/end date editing, editable whole-lot start price, and NEI catalog for adding items to the current lot.
+  - Its scoped CSS keeps the opened-lot NEI picker on exact square cells from `--icon-auction-nei-cell`; do not stretch those columns with `1fr`, or the runtime grid will drift from the icon-settings preview.
 - `frontend/src/features/auctions/AuctionDownloadModal.tsx`
   - Owns the extensionless auction command-file download dialog.
 - `frontend/src/features/auctions/AuctionStatusBar.tsx`
