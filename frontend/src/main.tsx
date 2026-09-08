@@ -12,6 +12,7 @@ import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { installCubixCraftActiveStarClickFix } from './features/cubixcraft/activeStarClickFix';
+import { installCubixCraftArchivedPositionFix } from './features/cubixcraft/archivedPositionFix';
 import { installCubixCraftActiveVariants } from './features/cubixcraft/activeVariantOverlay';
 import { installCubixCraftDraftVariants } from './features/cubixcraft/draftVariantOverlay';
 import { installCompactCubixAmounts } from './features/cubixcraft/compactAmountOverlay';
@@ -21,6 +22,7 @@ import { AuthUser } from './types';
 
 installConsoleCapture();
 installCubixCraftActiveStarClickFix();
+installCubixCraftArchivedPositionFix();
 installCubixCraftActiveVariants();
 installCubixCraftDraftVariants();
 installCompactCubixAmounts();
