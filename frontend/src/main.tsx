@@ -6,6 +6,7 @@ import './styles/nei.css';
 import './styles/mobile.css';
 import './styles/mobile-craft-icons.css';
 import './styles/mobile-shell.css';
+import './styles/cubixcraft.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
