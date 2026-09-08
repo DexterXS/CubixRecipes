@@ -11,3 +11,43 @@
 .cubixcraft-grid .grid-cell .cell-icon-slot img {
   z-index: 1;
 }
+
+/* Keep the CubixCraft recipe cards readable even when generic/mobile button
+   rules are active. The recipe search input uniquely scopes this list. */
+input[placeholder='Поиск рецепта'] + div > div > button {
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-height: 50px !important;
+  height: auto !important;
+  padding: 7px !important;
+  line-height: normal !important;
+  overflow: visible !important;
+}
+
+input[placeholder='Поиск рецепта'] + div > div > button > span {
+  visibility: visible !important;
+  opacity: 1;
+}
+
+input[placeholder='Поиск рецепта'] + div > div > button > span:first-child {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+input[placeholder='Поиск рецепта'] + div > div > button > span:nth-child(2) {
+  min-width: 0 !important;
+  color: var(--text) !important;
+}
+
+input[placeholder='Поиск рецепта'] + div > div > button > span:nth-child(2) strong,
+input[placeholder='Поиск рецепта'] + div > div > button > span:nth-child(2) span {
+  display: block !important;
+  visibility: visible !important;
+}
