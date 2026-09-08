@@ -1,8 +1,14 @@
-import { type CSSProperties, useEffect, useMemo, useState } from 'react';
-import { AnimatedIcon } from '../../components/AnimatedIcon';
+import { type CSSProperties, type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { NbtTreeEditor, type NbtCompoundNode, type NbtNode } from '../../components/NbtTreeEditor';
-import { getItemCatalog, getItemPanelAtlas, getProjectSettings } from '../../services/api';
-import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry } from '../../types';
+import {
+  downloadZsCloudFile,
+  getItemCatalog,
+  getItemPanelAtlas,
+  getProjectSettings,
+  listZsCloudFiles,
+  uploadZsCloudFile
+} from '../../services/api';
+import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ZsCloudFile } from '../../types';
 import {
   defaultIconSurfaceSettings,
   defaultMobileIconSurfaceSettings,
@@ -17,14 +23,149 @@ type CubixCell = {
   raw: string;
   amount: number;
   nbt: NbtCompoundNode;
+  opaqueNbt?: string;
 };
 
 type EditingCell = { row: number; col: number } | null;
 
+type ParsedCubixRecipe = {
+  start: number;
+  end: number;
+  group: string;
+  output: string;
+  grid: Array<Array<CubixCell | null>>;
+};
+
 const GRID_SIZE = 9;
 const DEFAULT_MAX_AMOUNT = 1_000_000;
+const CALL_PREFIX = 'mods.cubixcraft.Astral.addRecipe';
 const emptyNbt = (): NbtCompoundNode => ({ kind: 'compound', entries: [] });
 const emptyGrid = (): Array<Array<CubixCell | null>> => Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => null));
+
+function splitTopLevel(text: string): string[] {
+  const result: string[] = [];
+  let start = 0;
+  let round = 0;
+  let square = 0;
+  let curly = 0;
+  let quote = '';
+  let escaped = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'") { quote = char; continue; }
+    if (char === '(') round += 1;
+    else if (char === ')') round -= 1;
+    else if (char === '[') square += 1;
+    else if (char === ']') square -= 1;
+    else if (char === '{') curly += 1;
+    else if (char === '}') curly -= 1;
+    else if (char === ',' && round === 0 && square === 0 && curly === 0) {
+      result.push(text.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  result.push(text.slice(start).trim());
+  return result;
+}
+
+function findMatchingParen(text: string, openIndex: number): number {
+  let depth = 0;
+  let quote = '';
+  let escaped = false;
+  for (let index = openIndex; index < text.length; index += 1) {
+    const char = text[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'") { quote = char; continue; }
+    if (char === '(') depth += 1;
+    if (char === ')') {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
+function normalizeGrid(rows: Array<Array<CubixCell | null>>): Array<Array<CubixCell | null>> {
+  return Array.from({ length: GRID_SIZE }, (_, row) =>
+    Array.from({ length: GRID_SIZE }, (_, col) => rows[row]?.[col] ?? null)
+  );
+}
+
+function parseCell(text: string): CubixCell | null {
+  const value = text.trim();
+  if (!value || value === 'null') return null;
+  const amountMatch = value.match(/^(.*?)(?:\s*\*\s*(\d+))?\s*$/s);
+  const expression = (amountMatch?.[1] ?? value).trim();
+  const amount = Math.max(1, Number.parseInt(amountMatch?.[2] ?? '1', 10) || 1);
+  const itemMatch = expression.match(/^(<[^>]+>)(.*)$/s);
+  if (!itemMatch) return { raw: expression, amount, nbt: emptyNbt() };
+  return {
+    raw: itemMatch[1],
+    amount,
+    nbt: emptyNbt(),
+    opaqueNbt: itemMatch[2].trim() || undefined
+  };
+}
+
+function parseGrid(text: string): Array<Array<CubixCell | null>> {
+  const trimmed = text.trim();
+  const inner = trimmed.startsWith('[') && trimmed.endsWith(']') ? trimmed.slice(1, -1) : trimmed;
+  const rows = splitTopLevel(inner).map((rowText) => {
+    const rowTrimmed = rowText.trim();
+    const rowInner = rowTrimmed.startsWith('[') && rowTrimmed.endsWith(']') ? rowTrimmed.slice(1, -1) : rowTrimmed;
+    return splitTopLevel(rowInner).map(parseCell);
+  });
+  return normalizeGrid(rows);
+}
+
+function parseGroup(text: string): string {
+  const value = text.trim();
+  try {
+    const parsed = JSON.parse(value);
+    return typeof parsed === 'string' ? parsed : value;
+  } catch {
+    return value.replace(/^['"]|['"]$/g, '') || 'common';
+  }
+}
+
+function parseCubixRecipes(text: string): ParsedCubixRecipe[] {
+  const recipes: ParsedCubixRecipe[] = [];
+  let cursor = 0;
+  while (cursor < text.length) {
+    const start = text.indexOf(CALL_PREFIX, cursor);
+    if (start < 0) break;
+    const open = text.indexOf('(', start + CALL_PREFIX.length);
+    if (open < 0) break;
+    const close = findMatchingParen(text, open);
+    if (close < 0) break;
+    const args = splitTopLevel(text.slice(open + 1, close));
+    if (args.length >= 3) {
+      let end = close + 1;
+      while (end < text.length && /\s/.test(text[end])) end += 1;
+      if (text[end] === ';') end += 1;
+      recipes.push({
+        start,
+        end,
+        group: parseGroup(args[0]),
+        output: args[1].trim(),
+        grid: parseGrid(args[2])
+      });
+    }
+    cursor = close + 1;
+  }
+  return recipes;
+}
 
 function parseAtlasRaw(raw: string): { key: string; meta: number } | null {
   const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>/);
@@ -53,7 +194,7 @@ function nodeToSnbt(node: NbtNode): string {
 }
 
 function cellRaw(cell: CubixCell): string {
-  const nbt = cell.nbt.entries.length ? `.withTag(${nodeToSnbt(cell.nbt)})` : '';
+  const nbt = cell.nbt.entries.length ? `.withTag(${nodeToSnbt(cell.nbt)})` : (cell.opaqueNbt ?? '');
   return `${cell.raw}${nbt}${cell.amount === 1 ? '' : `*${cell.amount}`}`;
 }
 
@@ -82,10 +223,22 @@ function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurf
   };
 }
 
+function downloadText(filename: string, text: string) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename || 'CubixCraft_Recipes.zs';
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export function CubixCraftWorkspace() {
   const viewport = useIconViewport();
   const [catalog, setCatalog] = useState<ItemCatalogEntry[]>([]);
   const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
+  const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
+  const [cloudSelection, setCloudSelection] = useState('');
   const [desktopIconSettings, setDesktopIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
   const [mobileIconSettings, setMobileIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
   const [search, setSearch] = useState('');
@@ -100,14 +253,21 @@ export function CubixCraftWorkspace() {
   const [nbtDraft, setNbtDraft] = useState<NbtCompoundNode>(() => emptyNbt());
   const [nbtCollapsed, setNbtCollapsed] = useState<Record<string, boolean>>({});
   const [loadError, setLoadError] = useState('');
+  const [status, setStatus] = useState('');
+  const [fileText, setFileText] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [activeCloudPath, setActiveCloudPath] = useState<string | null>(null);
+  const [fileRecipes, setFileRecipes] = useState<ParsedCubixRecipe[]>([]);
+  const [selectedRecipeIndex, setSelectedRecipeIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    Promise.all([getItemCatalog(), getItemPanelAtlas(), getProjectSettings()])
-      .then(([catalogResponse, atlasResponse, projectSettings]) => {
+    Promise.all([getItemCatalog(), getItemPanelAtlas(), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
+      .then(([catalogResponse, atlasResponse, projectSettings, cloudResponse]) => {
         setCatalog(catalogResponse.entries ?? []);
         setAtlas(atlasResponse);
         setDesktopIconSettings(projectSettings.ui_preferences?.icon_surfaces ?? null);
         setMobileIconSettings(projectSettings.ui_preferences?.mobile_icon_surfaces ?? null);
+        setCloudFiles(cloudResponse.files ?? []);
       })
       .catch((error) => setLoadError(error instanceof Error ? error.message : String(error)));
   }, []);
@@ -145,6 +305,73 @@ export function CubixCraftWorkspace() {
     };
   }
 
+  function loadDocument(text: string, name: string, cloudPath: string | null) {
+    const recipes = parseCubixRecipes(text);
+    setFileText(text);
+    setFileName(name);
+    setActiveCloudPath(cloudPath);
+    setFileRecipes(recipes);
+    setSelectedRecipeIndex(null);
+    setStatus(`Загружено рецептов CubixCraft: ${recipes.length}`);
+    if (recipes.length > 0) selectRecipe(recipes, 0);
+  }
+
+  function selectRecipe(recipes: ParsedCubixRecipe[], index: number) {
+    const recipe = recipes[index];
+    if (!recipe) return;
+    setSelectedRecipeIndex(index);
+    setGroup(recipe.group);
+    setOutputRaw(recipe.output);
+    setGrid(recipe.grid);
+  }
+
+  async function handleLocalFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    loadDocument(await file.text(), file.name, null);
+    event.target.value = '';
+  }
+
+  async function openCloudFile() {
+    if (!cloudSelection) return;
+    setStatus('Загрузка файла из облака…');
+    try {
+      const result = await downloadZsCloudFile(cloudSelection);
+      loadDocument(await result.blob.text(), result.filename, cloudSelection);
+    } catch (error) {
+      setStatus(`Ошибка: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  function applyRecipeToDocument(): string | null {
+    if (selectedRecipeIndex === null || !fileText) return null;
+    const parsed = parseCubixRecipes(fileText);
+    const target = parsed[selectedRecipeIndex];
+    if (!target) return null;
+    const nextRecipe = serializeRecipe(group, outputRaw, grid);
+    const nextText = `${fileText.slice(0, target.start)}${nextRecipe}${fileText.slice(target.end)}`;
+    const reparsed = parseCubixRecipes(nextText);
+    setFileText(nextText);
+    setFileRecipes(reparsed);
+    if (reparsed[selectedRecipeIndex]) selectRecipe(reparsed, selectedRecipeIndex);
+    setStatus('Рецепт применён к файлу.');
+    return nextText;
+  }
+
+  async function saveCloud() {
+    if (!activeCloudPath) return;
+    const nextText = applyRecipeToDocument() ?? fileText;
+    if (!nextText) return;
+    setStatus('Сохранение в облако…');
+    try {
+      const result = await uploadZsCloudFile(activeCloudPath, nextText, 'overwrite');
+      setCloudFiles(result.files ?? cloudFiles);
+      setStatus('Файл сохранён в облако.');
+    } catch (error) {
+      setStatus(`Ошибка сохранения: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
   function place(row: number, col: number, raw: string) {
     setGrid((current) => current.map((line, r) => line.map((cell, c) => r === row && c === col ? { raw, amount: 1, nbt: emptyNbt() } : cell)));
   }
@@ -161,7 +388,7 @@ export function CubixCraftWorkspace() {
   function saveCell() {
     if (!editing) return;
     const nextAmount = Math.max(1, Math.min(maxAmount, Math.trunc(Number(amountDraft) || 1)));
-    setGrid((current) => current.map((line, r) => line.map((cell, c) => r === editing.row && c === editing.col && cell ? { ...cell, amount: nextAmount, nbt: nbtDraft } : cell)));
+    setGrid((current) => current.map((line, r) => line.map((cell, c) => r === editing.row && c === editing.col && cell ? { ...cell, amount: nextAmount, nbt: nbtDraft, opaqueNbt: nbtDraft.entries.length ? undefined : cell.opaqueNbt } : cell)));
     setEditing(null);
     setNbtOpen(false);
   }
@@ -177,7 +404,7 @@ export function CubixCraftWorkspace() {
 
   return (
     <main className="app-shell" style={{ padding: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
         <a className="ghost-button" href={window.location.pathname}>← Крафты</a>
         <h1 style={{ margin: 0 }}>CubixCraft</h1>
         <span className="status-pill">9×9</span>
@@ -186,7 +413,35 @@ export function CubixCraftWorkspace() {
         </label>
       </div>
 
-      {loadError ? <div className="error-box">Не удалось загрузить NEI: {loadError}</div> : null}
+      {loadError ? <div className="error-box">Не удалось загрузить данные: {loadError}</div> : null}
+
+      <section className="panel" style={{ marginBottom: 12 }}>
+        <strong>Файл рецептов</strong>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginTop: 8 }}>
+          <label className="ghost-button" style={{ cursor: 'pointer' }}>
+            Загрузить .zs
+            <input type="file" accept=".zs,text/plain" onChange={(event) => void handleLocalFile(event)} style={{ display: 'none' }} />
+          </label>
+          <select value={cloudSelection} onChange={(event) => setCloudSelection(event.target.value)} style={{ minWidth: 220 }}>
+            <option value="">Файл из облака…</option>
+            {cloudFiles.filter((file) => file.name.toLowerCase().endsWith('.zs')).map((file) => <option key={file.path} value={file.path}>{file.name}</option>)}
+          </select>
+          <button type="button" className="ghost-button" disabled={!cloudSelection} onClick={() => void openCloudFile()}>Открыть</button>
+          <button type="button" className="primary-button" disabled={selectedRecipeIndex === null || !fileText} onClick={applyRecipeToDocument}>Применить к файлу</button>
+          {activeCloudPath ? <button type="button" className="primary-button" onClick={() => void saveCloud()}>Сохранить в облако</button> : null}
+          {fileText ? <button type="button" className="ghost-button" onClick={() => downloadText(fileName, applyRecipeToDocument() ?? fileText)}>Скачать .zs</button> : null}
+        </div>
+        <div style={{ marginTop: 8, opacity: 0.8 }}>{fileName ? `${fileName} · ${fileRecipes.length} рецептов` : 'Файл не выбран'}{status ? ` · ${status}` : ''}</div>
+        {fileRecipes.length > 0 ? (
+          <div style={{ display: 'flex', gap: 6, overflowX: 'auto', marginTop: 8, paddingBottom: 4 }}>
+            {fileRecipes.map((recipe, index) => (
+              <button key={`${recipe.start}-${index}`} type="button" className={selectedRecipeIndex === index ? 'primary-button' : 'ghost-button'} onClick={() => selectRecipe(fileRecipes, index)} title={recipe.output}>
+                {index + 1}. {recipe.group} · {recipe.output.length > 34 ? `${recipe.output.slice(0, 31)}…` : recipe.output}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(520px, 1fr) minmax(320px, 420px)', gap: 16, alignItems: 'start' }}>
         <section className="panel">
@@ -217,7 +472,7 @@ export function CubixCraftWorkspace() {
                       <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
                         <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
                           {iconStyle ? <span className="cell-atlas-icon" style={iconStyle} aria-hidden="true" /> : null}
-                          {!iconStyle && catalogItem?.icon_url ? <AnimatedIcon iconUrl={catalogItem.icon_url} alt={catalogItem.display_ru || cell?.raw || ''} animated={false} animationsEnabled style={{ width: iconSurface.icon, height: iconSurface.icon }} /> : null}
+                          {!iconStyle && catalogItem?.icon_url ? <img src={catalogItem.icon_url} alt="" style={{ width: iconSurface.icon, height: iconSurface.icon, objectFit: 'contain' }} /> : null}
                           {cell && !iconStyle && !catalogItem?.icon_url ? <span>?</span> : null}
                         </div>
                       </div>
@@ -272,6 +527,7 @@ export function CubixCraftWorkspace() {
                   <input autoFocus type="number" min={1} max={maxAmount} value={amountDraft} onChange={(event) => setAmountDraft(event.target.value)} style={{ width: '100%' }} />
                 </label>
                 <small>Допустимо 1…{maxAmount.toLocaleString('ru-RU')}</small>
+                {editing && grid[editing.row]?.[editing.col]?.opaqueNbt ? <small style={{ display: 'block', marginTop: 6 }}>NBT из файла сохранён как есть. Если добавить NBT через редактор, он заменит исходный withTag.</small> : null}
                 <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
                   <button type="button" className="ghost-button" onClick={() => setNbtOpen(true)}>Настроить NBT</button>
                   <button type="button" className="ghost-button danger-lite-button" onClick={clearCell}>Удалить</button>
