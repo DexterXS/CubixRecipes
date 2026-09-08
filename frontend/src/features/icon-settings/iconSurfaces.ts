@@ -8,6 +8,7 @@ export type IconSurfaceId =
   | 'draftItems'
   | 'craftGrid'
   | 'craftGrid9'
+  | 'cubixCraftGrid'
   | 'craftOutput'
   | 'draftPreview'
   | 'draftPreview9'
@@ -45,6 +46,7 @@ export const iconSurfaceDefinitions: IconSurfaceDefinition[] = [
   { id: 'draftItems', label: 'Черновики', description: 'Список предметов с черновиками', defaults: { cell: 34, icon: 28, gap: 6, mode: 'scale' }, minCell: 24, maxCell: 56, minIcon: 12, maxIcon: 48 },
   { id: 'craftGrid', label: 'Крафт 2x2/3x3', description: 'Обычная сетка крафта', defaults: { cell: 52, icon: 32, gap: 2, mode: 'scale' }, minCell: 32, maxCell: 68, minIcon: 16, maxIcon: 48 },
   { id: 'craftGrid9', label: 'Крафт 9x9', description: 'Большая сетка крафта, адаптируется к экрану', defaults: { cell: 36, icon: 20, gap: 2, mode: 'scale' }, minCell: 24, maxCell: 44, minIcon: 10, maxIcon: 32 },
+  { id: 'cubixCraftGrid', label: 'CubixCraft 9x9', description: 'Ячейки и иконки отдельной сетки CubixCraft', defaults: { cell: 36, icon: 20, gap: 2, mode: 'absolute' }, minCell: 24, maxCell: 52, minIcon: 8, maxIcon: 40 },
   { id: 'craftOutput', label: 'Output', description: 'Слот результата крафта', defaults: { cell: 52, icon: 32, gap: 0, mode: 'scale' }, minCell: 36, maxCell: 80, minIcon: 16, maxIcon: 56 },
   { id: 'draftPreview', label: 'Превью 2x2/3x3', description: 'Предпросмотр обычных черновиков', defaults: { cell: 48, icon: 28, gap: 2, mode: 'scale' }, minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 44 },
   { id: 'draftPreview9', label: 'Превью 9x9', description: 'Предпросмотр черновиков 9x9', defaults: { cell: 36, icon: 14, gap: 2, mode: 'scale' }, minCell: 20, maxCell: 44, minIcon: 8, maxIcon: 28 },
@@ -69,6 +71,7 @@ export const defaultMobileIconSurfaceSettings: IconSurfaceSettingsMap = {
   draftItems: { cell: 38, icon: 30, gap: 6, mode: 'scale' },
   craftGrid: { cell: 42, icon: 28, gap: 2, mode: 'scale' },
   craftGrid9: { cell: 25, icon: 14, gap: 1, mode: 'scale' },
+  cubixCraftGrid: { cell: 32, icon: 20, gap: 1, mode: 'absolute' },
   craftOutput: { cell: 36, icon: 24, gap: 0, mode: 'scale' },
   draftPreview9: { cell: 30, icon: 12, gap: 1, mode: 'scale' },
   auctionPreview: { cell: 72, icon: 34, gap: 8, mode: 'scale' },
