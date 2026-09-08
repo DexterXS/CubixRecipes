@@ -12,10 +12,12 @@ import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { installCompactCubixAmounts } from './features/cubixcraft/compactAmountOverlay';
+import { installCubixVariantInteractionFix } from './features/cubixcraft/variantInteractionFix';
 import { AuthUser } from './types';
 
 installConsoleCapture();
 installCompactCubixAmounts();
+installCubixVariantInteractionFix();
 
 interface ServerGateProps {
   authUser: AuthUser;
