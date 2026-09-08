@@ -188,7 +188,7 @@ function cellRaw(cell: CubixCell): string {
 
 function serializeRecipe(group: string, output: string, grid: Array<Array<CubixCell | null>>): string {
   const rows = grid.map((row) => `        [${row.map((cell) => cell ? cellRaw(cell) : 'null').join(', ')}]`);
-  return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group)}, ${output || '<minecraft:stone>'},\n    [\n${rows.join(',\n')}\n    ]);`;
+  return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group)}, ${output || 'null'},\n    [\n${rows.join(',\n')}\n    ]);`;
 }
 
 function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurfaceSettings): CSSProperties | undefined {
@@ -197,9 +197,17 @@ function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurf
   const centered = settings.mode === 'absolute' || settings.mode === 'scale';
   return {
     ...base,
-    display: 'block', width: 32, height: 32, backgroundRepeat: 'no-repeat', imageRendering: 'pixelated',
-    position: centered ? 'absolute' : 'relative', left: centered ? '50%' : undefined, top: centered ? '50%' : undefined,
-    margin: centered ? undefined : 'auto', transform: centered ? `translate(-50%, -50%) scale(${scale})` : `scale(${scale})`, transformOrigin: 'center'
+    display: 'block',
+    width: 32,
+    height: 32,
+    backgroundRepeat: 'no-repeat',
+    imageRendering: 'pixelated',
+    position: centered ? 'absolute' : 'relative',
+    left: centered ? '50%' : undefined,
+    top: centered ? '50%' : undefined,
+    margin: centered ? undefined : 'auto',
+    transform: centered ? `translate(-50%, -50%) scale(${scale})` : `scale(${scale})`,
+    transformOrigin: 'center'
   };
 }
 
@@ -226,7 +234,7 @@ export function CubixCraftWorkspace() {
   const [recipeSearch, setRecipeSearch] = useState('');
   const [heldRaw, setHeldRaw] = useState<string | null>(null);
   const [grid, setGrid] = useState<Array<Array<CubixCell | null>>>(() => emptyGrid());
-  const [outputRaw, setOutputRaw] = useState('<minecraft:stone>');
+  const [outputRaw, setOutputRaw] = useState('');
   const [group, setGroup] = useState('common');
   const [maxAmount, setMaxAmount] = useState(DEFAULT_MAX_AMOUNT);
   const [editing, setEditing] = useState<EditingCell>(null);
@@ -255,11 +263,14 @@ export function CubixCraftWorkspace() {
       .catch((error) => setLoadError(error instanceof Error ? error.message : String(error)));
   }, []);
 
-  const iconSurface = useMemo(() => {
+  const surfaces = useMemo(() => {
     const defaults: IconSurfaceSettingsMap = mobile ? defaultMobileIconSurfaceSettings : defaultIconSurfaceSettings;
     const source = mobile ? mobileIconSettings : desktopIconSettings;
-    return normalizeIconSurfaceSettings(source, defaults).cubixCraftGrid;
+    return normalizeIconSurfaceSettings(source, defaults);
   }, [desktopIconSettings, mobileIconSettings, mobile]);
+
+  const iconSurface = surfaces.cubixCraftGrid;
+  const outputSurface = surfaces.craftOutput;
 
   const visibleItems = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -289,15 +300,19 @@ export function CubixCraftWorkspace() {
     const parsed = parseAtlasRaw(raw);
     const entry = atlas.entries[raw] ?? (parsed ? atlasIndex.get(`${parsed.key}:${parsed.meta}`) ?? atlasIndex.get(`${parsed.key}:0`) : undefined);
     if (!entry || !atlas.image_url) return undefined;
-    return { backgroundImage: `url(${atlas.image_url})`, backgroundPosition: `-${entry.x}px -${entry.y}px`, backgroundSize: `${atlas.columns * atlas.tile_size}px ${atlas.rows * atlas.tile_size}px` };
+    return {
+      backgroundImage: `url(${atlas.image_url})`,
+      backgroundPosition: `-${entry.x}px -${entry.y}px`,
+      backgroundSize: `${atlas.columns * atlas.tile_size}px ${atlas.rows * atlas.tile_size}px`
+    };
   }
 
-  function recipeOutputVisual(raw: string) {
+  function itemVisual(raw: string, surface: IconSurfaceSettings) {
     const item = catalogByRaw.get(raw);
-    const atlasIcon = atlasStyle(raw);
-    if (atlasIcon) return <span className="nei-atlas-icon" style={{ ...atlasIcon, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%) scale(.78)' }} aria-hidden="true" />;
-    if (item?.icon_url) return <img src={item.icon_url} alt="" style={{ width: 28, height: 28, objectFit: 'contain' }} />;
-    return <span style={{ opacity: 0.6 }}>?</span>;
+    const atlasIcon = positionedIconStyle(atlasStyle(raw), surface);
+    if (atlasIcon) return <span className="cell-atlas-icon" style={atlasIcon} aria-hidden="true" />;
+    if (item?.icon_url) return <img src={item.icon_url} alt="" style={{ width: surface.icon, height: surface.icon, objectFit: 'contain' }} />;
+    return raw ? <span style={{ opacity: 0.6 }}>?</span> : null;
   }
 
   function loadDocument(text: string, name: string, cloudPath: string | null) {
@@ -341,6 +356,10 @@ export function CubixCraftWorkspace() {
 
   function applyRecipeToDocument(): string | null {
     if (selectedRecipeIndex === null || !fileText) return null;
+    if (!outputRaw.trim()) {
+      setStatus('Сначала выберите результат рецепта.');
+      return null;
+    }
     const parsed = parseCubixRecipes(fileText);
     const target = parsed[selectedRecipeIndex];
     if (!target) return null;
@@ -397,11 +416,11 @@ export function CubixCraftWorkspace() {
 
   const source = useMemo(() => serializeRecipe(group, outputRaw, grid), [group, outputRaw, grid]);
   const editorColumns = fileRecipes.length > 0
-    ? (mobile ? '260px minmax(500px, 1fr) 360px' : '260px minmax(620px, 1fr) 360px')
-    : (mobile ? 'minmax(500px, 1fr) 360px' : 'minmax(620px, 1fr) 360px');
+    ? (mobile ? '260px minmax(500px, 1fr) 360px' : '260px minmax(660px, 1fr) 360px')
+    : (mobile ? 'minmax(500px, 1fr) 360px' : 'minmax(660px, 1fr) 360px');
 
   return (
-    <main className="app-shell" style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1600, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
+    <main className="app-shell" style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1660, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
         <a className="ghost-button" href={window.location.pathname}>← Крафты</a>
         <h1 style={{ margin: 0, fontSize: mobile ? 24 : 26 }}>CubixCraft</h1>
@@ -424,7 +443,7 @@ export function CubixCraftWorkspace() {
             {cloudFiles.filter((file) => file.name.toLowerCase().endsWith('.zs')).map((file) => <option key={file.path} value={file.path}>{file.name}</option>)}
           </select>
           <button type="button" className="ghost-button" disabled={!cloudSelection} onClick={() => void openCloudFile()}>Открыть</button>
-          <button type="button" className="primary-button" disabled={selectedRecipeIndex === null || !fileText} onClick={applyRecipeToDocument}>Применить</button>
+          <button type="button" className="primary-button" disabled={selectedRecipeIndex === null || !fileText || !outputRaw} onClick={applyRecipeToDocument}>Применить</button>
           {activeCloudPath ? <button type="button" className="primary-button" onClick={() => void saveCloud()}>Сохранить в облако</button> : null}
           {fileText ? <button type="button" className="ghost-button" onClick={() => downloadText(fileName, applyRecipeToDocument() ?? fileText)}>Скачать .zs</button> : null}
         </div>
@@ -445,7 +464,7 @@ export function CubixCraftWorkspace() {
                 const label = item?.display_ru || item?.display_en || recipe.output;
                 return (
                   <button key={`${recipe.start}-${index}`} type="button" onClick={() => selectRecipe(fileRecipes, index)} title={`${recipe.group}\n${recipe.output}`} style={{ width: '100%', display: 'grid', gridTemplateColumns: '38px minmax(0,1fr)', gap: 8, alignItems: 'center', textAlign: 'left', padding: 7, borderRadius: 8, border: selected ? '1px solid #4da3ff' : '1px solid rgba(255,255,255,.1)', background: selected ? 'rgba(45,126,247,.22)' : 'rgba(255,255,255,.025)', color: 'inherit', cursor: 'pointer' }}>
-                    <span style={{ width: 36, height: 36, position: 'relative', display: 'grid', placeItems: 'center', overflow: 'hidden', borderRadius: 6, background: 'rgba(255,255,255,.06)' }}>{recipeOutputVisual(recipe.output)}</span>
+                    <span style={{ width: 36, height: 36, position: 'relative', display: 'grid', placeItems: 'center', overflow: 'hidden', borderRadius: 6, background: 'rgba(255,255,255,.06)' }}>{itemVisual(recipe.output, { ...outputSurface, cell: 36, icon: 28 })}</span>
                     <span style={{ minWidth: 0 }}>
                       <strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: 13 }}>{index + 1}. {label}</strong>
                       <span style={{ display: 'block', fontSize: 11, opacity: 0.7 }}>{recipe.group || 'без группы'}</span>
@@ -460,37 +479,32 @@ export function CubixCraftWorkspace() {
         ) : null}
 
         <section className="panel" style={{ padding: 12, minWidth: 0 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '150px minmax(220px, 1fr) auto', gap: 8, alignItems: 'end', marginBottom: 12 }}>
-            <label style={{ display: 'grid', gap: 4 }}><span style={{ fontSize: 12, opacity: 0.75 }}>Группа</span>
-              <select value={group} onChange={(event) => setGroup(event.target.value)}>
-                {GROUP_OPTIONS.includes(group) ? null : <option value={group}>{group}</option>}
-                <option value="">без группы</option>
-                <option value="common">common</option>
-                <option value="resonant">resonant</option>
-                <option value="chaos">chaos</option>
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 4 }}><span style={{ fontSize: 12, opacity: 0.75 }}>Результат</span>
-              <input value={outputRaw} onChange={(event) => setOutputRaw(event.target.value)} style={{ width: '100%' }} />
-            </label>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
             <button type="button" className="ghost-button" onClick={() => setHeldRaw(null)} style={{ whiteSpace: 'nowrap' }}>Отпустить предмет</button>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', overflow: 'auto', padding: '4px 0 2px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: mobile ? 16 : 24, overflow: 'auto', padding: '4px 0 2px' }}>
             <div className="grid-wrap cubixcraft-grid" data-grid-size="9" style={{ '--extreme-grid-gap': '8px', gap: `${iconSurface.gap}px`, flex: '0 0 auto' } as CSSProperties}>
               {grid.map((row, rowIndex) => (
                 <div key={rowIndex} className={`grid-row ${rowIndex > 0 && rowIndex % 3 === 0 ? 'group-row-start' : ''}`} style={{ gap: iconSurface.gap }}>
                   {row.map((cell, colIndex) => {
-                    const rawAtlasStyle = cell ? atlasStyle(cell.raw) : undefined;
-                    const iconStyle = positionedIconStyle(rawAtlasStyle, iconSurface);
                     const catalogItem = cell ? catalogByRaw.get(cell.raw) : undefined;
                     return (
-                      <div key={`${rowIndex}-${colIndex}`} className={`grid-cell size-9 ${colIndex > 0 && colIndex % 3 === 0 ? 'group-col-start' : ''} ${cell ? 'is-filled' : 'is-empty'}`} style={{ width: iconSurface.cell, height: iconSurface.cell, minWidth: iconSurface.cell, minHeight: iconSurface.cell, position: 'relative' }} onClick={() => heldRaw && place(rowIndex, colIndex, heldRaw)} onContextMenu={(event) => { event.preventDefault(); openCellEditor(rowIndex, colIndex); }} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }} title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount}` : 'Пустая ячейка'}>
-                        <div className="cell-visual" style={{ width: '100%', height: '100%' }}><div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
-                          {iconStyle ? <span className="cell-atlas-icon" style={iconStyle} aria-hidden="true" /> : null}
-                          {!iconStyle && catalogItem?.icon_url ? <img src={catalogItem.icon_url} alt="" style={{ width: iconSurface.icon, height: iconSurface.icon, objectFit: 'contain' }} /> : null}
-                          {cell && !iconStyle && !catalogItem?.icon_url ? <span>?</span> : null}
-                        </div></div>
+                      <div
+                        key={`${rowIndex}-${colIndex}`}
+                        className={`grid-cell size-9 ${colIndex > 0 && colIndex % 3 === 0 ? 'group-col-start' : ''} ${cell ? 'is-filled' : 'is-empty'}`}
+                        style={{ width: iconSurface.cell, height: iconSurface.cell, minWidth: iconSurface.cell, minHeight: iconSurface.cell, position: 'relative' }}
+                        onClick={() => heldRaw && place(rowIndex, colIndex, heldRaw)}
+                        onContextMenu={(event) => { event.preventDefault(); openCellEditor(rowIndex, colIndex); }}
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }}
+                        title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount}` : 'Пустая ячейка'}
+                      >
+                        <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
+                          <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                            {cell ? itemVisual(cell.raw, iconSurface) : null}
+                          </div>
+                        </div>
                         {cell ? <span style={{ position: 'absolute', right: 2, bottom: 1, fontSize: 10, fontWeight: 700, textShadow: '0 1px 2px #000' }}>{cell.amount.toLocaleString('ru-RU')}</span> : null}
                       </div>
                     );
@@ -498,9 +512,42 @@ export function CubixCraftWorkspace() {
                 </div>
               ))}
             </div>
+
+            <div style={{ display: 'grid', justifyItems: 'center', alignContent: 'center', gap: 12, minWidth: 150 }}>
+              <label style={{ display: 'grid', gap: 5, width: 140 }}>
+                <span style={{ textAlign: 'center', fontSize: 12, opacity: 0.72 }}>Группа</span>
+                <select value={group} onChange={(event) => setGroup(event.target.value)}>
+                  {GROUP_OPTIONS.includes(group) ? null : <option value={group}>{group}</option>}
+                  <option value="">без группы</option>
+                  <option value="common">common</option>
+                  <option value="resonant">resonant</option>
+                  <option value="chaos">chaos</option>
+                </select>
+              </label>
+
+              <div style={{ display: 'grid', justifyItems: 'center', gap: 5 }}>
+                <span style={{ fontSize: 12, opacity: 0.72 }}>Результат</span>
+                <div
+                  className={`grid-cell ${outputRaw ? 'is-filled' : 'is-empty'}`}
+                  style={{ width: outputSurface.cell, height: outputSurface.cell, minWidth: outputSurface.cell, minHeight: outputSurface.cell, position: 'relative', cursor: heldRaw ? 'copy' : 'default' }}
+                  onClick={() => { if (heldRaw) setOutputRaw(heldRaw); }}
+                  onContextMenu={(event) => { event.preventDefault(); setOutputRaw(''); }}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) setOutputRaw(raw); }}
+                  title={outputRaw ? `${catalogByRaw.get(outputRaw)?.display_ru || catalogByRaw.get(outputRaw)?.display_en || outputRaw}\nПКМ — очистить` : 'Выберите предмет в NEI и нажмите сюда'}
+                >
+                  <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
+                    <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                      {outputRaw ? itemVisual(outputRaw, outputSurface) : null}
+                    </div>
+                  </div>
+                </div>
+                <span style={{ maxWidth: 150, fontSize: 10, opacity: 0.55, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{outputRaw || 'пусто'}</span>
+              </div>
+            </div>
           </div>
 
-          <p style={{ opacity: 0.65, margin: '8px 0 6px', fontSize: 12 }}>ЛКМ по NEI — взять предмет · ЛКМ по ячейке — поставить 1 · ПКМ — количество/NBT · Двойной клик по NEI — результат</p>
+          <p style={{ opacity: 0.65, margin: '8px 0 6px', fontSize: 12 }}>ЛКМ по NEI — взять предмет · ЛКМ по ячейке/результату — поставить · ПКМ по ячейке — количество/NBT · ПКМ по результату — очистить</p>
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 8, marginTop: 4 }}>
             <button type="button" className="ghost-button" onClick={() => setSourceOpen((value) => !value)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -520,7 +567,22 @@ export function CubixCraftWorkspace() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, minmax(34px, 1fr))', gap: 4, maxHeight: 'calc(100vh - 190px)', overflow: 'auto', paddingRight: 2 }}>
             {visibleItems.map((item) => {
               const style = atlasStyle(item.raw);
-              return <button key={`${item.raw}-${item.meta}`} type="button" className="nei-item-button" draggable title={`${item.display_ru || item.display_en || item.raw}\n${item.raw}`} onDragStart={(event) => event.dataTransfer.setData('text/plain', item.raw)} onClick={() => setHeldRaw(item.raw)} onDoubleClick={() => setOutputRaw(item.raw)} style={{ minWidth: 34, minHeight: 34, padding: 2, position: 'relative' }}>{style ? <span className="nei-atlas-icon" style={style} aria-hidden="true" /> : null}{!style && item.icon_url ? <img src={item.icon_url} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /> : null}{!style && !item.icon_url ? '?' : null}</button>;
+              return (
+                <button
+                  key={`${item.raw}-${item.meta}`}
+                  type="button"
+                  className="nei-item-button"
+                  draggable
+                  title={`${item.display_ru || item.display_en || item.raw}\n${item.raw}`}
+                  onDragStart={(event) => event.dataTransfer.setData('text/plain', item.raw)}
+                  onClick={() => setHeldRaw(item.raw)}
+                  style={{ minWidth: 34, minHeight: 34, padding: 2, position: 'relative' }}
+                >
+                  {style ? <span className="nei-atlas-icon" style={style} aria-hidden="true" /> : null}
+                  {!style && item.icon_url ? <img src={item.icon_url} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /> : null}
+                  {!style && !item.icon_url ? '?' : null}
+                </button>
+              );
             })}
           </div>
           <div style={{ marginTop: 6, opacity: 0.7, fontSize: 11 }}>Выбрано: {heldRaw ?? '—'} · найдено: {visibleItems.length}</div>
