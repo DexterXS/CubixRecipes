@@ -1,8 +1,17 @@
 import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 import { AnimatedIcon } from '../../components/AnimatedIcon';
 import { NbtTreeEditor, type NbtCompoundNode, type NbtNode } from '../../components/NbtTreeEditor';
-import { getItemCatalog, getItemPanelAtlas } from '../../services/api';
+import { getItemCatalog, getItemPanelAtlas, getProjectSettings } from '../../services/api';
 import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry } from '../../types';
+import {
+  defaultIconSurfaceSettings,
+  defaultMobileIconSurfaceSettings,
+  isMobileIconViewport,
+  normalizeIconSurfaceSettings,
+  type IconSurfaceSettings,
+  type IconSurfaceSettingsMap
+} from '../icon-settings/iconSurfaces';
+import { useIconViewport } from '../icon-settings/useIconViewport';
 
 type CubixCell = {
   raw: string;
@@ -53,9 +62,32 @@ function serializeRecipe(group: string, output: string, grid: Array<Array<CubixC
   return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group || 'common')}, ${output || '<minecraft:stone>'},\n    [\n${rows.join(',\n')}\n    ]);`;
 }
 
+function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurfaceSettings): CSSProperties | undefined {
+  if (!base) return undefined;
+  const scale = settings.icon / 32;
+  const centered = settings.mode === 'absolute' || settings.mode === 'scale';
+  return {
+    ...base,
+    display: 'block',
+    width: 32,
+    height: 32,
+    backgroundRepeat: 'no-repeat',
+    imageRendering: 'pixelated',
+    position: centered ? 'absolute' : 'relative',
+    left: centered ? '50%' : undefined,
+    top: centered ? '50%' : undefined,
+    margin: centered ? undefined : 'auto',
+    transform: centered ? `translate(-50%, -50%) scale(${scale})` : `scale(${scale})`,
+    transformOrigin: 'center'
+  };
+}
+
 export function CubixCraftWorkspace() {
+  const viewport = useIconViewport();
   const [catalog, setCatalog] = useState<ItemCatalogEntry[]>([]);
   const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
+  const [desktopIconSettings, setDesktopIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
+  const [mobileIconSettings, setMobileIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
   const [search, setSearch] = useState('');
   const [heldRaw, setHeldRaw] = useState<string | null>(null);
   const [grid, setGrid] = useState<Array<Array<CubixCell | null>>>(() => emptyGrid());
@@ -70,13 +102,22 @@ export function CubixCraftWorkspace() {
   const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
-    Promise.all([getItemCatalog(), getItemPanelAtlas()])
-      .then(([catalogResponse, atlasResponse]) => {
+    Promise.all([getItemCatalog(), getItemPanelAtlas(), getProjectSettings()])
+      .then(([catalogResponse, atlasResponse, projectSettings]) => {
         setCatalog(catalogResponse.entries ?? []);
         setAtlas(atlasResponse);
+        setDesktopIconSettings(projectSettings.ui_preferences?.icon_surfaces ?? null);
+        setMobileIconSettings(projectSettings.ui_preferences?.mobile_icon_surfaces ?? null);
       })
       .catch((error) => setLoadError(error instanceof Error ? error.message : String(error)));
   }, []);
+
+  const iconSurface = useMemo(() => {
+    const mobile = isMobileIconViewport(viewport);
+    const defaults: IconSurfaceSettingsMap = mobile ? defaultMobileIconSurfaceSettings : defaultIconSurfaceSettings;
+    const source = mobile ? mobileIconSettings : desktopIconSettings;
+    return normalizeIconSurfaceSettings(source, defaults).cubixCraftGrid;
+  }, [desktopIconSettings, mobileIconSettings, viewport]);
 
   const visibleItems = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -155,27 +196,29 @@ export function CubixCraftWorkspace() {
             <button type="button" className="ghost-button" onClick={() => setHeldRaw(null)}>Отпустить предмет</button>
           </div>
 
-          <div className="grid-wrap" data-grid-size="9" style={{ '--extreme-grid-gap': '8px' } as CSSProperties}>
+          <div className="grid-wrap cubixcraft-grid" data-grid-size="9" style={{ '--extreme-grid-gap': '8px', gap: `${iconSurface.gap}px` } as CSSProperties}>
             {grid.map((row, rowIndex) => (
-              <div key={rowIndex} className={`grid-row ${rowIndex > 0 && rowIndex % 3 === 0 ? 'group-row-start' : ''}`}>
+              <div key={rowIndex} className={`grid-row ${rowIndex > 0 && rowIndex % 3 === 0 ? 'group-row-start' : ''}`} style={{ gap: iconSurface.gap }}>
                 {row.map((cell, colIndex) => {
-                  const style = cell ? atlasStyle(cell.raw) : undefined;
+                  const rawAtlasStyle = cell ? atlasStyle(cell.raw) : undefined;
+                  const iconStyle = positionedIconStyle(rawAtlasStyle, iconSurface);
                   const catalogItem = cell ? catalog.find((item) => item.raw === cell.raw) : undefined;
                   return (
                     <div
                       key={`${rowIndex}-${colIndex}`}
                       className={`grid-cell size-9 ${colIndex > 0 && colIndex % 3 === 0 ? 'group-col-start' : ''} ${cell ? 'is-filled' : 'is-empty'}`}
+                      style={{ width: iconSurface.cell, height: iconSurface.cell, minWidth: iconSurface.cell, minHeight: iconSurface.cell, position: 'relative' }}
                       onClick={() => heldRaw && place(rowIndex, colIndex, heldRaw)}
                       onContextMenu={(event) => { event.preventDefault(); openCellEditor(rowIndex, colIndex); }}
                       onDragOver={(event) => event.preventDefault()}
                       onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }}
                       title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount}` : 'Пустая ячейка'}
                     >
-                      <div className="cell-visual">
-                        <div className="cell-icon-slot">
-                          {style ? <span className="cell-atlas-icon" style={style} aria-hidden="true" /> : null}
-                          {!style && catalogItem?.icon_url ? <AnimatedIcon iconUrl={catalogItem.icon_url} alt={catalogItem.display_ru || cell?.raw || ''} animated={false} animationsEnabled /> : null}
-                          {cell && !style && !catalogItem?.icon_url ? <span>?</span> : null}
+                      <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
+                        <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
+                          {iconStyle ? <span className="cell-atlas-icon" style={iconStyle} aria-hidden="true" /> : null}
+                          {!iconStyle && catalogItem?.icon_url ? <AnimatedIcon iconUrl={catalogItem.icon_url} alt={catalogItem.display_ru || cell?.raw || ''} animated={false} animationsEnabled style={{ width: iconSurface.icon, height: iconSurface.icon }} /> : null}
+                          {cell && !iconStyle && !catalogItem?.icon_url ? <span>?</span> : null}
                         </div>
                       </div>
                       {cell ? <span style={{ position: 'absolute', right: 2, bottom: 1, fontSize: 10, fontWeight: 700, textShadow: '0 1px 2px #000' }}>{cell.amount.toLocaleString('ru-RU')}</span> : null}
