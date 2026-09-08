@@ -1,0 +1,13 @@
+.cubixcraft-grid .grid-cell > span {
+  z-index: 20;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000, 0 1px 2px #000;
+}
+
+.cubixcraft-grid .grid-cell .cell-visual,
+.cubixcraft-grid .grid-cell .cell-icon-slot,
+.cubixcraft-grid .grid-cell .cell-atlas-icon,
+.cubixcraft-grid .grid-cell .cell-icon-slot img {
+  z-index: 1;
+}
