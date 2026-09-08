@@ -3,6 +3,7 @@ import { downloadZsCloudFile, uploadZsCloudFile } from '../../services/api/zsClo
 
 const CALL_PREFIX = 'mods.cubixcraft.Astral.addRecipe';
 const PREFERRED_MARKER = '// CubixRecipes:preferred';
+const STAR_SAVE_DELAY_MS = 90;
 
 type ServerVariant = {
   id: string;
@@ -26,6 +27,9 @@ let loadedPath = '';
 let busy = false;
 let maintenanceQueued = false;
 let syncedFingerprint = '';
+const confirmedActive = new Map<string, boolean>();
+const starSaveTimers = new Map<string, number>();
+const starSaveVersions = new Map<string, number>();
 
 function splitTopLevel(text: string): string[] {
   const result: string[] = [];
@@ -166,6 +170,26 @@ function starButton(row: HTMLElement): HTMLButtonElement | null {
   return buttons.find((button) => button.textContent?.trim() === '★' || button.textContent?.trim() === '☆') ?? null;
 }
 
+function paintRowActive(row: HTMLElement, active: boolean): void {
+  row.dataset.cubixActive = active ? '1' : '0';
+  const star = starButton(row);
+  if (star) {
+    star.textContent = active ? '★' : '☆';
+    star.title = active ? 'Выключить рецепт' : 'Включить рецепт';
+    star.style.color = active ? '#ffd34d' : 'inherit';
+  }
+  if (row.dataset.cubixServerVariant) {
+    const status = row.querySelector<HTMLSpanElement>('button:first-child span');
+    if (status) status.textContent = `сервер · ${active ? 'активен' : 'без звезды'}`;
+  }
+}
+
+function paintRowsById(id: string, active: boolean): void {
+  document.querySelectorAll<HTMLElement>('[data-cubix-variant-id]').forEach((row) => {
+    if (row.dataset.cubixVariantId === id) paintRowActive(row, active);
+  });
+}
+
 async function readCurrentFile(): Promise<{ path: string; text: string; blocks: RecipeBlock[] }> {
   const path = cloudSelect()?.value ?? '';
   if (!path) throw new Error('Сначала открой файл из облака.');
@@ -179,12 +203,16 @@ async function loadVariants(force = false): Promise<void> {
   if (!path) {
     variants = [];
     loadedPath = '';
+    confirmedActive.clear();
     return;
   }
   if (!force && loadedPath === path) return;
   const response = await request<{ variants: ServerVariant[] }>(apiPath(`/admin/cubixcraft-variants?file_path=${encodeURIComponent(path)}`));
   loadedPath = path;
   variants = response.variants ?? [];
+  variants.forEach((variant) => {
+    if (!starSaveTimers.has(variant.id)) confirmedActive.set(variant.id, variant.active);
+  });
 }
 
 async function syncPublishedFile(): Promise<void> {
@@ -236,13 +264,7 @@ function paintNativeRows(blocks: RecipeBlock[]): void {
       const variant = findVariant(output, block.source);
       if (!variant) return;
       row.dataset.cubixVariantId = variant.id;
-      row.dataset.cubixActive = variant.active ? '1' : '0';
-      const star = starButton(row);
-      if (star) {
-        star.textContent = variant.active ? '★' : '☆';
-        star.title = variant.active ? 'Выключить рецепт' : 'Включить рецепт';
-        star.style.color = variant.active ? '#ffd34d' : 'inherit';
-      }
+      paintRowActive(row, variant.active);
     });
   });
 }
@@ -320,14 +342,51 @@ function addServerOnlyRows(blocks: RecipeBlock[]): void {
   });
 }
 
-async function setVariantActive(id: string, active: boolean): Promise<void> {
-  const response = await request<{ variant: ServerVariant }>(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(id)}`), {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ active })
-  });
-  variants = variants.map((variant) => variant.id === id ? response.variant : variant);
-  queueMaintenance();
+async function persistVariantActive(id: string, version: number): Promise<void> {
+  const current = variants.find((variant) => variant.id === id);
+  if (!current) return;
+  const active = current.active;
+  try {
+    const response = await request<{ variant: ServerVariant }>(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(id)}`), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active })
+    });
+    confirmedActive.set(id, response.variant.active);
+    if (starSaveVersions.get(id) === version) {
+      variants = variants.map((variant) => variant.id === id ? { ...variant, active: response.variant.active } : variant);
+      paintRowsById(id, response.variant.active);
+    }
+  } catch (error) {
+    if (starSaveVersions.get(id) === version) {
+      const fallback = confirmedActive.get(id) ?? !active;
+      variants = variants.map((variant) => variant.id === id ? { ...variant, active: fallback } : variant);
+      paintRowsById(id, fallback);
+      window.alert(`Не удалось сохранить состояние рецепта: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  } finally {
+    if (starSaveVersions.get(id) === version) starSaveTimers.delete(id);
+  }
+}
+
+function setVariantActiveFast(id: string, active: boolean): void {
+  if (!confirmedActive.has(id)) {
+    const current = variants.find((variant) => variant.id === id);
+    if (current) confirmedActive.set(id, current.active);
+  }
+
+  variants = variants.map((variant) => variant.id === id ? { ...variant, active } : variant);
+  paintRowsById(id, active);
+
+  const previousTimer = starSaveTimers.get(id);
+  if (previousTimer !== undefined) window.clearTimeout(previousTimer);
+  const version = (starSaveVersions.get(id) ?? 0) + 1;
+  starSaveVersions.set(id, version);
+  const timer = window.setTimeout(() => {
+    starSaveTimers.delete(id);
+    void persistVariantActive(id, version);
+  }, STAR_SAVE_DELAY_MS);
+  starSaveTimers.set(id, timer);
 }
 
 function withoutRecipeBlocks(text: string, blocks: RecipeBlock[]): string {
@@ -408,7 +467,7 @@ function handleCaptureClick(event: MouseEvent): void {
   event.preventDefault();
   event.stopPropagation();
   event.stopImmediatePropagation();
-  void setVariantActive(id, row.dataset.cubixActive !== '1');
+  setVariantActiveFast(id, row.dataset.cubixActive !== '1');
 }
 
 function isSyntheticNode(node: Node): boolean {
@@ -423,6 +482,9 @@ export function installCubixCraftActiveVariants(): void {
       loadedPath = '';
       syncedFingerprint = '';
       variants = [];
+      confirmedActive.clear();
+      starSaveTimers.forEach((timer) => window.clearTimeout(timer));
+      starSaveTimers.clear();
       queueMaintenance();
     }
   });
@@ -433,6 +495,7 @@ export function installCubixCraftActiveVariants(): void {
   const observer = new MutationObserver((mutations) => {
     const relevant = mutations.some((mutation) => {
       if (mutation.type !== 'childList') return false;
+      if (mutation.target instanceof Element && mutation.target.closest('[data-cubix-variant-id]')) return false;
       return [...Array.from(mutation.addedNodes), ...Array.from(mutation.removedNodes)].some((node) => !isSyntheticNode(node));
     });
     if (relevant) queueMaintenance();
