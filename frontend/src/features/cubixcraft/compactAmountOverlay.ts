@@ -7,6 +7,9 @@ const SUFFIXES = [
   { value: 1e3, suffix: 'k' }
 ] as const;
 
+const initializedGroups = new Set<string>();
+let pendingPreferred: { key: string; index: number } | null = null;
+
 export function formatCompactCubixAmount(amount: number): string {
   if (!Number.isFinite(amount)) return String(amount);
   const absolute = Math.abs(amount);
@@ -48,6 +51,12 @@ function groupHeader(group: HTMLElement): HTMLButtonElement | null {
   return first instanceof HTMLButtonElement ? first : null;
 }
 
+function groupKey(group: HTMLElement): string {
+  const header = groupHeader(group);
+  const title = header?.querySelector('strong')?.textContent?.trim() ?? '';
+  return title || header?.textContent?.trim() || '';
+}
+
 function variantRows(group: HTMLElement): HTMLElement[] {
   const wrapper = Array.from(group.children).find((child, index) => index > 0 && child instanceof HTMLElement) as HTMLElement | undefined;
   if (!wrapper) return [];
@@ -60,19 +69,27 @@ function isExpanded(group: HTMLElement): boolean {
   return arrow === '▾';
 }
 
-function syncDefaultCollapsed(): void {
-  recipeGroups().forEach((group) => {
-    const rows = variantRows(group);
-    const count = rows.length;
-    const previousCount = Number(group.dataset.cubixVariantCount ?? '-1');
-    group.dataset.cubixVariantCount = String(count);
+function hasVariants(group: HTMLElement): boolean {
+  const header = groupHeader(group);
+  const arrow = header?.lastElementChild?.textContent?.trim();
+  return arrow === '▾' || arrow === '▸';
+}
 
-    // Collapse only on first appearance or when the variant count changes.
-    // A manual expand/collapse by the user is therefore left alone.
-    if (count > 1 && count !== previousCount && isExpanded(group)) {
-      groupHeader(group)?.click();
-    }
+function collapseInitiallyOnce(): void {
+  recipeGroups().forEach((group) => {
+    if (!hasVariants(group)) return;
+    const key = groupKey(group);
+    if (!key || initializedGroups.has(key)) return;
+
+    initializedGroups.add(key);
+    if (isExpanded(group)) groupHeader(group)?.click();
   });
+}
+
+function isSelectedGroup(group: HTMLElement): boolean {
+  const header = groupHeader(group);
+  const background = header?.style.background ?? '';
+  return background.includes('45, 126, 247') || background.includes('45,126,247');
 }
 
 function rememberOldRecipeForBackup(event: MouseEvent): void {
@@ -80,12 +97,11 @@ function rememberOldRecipeForBackup(event: MouseEvent): void {
   if (!(target instanceof HTMLButtonElement)) return;
   if (target.textContent?.trim() !== 'Сохранить как запасной вариант') return;
 
-  const groups = recipeGroups();
-  const selectedGroup = groups.find((group) => {
-    const header = groupHeader(group);
-    return Boolean(header?.style.background?.includes('45, 126, 247') || header?.style.background?.includes('45,126,247'));
-  });
+  const selectedGroup = recipeGroups().find(isSelectedGroup);
   if (!selectedGroup) return;
+
+  const key = groupKey(selectedGroup);
+  if (!key) return;
 
   const rows = variantRows(selectedGroup);
   let selectedIndex = 0;
@@ -96,33 +112,36 @@ function rememberOldRecipeForBackup(event: MouseEvent): void {
     if (border || background.includes('45, 126, 247') || background.includes('45,126,247')) selectedIndex = index;
   });
 
-  selectedGroup.dataset.cubixPendingPreferred = String(selectedIndex);
+  pendingPreferred = { key, index: selectedIndex };
+  initializedGroups.add(key);
 }
 
 function applyPendingPreferred(): void {
-  recipeGroups().forEach((group) => {
-    const pending = group.dataset.cubixPendingPreferred;
-    if (pending === undefined) return;
+  if (!pendingPreferred) return;
 
-    if (!isExpanded(group)) {
-      groupHeader(group)?.click();
-      return;
-    }
+  const group = recipeGroups().find((entry) => groupKey(entry) === pendingPreferred?.key);
+  if (!group) return;
 
-    const rows = variantRows(group);
-    if (rows.length < 2) return;
+  initializedGroups.add(pendingPreferred.key);
 
-    const alreadyPreferred = rows.some((row) => row.querySelector<HTMLButtonElement>('button[title="Основной вариант"]'));
-    if (alreadyPreferred) {
-      delete group.dataset.cubixPendingPreferred;
-      return;
-    }
+  if (!isExpanded(group)) {
+    groupHeader(group)?.click();
+    return;
+  }
 
-    const index = Math.max(0, Math.min(rows.length - 1, Number.parseInt(pending, 10) || 0));
-    const star = rows[index]?.querySelector<HTMLButtonElement>('button[title="Сделать основным"]');
-    delete group.dataset.cubixPendingPreferred;
-    star?.click();
-  });
+  const rows = variantRows(group);
+  if (rows.length < 2) return;
+
+  const alreadyPreferred = rows.some((row) => row.querySelector<HTMLButtonElement>('button[title="Основной вариант"]'));
+  if (alreadyPreferred) {
+    pendingPreferred = null;
+    return;
+  }
+
+  const index = Math.max(0, Math.min(rows.length - 1, pendingPreferred.index));
+  const star = rows[index]?.querySelector<HTMLButtonElement>('button[title="Сделать основным"]');
+  pendingPreferred = null;
+  star?.click();
 }
 
 export function installCompactCubixAmounts(): void {
@@ -131,7 +150,7 @@ export function installCompactCubixAmounts(): void {
   const run = () => {
     updateAmountLabels();
     applyPendingPreferred();
-    syncDefaultCollapsed();
+    collapseInitiallyOnce();
   };
 
   document.addEventListener('click', rememberOldRecipeForBackup, true);
