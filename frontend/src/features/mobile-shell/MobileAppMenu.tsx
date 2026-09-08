@@ -43,6 +43,12 @@ export function MobileAppMenu({
   const [open, setOpen] = useState(false);
 
   const handleSelectTab = (tabId: string) => {
+    if (tabId === 'cubixcraft') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('workspace', 'cubixcraft');
+      window.location.assign(url.toString());
+      return;
+    }
     onSelectTab(tabId);
     setOpen(false);
   };
