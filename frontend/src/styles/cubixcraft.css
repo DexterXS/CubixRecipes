@@ -1,0 +1,180 @@
+.cubixcraft-grid .grid-cell > span {
+  z-index: 20;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000, 0 1px 2px #000;
+}
+
+.cubixcraft-grid .grid-cell .cell-visual,
+.cubixcraft-grid .grid-cell .cell-icon-slot,
+.cubixcraft-grid .grid-cell .cell-atlas-icon,
+.cubixcraft-grid .grid-cell .cell-icon-slot img {
+  z-index: 1;
+}
+
+/* CubixCraft recipe sidebar. Keep cards from being collapsed by generic/mobile rules. */
+input[placeholder='Поиск рецепта'] ~ div > div {
+  min-height: 52px !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > button {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  height: auto !important;
+  padding: 7px !important;
+  line-height: normal !important;
+  overflow: hidden !important;
+  font-size: 13px !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > button > span {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > button > span:first-child {
+  display: grid !important;
+  place-items: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > button > span:nth-child(2) {
+  min-width: 0 !important;
+  color: var(--text) !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > button > span:nth-child(2) strong,
+input[placeholder='Поиск рецепта'] ~ div > div > button > span:nth-child(2) span {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  transform: none !important;
+}
+
+/* Expanded variants: opaque panel, bounded height, independent scrolling. */
+input[placeholder='Поиск рецепта'] ~ div > div > div {
+  position: relative !important;
+  display: grid !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 220px !important;
+  padding: 6px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  z-index: 20 !important;
+  background: #0f1a2b !important;
+  border-top: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 0 0 8px 8px !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.30) !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 30px 30px !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-height: 38px !important;
+  height: auto !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  align-items: stretch !important;
+  background: #111f33 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 7px !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div + div {
+  margin-top: 4px !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div > button {
+  position: relative !important;
+  display: block !important;
+  min-height: 38px !important;
+  height: auto !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  background: #111f33 !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div > .cubixcraft-delete-variant {
+  padding: 0 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  color: #ff8f8f !important;
+  border-color: rgba(255, 95, 95, .35) !important;
+  cursor: pointer !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div > .cubixcraft-delete-variant:hover {
+  background: rgba(180, 45, 45, .35) !important;
+  color: #fff !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scrollbar {
+  width: 8px;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.22);
+  border-radius: 999px;
+}
+
+/* Integrated workspace: keep the shared CubixRecipes top bar and replace only its content area. */
+body.cubixcraft-integrated #root > .app-shell > .utility-bar + * {
+  display: none !important;
+}
+
+body.cubixcraft-integrated #root > .app-shell {
+  min-height: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.cubixcraft-embedded {
+  width: min(1700px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.cubixcraft-embedded > .app-shell {
+  max-width: none !important;
+  margin: 0 !important;
+  padding-top: 4px !important;
+}
+
+.cubixcraft-embedded > .app-shell > div:first-child {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .cubixcraft-embedded {
+    width: 100%;
+  }
+}
