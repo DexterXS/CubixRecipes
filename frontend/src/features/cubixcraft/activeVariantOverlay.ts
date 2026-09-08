@@ -4,27 +4,28 @@ import { downloadZsCloudFile, uploadZsCloudFile } from '../../services/api/zsClo
 const CALL_PREFIX = 'mods.cubixcraft.Astral.addRecipe';
 const PREFERRED_MARKER = '// CubixRecipes:preferred';
 
-type ArchivedVariant = {
+type ServerVariant = {
   id: string;
   filePath: string;
   output: string;
   source: string;
+  active: boolean;
   createdAt?: string;
   updatedAt?: string;
 };
 
-type ActiveRecipeBlock = {
+type RecipeBlock = {
   start: number;
   end: number;
   output: string;
   source: string;
 };
 
-let archivePath = '';
-let archiveVariants: ArchivedVariant[] = [];
-let archiveLoading = false;
+let variants: ServerVariant[] = [];
+let loadedPath = '';
 let busy = false;
 let maintenanceQueued = false;
+let syncedFingerprint = '';
 
 function splitTopLevel(text: string): string[] {
   const result: string[] = [];
@@ -80,8 +81,15 @@ function findMatchingParen(text: string, openIndex: number): number {
   return -1;
 }
 
-function parseActiveRecipes(text: string): ActiveRecipeBlock[] {
-  const result: ActiveRecipeBlock[] = [];
+function normalizeSource(source: string): string {
+  return source
+    .replace(`${PREFERRED_MARKER}\r\n`, '')
+    .replace(`${PREFERRED_MARKER}\n`, '')
+    .trim();
+}
+
+function parseRecipes(text: string): RecipeBlock[] {
+  const result: RecipeBlock[] = [];
   let cursor = 0;
   while (cursor < text.length) {
     const callStart = text.indexOf(CALL_PREFIX, cursor);
@@ -90,6 +98,7 @@ function parseActiveRecipes(text: string): ActiveRecipeBlock[] {
     if (open < 0) break;
     const close = findMatchingParen(text, open);
     if (close < 0) break;
+
     let end = close + 1;
     while (end < text.length && /\s/.test(text[end]) && text[end] !== '\n' && text[end] !== '\r') end += 1;
     if (text[end] === ';') end += 1;
@@ -102,7 +111,7 @@ function parseActiveRecipes(text: string): ActiveRecipeBlock[] {
 
     const args = splitTopLevel(text.slice(open + 1, close));
     const output = (args[1] ?? '').match(/<[^>]+>/)?.[0] ?? '';
-    if (output) result.push({ start, end, output, source: text.slice(start, end) });
+    if (output) result.push({ start, end, output, source: normalizeSource(text.slice(start, end)) });
     cursor = end;
   }
   return result;
@@ -121,9 +130,18 @@ function openCloudButton(): HTMLButtonElement | null {
   return Array.from(container.querySelectorAll<HTMLButtonElement>('button')).find((button) => button.textContent?.trim() === 'Открыть') ?? null;
 }
 
+function publishButton(): HTMLButtonElement | null {
+  const select = cloudSelect();
+  const container = select?.parentElement;
+  if (!container) return null;
+  return Array.from(container.querySelectorAll<HTMLButtonElement>('button')).find((button) => {
+    const text = button.textContent?.trim();
+    return text === 'Сохранить в облако' || text === 'Обновить файл';
+  }) ?? null;
+}
+
 function recipeList(): HTMLElement | null {
-  const input = document.querySelector<HTMLInputElement>('input[placeholder="Поиск рецепта"]');
-  const list = input?.nextElementSibling;
+  const list = document.querySelector<HTMLInputElement>('input[placeholder="Поиск рецепта"]')?.nextElementSibling;
   return list instanceof HTMLElement ? list : null;
 }
 
@@ -131,7 +149,7 @@ function activeGroups(): HTMLElement[] {
   const list = recipeList();
   if (!list) return [];
   return Array.from(list.children).filter((entry): entry is HTMLElement =>
-    entry instanceof HTMLElement && !entry.dataset.cubixArchivedOnly
+    entry instanceof HTMLElement && !entry.dataset.cubixServerOnly
   );
 }
 
@@ -139,228 +157,224 @@ function nativeVariantRows(group: HTMLElement): HTMLElement[] {
   const wrapper = Array.from(group.children).find((child, index) => index > 0 && child instanceof HTMLElement) as HTMLElement | undefined;
   if (!wrapper) return [];
   return Array.from(wrapper.children).filter((entry): entry is HTMLElement =>
-    entry instanceof HTMLElement && !entry.dataset.cubixArchivedVariant
+    entry instanceof HTMLElement && !entry.dataset.cubixServerVariant
   );
 }
 
-async function loadArchive(force = false): Promise<void> {
-  const path = cloudSelect()?.value ?? '';
-  if (!path) {
-    archivePath = '';
-    archiveVariants = [];
-    return;
-  }
-  if (!force && (archiveLoading || archivePath === path)) return;
-  archiveLoading = true;
-  try {
-    const response = await request<{ variants: ArchivedVariant[] }>(apiPath(`/admin/cubixcraft-variants?file_path=${encodeURIComponent(path)}`));
-    archivePath = path;
-    archiveVariants = response.variants ?? [];
-  } catch (error) {
-    console.error('Failed to load CubixCraft archived variants', error);
-  } finally {
-    archiveLoading = false;
-  }
+function starButton(row: HTMLElement): HTMLButtonElement | null {
+  const buttons = Array.from(row.querySelectorAll<HTMLButtonElement>('button'));
+  return buttons.find((button) => button.textContent?.trim() === '★' || button.textContent?.trim() === '☆') ?? null;
 }
 
-function uniqueOutputs(blocks: ActiveRecipeBlock[]): string[] {
-  const seen = new Set<string>();
-  const outputs: string[] = [];
-  blocks.forEach((block) => {
-    if (!seen.has(block.output)) {
-      seen.add(block.output);
-      outputs.push(block.output);
-    }
-  });
-  return outputs;
-}
-
-async function readCurrentFile(): Promise<{ path: string; text: string; blocks: ActiveRecipeBlock[] }> {
+async function readCurrentFile(): Promise<{ path: string; text: string; blocks: RecipeBlock[] }> {
   const path = cloudSelect()?.value ?? '';
   if (!path) throw new Error('Сначала открой файл из облака.');
   const downloaded = await downloadZsCloudFile(path);
   const text = await downloaded.blob.text();
-  return { path, text, blocks: parseActiveRecipes(text) };
+  return { path, text, blocks: parseRecipes(text) };
 }
 
-async function refreshOpenedFile(): Promise<void> {
-  await loadArchive(true);
-  window.setTimeout(() => openCloudButton()?.click(), 40);
-  window.setTimeout(queueMaintenance, 120);
+async function loadVariants(force = false): Promise<void> {
+  const path = cloudSelect()?.value ?? '';
+  if (!path) {
+    variants = [];
+    loadedPath = '';
+    return;
+  }
+  if (!force && loadedPath === path) return;
+  const response = await request<{ variants: ServerVariant[] }>(apiPath(`/admin/cubixcraft-variants?file_path=${encodeURIComponent(path)}`));
+  loadedPath = path;
+  variants = response.variants ?? [];
 }
 
-async function disableActiveVariant(group: HTMLElement, row: HTMLElement): Promise<void> {
-  if (busy) return;
-  busy = true;
-  try {
-    const current = await readCurrentFile();
-    const groups = activeGroups();
-    const groupIndex = groups.indexOf(group);
-    const output = uniqueOutputs(current.blocks)[groupIndex];
-    if (!output) throw new Error('Не удалось определить output варианта.');
-    const rowIndex = nativeVariantRows(group).indexOf(row);
-    const matches = current.blocks.filter((block) => block.output === output);
-    const block = matches[rowIndex];
-    if (!block) throw new Error('Не удалось определить рецепт для отключения.');
+async function syncPublishedFile(): Promise<void> {
+  const current = await readCurrentFile();
+  const fingerprint = `${current.path}:${current.text.length}:${current.blocks.map((block) => block.source).join('|')}`;
+  if (fingerprint === syncedFingerprint) return;
 
-    await request(apiPath('/admin/cubixcraft-variants'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filePath: current.path, output: block.output, source: block.source })
+  await request(apiPath('/admin/cubixcraft-variants/sync'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      filePath: current.path,
+      recipes: current.blocks.map((block) => ({ output: block.output, source: block.source }))
+    })
+  });
+  syncedFingerprint = fingerprint;
+  loadedPath = '';
+  await loadVariants(true);
+}
+
+function uniqueOutputs(blocks: RecipeBlock[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  blocks.forEach((block) => {
+    if (!seen.has(block.output)) {
+      seen.add(block.output);
+      result.push(block.output);
+    }
+  });
+  return result;
+}
+
+function findVariant(output: string, source: string): ServerVariant | undefined {
+  const normalized = normalizeSource(source);
+  return variants.find((variant) => variant.output === output && normalizeSource(variant.source) === normalized);
+}
+
+function paintNativeRows(blocks: RecipeBlock[]): void {
+  const groups = activeGroups();
+  const outputs = uniqueOutputs(blocks);
+  groups.forEach((group, groupIndex) => {
+    const output = outputs[groupIndex];
+    if (!output) return;
+    group.dataset.cubixOutput = output;
+    const matches = blocks.filter((block) => block.output === output);
+    nativeVariantRows(group).forEach((row, rowIndex) => {
+      const block = matches[rowIndex];
+      if (!block) return;
+      const variant = findVariant(output, block.source);
+      if (!variant) return;
+      row.dataset.cubixVariantId = variant.id;
+      row.dataset.cubixActive = variant.active ? '1' : '0';
+      const star = starButton(row);
+      if (star) {
+        star.textContent = variant.active ? '★' : '☆';
+        star.title = variant.active ? 'Выключить рецепт' : 'Включить рецепт';
+        star.style.color = variant.active ? '#ffd34d' : 'inherit';
+      }
     });
-
-    let nextText = `${current.text.slice(0, block.start)}${current.text.slice(block.end)}`;
-    nextText = nextText.replace(/\n{3,}/g, '\n\n');
-    await uploadZsCloudFile(current.path, nextText, 'overwrite');
-    await refreshOpenedFile();
-  } catch (error) {
-    window.alert(error instanceof Error ? error.message : String(error));
-  } finally {
-    busy = false;
-  }
+  });
 }
 
-async function enableArchivedVariant(variant: ArchivedVariant): Promise<void> {
-  if (busy) return;
-  busy = true;
-  try {
-    const current = await readCurrentFile();
-    const separator = current.text.endsWith('\n') ? '\n' : '\n\n';
-    const source = variant.source.replace(`${PREFERRED_MARKER}\n`, '');
-    await uploadZsCloudFile(current.path, `${current.text}${separator}${source}\n`, 'overwrite');
-    await request(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(variant.id)}`), { method: 'DELETE' });
-    await refreshOpenedFile();
-  } catch (error) {
-    window.alert(error instanceof Error ? error.message : String(error));
-  } finally {
-    busy = false;
-  }
-}
-
-async function hardDeleteArchivedVariant(variant: ArchivedVariant): Promise<void> {
-  if (!window.confirm('Удалить этот запасной рецепт полностью из серверного хранилища?')) return;
-  try {
-    await request(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(variant.id)}`), { method: 'DELETE' });
-    await loadArchive(true);
-    queueMaintenance();
-  } catch (error) {
-    window.alert(error instanceof Error ? error.message : String(error));
-  }
-}
-
-function archivedRow(variant: ArchivedVariant, label: string): HTMLElement {
+function createServerRow(variant: ServerVariant, label: string): HTMLElement {
   const row = document.createElement('div');
-  row.dataset.cubixArchivedVariant = variant.id;
+  row.dataset.cubixServerVariant = variant.id;
+  row.dataset.cubixVariantId = variant.id;
+  row.dataset.cubixActive = variant.active ? '1' : '0';
   row.style.display = 'grid';
   row.style.gridTemplateColumns = 'minmax(0,1fr) 30px 30px';
   row.style.gap = '4px';
-  row.style.minHeight = '38px';
-  row.style.background = '#111f33';
-  row.style.border = '1px solid rgba(255,255,255,.08)';
-  row.style.borderRadius = '7px';
 
   const info = document.createElement('button');
   info.type = 'button';
   info.className = 'ghost-button';
   info.disabled = true;
   info.style.textAlign = 'left';
-  info.style.opacity = '0.75';
-  info.innerHTML = `<strong style="font-size:12px">${label}</strong><span style="display:block;font-size:10px;opacity:.68">выключен · хранится на сервере</span>`;
+  info.innerHTML = `<strong style="font-size:12px">${label}</strong><span style="display:block;font-size:10px;opacity:.68">сервер · ${variant.active ? 'активен' : 'без звезды'}</span>`;
 
   const star = document.createElement('button');
   star.type = 'button';
   star.className = 'ghost-button';
-  star.textContent = '☆';
-  star.title = 'Включить рецепт в игре';
+  star.textContent = variant.active ? '★' : '☆';
+  star.title = variant.active ? 'Выключить рецепт' : 'Включить рецепт';
   star.style.padding = '0';
   star.style.fontSize = '18px';
-  star.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    void enableArchivedVariant(variant);
-  });
+  star.style.color = variant.active ? '#ffd34d' : 'inherit';
 
   const remove = document.createElement('button');
   remove.type = 'button';
   remove.className = 'ghost-button cubixcraft-delete-variant';
   remove.textContent = '×';
   remove.title = 'Удалить полностью';
-  remove.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    void hardDeleteArchivedVariant(variant);
-  });
 
   row.append(info, star, remove);
   return row;
 }
 
-function syncUi(): void {
+function addServerOnlyRows(blocks: RecipeBlock[]): void {
   const list = recipeList();
   if (!list) return;
+  list.querySelectorAll('[data-cubix-server-variant], [data-cubix-server-only]').forEach((node) => node.remove());
 
-  list.querySelectorAll('[data-cubix-archived-only], [data-cubix-archived-variant]').forEach((node) => node.remove());
+  const represented = new Set(blocks.map((block) => `${block.output}\0${normalizeSource(block.source)}`));
+  const extras = variants.filter((variant) => !represented.has(`${variant.output}\0${normalizeSource(variant.source)}`));
+  const groupsByOutput = new Map(activeGroups().map((group) => [group.dataset.cubixOutput ?? '', group]));
 
-  const groups = activeGroups();
+  extras.forEach((variant) => {
+    const existing = groupsByOutput.get(variant.output);
+    if (existing) {
+      const wrapper = Array.from(existing.children).find((child, index) => index > 0 && child instanceof HTMLElement) as HTMLElement | undefined;
+      if (wrapper) wrapper.appendChild(createServerRow(variant, 'Серверный вариант'));
+      return;
+    }
+
+    const group = document.createElement('div');
+    group.dataset.cubixServerOnly = variant.output;
+    group.style.border = '1px solid rgba(255,255,255,.1)';
+    group.style.borderRadius = '8px';
+    group.style.overflow = 'hidden';
+    group.style.background = '#0f1a2b';
+
+    const header = document.createElement('div');
+    header.style.padding = '8px';
+    header.innerHTML = `<strong style="display:block;font-size:13px">${variant.output}</strong><span style="font-size:11px;opacity:.68">хранится на сервере</span>`;
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'grid';
+    wrapper.style.gap = '4px';
+    wrapper.style.padding = '0 6px 6px';
+    wrapper.appendChild(createServerRow(variant, 'Вариант 1'));
+    group.append(header, wrapper);
+    list.appendChild(group);
+    groupsByOutput.set(variant.output, group);
+  });
+}
+
+async function setVariantActive(id: string, active: boolean): Promise<void> {
+  const response = await request<{ variant: ServerVariant }>(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(id)}`), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ active })
+  });
+  variants = variants.map((variant) => variant.id === id ? response.variant : variant);
+  queueMaintenance();
+}
+
+function withoutRecipeBlocks(text: string, blocks: RecipeBlock[]): string {
+  let result = text;
+  [...blocks].sort((a, b) => b.start - a.start).forEach((block) => {
+    result = `${result.slice(0, block.start)}${result.slice(block.end)}`;
+  });
+  return result.replace(/\n{3,}/g, '\n\n').trimEnd();
+}
+
+async function publishFile(): Promise<void> {
+  if (busy) return;
+  busy = true;
+  try {
+    await loadVariants(true);
+    const current = await readCurrentFile();
+    const base = withoutRecipeBlocks(current.text, current.blocks);
+    const activeSources = variants.filter((variant) => variant.active).map((variant) => normalizeSource(variant.source));
+    const separator = base ? '\n\n' : '';
+    const nextText = `${base}${separator}${activeSources.join('\n\n')}${activeSources.length ? '\n' : ''}`;
+    await uploadZsCloudFile(current.path, nextText, 'overwrite');
+    syncedFingerprint = '';
+    window.setTimeout(() => openCloudButton()?.click(), 40);
+  } catch (error) {
+    window.alert(error instanceof Error ? error.message : String(error));
+  } finally {
+    busy = false;
+  }
+}
+
+async function syncUi(): Promise<void> {
+  const button = publishButton();
+  if (button) {
+    button.textContent = 'Обновить файл';
+    button.title = 'Записать в .zs только рецепты со звездой';
+  }
   const path = cloudSelect()?.value ?? '';
-  if (!path) return;
+  if (!path || !recipeList()) return;
 
-  void readCurrentFile().then(({ blocks }) => {
-    const outputs = uniqueOutputs(blocks);
-    groups.forEach((group, groupIndex) => {
-      const output = outputs[groupIndex];
-      if (!output) return;
-      group.dataset.cubixOutput = output;
-
-      const wrapper = Array.from(group.children).find((child, index) => index > 0 && child instanceof HTMLElement) as HTMLElement | undefined;
-      const nativeRows = nativeVariantRows(group);
-      nativeRows.forEach((row) => {
-        const star = row.querySelector<HTMLButtonElement>('button[title="Сделать основным"], button[title="Основной вариант"], button[title="Выключить рецепт (убрать из игрового .zs)"]');
-        if (star) {
-          star.textContent = '★';
-          star.title = 'Выключить рецепт (убрать из игрового .zs)';
-          star.style.color = '#ffd34d';
-        }
-      });
-
-      if (wrapper) {
-        archiveVariants.filter((variant) => variant.output === output).forEach((variant, index) => {
-          wrapper.appendChild(archivedRow(variant, `Запасной ${nativeRows.length + index + 1}`));
-        });
-      }
-    });
-
-    const activeOutputs = new Set(outputs);
-    const archiveOnly = archiveVariants.filter((variant) => !activeOutputs.has(variant.output));
-    const byOutput = new Map<string, ArchivedVariant[]>();
-    archiveOnly.forEach((variant) => {
-      const items = byOutput.get(variant.output) ?? [];
-      items.push(variant);
-      byOutput.set(variant.output, items);
-    });
-
-    byOutput.forEach((variants, output) => {
-      const group = document.createElement('div');
-      group.dataset.cubixArchivedOnly = '1';
-      group.style.border = '1px solid rgba(255,255,255,.1)';
-      group.style.borderRadius = '8px';
-      group.style.overflow = 'hidden';
-      group.style.background = '#0f1a2b';
-
-      const header = document.createElement('div');
-      header.style.padding = '8px';
-      header.innerHTML = `<strong style="display:block;font-size:13px">${output}</strong><span style="font-size:11px;opacity:.68">${variants.length} выключенных · 0 активных</span>`;
-      group.appendChild(header);
-
-      const wrapper = document.createElement('div');
-      wrapper.style.display = 'grid';
-      wrapper.style.gap = '4px';
-      wrapper.style.padding = '0 6px 6px';
-      variants.forEach((variant, index) => wrapper.appendChild(archivedRow(variant, `Вариант ${index + 1}`)));
-      group.appendChild(wrapper);
-      list.appendChild(group);
-    });
-  }).catch(() => undefined);
+  try {
+    await syncPublishedFile();
+    const current = await readCurrentFile();
+    paintNativeRows(current.blocks);
+    addServerOnlyRows(current.blocks);
+  } catch (error) {
+    console.error('CubixCraft server-state sync failed', error);
+  }
 }
 
 function queueMaintenance(): void {
@@ -368,32 +382,37 @@ function queueMaintenance(): void {
   maintenanceQueued = true;
   requestAnimationFrame(() => {
     maintenanceQueued = false;
-    void loadArchive().then(syncUi);
+    void syncUi();
   });
 }
 
 function handleCaptureClick(event: MouseEvent): void {
   const button = event.target instanceof Element ? event.target.closest('button') : null;
   if (!(button instanceof HTMLButtonElement)) return;
-  const title = button.title;
-  if (title !== 'Сделать основным' && title !== 'Основной вариант' && title !== 'Выключить рецепт (убрать из игрового .zs)') return;
 
-  const row = button.parentElement;
-  const wrapper = row?.parentElement;
-  const group = wrapper?.parentElement;
-  if (!(row instanceof HTMLElement) || !(group instanceof HTMLElement)) return;
+  const text = button.textContent?.trim() ?? '';
+  if (text === 'Обновить файл') {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    void publishFile();
+    return;
+  }
+
+  if (text !== '★' && text !== '☆') return;
+  const row = button.closest<HTMLElement>('[data-cubix-variant-id]');
+  if (!row) return;
+  const id = row.dataset.cubixVariantId;
+  if (!id) return;
 
   event.preventDefault();
   event.stopPropagation();
   event.stopImmediatePropagation();
-  void disableActiveVariant(group, row);
+  void setVariantActive(id, row.dataset.cubixActive !== '1');
 }
 
-function isSyntheticArchiveNode(node: Node): boolean {
-  return node instanceof Element && (
-    node.matches('[data-cubix-archived-only], [data-cubix-archived-variant]') ||
-    Boolean(node.closest('[data-cubix-archived-only], [data-cubix-archived-variant]'))
-  );
+function isSyntheticNode(node: Node): boolean {
+  return node instanceof Element && Boolean(node.closest('[data-cubix-server-variant], [data-cubix-server-only]'));
 }
 
 export function installCubixCraftActiveVariants(): void {
@@ -401,16 +420,20 @@ export function installCubixCraftActiveVariants(): void {
   document.addEventListener('click', handleCaptureClick, true);
   document.addEventListener('change', (event) => {
     if (event.target === cloudSelect()) {
-      archivePath = '';
-      archiveVariants = [];
+      loadedPath = '';
+      syncedFingerprint = '';
+      variants = [];
       queueMaintenance();
     }
+  });
+  window.addEventListener('cubixcraft-server-state-changed', () => {
+    loadedPath = '';
+    queueMaintenance();
   });
   const observer = new MutationObserver((mutations) => {
     const relevant = mutations.some((mutation) => {
       if (mutation.type !== 'childList') return false;
-      const changed = [...Array.from(mutation.addedNodes), ...Array.from(mutation.removedNodes)];
-      return changed.some((node) => !isSyntheticArchiveNode(node));
+      return [...Array.from(mutation.addedNodes), ...Array.from(mutation.removedNodes)].some((node) => !isSyntheticNode(node));
     });
     if (relevant) queueMaintenance();
   });
