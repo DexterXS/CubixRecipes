@@ -10,6 +10,7 @@ import './styles/cubixcraft.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
+import { VersionReloadBanner } from './components/VersionReloadBanner';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { installCubixCraftActiveStarClickFix } from './features/cubixcraft/activeStarClickFix';
 import { installCubixCraftArchivedPositionFix } from './features/cubixcraft/archivedPositionFix';
@@ -79,6 +80,7 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
 
   return (
     <>
+      <VersionReloadBanner />
       <App
         authUser={authUser}
         onLogout={onLogout}
