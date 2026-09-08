@@ -375,7 +375,6 @@ function queueMaintenance(): void {
 function handleCaptureClick(event: MouseEvent): void {
   const button = event.target instanceof Element ? event.target.closest('button') : null;
   if (!(button instanceof HTMLButtonElement)) return;
-  if (button.dataset.cubixArchivedVariant) return;
   const title = button.title;
   if (title !== 'Сделать основным' && title !== 'Основной вариант' && title !== 'Выключить рецепт (убрать из игрового .zs)') return;
 
@@ -390,6 +389,13 @@ function handleCaptureClick(event: MouseEvent): void {
   void disableActiveVariant(group, row);
 }
 
+function isSyntheticArchiveNode(node: Node): boolean {
+  return node instanceof Element && (
+    node.matches('[data-cubix-archived-only], [data-cubix-archived-variant]') ||
+    Boolean(node.closest('[data-cubix-archived-only], [data-cubix-archived-variant]'))
+  );
+}
+
 export function installCubixCraftActiveVariants(): void {
   if (typeof document === 'undefined') return;
   document.addEventListener('click', handleCaptureClick, true);
@@ -401,7 +407,12 @@ export function installCubixCraftActiveVariants(): void {
     }
   });
   const observer = new MutationObserver((mutations) => {
-    if (mutations.some((mutation) => mutation.type === 'childList')) queueMaintenance();
+    const relevant = mutations.some((mutation) => {
+      if (mutation.type !== 'childList') return false;
+      const changed = [...Array.from(mutation.addedNodes), ...Array.from(mutation.removedNodes)];
+      return changed.some((node) => !isSyntheticArchiveNode(node));
+    });
+    if (relevant) queueMaintenance();
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
   queueMaintenance();
