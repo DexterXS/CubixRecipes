@@ -147,3 +147,34 @@ input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scroll
   background: rgba(255,255,255,.22);
   border-radius: 999px;
 }
+
+/* Integrated workspace: keep the shared CubixRecipes top bar and replace only its content area. */
+body.cubixcraft-integrated #root > .app-shell > .utility-bar + * {
+  display: none !important;
+}
+
+body.cubixcraft-integrated #root > .app-shell {
+  min-height: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.cubixcraft-embedded {
+  width: min(1700px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.cubixcraft-embedded > .app-shell {
+  max-width: none !important;
+  margin: 0 !important;
+  padding-top: 4px !important;
+}
+
+.cubixcraft-embedded > .app-shell > div:first-child {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .cubixcraft-embedded {
+    width: 100%;
+  }
+}
