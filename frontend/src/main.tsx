@@ -13,11 +13,13 @@ import { ServerSelect } from './auth/ServerSelect';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { installCompactCubixAmounts } from './features/cubixcraft/compactAmountOverlay';
 import { installCubixVariantInteractionFix } from './features/cubixcraft/variantInteractionFix';
+import { installCubixCraftVariantDelete } from './features/cubixcraft/variantDeleteOverlay';
 import { AuthUser } from './types';
 
 installConsoleCapture();
 installCompactCubixAmounts();
 installCubixVariantInteractionFix();
+installCubixCraftVariantDelete();
 
 interface ServerGateProps {
   authUser: AuthUser;
