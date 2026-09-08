@@ -9,6 +9,7 @@ import './styles/mobile-shell.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
+import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { AuthUser } from './types';
 
 installConsoleCapture();
@@ -37,6 +38,11 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
     return <ServerSelect authUser={authUser} onSelect={handleSelectServer} />;
   }
 
+  const workspace = new URLSearchParams(window.location.search).get('workspace');
+  if (workspace === 'cubixcraft') {
+    return <CubixCraftWorkspace />;
+  }
+
   return (
     <App
       authUser={authUser}
@@ -54,4 +60,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </AuthGate>
   </React.StrictMode>
 );
-
