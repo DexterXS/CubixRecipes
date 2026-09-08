@@ -36,10 +36,106 @@ function updateAmountLabels(root: ParentNode = document): void {
   });
 }
 
+function recipeGroups(): HTMLElement[] {
+  const search = document.querySelector<HTMLInputElement>('input[placeholder="Поиск рецепта"]');
+  const list = search?.nextElementSibling;
+  if (!(list instanceof HTMLElement)) return [];
+  return Array.from(list.children).filter((entry): entry is HTMLElement => entry instanceof HTMLElement);
+}
+
+function groupHeader(group: HTMLElement): HTMLButtonElement | null {
+  const first = group.firstElementChild;
+  return first instanceof HTMLButtonElement ? first : null;
+}
+
+function variantRows(group: HTMLElement): HTMLElement[] {
+  const wrapper = Array.from(group.children).find((child, index) => index > 0 && child instanceof HTMLElement) as HTMLElement | undefined;
+  if (!wrapper) return [];
+  return Array.from(wrapper.children).filter((entry): entry is HTMLElement => entry instanceof HTMLElement);
+}
+
+function isExpanded(group: HTMLElement): boolean {
+  const header = groupHeader(group);
+  const arrow = header?.lastElementChild?.textContent?.trim();
+  return arrow === '▾';
+}
+
+function syncDefaultCollapsed(): void {
+  recipeGroups().forEach((group) => {
+    const rows = variantRows(group);
+    const count = rows.length;
+    const previousCount = Number(group.dataset.cubixVariantCount ?? '-1');
+    group.dataset.cubixVariantCount = String(count);
+
+    // Collapse only on first appearance or when the variant count changes.
+    // A manual expand/collapse by the user is therefore left alone.
+    if (count > 1 && count !== previousCount && isExpanded(group)) {
+      groupHeader(group)?.click();
+    }
+  });
+}
+
+function rememberOldRecipeForBackup(event: MouseEvent): void {
+  const target = event.target instanceof Element ? event.target.closest('button') : null;
+  if (!(target instanceof HTMLButtonElement)) return;
+  if (target.textContent?.trim() !== 'Сохранить как запасной вариант') return;
+
+  const groups = recipeGroups();
+  const selectedGroup = groups.find((group) => {
+    const header = groupHeader(group);
+    return Boolean(header?.style.background?.includes('45, 126, 247') || header?.style.background?.includes('45,126,247'));
+  });
+  if (!selectedGroup) return;
+
+  const rows = variantRows(selectedGroup);
+  let selectedIndex = 0;
+  rows.forEach((row, index) => {
+    const button = row.querySelector<HTMLButtonElement>('button');
+    const border = button?.style.borderColor ?? '';
+    const background = button?.style.background ?? '';
+    if (border || background.includes('45, 126, 247') || background.includes('45,126,247')) selectedIndex = index;
+  });
+
+  selectedGroup.dataset.cubixPendingPreferred = String(selectedIndex);
+}
+
+function applyPendingPreferred(): void {
+  recipeGroups().forEach((group) => {
+    const pending = group.dataset.cubixPendingPreferred;
+    if (pending === undefined) return;
+
+    if (!isExpanded(group)) {
+      groupHeader(group)?.click();
+      return;
+    }
+
+    const rows = variantRows(group);
+    if (rows.length < 2) return;
+
+    const alreadyPreferred = rows.some((row) => row.querySelector<HTMLButtonElement>('button[title="Основной вариант"]'));
+    if (alreadyPreferred) {
+      delete group.dataset.cubixPendingPreferred;
+      return;
+    }
+
+    const index = Math.max(0, Math.min(rows.length - 1, Number.parseInt(pending, 10) || 0));
+    const star = rows[index]?.querySelector<HTMLButtonElement>('button[title="Сделать основным"]');
+    delete group.dataset.cubixPendingPreferred;
+    star?.click();
+  });
+}
+
 export function installCompactCubixAmounts(): void {
   if (typeof document === 'undefined') return;
 
-  const run = () => updateAmountLabels();
+  const run = () => {
+    updateAmountLabels();
+    applyPendingPreferred();
+    syncDefaultCollapsed();
+  };
+
+  document.addEventListener('click', rememberOldRecipeForBackup, true);
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once: true });
   else run();
 
