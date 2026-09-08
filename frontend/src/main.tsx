@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './pages/App';
 import './styles.css';
@@ -26,10 +26,34 @@ interface ServerGateProps {
   onLogout: () => Promise<void>;
 }
 
+function isCubixCraftWorkspace() {
+  return new URLSearchParams(window.location.search).get('workspace') === 'cubixcraft';
+}
+
 function ServerGate({ authUser, onLogout }: ServerGateProps) {
   const [selectedServer, setSelectedServer] = useState<string | null>(() =>
     window.localStorage.getItem('active_server_id')
   );
+  const [cubixCraftOpen, setCubixCraftOpen] = useState(isCubixCraftWorkspace);
+
+  useEffect(() => {
+    const sync = () => setCubixCraftOpen(isCubixCraftWorkspace());
+    const handleWorkspaceChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ active?: boolean }>).detail;
+      setCubixCraftOpen(detail?.active ?? isCubixCraftWorkspace());
+    };
+    window.addEventListener('popstate', sync);
+    window.addEventListener('cubixcraft-workspace-change', handleWorkspaceChange as EventListener);
+    return () => {
+      window.removeEventListener('popstate', sync);
+      window.removeEventListener('cubixcraft-workspace-change', handleWorkspaceChange as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('cubixcraft-integrated', cubixCraftOpen);
+    return () => document.body.classList.remove('cubixcraft-integrated');
+  }, [cubixCraftOpen]);
 
   const handleSelectServer = (serverId: string) => {
     window.localStorage.setItem('active_server_id', serverId);
@@ -45,18 +69,20 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
     return <ServerSelect authUser={authUser} onSelect={handleSelectServer} />;
   }
 
-  const workspace = new URLSearchParams(window.location.search).get('workspace');
-  if (workspace === 'cubixcraft') {
-    return <CubixCraftWorkspace />;
-  }
-
   return (
-    <App
-      authUser={authUser}
-      onLogout={onLogout}
-      onResetServer={handleResetServer}
-      activeServerId={selectedServer}
-    />
+    <>
+      <App
+        authUser={authUser}
+        onLogout={onLogout}
+        onResetServer={handleResetServer}
+        activeServerId={selectedServer}
+      />
+      {cubixCraftOpen ? (
+        <div className="cubixcraft-embedded">
+          <CubixCraftWorkspace />
+        </div>
+      ) : null}
+    </>
   );
 }
 
