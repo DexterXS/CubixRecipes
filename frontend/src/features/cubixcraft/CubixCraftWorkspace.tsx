@@ -26,7 +26,7 @@ type CubixCell = {
   opaqueNbt?: string;
 };
 
-type EditingCell = { row: number; col: number } | null;
+type EditingTarget = { kind: 'grid'; row: number; col: number } | { kind: 'output' } | null;
 
 type ParsedCubixRecipe = {
   start: number;
@@ -34,6 +34,9 @@ type ParsedCubixRecipe = {
   end: number;
   group: string;
   output: string;
+  outputAmount: number;
+  outputNbt: NbtCompoundNode;
+  outputOpaqueNbt?: string;
   grid: Array<Array<CubixCell | null>>;
   preferred: boolean;
 };
@@ -167,12 +170,16 @@ function parseCubixRecipes(text: string): ParsedCubixRecipe[] {
       while (end < text.length && /\s/.test(text[end])) end += 1;
       if (text[end] === ';') end += 1;
       const marker = preferredStart(text, callStart);
+      const outputCell = parseCell(args[1]);
       recipes.push({
         start: marker.start,
         callStart,
         end,
         group: parseGroup(args[0]),
-        output: args[1].trim(),
+        output: outputCell?.raw ?? args[1].trim(),
+        outputAmount: outputCell?.amount ?? 1,
+        outputNbt: outputCell?.nbt ?? emptyNbt(),
+        outputOpaqueNbt: outputCell?.opaqueNbt,
         grid: parseGrid(args[2]),
         preferred: marker.preferred
       });
@@ -213,13 +220,21 @@ function cellRaw(cell: CubixCell): string {
   return `${cell.raw}${nbt}${cell.amount === 1 ? '' : `*${cell.amount}`}`;
 }
 
-function serializeRecipe(group: string, output: string, grid: Array<Array<CubixCell | null>>): string {
+function serializeRecipe(
+  group: string,
+  output: string,
+  grid: Array<Array<CubixCell | null>>,
+  outputAmount = 1,
+  outputNbt: NbtCompoundNode = emptyNbt(),
+  outputOpaqueNbt?: string
+): string {
   const rows = grid.map((row) => `        [${row.map((cell) => cell ? cellRaw(cell) : 'null').join(', ')}]`);
-  return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group)}, ${output || 'null'},\n    [\n${rows.join(',\n')}\n    ]);`;
+  const outputExpression = output ? cellRaw({ raw: output, amount: outputAmount, nbt: outputNbt, opaqueNbt: outputOpaqueNbt }) : 'null';
+  return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group)}, ${outputExpression},\n    [\n${rows.join(',\n')}\n    ]);`;
 }
 
 function serializeParsedRecipe(recipe: ParsedCubixRecipe, preferred = recipe.preferred): string {
-  return `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(recipe.group, recipe.output, recipe.grid)}`;
+  return `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(recipe.group, recipe.output, recipe.grid, recipe.outputAmount, recipe.outputNbt, recipe.outputOpaqueNbt)}`;
 }
 
 function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurfaceSettings): CSSProperties | undefined {
@@ -279,11 +294,15 @@ export function CubixCraftWorkspace() {
   const [search, setSearch] = useState('');
   const [recipeSearch, setRecipeSearch] = useState('');
   const [heldRaw, setHeldRaw] = useState<string | null>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [grid, setGrid] = useState<Array<Array<CubixCell | null>>>(() => emptyGrid());
   const [outputRaw, setOutputRaw] = useState('');
+  const [outputAmount, setOutputAmount] = useState(1);
+  const [outputNbt, setOutputNbt] = useState<NbtCompoundNode>(() => emptyNbt());
+  const [outputOpaqueNbt, setOutputOpaqueNbt] = useState<string | undefined>(undefined);
   const [group, setGroup] = useState('common');
   const [maxAmount, setMaxAmount] = useState(DEFAULT_MAX_AMOUNT);
-  const [editing, setEditing] = useState<EditingCell>(null);
+  const [editing, setEditing] = useState<EditingTarget>(null);
   const [amountDraft, setAmountDraft] = useState('1');
   const [nbtOpen, setNbtOpen] = useState(false);
   const [nbtDraft, setNbtDraft] = useState<NbtCompoundNode>(() => emptyNbt());
@@ -310,6 +329,13 @@ export function CubixCraftWorkspace() {
       .catch((error) => setLoadError(error instanceof Error ? error.message : String(error)));
   }, []);
 
+  useEffect(() => {
+    if (!heldRaw) return;
+    const handleMove = (event: MouseEvent) => setCursorPos({ x: event.clientX, y: event.clientY });
+    window.addEventListener('mousemove', handleMove);
+    return () => window.removeEventListener('mousemove', handleMove);
+  }, [heldRaw]);
+
   const surfaces = useMemo(() => {
     const defaults: IconSurfaceSettingsMap = mobile ? defaultMobileIconSurfaceSettings : defaultIconSurfaceSettings;
     const source = mobile ? mobileIconSettings : desktopIconSettings;
@@ -318,6 +344,7 @@ export function CubixCraftWorkspace() {
 
   const iconSurface = surfaces.cubixCraftGrid;
   const outputSurface = surfaces.craftOutput;
+  const heldSurface = surfaces.touchHeld;
 
   const visibleItems = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -400,6 +427,9 @@ export function CubixCraftWorkspace() {
     setSelectedRecipeIndex(index);
     setGroup(recipe.group);
     setOutputRaw(recipe.output);
+    setOutputAmount(recipe.outputAmount);
+    setOutputNbt(recipe.outputNbt);
+    setOutputOpaqueNbt(recipe.outputOpaqueNbt);
     setGrid(recipe.grid);
     setExpandedOutputs((current) => ({ ...current, [recipe.output]: true }));
   }
@@ -428,7 +458,7 @@ export function CubixCraftWorkspace() {
     const target = parsed[selectedRecipeIndex];
     if (!target) return null;
     const keepPreferred = target.preferred && target.output === outputRaw;
-    const nextRecipe = `${keepPreferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid)}`;
+    const nextRecipe = `${keepPreferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid, outputAmount, outputNbt, outputOpaqueNbt)}`;
     const nextText = `${fileText.slice(0, target.start)}${nextRecipe}${fileText.slice(target.end)}`;
     refreshDocument(nextText, selectedRecipeIndex);
     setStatus('Существующий вариант заменён.');
@@ -441,7 +471,7 @@ export function CubixCraftWorkspace() {
       return null;
     }
     const base = fileText.trimEnd();
-    const recipeText = `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid)}`;
+    const recipeText = `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid, outputAmount, outputNbt, outputOpaqueNbt)}`;
     const nextText = `${base}${base ? '\n\n' : ''}${recipeText}\n`;
     const reparsed = refreshDocument(nextText, parseCubixRecipes(nextText).length - 1);
     setFileName((current) => current || 'CubixCraft_Recipes.zs');
@@ -487,39 +517,71 @@ export function CubixCraftWorkspace() {
     setGrid((current) => current.map((line, r) => line.map((cell, c) => r === row && c === col ? { raw, amount: 1, nbt: emptyNbt() } : cell)));
   }
 
+  function clearGridCell(row: number, col: number) {
+    setGrid((current) => current.map((line, r) => line.map((cell, c) => r === row && c === col ? null : cell)));
+  }
+
+  function clearOutput() {
+    setOutputRaw('');
+    setOutputAmount(1);
+    setOutputNbt(emptyNbt());
+    setOutputOpaqueNbt(undefined);
+  }
+
   function openCellEditor(row: number, col: number) {
     const cell = grid[row]?.[col];
     if (!cell) return;
-    setEditing({ row, col });
+    setEditing({ kind: 'grid', row, col });
     setAmountDraft(String(cell.amount));
     setNbtDraft(cell.nbt);
+    setNbtOpen(false);
+  }
+
+  function openOutputEditor() {
+    if (!outputRaw) return;
+    setEditing({ kind: 'output' });
+    setAmountDraft(String(outputAmount));
+    setNbtDraft(outputNbt);
     setNbtOpen(false);
   }
 
   function saveCell() {
     if (!editing) return;
     const nextAmount = Math.max(1, Math.min(maxAmount, Math.trunc(Number(amountDraft) || 1)));
-    setGrid((current) => current.map((line, r) => line.map((cell, c) => r === editing.row && c === editing.col && cell ? { ...cell, amount: nextAmount, nbt: nbtDraft, opaqueNbt: nbtDraft.entries.length ? undefined : cell.opaqueNbt } : cell)));
+    if (editing.kind === 'output') {
+      setOutputAmount(nextAmount);
+      setOutputNbt(nbtDraft);
+      if (nbtDraft.entries.length) setOutputOpaqueNbt(undefined);
+    } else {
+      setGrid((current) => current.map((line, r) => line.map((cell, c) => r === editing.row && c === editing.col && cell ? { ...cell, amount: nextAmount, nbt: nbtDraft, opaqueNbt: nbtDraft.entries.length ? undefined : cell.opaqueNbt } : cell)));
+    }
     setEditing(null);
     setNbtOpen(false);
   }
 
-  function clearCell() {
+  function clearEditingTarget() {
     if (!editing) return;
-    setGrid((current) => current.map((line, r) => line.map((cell, c) => r === editing.row && c === editing.col ? null : cell)));
+    if (editing.kind === 'output') clearOutput();
+    else clearGridCell(editing.row, editing.col);
     setEditing(null);
     setNbtOpen(false);
   }
 
   const sameOutputIndexes = fileRecipes.map((recipe, index) => recipe.output === outputRaw ? index : -1).filter((index) => index >= 0);
   const selectedMatchesOutput = selectedRecipeIndex !== null && fileRecipes[selectedRecipeIndex]?.output === outputRaw;
-  const source = useMemo(() => serializeRecipe(group, outputRaw, grid), [group, outputRaw, grid]);
+  const source = useMemo(() => serializeRecipe(group, outputRaw, grid, outputAmount, outputNbt, outputOpaqueNbt), [group, outputRaw, grid, outputAmount, outputNbt, outputOpaqueNbt]);
   const editorColumns = fileRecipes.length > 0
     ? (mobile ? '280px minmax(500px, 1fr) 360px' : '300px minmax(660px, 1fr) 360px')
     : (mobile ? 'minmax(500px, 1fr) 360px' : 'minmax(660px, 1fr) 360px');
 
+  const editingOpaqueNbt = editing?.kind === 'output'
+    ? outputOpaqueNbt
+    : editing?.kind === 'grid'
+      ? grid[editing.row]?.[editing.col]?.opaqueNbt
+      : undefined;
+
   return (
-    <main className="app-shell" style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1700, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
+    <main className="app-shell" onClick={() => { if (heldRaw) setHeldRaw(null); }} style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1700, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
         <a className="ghost-button" href={window.location.pathname}>← Крафты</a>
         <h1 style={{ margin: 0, fontSize: mobile ? 24 : 26 }}>CubixCraft</h1>
@@ -613,7 +675,6 @@ export function CubixCraftWorkspace() {
                 </>
               )}
             </div>
-            <button type="button" className="ghost-button" onClick={() => setHeldRaw(null)} style={{ whiteSpace: 'nowrap' }}>Отпустить предмет</button>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: mobile ? 16 : 24, overflow: 'auto', padding: '4px 0 2px' }}>
@@ -627,10 +688,14 @@ export function CubixCraftWorkspace() {
                         key={`${rowIndex}-${colIndex}`}
                         className={`grid-cell size-9 ${colIndex > 0 && colIndex % 3 === 0 ? 'group-col-start' : ''} ${cell ? 'is-filled' : 'is-empty'}`}
                         style={{ width: iconSurface.cell, height: iconSurface.cell, minWidth: iconSurface.cell, minHeight: iconSurface.cell, position: 'relative' }}
-                        onClick={() => heldRaw && place(rowIndex, colIndex, heldRaw)}
-                        onContextMenu={(event) => { event.preventDefault(); openCellEditor(rowIndex, colIndex); }}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (heldRaw) place(rowIndex, colIndex, heldRaw);
+                          else if (cell) clearGridCell(rowIndex, colIndex);
+                        }}
+                        onContextMenu={(event) => { event.preventDefault(); event.stopPropagation(); openCellEditor(rowIndex, colIndex); }}
                         onDragOver={(event) => event.preventDefault()}
-                        onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }}
+                        onDrop={(event) => { event.preventDefault(); event.stopPropagation(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }}
                         title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount.toLocaleString('ru-RU')}` : 'Пустая ячейка'}
                       >
                         <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
@@ -663,24 +728,45 @@ export function CubixCraftWorkspace() {
                 <div
                   className={`grid-cell ${outputRaw ? 'is-filled' : 'is-empty'}`}
                   style={{ width: outputSurface.cell, height: outputSurface.cell, minWidth: outputSurface.cell, minHeight: outputSurface.cell, position: 'relative', cursor: heldRaw ? 'copy' : 'default' }}
-                  onClick={() => { if (heldRaw) setOutputRaw(heldRaw); }}
-                  onContextMenu={(event) => { event.preventDefault(); setOutputRaw(''); }}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (heldRaw) {
+                      setOutputRaw(heldRaw);
+                      setOutputAmount(1);
+                      setOutputNbt(emptyNbt());
+                      setOutputOpaqueNbt(undefined);
+                    } else if (outputRaw) {
+                      clearOutput();
+                    }
+                  }}
+                  onContextMenu={(event) => { event.preventDefault(); event.stopPropagation(); openOutputEditor(); }}
                   onDragOver={(event) => event.preventDefault()}
-                  onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) setOutputRaw(raw); }}
-                  title={outputRaw ? `${catalogByRaw.get(outputRaw)?.display_ru || catalogByRaw.get(outputRaw)?.display_en || outputRaw}\nПКМ — очистить` : 'Выберите предмет в NEI и нажмите сюда'}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const raw = event.dataTransfer.getData('text/plain');
+                    if (raw) {
+                      setOutputRaw(raw);
+                      setOutputAmount(1);
+                      setOutputNbt(emptyNbt());
+                      setOutputOpaqueNbt(undefined);
+                    }
+                  }}
+                  title={outputRaw ? `${catalogByRaw.get(outputRaw)?.display_ru || catalogByRaw.get(outputRaw)?.display_en || outputRaw} × ${outputAmount.toLocaleString('ru-RU')}\nПКМ — количество/NBT` : 'Выберите предмет в NEI и нажмите сюда'}
                 >
                   <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
                     <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
                       {outputRaw ? itemVisual(outputRaw, outputSurface) : null}
                     </div>
                   </div>
+                  {outputRaw ? <span className="cubixcraft-amount" title={outputAmount.toLocaleString('ru-RU')} style={{ position: 'absolute', right: 2, bottom: 1, zIndex: 20, pointerEvents: 'none', fontSize: 10, fontWeight: 800, color: '#fff', textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 2px #000' }}>{compactAmount(outputAmount)}</span> : null}
                 </div>
                 <span style={{ maxWidth: 150, fontSize: 10, opacity: 0.55, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{outputRaw || 'пусто'}</span>
               </div>
             </div>
           </div>
 
-          <p style={{ opacity: 0.65, margin: '8px 0 6px', fontSize: 12 }}>ЛКМ по NEI — взять предмет · ЛКМ по ячейке/результату — поставить · ПКМ по ячейке — количество/NBT · ПКМ по результату — очистить</p>
+          <p style={{ opacity: 0.65, margin: '8px 0 6px', fontSize: 12 }}>ЛКМ по NEI — взять предмет · ЛКМ с предметом по ячейке/результату — поставить · ЛКМ без предмета по заполненной ячейке — очистить · ПКМ — количество/NBT · клик вне ячеек — отпустить предмет</p>
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 8, marginTop: 4 }}>
             <button type="button" className="ghost-button" onClick={() => setSourceOpen((value) => !value)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -695,7 +781,7 @@ export function CubixCraftWorkspace() {
           </div>
         </section>
 
-        <aside className="panel" style={{ padding: 10, position: 'sticky', top: 8, maxHeight: 'calc(100vh - 110px)', minWidth: 0 }}>
+        <aside className="panel" onClick={() => { if (heldRaw) setHeldRaw(null); }} style={{ padding: 10, position: 'sticky', top: 8, maxHeight: 'calc(100vh - 110px)', minWidth: 0 }}>
           <input aria-label="cubixcraft-nei-search" placeholder="Поиск NEI" value={search} onChange={(event) => setSearch(event.target.value)} style={{ width: '100%', marginBottom: 8 }} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, minmax(34px, 1fr))', gap: 4, maxHeight: 'calc(100vh - 190px)', overflow: 'auto', paddingRight: 2 }}>
             {visibleItems.map((item) => {
@@ -708,7 +794,11 @@ export function CubixCraftWorkspace() {
                   draggable
                   title={`${item.display_ru || item.display_en || item.raw}\n${item.raw}`}
                   onDragStart={(event) => event.dataTransfer.setData('text/plain', item.raw)}
-                  onClick={() => setHeldRaw(item.raw)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setCursorPos({ x: event.clientX, y: event.clientY });
+                    setHeldRaw((current) => current ? null : item.raw);
+                  }}
                   style={{ minWidth: 34, minHeight: 34, padding: 2, position: 'relative' }}
                 >
                   {style ? <span className="nei-atlas-icon" style={style} aria-hidden="true" /> : null}
@@ -722,18 +812,24 @@ export function CubixCraftWorkspace() {
         </aside>
       </div>
 
+      {heldRaw ? (
+        <div style={{ position: 'fixed', left: cursorPos.x + 12, top: cursorPos.y + 12, width: heldSurface.cell, height: heldSurface.cell, zIndex: 10000, pointerEvents: 'none', display: 'grid', placeItems: 'center' }}>
+          <div style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>{itemVisual(heldRaw, heldSurface)}</div>
+        </div>
+      ) : null}
+
       {editing ? (
-        <div className="modal-backdrop" role="presentation">
+        <div className="modal-backdrop" role="presentation" onClick={(event) => event.stopPropagation()}>
           <div className="modal-card" role="dialog" aria-modal="true" style={{ width: nbtOpen ? 'min(900px, 92vw)' : 420, maxHeight: '90vh', overflow: 'auto' }}>
-            <h2>Настройка ячейки</h2>
+            <h2>{editing.kind === 'output' ? 'Настройка результата' : 'Настройка ячейки'}</h2>
             {!nbtOpen ? (
               <>
                 <label>Количество<input autoFocus type="number" min={1} max={maxAmount} value={amountDraft} onChange={(event) => setAmountDraft(event.target.value)} style={{ width: '100%' }} /></label>
                 <small>Допустимо 1…{maxAmount.toLocaleString('ru-RU')}</small>
-                {editing && grid[editing.row]?.[editing.col]?.opaqueNbt ? <small style={{ display: 'block', marginTop: 6 }}>NBT из файла сохранён как есть. Если добавить NBT через редактор, он заменит исходный withTag.</small> : null}
+                {editingOpaqueNbt ? <small style={{ display: 'block', marginTop: 6 }}>NBT из файла сохранён как есть. Если добавить NBT через редактор, он заменит исходный withTag.</small> : null}
                 <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
                   <button type="button" className="ghost-button" onClick={() => setNbtOpen(true)}>Настроить NBT</button>
-                  <button type="button" className="ghost-button danger-lite-button" onClick={clearCell}>Удалить</button>
+                  <button type="button" className="ghost-button danger-lite-button" onClick={clearEditingTarget}>Удалить</button>
                   <button type="button" className="ghost-button" onClick={() => setEditing(null)}>Отмена</button>
                   <button type="button" className="primary-button" onClick={saveCell}>Сохранить</button>
                 </div>
