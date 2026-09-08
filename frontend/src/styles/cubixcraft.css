@@ -93,7 +93,7 @@ input[placeholder='Поиск рецепта'] ~ div > div > div {
 input[placeholder='Поиск рецепта'] ~ div > div > div > div {
   position: relative !important;
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 30px !important;
+  grid-template-columns: minmax(0, 1fr) 30px 30px !important;
   gap: 4px !important;
   width: 100% !important;
   min-height: 38px !important;
@@ -123,6 +123,20 @@ input[placeholder='Поиск рецепта'] ~ div > div > div > div > button 
   white-space: normal !important;
   overflow: hidden !important;
   background: #111f33 !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div > .cubixcraft-delete-variant {
+  padding: 0 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  color: #ff8f8f !important;
+  border-color: rgba(255, 95, 95, .35) !important;
+  cursor: pointer !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div > .cubixcraft-delete-variant:hover {
+  background: rgba(180, 45, 45, .35) !important;
+  color: #fff !important;
 }
 
 input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scrollbar {
