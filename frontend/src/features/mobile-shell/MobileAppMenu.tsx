@@ -23,6 +23,14 @@ interface MobileAppMenuProps {
   editorTools?: ReactNode;
 }
 
+function setCubixCraftWorkspace(active: boolean) {
+  const url = new URL(window.location.href);
+  if (active) url.searchParams.set('workspace', 'cubixcraft');
+  else url.searchParams.delete('workspace');
+  window.history.pushState({}, '', url.toString());
+  window.dispatchEvent(new CustomEvent('cubixcraft-workspace-change', { detail: { active } }));
+}
+
 export function MobileAppMenu({
   appName,
   userEmail,
@@ -41,14 +49,15 @@ export function MobileAppMenu({
   editorTools
 }: MobileAppMenuProps) {
   const [open, setOpen] = useState(false);
+  const cubixCraftActive = new URLSearchParams(window.location.search).get('workspace') === 'cubixcraft';
 
   const handleSelectTab = (tabId: string) => {
     if (tabId === 'cubixcraft') {
-      const url = new URL(window.location.href);
-      url.searchParams.set('workspace', 'cubixcraft');
-      window.location.assign(url.toString());
+      setCubixCraftWorkspace(true);
+      setOpen(false);
       return;
     }
+    if (cubixCraftActive) setCubixCraftWorkspace(false);
     onSelectTab(tabId);
     setOpen(false);
   };
@@ -85,16 +94,19 @@ export function MobileAppMenu({
           <section className="mobile-menu-section">
             <span className="mobile-menu-section-title">Разделы</span>
             <div className="mobile-menu-items">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  className={`mobile-menu-item ${activeTab === tab.id ? 'active' : ''}`.trim()}
-                  onClick={() => handleSelectTab(tab.id)}
-                >
-                  <span>{tab.label}</span>
-                </button>
-              ))}
+              {tabs.map((tab) => {
+                const active = tab.id === 'cubixcraft' ? cubixCraftActive : (!cubixCraftActive && activeTab === tab.id);
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    className={`mobile-menu-item ${active ? 'active' : ''}`.trim()}
+                    onClick={() => handleSelectTab(tab.id)}
+                  >
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </section>
 
