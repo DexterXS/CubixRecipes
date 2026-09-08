@@ -30,15 +30,23 @@ type EditingCell = { row: number; col: number } | null;
 
 type ParsedCubixRecipe = {
   start: number;
+  callStart: number;
   end: number;
   group: string;
   output: string;
   grid: Array<Array<CubixCell | null>>;
+  preferred: boolean;
+};
+
+type RecipeGroup = {
+  output: string;
+  indexes: number[];
 };
 
 const GRID_SIZE = 9;
 const DEFAULT_MAX_AMOUNT = 1_000_000;
 const CALL_PREFIX = 'mods.cubixcraft.Astral.addRecipe';
+const PREFERRED_MARKER = '// CubixRecipes:preferred';
 const GROUP_OPTIONS = ['', 'common', 'resonant', 'chaos'];
 const emptyNbt = (): NbtCompoundNode => ({ kind: 'compound', entries: [] });
 const emptyGrid = (): Array<Array<CubixCell | null>> => Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => null));
@@ -133,13 +141,23 @@ function parseGroup(text: string): string {
   }
 }
 
+function preferredStart(text: string, callStart: number): { start: number; preferred: boolean } {
+  const currentLineStart = text.lastIndexOf('\n', Math.max(0, callStart - 1)) + 1;
+  const previousLineEnd = currentLineStart > 0 ? currentLineStart - 1 : 0;
+  const previousLineStart = previousLineEnd > 0 ? text.lastIndexOf('\n', previousLineEnd - 1) + 1 : 0;
+  const previousLine = text.slice(previousLineStart, previousLineEnd).trim();
+  return previousLine === PREFERRED_MARKER
+    ? { start: previousLineStart, preferred: true }
+    : { start: callStart, preferred: false };
+}
+
 function parseCubixRecipes(text: string): ParsedCubixRecipe[] {
   const recipes: ParsedCubixRecipe[] = [];
   let cursor = 0;
   while (cursor < text.length) {
-    const start = text.indexOf(CALL_PREFIX, cursor);
-    if (start < 0) break;
-    const open = text.indexOf('(', start + CALL_PREFIX.length);
+    const callStart = text.indexOf(CALL_PREFIX, cursor);
+    if (callStart < 0) break;
+    const open = text.indexOf('(', callStart + CALL_PREFIX.length);
     if (open < 0) break;
     const close = findMatchingParen(text, open);
     if (close < 0) break;
@@ -148,7 +166,16 @@ function parseCubixRecipes(text: string): ParsedCubixRecipe[] {
       let end = close + 1;
       while (end < text.length && /\s/.test(text[end])) end += 1;
       if (text[end] === ';') end += 1;
-      recipes.push({ start, end, group: parseGroup(args[0]), output: args[1].trim(), grid: parseGrid(args[2]) });
+      const marker = preferredStart(text, callStart);
+      recipes.push({
+        start: marker.start,
+        callStart,
+        end,
+        group: parseGroup(args[0]),
+        output: args[1].trim(),
+        grid: parseGrid(args[2]),
+        preferred: marker.preferred
+      });
     }
     cursor = close + 1;
   }
@@ -191,6 +218,10 @@ function serializeRecipe(group: string, output: string, grid: Array<Array<CubixC
   return `mods.cubixcraft.Astral.addRecipe(${JSON.stringify(group)}, ${output || 'null'},\n    [\n${rows.join(',\n')}\n    ]);`;
 }
 
+function serializeParsedRecipe(recipe: ParsedCubixRecipe, preferred = recipe.preferred): string {
+  return `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(recipe.group, recipe.output, recipe.grid)}`;
+}
+
 function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurfaceSettings): CSSProperties | undefined {
   if (!base) return undefined;
   const scale = settings.icon / 32;
@@ -209,6 +240,21 @@ function positionedIconStyle(base: CSSProperties | undefined, settings: IconSurf
     transform: centered ? `translate(-50%, -50%) scale(${scale})` : `scale(${scale})`,
     transformOrigin: 'center'
   };
+}
+
+function compactAmount(value: number): string {
+  const units = [
+    { value: 1e15, suffix: 'P' },
+    { value: 1e12, suffix: 'T' },
+    { value: 1e9, suffix: 'G' },
+    { value: 1e6, suffix: 'M' },
+    { value: 1e3, suffix: 'k' }
+  ];
+  const unit = units.find((entry) => value >= entry.value);
+  if (!unit) return String(value);
+  const scaled = value / unit.value;
+  const rounded = scaled >= 100 ? Math.round(scaled) : scaled >= 10 ? Math.round(scaled * 10) / 10 : Math.round(scaled * 100) / 100;
+  return `${String(rounded).replace(/\.0+$/, '')}${unit.suffix}`;
 }
 
 function downloadText(filename: string, text: string) {
@@ -250,6 +296,7 @@ export function CubixCraftWorkspace() {
   const [fileRecipes, setFileRecipes] = useState<ParsedCubixRecipe[]>([]);
   const [selectedRecipeIndex, setSelectedRecipeIndex] = useState<number | null>(null);
   const [sourceOpen, setSourceOpen] = useState(false);
+  const [expandedOutputs, setExpandedOutputs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     Promise.all([getItemCatalog(), getItemPanelAtlas(), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
@@ -280,13 +327,22 @@ export function CubixCraftWorkspace() {
 
   const catalogByRaw = useMemo(() => new Map(catalog.map((item) => [item.raw, item])), [catalog]);
 
-  const visibleRecipes = useMemo(() => {
-    const query = recipeSearch.trim().toLowerCase();
-    return fileRecipes.map((recipe, index) => ({ recipe, index })).filter(({ recipe, index }) => {
-      if (!query) return true;
-      const item = catalogByRaw.get(recipe.output);
-      return `${index + 1} ${recipe.group} ${recipe.output} ${item?.display_ru ?? ''} ${item?.display_en ?? ''}`.toLowerCase().includes(query);
+  const recipeGroups = useMemo<RecipeGroup[]>(() => {
+    const map = new Map<string, number[]>();
+    fileRecipes.forEach((recipe, index) => {
+      const list = map.get(recipe.output) ?? [];
+      list.push(index);
+      map.set(recipe.output, list);
     });
+    const query = recipeSearch.trim().toLowerCase();
+    return Array.from(map.entries())
+      .map(([output, indexes]) => ({ output, indexes }))
+      .filter(({ output, indexes }) => {
+        if (!query) return true;
+        const item = catalogByRaw.get(output);
+        const groups = indexes.map((index) => fileRecipes[index]?.group ?? '').join(' ');
+        return `${output} ${item?.display_ru ?? ''} ${item?.display_en ?? ''} ${groups}`.toLowerCase().includes(query);
+      });
   }, [catalogByRaw, fileRecipes, recipeSearch]);
 
   const atlasIndex = useMemo(() => {
@@ -323,8 +379,19 @@ export function CubixCraftWorkspace() {
     setFileRecipes(recipes);
     setSelectedRecipeIndex(null);
     setRecipeSearch('');
+    const expanded: Record<string, boolean> = {};
+    recipes.forEach((recipe) => { if (recipes.filter((entry) => entry.output === recipe.output).length > 1) expanded[recipe.output] = true; });
+    setExpandedOutputs(expanded);
     setStatus(`Загружено рецептов CubixCraft: ${recipes.length}`);
     if (recipes.length > 0) selectRecipe(recipes, 0);
+  }
+
+  function refreshDocument(nextText: string, selectIndex: number | null = selectedRecipeIndex) {
+    const reparsed = parseCubixRecipes(nextText);
+    setFileText(nextText);
+    setFileRecipes(reparsed);
+    if (selectIndex !== null && reparsed[selectIndex]) selectRecipe(reparsed, selectIndex);
+    return reparsed;
   }
 
   function selectRecipe(recipes: ParsedCubixRecipe[], index: number) {
@@ -334,6 +401,7 @@ export function CubixCraftWorkspace() {
     setGroup(recipe.group);
     setOutputRaw(recipe.output);
     setGrid(recipe.grid);
+    setExpandedOutputs((current) => ({ ...current, [recipe.output]: true }));
   }
 
   async function handleLocalFile(event: ChangeEvent<HTMLInputElement>) {
@@ -354,31 +422,60 @@ export function CubixCraftWorkspace() {
     }
   }
 
-  function applyRecipeToDocument(): string | null {
-    if (selectedRecipeIndex === null || !fileText) return null;
+  function replaceSelectedRecipe(): string | null {
+    if (selectedRecipeIndex === null || !fileText || !outputRaw.trim()) return null;
+    const parsed = parseCubixRecipes(fileText);
+    const target = parsed[selectedRecipeIndex];
+    if (!target) return null;
+    const keepPreferred = target.preferred && target.output === outputRaw;
+    const nextRecipe = `${keepPreferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid)}`;
+    const nextText = `${fileText.slice(0, target.start)}${nextRecipe}${fileText.slice(target.end)}`;
+    refreshDocument(nextText, selectedRecipeIndex);
+    setStatus('Существующий вариант заменён.');
+    return nextText;
+  }
+
+  function appendVariant(preferred = false): string | null {
     if (!outputRaw.trim()) {
       setStatus('Сначала выберите результат рецепта.');
       return null;
     }
-    const parsed = parseCubixRecipes(fileText);
-    const target = parsed[selectedRecipeIndex];
-    if (!target) return null;
-    const nextText = `${fileText.slice(0, target.start)}${serializeRecipe(group, outputRaw, grid)}${fileText.slice(target.end)}`;
-    const reparsed = parseCubixRecipes(nextText);
-    setFileText(nextText);
-    setFileRecipes(reparsed);
-    if (reparsed[selectedRecipeIndex]) selectRecipe(reparsed, selectedRecipeIndex);
-    setStatus('Рецепт применён к файлу.');
+    const base = fileText.trimEnd();
+    const recipeText = `${preferred ? `${PREFERRED_MARKER}\n` : ''}${serializeRecipe(group, outputRaw, grid)}`;
+    const nextText = `${base}${base ? '\n\n' : ''}${recipeText}\n`;
+    const reparsed = refreshDocument(nextText, parseCubixRecipes(nextText).length - 1);
+    setFileName((current) => current || 'CubixCraft_Recipes.zs');
+    setExpandedOutputs((current) => ({ ...current, [outputRaw]: true }));
+    setStatus(reparsed.filter((entry) => entry.output === outputRaw).length > 1 ? 'Запасной вариант сохранён.' : 'Рецепт сохранён.');
     return nextText;
   }
 
+  function markPreferred(index: number) {
+    const parsed = parseCubixRecipes(fileText);
+    const target = parsed[index];
+    if (!target) return;
+    let nextText = fileText;
+    const siblings = parsed
+      .map((recipe, recipeIndex) => ({ recipe, recipeIndex }))
+      .filter(({ recipe }) => recipe.output === target.output)
+      .sort((a, b) => b.recipe.start - a.recipe.start);
+
+    siblings.forEach(({ recipe, recipeIndex }) => {
+      const replacement = serializeParsedRecipe(recipe, recipeIndex === index);
+      nextText = `${nextText.slice(0, recipe.start)}${replacement}${nextText.slice(recipe.end)}`;
+    });
+
+    const reparsed = parseCubixRecipes(nextText);
+    const nextIndex = reparsed.findIndex((recipe, recipeIndex) => recipeIndex === index && recipe.output === target.output);
+    refreshDocument(nextText, nextIndex >= 0 ? nextIndex : index);
+    setStatus('Основной вариант отмечен звёздочкой.');
+  }
+
   async function saveCloud() {
-    if (!activeCloudPath) return;
-    const nextText = applyRecipeToDocument() ?? fileText;
-    if (!nextText) return;
+    if (!activeCloudPath || !fileText) return;
     setStatus('Сохранение в облако…');
     try {
-      const result = await uploadZsCloudFile(activeCloudPath, nextText, 'overwrite');
+      const result = await uploadZsCloudFile(activeCloudPath, fileText, 'overwrite');
       setCloudFiles(result.files ?? cloudFiles);
       setStatus('Файл сохранён в облако.');
     } catch (error) {
@@ -414,13 +511,15 @@ export function CubixCraftWorkspace() {
     setNbtOpen(false);
   }
 
+  const sameOutputIndexes = fileRecipes.map((recipe, index) => recipe.output === outputRaw ? index : -1).filter((index) => index >= 0);
+  const selectedMatchesOutput = selectedRecipeIndex !== null && fileRecipes[selectedRecipeIndex]?.output === outputRaw;
   const source = useMemo(() => serializeRecipe(group, outputRaw, grid), [group, outputRaw, grid]);
   const editorColumns = fileRecipes.length > 0
-    ? (mobile ? '260px minmax(500px, 1fr) 360px' : '260px minmax(660px, 1fr) 360px')
+    ? (mobile ? '280px minmax(500px, 1fr) 360px' : '300px minmax(660px, 1fr) 360px')
     : (mobile ? 'minmax(500px, 1fr) 360px' : 'minmax(660px, 1fr) 360px');
 
   return (
-    <main className="app-shell" style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1660, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
+    <main className="app-shell" style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1700, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
         <a className="ghost-button" href={window.location.pathname}>← Крафты</a>
         <h1 style={{ margin: 0, fontSize: mobile ? 24 : 26 }}>CubixCraft</h1>
@@ -443,43 +542,77 @@ export function CubixCraftWorkspace() {
             {cloudFiles.filter((file) => file.name.toLowerCase().endsWith('.zs')).map((file) => <option key={file.path} value={file.path}>{file.name}</option>)}
           </select>
           <button type="button" className="ghost-button" disabled={!cloudSelection} onClick={() => void openCloudFile()}>Открыть</button>
-          <button type="button" className="primary-button" disabled={selectedRecipeIndex === null || !fileText || !outputRaw} onClick={applyRecipeToDocument}>Применить</button>
           {activeCloudPath ? <button type="button" className="primary-button" onClick={() => void saveCloud()}>Сохранить в облако</button> : null}
-          {fileText ? <button type="button" className="ghost-button" onClick={() => downloadText(fileName, applyRecipeToDocument() ?? fileText)}>Скачать .zs</button> : null}
+          {fileText ? <button type="button" className="ghost-button" onClick={() => downloadText(fileName || 'CubixCraft_Recipes.zs', fileText)}>Скачать .zs</button> : null}
         </div>
-        <div style={{ marginTop: 6, opacity: 0.72, fontSize: 12 }}>{fileName ? `${fileName} · ${fileRecipes.length} рецептов` : 'Файл не выбран'}{status ? ` · ${status}` : ''}</div>
+        <div style={{ marginTop: 6, opacity: 0.72, fontSize: 12 }}>{fileName ? `${fileName} · ${fileRecipes.length} рецептов` : 'Новый файл'}{status ? ` · ${status}` : ''}</div>
       </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: editorColumns, gap: 12, alignItems: 'start' }}>
         {fileRecipes.length > 0 ? (
           <aside className="panel" style={{ padding: 10, position: 'sticky', top: 8, maxHeight: 'calc(100vh - 110px)', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-              <strong>Рецепты</strong><span style={{ opacity: 0.65, fontSize: 12 }}>{visibleRecipes.length}/{fileRecipes.length}</span>
+              <strong>Рецепты</strong><span style={{ opacity: 0.65, fontSize: 12 }}>{recipeGroups.length} предметов</span>
             </div>
             <input value={recipeSearch} onChange={(event) => setRecipeSearch(event.target.value)} placeholder="Поиск рецепта" style={{ width: '100%', marginBottom: 8 }} />
             <div style={{ display: 'grid', gap: 6, maxHeight: 'calc(100vh - 190px)', overflowY: 'auto', paddingRight: 3 }}>
-              {visibleRecipes.map(({ recipe, index }) => {
-                const item = catalogByRaw.get(recipe.output);
-                const selected = selectedRecipeIndex === index;
-                const label = item?.display_ru || item?.display_en || recipe.output;
+              {recipeGroups.map(({ output, indexes }, groupIndex) => {
+                const item = catalogByRaw.get(output);
+                const label = item?.display_ru || item?.display_en || output;
+                const expanded = indexes.length > 1 && (expandedOutputs[output] ?? false);
+                const preferred = indexes.find((index) => fileRecipes[index]?.preferred);
                 return (
-                  <button key={`${recipe.start}-${index}`} type="button" onClick={() => selectRecipe(fileRecipes, index)} title={`${recipe.group}\n${recipe.output}`} style={{ width: '100%', display: 'grid', gridTemplateColumns: '38px minmax(0,1fr)', gap: 8, alignItems: 'center', textAlign: 'left', padding: 7, borderRadius: 8, border: selected ? '1px solid #4da3ff' : '1px solid rgba(255,255,255,.1)', background: selected ? 'rgba(45,126,247,.22)' : 'rgba(255,255,255,.025)', color: 'inherit', cursor: 'pointer' }}>
-                    <span style={{ width: 36, height: 36, position: 'relative', display: 'grid', placeItems: 'center', overflow: 'hidden', borderRadius: 6, background: 'rgba(255,255,255,.06)' }}>{itemVisual(recipe.output, { ...outputSurface, cell: 36, icon: 28 })}</span>
-                    <span style={{ minWidth: 0 }}>
-                      <strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: 13 }}>{index + 1}. {label}</strong>
-                      <span style={{ display: 'block', fontSize: 11, opacity: 0.7 }}>{recipe.group || 'без группы'}</span>
-                      <code style={{ display: 'block', fontSize: 9, opacity: 0.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{recipe.output}</code>
-                    </span>
-                  </button>
+                  <div key={output} style={{ border: '1px solid rgba(255,255,255,.1)', borderRadius: 8, overflow: 'hidden', background: 'rgba(255,255,255,.025)' }}>
+                    <button
+                      type="button"
+                      onClick={() => indexes.length === 1 ? selectRecipe(fileRecipes, indexes[0]) : setExpandedOutputs((current) => ({ ...current, [output]: !expanded }))}
+                      style={{ width: '100%', display: 'grid', gridTemplateColumns: '38px minmax(0,1fr) auto', gap: 8, alignItems: 'center', textAlign: 'left', padding: 7, border: 0, borderRadius: 0, background: indexes.some((index) => index === selectedRecipeIndex) ? 'rgba(45,126,247,.18)' : 'transparent', color: 'inherit', cursor: 'pointer' }}
+                    >
+                      <span style={{ width: 36, height: 36, position: 'relative', display: 'grid', placeItems: 'center', overflow: 'hidden', borderRadius: 6, background: 'rgba(255,255,255,.06)' }}>{itemVisual(output, { ...outputSurface, cell: 36, icon: 28 })}</span>
+                      <span style={{ minWidth: 0 }}>
+                        <strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: 13 }}>{groupIndex + 1}. {label}</strong>
+                        <span style={{ display: 'block', fontSize: 11, opacity: 0.68 }}>{indexes.length === 1 ? '1 рецепт' : `${indexes.length} вариантов`}{preferred !== undefined ? ' · ★ выбран' : ''}</span>
+                      </span>
+                      <span style={{ opacity: 0.65 }}>{indexes.length > 1 ? (expanded ? '▾' : '▸') : ''}</span>
+                    </button>
+
+                    {expanded ? (
+                      <div style={{ display: 'grid', gap: 4, padding: '0 6px 6px 46px' }}>
+                        {indexes.map((index, variantIndex) => {
+                          const recipe = fileRecipes[index];
+                          const selected = selectedRecipeIndex === index;
+                          return (
+                            <div key={`${recipe.start}-${index}`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 30px', gap: 4 }}>
+                              <button type="button" className="ghost-button" onClick={() => selectRecipe(fileRecipes, index)} style={{ textAlign: 'left', padding: '6px 8px', borderColor: selected ? '#4da3ff' : undefined, background: selected ? 'rgba(45,126,247,.18)' : undefined }}>
+                                <strong style={{ fontSize: 12 }}>Вариант {variantIndex + 1}</strong>
+                                <span style={{ display: 'block', fontSize: 10, opacity: 0.68 }}>{recipe.group || 'без группы'}</span>
+                              </button>
+                              <button type="button" className="ghost-button" title={recipe.preferred ? 'Основной вариант' : 'Сделать основным'} onClick={() => markPreferred(index)} style={{ padding: 0, fontSize: 18, color: recipe.preferred ? '#ffd34d' : 'inherit' }}>{recipe.preferred ? '★' : '☆'}</button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
                 );
               })}
-              {visibleRecipes.length === 0 ? <div style={{ opacity: 0.65, padding: 10 }}>Ничего не найдено</div> : null}
+              {recipeGroups.length === 0 ? <div style={{ opacity: 0.65, padding: 10 }}>Ничего не найдено</div> : null}
             </div>
           </aside>
         ) : null}
 
         <section className="panel" style={{ padding: 12, minWidth: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {sameOutputIndexes.length === 0 ? (
+                <button type="button" className="primary-button" disabled={!outputRaw} onClick={() => appendVariant(true)}>Сохранить рецепт</button>
+              ) : (
+                <>
+                  <button type="button" className="primary-button" disabled={!selectedMatchesOutput} onClick={replaceSelectedRecipe}>Заменить существующий</button>
+                  <button type="button" className="ghost-button" disabled={!outputRaw} onClick={() => appendVariant(false)}>Сохранить как запасной вариант</button>
+                </>
+              )}
+            </div>
             <button type="button" className="ghost-button" onClick={() => setHeldRaw(null)} style={{ whiteSpace: 'nowrap' }}>Отпустить предмет</button>
           </div>
 
@@ -498,14 +631,14 @@ export function CubixCraftWorkspace() {
                         onContextMenu={(event) => { event.preventDefault(); openCellEditor(rowIndex, colIndex); }}
                         onDragOver={(event) => event.preventDefault()}
                         onDrop={(event) => { event.preventDefault(); const raw = event.dataTransfer.getData('text/plain'); if (raw) place(rowIndex, colIndex, raw); }}
-                        title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount}` : 'Пустая ячейка'}
+                        title={cell ? `${catalogItem?.display_ru || cell.raw} × ${cell.amount.toLocaleString('ru-RU')}` : 'Пустая ячейка'}
                       >
                         <div className="cell-visual" style={{ width: '100%', height: '100%' }}>
                           <div className="cell-icon-slot" style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
                             {cell ? itemVisual(cell.raw, iconSurface) : null}
                           </div>
                         </div>
-                        {cell ? <span style={{ position: 'absolute', right: 2, bottom: 1, fontSize: 10, fontWeight: 700, textShadow: '0 1px 2px #000' }}>{cell.amount.toLocaleString('ru-RU')}</span> : null}
+                        {cell ? <span className="cubixcraft-amount" title={cell.amount.toLocaleString('ru-RU')} style={{ position: 'absolute', right: 2, bottom: 1, zIndex: 20, pointerEvents: 'none', fontSize: 10, fontWeight: 800, color: '#fff', textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 2px #000' }}>{compactAmount(cell.amount)}</span> : null}
                       </div>
                     );
                   })}
