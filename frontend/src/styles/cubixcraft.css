@@ -69,7 +69,7 @@ input[placeholder='Поиск рецепта'] ~ div > div > button > span:nth-c
   transform: none !important;
 }
 
-/* Expanded variants are a real block below the recipe header. */
+/* Expanded variants: opaque panel, bounded height, independent scrolling. */
 input[placeholder='Поиск рецепта'] ~ div > div > div {
   position: relative !important;
   display: grid !important;
@@ -77,11 +77,17 @@ input[placeholder='Поиск рецепта'] ~ div > div > div {
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  max-height: none !important;
+  max-height: 220px !important;
+  padding: 6px !important;
   visibility: visible !important;
   opacity: 1 !important;
-  overflow: visible !important;
-  z-index: 2 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  z-index: 20 !important;
+  background: #0f1a2b !important;
+  border-top: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 0 0 8px 8px !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.30) !important;
 }
 
 input[placeholder='Поиск рецепта'] ~ div > div > div > div {
@@ -97,6 +103,13 @@ input[placeholder='Поиск рецепта'] ~ div > div > div > div {
   opacity: 1 !important;
   overflow: visible !important;
   align-items: stretch !important;
+  background: #111f33 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 7px !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div > div + div {
+  margin-top: 4px !important;
 }
 
 input[placeholder='Поиск рецепта'] ~ div > div > div > div > button {
@@ -109,4 +122,14 @@ input[placeholder='Поиск рецепта'] ~ div > div > div > div > button 
   opacity: 1 !important;
   white-space: normal !important;
   overflow: hidden !important;
+  background: #111f33 !important;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scrollbar {
+  width: 8px;
+}
+
+input[placeholder='Поиск рецепта'] ~ div > div > div::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.22);
+  border-radius: 999px;
 }
