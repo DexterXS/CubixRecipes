@@ -1,3 +1,4 @@
+import { apiPath, request } from '../../services/api/client';
 import { downloadZsCloudFile, uploadZsCloudFile } from '../../services/api';
 
 const CALL_PREFIX = 'mods.cubixcraft.Astral.addRecipe';
@@ -129,8 +130,22 @@ function recipeBlocks(text: string): RecipeBlock[] {
   return blocks;
 }
 
-async function deleteVariant(row: HTMLElement, wrapper: HTMLElement) {
-  const rows = Array.from(wrapper.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
+async function deleteServerVariant(row: HTMLElement) {
+  const variantId = row.dataset.cubixServerVariant || row.dataset.cubixVariantId;
+  if (!variantId) return;
+  if (!window.confirm('Удалить этот серверный вариант полностью?')) return;
+
+  try {
+    await request(apiPath(`/admin/cubixcraft-variants/${encodeURIComponent(variantId)}`), { method: 'DELETE' });
+    row.remove();
+    window.dispatchEvent(new CustomEvent('cubixcraft-server-state-changed'));
+  } catch (error) {
+    window.alert(`Не удалось удалить серверный вариант: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+async function deleteFileVariant(row: HTMLElement, wrapper: HTMLElement) {
+  const rows = Array.from(wrapper.children).filter((child): child is HTMLElement => child instanceof HTMLElement && !child.dataset.cubixServerVariant);
   const variantIndex = rows.indexOf(row);
   if (variantIndex < 0) return;
 
@@ -169,24 +184,31 @@ async function deleteVariant(row: HTMLElement, wrapper: HTMLElement) {
   }
 }
 
+function ensureDeleteButton(row: HTMLElement, wrapper: HTMLElement) {
+  const serverVariant = Boolean(row.dataset.cubixServerVariant);
+  const existing = row.querySelector<HTMLButtonElement>('.cubixcraft-delete-variant');
+  const button = existing ?? document.createElement('button');
+
+  if (button.dataset.cubixDeleteVariant === '1') return;
+  button.dataset.cubixDeleteVariant = '1';
+  button.type = 'button';
+  button.className = 'ghost-button cubixcraft-delete-variant';
+  button.title = serverVariant ? 'Удалить серверный вариант' : 'Удалить вариант';
+  button.textContent = '×';
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (serverVariant) void deleteServerVariant(row);
+    else void deleteFileVariant(row, wrapper);
+  });
+
+  if (!existing) row.appendChild(button);
+}
+
 function injectDeleteButtons() {
   variantWrappers().forEach((wrapper) => {
     const rows = Array.from(wrapper.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
-    rows.forEach((row) => {
-      if (row.querySelector('[data-cubix-delete-variant]')) return;
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.dataset.cubixDeleteVariant = '1';
-      button.className = 'ghost-button cubixcraft-delete-variant';
-      button.title = 'Удалить вариант';
-      button.textContent = '×';
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        void deleteVariant(row, wrapper);
-      });
-      row.appendChild(button);
-    });
+    rows.forEach((row) => ensureDeleteButton(row, wrapper));
   });
 }
 
