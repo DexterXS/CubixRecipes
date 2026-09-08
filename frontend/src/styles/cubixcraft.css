@@ -16,7 +16,8 @@
 input[placeholder='Поиск рецепта'] ~ div > div {
   min-height: 52px !important;
   height: auto !important;
-  overflow: hidden !important;
+  max-height: none !important;
+  overflow: visible !important;
   position: relative !important;
 }
 
@@ -68,26 +69,44 @@ input[placeholder='Поиск рецепта'] ~ div > div > button > span:nth-c
   transform: none !important;
 }
 
-/* Expanded variants must participate in normal flow instead of overlaying the next recipe. */
+/* Expanded variants are a real block below the recipe header. */
 input[placeholder='Поиск рецепта'] ~ div > div > div {
-  position: static !important;
-  width: auto !important;
+  position: relative !important;
+  display: grid !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   overflow: visible !important;
+  z-index: 2 !important;
 }
 
 input[placeholder='Поиск рецепта'] ~ div > div > div > div {
-  position: static !important;
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 30px !important;
+  gap: 4px !important;
+  width: 100% !important;
   min-height: 38px !important;
   height: auto !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
   align-items: stretch !important;
 }
 
 input[placeholder='Поиск рецепта'] ~ div > div > div > div > button {
-  position: static !important;
+  position: relative !important;
+  display: block !important;
   min-height: 38px !important;
   height: auto !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   white-space: normal !important;
   overflow: hidden !important;
 }
