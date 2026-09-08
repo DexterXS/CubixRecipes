@@ -10,10 +10,14 @@ export async function downloadZsCloudFile(path: string): Promise<{ blob: Blob; f
 }
 
 export async function uploadZsCloudFile(filename: string, text: string, mode: 'fail' | 'overwrite' | 'append' = 'fail'): Promise<{ ok: boolean; path: string; files: ZsCloudFile[] }> {
+  // The cloud list/download API exposes the full managed path, while the
+  // upload endpoint intentionally accepts only a file name inside scripts_dir.
+  // Normalize here so an opened cloud file can always be overwritten safely.
+  const normalizedFilename = filename.replace(/\\/g, '/').split('/').filter(Boolean).pop() || filename;
   return request<{ ok: boolean; path: string; files: ZsCloudFile[] }>(apiPath('/admin/zs-cloud/files/upload'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename, text, mode })
+    body: JSON.stringify({ filename: normalizedFilename, text, mode })
   });
 }
 
