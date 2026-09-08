@@ -43,9 +43,14 @@ function shouldSkip(payload: FrontendLogPayload): boolean {
 }
 
 function sendFrontendLog(payload: FrontendLogPayload, attempt: number): void {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  const activeServerId = window.localStorage.getItem('active_server_id');
+  if (activeServerId) headers['X-Server-Id'] = activeServerId;
+
   void fetch(apiPath('/debug/log'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    headers,
     body: JSON.stringify({
       source: payload.source ?? 'FRONTEND',
       level: payload.level ?? 'INFO',
@@ -54,6 +59,17 @@ function sendFrontendLog(payload: FrontendLogPayload, attempt: number): void {
       details: payload.details ?? {},
       verbose_only: payload.verbose_only ?? false
     })
+  }).then((response) => {
+    if (response.ok) return;
+    if (response.status === 401 || response.status === 403) {
+      debugEndpointMutedUntil = Date.now() + DEBUG_ENDPOINT_MUTE_MS;
+      return;
+    }
+    if (attempt < DEBUG_RETRY_DELAYS_MS.length) {
+      window.setTimeout(() => sendFrontendLog(payload, attempt + 1), DEBUG_RETRY_DELAYS_MS[attempt]);
+      return;
+    }
+    debugEndpointMutedUntil = Date.now() + DEBUG_ENDPOINT_MUTE_MS;
   }).catch(() => {
     if (attempt < DEBUG_RETRY_DELAYS_MS.length) {
       window.setTimeout(() => sendFrontendLog(payload, attempt + 1), DEBUG_RETRY_DELAYS_MS[attempt]);
