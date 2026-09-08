@@ -11,9 +11,11 @@ import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
+import { installCompactCubixAmounts } from './features/cubixcraft/compactAmountOverlay';
 import { AuthUser } from './types';
 
 installConsoleCapture();
+installCompactCubixAmounts();
 
 interface ServerGateProps {
   authUser: AuthUser;
