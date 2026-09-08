@@ -22,6 +22,15 @@ export function AppWorkspaceNav({ tabs, activeTab, onSelectTab }: AppWorkspaceNa
           <span className="app-workspace-nav-description">{tab.description}</span>
         </button>
       ))}
+      <a
+        href={`${window.location.pathname}?workspace=cubixcraft`}
+        data-testid="workspace-tab-cubixcraft"
+        aria-label="CubixCraft"
+        className="main-tab-button app-workspace-nav-button area-recipes"
+      >
+        <span className="app-workspace-nav-label">CubixCraft</span>
+        <span className="app-workspace-nav-description">9×9 · большие количества</span>
+      </a>
     </nav>
   );
 }
