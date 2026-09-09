@@ -38,11 +38,28 @@ export type PriceImportResult = {
   invalid: number; server_id: string; source_name: string; import_id: string; history?: PriceImportHistory;
 };
 
+const ECONOMY_RESTRICTION_FIELDS: PassportField[] = [
+  ['raw_server_price', 'Серверное значение (raw)', 'number'],
+  ['trade_allowed', 'Продажа разрешена', 'text'],
+  ['sale_restricted', 'Продажа запрещена', 'text'],
+  ['restriction_reason', 'Причина ограничения', 'textarea'],
+  ['market_price_eligible', 'Учитывать как рыночную цену', 'text'],
+  ['exclude_from_market_calculations', 'Исключить из расчётов рынка', 'text'],
+  ['price_source', 'Источник цены', 'text'],
+  ['price_updated_at', 'Цена обновлена', 'text'],
+];
+
 export async function getItemIntelligenceSummary(): Promise<ItemIntelligenceSummary> {
   return request(apiPath('/item-intelligence/summary'));
 }
 export async function getItemIntelligenceSchema(): Promise<{ groups: PassportGroup[] }> {
-  return request(apiPath('/item-intelligence/schema'));
+  const response = await request<{ groups: PassportGroup[] }>(apiPath('/item-intelligence/schema'));
+  const groups = (response.groups || []).map((group) => {
+    if (group.key !== 'economy') return group;
+    const existing = new Set(group.fields.map(([key]) => key));
+    return { ...group, fields: [...group.fields, ...ECONOMY_RESTRICTION_FIELDS.filter(([key]) => !existing.has(key))] };
+  });
+  return { groups };
 }
 export async function listItemIntelligence(): Promise<{ items: ItemIntelligenceRecord[] }> {
   return request(apiPath('/item-intelligence/items'));
