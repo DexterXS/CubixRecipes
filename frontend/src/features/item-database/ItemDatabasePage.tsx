@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+  bootstrapItemIntelligence,
   getItemCatalog,
   getItemIntelligenceSummary,
   listItemIntelligence,
@@ -48,6 +49,8 @@ export function ItemDatabasePage() {
   const [intelligenceItems, setIntelligenceItems] = useState<ItemIntelligenceRecord[]>([]);
   const [intelligenceSummary, setIntelligenceSummary] = useState<ItemIntelligenceSummary>(EMPTY_INTELLIGENCE_SUMMARY);
   const [intelligenceConnected, setIntelligenceConnected] = useState(false);
+  const [bootstrapState, setBootstrapState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
+  const [bootstrapProcessed, setBootstrapProcessed] = useState(0);
   const [query, setQuery] = useState('');
   const [modFilter, setModFilter] = useState('all');
   const [selected, setSelected] = useState<ItemCatalogEntry | null>(null);
@@ -56,18 +59,22 @@ export function ItemDatabasePage() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
 
-    Promise.all([
-      getItemCatalog(),
-      getItemIntelligenceSummary().catch(() => null),
-      listItemIntelligence().catch(() => null)
-    ])
-      .then(([catalogResponse, summaryResponse, intelligenceResponse]) => {
+    const run = async () => {
+      try {
+        setLoading(true);
+        const catalogResponse = await getItemCatalog();
         if (cancelled) return;
         const entries = catalogResponse.entries || [];
         setItems(entries);
         setSelected((current) => current || entries[0] || null);
+
+        const [summaryResponse, intelligenceResponse] = await Promise.all([
+          getItemIntelligenceSummary().catch(() => null),
+          listItemIntelligence().catch(() => null)
+        ]);
+        if (cancelled) return;
+
         if (summaryResponse) {
           setIntelligenceSummary(summaryResponse);
           setIntelligenceConnected(true);
@@ -76,15 +83,57 @@ export function ItemDatabasePage() {
           setIntelligenceItems(intelligenceResponse.items || []);
         }
         setError(null);
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        setError(err instanceof Error ? err.message : 'Не удалось загрузить предметы');
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+        setLoading(false);
 
+        if (!summaryResponse || summaryResponse.items_total >= entries.length || entries.length === 0) {
+          setBootstrapState(summaryResponse ? 'done' : 'idle');
+          return;
+        }
+
+        setBootstrapState('running');
+        const serverId = window.localStorage.getItem('active_server_id') || 'default';
+        const batchSize = 300;
+        for (let start = 0; start < entries.length; start += batchSize) {
+          if (cancelled) return;
+          const batch = entries.slice(start, start + batchSize).map((entry) => ({
+            key: entry.key,
+            meta: entry.meta,
+            legacy_id: entry.legacy_id,
+            raw: entry.raw,
+            display_ru: entry.display_ru,
+            display_en: entry.display_en,
+            icon_url: entry.icon_url,
+            ore_groups: entry.ore_groups || [],
+            sources: entry.sources || [],
+            nbt_raw: entry.nbt_raw
+          }));
+          await bootstrapItemIntelligence(batch, serverId);
+          if (cancelled) return;
+          setBootstrapProcessed(Math.min(start + batch.length, entries.length));
+          const liveSummary = await getItemIntelligenceSummary().catch(() => null);
+          if (liveSummary && !cancelled) {
+            setIntelligenceSummary(liveSummary);
+            setIntelligenceConnected(true);
+          }
+        }
+
+        const [finalSummary, finalItems] = await Promise.all([
+          getItemIntelligenceSummary(),
+          listItemIntelligence()
+        ]);
+        if (cancelled) return;
+        setIntelligenceSummary(finalSummary);
+        setIntelligenceItems(finalItems.items || []);
+        setBootstrapState('done');
+      } catch (err) {
+        if (cancelled) return;
+        setBootstrapState('error');
+        setError(err instanceof Error ? err.message : 'Не удалось загрузить или импортировать предметы');
+        setLoading(false);
+      }
+    };
+
+    void run();
     return () => {
       cancelled = true;
     };
@@ -139,6 +188,7 @@ export function ItemDatabasePage() {
 
       <div className="item-db-status-row">
         <span className="item-db-status-chip">Intelligence DB: {intelligenceConnected ? 'подключена' : 'нет соединения'}</span>
+        <span className="item-db-status-chip">Импорт: {bootstrapState}{bootstrapState === 'running' ? ` ${bootstrapProcessed}/${items.length}` : ''}</span>
         <span className="item-db-status-chip">В БД: {intelligenceSummary.items_total}</span>
         <span className="item-db-status-chip">Готово: {intelligenceSummary.items_ready}</span>
         <span className="item-db-status-chip">На проверку: {intelligenceSummary.items_needs_review}</span>
@@ -171,7 +221,7 @@ export function ItemDatabasePage() {
       {loading ? <div className="item-db-state">Загрузка каталога…</div> : null}
       {error ? <div className="item-db-state item-db-error">{error}</div> : null}
 
-      {!loading && !error ? (
+      {!loading ? (
         <div className="item-db-layout">
           <div className="item-db-list" role="list">
             {filtered.map((entry) => {
@@ -249,7 +299,7 @@ export function ItemDatabasePage() {
         </div>
       ) : null}
 
-      {!loading && !error ? <div className="item-db-state">Локальных связей с источниками: {totalSources}. Отдельная Intelligence DB содержит {intelligenceSummary.sources_total} источников и {intelligenceSummary.evidence_total} evidence-записей.</div> : null}
+      {!loading ? <div className="item-db-state">Локальных связей с источниками: {totalSources}. Отдельная Intelligence DB содержит {intelligenceSummary.sources_total} источников и {intelligenceSummary.evidence_total} evidence-записей.</div> : null}
     </section>
   );
 }
