@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 from typing import Any
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 from fastapi import APIRouter, HTTPException
 
@@ -64,15 +68,7 @@ def _seed_completion(item: dict[str, Any]) -> int:
     return min(score, 50)
 
 
-@router.post('/bootstrap-catalog')
-def bootstrap_catalog(payload: dict[str, Any]):
-    items = payload.get('items')
-    if not isinstance(items, list):
-        raise HTTPException(status_code=400, detail='items must be a list')
-    if len(items) > 500:
-        raise HTTPException(status_code=400, detail='Maximum bootstrap batch is 500 items')
-
-    server_id = _text(payload.get('server_id')) or 'default'
+def _bootstrap_batch(items: list[dict[str, Any]], server_id: str) -> dict[str, int | str]:
     factory = _require_session()
     created = 0
     updated = 0
@@ -130,8 +126,7 @@ def bootstrap_catalog(payload: dict[str, Any]):
             source_names = raw_item.get('sources') if isinstance(raw_item.get('sources'), list) else []
             if raw_item.get('ore_groups'):
                 source_names = [*source_names, 'oredict']
-            if not source_names:
-                source_names = ['catalog']
+            source_names = [*source_names, 'production-catalog']
 
             snapshot = {
                 'display_ru': raw_item.get('display_ru'),
@@ -160,7 +155,7 @@ def bootstrap_catalog(payload: dict[str, Any]):
                         source_id=source.id,
                         field_name='catalog_seed',
                         value_json=snapshot,
-                        confidence=0.85,
+                        confidence=0.9,
                         observed_at=utc_now(),
                     ))
                     evidence_created += 1
@@ -176,4 +171,44 @@ def bootstrap_catalog(payload: dict[str, Any]):
         'updated': updated,
         'evidence_created': evidence_created,
         'server_id': server_id,
+    }
+
+
+@router.post('/bootstrap-catalog')
+def bootstrap_catalog(payload: dict[str, Any]):
+    items = payload.get('items')
+    if not isinstance(items, list):
+        raise HTTPException(status_code=400, detail='items must be a list')
+    if len(items) > 500:
+        raise HTTPException(status_code=400, detail='Maximum bootstrap batch is 500 items')
+    return _bootstrap_batch(items, _text(payload.get('server_id')) or 'default')
+
+
+@router.post('/bootstrap-from-production')
+def bootstrap_from_production():
+    base_url = _text(os.environ.get('ITEM_INTELLIGENCE_SOURCE_URL')).rstrip('/')
+    if not base_url:
+        raise HTTPException(status_code=503, detail='ITEM_INTELLIGENCE_SOURCE_URL is not configured')
+    url = f'{base_url}/api/itempanel/catalog'
+    try:
+        request = Request(url, headers={'Accept': 'application/json', 'User-Agent': 'CubixRecipes-ItemIntelligence/1.0'})
+        with urlopen(request, timeout=60) as response:  # nosec B310 - URL is controlled by Railway env
+            payload = json.load(response)
+    except (URLError, TimeoutError, ValueError, OSError) as exc:
+        raise HTTPException(status_code=502, detail=f'Could not read production catalog: {exc}') from exc
+
+    items = payload.get('entries') if isinstance(payload, dict) else None
+    if not isinstance(items, list):
+        raise HTTPException(status_code=502, detail='Production catalog response has no entries list')
+
+    total = {'processed': 0, 'created': 0, 'updated': 0, 'evidence_created': 0}
+    for start in range(0, len(items), 500):
+        result = _bootstrap_batch(items[start:start + 500], 'production')
+        for key in total:
+            total[key] += int(result[key])
+
+    return {
+        **total,
+        'server_id': 'production',
+        'source_url': base_url,
     }
