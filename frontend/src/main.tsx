@@ -7,11 +7,13 @@ import './styles/mobile.css';
 import './styles/mobile-craft-icons.css';
 import './styles/mobile-shell.css';
 import './styles/cubixcraft.css';
+import './styles/item-database.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
 import { VersionReloadBanner } from './components/VersionReloadBanner';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
+import { ItemDatabasePage } from './features/item-database/ItemDatabasePage';
 import { installCubixCraftActiveStarClickFix } from './features/cubixcraft/activeStarClickFix';
 import { installCubixCraftArchivedPositionFix } from './features/cubixcraft/archivedPositionFix';
 import { installCubixCraftActiveVariants } from './features/cubixcraft/activeVariantOverlay';
@@ -35,34 +37,50 @@ interface ServerGateProps {
   onLogout: () => Promise<void>;
 }
 
-function isCubixCraftWorkspace() {
-  return new URLSearchParams(window.location.search).get('workspace') === 'cubixcraft';
+type SpecialWorkspace = 'cubixcraft' | 'itemdb' | null;
+
+function getSpecialWorkspace(): SpecialWorkspace {
+  const value = new URLSearchParams(window.location.search).get('workspace');
+  return value === 'cubixcraft' || value === 'itemdb' ? value : null;
 }
 
 function ServerGate({ authUser, onLogout }: ServerGateProps) {
   const [selectedServer, setSelectedServer] = useState<string | null>(() =>
     window.localStorage.getItem('active_server_id')
   );
-  const [cubixCraftOpen, setCubixCraftOpen] = useState(isCubixCraftWorkspace);
+  const [specialWorkspace, setSpecialWorkspace] = useState<SpecialWorkspace>(getSpecialWorkspace);
+  const cubixCraftOpen = specialWorkspace === 'cubixcraft';
+  const itemDatabaseOpen = specialWorkspace === 'itemdb';
 
   useEffect(() => {
-    const sync = () => setCubixCraftOpen(isCubixCraftWorkspace());
+    const sync = () => setSpecialWorkspace(getSpecialWorkspace());
     const handleWorkspaceChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ workspace?: SpecialWorkspace }>).detail;
+      setSpecialWorkspace(detail?.workspace ?? getSpecialWorkspace());
+    };
+    const handleLegacyCubixCraftChange = (event: Event) => {
       const detail = (event as CustomEvent<{ active?: boolean }>).detail;
-      setCubixCraftOpen(detail?.active ?? isCubixCraftWorkspace());
+      if (detail?.active) setSpecialWorkspace('cubixcraft');
+      else setSpecialWorkspace(getSpecialWorkspace());
     };
     window.addEventListener('popstate', sync);
-    window.addEventListener('cubixcraft-workspace-change', handleWorkspaceChange as EventListener);
+    window.addEventListener('app-workspace-change', handleWorkspaceChange as EventListener);
+    window.addEventListener('cubixcraft-workspace-change', handleLegacyCubixCraftChange as EventListener);
     return () => {
       window.removeEventListener('popstate', sync);
-      window.removeEventListener('cubixcraft-workspace-change', handleWorkspaceChange as EventListener);
+      window.removeEventListener('app-workspace-change', handleWorkspaceChange as EventListener);
+      window.removeEventListener('cubixcraft-workspace-change', handleLegacyCubixCraftChange as EventListener);
     };
   }, []);
 
   useEffect(() => {
     document.body.classList.toggle('cubixcraft-integrated', cubixCraftOpen);
-    return () => document.body.classList.remove('cubixcraft-integrated');
-  }, [cubixCraftOpen]);
+    document.body.classList.toggle('itemdb-integrated', itemDatabaseOpen);
+    return () => {
+      document.body.classList.remove('cubixcraft-integrated');
+      document.body.classList.remove('itemdb-integrated');
+    };
+  }, [cubixCraftOpen, itemDatabaseOpen]);
 
   const handleSelectServer = (serverId: string) => {
     window.localStorage.setItem('active_server_id', serverId);
@@ -90,6 +108,11 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
       {cubixCraftOpen ? (
         <div className="cubixcraft-embedded">
           <CubixCraftWorkspace />
+        </div>
+      ) : null}
+      {itemDatabaseOpen ? (
+        <div className="item-db-embedded">
+          <ItemDatabasePage />
         </div>
       ) : null}
     </>
