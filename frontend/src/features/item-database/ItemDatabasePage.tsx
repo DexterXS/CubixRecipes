@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 import {
   bootstrapItemIntelligence,
   getItemCatalog,
   getItemIntelligenceItem,
   getItemIntelligenceSchema,
   getItemIntelligenceSummary,
+  getItemPanelAtlas,
   listItemIntelligence,
   updateItemIntelligence,
   type ItemIntelligenceRecord,
@@ -12,7 +13,7 @@ import {
   type PassportField,
   type PassportGroup
 } from '../../services/api';
-import type { ItemCatalogEntry } from '../../types';
+import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry } from '../../types';
 import './ItemDatabasePage.css';
 
 function itemModId(entry: ItemCatalogEntry): string {
@@ -39,6 +40,11 @@ function parseValue(raw: string, type: PassportField[2]): unknown {
   if (type === 'number') return raw.trim() === '' ? null : Number(raw);
   return raw;
 }
+function parseAtlasRaw(raw: string): { key: string; meta: number } | null {
+  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>/);
+  if (!match) return null;
+  return { key: match[1].toLowerCase(), meta: match[2] === '*' ? 0 : (Number.parseInt(match[2] ?? '0', 10) || 0) };
+}
 
 const EMPTY_SUMMARY: ItemIntelligenceSummary = {
   items_total: 0, items_ready: 0, items_needs_review: 0,
@@ -56,6 +62,7 @@ const CORE_GROUP: PassportGroup = {
 
 export function ItemDatabasePage() {
   const [items, setItems] = useState<ItemCatalogEntry[]>([]);
+  const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
   const [intelItems, setIntelItems] = useState<ItemIntelligenceRecord[]>([]);
   const [summary, setSummary] = useState<ItemIntelligenceSummary>(EMPTY_SUMMARY);
   const [schema, setSchema] = useState<PassportGroup[]>([]);
@@ -76,10 +83,15 @@ export function ItemDatabasePage() {
     const run = async () => {
       try {
         setLoading(true);
-        const [catalog, schemaResponse] = await Promise.all([getItemCatalog(), getItemIntelligenceSchema()]);
+        const [catalog, schemaResponse, atlasResponse] = await Promise.all([
+          getItemCatalog(),
+          getItemIntelligenceSchema(),
+          getItemPanelAtlas().catch(() => null)
+        ]);
         if (cancelled) return;
         const entries = catalog.entries || [];
         setItems(entries);
+        setAtlas(atlasResponse);
         setSchema(schemaResponse.groups || []);
         setSelected(entries[0] || null);
 
@@ -125,6 +137,36 @@ export function ItemDatabasePage() {
     void run();
     return () => { cancelled = true; };
   }, []);
+
+  const atlasIndex = useMemo(() => {
+    const map = new Map<string, ItemPanelAtlasEntry>();
+    Object.values(atlas?.entries ?? {}).forEach((entry) => map.set(`${entry.item_key}:${entry.meta ?? 0}`, entry));
+    return map;
+  }, [atlas]);
+
+  const atlasStyle = (entry: ItemCatalogEntry, size: number): CSSProperties | undefined => {
+    if (!atlas?.image_url) return undefined;
+    const parsed = parseAtlasRaw(entry.raw || '') ?? { key: String(entry.key || '').toLowerCase(), meta: entry.meta || 0 };
+    const atlasEntry = atlas.entries?.[entry.raw || ''] ?? atlasIndex.get(`${parsed.key}:${parsed.meta}`) ?? atlasIndex.get(`${parsed.key}:0`);
+    if (!atlasEntry) return undefined;
+    const scale = size / atlas.tile_size;
+    return {
+      width: size,
+      height: size,
+      backgroundImage: `url(${atlas.image_url})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: `-${atlasEntry.x * scale}px -${atlasEntry.y * scale}px`,
+      backgroundSize: `${atlas.columns * atlas.tile_size * scale}px ${atlas.rows * atlas.tile_size * scale}px`,
+      imageRendering: 'pixelated'
+    };
+  };
+
+  const itemVisual = (entry: ItemCatalogEntry, size: number) => {
+    const style = atlasStyle(entry, size);
+    if (style) return <span className="item-db-atlas-icon" style={style} aria-hidden="true" />;
+    if (entry.icon_url) return <img src={entry.icon_url} alt="" className="item-db-icon" loading="lazy" />;
+    return <span className="item-db-icon-missing">?</span>;
+  };
 
   const intelByIdentity = useMemo(() => {
     const map = new Map<string, ItemIntelligenceRecord>();
@@ -219,7 +261,7 @@ export function ItemDatabasePage() {
               const intel = intelByIdentity.get(identity(entry.key, entry.meta));
               const active = selected?.raw === entry.raw;
               return <button key={`${entry.raw}:${entry.meta}`} className={`item-db-row ${active ? 'active' : ''}`} onClick={() => setSelected(entry)}>
-                <div className="item-db-icon-shell">{entry.icon_url ? <img src={entry.icon_url} alt="" className="item-db-icon" loading="lazy" /> : '?'}</div>
+                <div className="item-db-icon-shell">{itemVisual(entry, 30)}</div>
                 <div className="item-db-row-copy"><strong>{entry.display_ru || entry.display_en || entry.key}</strong><span>{entry.key}:{entry.meta} · {intel?.completion_percent ?? 0}%</span></div>
                 <span className="item-db-mod">{itemModId(entry)}</span>
               </button>;
@@ -229,7 +271,7 @@ export function ItemDatabasePage() {
           <aside className="item-db-detail passport-compact">
             {selected ? <>
               <div className="passport-head">
-                <div className="item-db-icon-shell item-db-icon-large">{selected.icon_url ? <img src={selected.icon_url} alt="" className="item-db-icon" /> : '?'}</div>
+                <div className="item-db-icon-shell item-db-icon-large">{itemVisual(selected, 46)}</div>
                 <div className="passport-title"><span>{itemModId(selected)}</span><h2>{selected.display_ru || selected.display_en || selected.key}</h2><small>{selected.key}:{selected.meta} · ID {selected.legacy_id ?? '—'} · Intelligence #{detail?.id ?? '—'}</small></div>
               </div>
 
