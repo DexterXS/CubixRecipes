@@ -22,6 +22,15 @@ export type ItemIntelligenceBootstrapItem = {
   ore_groups?: string[]; sources?: string[]; nbt_raw?: string | null;
 };
 
+export type PriceImportItem = {
+  registry_data: string; metadata: number; nbt?: string | null; price: number; flags?: string[];
+};
+export type PriceImportResult = {
+  processed: number; matched_rows: number; matched_items: number; unmatched_count: number;
+  unmatched: Array<{ registryData: string; metadata: number; price: number }>;
+  invalid: number; server_id: string; source_name: string;
+};
+
 export async function getItemIntelligenceSummary(): Promise<ItemIntelligenceSummary> {
   return request(apiPath('/item-intelligence/summary'));
 }
@@ -42,5 +51,11 @@ export async function updateItemIntelligence(id: number, payload: Record<string,
 export async function bootstrapItemIntelligence(items: ItemIntelligenceBootstrapItem[], serverId: string) {
   return request<{ processed: number; created: number; updated: number; evidence_created: number; server_id: string }>(apiPath('/item-intelligence/bootstrap-catalog'), {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, server_id: serverId })
+  });
+}
+export async function importItemPrices(items: PriceImportItem[], sourceName: string, serverId = 'production', currency = 'server') {
+  return request<PriceImportResult>(apiPath('/item-intelligence/import-prices'), {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items, source_name: sourceName, server_id: serverId, currency })
   });
 }
