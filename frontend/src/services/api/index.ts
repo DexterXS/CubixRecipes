@@ -3,6 +3,7 @@ export * from './auth';
 export * from './auctions';
 export * from './client';
 export * from './favorites';
+export * from './itemIntelligence';
 export * from './itempanel';
 export * from './items';
 export * from './modIcons';

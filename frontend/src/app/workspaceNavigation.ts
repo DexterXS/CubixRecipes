@@ -1,6 +1,6 @@
 import type { UiLanguage } from '../types';
 
-export type WorkspaceTab = 'editor' | 'cubixcraft' | 'recipe' | 'auctions' | 'tasks' | 'technical' | 'cloud';
+export type WorkspaceTab = 'editor' | 'cubixcraft' | 'itemdb' | 'recipe' | 'auctions' | 'tasks' | 'technical' | 'cloud';
 
 export type WorkspaceNavigationPermissions = {
   canCreateTemplates: boolean;
@@ -25,6 +25,7 @@ const labels = {
   ru: {
     recipes: 'Крафты',
     cubixcraft: 'CubixCraft',
+    itemdb: 'База предметов',
     drafts: 'Черновики',
     auctions: 'Аукционы',
     tasks: 'Задачи',
@@ -32,6 +33,7 @@ const labels = {
     cloud: 'Файлы',
     recipesDescription: 'Редактор и NEI',
     cubixcraftDescription: 'Крафт 9×9 с количеством',
+    itemdbDescription: 'Паспорта и прогресс индексации',
     draftsDescription: 'Шаблоны и заготовки',
     auctionsDescription: 'План и команды',
     tasksDescription: 'Рабочая доска',
@@ -41,6 +43,7 @@ const labels = {
   en: {
     recipes: 'Recipes',
     cubixcraft: 'CubixCraft',
+    itemdb: 'Item Database',
     drafts: 'Drafts',
     auctions: 'Auctions',
     tasks: 'Tasks',
@@ -48,6 +51,7 @@ const labels = {
     cloud: 'Files',
     recipesDescription: 'Editor and NEI',
     cubixcraftDescription: '9×9 crafting with amounts',
+    itemdbDescription: 'Item passports and indexing progress',
     draftsDescription: 'Templates and drafts',
     auctionsDescription: 'Schedule and commands',
     tasksDescription: 'Work board',
@@ -75,6 +79,13 @@ export function buildWorkspaceNavigation(
       area: 'recipes',
       description: text.cubixcraftDescription,
       visible: permissions.canEditRecipes
+    },
+    {
+      id: 'itemdb',
+      label: text.itemdb,
+      area: 'recipes',
+      description: text.itemdbDescription,
+      visible: true
     },
     {
       id: 'recipe',
