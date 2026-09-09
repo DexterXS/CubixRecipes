@@ -6,10 +6,12 @@ import {
   getItemIntelligenceSchema,
   getItemIntelligenceSummary,
   getItemPanelAtlas,
+  getItemPriceHistory,
   listItemIntelligence,
   updateItemIntelligence,
   type ItemIntelligenceRecord,
   type ItemIntelligenceSummary,
+  type ItemPriceHistoryEntry,
   type PassportField,
   type PassportGroup
 } from '../../services/api';
@@ -46,6 +48,12 @@ function parseAtlasRaw(raw: string): { key: string; meta: number } | null {
   if (!match) return null;
   return { key: match[1].toLowerCase(), meta: match[2] === '*' ? 0 : (Number.parseInt(match[2] ?? '0', 10) || 0) };
 }
+function priceHistoryLabel(entry: ItemPriceHistoryEntry): string {
+  if (entry.sale_restricted) return 'Продажа запрещена';
+  if (entry.change_type === 'sale_allowed') return `Продажа снова разрешена · ${entry.price ?? entry.raw_price}`;
+  if (entry.change_type === 'initial') return `Начальная цена · ${entry.price ?? entry.raw_price}`;
+  return `${entry.previous_raw_price ?? '—'} → ${entry.price ?? entry.raw_price}`;
+}
 
 const EMPTY_SUMMARY: ItemIntelligenceSummary = {
   items_total: 0, items_ready: 0, items_needs_review: 0,
@@ -69,6 +77,7 @@ export function ItemDatabasePage() {
   const [schema, setSchema] = useState<PassportGroup[]>([]);
   const [selected, setSelected] = useState<ItemCatalogEntry | null>(null);
   const [detail, setDetail] = useState<ItemIntelligenceRecord | null>(null);
+  const [priceHistory, setPriceHistory] = useState<ItemPriceHistoryEntry[]>([]);
   const [query, setQuery] = useState('');
   const [modFilter, setModFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -182,13 +191,19 @@ export function ItemDatabasePage() {
     let cancelled = false;
     setEditGroup(null);
     setDraft({});
+    setPriceHistory([]);
     if (!selectedIntel?.id) {
       setDetail(null);
       return;
     }
-    getItemIntelligenceItem(selectedIntel.id)
-      .then((value) => { if (!cancelled) setDetail(value); })
-      .catch(() => { if (!cancelled) setDetail(selectedIntel); });
+    Promise.all([
+      getItemIntelligenceItem(selectedIntel.id).catch(() => selectedIntel),
+      getItemPriceHistory(selectedIntel.id, 100).catch(() => ({ item_id: selectedIntel.id, history: [] }))
+    ]).then(([value, historyResponse]) => {
+      if (cancelled) return;
+      setDetail(value);
+      setPriceHistory(historyResponse.history || []);
+    });
     return () => { cancelled = true; };
   }, [selectedIntel?.id]);
 
@@ -239,7 +254,14 @@ export function ItemDatabasePage() {
     const [sum, list] = await Promise.all([getItemIntelligenceSummary(), listItemIntelligence()]);
     setSummary(sum);
     setIntelItems(list.items || []);
-    if (detail?.id) setDetail(await getItemIntelligenceItem(detail.id).catch(() => detail));
+    if (detail?.id) {
+      const [refreshed, historyResponse] = await Promise.all([
+        getItemIntelligenceItem(detail.id).catch(() => detail),
+        getItemPriceHistory(detail.id, 100).catch(() => ({ item_id: detail.id, history: priceHistory }))
+      ]);
+      setDetail(refreshed);
+      setPriceHistory(historyResponse.history || []);
+    }
   };
 
   return (
@@ -307,6 +329,17 @@ export function ItemDatabasePage() {
                   </section>;
                 })}
               </div>
+
+              <details className="passport-price-history">
+                <summary>История изменения цен <span>{priceHistory.length}</span></summary>
+                {priceHistory.length ? <div className="passport-price-history-list">
+                  {priceHistory.map((entry) => <div className={`passport-price-history-row ${entry.sale_restricted ? 'restricted' : ''}`} key={entry.id}>
+                    <time>{entry.observed_at ? new Date(entry.observed_at).toLocaleString() : '—'}</time>
+                    <strong>{priceHistoryLabel(entry)}</strong>
+                    <small>{entry.source_name}</small>
+                  </div>)}
+                </div> : <div className="passport-price-history-empty">Изменений цены пока нет.</div>}
+              </details>
             </> : <div className="item-db-state">Выберите предмет</div>}
           </aside>
         </div>
