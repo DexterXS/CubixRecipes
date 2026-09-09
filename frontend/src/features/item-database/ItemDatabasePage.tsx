@@ -2,304 +2,261 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   bootstrapItemIntelligence,
   getItemCatalog,
+  getItemIntelligenceItem,
+  getItemIntelligenceSchema,
   getItemIntelligenceSummary,
   listItemIntelligence,
+  updateItemIntelligence,
   type ItemIntelligenceRecord,
-  type ItemIntelligenceSummary
+  type ItemIntelligenceSummary,
+  type PassportField,
+  type PassportGroup
 } from '../../services/api';
 import type { ItemCatalogEntry } from '../../types';
+import './ItemDatabasePage.css';
 
 function itemModId(entry: ItemCatalogEntry): string {
   return String(entry.key || '').split(':', 1)[0] || 'unknown';
 }
-
 function sourceCount(entry: ItemCatalogEntry): number {
   return new Set(entry.sources || []).size;
 }
-
-function initialPassportPercent(entry: ItemCatalogEntry): number {
-  let score = 0;
-  if (entry.key) score += 15;
-  if (entry.display_ru || entry.display_en) score += 15;
-  if (entry.legacy_id != null) score += 10;
-  if (entry.has_icon) score += 15;
-  if (entry.raw) score += 10;
-  if (entry.ore_groups?.length) score += 10;
-  if (entry.has_nbt) score += 5;
-  if (sourceCount(entry) > 0) score += 10;
-  return Math.min(score, 60);
-}
-
 function identity(key: string, meta: number): string {
   return `${String(key || '').toLowerCase()}:${meta || 0}`;
 }
+function displayValue(value: unknown): string {
+  if (Array.isArray(value)) return value.length ? value.join(', ') : '—';
+  if (value === null || value === undefined || value === '') return '—';
+  if (typeof value === 'boolean') return value ? 'Да' : 'Нет';
+  return String(value);
+}
+function inputValue(value: unknown): string {
+  if (Array.isArray(value)) return value.join(', ');
+  return value === null || value === undefined ? '' : String(value);
+}
+function parseValue(raw: string, type: PassportField[2]): unknown {
+  if (type === 'list') return raw.split(',').map((v) => v.trim()).filter(Boolean);
+  if (type === 'number') return raw.trim() === '' ? null : Number(raw);
+  return raw;
+}
 
-const EMPTY_INTELLIGENCE_SUMMARY: ItemIntelligenceSummary = {
-  items_total: 0,
-  items_ready: 0,
-  items_needs_review: 0,
-  sources_total: 0,
-  evidence_total: 0,
-  mods_total: 0,
-  average_completion: 0
+const EMPTY_SUMMARY: ItemIntelligenceSummary = {
+  items_total: 0, items_ready: 0, items_needs_review: 0,
+  sources_total: 0, evidence_total: 0, mods_total: 0, average_completion: 0
+};
+
+const CORE_GROUP: PassportGroup = {
+  key: 'core', label: 'Основные данные', fields: [
+    ['display_ru', 'Название RU', 'text'], ['display_en', 'Название EN', 'text'],
+    ['description', 'Основное описание', 'textarea'], ['category', 'Категория', 'text'],
+    ['tier', 'Tier', 'text'], ['rarity', 'Редкость', 'text'], ['status', 'Статус', 'text'],
+    ['completion_percent', 'Готовность паспорта, %', 'number'], ['confidence', 'Общий confidence', 'number']
+  ]
 };
 
 export function ItemDatabasePage() {
   const [items, setItems] = useState<ItemCatalogEntry[]>([]);
-  const [intelligenceItems, setIntelligenceItems] = useState<ItemIntelligenceRecord[]>([]);
-  const [intelligenceSummary, setIntelligenceSummary] = useState<ItemIntelligenceSummary>(EMPTY_INTELLIGENCE_SUMMARY);
-  const [intelligenceConnected, setIntelligenceConnected] = useState(false);
-  const [bootstrapState, setBootstrapState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
-  const [bootstrapProcessed, setBootstrapProcessed] = useState(0);
+  const [intelItems, setIntelItems] = useState<ItemIntelligenceRecord[]>([]);
+  const [summary, setSummary] = useState<ItemIntelligenceSummary>(EMPTY_SUMMARY);
+  const [schema, setSchema] = useState<PassportGroup[]>([]);
+  const [selected, setSelected] = useState<ItemCatalogEntry | null>(null);
+  const [detail, setDetail] = useState<ItemIntelligenceRecord | null>(null);
   const [query, setQuery] = useState('');
   const [modFilter, setModFilter] = useState('all');
-  const [selected, setSelected] = useState<ItemCatalogEntry | null>(null);
   const [loading, setLoading] = useState(true);
+  const [bootstrapState, setBootstrapState] = useState<'idle'|'running'|'done'|'error'>('idle');
+  const [bootstrapProcessed, setBootstrapProcessed] = useState(0);
+  const [editGroup, setEditGroup] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-
     const run = async () => {
       try {
         setLoading(true);
-        const catalogResponse = await getItemCatalog();
+        const [catalog, schemaResponse] = await Promise.all([getItemCatalog(), getItemIntelligenceSchema()]);
         if (cancelled) return;
-        const entries = catalogResponse.entries || [];
+        const entries = catalog.entries || [];
         setItems(entries);
-        setSelected((current) => current || entries[0] || null);
+        setSchema(schemaResponse.groups || []);
+        setSelected(entries[0] || null);
 
-        const [summaryResponse, intelligenceResponse] = await Promise.all([
-          getItemIntelligenceSummary().catch(() => null),
-          listItemIntelligence().catch(() => null)
-        ]);
+        const [sum, list] = await Promise.all([getItemIntelligenceSummary(), listItemIntelligence()]);
         if (cancelled) return;
-
-        if (summaryResponse) {
-          setIntelligenceSummary(summaryResponse);
-          setIntelligenceConnected(true);
-        }
-        if (intelligenceResponse) {
-          setIntelligenceItems(intelligenceResponse.items || []);
-        }
+        setSummary(sum);
+        setIntelItems(list.items || []);
+        setLoading(false);
         setError(null);
-        setLoading(false);
 
-        if (!summaryResponse || summaryResponse.items_total >= entries.length || entries.length === 0) {
-          setBootstrapState(summaryResponse ? 'done' : 'idle');
-          return;
-        }
-
-        setBootstrapState('running');
-        const serverId = window.localStorage.getItem('active_server_id') || 'default';
-        const batchSize = 300;
-        for (let start = 0; start < entries.length; start += batchSize) {
-          if (cancelled) return;
-          const batch = entries.slice(start, start + batchSize).map((entry) => ({
-            key: entry.key,
-            meta: entry.meta,
-            legacy_id: entry.legacy_id,
-            raw: entry.raw,
-            display_ru: entry.display_ru,
-            display_en: entry.display_en,
-            icon_url: entry.icon_url,
-            ore_groups: entry.ore_groups || [],
-            sources: entry.sources || [],
-            nbt_raw: entry.nbt_raw
-          }));
-          await bootstrapItemIntelligence(batch, serverId);
-          if (cancelled) return;
-          setBootstrapProcessed(Math.min(start + batch.length, entries.length));
-          const liveSummary = await getItemIntelligenceSummary().catch(() => null);
-          if (liveSummary && !cancelled) {
-            setIntelligenceSummary(liveSummary);
-            setIntelligenceConnected(true);
+        if (sum.items_total < entries.length && entries.length) {
+          setBootstrapState('running');
+          const serverId = window.localStorage.getItem('active_server_id') || 'default';
+          const batchSize = 300;
+          for (let start = 0; start < entries.length; start += batchSize) {
+            if (cancelled) return;
+            const batch = entries.slice(start, start + batchSize).map((entry) => ({
+              key: entry.key, meta: entry.meta, legacy_id: entry.legacy_id, raw: entry.raw,
+              display_ru: entry.display_ru, display_en: entry.display_en, icon_url: entry.icon_url,
+              ore_groups: entry.ore_groups || [], sources: entry.sources || [], nbt_raw: entry.nbt_raw
+            }));
+            await bootstrapItemIntelligence(batch, serverId);
+            if (cancelled) return;
+            setBootstrapProcessed(Math.min(start + batch.length, entries.length));
+            setSummary(await getItemIntelligenceSummary());
           }
+          const finalList = await listItemIntelligence();
+          if (!cancelled) {
+            setIntelItems(finalList.items || []);
+            setBootstrapState('done');
+          }
+        } else {
+          setBootstrapState('done');
         }
-
-        const [finalSummary, finalItems] = await Promise.all([
-          getItemIntelligenceSummary(),
-          listItemIntelligence()
-        ]);
-        if (cancelled) return;
-        setIntelligenceSummary(finalSummary);
-        setIntelligenceItems(finalItems.items || []);
-        setBootstrapState('done');
       } catch (err) {
-        if (cancelled) return;
-        setBootstrapState('error');
-        setError(err instanceof Error ? err.message : 'Не удалось загрузить или импортировать предметы');
-        setLoading(false);
+        if (!cancelled) {
+          setBootstrapState('error');
+          setLoading(false);
+          setError(err instanceof Error ? err.message : 'Ошибка загрузки базы предметов');
+        }
       }
     };
-
     void run();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  const intelligenceByIdentity = useMemo(() => {
+  const intelByIdentity = useMemo(() => {
     const map = new Map<string, ItemIntelligenceRecord>();
-    intelligenceItems.forEach((entry) => map.set(identity(entry.registry_key, entry.meta), entry));
+    intelItems.forEach((entry) => map.set(identity(entry.registry_key, entry.meta), entry));
     return map;
-  }, [intelligenceItems]);
+  }, [intelItems]);
 
-  const mods = useMemo(() => {
-    return Array.from(new Set(items.map(itemModId))).sort((a, b) => a.localeCompare(b));
-  }, [items]);
+  const selectedIntel = selected ? intelByIdentity.get(identity(selected.key, selected.meta)) || null : null;
 
-  const totalSources = useMemo(() => items.reduce((sum, entry) => sum + sourceCount(entry), 0), [items]);
-  const withIcons = useMemo(() => items.filter((entry) => entry.has_icon).length, [items]);
+  useEffect(() => {
+    let cancelled = false;
+    setEditGroup(null);
+    setDraft({});
+    if (!selectedIntel?.id) {
+      setDetail(null);
+      return;
+    }
+    getItemIntelligenceItem(selectedIntel.id)
+      .then((value) => { if (!cancelled) setDetail(value); })
+      .catch(() => { if (!cancelled) setDetail(selectedIntel); });
+    return () => { cancelled = true; };
+  }, [selectedIntel?.id]);
 
+  const mods = useMemo(() => Array.from(new Set(items.map(itemModId))).sort(), [items]);
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return items.filter((entry) => {
       if (modFilter !== 'all' && itemModId(entry) !== modFilter) return false;
-      if (!needle) return true;
-      return [
-        entry.key,
-        entry.display_ru,
-        entry.display_en,
-        entry.raw,
-        entry.legacy_id == null ? '' : String(entry.legacy_id),
-        String(entry.meta),
-        ...(entry.ore_groups || [])
-      ].some((value) => String(value || '').toLowerCase().includes(needle));
+      return !needle || [entry.key, entry.display_ru, entry.display_en, entry.raw, entry.legacy_id, entry.meta, ...(entry.ore_groups || [])]
+        .some((value) => String(value ?? '').toLowerCase().includes(needle));
     });
   }, [items, query, modFilter]);
 
-  const selectedIntelligence = selected
-    ? intelligenceByIdentity.get(identity(selected.key, selected.meta)) || null
-    : null;
-  const selectedProgress = selectedIntelligence?.completion_percent ?? (selected ? initialPassportPercent(selected) : 0);
-  const selectedStatus = selectedIntelligence?.status ?? 'not_imported';
+  const groups = useMemo(() => [CORE_GROUP, ...schema], [schema]);
+
+  const fieldValue = (groupKey: string, fieldKey: string): unknown => {
+    if (groupKey === 'core') return (detail as Record<string, unknown> | null)?.[fieldKey];
+    return detail?.passport?.[fieldKey];
+  };
+
+  const startEdit = (group: PassportGroup) => {
+    const next: Record<string, string> = {};
+    group.fields.forEach(([key]) => { next[key] = inputValue(fieldValue(group.key, key)); });
+    setDraft(next);
+    setEditGroup(group.key);
+  };
+
+  const saveGroup = async (group: PassportGroup) => {
+    if (!detail?.id) return;
+    const values: Record<string, unknown> = {};
+    group.fields.forEach(([key, , type]) => { values[key] = parseValue(draft[key] ?? '', type); });
+    setSaving(true);
+    try {
+      const payload = group.key === 'core' ? values : { passport: values };
+      const updated = await updateItemIntelligence(detail.id, payload);
+      const refreshed = await getItemIntelligenceItem(detail.id).catch(() => updated);
+      setDetail(refreshed);
+      setIntelItems((current) => current.map((item) => item.id === updated.id ? { ...item, ...updated } : item));
+      setEditGroup(null);
+      setDraft({});
+      setSummary(await getItemIntelligenceSummary());
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <section className="item-db-page" aria-label="База предметов">
       <header className="item-db-header">
-        <div>
-          <div className="item-db-eyebrow">CubixWorld Item Intelligence</div>
-          <h1>База предметов</h1>
-          <p>Публичный монитор отдельной Railway-БД паспортов предметов и процесса индексации.</p>
-        </div>
+        <div><div className="item-db-eyebrow">CubixWorld Item Intelligence</div><h1>База предметов</h1></div>
         <div className="item-db-counter">{filtered.length} / {items.length}</div>
       </header>
 
-      <div className="item-db-status-row">
-        <span className="item-db-status-chip">Intelligence DB: {intelligenceConnected ? 'подключена' : 'нет соединения'}</span>
+      <div className="item-db-status-row compact">
+        <span className="item-db-status-chip">DB: {summary.items_total ? 'online' : 'пустая/импорт'}</span>
         <span className="item-db-status-chip">Импорт: {bootstrapState}{bootstrapState === 'running' ? ` ${bootstrapProcessed}/${items.length}` : ''}</span>
-        <span className="item-db-status-chip">В БД: {intelligenceSummary.items_total}</span>
-        <span className="item-db-status-chip">Готово: {intelligenceSummary.items_ready}</span>
-        <span className="item-db-status-chip">На проверку: {intelligenceSummary.items_needs_review}</span>
-      </div>
-
-      <div className="item-db-progress-grid" aria-label="Прогресс индексации">
-        <div className="item-db-progress-card"><span>Найдено исходных предметов</span><strong>{items.length}</strong></div>
-        <div className="item-db-progress-card"><span>Записано в Intelligence DB</span><strong>{intelligenceSummary.items_total}</strong></div>
-        <div className="item-db-progress-card"><span>Источников в Intelligence DB</span><strong>{intelligenceSummary.sources_total}</strong></div>
-        <div className="item-db-progress-card"><span>Evidence-записей</span><strong>{intelligenceSummary.evidence_total}</strong></div>
-        <div className="item-db-progress-card"><span>Модов в исходном каталоге</span><strong>{mods.length}</strong></div>
-        <div className="item-db-progress-card"><span>Иконки найдены</span><strong>{withIcons}</strong></div>
-        <div className="item-db-progress-card"><span>Модов в Intelligence DB</span><strong>{intelligenceSummary.mods_total}</strong></div>
-        <div className="item-db-progress-card"><span>Средняя готовность паспорта</span><strong>{intelligenceSummary.average_completion}%</strong></div>
+        <span className="item-db-status-chip">Источники: {summary.sources_total}</span>
+        <span className="item-db-status-chip">Evidence: {summary.evidence_total}</span>
+        <span className="item-db-status-chip">Средняя готовность: {summary.average_completion}%</span>
       </div>
 
       <div className="item-db-toolbar">
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Поиск по названию, ID, raw, OreDict…"
-          aria-label="Поиск предметов"
-        />
-        <select value={modFilter} onChange={(event) => setModFilter(event.target.value)} aria-label="Фильтр по моду">
-          <option value="all">Все моды</option>
-          {mods.map((mod) => <option key={mod} value={mod}>{mod}</option>)}
-        </select>
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Поиск…" />
+        <select value={modFilter} onChange={(e) => setModFilter(e.target.value)}><option value="all">Все моды</option>{mods.map((m) => <option key={m}>{m}</option>)}</select>
       </div>
 
-      {loading ? <div className="item-db-state">Загрузка каталога…</div> : null}
       {error ? <div className="item-db-state item-db-error">{error}</div> : null}
-
-      {!loading ? (
+      {loading ? <div className="item-db-state">Загрузка…</div> : (
         <div className="item-db-layout">
-          <div className="item-db-list" role="list">
+          <div className="item-db-list">
             {filtered.map((entry) => {
+              const intel = intelByIdentity.get(identity(entry.key, entry.meta));
               const active = selected?.raw === entry.raw;
-              const intelligence = intelligenceByIdentity.get(identity(entry.key, entry.meta));
-              const progress = intelligence?.completion_percent ?? initialPassportPercent(entry);
-              const status = intelligence?.status ?? 'not_imported';
-              return (
-                <button
-                  type="button"
-                  role="listitem"
-                  key={`${entry.raw || entry.key}:${entry.meta}`}
-                  className={`item-db-row ${active ? 'active' : ''}`}
-                  onClick={() => setSelected(entry)}
-                >
-                  <div className="item-db-icon-shell">
-                    {entry.icon_url ? <img src={entry.icon_url} alt="" className="item-db-icon" loading="lazy" /> : <span>?</span>}
-                  </div>
-                  <div className="item-db-row-copy">
-                    <strong>{entry.display_ru || entry.display_en || entry.key}</strong>
-                    <span>{entry.key}{entry.meta ? `:${entry.meta}` : ''} · {status} · паспорт {progress}%</span>
-                  </div>
-                  <span className="item-db-mod">{itemModId(entry)}</span>
-                </button>
-              );
+              return <button key={`${entry.raw}:${entry.meta}`} className={`item-db-row ${active ? 'active' : ''}`} onClick={() => setSelected(entry)}>
+                <div className="item-db-icon-shell">{entry.icon_url ? <img src={entry.icon_url} alt="" className="item-db-icon" loading="lazy" /> : '?'}</div>
+                <div className="item-db-row-copy"><strong>{entry.display_ru || entry.display_en || entry.key}</strong><span>{entry.key}:{entry.meta} · {intel?.completion_percent ?? 0}%</span></div>
+                <span className="item-db-mod">{itemModId(entry)}</span>
+              </button>;
             })}
-            {filtered.length === 0 ? <div className="item-db-state">Ничего не найдено</div> : null}
           </div>
 
-          <aside className="item-db-detail">
-            {selected ? (
-              <>
-                <div className="item-db-detail-top">
-                  <div className="item-db-icon-shell item-db-icon-large">
-                    {selected.icon_url ? <img src={selected.icon_url} alt="" className="item-db-icon" /> : <span>?</span>}
-                  </div>
-                  <div>
-                    <div className="item-db-eyebrow">{itemModId(selected)}</div>
-                    <h2>{selected.display_ru || selected.display_en || selected.key}</h2>
-                    {selected.display_en && selected.display_en !== selected.display_ru ? <p>{selected.display_en}</p> : null}
-                  </div>
-                </div>
+          <aside className="item-db-detail passport-compact">
+            {selected ? <>
+              <div className="passport-head">
+                <div className="item-db-icon-shell item-db-icon-large">{selected.icon_url ? <img src={selected.icon_url} alt="" className="item-db-icon" /> : '?'}</div>
+                <div className="passport-title"><span>{itemModId(selected)}</span><h2>{selected.display_ru || selected.display_en || selected.key}</h2><small>{selected.key}:{selected.meta} · ID {selected.legacy_id ?? '—'} · Intelligence #{detail?.id ?? '—'}</small></div>
+              </div>
 
-                <div className="item-db-status-row">
-                  <span className="item-db-status-chip">Статус: {selectedStatus}</span>
-                  <span className="item-db-status-chip">Паспорт: {selectedProgress}%</span>
-                  <span className="item-db-status-chip">Локальных источников: {sourceCount(selected)}</span>
-                  <span className="item-db-status-chip">Intelligence ID: {selectedIntelligence?.id ?? 'ещё не импортирован'}</span>
-                </div>
+              <div className="passport-techline">
+                <span>Raw: <code>{selected.raw || '—'}</code></span><span>OreDict: {(selected.ore_groups || []).join(', ') || '—'}</span><span>NBT: {selected.has_nbt ? 'есть' : 'нет'}</span><span>Лок. источников: {sourceCount(selected)}</span>
+              </div>
 
-                <dl className="item-db-facts">
-                  <div><dt>Registry key</dt><dd>{selected.key}</dd></div>
-                  <div><dt>Legacy ID</dt><dd>{selected.legacy_id ?? '—'}</dd></div>
-                  <div><dt>Meta</dt><dd>{selected.meta}</dd></div>
-                  <div><dt>Иконка</dt><dd>{selected.has_icon ? 'Есть' : 'Нет'}</dd></div>
-                  <div><dt>NBT</dt><dd>{selected.has_nbt ? 'Есть' : 'Нет'}</dd></div>
-                  <div><dt>Текущие локальные источники</dt><dd>{(selected.sources || []).join(', ') || '—'}</dd></div>
-                  <div className="wide"><dt>OreDict</dt><dd>{(selected.ore_groups || []).join(', ') || '—'}</dd></div>
-                  <div className="wide"><dt>Raw</dt><dd><code>{selected.raw || '—'}</code></dd></div>
-                  {selectedIntelligence?.category ? <div><dt>Категория</dt><dd>{selectedIntelligence.category}</dd></div> : null}
-                  {selectedIntelligence?.tier ? <div><dt>Tier</dt><dd>{selectedIntelligence.tier}</dd></div> : null}
-                  {selectedIntelligence?.rarity ? <div><dt>Редкость</dt><dd>{selectedIntelligence.rarity}</dd></div> : null}
-                  {selectedIntelligence?.confidence != null ? <div><dt>Confidence</dt><dd>{selectedIntelligence.confidence}</dd></div> : null}
-                  {selectedIntelligence?.indexed_at ? <div className="wide"><dt>Последняя индексация</dt><dd>{selectedIntelligence.indexed_at}</dd></div> : null}
-                  {selected.nbt_raw ? <div className="wide"><dt>NBT Raw</dt><dd><pre>{selected.nbt_raw}</pre></dd></div> : null}
-                </dl>
-
-                <div className="item-db-future">
-                  <strong>Полный паспорт</strong>
-                  <span>Рецепты получения и использования, частота в крафтах, способы добычи, цены и история цен, ценность, tier/progression, редкость, теги, конфиги, зависимости, внешние источники, confidence, конфликты источников и дата последней проверки будут заполняться в отдельной Intelligence DB.</span>
-                </div>
-              </>
-            ) : <div className="item-db-state">Выберите предмет</div>}
+              <div className="passport-groups">
+                {groups.map((group) => {
+                  const editing = editGroup === group.key;
+                  return <section className="passport-group" key={group.key}>
+                    <header><strong>{group.label}</strong><div className="passport-group-actions">
+                      {editing ? <><button className="passport-icon-btn save" disabled={saving} onClick={() => void saveGroup(group)}>✓</button><button className="passport-icon-btn" disabled={saving} onClick={() => { setEditGroup(null); setDraft({}); }}>×</button></> : <button className="passport-icon-btn" onClick={() => startEdit(group)} title="Редактировать">✎</button>}
+                    </div></header>
+                    <div className="passport-fields">
+                      {group.fields.map(([key, label, type]) => <div className={`passport-field ${type === 'textarea' ? 'wide' : ''}`} key={key}>
+                        <span>{label}</span>
+                        {editing ? (type === 'textarea' ? <textarea value={draft[key] ?? ''} onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))} /> : <input type={type === 'number' ? 'number' : 'text'} value={draft[key] ?? ''} onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))} />) : <strong title={displayValue(fieldValue(group.key, key))}>{displayValue(fieldValue(group.key, key))}</strong>}
+                      </div>)}
+                    </div>
+                  </section>;
+                })}
+              </div>
+            </> : <div className="item-db-state">Выберите предмет</div>}
           </aside>
         </div>
-      ) : null}
-
-      {!loading ? <div className="item-db-state">Локальных связей с источниками: {totalSources}. Отдельная Intelligence DB содержит {intelligenceSummary.sources_total} источников и {intelligenceSummary.evidence_total} evidence-записей.</div> : null}
+      )}
     </section>
   );
 }
