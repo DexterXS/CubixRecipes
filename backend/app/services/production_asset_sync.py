@@ -159,6 +159,35 @@ def sync_production_assets(server_id: str = 'hitech') -> dict[str, Any]:
         return {'ok': False, 'server_id': server_id, 'source': base_url, 'error': str(exc)}
 
 
+def install_itempanel_mirror_patch() -> None:
+    from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
+
+    if getattr(ItemPanelIconCatalog, '_production_mirror_patch', False):
+        return
+    original = ItemPanelIconCatalog._ensure_atlas
+
+    def _ensure_atlas_with_mirror(self) -> None:
+        if self._atlas_manifest is not None:
+            return
+        cache_dir = self.csv_path.parent
+        manifest_path = cache_dir / 'production-atlas.json'
+        png_path = cache_dir / 'production-atlas.png'
+        if manifest_path.is_file() and png_path.is_file():
+            try:
+                manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+                if isinstance(manifest, dict):
+                    manifest['image_url'] = '/api/itempanel/atlas.png'
+                    self._atlas_manifest = manifest
+                    self._atlas_png = png_path.read_bytes()
+                    return
+            except (OSError, json.JSONDecodeError):
+                pass
+        original(self)
+
+    ItemPanelIconCatalog._ensure_atlas = _ensure_atlas_with_mirror
+    ItemPanelIconCatalog._production_mirror_patch = True
+
+
 def sync_on_startup() -> dict[str, Any] | None:
     enabled = os.environ.get('CUBIXRECIPES_SYNC_PRODUCTION_ASSETS', '').strip().lower()
     if enabled not in {'1', 'true', 'yes', 'on'}:
