@@ -1,5 +1,12 @@
 import os
 
+from app.services.production_asset_sync import install_itempanel_mirror_patch, sync_on_startup
+
+install_itempanel_mirror_patch()
+_sync_result = sync_on_startup()
+if _sync_result is not None:
+    print(f'[production-asset-sync] {_sync_result}', flush=True)
+
 from app.api.routes import create_app
 from app.api.cubixcraft_variants import router as cubixcraft_variants_router
 from app.api.item_intelligence import router as item_intelligence_router
