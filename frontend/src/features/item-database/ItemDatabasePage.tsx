@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getItemCatalog } from '../../services/api';
+import {
+  getItemCatalog,
+  getItemIntelligenceSummary,
+  listItemIntelligence,
+  type ItemIntelligenceRecord,
+  type ItemIntelligenceSummary
+} from '../../services/api';
 import type { ItemCatalogEntry } from '../../types';
 
 function itemModId(entry: ItemCatalogEntry): string {
@@ -23,8 +29,25 @@ function initialPassportPercent(entry: ItemCatalogEntry): number {
   return Math.min(score, 60);
 }
 
+function identity(key: string, meta: number): string {
+  return `${String(key || '').toLowerCase()}:${meta || 0}`;
+}
+
+const EMPTY_INTELLIGENCE_SUMMARY: ItemIntelligenceSummary = {
+  items_total: 0,
+  items_ready: 0,
+  items_needs_review: 0,
+  sources_total: 0,
+  evidence_total: 0,
+  mods_total: 0,
+  average_completion: 0
+};
+
 export function ItemDatabasePage() {
   const [items, setItems] = useState<ItemCatalogEntry[]>([]);
+  const [intelligenceItems, setIntelligenceItems] = useState<ItemIntelligenceRecord[]>([]);
+  const [intelligenceSummary, setIntelligenceSummary] = useState<ItemIntelligenceSummary>(EMPTY_INTELLIGENCE_SUMMARY);
+  const [intelligenceConnected, setIntelligenceConnected] = useState(false);
   const [query, setQuery] = useState('');
   const [modFilter, setModFilter] = useState('all');
   const [selected, setSelected] = useState<ItemCatalogEntry | null>(null);
@@ -34,12 +57,24 @@ export function ItemDatabasePage() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    getItemCatalog()
-      .then((response) => {
+
+    Promise.all([
+      getItemCatalog(),
+      getItemIntelligenceSummary().catch(() => null),
+      listItemIntelligence().catch(() => null)
+    ])
+      .then(([catalogResponse, summaryResponse, intelligenceResponse]) => {
         if (cancelled) return;
-        const entries = response.entries || [];
+        const entries = catalogResponse.entries || [];
         setItems(entries);
         setSelected((current) => current || entries[0] || null);
+        if (summaryResponse) {
+          setIntelligenceSummary(summaryResponse);
+          setIntelligenceConnected(true);
+        }
+        if (intelligenceResponse) {
+          setIntelligenceItems(intelligenceResponse.items || []);
+        }
         setError(null);
       })
       .catch((err) => {
@@ -49,10 +84,17 @@ export function ItemDatabasePage() {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const intelligenceByIdentity = useMemo(() => {
+    const map = new Map<string, ItemIntelligenceRecord>();
+    intelligenceItems.forEach((entry) => map.set(identity(entry.registry_key, entry.meta), entry));
+    return map;
+  }, [intelligenceItems]);
 
   const mods = useMemo(() => {
     return Array.from(new Set(items.map(itemModId))).sort((a, b) => a.localeCompare(b));
@@ -60,10 +102,6 @@ export function ItemDatabasePage() {
 
   const totalSources = useMemo(() => items.reduce((sum, entry) => sum + sourceCount(entry), 0), [items]);
   const withIcons = useMemo(() => items.filter((entry) => entry.has_icon).length, [items]);
-  const initialProgress = useMemo(() => {
-    if (!items.length) return 0;
-    return Math.round(items.reduce((sum, entry) => sum + initialPassportPercent(entry), 0) / items.length);
-  }, [items]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -82,7 +120,11 @@ export function ItemDatabasePage() {
     });
   }, [items, query, modFilter]);
 
-  const selectedProgress = selected ? initialPassportPercent(selected) : 0;
+  const selectedIntelligence = selected
+    ? intelligenceByIdentity.get(identity(selected.key, selected.meta)) || null
+    : null;
+  const selectedProgress = selectedIntelligence?.completion_percent ?? (selected ? initialPassportPercent(selected) : 0);
+  const selectedStatus = selectedIntelligence?.status ?? 'not_imported';
 
   return (
     <section className="item-db-page" aria-label="База предметов">
@@ -90,16 +132,27 @@ export function ItemDatabasePage() {
         <div>
           <div className="item-db-eyebrow">CubixWorld Item Intelligence</div>
           <h1>База предметов</h1>
-          <p>Отдельный каталог паспортов предметов. Сейчас идёт первичное наполнение перед подключением полной Railway-БД.</p>
+          <p>Публичный монитор отдельной Railway-БД паспортов предметов и процесса индексации.</p>
         </div>
         <div className="item-db-counter">{filtered.length} / {items.length}</div>
       </header>
 
+      <div className="item-db-status-row">
+        <span className="item-db-status-chip">Intelligence DB: {intelligenceConnected ? 'подключена' : 'нет соединения'}</span>
+        <span className="item-db-status-chip">В БД: {intelligenceSummary.items_total}</span>
+        <span className="item-db-status-chip">Готово: {intelligenceSummary.items_ready}</span>
+        <span className="item-db-status-chip">На проверку: {intelligenceSummary.items_needs_review}</span>
+      </div>
+
       <div className="item-db-progress-grid" aria-label="Прогресс индексации">
-        <div className="item-db-progress-card"><span>Найдено предметов</span><strong>{items.length}</strong></div>
-        <div className="item-db-progress-card"><span>Модов в каталоге</span><strong>{mods.length}</strong></div>
+        <div className="item-db-progress-card"><span>Найдено исходных предметов</span><strong>{items.length}</strong></div>
+        <div className="item-db-progress-card"><span>Записано в Intelligence DB</span><strong>{intelligenceSummary.items_total}</strong></div>
+        <div className="item-db-progress-card"><span>Источников в Intelligence DB</span><strong>{intelligenceSummary.sources_total}</strong></div>
+        <div className="item-db-progress-card"><span>Evidence-записей</span><strong>{intelligenceSummary.evidence_total}</strong></div>
+        <div className="item-db-progress-card"><span>Модов в исходном каталоге</span><strong>{mods.length}</strong></div>
         <div className="item-db-progress-card"><span>Иконки найдены</span><strong>{withIcons}</strong></div>
-        <div className="item-db-progress-card"><span>Первичная заполненность</span><strong>{initialProgress}%</strong></div>
+        <div className="item-db-progress-card"><span>Модов в Intelligence DB</span><strong>{intelligenceSummary.mods_total}</strong></div>
+        <div className="item-db-progress-card"><span>Средняя готовность паспорта</span><strong>{intelligenceSummary.average_completion}%</strong></div>
       </div>
 
       <div className="item-db-toolbar">
@@ -123,7 +176,9 @@ export function ItemDatabasePage() {
           <div className="item-db-list" role="list">
             {filtered.map((entry) => {
               const active = selected?.raw === entry.raw;
-              const progress = initialPassportPercent(entry);
+              const intelligence = intelligenceByIdentity.get(identity(entry.key, entry.meta));
+              const progress = intelligence?.completion_percent ?? initialPassportPercent(entry);
+              const status = intelligence?.status ?? 'not_imported';
               return (
                 <button
                   type="button"
@@ -137,7 +192,7 @@ export function ItemDatabasePage() {
                   </div>
                   <div className="item-db-row-copy">
                     <strong>{entry.display_ru || entry.display_en || entry.key}</strong>
-                    <span>{entry.key}{entry.meta ? `:${entry.meta}` : ''} · паспорт {progress}%</span>
+                    <span>{entry.key}{entry.meta ? `:${entry.meta}` : ''} · {status} · паспорт {progress}%</span>
                   </div>
                   <span className="item-db-mod">{itemModId(entry)}</span>
                 </button>
@@ -161,9 +216,10 @@ export function ItemDatabasePage() {
                 </div>
 
                 <div className="item-db-status-row">
-                  <span className="item-db-status-chip">Статус: первичный импорт</span>
+                  <span className="item-db-status-chip">Статус: {selectedStatus}</span>
                   <span className="item-db-status-chip">Паспорт: {selectedProgress}%</span>
-                  <span className="item-db-status-chip">Источников сейчас: {sourceCount(selected)}</span>
+                  <span className="item-db-status-chip">Локальных источников: {sourceCount(selected)}</span>
+                  <span className="item-db-status-chip">Intelligence ID: {selectedIntelligence?.id ?? 'ещё не импортирован'}</span>
                 </div>
 
                 <dl className="item-db-facts">
@@ -172,19 +228,20 @@ export function ItemDatabasePage() {
                   <div><dt>Meta</dt><dd>{selected.meta}</dd></div>
                   <div><dt>Иконка</dt><dd>{selected.has_icon ? 'Есть' : 'Нет'}</dd></div>
                   <div><dt>NBT</dt><dd>{selected.has_nbt ? 'Есть' : 'Нет'}</dd></div>
-                  <div><dt>Текущие источники</dt><dd>{(selected.sources || []).join(', ') || '—'}</dd></div>
+                  <div><dt>Текущие локальные источники</dt><dd>{(selected.sources || []).join(', ') || '—'}</dd></div>
                   <div className="wide"><dt>OreDict</dt><dd>{(selected.ore_groups || []).join(', ') || '—'}</dd></div>
                   <div className="wide"><dt>Raw</dt><dd><code>{selected.raw || '—'}</code></dd></div>
+                  {selectedIntelligence?.category ? <div><dt>Категория</dt><dd>{selectedIntelligence.category}</dd></div> : null}
+                  {selectedIntelligence?.tier ? <div><dt>Tier</dt><dd>{selectedIntelligence.tier}</dd></div> : null}
+                  {selectedIntelligence?.rarity ? <div><dt>Редкость</dt><dd>{selectedIntelligence.rarity}</dd></div> : null}
+                  {selectedIntelligence?.confidence != null ? <div><dt>Confidence</dt><dd>{selectedIntelligence.confidence}</dd></div> : null}
+                  {selectedIntelligence?.indexed_at ? <div className="wide"><dt>Последняя индексация</dt><dd>{selectedIntelligence.indexed_at}</dd></div> : null}
                   {selected.nbt_raw ? <div className="wide"><dt>NBT Raw</dt><dd><pre>{selected.nbt_raw}</pre></dd></div> : null}
                 </dl>
 
                 <div className="item-db-future">
-                  <strong>Что будет добавляться в паспорт</strong>
-                  <span>Рецепты получения и использования, частота в крафтах, способы добычи, цены и история цен, ценность, tier/progression, редкость, теги, конфиги, зависимости, внешние источники, confidence, конфликты источников и дата последней проверки.</span>
-                </div>
-                <div className="item-db-future">
-                  <strong>Прогресс источников</strong>
-                  <span>Сейчас видны только уже доступные локальные источники. Следующий этап — отдельная Railway-БД и добавление результатов анализа рецептов, конфигов, модов и открытого интернета.</span>
+                  <strong>Полный паспорт</strong>
+                  <span>Рецепты получения и использования, частота в крафтах, способы добычи, цены и история цен, ценность, tier/progression, редкость, теги, конфиги, зависимости, внешние источники, confidence, конфликты источников и дата последней проверки будут заполняться в отдельной Intelligence DB.</span>
                 </div>
               </>
             ) : <div className="item-db-state">Выберите предмет</div>}
@@ -192,7 +249,7 @@ export function ItemDatabasePage() {
         </div>
       ) : null}
 
-      {!loading && !error ? <div className="item-db-state">Всего зафиксировано локальных связей с источниками: {totalSources}. Эта цифра будет расти по мере индексации.</div> : null}
+      {!loading && !error ? <div className="item-db-state">Локальных связей с источниками: {totalSources}. Отдельная Intelligence DB содержит {intelligenceSummary.sources_total} источников и {intelligenceSummary.evidence_total} evidence-записей.</div> : null}
     </section>
   );
 }
