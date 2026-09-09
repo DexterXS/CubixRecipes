@@ -1,6 +1,7 @@
 import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 import {
   bootstrapItemIntelligenceFromProduction,
+  getBasicEnrichmentStatus,
   getItemIntelligenceEvidence,
   getItemIntelligenceMetrics,
   getItemIntelligenceMods,
@@ -9,8 +10,11 @@ import {
   getItemIntelligenceSummary,
   getItemPanelAtlas,
   getItemPriceHistory,
+  runBasicEnrichmentBatch,
   searchItemIntelligence,
+  startBasicEnrichment,
   updateItemIntelligence,
+  type BasicEnrichmentRun,
   type ItemIntelligenceMod,
   type ItemIntelligenceRecord,
   type ItemIntelligenceSummary,
@@ -85,6 +89,8 @@ export function ItemDatabasePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [priceImportOpen, setPriceImportOpen] = useState(false);
+  const [basicRun, setBasicRun] = useState<BasicEnrichmentRun | null>(null);
+  const [basicRunning, setBasicRunning] = useState(false);
 
   const loadIndex = async (offset = 0, append = false) => {
     const response = await searchItemIntelligence({ q: query.trim(), modId: modFilter, limit: PAGE_SIZE, offset });
@@ -99,10 +105,11 @@ export function ItemDatabasePage() {
     const run = async () => {
       try {
         setLoading(true);
-        const [sum, schemaResponse, atlasResponse] = await Promise.all([
+        const [sum, schemaResponse, atlasResponse, stageA] = await Promise.all([
           getItemIntelligenceSummary(),
           getItemIntelligenceSchema(),
-          getItemPanelAtlas().catch(() => null)
+          getItemPanelAtlas().catch(() => null),
+          getBasicEnrichmentStatus().catch(() => null)
         ]);
         if (cancelled) return;
         let currentSummary = sum;
@@ -116,6 +123,7 @@ export function ItemDatabasePage() {
         ]);
         if (cancelled) return;
         setSummary(currentSummary);
+        setBasicRun(stageA);
         setSchema(schemaResponse.groups || []);
         setAtlas(atlasResponse);
         setItems(indexResponse.items || []);
@@ -201,6 +209,29 @@ export function ItemDatabasePage() {
     }
   };
 
+  const runStageA = async () => {
+    if (basicRunning) return;
+    setBasicRunning(true);
+    setError(null);
+    try {
+      let run = await startBasicEnrichment('production', false);
+      setBasicRun(run);
+      while (run.status === 'running') {
+        run = await runBasicEnrichmentBatch('production', 500);
+        setBasicRun(run);
+        if (run.processed_items % 2500 === 0 || run.status === 'completed') {
+          setSummary(await getItemIntelligenceSummary());
+        }
+      }
+      await loadIndex(0, false);
+      if (selected?.id) setDetail(await getItemIntelligencePassport(selected.id).catch(() => detail));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ошибка Stage A');
+    } finally {
+      setBasicRunning(false);
+    }
+  };
+
   const groups = useMemo(() => [CORE_GROUP, ...schema], [schema]);
   const fieldValue = (groupKey: string, fieldKey: string): unknown => {
     if (groupKey === 'core') return (detail as Record<string, unknown> | null)?.[fieldKey];
@@ -241,7 +272,11 @@ export function ItemDatabasePage() {
   return <section className="item-db-page" aria-label="База предметов">
     <header className="item-db-header">
       <div><div className="item-db-eyebrow">CubixWorld Item Intelligence</div><h1>База предметов</h1></div>
-      <div className="item-db-header-actions"><button type="button" className="ghost-button" onClick={() => setPriceImportOpen(true)}>↑ Загрузить цены</button><div className="item-db-counter">{items.length} / {total}</div></div>
+      <div className="item-db-header-actions">
+        <button type="button" className="ghost-button" disabled={basicRunning} onClick={() => void runStageA()}>{basicRunning ? 'Stage A…' : basicRun?.status === 'completed' ? '↻ Stage A' : '▶ Stage A'}</button>
+        <button type="button" className="ghost-button" onClick={() => setPriceImportOpen(true)}>↑ Загрузить цены</button>
+        <div className="item-db-counter">{items.length} / {total}</div>
+      </div>
     </header>
 
     <div className="item-db-status-row compact">
@@ -250,6 +285,7 @@ export function ItemDatabasePage() {
       <span className="item-db-status-chip">Источники: {summary.sources_total}</span>
       <span className="item-db-status-chip">Evidence: {summary.evidence_total}</span>
       <span className="item-db-status-chip">Средняя готовность: {summary.average_completion}%</span>
+      <span className="item-db-status-chip">Stage A: {basicRun?.status ?? 'not_started'} {basicRun?.total_items ? `${basicRun.processed_items}/${basicRun.total_items} · ${basicRun.progress_percent}%` : ''}</span>
       <span className="item-db-status-chip">Lazy API: ON</span>
     </div>
 
