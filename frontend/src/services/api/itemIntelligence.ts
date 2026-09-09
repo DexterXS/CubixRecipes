@@ -9,12 +9,17 @@ export type PassportField = [string, string, 'text' | 'textarea' | 'number' | 'l
 export type PassportGroup = { key: string; label: string; fields: PassportField[] };
 
 export type ItemIntelligenceRecord = {
-  id: number; server_id: string; registry_key: string; meta: number; nbt_hash: string;
+  id: number; server_id: string; registry_key: string; meta: number; nbt_hash?: string;
   raw?: string | null; mod_id?: string | null; display_ru?: string | null; display_en?: string | null;
   icon_url?: string | null; description?: string | null; category?: string | null; tier?: string | null;
   rarity?: string | null; status: string; completion_percent: number; confidence?: number | null;
   updated_at?: string | null; indexed_at?: string | null; passport?: Record<string, unknown>;
 };
+
+export type ItemIntelligenceIndexResponse = {
+  items: ItemIntelligenceRecord[]; total: number; limit: number; offset: number; has_more: boolean;
+};
+export type ItemIntelligenceMod = { mod_id: string; count: number };
 
 export type ItemIntelligenceBootstrapItem = {
   key: string; meta: number; legacy_id?: number | null; raw?: string | null;
@@ -75,17 +80,37 @@ export async function listItemIntelligence(): Promise<{ items: ItemIntelligenceR
   const pageSize = 10000;
   const all: ItemIntelligenceRecord[] = [];
   for (let offset = 0; ; offset += pageSize) {
-    const page = await request<{ items: ItemIntelligenceRecord[]; limit?: number; offset?: number }>(
-      apiPath(`/item-intelligence/items?limit=${pageSize}&offset=${offset}`)
-    );
+    const page = await request<{ items: ItemIntelligenceRecord[] }>(apiPath(`/item-intelligence/items?limit=${pageSize}&offset=${offset}`));
     const rows = page.items || [];
     all.push(...rows);
     if (rows.length < pageSize) break;
   }
   return { items: all };
 }
+export async function searchItemIntelligence(options?: { q?: string; modId?: string; serverId?: string; limit?: number; offset?: number }): Promise<ItemIntelligenceIndexResponse> {
+  const params = new URLSearchParams();
+  if (options?.q) params.set('q', options.q);
+  if (options?.modId && options.modId !== 'all') params.set('mod_id', options.modId);
+  if (options?.serverId) params.set('server_id', options.serverId);
+  params.set('limit', String(options?.limit ?? 250));
+  params.set('offset', String(options?.offset ?? 0));
+  return request(apiPath(`/item-intelligence/index?${params.toString()}`));
+}
+export async function getItemIntelligenceMods(serverId?: string): Promise<{ mods: ItemIntelligenceMod[] }> {
+  const suffix = serverId ? `?server_id=${encodeURIComponent(serverId)}` : '';
+  return request(apiPath(`/item-intelligence/mods${suffix}`));
+}
 export async function getItemIntelligenceItem(id: number): Promise<ItemIntelligenceRecord> {
   return request(apiPath(`/item-intelligence/items/${id}`));
+}
+export async function getItemIntelligencePassport(id: number): Promise<ItemIntelligenceRecord> {
+  return request(apiPath(`/item-intelligence/items/${id}/passport`));
+}
+export async function getItemIntelligenceEvidence(id: number, limit = 100, offset = 0) {
+  return request<{ items: unknown[]; total: number; limit: number; offset: number; has_more: boolean }>(apiPath(`/item-intelligence/items/${id}/evidence?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}`));
+}
+export async function getItemIntelligenceMetrics(id: number) {
+  return request<{ metrics: unknown[] }>(apiPath(`/item-intelligence/items/${id}/metrics`));
 }
 export async function getItemPriceHistory(id: number, limit = 100): Promise<{ item_id: number; history: ItemPriceHistoryEntry[] }> {
   return request(apiPath(`/item-intelligence/items/${id}/price-history?limit=${encodeURIComponent(limit)}`));
@@ -100,16 +125,16 @@ export async function bootstrapItemIntelligence(items: ItemIntelligenceBootstrap
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, server_id: serverId })
   });
 }
+export async function bootstrapItemIntelligenceFromProduction() {
+  return request<{ processed: number; created: number; updated: number; evidence_created: number; server_id: string }>(apiPath('/item-intelligence/bootstrap-from-production'), { method: 'POST' });
+}
 export async function importItemPrices(
   items: PriceImportItem[], sourceName: string, serverId = 'production', currency = 'server',
   options?: { importId?: string; totalRows?: number; finalize?: boolean }
 ) {
   return request<PriceImportResult>(apiPath('/item-intelligence/import-prices'), {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      items, source_name: sourceName, server_id: serverId, currency,
-      import_id: options?.importId, total_rows: options?.totalRows, finalize: options?.finalize ?? false
-    })
+    body: JSON.stringify({ items, source_name: sourceName, server_id: serverId, currency, import_id: options?.importId, total_rows: options?.totalRows, finalize: options?.finalize ?? false })
   });
 }
 export async function getPriceImportHistory(limit = 10): Promise<{ imports: PriceImportHistory[] }> {
