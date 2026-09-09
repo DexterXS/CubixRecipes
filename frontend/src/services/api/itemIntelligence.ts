@@ -21,6 +21,14 @@ export type ItemIntelligenceIndexResponse = {
 };
 export type ItemIntelligenceMod = { mod_id: string; count: number };
 
+export type BasicEnrichmentRun = {
+  id?: number; stage: string; revision: string; server_id?: string;
+  status: 'not_started' | 'running' | 'completed' | 'failed' | string;
+  total_items: number; processed_items: number; changed_items: number; skipped_items: number;
+  cursor_id: number; progress_percent: number; message?: string | null;
+  started_at?: string | null; updated_at?: string | null; completed_at?: string | null;
+};
+
 export type ItemIntelligenceBootstrapItem = {
   key: string; meta: number; legacy_id?: number | null; raw?: string | null;
   display_ru?: string | null; display_en?: string | null; icon_url?: string | null;
@@ -114,6 +122,15 @@ export async function getItemIntelligenceMetrics(id: number) {
 }
 export async function getItemPriceHistory(id: number, limit = 100): Promise<{ item_id: number; history: ItemPriceHistoryEntry[] }> {
   return request(apiPath(`/item-intelligence/items/${id}/price-history?limit=${encodeURIComponent(limit)}`));
+}
+export async function getBasicEnrichmentStatus(serverId = 'production'): Promise<BasicEnrichmentRun> {
+  return request(apiPath(`/item-intelligence/enrichment/basic/status?server_id=${encodeURIComponent(serverId)}`));
+}
+export async function startBasicEnrichment(serverId = 'production', restart = false): Promise<BasicEnrichmentRun> {
+  return request(apiPath(`/item-intelligence/enrichment/basic/start?server_id=${encodeURIComponent(serverId)}&restart=${restart ? 'true' : 'false'}`), { method: 'POST' });
+}
+export async function runBasicEnrichmentBatch(serverId = 'production', limit = 500): Promise<BasicEnrichmentRun> {
+  return request(apiPath(`/item-intelligence/enrichment/basic/run-batch?server_id=${encodeURIComponent(serverId)}&limit=${encodeURIComponent(limit)}`), { method: 'POST' });
 }
 export async function updateItemIntelligence(id: number, payload: Record<string, unknown>): Promise<ItemIntelligenceRecord> {
   return request(apiPath(`/item-intelligence/items/${id}`), {
