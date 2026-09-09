@@ -95,6 +95,7 @@ export function PriceImportDialog({ onClose, onImported }: Props) {
       const importId = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
       let total: PriceImportResult = {
         processed: 0, matched_rows: 0, matched_items: 0, restricted_rows: 0, unmatched_count: 0,
+        changed_items: 0, unchanged_items: 0,
         unmatched: [], invalid: 0, server_id: 'production', source_name: fileName, import_id: importId
       };
       for (let start = 0; start < rows.length; start += batchSize) {
@@ -109,6 +110,8 @@ export function PriceImportDialog({ onClose, onImported }: Props) {
           processed: total.processed + response.processed,
           matched_rows: total.matched_rows + response.matched_rows,
           matched_items: total.matched_items + response.matched_items,
+          changed_items: (total.changed_items || 0) + (response.changed_items || 0),
+          unchanged_items: (total.unchanged_items || 0) + (response.unchanged_items || 0),
           restricted_rows: total.restricted_rows + response.restricted_rows,
           unmatched_count: total.unmatched_count + response.unmatched_count,
           invalid: total.invalid + response.invalid,
@@ -156,7 +159,7 @@ export function PriceImportDialog({ onClose, onImported }: Props) {
       {busy ? <div className="price-import-progress"><div style={{ width: `${Math.round((processed / rows.length) * 100)}%` }} /></div> : null}
       {error ? <div className="price-import-error">{error}</div> : null}
       {result ? <div className="price-import-result">
-        Импортировано: <b>{result.matched_rows}</b> · обновлено: <b>{result.matched_items}</b> · запрещено продавать: <b>{result.restricted_rows}</b> · не найдено: <b>{result.unmatched_count}</b> · некорректных: <b>{result.invalid}</b>
+        Найдено: <b>{result.matched_rows}</b> · изменилось: <b>{result.changed_items ?? 0}</b> · без изменений: <b>{result.unchanged_items ?? 0}</b> · запрещено продавать: <b>{result.restricted_rows}</b> · не найдено: <b>{result.unmatched_count}</b> · некорректных: <b>{result.invalid}</b>
       </div> : null}
 
       {history.length ? <div className="price-import-history">
