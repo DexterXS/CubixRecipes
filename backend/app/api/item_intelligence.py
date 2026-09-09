@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import logging
 import os
+import threading
 from datetime import datetime, timezone
 from typing import Any
 
@@ -12,6 +14,7 @@ from app.auth.database import normalize_database_url
 
 
 router = APIRouter(prefix='/api/item-intelligence', tags=['item-intelligence'])
+logger = logging.getLogger(__name__)
 
 
 PASSPORT_SCHEMA: list[dict[str, Any]] = [
@@ -255,27 +258,36 @@ class IntelligenceMetric(IntelligenceBase):
 
 _session_factory = None
 _configuration_error: str | None = None
+_session_init_lock = threading.Lock()
 
 
 def _session():
     global _session_factory, _configuration_error
     if _session_factory is not None:
         return _session_factory
-    database_url = os.environ.get('ITEM_INTELLIGENCE_DATABASE_URL', '').strip()
-    if not database_url:
-        _configuration_error = 'ITEM_INTELLIGENCE_DATABASE_URL is not configured'
-        return None
-    if database_url.startswith('${{'):
-        _configuration_error = 'ITEM_INTELLIGENCE_DATABASE_URL is not resolved by Railway'
-        return None
-    try:
-        engine = create_engine(normalize_database_url(database_url), pool_pre_ping=True)
-        IntelligenceBase.metadata.create_all(engine)
-        _session_factory = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
-        _configuration_error = None
-    except Exception as exc:
-        _configuration_error = str(exc)
-        return None
+
+    with _session_init_lock:
+        if _session_factory is not None:
+            return _session_factory
+
+        database_url = os.environ.get('ITEM_INTELLIGENCE_DATABASE_URL', '').strip()
+        if not database_url:
+            _configuration_error = 'ITEM_INTELLIGENCE_DATABASE_URL is not configured'
+            return None
+        if database_url.startswith('${{'):
+            _configuration_error = 'ITEM_INTELLIGENCE_DATABASE_URL is not resolved by Railway'
+            return None
+
+        try:
+            engine = create_engine(normalize_database_url(database_url), pool_pre_ping=True)
+            IntelligenceBase.metadata.create_all(engine)
+            _session_factory = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+            _configuration_error = None
+        except Exception:
+            logger.exception('Failed to initialize Item Intelligence database')
+            _configuration_error = 'Item Intelligence database initialization failed. Check backend logs.'
+            return None
+
     return _session_factory
 
 
