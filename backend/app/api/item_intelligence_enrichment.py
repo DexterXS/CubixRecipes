@@ -21,7 +21,7 @@ from app.api.item_intelligence import (
 
 router = APIRouter(prefix='/api/item-intelligence/enrichment', tags=['item-intelligence'])
 
-STAGE_A_REVISION = 'stage-a-basic-v1'
+STAGE_A_REVISION = 'stage-a-basic-v2'
 
 
 class IntelligenceEnrichmentRun(IntelligenceBase):
@@ -88,7 +88,7 @@ def _stage_source(session) -> IntelligenceSource:
     if source is None:
         source = IntelligenceSource(
             source_type='derived',
-            name='Stage A Basic Enrichment',
+            name='Stage A Basic Enrichment v2',
             canonical_ref=canonical_ref,
             trust_weight=0.95,
             last_checked_at=utc_now(),
@@ -151,11 +151,21 @@ def _enrich_item(session, item: IntelligenceItem, evidence_rows: list[Intelligen
         if text and text not in aliases:
             aliases.append(text)
 
+    raw_value = str(item.raw or snapshot.get('raw') or '').strip()
+    nbt_raw = str(snapshot.get('nbt_raw') or '').strip()
+    icon_ref = str(item.icon_url or snapshot.get('icon_url') or '').strip()
+    variant = f'meta:{item.meta}' if item.meta else 'meta:0'
+
     derived: dict[str, tuple[Any, float, str]] = {
         'aliases': (aliases, 0.98, 'Normalized from display_ru/display_en in the production item catalog.'),
         'legacy_id': (snapshot.get('legacy_id'), 0.98, 'Copied from production catalog evidence.'),
         'ore_dict': (snapshot.get('ore_groups') or [], 0.98, 'Copied from OreDictionary/catalog evidence.'),
+        'item_variant': (variant, 1.0, 'Derived directly from the item metadata value.'),
+        'texture_path': (icon_ref, 0.95, 'Current icon/texture reference from the production catalog.'),
         'server_context': (item.server_id, 1.0, 'Taken from the Item Intelligence record server_id.'),
+        'damage_value': (item.meta, 1.0, 'Minecraft 1.7.x item metadata/damage value stored on the Intelligence record.'),
+        'nbt_raw': (nbt_raw, 1.0, 'Raw NBT copied from production catalog evidence when available.'),
+        'technical_notes': (raw_value, 0.98, 'Raw ItemStack/catalog representation from the production catalog.'),
         'data_revision': (STAGE_A_REVISION, 1.0, 'Stage A enrichment revision.'),
     }
 
@@ -173,7 +183,6 @@ def _enrich_item(session, item: IntelligenceItem, evidence_rows: list[Intelligen
     confidences = [float(row.confidence) for row in evidence_rows if row.confidence is not None]
     avg_confidence = round(sum(confidences) / len(confidences), 3) if confidences else None
 
-    # System quality fields are refreshed every run because they describe current evidence state.
     quality_values: dict[str, tuple[Any, float, str]] = {
         'source_count': (len(source_ids), 1.0, 'Count of distinct evidence sources currently linked to this item.'),
         'source_summary': (', '.join(source_names), 1.0, 'Names of evidence sources currently linked to this item.'),
@@ -183,9 +192,10 @@ def _enrich_item(session, item: IntelligenceItem, evidence_rows: list[Intelligen
     for key, (value, confidence, note) in derived.items():
         if _is_empty(value):
             continue
-        if _is_empty(data.get(key)):
-            data[key] = value
-            changed = True
+        if _is_empty(data.get(key)) or key == 'data_revision':
+            if data.get(key) != value:
+                data[key] = value
+                changed = True
             _upsert_stage_evidence(session, item.id, source.id, f'passport.{key}', value, confidence, note)
 
     for key, (value, confidence, note) in quality_values.items():
@@ -207,6 +217,8 @@ def _enrich_item(session, item: IntelligenceItem, evidence_rows: list[Intelligen
     if item.status in {'not_started', 'seeded'}:
         item.status = 'partial'
         changed = True
+    if changed:
+        item.completion_percent = max(item.completion_percent or 0, 25)
     item.indexed_at = item.indexed_at or utc_now()
     item.updated_at = utc_now()
     passport.data_json = data
@@ -232,7 +244,7 @@ def basic_enrichment_start(server_id: str = 'production', restart: bool = False)
         run = IntelligenceEnrichmentRun(
             stage='basic', server_id=server_id, status='running', total_items=int(total),
             processed_items=0, changed_items=0, skipped_items=0, cursor_id=0,
-            message='Stage A Basic Enrichment', started_at=utc_now(), updated_at=utc_now(),
+            message=f'Stage A Basic Enrichment ({STAGE_A_REVISION})', started_at=utc_now(), updated_at=utc_now(),
         )
         session.add(run)
         session.commit()
