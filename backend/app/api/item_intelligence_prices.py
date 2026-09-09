@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import DateTime, Float, Integer, JSON, String, Text
+from sqlalchemy import Boolean, DateTime, Float, Integer, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.api.item_intelligence import (
@@ -42,6 +42,26 @@ class PriceImportBatch(IntelligenceBase):
     unmatched_json: Mapped[list[dict[str, Any]]] = mapped_column(JSON, nullable=False, default=list)
     created_at: Mapped[Any] = mapped_column(DateTime(timezone=True), nullable=False, default=utc_now)
     completed_at: Mapped[Any | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class ItemPriceHistory(IntelligenceBase):
+    __tablename__ = 'intelligence_item_price_history'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    item_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
+    import_id: Mapped[str] = mapped_column(String(96), nullable=False, index=True)
+    source_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    source_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    server_id: Mapped[str] = mapped_column(String(96), nullable=False, index=True)
+    currency: Mapped[str] = mapped_column(String(64), nullable=False, default='server')
+    raw_price: Mapped[float] = mapped_column(Float, nullable=False)
+    price: Mapped[float | None] = mapped_column(Float, nullable=True)
+    sale_restricted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    trade_allowed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    previous_raw_price: Mapped[float | None] = mapped_column(Float, nullable=True)
+    previous_sale_restricted: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    change_type: Mapped[str] = mapped_column(String(32), nullable=False, default='price_changed')
+    observed_at: Mapped[Any] = mapped_column(DateTime(timezone=True), nullable=False, default=utc_now, index=True)
 
 
 def _text(value: Any) -> str:
@@ -97,12 +117,51 @@ def _history_payload(row: PriceImportBatch) -> dict[str, Any]:
     }
 
 
+def _item_price_history_payload(row: ItemPriceHistory) -> dict[str, Any]:
+    return {
+        'id': row.id,
+        'item_id': row.item_id,
+        'import_id': row.import_id,
+        'source_name': row.source_name,
+        'server_id': row.server_id,
+        'currency': row.currency,
+        'raw_price': row.raw_price,
+        'price': row.price,
+        'sale_restricted': row.sale_restricted,
+        'trade_allowed': row.trade_allowed,
+        'previous_raw_price': row.previous_raw_price,
+        'previous_sale_restricted': row.previous_sale_restricted,
+        'change_type': row.change_type,
+        'observed_at': row.observed_at.isoformat() if row.observed_at else None,
+    }
+
+
+def _as_float(value: Any) -> float | None:
+    try:
+        return None if value is None else float(value)
+    except (TypeError, ValueError):
+        return None
+
+
 @router.get('/price-imports')
 def price_imports(limit: int = 10):
     factory = _require_session()
     with factory() as session:
         rows = session.query(PriceImportBatch).order_by(PriceImportBatch.id.desc()).limit(max(1, min(limit, 50))).all()
         return {'imports': [_history_payload(row) for row in rows]}
+
+
+@router.get('/items/{item_id}/price-history')
+def item_price_history(item_id: int, limit: int = 100):
+    factory = _require_session()
+    with factory() as session:
+        item = session.get(IntelligenceItem, item_id)
+        if item is None:
+            raise HTTPException(status_code=404, detail='Item intelligence record not found')
+        rows = session.query(ItemPriceHistory).filter(
+            ItemPriceHistory.item_id == item_id,
+        ).order_by(ItemPriceHistory.observed_at.desc(), ItemPriceHistory.id.desc()).limit(max(1, min(limit, 500))).all()
+        return {'item_id': item_id, 'history': [_item_price_history_payload(row) for row in rows]}
 
 
 @router.post('/import-prices')
@@ -124,6 +183,8 @@ def import_prices(payload: dict[str, Any]):
     matched_rows = 0
     matched_items = 0
     restricted_rows = 0
+    changed_items = 0
+    unchanged_items = 0
     unmatched: list[dict[str, Any]] = []
     invalid = 0
     normal_prices: list[float] = []
@@ -180,13 +241,23 @@ def import_prices(payload: dict[str, Any]):
             for item in candidates:
                 passport = _passport(session, item.id)
                 data = dict(passport.data_json or {})
-                previous = data.get('current_price')
-                if previous is not None and previous != raw_price:
-                    data['old_server_price'] = previous
+                had_previous = 'raw_server_price' in data
+                previous_raw = _as_float(data.get('raw_server_price'))
+                previous_restricted = bool(data.get('sale_restricted')) if had_previous else None
+                changed = (not had_previous) or previous_raw != raw_price or previous_restricted != restricted
 
+                if not changed:
+                    unchanged_items += 1
+                    matched_items += 1
+                    continue
+
+                if had_previous:
+                    data['old_server_price'] = data.get('current_price')
+
+                now = utc_now()
                 data['raw_server_price'] = raw_price
                 data['price_source'] = source_name
-                data['price_updated_at'] = utc_now().isoformat()
+                data['price_updated_at'] = now.isoformat()
                 data['price_rule_flags'] = flags
                 data['price_nbt'] = nbt or None
 
@@ -212,9 +283,42 @@ def import_prices(payload: dict[str, Any]):
                     if data.get('server_overrides') == 'Продажа предмета запрещена правилами сервера (маркер цены 999999).':
                         data['server_overrides'] = None
 
+                if not had_previous:
+                    change_type = 'initial'
+                elif restricted and not previous_restricted:
+                    change_type = 'sale_restricted'
+                elif not restricted and previous_restricted:
+                    change_type = 'sale_allowed'
+                else:
+                    change_type = 'price_changed'
+
+                session.add(ItemPriceHistory(
+                    item_id=item.id,
+                    import_id=import_id,
+                    source_id=source.id,
+                    source_name=source_name,
+                    server_id=server_id,
+                    currency=currency,
+                    raw_price=raw_price,
+                    price=None if restricted else raw_price,
+                    sale_restricted=restricted,
+                    trade_allowed=not restricted,
+                    previous_raw_price=previous_raw,
+                    previous_sale_restricted=previous_restricted,
+                    change_type=change_type,
+                    observed_at=now,
+                ))
+
+                history_count = session.query(ItemPriceHistory).filter(ItemPriceHistory.item_id == item.id).count() + 1
+                data['price_history_count'] = history_count
+                data['last_price_change_at'] = now.isoformat()
+                data['price_history_summary'] = (
+                    f'Продажа запрещена' if restricted else f'Цена изменена на {raw_price:g} {currency}'
+                )
+
                 passport.data_json = data
-                passport.updated_at = utc_now()
-                item.updated_at = utc_now()
+                passport.updated_at = now
+                item.updated_at = now
 
                 metric = session.query(IntelligenceMetric).filter(
                     IntelligenceMetric.item_id == item.id,
@@ -224,14 +328,14 @@ def import_prices(payload: dict[str, Any]):
                 if metric is None:
                     metric = IntelligenceMetric(
                         item_id=item.id, metric_key='server_price', context_key=server_id,
-                        unit=currency, confidence=0.95, calculated_at=utc_now(),
+                        unit=currency, confidence=0.95, calculated_at=now,
                     )
                     session.add(metric)
                 metric.value_numeric = None if restricted else raw_price
                 metric.value_text = 'sale_restricted' if restricted else None
                 metric.unit = currency
                 metric.confidence = 0.95
-                metric.calculated_at = utc_now()
+                metric.calculated_at = now
 
                 field_name = 'server_sale_restriction' if restricted else 'server_price'
                 snapshot = {
@@ -256,12 +360,14 @@ def import_prices(payload: dict[str, Any]):
                 if evidence is None:
                     session.add(IntelligenceEvidence(
                         item_id=item.id, source_id=source.id, field_name=field_name,
-                        value_json=snapshot, confidence=0.95, observed_at=utc_now(),
+                        value_json=snapshot, confidence=0.95, observed_at=now,
                     ))
                 else:
                     evidence.value_json = snapshot
                     evidence.confidence = 0.95
-                    evidence.observed_at = utc_now()
+                    evidence.observed_at = now
+
+                changed_items += 1
                 matched_items += 1
 
         history.total_rows = max(history.total_rows, total_rows)
@@ -288,6 +394,8 @@ def import_prices(payload: dict[str, Any]):
         'processed': len(rows),
         'matched_rows': matched_rows,
         'matched_items': matched_items,
+        'changed_items': changed_items,
+        'unchanged_items': unchanged_items,
         'restricted_rows': restricted_rows,
         'unmatched_count': len(unmatched),
         'unmatched': unmatched[:100],
