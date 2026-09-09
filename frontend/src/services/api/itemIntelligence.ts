@@ -72,7 +72,17 @@ export async function getItemIntelligenceSchema(): Promise<{ groups: PassportGro
   return { groups };
 }
 export async function listItemIntelligence(): Promise<{ items: ItemIntelligenceRecord[] }> {
-  return request(apiPath('/item-intelligence/items'));
+  const pageSize = 10000;
+  const all: ItemIntelligenceRecord[] = [];
+  for (let offset = 0; ; offset += pageSize) {
+    const page = await request<{ items: ItemIntelligenceRecord[]; limit?: number; offset?: number }>(
+      apiPath(`/item-intelligence/items?limit=${pageSize}&offset=${offset}`)
+    );
+    const rows = page.items || [];
+    all.push(...rows);
+    if (rows.length < pageSize) break;
+  }
+  return { items: all };
 }
 export async function getItemIntelligenceItem(id: number): Promise<ItemIntelligenceRecord> {
   return request(apiPath(`/item-intelligence/items/${id}`));
