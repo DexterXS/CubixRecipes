@@ -25,10 +25,17 @@ export type ItemIntelligenceBootstrapItem = {
 export type PriceImportItem = {
   registry_data: string; metadata: number; nbt?: string | null; price: number; flags?: string[];
 };
+export type PriceImportHistory = {
+  import_id: string; source_name: string; server_id: string; currency: string; status: string;
+  total_rows: number; processed_rows: number; matched_rows: number; matched_items: number;
+  restricted_rows: number; unmatched_rows: number; invalid_rows: number;
+  normal_price_min?: number | null; normal_price_max?: number | null;
+  created_at?: string | null; completed_at?: string | null;
+};
 export type PriceImportResult = {
-  processed: number; matched_rows: number; matched_items: number; unmatched_count: number;
+  processed: number; matched_rows: number; matched_items: number; restricted_rows: number; unmatched_count: number;
   unmatched: Array<{ registryData: string; metadata: number; price: number }>;
-  invalid: number; server_id: string; source_name: string;
+  invalid: number; server_id: string; source_name: string; import_id: string; history?: PriceImportHistory;
 };
 
 export async function getItemIntelligenceSummary(): Promise<ItemIntelligenceSummary> {
@@ -53,9 +60,18 @@ export async function bootstrapItemIntelligence(items: ItemIntelligenceBootstrap
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, server_id: serverId })
   });
 }
-export async function importItemPrices(items: PriceImportItem[], sourceName: string, serverId = 'production', currency = 'server') {
+export async function importItemPrices(
+  items: PriceImportItem[], sourceName: string, serverId = 'production', currency = 'server',
+  options?: { importId?: string; totalRows?: number; finalize?: boolean }
+) {
   return request<PriceImportResult>(apiPath('/item-intelligence/import-prices'), {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items, source_name: sourceName, server_id: serverId, currency })
+    body: JSON.stringify({
+      items, source_name: sourceName, server_id: serverId, currency,
+      import_id: options?.importId, total_rows: options?.totalRows, finalize: options?.finalize ?? false
+    })
   });
+}
+export async function getPriceImportHistory(limit = 10): Promise<{ imports: PriceImportHistory[] }> {
+  return request(apiPath(`/item-intelligence/price-imports?limit=${encodeURIComponent(limit)}`));
 }
