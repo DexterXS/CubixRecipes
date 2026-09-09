@@ -1,65 +1,46 @@
 import { apiPath, request } from './client';
 
 export type ItemIntelligenceSummary = {
-  items_total: number;
-  items_ready: number;
-  items_needs_review: number;
-  sources_total: number;
-  evidence_total: number;
-  mods_total: number;
-  average_completion: number;
+  items_total: number; items_ready: number; items_needs_review: number;
+  sources_total: number; evidence_total: number; mods_total: number; average_completion: number;
 };
 
+export type PassportField = [string, string, 'text' | 'textarea' | 'number' | 'list'];
+export type PassportGroup = { key: string; label: string; fields: PassportField[] };
+
 export type ItemIntelligenceRecord = {
-  id: number;
-  server_id: string;
-  registry_key: string;
-  meta: number;
-  nbt_hash: string;
-  raw?: string | null;
-  mod_id?: string | null;
-  display_ru?: string | null;
-  display_en?: string | null;
-  icon_url?: string | null;
-  description?: string | null;
-  category?: string | null;
-  tier?: string | null;
-  rarity?: string | null;
-  status: string;
-  completion_percent: number;
-  confidence?: number | null;
-  updated_at?: string | null;
-  indexed_at?: string | null;
+  id: number; server_id: string; registry_key: string; meta: number; nbt_hash: string;
+  raw?: string | null; mod_id?: string | null; display_ru?: string | null; display_en?: string | null;
+  icon_url?: string | null; description?: string | null; category?: string | null; tier?: string | null;
+  rarity?: string | null; status: string; completion_percent: number; confidence?: number | null;
+  updated_at?: string | null; indexed_at?: string | null; passport?: Record<string, unknown>;
 };
 
 export type ItemIntelligenceBootstrapItem = {
-  key: string;
-  meta: number;
-  legacy_id?: number | null;
-  raw?: string | null;
-  display_ru?: string | null;
-  display_en?: string | null;
-  icon_url?: string | null;
-  ore_groups?: string[];
-  sources?: string[];
-  nbt_raw?: string | null;
+  key: string; meta: number; legacy_id?: number | null; raw?: string | null;
+  display_ru?: string | null; display_en?: string | null; icon_url?: string | null;
+  ore_groups?: string[]; sources?: string[]; nbt_raw?: string | null;
 };
 
 export async function getItemIntelligenceSummary(): Promise<ItemIntelligenceSummary> {
-  return request<ItemIntelligenceSummary>(apiPath('/item-intelligence/summary'));
+  return request(apiPath('/item-intelligence/summary'));
 }
-
+export async function getItemIntelligenceSchema(): Promise<{ groups: PassportGroup[] }> {
+  return request(apiPath('/item-intelligence/schema'));
+}
 export async function listItemIntelligence(): Promise<{ items: ItemIntelligenceRecord[] }> {
-  return request<{ items: ItemIntelligenceRecord[] }>(apiPath('/item-intelligence/items'));
+  return request(apiPath('/item-intelligence/items'));
 }
-
-export async function bootstrapItemIntelligence(
-  items: ItemIntelligenceBootstrapItem[],
-  serverId: string
-): Promise<{ processed: number; created: number; updated: number; evidence_created: number; server_id: string }> {
-  return request(apiPath('/item-intelligence/bootstrap-catalog'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items, server_id: serverId })
+export async function getItemIntelligenceItem(id: number): Promise<ItemIntelligenceRecord> {
+  return request(apiPath(`/item-intelligence/items/${id}`));
+}
+export async function updateItemIntelligence(id: number, payload: Record<string, unknown>): Promise<ItemIntelligenceRecord> {
+  return request(apiPath(`/item-intelligence/items/${id}`), {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+  });
+}
+export async function bootstrapItemIntelligence(items: ItemIntelligenceBootstrapItem[], serverId: string) {
+  return request<{ processed: number; created: number; updated: number; evidence_created: number; server_id: string }>(apiPath('/item-intelligence/bootstrap-catalog'), {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, server_id: serverId })
   });
 }
