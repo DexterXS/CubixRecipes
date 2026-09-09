@@ -32,8 +32,16 @@ export type PriceImportHistory = {
   normal_price_min?: number | null; normal_price_max?: number | null;
   created_at?: string | null; completed_at?: string | null;
 };
+export type ItemPriceHistoryEntry = {
+  id: number; item_id: number; import_id: string; source_name: string; server_id: string; currency: string;
+  raw_price: number; price?: number | null; sale_restricted: boolean; trade_allowed: boolean;
+  previous_raw_price?: number | null; previous_sale_restricted?: boolean | null;
+  change_type: 'initial' | 'price_changed' | 'sale_restricted' | 'sale_allowed' | string;
+  observed_at?: string | null;
+};
 export type PriceImportResult = {
   processed: number; matched_rows: number; matched_items: number; restricted_rows: number; unmatched_count: number;
+  changed_items?: number; unchanged_items?: number;
   unmatched: Array<{ registryData: string; metadata: number; price: number }>;
   invalid: number; server_id: string; source_name: string; import_id: string; history?: PriceImportHistory;
 };
@@ -47,6 +55,8 @@ const ECONOMY_RESTRICTION_FIELDS: PassportField[] = [
   ['exclude_from_market_calculations', 'Исключить из расчётов рынка', 'text'],
   ['price_source', 'Источник цены', 'text'],
   ['price_updated_at', 'Цена обновлена', 'text'],
+  ['price_history_count', 'Изменений цены', 'number'],
+  ['last_price_change_at', 'Последнее изменение цены', 'text'],
 ];
 
 export async function getItemIntelligenceSummary(): Promise<ItemIntelligenceSummary> {
@@ -66,6 +76,9 @@ export async function listItemIntelligence(): Promise<{ items: ItemIntelligenceR
 }
 export async function getItemIntelligenceItem(id: number): Promise<ItemIntelligenceRecord> {
   return request(apiPath(`/item-intelligence/items/${id}`));
+}
+export async function getItemPriceHistory(id: number, limit = 100): Promise<{ item_id: number; history: ItemPriceHistoryEntry[] }> {
+  return request(apiPath(`/item-intelligence/items/${id}/price-history?limit=${encodeURIComponent(limit)}`));
 }
 export async function updateItemIntelligence(id: number, payload: Record<string, unknown>): Promise<ItemIntelligenceRecord> {
   return request(apiPath(`/item-intelligence/items/${id}`), {
