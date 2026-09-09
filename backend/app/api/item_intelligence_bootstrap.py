@@ -137,6 +137,7 @@ def _bootstrap_batch(items: list[dict[str, Any]], server_id: str) -> dict[str, i
                 'icon_url': raw_item.get('icon_url'),
                 'ore_groups': raw_item.get('ore_groups') or [],
                 'has_nbt': bool(nbt_raw),
+                'nbt_raw': nbt_raw or None,
             }
             for source_name in sorted({_text(name).lower() for name in source_names if _text(name)}):
                 source = _source(session, source_name)
