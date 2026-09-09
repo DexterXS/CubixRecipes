@@ -14,6 +14,7 @@ import {
   type PassportGroup
 } from '../../services/api';
 import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry } from '../../types';
+import { PriceImportDialog } from './PriceImportDialog';
 import './ItemDatabasePage.css';
 
 function itemModId(entry: ItemCatalogEntry): string {
@@ -77,6 +78,7 @@ export function ItemDatabasePage() {
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [priceImportOpen, setPriceImportOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -233,11 +235,21 @@ export function ItemDatabasePage() {
     }
   };
 
+  const refreshAfterPriceImport = async () => {
+    const [sum, list] = await Promise.all([getItemIntelligenceSummary(), listItemIntelligence()]);
+    setSummary(sum);
+    setIntelItems(list.items || []);
+    if (detail?.id) setDetail(await getItemIntelligenceItem(detail.id).catch(() => detail));
+  };
+
   return (
     <section className="item-db-page" aria-label="База предметов">
       <header className="item-db-header">
         <div><div className="item-db-eyebrow">CubixWorld Item Intelligence</div><h1>База предметов</h1></div>
-        <div className="item-db-counter">{filtered.length} / {items.length}</div>
+        <div className="item-db-header-actions">
+          <button type="button" className="ghost-button" onClick={() => setPriceImportOpen(true)}>↑ Загрузить цены</button>
+          <div className="item-db-counter">{filtered.length} / {items.length}</div>
+        </div>
       </header>
 
       <div className="item-db-status-row compact">
@@ -299,6 +311,7 @@ export function ItemDatabasePage() {
           </aside>
         </div>
       )}
+      {priceImportOpen ? <PriceImportDialog onClose={() => setPriceImportOpen(false)} onImported={refreshAfterPriceImport} /> : null}
     </section>
   );
 }
