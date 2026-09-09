@@ -6,30 +6,38 @@ type AppWorkspaceNavProps = {
   onSelectTab: (tab: WorkspaceTab) => void;
 };
 
-function setCubixCraftWorkspace(active: boolean) {
+function currentSpecialWorkspace(): 'cubixcraft' | 'itemdb' | null {
+  const value = new URLSearchParams(window.location.search).get('workspace');
+  return value === 'cubixcraft' || value === 'itemdb' ? value : null;
+}
+
+function setSpecialWorkspace(workspace: 'cubixcraft' | 'itemdb' | null) {
   const url = new URL(window.location.href);
-  if (active) url.searchParams.set('workspace', 'cubixcraft');
+  if (workspace) url.searchParams.set('workspace', workspace);
   else url.searchParams.delete('workspace');
   window.history.pushState({}, '', url.toString());
-  window.dispatchEvent(new CustomEvent('cubixcraft-workspace-change', { detail: { active } }));
+  window.dispatchEvent(new CustomEvent('app-workspace-change', { detail: { workspace } }));
+  window.dispatchEvent(new CustomEvent('cubixcraft-workspace-change', { detail: { active: workspace === 'cubixcraft' } }));
 }
 
 export function AppWorkspaceNav({ tabs, activeTab, onSelectTab }: AppWorkspaceNavProps) {
-  const cubixCraftActive = new URLSearchParams(window.location.search).get('workspace') === 'cubixcraft';
+  const specialWorkspace = currentSpecialWorkspace();
 
   const handleSelect = (tab: WorkspaceTab) => {
-    if (tab === 'cubixcraft') {
-      setCubixCraftWorkspace(true);
+    if (tab === 'cubixcraft' || tab === 'itemdb') {
+      setSpecialWorkspace(tab);
       return;
     }
-    if (cubixCraftActive) setCubixCraftWorkspace(false);
+    if (specialWorkspace) setSpecialWorkspace(null);
     onSelectTab(tab);
   };
 
   return (
     <nav className="main-tabs app-workspace-nav" aria-label="workspace-tabs">
       {tabs.map((tab) => {
-        const active = tab.id === 'cubixcraft' ? cubixCraftActive : (!cubixCraftActive && activeTab === tab.id);
+        const active = tab.id === 'cubixcraft' || tab.id === 'itemdb'
+          ? specialWorkspace === tab.id
+          : (!specialWorkspace && activeTab === tab.id);
         return (
           <button
             key={tab.id}
