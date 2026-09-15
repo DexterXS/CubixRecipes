@@ -1225,9 +1225,9 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 }
 
 .draft-preview-grid .grid-wrap[data-grid-size='9'] {
-  --craft-cell: min(calc((100cqw - 30px) / 9), calc((100cqh - 30px) / 9));
-  --preview-icon-scale: .72;
-  gap: 1px;
+  --craft-cell: min(var(--icon-draft-preview9-cell, 36px), calc((100cqw - 30px) / 9), calc((100cqh - 30px) / 9));
+  --preview-icon-scale: var(--icon-draft-preview9-scale, .6875);
+  gap: var(--icon-draft-preview9-gap, 1px);
 }
 
 .draft-preview-grid .grid-row {
@@ -1248,14 +1248,33 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 
 .draft-preview-grid .grid-wrap[data-grid-size='9'] .grid-cell.size-9 .cell-icon-slot img,
 .draft-preview-grid .grid-wrap[data-grid-size='9'] .grid-cell.size-9 .cell-icon-slot .animated-icon {
-  width: 32px;
-  height: 32px;
-  transform: scale(var(--preview-icon-scale));
+  width: var(--icon-draft-preview9-render-width, 32px);
+  height: var(--icon-draft-preview9-render-height, 32px);
+  max-width: none;
+  max-height: none;
+  position: var(--icon-draft-preview9-render-position, relative);
+  left: var(--icon-draft-preview9-render-left, auto);
+  top: var(--icon-draft-preview9-render-top, auto);
+  margin: 0;
+  transform: var(--icon-draft-preview9-render-transform, scale(var(--preview-icon-scale)));
   transform-origin: center;
 }
 
 .draft-preview-grid .grid-wrap[data-grid-size='9'] .grid-cell.size-9 .cell-atlas-icon {
-  transform: scale(var(--preview-icon-scale));
+  width: var(--icon-draft-preview9-render-width, 32px);
+  height: var(--icon-draft-preview9-render-height, 32px);
+  position: var(--icon-draft-preview9-render-position, relative);
+  left: var(--icon-draft-preview9-render-left, auto);
+  top: var(--icon-draft-preview9-render-top, auto);
+  margin: 0;
+  transform: var(--icon-draft-preview9-render-transform, scale(var(--preview-icon-scale)));
+  transform-origin: center;
+}
+
+.draft-preview-grid .grid-wrap[data-grid-size='9'] .grid-cell.size-9 .cell-icon-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
 }
 
 .draft-template-list-shell {

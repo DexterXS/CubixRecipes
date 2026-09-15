@@ -821,10 +821,15 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
   expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(16);
+  const draftPreview9Surface = screen.getByLabelText('icon-surface-draftPreview9');
+  expect(within(draftPreview9Surface).getByText('Черновики: превью 9×9')).toBeTruthy();
+  fireEvent.change(screen.getByLabelText('icon-draftPreview9-icon'), { target: { value: '24' } });
+  expect(document.querySelector('main')?.style.getPropertyValue('--icon-draft-preview9-icon')).toBe('24px');
+  expect(document.querySelector('main')?.style.getPropertyValue('--icon-draft-preview9-render-position')).toBe('absolute');
   fireEvent.click(screen.getByLabelText('icon-settings-profile-mobile'));
   expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(16);
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);

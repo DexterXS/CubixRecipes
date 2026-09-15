@@ -417,6 +417,7 @@ Last full rebuild: 2026-06-29
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
   - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, Auctions preview/lot/NEI surfaces, held item, and mobile inspection.
+  - The `draftPreview9` surface controls the actual item icons inside the Drafts 9×9 preview, including cell/icon size, gap, and runtime centering mode.
   - Builds shared CSS custom properties, desktop/mobile default profiles, and dynamic craft-grid fitting from viewport size.
 - `frontend/src/features/icon-settings/useIconViewport.ts`
   - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.

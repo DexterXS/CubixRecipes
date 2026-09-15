@@ -49,7 +49,7 @@ export const iconSurfaceDefinitions: IconSurfaceDefinition[] = [
   { id: 'cubixCraftGrid', label: 'CubixCraft 9x9', description: 'Ячейки и иконки отдельной сетки CubixCraft', defaults: { cell: 36, icon: 20, gap: 2, mode: 'absolute' }, minCell: 24, maxCell: 52, minIcon: 8, maxIcon: 40 },
   { id: 'craftOutput', label: 'Output', description: 'Слот результата крафта', defaults: { cell: 52, icon: 32, gap: 0, mode: 'scale' }, minCell: 36, maxCell: 80, minIcon: 16, maxIcon: 56 },
   { id: 'draftPreview', label: 'Превью 2x2/3x3', description: 'Предпросмотр обычных черновиков', defaults: { cell: 48, icon: 28, gap: 2, mode: 'scale' }, minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 44 },
-  { id: 'draftPreview9', label: 'Превью 9x9', description: 'Предпросмотр черновиков 9x9', defaults: { cell: 36, icon: 14, gap: 2, mode: 'scale' }, minCell: 20, maxCell: 44, minIcon: 8, maxIcon: 28 },
+  { id: 'draftPreview9', label: 'Черновики: превью 9×9', description: 'Иконки предметов внутри сетки черновика 9×9', defaults: { cell: 36, icon: 22, gap: 2, mode: 'scale' }, minCell: 20, maxCell: 44, minIcon: 8, maxIcon: 28 },
   { id: 'draftSelected', label: 'Выбранный черновик', description: 'Большая иконка выбранного предмета', defaults: { cell: 72, icon: 42, gap: 0, mode: 'scale' }, minCell: 44, maxCell: 96, minIcon: 20, maxIcon: 72 },
   { id: 'tasks', label: 'Задачи', description: 'Иконки в карточках задач', defaults: { cell: 42, icon: 32, gap: 6, mode: 'scale' }, minCell: 28, maxCell: 72, minIcon: 14, maxIcon: 56 },
   { id: 'auctionPreview', label: 'Аукционы: превью', description: 'Главная иконка лота и карточки аукциона', defaults: { cell: 84, icon: 40, gap: 8, mode: 'scale' }, minCell: 48, maxCell: 120, minIcon: 18, maxIcon: 72 },
@@ -73,7 +73,7 @@ export const defaultMobileIconSurfaceSettings: IconSurfaceSettingsMap = {
   craftGrid9: { cell: 25, icon: 14, gap: 1, mode: 'scale' },
   cubixCraftGrid: { cell: 32, icon: 20, gap: 1, mode: 'absolute' },
   craftOutput: { cell: 36, icon: 24, gap: 0, mode: 'scale' },
-  draftPreview9: { cell: 30, icon: 12, gap: 1, mode: 'scale' },
+  draftPreview9: { cell: 30, icon: 18, gap: 1, mode: 'scale' },
   auctionPreview: { cell: 72, icon: 34, gap: 8, mode: 'scale' },
   auctionLotItems: { cell: 40, icon: 26, gap: 6, mode: 'scale' },
   auctionNei: { cell: 42, icon: 30, gap: 7, mode: 'scale' },
@@ -164,6 +164,17 @@ export function buildIconSurfaceCssVars(
     vars[`${prefix}-icon`] = `${value.icon}px`;
     vars[`${prefix}-gap`] = `${value.gap}px`;
     vars[`${prefix}-scale`] = String(value.icon / 32);
+    if (surface.id === 'draftPreview9') {
+      const centered = value.mode === 'absolute' || value.mode === 'scale';
+      vars[`${prefix}-render-position`] = centered ? 'absolute' : 'relative';
+      vars[`${prefix}-render-left`] = centered ? '50%' : 'auto';
+      vars[`${prefix}-render-top`] = centered ? '50%' : 'auto';
+      vars[`${prefix}-render-width`] = value.mode === 'scale' ? '32px' : `${value.icon}px`;
+      vars[`${prefix}-render-height`] = value.mode === 'scale' ? '32px' : `${value.icon}px`;
+      vars[`${prefix}-render-transform`] = value.mode === 'scale'
+        ? `translate(-50%, -50%) scale(${value.icon / 32})`
+        : value.mode === 'absolute' ? 'translate(-50%, -50%)' : 'none';
+    }
   });
   return vars as CSSProperties;
 }
