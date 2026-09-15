@@ -308,10 +308,11 @@ Last full rebuild: 2026-06-29
   - Depends on `AuthGate`, `ServerSelect`, `App`, global styles, mobile styles, debug logging, and shared types.
 - `frontend/src/app/workspaceNavigation.ts`
   - App-shell owner for top-level workspace tab IDs, product-oriented labels, section areas, descriptions, and permission-based visibility.
+  - Stores localized short descriptions, detail text, and contextual hints for the desktop navigation tooltip.
   - Exports shared `WorkspaceTab` so the page shell and navigation components do not redefine the workspace-tab contract.
 - `frontend/src/app/AppWorkspaceNav.tsx`
   - Desktop workspace navigation component for the global product sections currently backed by existing workspaces: recipes, drafts, tasks, files, and tech.
-  - Preserves `workspace-tab-*` test IDs for existing workflow tests.
+  - Uses compact line icons, preserves `workspace-tab-*` test IDs for existing workflow tests, and exposes per-tab detail cards on hover/focus.
 - `frontend/src/app/ServerContextChip.tsx`
   - Global active-server chip in the app shell, including the quick change-server action.
   - Keeps server context visible outside recipe-specific UI.
@@ -572,6 +573,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`: mobile recipe workspace shell behavior.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`: recipe matrix helper behavior.
 - `frontend/src/app/workspaceNavigation.test.ts`: app-shell workspace tab map, labels, and permission filtering.
+- `frontend/src/app/AppWorkspaceNav.test.tsx`: compact navigation icons, active state, and tooltip content.
 - Global settings modal behavior is covered through `frontend/src/App.test.tsx`.
 - Technical panel shell/sidebar behavior is covered through `frontend/src/App.test.tsx`.
 - Debug event list behavior is covered through `frontend/src/App.test.tsx`.

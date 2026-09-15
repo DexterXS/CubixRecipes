@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a compact desktop workspace navigation with line icons and accessible hover/focus cards that explain each section without filling the header with descriptions.
 - Connected the Drafts 9×9 preview item icons to the technical icon settings, with explicit centering controls and readable default sizing.
 - Improved the Drafts workspace layout: no item is selected by default, Ctrl-selection can be fully cleared, long labels stay inside their controls, desktop panels use the available width, and 9x9 previews render at a readable size with foreground selection outlines.
 - Added a compact Drafts workspace with fitted 3x3/9x9 previews, expandable multi-recipe cards, locally persisted primary-recipe stars, Ctrl multi-selection, and batch append of selected draft recipes to a cloud `.zs` file.
