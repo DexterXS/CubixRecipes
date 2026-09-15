@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a compact Drafts workspace with fitted 3x3/9x9 previews, expandable multi-recipe cards, locally persisted primary-recipe stars, Ctrl multi-selection, and batch append of selected draft recipes to a cloud `.zs` file.
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
 - Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.

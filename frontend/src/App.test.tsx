@@ -1667,6 +1667,70 @@ test('saved recipe draft templates can be browsed, previewed, opened, and remove
   await waitFor(() => expect(screen.queryByLabelText(/^draft-template-<minecraft:planks>-/)).toBeFalsy());
 });
 
+test('draft workspace supports compact grid modes, recipe selection, and batch cloud export', async () => {
+  const recipe = (id: string, outputRaw: string, sourceText: string, size = 3) => ({
+    id,
+    outputRaw,
+    recipe: {
+      recipe_uid: id,
+      recipe_type: size === 9 ? 'avaritia_extreme_shaped' : 'ct_shaped',
+      binding_mode: 'soft',
+      name: null,
+      output: { raw: outputRaw },
+      output_resolution: null,
+      grid_w: size,
+      grid_h: size,
+      source: { kind: 'local_draft', path: `draft:${outputRaw}` },
+      matrix: Array.from({ length: size }, () => Array.from({ length: size }, () => ({ raw: null })))
+    },
+    sourceText,
+    createdByEmail: adminUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    name: `${outputRaw} ${id}`
+  });
+
+  mockRecipeDraftTemplates = [
+    recipe('planks-primary', '<minecraft:planks>', 'recipes.addShaped(<minecraft:planks>, [[<minecraft:stick>]]);', 9),
+    recipe('planks-alt', '<minecraft:planks>', 'recipes.addShaped(<minecraft:planks>, [[<minecraft:stone>]]);'),
+    recipe('stick-only', '<minecraft:stick>', 'recipes.addShaped(<minecraft:stick>, [[<minecraft:planks>]]);')
+  ];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+
+  const planksItem = await screen.findByLabelText('draft-item-<minecraft:planks>');
+  fireEvent.click(planksItem);
+  expect(screen.getByLabelText('draft-template-disclosure')).toBeTruthy();
+  expect(screen.getByLabelText('draft-grid-mode-9').getAttribute('aria-pressed')).toBe('true');
+
+  fireEvent.click(screen.getByLabelText('draft-template-select-planks-alt'));
+  expect(screen.getByText('Отмечено: 2')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('draft-template-<minecraft:planks>-planks-alt'));
+  expect(screen.getByLabelText('draft-grid-mode-3').getAttribute('aria-pressed')).toBe('true');
+  fireEvent.click(screen.getByLabelText('draft-template-<minecraft:planks>-planks-primary'));
+
+  const stickItem = await screen.findByLabelText('draft-item-<minecraft:stick>');
+  fireEvent.click(stickItem, { ctrlKey: true });
+  expect(screen.getByLabelText('draft-selected-count').textContent).toContain('Выбрано: 2');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Добавить рецепты в облако' }));
+  const dialog = await screen.findByRole('dialog', { name: 'draft-batch-cloud-save' });
+  fireEvent.change(within(dialog).getByLabelText('draft-batch-cloud-filename'), { target: { value: 'draft_batch.zs' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Добавить в облако' }));
+
+  await waitFor(() => {
+    const uploadCall = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.find(([url]) => url === '/api/admin/zs-cloud/files/upload');
+    expect(uploadCall).toBeTruthy();
+    const body = JSON.parse(String(uploadCall?.[1]?.body ?? '{}'));
+    expect(body.filename).toBe('draft_batch.zs');
+    expect(body.mode).toBe('append');
+    expect(body.text).toContain('recipes.addShaped(<minecraft:planks>, [[<minecraft:stick>]]);');
+    expect(body.text).toContain('recipes.addShaped(<minecraft:stick>, [[<minecraft:planks>]]);');
+    expect(body.text).not.toContain('recipes.addShaped(<minecraft:planks>, [[<minecraft:stone>]]);');
+  });
+});
+
 test('admin can browse recipe draft templates created by moderators', async () => {
   mockRecipeDraftTemplates = [{
     id: 'moderator-template-1',

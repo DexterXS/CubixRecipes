@@ -18,6 +18,7 @@ import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
+import { DraftsWorkspace, type DraftCloudSelection } from '../features/drafts/DraftsWorkspace';
 import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
@@ -1621,8 +1622,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>('none');
   const [collapsedDraftGroups, setCollapsedDraftGroups] = useState<Record<string, boolean>>({});
   const [draftItemPage, setDraftItemPage] = useState(0);
-  const [previewDraftTemplateId, setPreviewDraftTemplateId] = useState<string | null>(null);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
+  const [draftBatchCloudTemplates, setDraftBatchCloudTemplates] = useState<RecipeDraftTemplate[] | null>(null);
+  const [draftBatchCloudNameDraft, setDraftBatchCloudNameDraft] = useState('drafts_export.zs');
+  const [draftBatchCloudError, setDraftBatchCloudError] = useState('');
   const [recipeAvailability, setRecipeAvailability] = useState<Record<string, boolean>>({});
   const [recipeUsesModal, setRecipeUsesModal] = useState<RecipeUsesModalState | null>(null);
   const [similarRecipes, setSimilarRecipes] = useState<SimilarRecipeState | null>(null);
@@ -3873,9 +3876,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!selectedDraftItemRaw) return [];
     return getRecipeDraftTemplatesForRaw(selectedDraftItemRaw).sort((left, right) => right.updatedAt - left.updatedAt);
   }, [recipeDraftTemplatesByOutputKey, selectedDraftItemRaw]);
-  const activeDraftPreview = useMemo(() => (
-    selectedDraftTemplates.find((draft) => draft.id === previewDraftTemplateId) ?? selectedDraftTemplates[0] ?? null
-  ), [previewDraftTemplateId, selectedDraftTemplates]);
 
   useEffect(() => {
     setNeiPage(0);
@@ -3896,18 +3896,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
     setSelectedDraftItemRaw(visibleRaws[0] ?? null);
   }, [draftItemEntries, selectedDraftItemRaw]);
-
-  useEffect(() => {
-    if (!selectedDraftTemplates.length) {
-      if (previewDraftTemplateId) {
-        setPreviewDraftTemplateId(null);
-      }
-      return;
-    }
-    if (!previewDraftTemplateId || !selectedDraftTemplates.some((draft) => draft.id === previewDraftTemplateId)) {
-      setPreviewDraftTemplateId(selectedDraftTemplates[0].id);
-    }
-  }, [previewDraftTemplateId, selectedDraftTemplates]);
 
   useEffect(() => {
     const lookupRaws = availabilityLookupRaws;
@@ -5447,6 +5435,83 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         message: 'Recipe draft template saved locally after backend failure',
         details: { error: error instanceof Error ? error.message : String(error) }
       });
+    }
+  }
+
+  function handleDraftBatchExport(selection: DraftCloudSelection) {
+    if (!canManageCloudFiles) {
+      setStatus('Нет прав для добавления рецептов в облако.');
+      return;
+    }
+    if (!selection.itemRaws.length) {
+      setStatus('Выберите хотя бы один предмет.');
+      return;
+    }
+
+    const selectedTemplateIds = new Set(selection.selectedTemplateIds);
+    const templatesById = new Map(recipeDraftTemplates.map((template) => [template.id, template]));
+    const pickedTemplates = new Map<string, RecipeDraftTemplate>();
+
+    selection.itemRaws.forEach((raw) => {
+      const candidates = getRecipeDraftTemplatesForRaw(raw);
+      if (selection.mode === 'selected') {
+        candidates
+          .filter((template) => selectedTemplateIds.has(template.id))
+          .forEach((template) => pickedTemplates.set(template.id, template));
+        return;
+      }
+
+      const configuredPrimaryId = selection.primaryTemplateIds[raw];
+      const primary = configuredPrimaryId ? templatesById.get(configuredPrimaryId) : undefined;
+      const chosen = primary && candidates.some((template) => template.id === primary.id)
+        ? primary
+        : candidates[0];
+      if (chosen) pickedTemplates.set(chosen.id, chosen);
+    });
+
+    const templates = [...pickedTemplates.values()].filter((template) => template.sourceText.trim());
+    if (!templates.length) {
+      setStatus('Нет рецептов для выгрузки.');
+      return;
+    }
+    setDraftBatchCloudTemplates(templates);
+    setDraftBatchCloudNameDraft('drafts_export.zs');
+    setDraftBatchCloudError('');
+  }
+
+  function closeDraftBatchCloudModal() {
+    setDraftBatchCloudTemplates(null);
+    setDraftBatchCloudError('');
+  }
+
+  async function submitDraftBatchCloud() {
+    if (!draftBatchCloudTemplates?.length) return;
+    const validation = validateCloudRecipeFilename(draftBatchCloudNameDraft);
+    if (validation.error || !validation.filename) {
+      setDraftBatchCloudError(validation.error ?? 'Введите корректное имя .zs файла.');
+      return;
+    }
+
+    const sourceText = draftBatchCloudTemplates
+      .map((template) => template.sourceText.trim())
+      .filter(Boolean)
+      .join('\n\n');
+    if (!sourceText) {
+      setDraftBatchCloudError('У выбранных шаблонов нет исходного текста рецепта.');
+      return;
+    }
+
+    setStatus(`Добавляем рецепты в ${validation.filename}...`);
+    try {
+      const payload = await uploadZsCloudFile(validation.filename, sourceText, 'append');
+      setCloudFiles(payload.files);
+      const uploadedCount = draftBatchCloudTemplates.length;
+      closeDraftBatchCloudModal();
+      setStatus(`В облако добавлено рецептов: ${uploadedCount} → ${validation.filename}`);
+      void refreshCloudFiles();
+    } catch (error) {
+      setDraftBatchCloudError(error instanceof Error ? error.message : String(error));
+      setStatus('Не удалось добавить рецепты в облако.');
     }
   }
 
@@ -7055,6 +7120,61 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function renderDraftBatchCloudModal() {
+    if (!draftBatchCloudTemplates?.length) return null;
+    const validation = validateCloudRecipeFilename(draftBatchCloudNameDraft);
+    const visibleError = draftBatchCloudError || validation.error;
+    const previewNames = draftBatchCloudTemplates.slice(0, 3).map((template) => template.name).join(', ');
+    const extraCount = Math.max(0, draftBatchCloudTemplates.length - 3);
+    return (
+      <div className="modal-backdrop" role="presentation" onClick={closeDraftBatchCloudModal}>
+        <form
+          className="modal cloud-save-modal draft-batch-cloud-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="draft-batch-cloud-save"
+          onClick={(event) => event.stopPropagation()}
+          onSubmit={(event) => {
+            event.preventDefault();
+            void submitDraftBatchCloud();
+          }}
+        >
+          <div className="modal-header">
+            <div>
+              <h2>Добавить рецепты в облако</h2>
+              <span className="modal-subtitle">Выбрано рецептов: {draftBatchCloudTemplates.length}. Добавление выполняется в конец .zs файла.</span>
+            </div>
+            <button type="button" className="ghost-button" onClick={closeDraftBatchCloudModal}>Закрыть</button>
+          </div>
+          <div className="settings-modal-body">
+            <label className="field-block">
+              <span>Имя .zs файла</span>
+              <input
+                aria-label="draft-batch-cloud-filename"
+                autoFocus
+                value={draftBatchCloudNameDraft}
+                onChange={(event) => {
+                  setDraftBatchCloudNameDraft(event.target.value);
+                  setDraftBatchCloudError('');
+                }}
+                placeholder="drafts_export.zs"
+              />
+            </label>
+            <div className="cloud-save-preview">
+              <span>Рецепты</span>
+              <strong>{previewNames}{extraCount ? ` и ещё ${extraCount}` : ''}</strong>
+            </div>
+            {visibleError ? <div className="inline-hint inline-hint-warning">{visibleError}</div> : null}
+            <div className="inline-actions cloud-save-actions">
+              <button type="button" className="ghost-button" onClick={closeDraftBatchCloudModal}>Отмена</button>
+              <button type="submit" disabled={Boolean(validation.error)}>Добавить в облако</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
   function renderSaveConflictModal() {
     if (!isSaveConflictModalOpen) return null;
     return (
@@ -7168,182 +7288,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return <img src={iconUrl} alt="" onError={() => setItemSearchIcons((current) => ({ ...current, [resolvedRaw]: null }))} />;
     }
     return null;
-  }
-
-  function renderDraftItemsPanel() {
-    return (
-      <div className="workspace-panel-shell panel-draft-items">
-        <Panel title="Черновики" subtitle="Только предметы с сохранёнными шаблонами" className="draft-items-panel">
-          <div className="draft-filter-grid">
-            <input aria-label="draft-item-search" type="search" value={draftItemSearchQuery} onChange={(event) => setDraftItemSearchQuery(event.target.value)} placeholder="Поиск шаблона, mod:item или ID" />
-            <select aria-label="draft-item-sort" value={draftItemSortMode} onChange={(event) => setDraftItemSortMode(event.target.value as DraftItemSortMode)}>
-              <option value="date-desc">Сначала новые</option>
-              <option value="date-asc">Сначала старые</option>
-              <option value="drafts-desc">Сначала больше черновиков</option>
-              <option value="drafts-asc">Сначала меньше черновиков</option>
-              <option value="name">По названию</option>
-            </select>
-            <select aria-label="draft-item-group" value={draftItemGroupMode} onChange={(event) => setDraftItemGroupMode(event.target.value as DraftItemGroupMode)}>
-              <option value="none">Без группировки</option>
-              <option value="mod">По моду</option>
-              <option value="author">По персоналу</option>
-              <option value="date">По дате</option>
-              <option value="grid-size">По типу сетки</option>
-            </select>
-          </div>
-          <div className="nei-pager" aria-label="draft-item-pagination">
-            <button type="button" className="ghost-button icon-button" aria-label="draft-items-prev-page" disabled={draftItemPage <= 0} onClick={() => changeDraftItemPage(-1)}>‹</button>
-            <strong>{draftItemPage + 1}/{draftItemPageCount}</strong>
-            <button type="button" className="ghost-button icon-button" aria-label="draft-items-next-page" disabled={draftItemPage >= draftItemPageCount - 1} onClick={() => changeDraftItemPage(1)}>›</button>
-          </div>
-          <div className="draft-item-list" aria-label="draft-item-list">
-            {draftItemsPage.length === 0 ? (
-              <div className="draft-empty-state">Нет сохранённых шаблонов.</div>
-            ) : groupedDraftItems.map((group) => {
-              const isCollapsed = Boolean(collapsedDraftGroups[group.key]);
-              return (
-                <div key={group.key} className="draft-item-group">
-                  {draftItemGroupMode !== 'none' && (
-                    <button
-                      type="button"
-                      className={`draft-group-header${isCollapsed ? ' is-collapsed' : ''}`}
-                      onClick={() => setCollapsedDraftGroups((curr) => ({ ...curr, [group.key]: !isCollapsed }))}
-                    >
-                      <span className="draft-group-chevron" aria-hidden="true">▼</span>
-                      {group.name}
-                    </button>
-                  )}
-                  {!isCollapsed && (
-                    <div className={`draft-group-items${draftItemGroupMode !== 'none' ? ' has-header' : ''}`}>
-                      {group.items.map((entry) => {
-                        const raw = entry.raw;
-                        const draftCount = entry.draftCount;
-                        const availability = getRecipeAvailability(raw);
-                        const selected = raw === selectedDraftItemRaw;
-                        const icon = renderDraftCatalogIcon(raw);
-                        const nbtClass = entry.hasNbt ? 'has-nbt' : 'no-nbt';
-                        return (
-                          <button
-                            key={raw}
-                            type="button"
-                            className={`draft-item-button recipe-${availability} ${nbtClass} ${draftCount > 0 ? 'has-drafts' : ''} ${selected ? 'active' : ''}`.trim()}
-                            aria-label={`draft-item-${raw}`}
-                            data-item-raw={raw}
-                            onMouseEnter={() => updateHoveredItemRaw(raw)}
-                            onFocus={() => updateHoveredItemRaw(raw)}
-                            onMouseLeave={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                            onBlur={() => updateHoveredItemRaw((current) => (current === raw ? null : current))}
-                            onClick={() => setSelectedDraftItemRaw(raw)}
-                          >
-                            <span className={`nei-icon ${icon ? 'has-icon' : 'is-loading'}`}>
-                              {icon}
-                            </span>
-                            {draftCount > 0 ? <span className="draft-count-badge">{draftCount}</span> : null}
-                            {renderItemTooltip(raw)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </Panel>
-      </div>
-    );
-  }
-
-  function renderDraftTemplatesPanel() {
-    const selectedTitle = selectedDraftItemRaw ? resolveCellTitle(selectedDraftItemRaw) : 'Предмет не выбран';
-    const draftPreviewAtlasUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
-    return (
-      <div className="workspace-panel-shell panel-draft-templates">
-        <Panel title="Шаблоны" subtitle={selectedDraftItemRaw ?? 'Выберите предмет слева'} className="draft-templates-panel">
-          {selectedDraftItemRaw ? (
-            <div className="draft-selected-item">
-              <span className="output-icon-slot draft-selected-icon">{renderCraftItemIcon(selectedDraftItemRaw, undefined, false, 1, selectedTitle)}</span>
-              <div>
-                <strong>{selectedTitle}</strong>
-                <span>{selectedDraftItemRaw}</span>
-              </div>
-            </div>
-          ) : null}
-          {selectedDraftTemplates.length ? (
-            <>
-              {activeDraftPreview ? (
-                <div className="draft-template-preview" aria-label="draft-template-preview">
-                  <div className="draft-preview-header">
-                    <div className="draft-preview-meta">
-                      <strong>{activeDraftPreview.name}</strong>
-                      <span>{activeDraftPreview.outputRaw}</span>
-                      <small>Создал: {activeDraftPreview.createdByEmail}</small>
-                      <small>Обновлён: {new Date(activeDraftPreview.updatedAt).toLocaleString()}</small>
-                    </div>
-                    <button type="button" aria-label="edit-selected-draft-template" onClick={() => openRecipeDraftTemplate(activeDraftPreview)}>Редактировать рецепт</button>
-                  </div>
-                  <div className="draft-preview-grid">
-                  <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={uiPreferences.display_mode} animationsEnabled={areAnimationsEnabled} editorMode="view" extremeGroupGap={uiPreferences.workspace_layout.extreme_grid_gap ?? 8} heldItemRaw={null} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} renderItemTooltip={renderItemTooltip} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
-                  </div>
-                </div>
-              ) : null}
-              <div className="draft-template-list" aria-label="draft-template-list">
-                {selectedDraftTemplates.map((draft) => {
-                  const active = draft.id === activeDraftPreview?.id;
-                  return (
-                    <div
-                      key={draft.id}
-                      className={`draft-template-card ${active ? 'active' : ''}`.trim()}
-                      tabIndex={0}
-                      aria-label={`draft-template-${draft.outputRaw}-${draft.id}`}
-                      aria-selected={active}
-                      onMouseEnter={() => setPreviewDraftTemplateId(draft.id)}
-                      onFocus={() => setPreviewDraftTemplateId(draft.id)}
-                      onClick={() => setPreviewDraftTemplateId(draft.id)}
-                      onKeyDown={(event) => {
-                        if (event.target !== event.currentTarget) return;
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          setPreviewDraftTemplateId(draft.id);
-                        }
-                      }}
-                      onContextMenu={(event) => {
-                        event.preventDefault();
-                        setDraftTemplateContextMenu({ draftId: draft.id, x: event.clientX, y: event.clientY });
-                      }}
-                    >
-                      <div className="draft-template-card-head">
-                        <div className="draft-template-main">
-                          <strong>{draft.name}</strong>
-                          <span>{new Date(draft.updatedAt).toLocaleString()}</span>
-                          <span>{draft.createdByEmail}</span>
-                        </div>
-                        <span className="draft-template-status">{active ? 'В превью' : 'Просмотр'}</span>
-                      </div>
-                      <div className="draft-template-actions">
-                        <button
-                          type="button"
-                          className="secondary-button draft-template-edit"
-                          aria-label={`edit-draft-template-${draft.id}`}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            openRecipeDraftTemplate(draft);
-                          }}
-                        >
-                          Редактировать рецепт
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ) : (
-            <div className="inline-hint inline-hint-warning">Нет шаблонов для выбранного предмета.</div>
-          )}
-        </Panel>
-      </div>
-    );
   }
 
   function renderTextureToolsPanel() {
@@ -7832,10 +7776,40 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function renderWorkspace() {
     if (workspaceTab === 'recipe') {
       return (
-        <div className="workspace-layout workspace-layout-drafts">
-          <div className="workspace-column workspace-left">{renderDraftItemsPanel()}</div>
-          <div className="workspace-column workspace-right">{renderDraftTemplatesPanel()}</div>
-        </div>
+        <DraftsWorkspace
+          email={authUser.email}
+          selectedDraftItemRaw={selectedDraftItemRaw}
+          draftItemEntries={draftItemEntries}
+          groupedDraftItems={groupedDraftItems}
+          draftItemSearchQuery={draftItemSearchQuery}
+          draftItemSortMode={draftItemSortMode}
+          draftItemGroupMode={draftItemGroupMode}
+          collapsedDraftGroups={collapsedDraftGroups}
+          draftItemPage={draftItemPage}
+          draftItemPageCount={draftItemPageCount}
+          selectedDraftTemplates={selectedDraftTemplates}
+          itemPanelAtlas={itemPanelAtlas}
+          draftPreviewAtlasUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
+          displayMode={uiPreferences.display_mode}
+          animationsEnabled={areAnimationsEnabled}
+          canManageCloudFiles={canManageCloudFiles}
+          resolveCellTitle={resolveCellTitle}
+          renderDraftCatalogIcon={renderDraftCatalogIcon}
+          renderCraftItemIcon={renderCraftItemIcon}
+          renderItemTooltip={renderItemTooltip}
+          resolveRecipeGridIconStyle={resolveRecipeGridIconStyle}
+          getRecipeAvailability={getRecipeAvailability}
+          onSelectDraftItem={setSelectedDraftItemRaw}
+          onChangeDraftSearch={setDraftItemSearchQuery}
+          onChangeDraftSort={(value) => setDraftItemSortMode(value as DraftItemSortMode)}
+          onChangeDraftGroup={(value) => setDraftItemGroupMode(value as DraftItemGroupMode)}
+          onChangeDraftPage={(delta) => changeDraftItemPage(delta >= 0 ? 1 : -1)}
+          onToggleDraftGroup={(key) => setCollapsedDraftGroups((current) => ({ ...current, [key]: !current[key] }))}
+          onOpenDraft={openRecipeDraftTemplate}
+          onOpenDraftContextMenu={(draftId, x, y) => setDraftTemplateContextMenu({ draftId, x, y })}
+          onExportDrafts={handleDraftBatchExport}
+          onItemHover={updateHoveredItemRaw}
+        />
       );
     }
     if (workspaceTab === 'tasks' && canManageTasks) {
@@ -8098,6 +8072,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       {renderTouchItemInspection()}
       {renderNeiContextMenu()}
       {renderDraftTemplateContextMenu()}
+      {renderDraftBatchCloudModal()}
       {renderCloudContextMenu()}
       {renderCustomItemModal()}
       {renderWipeUpdateModal()}
