@@ -1700,6 +1700,8 @@ test('draft workspace supports compact grid modes, recipe selection, and batch c
   fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
 
   const planksItem = await screen.findByLabelText('draft-item-<minecraft:planks>');
+  expect(planksItem.className).not.toContain('active');
+  expect(screen.queryByLabelText('draft-selected-count')).toBeFalsy();
   fireEvent.click(planksItem);
   expect(screen.getByLabelText('draft-template-disclosure')).toBeTruthy();
   expect(screen.getByLabelText('draft-grid-mode-9').getAttribute('aria-pressed')).toBe('true');
@@ -1711,6 +1713,13 @@ test('draft workspace supports compact grid modes, recipe selection, and batch c
   fireEvent.click(screen.getByLabelText('draft-template-<minecraft:planks>-planks-primary'));
 
   const stickItem = await screen.findByLabelText('draft-item-<minecraft:stick>');
+  fireEvent.click(stickItem, { ctrlKey: true });
+  expect(screen.getByLabelText('draft-selected-count').textContent).toContain('Выбрано: 2');
+  fireEvent.click(stickItem, { ctrlKey: true });
+  expect(screen.getByLabelText('draft-selected-count').textContent).toContain('Выбрано: 1');
+  fireEvent.click(planksItem, { ctrlKey: true });
+  expect(screen.queryByLabelText('draft-selected-count')).toBeFalsy();
+  fireEvent.click(planksItem);
   fireEvent.click(stickItem, { ctrlKey: true });
   expect(screen.getByLabelText('draft-selected-count').textContent).toContain('Выбрано: 2');
 
@@ -1757,6 +1766,7 @@ test('admin can browse recipe draft templates created by moderators', async () =
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+  fireEvent.click(await screen.findByLabelText('draft-item-<minecraft:planks>'));
   const template = await screen.findByLabelText('draft-template-<minecraft:planks>-moderator-template-1');
 
   expect(within(template).getByText(moderatorUser.email)).toBeTruthy();

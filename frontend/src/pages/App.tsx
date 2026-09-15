@@ -3891,10 +3891,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     const visibleRaws = draftItemEntries.map((entry) => entry.raw);
-    if (selectedDraftItemRaw && visibleRaws.includes(selectedDraftItemRaw)) {
+    if (!selectedDraftItemRaw || visibleRaws.includes(selectedDraftItemRaw)) {
       return;
     }
-    setSelectedDraftItemRaw(visibleRaws[0] ?? null);
+    setSelectedDraftItemRaw(null);
   }, [draftItemEntries, selectedDraftItemRaw]);
 
   useEffect(() => {

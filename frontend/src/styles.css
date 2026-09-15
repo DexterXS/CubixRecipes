@@ -1072,6 +1072,14 @@ h1 { margin-bottom: 4px; font-size: 26px; }
   gap: 10px;
 }
 
+@media (min-width: 1281px) {
+  .workspace-layout-drafts {
+    width: min(100%, 1780px);
+    max-width: 1780px;
+    grid-template-columns: minmax(0, 1.55fr) minmax(520px, .9fr);
+  }
+}
+
 .draft-items-panel .panel-body,
 .draft-templates-panel .panel-body {
   min-width: 0;
@@ -1099,7 +1107,38 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 }
 
 .draft-item-button.multi-selected {
-  box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+  z-index: 70;
+  isolation: isolate;
+  border-color: var(--accent-strong);
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 1px;
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--panel) 92%, transparent), 0 0 0 4px var(--accent-strong), 0 7px 16px rgba(0, 0, 0, .38);
+}
+
+.draft-filter-grid > select {
+  min-width: 0;
+  padding: 8px 28px 8px 9px;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+}
+
+.draft-templates-panel > .panel-header .panel-header-main,
+.draft-preview-meta,
+.draft-selected-item > div {
+  min-width: 0;
+}
+
+.draft-templates-panel > .panel-header .panel-header-main > p,
+.draft-preview-meta strong,
+.draft-preview-meta span,
+.draft-preview-meta small,
+.draft-selected-item strong,
+.draft-selected-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .draft-selected-item {
@@ -1169,8 +1208,8 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 
 .draft-preview-grid {
   container-type: size;
-  height: clamp(150px, 20vh, 220px);
-  min-height: 150px;
+  height: clamp(230px, 28vh, 300px);
+  min-height: 230px;
   padding: 5px;
 }
 
@@ -1186,8 +1225,8 @@ h1 { margin-bottom: 4px; font-size: 26px; }
 }
 
 .draft-preview-grid .grid-wrap[data-grid-size='9'] {
-  --craft-cell: min(calc((100cqw - 44px) / 9), calc((100cqh - 44px) / 9));
-  --preview-icon-scale: .62;
+  --craft-cell: min(calc((100cqw - 30px) / 9), calc((100cqh - 30px) / 9));
+  --preview-icon-scale: .72;
   gap: 1px;
 }
 

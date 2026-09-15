@@ -144,12 +144,6 @@ export function DraftsWorkspace({
   const selectedTitle = selectedDraftItemRaw ? resolveCellTitle(selectedDraftItemRaw) : 'Предмет не выбран';
 
   useEffect(() => {
-    if (selectedDraftItemRaw && !selectedItemRaws.length) {
-      setSelectedItemRaws([selectedDraftItemRaw]);
-    }
-  }, [selectedDraftItemRaw, selectedItemRaws.length]);
-
-  useEffect(() => {
     setPrimaryTemplateIds(loadPrimaryTemplateIds(email));
   }, [email]);
 
