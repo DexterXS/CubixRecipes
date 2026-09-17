@@ -3506,6 +3506,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (custom) {
       return custom.display_name;
     }
+    if (rawHasNbtTag(raw)) {
+      const exactEntry = itemPanelEntryByRaw.get(raw);
+      const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
+      if (exactTitle) {
+        return exactTitle;
+      }
+    }
     const parsed = parseItemRaw(raw);
     if (!parsed) {
       return raw;
@@ -3788,7 +3795,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [recipeDraftTemplates]);
   function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
     const templates = new Map<string, RecipeDraftTemplate>();
-    recipeLookupKeysForRaw(raw).forEach((key) => {
+    const lookupKeys = rawHasNbtTag(raw) ? [raw] : recipeLookupKeysForRaw(raw);
+    lookupKeys.forEach((key) => {
       (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
     });
     return [...templates.values()];

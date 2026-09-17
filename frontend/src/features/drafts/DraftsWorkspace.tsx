@@ -87,6 +87,15 @@ function persistPrimaryTemplateIds(email: string, value: Record<string, string>)
   }
 }
 
+function draftTemplateDisplayName(draft: RecipeDraftTemplate, resolveCellTitle: (raw: string) => string): string {
+  const exactTitle = resolveCellTitle(draft.outputRaw).trim();
+  const generatedSuffix = draft.name.match(/(\s+#\d+)\s*$/)?.[1];
+  if (!generatedSuffix || !exactTitle || exactTitle === draft.outputRaw) {
+    return draft.name;
+  }
+  return `${exactTitle}${generatedSuffix}`;
+}
+
 export function DraftsWorkspace({
   email,
   selectedDraftItemRaw,
@@ -345,6 +354,7 @@ export function DraftsWorkspace({
                       {selectedDraftTemplates.map((draft) => {
                         const active = draft.id === activeDraftPreview?.id;
                         const primary = isPrimaryTemplate(draft);
+                        const displayName = draftTemplateDisplayName(draft, resolveCellTitle);
                         return (
                           <div
                             key={draft.id}
@@ -368,7 +378,7 @@ export function DraftsWorkspace({
                               <input type="checkbox" aria-label={`draft-template-select-${draft.id}`} checked={Boolean(selectedTemplateIds[draft.id])} onChange={(event) => setTemplateSelected(draft.id, event.target.checked)} onClick={(event) => event.stopPropagation()} />
                               <span className="draft-template-icon">{renderCraftItemIcon(draft.outputRaw, draft.recipe.output_resolution?.icon_url, draft.recipe.output_resolution?.animated, draft.recipe.output_resolution?.animation_meta?.frametime, resolveCellTitle(draft.outputRaw))}</span>
                               <div className="draft-template-main">
-                                <strong>{draft.name}</strong>
+                                <strong>{displayName}</strong>
                                 <span>{draft.outputRaw}</span>
                                 <small><span>Создал: </span><span>{draft.createdByEmail}</span><span> · {new Date(draft.updatedAt).toLocaleString()}</span></small>
                               </div>

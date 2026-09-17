@@ -78,6 +78,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed Drafts NBT variant selection: opening one exact item variant no longer includes recipes for other NBT variants, and existing draft cards now display the exact catalog name for their output.
 - Fixed slow first-load item icons after a backend restart: itempanel atlases are now loaded from the last published per-server snapshot, and startup never regenerates them automatically.
 - Fixed the remaining first-load browser stall: the base itempanel atlas is now applied immediately, while generated mod-icon atlases keep their separate sprite layer instead of being downloaded and merged synchronously in a client-side Canvas.
 - Fixed the cold-server loading state: the bundled catalog and atlas are now shown immediately while the server-specific catalog and atlas load in the background and replace the temporary data when ready.

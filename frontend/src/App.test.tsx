@@ -1788,6 +1788,46 @@ test('draft workspace supports compact grid modes, recipe selection, and batch c
   });
 });
 
+test('draft selection keeps NBT variants separate and uses the exact variant title', async () => {
+  const exactRaw = '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})';
+  const otherVariantRaw = '<examplemod:charged:1>.withTag({charge: 7, ea_module_admin: 1})';
+  const makeDraft = (id: string, outputRaw: string, name: string) => ({
+    id,
+    outputRaw,
+    recipe: {
+      recipe_uid: id,
+      recipe_type: 'ct_shaped',
+      binding_mode: 'soft',
+      name: null,
+      output: { raw: outputRaw },
+      output_resolution: null,
+      grid_w: 1,
+      grid_h: 1,
+      source: { kind: 'local_draft', path: `draft:${outputRaw}` },
+      matrix: [[{ raw: null }]]
+    },
+    sourceText: `recipes.addShaped(${outputRaw}, [[<minecraft:stick>]]);`,
+    createdByEmail: adminUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    name
+  });
+
+  mockRecipeDraftTemplates = [
+    makeDraft('charged-exact', exactRaw, 'Старое общее имя #1'),
+    makeDraft('charged-other', otherVariantRaw, 'Другая версия #2')
+  ];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+  fireEvent.click(await screen.findByLabelText(`draft-item-${exactRaw}`));
+
+  const templateList = await screen.findByLabelText('draft-template-list');
+  expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
+  expect(within(templateList).getByText('Charged item #1')).toBeTruthy();
+  expect(within(templateList).queryByText('Другая версия #2')).toBeFalsy();
+});
+
 test('admin can browse recipe draft templates created by moderators', async () => {
   mockRecipeDraftTemplates = [{
     id: 'moderator-template-1',

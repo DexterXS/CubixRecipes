@@ -379,6 +379,7 @@ Last full rebuild: 2026-06-29
 ### Drafts Feature
 - `frontend/src/features/drafts/DraftsWorkspace.tsx`
   - Owns the compact Drafts workspace presentation and local UI state for Ctrl multi-selection, expandable recipe lists, primary-recipe selection, fitted 3x3/9x9 previews, and batch cloud-export selection.
+  - Displays the exact itempanel name for NBT outputs when an older saved draft name contains only the generated numeric suffix.
   - Scoped Drafts styles keep long labels within controls, use the available desktop panel width, fit 9x9 previews to a readable area, and render multi-selection in the foreground.
   - Receives draft data, icon/grid renderers, context-menu callbacks, and cloud-export orchestration from `pages/App.tsx`; the existing draft-template delete context menu remains owned by the page shell.
 
