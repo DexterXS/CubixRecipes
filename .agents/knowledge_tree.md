@@ -136,6 +136,12 @@ Last full rebuild: 2026-06-29
 - `backend/app/indexer/itempanel_icon_catalog.py`
   - Scans itempanel CSV plus `itempanel_icons`, detects missing/bad icons, builds atlas data without requiring Pillow.
   - Classes: `ItemPanelIconEntry`, `ItemPanelIconCatalog`.
+- `backend/app/indexer/itempanel_atlas_builder.py`
+  - Owns itempanel atlas construction and delegates persistent storage to the atlas cache, keeping the catalog scanner focused on source indexing and resolution.
+  - Class: `ItemPanelAtlasBuilder`.
+- `backend/app/indexer/itempanel_atlas_cache.py`
+  - Persists the generated itempanel atlas and manifest per server, keyed by the CSV/icon source fingerprint, so restarts do not rebuild the atlas inside the first API request.
+  - Class: `ItemPanelAtlasCache`.
   - Primary startup icon source when available.
 - `backend/app/resolver/item_resolver.py`
   - Resolves `ItemRef` to icon/name/confidence through itempanel catalog, manual overrides, model texture links, lang lookup, grouped candidates, meta-specific strategies, and fallback asset paths.

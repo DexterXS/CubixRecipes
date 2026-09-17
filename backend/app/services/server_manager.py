@@ -67,7 +67,8 @@ class ServerContext:
 
         self.itempanel_icon_catalog = ItemPanelIconCatalog(
             self.active_itempanel_csv_path(),
-            self.active_itempanel_icons_dir()
+            self.active_itempanel_icons_dir(),
+            cache_dir=self.admin_data_dir / 'itempanel_atlas_cache',
         )
         self.itempanel_icon_catalog.scan()
 
@@ -79,6 +80,7 @@ class ServerContext:
             oredict_path=oredict_storage_path,
         )
         self.item_catalog_service.scan()
+        self.itempanel_icon_catalog.get_atlas_manifest()
 
         self.mod_icon_atlas_service = ModIconAtlasService(
             self.admin_data_dir / 'mod_icon_archives',

@@ -130,3 +130,27 @@ def test_itempanel_atlas_centers_visible_pixels_instead_of_source_canvas(tmp_pat
     assert (width, height) == (32, 32)
     assert rows[15][15 * 4:15 * 4 + 4] == bytes(cyan)
     assert rows[31][31 * 4:31 * 4 + 4] == bytes(transparent)
+
+
+def test_itempanel_catalog_reuses_persisted_atlas(tmp_path: Path):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text('Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Stone\n', encoding='utf-8')
+    _write_rgba_png(icons_dir / 'Stone.png', [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+    cache_dir = tmp_path / 'atlas-cache'
+
+    first = ItemPanelIconCatalog(csv_path, icons_dir, cache_dir=cache_dir)
+    first.scan()
+    first_manifest = first.get_atlas_manifest()
+    first_png = first.read_atlas_png()
+
+    second = ItemPanelIconCatalog(csv_path, icons_dir, cache_dir=cache_dir)
+    second.scan()
+    second_manifest = second.get_atlas_manifest()
+    second_png = second.read_atlas_png()
+
+    assert (cache_dir / 'itempanel-atlas.json').is_file()
+    assert (cache_dir / 'itempanel-atlas.png').is_file()
+    assert second_manifest == first_manifest
+    assert second_png == first_png
