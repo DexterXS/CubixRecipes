@@ -35,7 +35,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -506,6 +506,46 @@ function localDraftUserHash(email: string): string {
 
 function localDraftStorageKey(email: string): string {
   return `${LOCAL_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+async function loadStaticItemPanelEntries(): Promise<ItemPanelEntry[]> {
+  const response = await fetch('/itempanel.csv');
+  if (!response.ok) {
+    throw new Error(`Failed to load static itempanel catalog: HTTP ${response.status}`);
+  }
+  const bytes = await response.arrayBuffer();
+  let text = '';
+  try {
+    text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    text = new TextDecoder('windows-1251').decode(bytes);
+  }
+  const entries: ItemPanelEntry[] = [];
+  text.split(/\r?\n/).slice(1).forEach((line) => {
+    if (!line.trim()) return;
+    const parts = line.split(',');
+    if (parts.length < 5) return;
+    const key = parts[0]?.trim().toLowerCase();
+    const legacyIdRaw = parts[1]?.trim();
+    const metaRaw = parts[2]?.trim();
+    const hasNbtRaw = parts[3]?.trim().toLowerCase();
+    const displayRu = (parts[4] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+    const displayEn = (parts[5] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
+    const primaryDisplay = displayRu || displayEn;
+    if (!key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
+    const meta = Number.parseInt(metaRaw || '0', 10);
+    if (Number.isNaN(meta)) return;
+    const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
+    entries.push({
+      key,
+      legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
+      meta,
+      hasNbt: hasNbtRaw === 'true' || hasNbtRaw === '1' || hasNbtRaw === 'yes',
+      displayRu: displayRu || primaryDisplay,
+      displayEn
+    });
+  });
+  return entries;
 }
 
 function serverLocalDraftStorageKey(email: string, serverId: string | undefined, sharedCraftDraft: boolean): string {
@@ -3087,11 +3127,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     let cancelled = false;
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
+      let hasCachedEntries = false;
       try {
         const cached = window.localStorage.getItem(itemPanelCacheKey);
         if (cached) {
           const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
+            hasCachedEntries = true;
             setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
             setItemCatalogSummary(parsed.summary ?? null);
           }
@@ -3099,60 +3141,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       } catch {
         // ignore corrupted cache
       }
+
+      const catalogPromise = getItemCatalog();
+      if (!hasCachedEntries) {
+        try {
+          const staticEntries = await loadStaticItemPanelEntries();
+          if (!cancelled && staticEntries.length) {
+            applyItemPanelEntries(staticEntries);
+          }
+        } catch {
+          // The remote catalog below remains the source of truth when static assets are unavailable.
+        }
+      }
       try {
-        const payload = await getItemCatalog();
+        const payload = await catalogPromise;
         if (!cancelled && payload.entries.length) {
           applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
           return;
         }
       } catch {
-        // Fall back to static itempanel.csv below.
-      }
-      try {
-        const response = await fetch('/itempanel.csv');
-        if (!response.ok) {
-          return;
-        }
-        const bytes = await response.arrayBuffer();
-        let text = '';
-        try {
-          text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-        } catch {
-          text = new TextDecoder('windows-1251').decode(bytes);
-        }
-        const lines = text.split(/\r?\n/).slice(1);
-        const entries: ItemPanelEntry[] = [];
-        lines.forEach((line) => {
-          if (!line.trim()) return;
-          const parts = line.split(',');
-          if (parts.length < 5) return;
-          const key = parts[0]?.trim().toLowerCase();
-          const legacyIdRaw = parts[1]?.trim();
-          const metaRaw = parts[2]?.trim();
-          const hasNbtRaw = parts[3]?.trim().toLowerCase();
-          const displayRu = (parts[4] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          const displayEn = (parts[5] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
-          const primaryDisplay = displayRu || displayEn;
-          if (!key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
-          const meta = Number.parseInt(metaRaw || '0', 10);
-          if (Number.isNaN(meta)) return;
-          const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
-          const hasNbt = hasNbtRaw === 'true' || hasNbtRaw === '1' || hasNbtRaw === 'yes';
-          const entry: ItemPanelEntry = {
-            key,
-            legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
-            meta,
-            hasNbt,
-            displayRu: displayRu || primaryDisplay,
-            displayEn
-          };
-          entries.push(entry);
-        });
-        if (!cancelled) {
-          applyItemPanelEntries(entries);
-        }
-      } catch {
-        // optional source
+        // Static entries, when available, are already visible while the remote catalog is slow.
       }
     }
     void loadItemPanelTranslations();
@@ -3164,18 +3172,26 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   useEffect(() => {
     let cancelled = false;
     void (async () => {
+      const backendAtlasPromise = getItemPanelAtlas();
+      let staticAtlasApplied = false;
       try {
-        const atlas = await getItemPanelAtlas();
-        if (!cancelled && atlas.entries) {
-          if (Object.keys(atlas.entries).length > 0) {
-            await preloadImage(normalizeAtlasImageUrl(atlas.image_url));
-          }
-          if (!cancelled) {
-            setItemPanelAtlas(atlas);
-          }
+        const staticAtlas = await getStaticItemPanelAtlas();
+        if (!cancelled && Object.keys(staticAtlas.entries ?? {}).length > 0) {
+          staticAtlasApplied = true;
+          setItemPanelAtlas(staticAtlas);
+          void preloadImage(normalizeAtlasImageUrl(staticAtlas.image_url)).catch(() => undefined);
         }
       } catch {
-        if (!cancelled) {
+        // The backend request below remains the source of truth when static assets are unavailable.
+      }
+      try {
+        const atlas = await backendAtlasPromise;
+        if (!cancelled && atlas.entries) {
+          setItemPanelAtlas(atlas);
+          void preloadImage(normalizeAtlasImageUrl(atlas.image_url)).catch(() => undefined);
+        }
+      } catch {
+        if (!cancelled && !staticAtlasApplied) {
           setItemPanelAtlas(null);
         }
       }

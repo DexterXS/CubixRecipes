@@ -541,6 +541,7 @@ Last full rebuild: 2026-06-29
   - `settings.ts`: project settings and UI preferences endpoints.
   - `items.ts`: item resolve, custom item, and draft-template endpoints.
   - `itempanel.ts`: item catalog/atlas and itempanel upload/merge endpoints, including static `/itempanel-atlas.json` fallback; the base atlas promise resolves without waiting for the separate mod-icon atlas.
+  - `pages/App.tsx`: applies bundled `itempanel.csv` and `/itempanel-atlas.json` immediately during cold startup, then replaces them with server-specific catalog/atlas data when revalidation completes.
   - `auth.ts`: current user, login/logout, users, roles, access-control endpoints.
   - `tasks.ts`: admin recipe task board endpoints and `RecipeTaskPayload`.
   - `favorites.ts`: NEI favorites endpoints.
@@ -619,7 +620,7 @@ Last full rebuild: 2026-06-29
 - `listRecipeDraftTemplates` -> `GET /api/recipe-drafts/templates`
 - `saveRecipeDraftTemplate` -> `POST /api/recipe-drafts/templates`
 - `deleteRecipeDraftTemplate` -> `DELETE /api/recipe-drafts/templates/{draft_id}`
-- `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`; resolves the base atlas without a blocking client-side mod-atlas merge.
+- `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`; resolves the base atlas without a blocking client-side mod-atlas merge. `App.tsx` also applies the bundled CSV/atlas before the server response arrives.
 - `getItemCatalog` -> `GET /api/itempanel/catalog`
 - `uploadItemPanelCsv` -> `POST /api/admin/itempanel/csv`
 - `uploadItemPanelJson` -> `POST /api/admin/itempanel/json`

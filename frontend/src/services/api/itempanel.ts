@@ -3,6 +3,14 @@ import { apiPath, buildRequestHeaders, readErrorMessage, request } from './clien
 
 let baseAtlasPromise: Promise<ItemPanelAtlas> | null = null;
 
+export async function getStaticItemPanelAtlas(): Promise<ItemPanelAtlas> {
+  const response = await fetch('/itempanel-atlas.json');
+  if (response.ok) {
+    return await response.json() as ItemPanelAtlas;
+  }
+  throw new Error(`Failed to load static itempanel atlas: HTTP ${response.status}`);
+}
+
 async function loadBaseItemPanelAtlas(): Promise<ItemPanelAtlas> {
   try {
     const backendAtlas = await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
@@ -12,17 +20,17 @@ async function loadBaseItemPanelAtlas(): Promise<ItemPanelAtlas> {
   } catch {
     // Fall back to the generated static atlas for offline/dev snapshots.
   }
-  const response = await fetch('/itempanel-atlas.json');
-  if (response.ok) {
-    return await response.json() as ItemPanelAtlas;
+  try {
+    return await getStaticItemPanelAtlas();
+  } catch {
+    return {
+      image_url: '/itempanel-atlas.png',
+      tile_size: 32,
+      columns: 0,
+      rows: 0,
+      entries: {}
+    };
   }
-  return {
-    image_url: '/itempanel-atlas.png',
-    tile_size: 32,
-    columns: 0,
-    rows: 0,
-    entries: {}
-  };
 }
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {

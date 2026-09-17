@@ -278,6 +278,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Reduce redundant debug/API calls.
 - Progress on 2026-09-17:
   - Removed the blocking browser-side merge of the base itempanel atlas with generated mod-icon atlases. The base atlas now becomes available immediately; the existing separate mod-icon layer renders its overrides independently.
+  - Added a stale-while-revalidate startup path for the bundled itempanel CSV and atlas, so a slow cold server no longer leaves the editor and NEI empty while server-specific data is loading.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.
@@ -303,6 +304,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Optimized asset indexing to avoid unnecessary file reads while preserving indexed icon counts.
 - Optimized recipe storage saves to use changed-file rescans instead of full recipe rescans.
 - Removed the blocking frontend Canvas atlas merge that delayed first icon rendering while separately generated mod-icon atlas sprites continue to render through their manifest.
+- Added a bundled itempanel CSV/atlas startup fallback that renders immediately while server-specific catalog data is fetched in the background.
 - Added NEI/itempanel icon catalog as the primary icon resolver source and filtered bad dump icons before UI display.
 - Frontend workspace now uses task tabs and a theme toggle; texture-cache actions live in the items tab instead of the global header.
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.
