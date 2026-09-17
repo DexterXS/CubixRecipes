@@ -351,6 +351,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/components/ActionToolbar.tsx`: compact toolbar.
 - `frontend/src/components/StatusBar.tsx`: status item row.
 - `frontend/src/components/TabNav.tsx`: tab navigation using shared tab types.
+- `frontend/src/components/WipeUpdateModal.tsx`: compact sequential wipe-update workflow; tracks CSV/JSON merge and mod-atlas prerequisites locally and exposes one final static publication action.
 
 ### Mobile Shell Feature
 - `frontend/src/features/mobile-shell/MobileAppMenu.tsx`
@@ -588,6 +589,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/app/AppWorkspaceNav.test.tsx`: compact navigation icons, active state, and tooltip content.
 - Global settings modal behavior is covered through `frontend/src/App.test.tsx`.
 - Technical panel shell/sidebar behavior is covered through `frontend/src/App.test.tsx`.
+- Wipe-update sequencing and prerequisite lock states are covered through `frontend/src/App.test.tsx`.
 - Debug event list behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics logs panel behavior is covered through `frontend/src/App.test.tsx`.
 - Diagnostics runtime panel behavior is covered through `frontend/src/App.test.tsx`.
@@ -766,6 +768,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
+- `pages/App.tsx` -> `components/WipeUpdateModal.tsx`, wipe-update API handlers, and server/catalog state.
 - `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.

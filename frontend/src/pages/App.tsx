@@ -6,6 +6,7 @@ import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
+import { WipeUpdateModal } from '../components/WipeUpdateModal';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
@@ -35,7 +36,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateItemPanelAtlas, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, getStaticItemPanelCatalog, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, refreshItemPanelStaticAssets, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, getStaticItemPanelCatalog, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, refreshItemPanelStaticAssets, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1733,7 +1734,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
   const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
   const [itemPanelMerging, setItemPanelMerging] = useState(false);
-  const [itemPanelAtlasGenerating, setItemPanelAtlasGenerating] = useState(false);
   const [itemPanelStaticRefreshing, setItemPanelStaticRefreshing] = useState(false);
   const [itemPanelAtlasMessage, setItemPanelAtlasMessage] = useState('');
   const [modIconUploading, setModIconUploading] = useState(false);
@@ -2066,13 +2066,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  async function handleModIconArchiveFiles(files: FileList | File[]) {
-    if (!canManageModIcons) return;
+  async function handleModIconArchiveFiles(files: FileList | File[]): Promise<boolean> {
+    if (!canManageModIcons) return false;
     const file = Array.from(files)[0];
-    if (!file) return;
+    if (!file) return false;
     if (!file.name.toLowerCase().endsWith('.zip')) {
       setModIconMessage('Можно загрузить только .zip архив.');
-      return;
+      return false;
     }
     setModIconUploading(true);
     setModIconMessage(`Загружаю ${file.name}...`);
@@ -2081,6 +2081,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setModIconStatus(payload);
       setModIconManifest(payload.manifest);
       setModIconMessage(`Архив загружен: ${file.name}`);
+      return true;
     } catch (error) {
       if (error instanceof ApiConflictError) {
         const replace = window.confirm(`Архив ${file.name} уже есть. Заменить его?`);
@@ -2090,6 +2091,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             setModIconStatus(payload);
             setModIconManifest(payload.manifest);
             setModIconMessage(`Архив заменён: ${file.name}`);
+            return true;
           } catch (replaceError) {
             setModIconMessage(replaceError instanceof Error ? replaceError.message : String(replaceError));
           }
@@ -2099,6 +2101,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       } else {
         setModIconMessage(error instanceof Error ? error.message : String(error));
       }
+      return false;
     } finally {
       setModIconUploading(false);
     }
@@ -2145,13 +2148,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
   }
 
-  async function handleItemPanelCsvFiles(files: FileList | File[]) {
-    if (!canManageModIcons) return;
+  async function handleItemPanelCsvFiles(files: FileList | File[]): Promise<boolean> {
+    if (!canManageModIcons) return false;
     const file = Array.from(files)[0];
-    if (!file) return;
+    if (!file) return false;
     if (!file.name.toLowerCase().endsWith('.csv')) {
       setItemPanelCsvMessage('Можно загрузить только itempanel.csv.');
-      return;
+      return false;
     }
     setItemPanelCsvUploading(true);
     setItemPanelCsvMessage(`Загружаю ${file.name}...`);
@@ -2160,20 +2163,22 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemPanelAtlas(payload.atlas);
       const summary = await refreshItemCatalogTranslations();
       setItemPanelCsvMessage(`CSV загружен. Строк: ${String(payload.scan.rows ?? 0)}, найдено иконок: ${String(payload.scan.matched ?? 0)}, каталог: ${String(summary.entries ?? 0)}.`);
+      return true;
     } catch (error) {
       setItemPanelCsvMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setItemPanelCsvUploading(false);
     }
   }
 
-  async function handleItemPanelJsonFiles(files: FileList | File[]) {
-    if (!canManageModIcons) return;
+  async function handleItemPanelJsonFiles(files: FileList | File[]): Promise<boolean> {
+    if (!canManageModIcons) return false;
     const file = Array.from(files)[0];
-    if (!file) return;
+    if (!file) return false;
     if (!file.name.toLowerCase().endsWith('.json')) {
       setItemPanelJsonMessage('Можно загрузить только itempanel.json.');
-      return;
+      return false;
     }
     setItemPanelJsonUploading(true);
     setItemPanelJsonMessage(`Загружаю ${file.name}...`);
@@ -2181,19 +2186,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const payload = await uploadItemPanelJson(file);
       const summary = await refreshItemCatalogTranslations();
       setItemPanelJsonMessage(`JSON загружен. SNBT строк: ${String(payload.summary.uploaded_snbt_rows ?? summary.snbt_rows ?? 0)}. Для применения нажмите "Объединить файлы".`);
+      return true;
     } catch (error) {
       setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setItemPanelJsonUploading(false);
     }
   }
 
-  async function handleOreDictFile(files: FileList | File[]) {
+  async function handleOreDictFile(files: FileList | File[]): Promise<boolean> {
     const file = Array.from(files)[0];
-    if (!file) return;
+    if (!file) return false;
     if (!file.name.toLowerCase().endsWith('.txt')) {
       setOreDictMessage('Только oredict.txt поддерживается.');
-      return;
+      return false;
     }
     setOreDictUploading(true);
     setOreDictMessage(`Загружаю ${file.name}...`);
@@ -2204,15 +2211,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       void getOreDictGroups().then(resp => {
         if (resp.available) setOreDictGroups(resp.groups);
       });
+      return true;
     } catch (error) {
       setOreDictMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setOreDictUploading(false);
     }
   }
 
-  async function handleMergeItemPanelFiles() {
-    if (!canManageModIcons) return;
+  async function handleMergeItemPanelFiles(): Promise<boolean> {
+    if (!canManageModIcons) return false;
     setItemPanelMerging(true);
     setItemPanelJsonMessage('Объединяю itempanel.csv и itempanel.json...');
     try {
@@ -2221,30 +2230,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const summary = payload.summary;
       const catalog = (summary.catalog && typeof summary.catalog === 'object') ? summary.catalog as Record<string, unknown> : catalogSummary;
       setItemPanelJsonMessage(`Файлы объединены. Строк: ${String(summary.merged_rows ?? 0)}, с NBT: ${String(summary.merged_nbt_rows ?? 0)}, каталог: ${String(catalog.entries ?? catalogSummary.entries ?? 0)}.`);
+      return true;
     } catch (error) {
       setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setItemPanelMerging(false);
     }
   }
 
-  async function handleGenerateItemPanelAtlas() {
-    if (!canManageModIcons) return;
-    setItemPanelAtlasGenerating(true);
-    setItemPanelAtlasMessage('Генерирую и публикую основной атлас...');
-    try {
-      const atlas = await generateItemPanelAtlas();
-      setItemPanelAtlas(atlas);
-      setItemPanelAtlasMessage(`Готово: опубликовано иконок ${Object.keys(atlas.entries ?? {}).length}. Атлас сохранён на сервере и будет использоваться после перезапуска.`);
-    } catch (error) {
-      setItemPanelAtlasMessage(error instanceof Error ? error.message : String(error));
-    } finally {
-      setItemPanelAtlasGenerating(false);
-    }
-  }
-
-  async function handleRefreshItemPanelStaticAssets() {
-    if (!canManageModIcons) return;
+  async function handleRefreshItemPanelStaticAssets(): Promise<boolean> {
+    if (!canManageModIcons) return false;
     setItemPanelStaticRefreshing(true);
     setItemPanelAtlasMessage('Обновляю атлас и всю серверную статику...');
     try {
@@ -2253,15 +2249,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const catalogEntries = payload.static.summary.catalog_entries;
       const atlasEntries = payload.static.summary.atlas_entries;
       setItemPanelAtlasMessage(`Готово: статика обновлена (каталог ${catalogEntries}, атлас ${atlasEntries}). Версия ${payload.static.version}.`);
+      return true;
     } catch (error) {
       setItemPanelAtlasMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setItemPanelStaticRefreshing(false);
     }
   }
 
-  async function handleGenerateModIconAtlases() {
-    if (!canManageModIcons) return;
+  async function handleGenerateModIconAtlases(): Promise<boolean> {
+    if (!canManageModIcons) return false;
     setModIconGenerating(true);
     setModIconMessage('Генерирую атласы...');
     try {
@@ -2273,8 +2271,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         rules: current?.rules ?? { acceptedArchive: '.zip', acceptedFiles: ['modid_x32.png', 'modid_x256.png'], maxAtlasSize: 4096 }
       }));
       setModIconMessage(`Готово: модов ${manifest.totalMods}, атласов ${manifest.atlases.length}.`);
+      return true;
     } catch (error) {
       setModIconMessage(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setModIconGenerating(false);
     }
@@ -6700,171 +6700,37 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderWipeUpdateModal() {
-    if (!isWipeUpdateOpen) return null;
-    const summary = itemCatalogSummary ?? {};
     return (
-      <div className="modal-backdrop" role="presentation" onClick={() => setIsWipeUpdateOpen(false)}>
-        <div className="modal wipe-update-modal" role="dialog" aria-modal="true" aria-label="Обновление вайпа" onClick={(event) => event.stopPropagation()}>
-          <div className="modal-header">
-            <div>
-              <h2>Обновление вайпа</h2>
-              <span className="modal-subtitle">CSV, иконки, атласы и построчный itempanel.json в один общий каталог</span>
-            </div>
-            <div className="inline-actions">
-              <button type="button" onClick={() => setIsWipeUpdateOpen(false)}>Закрыть</button>
-            </div>
-          </div>
-          <div className="settings-modal-body wipe-update-steps">
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>1. itempanel.csv</h3>
-                <span>Список предметов, legacy ID, meta и локализованные названия.</span>
-              </div>
-              <label
-                className="file-drop-zone compact-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleItemPanelCsvFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".csv,text/csv"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleItemPanelCsvFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить itempanel.csv</strong>
-                <span>{itemPanelCsvUploading ? 'Загрузка...' : itemPanelCsvMessage || 'Ожидает CSV из NEI dump.'}</span>
-              </label>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>2. Иконки</h3>
-                <span>ZIP архивы modid_x32.zip или modid_x256.zip с PNG.</span>
-              </div>
-              <label
-                className="file-drop-zone compact-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleModIconArchiveFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".zip,application/zip"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleModIconArchiveFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить ZIP иконок</strong>
-                <span>{modIconUploading ? 'Загрузка...' : modIconMessage || 'Можно загрузить несколько архивов по очереди.'}</span>
-              </label>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>3. Основной атлас itempanel</h3>
-                <span>Снимок сохраняется для выбранного сервера и переживает перезапуск: itempanel.csv, полный каталог, JSON атласа и PNG атласа.</span>
-              </div>
-              <div className="inline-actions">
-                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating || itemPanelStaticRefreshing} onClick={() => void handleGenerateItemPanelAtlas()}>{itemPanelAtlasGenerating ? 'Генерация...' : 'Сгенерировать и опубликовать'}</button>
-                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating || itemPanelStaticRefreshing} onClick={() => void handleRefreshItemPanelStaticAssets()}>{itemPanelStaticRefreshing ? 'Обновление...' : 'Обновить всю статику'}</button>
-                <span>{itemPanelAtlasMessage || 'После загрузки новых CSV или иконок запустите публикацию вручную.'}</span>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>4. Атласы иконок модов</h3>
-                <span>После загрузки ZIP пересоберите отдельные атласы модов для отображения иконок.</span>
-              </div>
-              <div className="inline-actions">
-                <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
-                <span>{modIconGenerating ? 'Генерация...' : `Атласов: ${modIconManifest?.atlases.length ?? modIconStatus?.manifest?.atlases.length ?? 0}`}</span>
-              </div>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>5. itempanel.json</h3>
-                <span>Построчный SNBT файл должен совпадать с itempanel.csv по количеству строк и порядку.</span>
-              </div>
-              <label
-                className="file-drop-zone compact-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleItemPanelJsonFiles(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".json,application/json,text/plain"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleItemPanelJsonFiles(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить itempanel.json</strong>
-                <span>{itemPanelJsonUploading ? 'Загрузка...' : itemPanelJsonMessage || 'Файл с SNBT строками из NEI dump.'}</span>
-              </label>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>6. oredict.txt (опционально)</h3>
-                <span>Экспорт Forge Ore Dictionary, используется для замен &lt;ore:group&gt;.</span>
-              </div>
-              <label
-                className="file-drop-zone compact-drop-zone"
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  void handleOreDictFile(event.dataTransfer.files);
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".txt,text/plain"
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      void handleOreDictFile(event.target.files);
-                      event.currentTarget.value = '';
-                    }
-                  }}
-                />
-                <strong>Загрузить oredict.txt</strong>
-                <span>{oreDictUploading ? 'Загрузка...' : oreDictMessage || 'Ожидает файл oredict.txt.'}</span>
-              </label>
-            </section>
-            <section className="settings-section">
-              <div className="settings-section-title">
-                <h3>7. Объединение и проверка</h3>
-                <span>После объединения NEI получает raw-варианты с .withTag(...), а редактор строит дерево NBT.</span>
-              </div>
-              <div className="kv-grid">
-                <div><span>Всего</span><strong>{String(summary.entries ?? itemPanelTranslations.entries.length)}</strong></div>
-                <div><span>CSV</span><strong>{String(summary.csv_entries ?? 0)}</strong></div>
-                <div><span>SNBT строк</span><strong>{String(summary.snbt_rows ?? 0)}</strong></div>
-                <div><span>NBT варианты</span><strong>{String(summary.nbt_entries ?? 0)}</strong></div>
-                <div><span>Merged CSV</span><strong>{summary.merged_csv_exists ? 'создан' : 'нет'}</strong></div>
-              </div>
-              <div className="inline-actions">
-                <button type="button" className="secondary-button" disabled={itemPanelMerging} onClick={() => void handleMergeItemPanelFiles()}>{itemPanelMerging ? 'Объединение...' : 'Объединить файлы'}</button>
-                <button type="button" className="ghost-button" onClick={() => void refreshItemCatalogTranslations()}>Обновить каталог</button>
-                <button type="button" className="ghost-button" disabled={!summary.merged_csv_exists} onClick={() => window.open(getItemPanelMergedCsvUrl(), '_blank', 'noopener,noreferrer')}>Открыть объединенный файл</button>
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
+      <WipeUpdateModal
+        isOpen={isWipeUpdateOpen}
+        onClose={() => setIsWipeUpdateOpen(false)}
+        serverName={activeServerName}
+        summary={itemCatalogSummary}
+        catalogEntryCount={itemPanelTranslations.entries.length}
+        modIconStatus={modIconStatus}
+        modIconManifest={modIconManifest}
+        csvUploading={itemPanelCsvUploading}
+        csvMessage={itemPanelCsvMessage}
+        jsonUploading={itemPanelJsonUploading}
+        jsonMessage={itemPanelJsonMessage}
+        oreDictUploading={oreDictUploading}
+        oreDictMessage={oreDictMessage}
+        merging={itemPanelMerging}
+        modIconUploading={modIconUploading}
+        modIconGenerating={modIconGenerating}
+        modIconMessage={modIconMessage}
+        staticRefreshing={itemPanelStaticRefreshing}
+        atlasMessage={itemPanelAtlasMessage}
+        onUploadCsv={handleItemPanelCsvFiles}
+        onUploadJson={handleItemPanelJsonFiles}
+        onUploadOreDict={handleOreDictFile}
+        onUploadModArchive={handleModIconArchiveFiles}
+        onMerge={handleMergeItemPanelFiles}
+        onGenerateModAtlases={handleGenerateModIconAtlases}
+        onRefreshStatic={handleRefreshItemPanelStaticAssets}
+        onRefreshCatalog={() => void refreshItemCatalogTranslations()}
+        onOpenMergedCsv={() => window.open(getItemPanelMergedCsvUrl(), '_blank', 'noopener,noreferrer')}
+      />
     );
   }
 

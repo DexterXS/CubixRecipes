@@ -941,7 +941,7 @@ test('admin mod icons tab shows archive and atlas status', async () => {
   expect(await screen.findByLabelText('mod-icon-examplemod/First icon-x32')).toBeTruthy();
 });
 
-test('wipe update modal exposes csv icons atlas json and merge steps', async () => {
+test('wipe update modal exposes a sequential update flow', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   fireEvent.click(screen.getByTestId('workspace-tab-technical'));
@@ -949,17 +949,34 @@ test('wipe update modal exposes csv icons atlas json and merge steps', async () 
   fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
 
   const dialog = screen.getByRole('dialog', { name: 'Обновление вайпа' });
-  expect(within(dialog).getByText('1. itempanel.csv')).toBeTruthy();
-  expect(within(dialog).getByText('2. Иконки')).toBeTruthy();
-  expect(within(dialog).getByText('3. Основной атлас itempanel')).toBeTruthy();
-  expect(within(dialog).getByText('4. Атласы иконок модов')).toBeTruthy();
-  expect(within(dialog).getByText('5. itempanel.json')).toBeTruthy();
-  expect(within(dialog).getByText('6. oredict.txt (опционально)')).toBeTruthy();
-  expect(within(dialog).getByRole('button', { name: 'Сгенерировать и опубликовать' })).toBeTruthy();
-  expect(within(dialog).getByRole('button', { name: 'Обновить всю статику' })).toBeTruthy();
-  expect(within(dialog).getByText('7. Объединение и проверка')).toBeTruthy();
+  expect(within(dialog).getByText('1. Исходные файлы')).toBeTruthy();
+  expect(within(dialog).getByText('2. Объединить и проверить каталог')).toBeTruthy();
+  expect(within(dialog).getByText('3. Иконки и атласы')).toBeTruthy();
+  expect(within(dialog).getByText('4. Применить обновление')).toBeTruthy();
+  expect(within(dialog).getByText('JSON применяется к CSV только после объединения по строкам.')).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Применить всё и обновить статику' })).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Объединить файлы' })).toBeTruthy();
-  expect(within(dialog).getByRole('button', { name: 'Открыть объединенный файл' })).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Открыть merged CSV' })).toBeTruthy();
+});
+
+test('wipe update flow locks later steps after a source change', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
+  const dialog = screen.getByRole('dialog', { name: 'Обновление вайпа' });
+  const csvInput = [...container.querySelectorAll('input[type="file"]')].find((input) => (input as HTMLInputElement).accept.includes('.csv')) as HTMLInputElement;
+  const file = new File(['Item Name,Item ID,Item meta\nminecraft:stone,1,0\n'], 'itempanel.csv', { type: 'text/csv' });
+
+  fireEvent.change(csvInput, { target: { files: [file] } });
+  await waitFor(() => expect(within(dialog).getByText(/CSV загружен/)).toBeTruthy());
+
+  expect((within(dialog).getByRole('button', { name: 'Объединить файлы' }) as HTMLButtonElement).disabled).toBe(false);
+  expect((within(dialog).getByRole('button', { name: 'Сгенерировать атласы' }) as HTMLButtonElement).disabled).toBe(true);
+  expect((within(dialog).getByRole('button', { name: 'Применить всё и обновить статику' }) as HTMLButtonElement).disabled).toBe(true);
+
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Объединить файлы' }));
+  await waitFor(() => expect((within(dialog).getByRole('button', { name: 'Применить всё и обновить статику' }) as HTMLButtonElement).disabled).toBe(false));
 });
 
 test('admin can publish the full itempanel static snapshot', async () => {
@@ -968,7 +985,7 @@ test('admin can publish the full itempanel static snapshot', async () => {
   fireEvent.click(screen.getByTestId('workspace-tab-technical'));
   fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
   fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Обновить всю статику' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Применить всё и обновить статику' }));
 
   await waitFor(() => {
     const calls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/admin/itempanel/static/refresh' && init?.method === 'POST');
