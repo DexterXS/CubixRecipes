@@ -138,6 +138,17 @@ export interface ItemCatalogResponse {
   summary: Record<string, unknown>;
 }
 
+export interface ItemPanelStaticPublication {
+  version: string;
+  store_version: number;
+  published_at: string;
+  assets: string[];
+  summary: {
+    catalog_entries: number;
+    atlas_entries: number;
+  };
+}
+
 export type UserRole = 'admin' | 'moderator' | 'default';
 export type RecipeTaskStatus = 'planned' | 'in_progress' | 'review' | 'done';
 export type RecipeTaskPriority = 'low' | 'normal' | 'high' | 'urgent';

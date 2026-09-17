@@ -143,6 +143,9 @@ Last full rebuild: 2026-06-29
   - Persists the explicitly published itempanel atlas and manifest per server. The source fingerprint is retained as provenance, but it does not invalidate the published snapshot on restart or source updates.
   - Class: `ItemPanelAtlasCache`.
   - Primary startup icon source when available.
+- `backend/app/services/itempanel_static_store.py`
+  - Persists a versioned per-server frontend fallback snapshot containing the itempanel CSV, full catalog JSON, atlas manifest, and atlas PNG; writes files atomically and serves only complete snapshots.
+  - Class: `ItemPanelStaticStore`.
 - `backend/app/resolver/item_resolver.py`
   - Resolves `ItemRef` to icon/name/confidence through itempanel catalog, manual overrides, model texture links, lang lookup, grouped candidates, meta-specific strategies, and fallback asset paths.
   - Class: `ItemResolver`.
@@ -621,11 +624,13 @@ Last full rebuild: 2026-06-29
 - `listRecipeDraftTemplates` -> `GET /api/recipe-drafts/templates`
 - `saveRecipeDraftTemplate` -> `POST /api/recipe-drafts/templates`
 - `deleteRecipeDraftTemplate` -> `DELETE /api/recipe-drafts/templates/{draft_id}`
-- `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`; resolves the base atlas without a blocking client-side mod-atlas merge. `App.tsx` also applies the bundled CSV/atlas before the server response arrives.
+- `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback to the persistent `/api/itempanel/static/atlas.json` and bundled `/itempanel-atlas.json`; resolves the base atlas without a blocking client-side mod-atlas merge. `App.tsx` also applies the bundled CSV/atlas before the server response arrives.
 - `getItemCatalog` -> `GET /api/itempanel/catalog`
+- `getStaticItemPanelCatalog` -> `GET /api/itempanel/static/catalog.json` for the last published full catalog snapshot.
 - `uploadItemPanelCsv` -> `POST /api/admin/itempanel/csv`
 - `uploadItemPanelJson` -> `POST /api/admin/itempanel/json`
 - `mergeItemPanelFiles` -> `POST /api/admin/itempanel/merge`
+- `refreshItemPanelStaticAssets` -> `POST /api/admin/itempanel/static/refresh`, regenerating the atlas and publishing the complete static snapshot.
 - `getItemPanelMergedCsvUrl` -> `GET /api/admin/itempanel/merged`
 - `getCurrentUser` -> `GET /api/auth/me`
 - `getGoogleLoginUrl` -> `GET /api/auth/google/start`
@@ -680,10 +685,10 @@ Last full rebuild: 2026-06-29
 - Tests: `test_parser.py`, `test_storage.py`, `test_api_routes.py`, `App.test.tsx`, `recipeMatrix.test.ts`.
 
 ### Itempanel, NEI, NBT Catalog
-- Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
+- Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `services/itempanel_static_store.py`, `api/routes.py`.
 - Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
-- Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
-- APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
+- Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`, per-server `itempanel_static/` revisions.
+- APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/itempanel/static/status`, `/itempanel/static/catalog.csv`, `/itempanel/static/catalog.json`, `/itempanel/static/atlas.json`, `/itempanel/static/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`, `/admin/itempanel/static/publish`, `/admin/itempanel/static/refresh`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 
 ### Icon Indexing and Resolver

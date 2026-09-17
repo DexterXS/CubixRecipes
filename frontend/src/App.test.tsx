@@ -555,6 +555,31 @@ beforeEach(() => {
         })
       }) as Promise<Response>;
     }
+    if (url === '/api/admin/itempanel/static/refresh' && init?.method === 'POST') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          ok: true,
+          atlas: {
+            image_url: '/api/itempanel/atlas.png',
+            tile_size: 32,
+            columns: 1,
+            rows: 1,
+            entries: {
+              '<minecraft:planks>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Дубовые доски', item_key: 'minecraft:planks', meta: 0 }
+            }
+          },
+          static: {
+            version: 'static-v2',
+            store_version: 1,
+            published_at: '2026-09-17T00:00:00+00:00',
+            assets: ['itempanel.csv', 'itempanel-catalog.json', 'itempanel-atlas.json', 'itempanel-atlas.png'],
+            summary: { catalog_entries: 5, atlas_entries: 1 }
+          }
+        })
+      }) as Promise<Response>;
+    }
     if (url === '/api/admin/zs-cloud/files' && (!init?.method || init.method === 'GET')) {
       return Promise.resolve({
         ok: true,
@@ -931,9 +956,25 @@ test('wipe update modal exposes csv icons atlas json and merge steps', async () 
   expect(within(dialog).getByText('5. itempanel.json')).toBeTruthy();
   expect(within(dialog).getByText('6. oredict.txt (опционально)')).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Сгенерировать и опубликовать' })).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Обновить всю статику' })).toBeTruthy();
   expect(within(dialog).getByText('7. Объединение и проверка')).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Объединить файлы' })).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Открыть объединенный файл' })).toBeTruthy();
+});
+
+test('admin can publish the full itempanel static snapshot', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.click(screen.getByTestId('workspace-tab-technical'));
+  fireEvent.click(screen.getByLabelText('debug-section-modIcons'));
+  fireEvent.click(await screen.findByRole('button', { name: 'Обновление вайпа' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Обновить всю статику' }));
+
+  await waitFor(() => {
+    const calls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls.filter(([url, init]) => url === '/api/admin/itempanel/static/refresh' && init?.method === 'POST');
+    expect(calls.length).toBeGreaterThan(0);
+  });
+  expect(await screen.findByText(/статика обновлена/)).toBeTruthy();
 });
 
 test('NEI uses generated mod icon atlas entries matched by itempanel display name', async () => {

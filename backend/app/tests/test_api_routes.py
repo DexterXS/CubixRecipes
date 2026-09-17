@@ -49,17 +49,32 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas')
     png_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas.png')
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/atlas/generate')
+    refresh_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/static/refresh')
+    static_catalog_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/static/catalog.json')
+    static_atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/static/atlas.json')
+    static_png_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/static/atlas.png')
 
     manifest = manifest_route()
     assert manifest['entries'] == {}
     generated = generate_route()
     assert '<minecraft:stone>' in generated['atlas']['entries']
+    refreshed = refresh_route()
+    assert refreshed['static']['summary']['catalog_entries'] == 1
     manifest = manifest_route()
     png_response = png_route()
+    static_catalog_response = static_catalog_route()
+    static_atlas_response = static_atlas_route()
+    static_png_response = static_png_route()
 
     assert '<minecraft:stone>' in manifest['entries']
     assert png_response.media_type == 'image/png'
     assert png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
+    assert static_catalog_response.media_type == 'application/json'
+    assert b'minecraft:stone' in static_catalog_response.body
+    assert static_atlas_response.media_type == 'application/json'
+    assert '/api/itempanel/static/atlas.png?v=' in static_atlas_response.body.decode('utf-8')
+    assert static_png_response.media_type == 'image/png'
+    assert static_png_response.body.startswith(b'\x89PNG\r\n\x1a\n')
 
 
 def test_itempanel_catalog_and_json_merge_routes_are_available(tmp_path: Path):

@@ -22,6 +22,7 @@ from app.items.custom_items import CustomItemService
 from app.services.item_case_alias_service import ItemCaseAliasService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.services.mod_icon_atlas_service import ModIconAtlasService
+from app.services.itempanel_static_store import ItemPanelStaticStore
 
 
 class ServerContext:
@@ -65,6 +66,7 @@ class ServerContext:
         self.itempanel_merged_csv_path = itempanel_data_dir / 'itempanel_merged.csv'
         self.itempanel_icons_dir = self.admin_data_dir / 'itempanel_icons'
         oredict_storage_path = self.admin_data_dir / 'oredict.txt'
+        self.itempanel_static_store = ItemPanelStaticStore(self.admin_data_dir / 'itempanel_static')
 
         self.itempanel_icon_catalog = ItemPanelIconCatalog(
             self.active_itempanel_csv_path(),

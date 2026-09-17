@@ -318,6 +318,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     asset_index = ContextProxy(_current_context, 'asset_index')
     itempanel_icon_catalog = ContextProxy(_current_context, 'itempanel_icon_catalog')
     item_catalog_service = ContextProxy(_current_context, 'item_catalog_service')
+    itempanel_static_store = ContextProxy(_current_context, 'itempanel_static_store')
     mod_icon_atlas_service = ContextProxy(_current_context, 'mod_icon_atlas_service')
     item_case_alias_service = ContextProxy(_current_context, 'item_case_alias_service')
     zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
@@ -598,6 +599,41 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'rows': manifest.get('rows', 0),
         })
         return {'ok': True, 'atlas': manifest}
+
+    def _publish_itempanel_static_assets() -> dict[str, Any]:
+        context = _current_context()
+        atlas_png = context.itempanel_icon_catalog.read_atlas_png()
+        return context.itempanel_static_store.publish(
+            context.itempanel_icon_catalog.csv_path,
+            context.item_catalog_service.to_api(),
+            context.itempanel_icon_catalog.get_atlas_manifest(),
+            atlas_png or b'',
+        )
+
+    @router.post('/admin/itempanel/static/publish')
+    def admin_publish_itempanel_static_assets():
+        try:
+            metadata = _publish_itempanel_static_assets()
+        except (FileNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel static snapshot published', metadata)
+        return {'ok': True, 'static': metadata}
+
+    @router.post('/admin/itempanel/static/refresh')
+    def admin_refresh_itempanel_static_assets():
+        context = _current_context()
+        if not context.itempanel_icon_catalog.csv_path.is_file():
+            raise HTTPException(status_code=400, detail='itempanel.csv is not available')
+        try:
+            atlas = context.itempanel_icon_catalog.generate_atlas()
+            metadata = _publish_itempanel_static_assets()
+        except (FileNotFoundError, ValueError) as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Itempanel atlas and static snapshot refreshed', {
+            'static': metadata,
+            'atlas_entries': len(atlas.get('entries', {})),
+        })
+        return {'ok': True, 'atlas': atlas, 'static': metadata}
 
     @router.post('/admin/itempanel/json')
     async def admin_upload_itempanel_json(request: Request, filename: str = ''):
@@ -1253,6 +1289,50 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         if content is None:
             raise HTTPException(status_code=404, detail='Itempanel atlas is not available')
         return Response(content=content, media_type='image/png')
+
+    @router.get('/itempanel/static/status')
+    def itempanel_static_status():
+        return itempanel_static_store.status()
+
+    def _static_asset_response(name: str, media_type: str) -> Response:
+        content = itempanel_static_store.read_asset(name)
+        if content is None:
+            raise HTTPException(status_code=404, detail='Published itempanel static snapshot is not available')
+        status = itempanel_static_store.status()
+        version = str(status.get('version', ''))
+        headers = {
+            'Cache-Control': 'no-store, max-age=0',
+            'ETag': f'"{version}"' if version else '',
+        }
+        return Response(content=content, media_type=media_type, headers=headers)
+
+    @router.get('/itempanel/static/catalog.csv')
+    def itempanel_static_catalog_csv():
+        return _static_asset_response('itempanel.csv', 'text/csv; charset=utf-8')
+
+    @router.get('/itempanel/static/catalog.json')
+    def itempanel_static_catalog_json():
+        return _static_asset_response('itempanel-catalog.json', 'application/json')
+
+    @router.get('/itempanel/static/atlas.json')
+    def itempanel_static_atlas_json():
+        status = itempanel_static_store.status()
+        version = str(status.get('version', ''))
+        image_url = '/api/itempanel/static/atlas.png'
+        if version:
+            image_url = f'{image_url}?v={version}'
+        manifest = itempanel_static_store.read_atlas_manifest(image_url)
+        if manifest is None:
+            raise HTTPException(status_code=404, detail='Published itempanel static snapshot is not available')
+        return Response(
+            content=json.dumps(manifest, ensure_ascii=False, separators=(',', ':')),
+            media_type='application/json',
+            headers={'Cache-Control': 'no-store, max-age=0', 'ETag': f'"{version}"' if version else ''},
+        )
+
+    @router.get('/itempanel/static/atlas.png')
+    def itempanel_static_atlas_png():
+        return _static_asset_response('itempanel-atlas.png', 'image/png')
 
     @router.get('/settings/project')
     def get_project_settings():

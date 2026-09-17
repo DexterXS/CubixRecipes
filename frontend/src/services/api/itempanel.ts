@@ -1,9 +1,27 @@
-import { ItemCatalogResponse, ItemPanelAtlas } from '../../types';
+import { ItemCatalogResponse, ItemPanelAtlas, ItemPanelStaticPublication } from '../../types';
 import { apiPath, buildRequestHeaders, readErrorMessage, request } from './client';
 
 let baseAtlasPromise: Promise<ItemPanelAtlas> | null = null;
+let baseAtlasServerId: string | null = null;
+
+function getActiveServerId(): string | null {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage.getItem('active_server_id');
+}
 
 export async function getStaticItemPanelAtlas(): Promise<ItemPanelAtlas> {
+  try {
+    const serverResponse = await fetch(apiPath('/itempanel/static/atlas.json'), {
+      credentials: 'include',
+      cache: 'no-store',
+      headers: buildRequestHeaders()
+    });
+    if (serverResponse.ok) {
+      return await serverResponse.json() as ItemPanelAtlas;
+    }
+  } catch {
+    // Fall back to the bundled snapshot when the backend is unavailable.
+  }
   const response = await fetch('/itempanel-atlas.json');
   if (response.ok) {
     return await response.json() as ItemPanelAtlas;
@@ -34,7 +52,9 @@ async function loadBaseItemPanelAtlas(): Promise<ItemPanelAtlas> {
 }
 
 export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
-  if (!baseAtlasPromise) {
+  const activeServerId = getActiveServerId();
+  if (!baseAtlasPromise || baseAtlasServerId !== activeServerId) {
+    baseAtlasServerId = activeServerId;
     baseAtlasPromise = loadBaseItemPanelAtlas();
   }
   return baseAtlasPromise;
@@ -42,6 +62,18 @@ export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
 
 export async function getItemCatalog(): Promise<ItemCatalogResponse> {
   return request<ItemCatalogResponse>(apiPath('/itempanel/catalog'));
+}
+
+export async function getStaticItemPanelCatalog(): Promise<ItemCatalogResponse> {
+  const response = await fetch(apiPath('/itempanel/static/catalog.json'), {
+    credentials: 'include',
+    cache: 'no-store',
+    headers: buildRequestHeaders()
+  });
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
+  }
+  return await response.json() as ItemCatalogResponse;
 }
 
 async function uploadRawItemPanelFile(file: File, endpoint: string, contentType: string): Promise<Response> {
@@ -71,8 +103,16 @@ export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; pat
 
 export async function generateItemPanelAtlas(): Promise<ItemPanelAtlas> {
   const payload = await request<{ ok: boolean; atlas: ItemPanelAtlas }>(apiPath('/admin/itempanel/atlas/generate'), { method: 'POST' });
+  baseAtlasServerId = getActiveServerId();
   baseAtlasPromise = Promise.resolve(payload.atlas);
   return payload.atlas;
+}
+
+export async function refreshItemPanelStaticAssets(): Promise<{ ok: boolean; atlas: ItemPanelAtlas; static: ItemPanelStaticPublication }> {
+  const payload = await request<{ ok: boolean; atlas: ItemPanelAtlas; static: ItemPanelStaticPublication }>(apiPath('/admin/itempanel/static/refresh'), { method: 'POST' });
+  baseAtlasServerId = getActiveServerId();
+  baseAtlasPromise = Promise.resolve(payload.atlas);
+  return payload;
 }
 
 export async function mergeItemPanelFiles(): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {

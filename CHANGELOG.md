@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added a server-persistent itempanel static snapshot. The technical wipe-update tool can now rebuild the current atlas and publish `itempanel.csv`, the full catalog JSON, and both atlas assets as one versioned snapshot that is reused after restarts with cache-safe URLs.
 - Added explicit server-wide itempanel atlas publication: startup only loads the last saved atlas, while administrators generate and replace it manually from the technical wipe-update tool; the same snapshot is reused after restarts.
 - Added a compact desktop workspace navigation with line icons and accessible hover/focus cards that explain each section without filling the header with descriptions.
 - Connected the Drafts 9×9 preview item icons to the technical icon settings, with explicit centering controls and readable default sizing.

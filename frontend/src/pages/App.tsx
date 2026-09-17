@@ -35,7 +35,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateItemPanelAtlas, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateItemPanelAtlas, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, getStaticItemPanelCatalog, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, refreshItemPanelStaticAssets, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1734,6 +1734,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
   const [itemPanelMerging, setItemPanelMerging] = useState(false);
   const [itemPanelAtlasGenerating, setItemPanelAtlasGenerating] = useState(false);
+  const [itemPanelStaticRefreshing, setItemPanelStaticRefreshing] = useState(false);
   const [itemPanelAtlasMessage, setItemPanelAtlasMessage] = useState('');
   const [modIconUploading, setModIconUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
@@ -2239,6 +2240,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemPanelAtlasMessage(error instanceof Error ? error.message : String(error));
     } finally {
       setItemPanelAtlasGenerating(false);
+    }
+  }
+
+  async function handleRefreshItemPanelStaticAssets() {
+    if (!canManageModIcons) return;
+    setItemPanelStaticRefreshing(true);
+    setItemPanelAtlasMessage('Обновляю атлас и всю серверную статику...');
+    try {
+      const payload = await refreshItemPanelStaticAssets();
+      setItemPanelAtlas(payload.atlas);
+      const catalogEntries = payload.static.summary.catalog_entries;
+      const atlasEntries = payload.static.summary.atlas_entries;
+      setItemPanelAtlasMessage(`Готово: статика обновлена (каталог ${catalogEntries}, атлас ${atlasEntries}). Версия ${payload.static.version}.`);
+    } catch (error) {
+      setItemPanelAtlasMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemPanelStaticRefreshing(false);
     }
   }
 
@@ -3160,10 +3178,19 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
 
       const catalogPromise = getItemCatalog();
+      let remoteCatalogApplied = false;
+      let publishedCatalogApplied = false;
+      const publishedCatalogPromise = getStaticItemPanelCatalog().catch(() => null);
+      void publishedCatalogPromise.then((payload) => {
+        if (!cancelled && !remoteCatalogApplied && payload?.entries.length) {
+          publishedCatalogApplied = true;
+          applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
+        }
+      });
       if (!hasCachedEntries) {
         try {
           const staticEntries = await loadStaticItemPanelEntries();
-          if (!cancelled && staticEntries.length) {
+          if (!cancelled && !publishedCatalogApplied && staticEntries.length) {
             applyItemPanelEntries(staticEntries);
           }
         } catch {
@@ -3173,6 +3200,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       try {
         const payload = await catalogPromise;
         if (!cancelled && payload.entries.length) {
+          remoteCatalogApplied = true;
           applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
           return;
         }
@@ -6736,10 +6764,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             <section className="settings-section">
               <div className="settings-section-title">
                 <h3>3. Основной атлас itempanel</h3>
-                <span>Генерируется только вручную. Опубликованный атлас используется глобально на сервере и сохраняется после перезапуска.</span>
+                <span>Снимок сохраняется для выбранного сервера и переживает перезапуск: itempanel.csv, полный каталог, JSON атласа и PNG атласа.</span>
               </div>
               <div className="inline-actions">
-                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating} onClick={() => void handleGenerateItemPanelAtlas()}>{itemPanelAtlasGenerating ? 'Генерация...' : 'Сгенерировать и опубликовать'}</button>
+                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating || itemPanelStaticRefreshing} onClick={() => void handleGenerateItemPanelAtlas()}>{itemPanelAtlasGenerating ? 'Генерация...' : 'Сгенерировать и опубликовать'}</button>
+                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating || itemPanelStaticRefreshing} onClick={() => void handleRefreshItemPanelStaticAssets()}>{itemPanelStaticRefreshing ? 'Обновление...' : 'Обновить всю статику'}</button>
                 <span>{itemPanelAtlasMessage || 'После загрузки новых CSV или иконок запустите публикацию вручную.'}</span>
               </div>
             </section>

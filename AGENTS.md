@@ -245,6 +245,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - `itempanel_icons`/NEI dump catalog is now the primary startup icon source; old asset scan is skipped during startup when the catalog is available and remains available via explicit index/debug rescans.
   - `create_app(config_path=...)` after itempanel catalog integration and startup asset-scan skip: about 2.001s.
   - On 2026-09-17, automatic itempanel atlas generation was removed from server startup. Each server now loads only its last explicitly published atlas; generation and replacement happen through the admin tool and the published snapshot is kept across source changes and restarts.
+  - On 2026-09-17, added a per-server persistent static snapshot under `itempanel_static/`; the wipe-update action can publish the current CSV, full catalog JSON, atlas manifest, and atlas PNG together, with cache-safe versioned responses and a bundled fallback.
   - Remaining Stage 2 work: validate cold-start and warm-restart timings on Railway after deployment.
 
 ### Stage 3: Asset Index and Resolver
