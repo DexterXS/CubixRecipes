@@ -41,6 +41,7 @@ class ItemPanelIconCatalog:
         self.quality_by_file: dict[str, str] = {}
         self._atlas_png: Optional[bytes] = None
         self._atlas_manifest: Optional[dict] = None
+        self._atlas_loaded = False
         self.last_scan_report = {
             'csv_path': str(csv_path),
             'icons_dir': str(icons_dir),
@@ -54,8 +55,6 @@ class ItemPanelIconCatalog:
     def scan(self) -> None:
         self.entries_by_key.clear()
         self.quality_by_file.clear()
-        self._atlas_png = None
-        self._atlas_manifest = None
         icon_files = self._build_icon_file_map()
         self._icon_files = tuple(sorted(icon_files.values()))
         rows = self._read_rows()
@@ -134,7 +133,7 @@ class ItemPanelIconCatalog:
         return path.read_bytes()
 
     def get_atlas_manifest(self) -> dict:
-        self._ensure_atlas()
+        self._load_published_atlas()
         return self._atlas_manifest or {
             'image_url': '/api/itempanel/atlas.png',
             'tile_size': 32,
@@ -144,11 +143,20 @@ class ItemPanelIconCatalog:
         }
 
     def read_atlas_png(self) -> Optional[bytes]:
-        self._ensure_atlas()
+        self._load_published_atlas()
         return self._atlas_png
 
-    def _ensure_atlas(self) -> None:
-        self._atlas_builder.ensure(self)
+    def generate_atlas(self) -> dict:
+        """Explicitly regenerate and publish the server's shared atlas."""
+        self._atlas_builder.generate(self)
+        self._atlas_loaded = True
+        return self.get_atlas_manifest()
+
+    def _load_published_atlas(self) -> None:
+        if self._atlas_loaded:
+            return
+        self._atlas_loaded = True
+        self._atlas_builder.load_published(self)
 
     def read_png_rgba_bytes(self, data: bytes) -> tuple[int, int, list[bytes]]:
         width, height, rows, channels, palette, alpha_palette = self._decode_png_bytes(data)

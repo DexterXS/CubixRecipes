@@ -134,13 +134,13 @@ Last full rebuild: 2026-06-29
   - Class: `AssetIndex`.
   - Used by resolver, debug, routes, server context.
 - `backend/app/indexer/itempanel_icon_catalog.py`
-  - Scans itempanel CSV plus `itempanel_icons`, detects missing/bad icons, builds atlas data without requiring Pillow.
+  - Scans itempanel CSV plus `itempanel_icons`, detects missing/bad icons, resolves icons, and loads or explicitly publishes the server's atlas without requiring Pillow.
   - Classes: `ItemPanelIconEntry`, `ItemPanelIconCatalog`.
 - `backend/app/indexer/itempanel_atlas_builder.py`
   - Owns itempanel atlas construction and delegates persistent storage to the atlas cache, keeping the catalog scanner focused on source indexing and resolution.
   - Class: `ItemPanelAtlasBuilder`.
 - `backend/app/indexer/itempanel_atlas_cache.py`
-  - Persists the generated itempanel atlas and manifest per server, keyed by the CSV/icon source fingerprint, so restarts do not rebuild the atlas inside the first API request.
+  - Persists the explicitly published itempanel atlas and manifest per server. The source fingerprint is retained as provenance, but it does not invalidate the published snapshot on restart or source updates.
   - Class: `ItemPanelAtlasCache`.
   - Primary startup icon source when available.
 - `backend/app/resolver/item_resolver.py`
@@ -229,6 +229,7 @@ Last full rebuild: 2026-06-29
 - `POST /api/admin/itempanel/csv`
 - `POST /api/admin/itempanel/json`
 - `POST /api/admin/itempanel/merge`
+- `POST /api/admin/itempanel/atlas/generate`
 - `GET /api/admin/itempanel/merged`
 - `GET /api/itempanel/catalog`
 - `GET /api/itempanel/atlas`

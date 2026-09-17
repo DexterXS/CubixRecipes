@@ -926,10 +926,12 @@ test('wipe update modal exposes csv icons atlas json and merge steps', async () 
   const dialog = screen.getByRole('dialog', { name: 'Обновление вайпа' });
   expect(within(dialog).getByText('1. itempanel.csv')).toBeTruthy();
   expect(within(dialog).getByText('2. Иконки')).toBeTruthy();
-  expect(within(dialog).getByText('3. Атласы')).toBeTruthy();
-  expect(within(dialog).getByText('4. itempanel.json')).toBeTruthy();
-  expect(within(dialog).getByText('5. oredict.txt (опционально)')).toBeTruthy();
-  expect(within(dialog).getByText('6. Объединение и проверка')).toBeTruthy();
+  expect(within(dialog).getByText('3. Основной атлас itempanel')).toBeTruthy();
+  expect(within(dialog).getByText('4. Атласы иконок модов')).toBeTruthy();
+  expect(within(dialog).getByText('5. itempanel.json')).toBeTruthy();
+  expect(within(dialog).getByText('6. oredict.txt (опционально)')).toBeTruthy();
+  expect(within(dialog).getByRole('button', { name: 'Сгенерировать и опубликовать' })).toBeTruthy();
+  expect(within(dialog).getByText('7. Объединение и проверка')).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Объединить файлы' })).toBeTruthy();
   expect(within(dialog).getByRole('button', { name: 'Открыть объединенный файл' })).toBeTruthy();
 });

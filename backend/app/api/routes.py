@@ -16,6 +16,7 @@ from contextvars import ContextVar
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
+from starlette.concurrency import run_in_threadpool
 
 # Context variables and dynamic proxy pattern for multiple servers
 active_request: ContextVar[Optional[Request]] = ContextVar('active_request', default=None)
@@ -587,6 +588,16 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'catalog_summary': item_catalog_service.last_scan_report,
             'atlas': itempanel_icon_catalog.get_atlas_manifest(),
         }
+
+    @router.post('/admin/itempanel/atlas/generate')
+    def admin_generate_itempanel_atlas():
+        manifest = itempanel_icon_catalog.generate_atlas()
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Published itempanel atlas generated', {
+            'entries': len(manifest.get('entries', {})),
+            'columns': manifest.get('columns', 0),
+            'rows': manifest.get('rows', 0),
+        })
+        return {'ok': True, 'atlas': manifest}
 
     @router.post('/admin/itempanel/json')
     async def admin_upload_itempanel_json(request: Request, filename: str = ''):
@@ -1462,7 +1473,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
                 else:
                     return JSONResponse({'detail': 'Server ID is required'}, status_code=400)
             
-            context = server_manager.get_context(server_id)
+            context = await run_in_threadpool(server_manager.get_context, server_id)
             if not context:
                 return JSONResponse({'detail': f'Server {server_id} not found'}, status_code=404)
             request.state.server_context = context

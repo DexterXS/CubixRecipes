@@ -6,20 +6,22 @@ from app.indexer.itempanel_atlas_cache import ItemPanelAtlasCache
 
 
 class ItemPanelAtlasBuilder:
-    """Builds and persists the itempanel atlas for one server context."""
+    """Builds and persists the published itempanel atlas for one server."""
 
     def __init__(self, cache: ItemPanelAtlasCache) -> None:
         self.cache = cache
 
-    def ensure(self, catalog: Any) -> None:
-        if catalog._atlas_manifest is not None:
-            return
-
-        source_key = self.cache.source_key(catalog.csv_path, catalog.icons_dir, catalog._icon_files)
-        cached = self.cache.load(source_key)
+    def load_published(self, catalog: Any) -> bool:
+        """Load the persisted server-wide snapshot without generating it."""
+        cached = self.cache.load_published()
         if cached is not None:
             catalog._atlas_manifest, catalog._atlas_png = cached
-            return
+            return True
+        return False
+
+    def generate(self, catalog: Any) -> None:
+        """Build and publish a new snapshot from the current itempanel sources."""
+        source_key = self.cache.source_key(catalog.csv_path, catalog.icons_dir, catalog._icon_files)
 
         good_entries: list[Any] = []
         seen_files: set[str] = set()
@@ -40,8 +42,11 @@ class ItemPanelAtlasBuilder:
             'entries': {},
         }
         if not good_entries:
-            catalog._atlas_png = None
+            # Keep an explicit empty publication stable too, so an older
+            # snapshot is not resurrected after the next server restart.
+            catalog._atlas_png = catalog._encode_rgba_png(1, 1, bytearray(4))
             catalog._atlas_manifest = empty_manifest
+            self.cache.save(source_key, catalog._atlas_manifest, catalog._atlas_png)
             return
 
         columns = min(64, max(1, self._ceil_sqrt(len(good_entries))))

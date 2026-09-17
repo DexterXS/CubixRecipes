@@ -96,6 +96,10 @@ def test_itempanel_catalog_builds_atlas_without_pillow(tmp_path: Path):
 
     catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     catalog.scan()
+    assert catalog.get_atlas_manifest()['entries'] == {}
+    assert catalog.read_atlas_png() is None
+
+    catalog.generate_atlas()
     manifest = catalog.get_atlas_manifest()
     atlas_png = catalog.read_atlas_png()
 
@@ -123,6 +127,7 @@ def test_itempanel_atlas_centers_visible_pixels_instead_of_source_canvas(tmp_pat
 
     catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     catalog.scan()
+    catalog.generate_atlas()
     atlas_png = catalog.read_atlas_png()
 
     assert atlas_png is not None
@@ -142,6 +147,7 @@ def test_itempanel_catalog_reuses_persisted_atlas(tmp_path: Path):
 
     first = ItemPanelIconCatalog(csv_path, icons_dir, cache_dir=cache_dir)
     first.scan()
+    first.generate_atlas()
     first_manifest = first.get_atlas_manifest()
     first_png = first.read_atlas_png()
 
@@ -154,3 +160,14 @@ def test_itempanel_catalog_reuses_persisted_atlas(tmp_path: Path):
     assert (cache_dir / 'itempanel-atlas.png').is_file()
     assert second_manifest == first_manifest
     assert second_png == first_png
+
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'minecraft:diamond,264,0,false,Diamond\n',
+        encoding='utf-8',
+    )
+    _write_rgba_png(icons_dir / 'Diamond.png', [(255, 255, 255, 255)] * 4)
+    second.scan()
+
+    assert second.get_atlas_manifest() == first_manifest
+    assert second.read_atlas_png() == first_png

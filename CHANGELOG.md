@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added explicit server-wide itempanel atlas publication: startup only loads the last saved atlas, while administrators generate and replace it manually from the technical wipe-update tool; the same snapshot is reused after restarts.
 - Added a compact desktop workspace navigation with line icons and accessible hover/focus cards that explain each section without filling the header with descriptions.
 - Connected the Drafts 9×9 preview item icons to the technical icon settings, with explicit centering controls and readable default sizing.
 - Improved the Drafts workspace layout: no item is selected by default, Ctrl-selection can be fully cleared, long labels stay inside their controls, desktop panels use the available width, and 9x9 previews render at a readable size with foreground selection outlines.
@@ -76,7 +77,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
-- Fixed slow first-load item icons after a backend restart: itempanel atlases are now persisted per server and prewarmed before serving requests, with source-based invalidation when the CSV or icon directory changes.
+- Fixed slow first-load item icons after a backend restart: itempanel atlases are now loaded from the last published per-server snapshot, and startup never regenerates them automatically.
 - Fixed the remaining first-load browser stall: the base itempanel atlas is now applied immediately, while generated mod-icon atlases keep their separate sprite layer instead of being downloaded and merged synchronously in a client-side Canvas.
 - Fixed the cold-server loading state: the bundled catalog and atlas are now shown immediately while the server-specific catalog and atlas load in the background and replace the temporary data when ready.
 - Fixed the admin icon settings grid and Auctions NEI picker sizing: center-mode buttons now wrap instead of overlapping, and the opened-lot NEI catalog uses exact square cells with zero button padding from the `auctionNei` icon-surface settings instead of stretching columns.

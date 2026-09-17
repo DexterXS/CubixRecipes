@@ -69,6 +69,12 @@ export async function uploadItemPanelCsv(file: File): Promise<{ ok: boolean; pat
   return await response.json() as { ok: boolean; path: string; scan: Record<string, unknown>; atlas: ItemPanelAtlas };
 }
 
+export async function generateItemPanelAtlas(): Promise<ItemPanelAtlas> {
+  const payload = await request<{ ok: boolean; atlas: ItemPanelAtlas }>(apiPath('/admin/itempanel/atlas/generate'), { method: 'POST' });
+  baseAtlasPromise = Promise.resolve(payload.atlas);
+  return payload.atlas;
+}
+
 export async function mergeItemPanelFiles(): Promise<{ ok: boolean; path: string; summary: Record<string, unknown> }> {
   return request<{ ok: boolean; path: string; summary: Record<string, unknown> }>(apiPath('/admin/itempanel/merge'), { method: 'POST' });
 }

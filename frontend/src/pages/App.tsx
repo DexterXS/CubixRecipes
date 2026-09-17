@@ -35,7 +35,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateItemPanelAtlas, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getStaticItemPanelAtlas, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1733,6 +1733,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [itemPanelCsvUploading, setItemPanelCsvUploading] = useState(false);
   const [itemPanelJsonUploading, setItemPanelJsonUploading] = useState(false);
   const [itemPanelMerging, setItemPanelMerging] = useState(false);
+  const [itemPanelAtlasGenerating, setItemPanelAtlasGenerating] = useState(false);
+  const [itemPanelAtlasMessage, setItemPanelAtlasMessage] = useState('');
   const [modIconUploading, setModIconUploading] = useState(false);
   const [modIconGenerating, setModIconGenerating] = useState(false);
   const [modIconArchiveAction, setModIconArchiveAction] = useState('');
@@ -2222,6 +2224,21 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       setItemPanelJsonMessage(error instanceof Error ? error.message : String(error));
     } finally {
       setItemPanelMerging(false);
+    }
+  }
+
+  async function handleGenerateItemPanelAtlas() {
+    if (!canManageModIcons) return;
+    setItemPanelAtlasGenerating(true);
+    setItemPanelAtlasMessage('Генерирую и публикую основной атлас...');
+    try {
+      const atlas = await generateItemPanelAtlas();
+      setItemPanelAtlas(atlas);
+      setItemPanelAtlasMessage(`Готово: опубликовано иконок ${Object.keys(atlas.entries ?? {}).length}. Атлас сохранён на сервере и будет использоваться после перезапуска.`);
+    } catch (error) {
+      setItemPanelAtlasMessage(error instanceof Error ? error.message : String(error));
+    } finally {
+      setItemPanelAtlasGenerating(false);
     }
   }
 
@@ -6718,8 +6735,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>3. Атласы</h3>
-                <span>После загрузки ZIP пересоберите атласы для отображения иконок.</span>
+                <h3>3. Основной атлас itempanel</h3>
+                <span>Генерируется только вручную. Опубликованный атлас используется глобально на сервере и сохраняется после перезапуска.</span>
+              </div>
+              <div className="inline-actions">
+                <button type="button" className="secondary-button" disabled={itemPanelAtlasGenerating} onClick={() => void handleGenerateItemPanelAtlas()}>{itemPanelAtlasGenerating ? 'Генерация...' : 'Сгенерировать и опубликовать'}</button>
+                <span>{itemPanelAtlasMessage || 'После загрузки новых CSV или иконок запустите публикацию вручную.'}</span>
+              </div>
+            </section>
+            <section className="settings-section">
+              <div className="settings-section-title">
+                <h3>4. Атласы иконок модов</h3>
+                <span>После загрузки ZIP пересоберите отдельные атласы модов для отображения иконок.</span>
               </div>
               <div className="inline-actions">
                 <button type="button" className="secondary-button" disabled={modIconGenerating || !(modIconStatus?.archives.length)} onClick={() => void handleGenerateModIconAtlases()}>Сгенерировать атласы</button>
@@ -6728,7 +6755,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>4. itempanel.json</h3>
+                <h3>5. itempanel.json</h3>
                 <span>Построчный SNBT файл должен совпадать с itempanel.csv по количеству строк и порядку.</span>
               </div>
               <label
@@ -6755,7 +6782,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>5. oredict.txt (опционально)</h3>
+                <h3>6. oredict.txt (опционально)</h3>
                 <span>Экспорт Forge Ore Dictionary, используется для замен &lt;ore:group&gt;.</span>
               </div>
               <label
@@ -6782,7 +6809,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             </section>
             <section className="settings-section">
               <div className="settings-section-title">
-                <h3>6. Объединение и проверка</h3>
+                <h3>7. Объединение и проверка</h3>
                 <span>После объединения NEI получает raw-варианты с .withTag(...), а редактор строит дерево NBT.</span>
               </div>
               <div className="kv-grid">

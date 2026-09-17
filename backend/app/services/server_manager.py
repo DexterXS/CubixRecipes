@@ -4,6 +4,7 @@ import json
 import os
 import re
 import shutil
+from threading import RLock
 from pathlib import Path
 from typing import Any, Optional
 
@@ -80,7 +81,6 @@ class ServerContext:
             oredict_path=oredict_storage_path,
         )
         self.item_catalog_service.scan()
-        self.itempanel_icon_catalog.get_atlas_manifest()
 
         self.mod_icon_atlas_service = ModIconAtlasService(
             self.admin_data_dir / 'mod_icon_archives',
@@ -155,6 +155,7 @@ class ServerManager:
 
         self.servers_file = global_admin_data_dir / "servers.json"
         self.contexts: dict[str, ServerContext] = {}
+        self._context_lock = RLock()
 
         # Инициализируем / загружаем список серверов
         self.servers = self._load_servers()
@@ -227,21 +228,22 @@ class ServerManager:
             shutil.copy(str(legacy_config), str(target_admin_dir / "config.json"))
 
     def get_context(self, server_id: str) -> Optional[ServerContext]:
-        if server_id not in self.contexts:
-            # Ищем сервер в списке
-            server_info = next((s for s in self.servers if s['id'] == server_id), None)
-            if not server_info:
-                return None
-            self.contexts[server_id] = ServerContext(
-                server_id=server_id,
-                name=server_info['name'],
-                global_admin_data_dir=self.global_admin_data_dir,
-                global_data_dir=self.global_data_dir,
-                project_root=self.project_root,
-                parser=self.parser,
-                log_service=self.log_service,
-            )
-        return self.contexts[server_id]
+        with self._context_lock:
+            if server_id not in self.contexts:
+                # Ищем сервер в списке
+                server_info = next((s for s in self.servers if s['id'] == server_id), None)
+                if not server_info:
+                    return None
+                self.contexts[server_id] = ServerContext(
+                    server_id=server_id,
+                    name=server_info['name'],
+                    global_admin_data_dir=self.global_admin_data_dir,
+                    global_data_dir=self.global_data_dir,
+                    project_root=self.project_root,
+                    parser=self.parser,
+                    log_service=self.log_service,
+                )
+            return self.contexts[server_id]
 
     def create_server(self, server_id: str, name: str) -> None:
         if any(s['id'] == server_id for s in self.servers):

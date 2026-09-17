@@ -244,7 +244,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Recipe save operations now rescan only the changed `.zs` file instead of all recipe sources.
   - `itempanel_icons`/NEI dump catalog is now the primary startup icon source; old asset scan is skipped during startup when the catalog is available and remains available via explicit index/debug rescans.
   - `create_app(config_path=...)` after itempanel catalog integration and startup asset-scan skip: about 2.001s.
-  - On 2026-09-17, itempanel atlas generation was moved behind `ItemPanelAtlasBuilder`, persisted per server with source-key invalidation, and prewarmed during server-context initialization so the first API request no longer performs the expensive build.
+  - On 2026-09-17, automatic itempanel atlas generation was removed from server startup. Each server now loads only its last explicitly published atlas; generation and replacement happen through the admin tool and the published snapshot is kept across source changes and restarts.
   - Remaining Stage 2 work: validate cold-start and warm-restart timings on Railway after deployment.
 
 ### Stage 3: Asset Index and Resolver
@@ -309,7 +309,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Frontend workspace now uses task tabs and a theme toggle; texture-cache actions live in the items tab instead of the global header.
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.
 - Added a wipe-update workflow, backend combined item catalog from itempanel CSV/NBT/icon data, and shared per-size mod icon atlas packing.
-- Added persistent itempanel atlas caching and startup prewarming to avoid rebuilding all item icons during the first request after a backend restart.
+- Added persistent published itempanel atlas snapshots: the server no longer builds the atlas automatically, and the admin can explicitly generate and replace the snapshot used after restarts.
 
 ### Known Issues
 - Resolver heuristics not fully implemented.

@@ -48,7 +48,12 @@ def test_itempanel_atlas_routes_are_available(tmp_path: Path):
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
     manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas')
     png_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/itempanel/atlas.png')
+    generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/itempanel/atlas/generate')
 
+    manifest = manifest_route()
+    assert manifest['entries'] == {}
+    generated = generate_route()
+    assert '<minecraft:stone>' in generated['atlas']['entries']
     manifest = manifest_route()
     png_response = png_route()
 
