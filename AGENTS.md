@@ -272,10 +272,12 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added persisted dark/light theme mode with a compact sun/moon toggle.
 
 ### Stage 6: Frontend Performance
-- Status: pending.
+- Status: in progress.
 - Optimize itempanel loading/search.
 - Bound localStorage caches.
 - Reduce redundant debug/API calls.
+- Progress on 2026-09-17:
+  - Removed the blocking browser-side merge of the base itempanel atlas with generated mod-icon atlases. The base atlas now becomes available immediately; the existing separate mod-icon layer renders its overrides independently.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.
@@ -300,6 +302,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Captured Stage 1 optimization baseline; asset scan is the dominant measured backend cost.
 - Optimized asset indexing to avoid unnecessary file reads while preserving indexed icon counts.
 - Optimized recipe storage saves to use changed-file rescans instead of full recipe rescans.
+- Removed the blocking frontend Canvas atlas merge that delayed first icon rendering while separately generated mod-icon atlas sprites continue to render through their manifest.
 - Added NEI/itempanel icon catalog as the primary icon resolver source and filtered bad dump icons before UI display.
 - Frontend workspace now uses task tabs and a theme toggle; texture-cache actions live in the items tab instead of the global header.
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.

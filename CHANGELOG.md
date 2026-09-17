@@ -77,6 +77,7 @@
 
 ### Fixed
 - Fixed slow first-load item icons after a backend restart: itempanel atlases are now persisted per server and prewarmed before serving requests, with source-based invalidation when the CSV or icon directory changes.
+- Fixed the remaining first-load browser stall: the base itempanel atlas is now applied immediately, while generated mod-icon atlases keep their separate sprite layer instead of being downloaded and merged synchronously in a client-side Canvas.
 - Fixed the admin icon settings grid and Auctions NEI picker sizing: center-mode buttons now wrap instead of overlapping, and the opened-lot NEI catalog uses exact square cells with zero button padding from the `auctionNei` icon-surface settings instead of stretching columns.
 - Fixed saved Auctions command-generator modes after deploy/reload: disabled command checkboxes now stay disabled through frontend/backend normalization, and saved profiles are not dropped when remote day folders are empty.
 - Made Auctions folder cards show currency beside start price and bid step, show each lot description directly in the opened-folder list, and mark missing descriptions as high-risk warnings.
