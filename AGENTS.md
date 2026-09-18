@@ -280,7 +280,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Progress on 2026-09-18:
   - Added a persistent browser Cache Storage snapshot for the published itempanel atlas, keyed by server and authenticated user, with immediate stale rendering and background refresh.
   - Kept the existing server-scoped localStorage catalog cache for fast subject/search metadata and keyed in-memory atlas requests by server to prevent cross-server reuse.
-  - Removed client-side Canvas recomposition of mod icons; the frontend now consumes the server-generated itempanel atlas directly and requests generated mod metadata only through the existing technical/mod-icon workflow.
+  - Removed client-side Canvas recomposition of mod icons; the frontend now consumes the server-generated itempanel atlas directly while the already-generated mod atlas remains a separate server-owned overlay layer.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.
