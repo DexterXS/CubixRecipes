@@ -67,7 +67,8 @@ class ServerContext:
 
         self.itempanel_icon_catalog = ItemPanelIconCatalog(
             self.active_itempanel_csv_path(),
-            self.active_itempanel_icons_dir()
+            self.active_itempanel_icons_dir(),
+            cache_dir=self.admin_data_dir / 'itempanel_atlas_cache',
         )
         self.itempanel_icon_catalog.scan()
 

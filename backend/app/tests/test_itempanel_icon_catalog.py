@@ -130,3 +130,24 @@ def test_itempanel_atlas_centers_visible_pixels_instead_of_source_canvas(tmp_pat
     assert (width, height) == (32, 32)
     assert rows[15][15 * 4:15 * 4 + 4] == bytes(cyan)
     assert rows[31][31 * 4:31 * 4 + 4] == bytes(transparent)
+
+
+def test_itempanel_catalog_reuses_persisted_atlas_without_decoding_icons(tmp_path: Path, monkeypatch):
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    csv_path = tmp_path / 'itempanel.csv'
+    cache_dir = tmp_path / 'itempanel_atlas_cache'
+    csv_path.write_text('Item Name,Item ID,Item meta,Has NBT,Display Name\nminecraft:stone,1,0,false,Stone\n', encoding='utf-8')
+    _write_rgba_png(icons_dir / 'Stone.png', [(255, 0, 0, 255), (0, 255, 0, 255), (0, 0, 255, 255), (255, 255, 0, 255)])
+
+    first_catalog = ItemPanelIconCatalog(csv_path, icons_dir, cache_dir=cache_dir)
+    first_catalog.scan()
+    first_catalog.get_atlas_manifest()
+
+    second_catalog = ItemPanelIconCatalog(csv_path, icons_dir, cache_dir=cache_dir)
+    second_catalog.scan()
+    monkeypatch.setattr(second_catalog, '_read_png_rgba', lambda _path: (_ for _ in ()).throw(AssertionError('cached atlas should skip PNG decoding')))
+
+    manifest = second_catalog.get_atlas_manifest()
+
+    assert manifest['entries']['<minecraft:stone>']['display_name'] == 'Stone'

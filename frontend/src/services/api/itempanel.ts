@@ -1,205 +1,7 @@
-import { ItemCatalogResponse, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAtlasEntry } from '../../types';
+import { ItemCatalogResponse, ItemPanelAtlas } from '../../types';
 import { apiPath, buildRequestHeaders, readErrorMessage, request } from './client';
-import { getModIconAtlasManifest } from './modIcons';
 
-const mergedAtlasPromises = new Map<string, Promise<ItemPanelAtlas>>();
-const mergedAtlasObjectUrls = new Map<string, string>();
-
-function normalizeIconName(value: string): string {
-  return (value || '')
-    .replace(/§./g, '')
-    .replace(/\.[a-z0-9]+$/i, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9а-яё]+/gi, '');
-}
-
-function entryModId(entry: ItemPanelAtlasEntry): string {
-  return (entry.item_key.split(':', 1)[0] || '').toLowerCase();
-}
-
-function generatedCandidates(entry: ItemPanelAtlasEntry): string[] {
-  const itemPath = entry.item_key.includes(':') ? entry.item_key.slice(entry.item_key.indexOf(':') + 1) : entry.item_key;
-  const basename = itemPath.split('/').pop() || itemPath;
-  return [entry.display_name, itemPath, basename]
-    .map(normalizeIconName)
-    .filter((value, index, values) => Boolean(value) && values.indexOf(value) === index);
-}
-
-function catalogCandidates(entry: ItemCatalogResponse['entries'][number]): string[] {
-  const itemPath = entry.key.includes(':') ? entry.key.slice(entry.key.indexOf(':') + 1) : entry.key;
-  const basename = itemPath.split('/').pop() || itemPath;
-  return [entry.display_ru, entry.display_en, itemPath, basename]
-    .map(normalizeIconName)
-    .filter((value, index, values) => Boolean(value) && values.indexOf(value) === index);
-}
-
-function findGeneratedEntry(entry: ItemPanelAtlasEntry, generatedByMod: Map<string, Map<string, ModIconAtlasEntry>>): ModIconAtlasEntry | undefined {
-  const modEntries = generatedByMod.get(entryModId(entry));
-  if (!modEntries) return undefined;
-  for (const candidate of generatedCandidates(entry)) {
-    const exact = modEntries.get(candidate);
-    if (exact) return exact;
-  }
-  return undefined;
-}
-
-function findGeneratedCatalogEntry(entry: ItemCatalogResponse['entries'][number], generatedByMod: Map<string, Map<string, ModIconAtlasEntry>>): ModIconAtlasEntry | undefined {
-  const modid = (entry.key.split(':', 1)[0] || '').toLowerCase();
-  const modEntries = generatedByMod.get(modid);
-  if (!modEntries) return undefined;
-  for (const candidate of catalogCandidates(entry)) {
-    const exact = modEntries.get(candidate);
-    if (exact) return exact;
-  }
-  return undefined;
-}
-
-function backendAssetUrl(url: string): string {
-  if (/^https?:\/\//i.test(url)) return url;
-  if (url.startsWith('/api/')) return apiPath(url.slice(4));
-  return url;
-}
-
-async function fetchImage(url: string, serverId?: string): Promise<{ image: HTMLImageElement; objectUrl: string }> {
-  const resolvedUrl = backendAssetUrl(url);
-  const response = await fetch(resolvedUrl, {
-    cache: 'no-store',
-    credentials: 'include',
-    headers: buildRequestHeaders(serverId ? { 'X-Server-Id': serverId } : undefined)
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status} for ${resolvedUrl}`);
-  const objectUrl = URL.createObjectURL(await response.blob());
-  const image = new Image();
-  image.src = objectUrl;
-  await image.decode();
-  return { image, objectUrl };
-}
-
-async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas, serverId?: string): Promise<ItemPanelAtlas> {
-  if (typeof document === 'undefined' || typeof Image === 'undefined' || !baseAtlas.image_url) return baseAtlas;
-
-  let manifest;
-  let catalog: ItemCatalogResponse | null = null;
-  try {
-    [manifest, catalog] = await Promise.all([
-      getModIconAtlasManifest(serverId),
-      getItemCatalog(serverId).catch(() => null)
-    ]);
-  } catch {
-    return baseAtlas;
-  }
-  const generatedEntries = Object.values(manifest?.entries?.x32 ?? {});
-  if (!manifest || generatedEntries.length === 0) return baseAtlas;
-
-  const generatedByMod = new Map<string, Map<string, ModIconAtlasEntry>>();
-  generatedEntries.forEach((entry) => {
-    const modid = (entry.modid || '').toLowerCase();
-    if (!modid) return;
-    const byName = generatedByMod.get(modid) ?? new Map<string, ModIconAtlasEntry>();
-    const names = [entry.iconName ?? '', entry.key?.split('/').slice(1).join('/') ?? ''];
-    names.forEach((name) => {
-      const normalized = normalizeIconName(name);
-      if (normalized && !byName.has(normalized)) byName.set(normalized, entry);
-    });
-    generatedByMod.set(modid, byName);
-  });
-
-  const replacements = Object.values(baseAtlas.entries ?? {})
-    .map((entry) => ({ base: entry, generated: findGeneratedEntry(entry, generatedByMod) }))
-    .filter((pair): pair is { base: ItemPanelAtlasEntry; generated: ModIconAtlasEntry } => Boolean(pair.generated));
-
-  const nextEntries: Record<string, ItemPanelAtlasEntry> = { ...(baseAtlas.entries ?? {}) };
-  const baseEntryKeys = new Set<string>();
-  Object.values(nextEntries).forEach((entry) => baseEntryKeys.add(`${entry.item_key.toLowerCase()}:${entry.meta ?? 0}`));
-
-  const additions = (catalog?.entries ?? [])
-    .map((item) => ({ item, generated: findGeneratedCatalogEntry(item, generatedByMod) }))
-    .filter((pair): pair is { item: ItemCatalogResponse['entries'][number]; generated: ModIconAtlasEntry } => {
-      if (!pair.generated) return false;
-      return !baseEntryKeys.has(`${pair.item.key.toLowerCase()}:${pair.item.meta ?? 0}`);
-    });
-
-  if (replacements.length === 0 && additions.length === 0) return baseAtlas;
-
-  const columns = baseAtlas.columns;
-  const tileSize = baseAtlas.tile_size;
-  const baseRows = baseAtlas.rows;
-  const width = columns * tileSize;
-  if (!width || !baseRows || !tileSize) return baseAtlas;
-
-  const firstExtraSlot = baseRows * columns;
-  additions.forEach(({ item }, index) => {
-    const slot = firstExtraSlot + index;
-    const x = (slot % columns) * tileSize;
-    const y = Math.floor(slot / columns) * tileSize;
-    nextEntries[item.raw] = {
-      x,
-      y,
-      w: tileSize,
-      h: tileSize,
-      display_name: item.display_ru || item.display_en || item.raw,
-      item_key: item.key,
-      meta: item.meta
-    };
-  });
-
-  const rows = Math.max(baseRows, Math.ceil((firstExtraSlot + additions.length) / columns));
-  const height = rows * tileSize;
-  const baseHeight = baseRows * tileSize;
-
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const context = canvas.getContext('2d');
-  if (!context) return baseAtlas;
-  context.imageSmoothingEnabled = false;
-
-  const disposableUrls: string[] = [];
-  try {
-    const baseImage = await fetchImage(baseAtlas.image_url, serverId);
-    disposableUrls.push(baseImage.objectUrl);
-    context.drawImage(baseImage.image, 0, 0, width, baseHeight);
-
-    const atlasImages = new Map<string, HTMLImageElement>();
-    const loadGeneratedImage = async (generated: ModIconAtlasEntry) => {
-      const cacheKey = generated.image_url;
-      let source = atlasImages.get(cacheKey);
-      if (!source) {
-        const loaded = await fetchImage(generated.image_url, serverId);
-        disposableUrls.push(loaded.objectUrl);
-        source = loaded.image;
-        atlasImages.set(cacheKey, source);
-      }
-      return source;
-    };
-
-    for (const { base, generated } of replacements) {
-      const source = await loadGeneratedImage(generated);
-      context.clearRect(base.x, base.y, base.w, base.h);
-      context.drawImage(source, generated.x, generated.y, generated.w, generated.h, base.x, base.y, base.w, base.h);
-    }
-
-    for (let index = 0; index < additions.length; index += 1) {
-      const { item, generated } = additions[index];
-      const target = nextEntries[item.raw];
-      const source = await loadGeneratedImage(generated);
-      context.drawImage(source, generated.x, generated.y, generated.w, generated.h, target.x, target.y, target.w, target.h);
-    }
-
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
-    if (!blob) return baseAtlas;
-    const cacheKey = serverId || 'default';
-    const previousObjectUrl = mergedAtlasObjectUrls.get(cacheKey);
-    if (previousObjectUrl) URL.revokeObjectURL(previousObjectUrl);
-    const mergedObjectUrl = URL.createObjectURL(blob);
-    mergedAtlasObjectUrls.set(cacheKey, mergedObjectUrl);
-    return { ...baseAtlas, image_url: mergedObjectUrl, rows, entries: nextEntries };
-  } catch {
-    return baseAtlas;
-  } finally {
-    disposableUrls.forEach((url) => URL.revokeObjectURL(url));
-  }
-}
+const baseAtlasPromises = new Map<string, Promise<ItemPanelAtlas>>();
 
 async function loadBaseItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas> {
   try {
@@ -211,7 +13,7 @@ async function loadBaseItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas
       return backendAtlas;
     }
   } catch {
-    // Fall back to the generated static atlas for offline/dev snapshots.
+    // Fall back to the bundled static atlas for offline/dev snapshots.
   }
   const response = await fetch('/itempanel-atlas.json');
   if (response.ok) {
@@ -228,10 +30,10 @@ async function loadBaseItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas
 
 export async function getItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas> {
   const cacheKey = serverId || 'default';
-  const existing = mergedAtlasPromises.get(cacheKey);
+  const existing = baseAtlasPromises.get(cacheKey);
   if (existing) return existing;
-  const promise = loadBaseItemPanelAtlas(serverId).then((atlas) => mergeGeneratedModIcons(atlas, serverId));
-  mergedAtlasPromises.set(cacheKey, promise);
+  const promise = loadBaseItemPanelAtlas(serverId);
+  baseAtlasPromises.set(cacheKey, promise);
   return promise;
 }
 

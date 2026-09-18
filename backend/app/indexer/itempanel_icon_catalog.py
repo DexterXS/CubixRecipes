@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import math
 import re
 import struct
 import unicodedata
@@ -12,6 +11,8 @@ from typing import Optional
 from urllib.parse import quote
 
 from app.domain.models import ItemRef, ResolutionResult
+from app.indexer.itempanel_atlas_builder import ItemPanelAtlasBuilder
+from app.indexer.itempanel_atlas_cache import ItemPanelAtlasCache
 
 
 GOOD_ICON = 'good_icon'
@@ -31,9 +32,11 @@ class ItemPanelIconEntry:
 
 
 class ItemPanelIconCatalog:
-    def __init__(self, csv_path: Path, icons_dir: Path) -> None:
+    def __init__(self, csv_path: Path, icons_dir: Path, cache_dir: Optional[Path] = None) -> None:
         self.csv_path = csv_path
         self.icons_dir = icons_dir
+        self._atlas_builder = ItemPanelAtlasBuilder(ItemPanelAtlasCache(cache_dir))
+        self._icon_files: tuple[str, ...] = ()
         self.entries_by_key: dict[tuple[str, Optional[int]], ItemPanelIconEntry] = {}
         self.quality_by_file: dict[str, str] = {}
         self._atlas_png: Optional[bytes] = None
@@ -54,6 +57,7 @@ class ItemPanelIconCatalog:
         self._atlas_png = None
         self._atlas_manifest = None
         icon_files = self._build_icon_file_map()
+        self._icon_files = tuple(sorted(icon_files.values()))
         rows = self._read_rows()
         matched = 0
         missing = 0
@@ -144,77 +148,7 @@ class ItemPanelIconCatalog:
         return self._atlas_png
 
     def _ensure_atlas(self) -> None:
-        if self._atlas_manifest is not None:
-            return
-
-        good_entries: list[ItemPanelIconEntry] = []
-        seen_files: set[str] = set()
-        for entry in self.entries_by_key.values():
-            if entry.icon_file in seen_files:
-                continue
-            if self._quality_for(entry.icon_file) != GOOD_ICON:
-                continue
-            seen_files.add(entry.icon_file)
-            good_entries.append(entry)
-
-        tile_size = 32
-        empty_manifest = {
-            'image_url': '/api/itempanel/atlas.png',
-            'tile_size': tile_size,
-            'columns': 0,
-            'rows': 0,
-            'entries': {},
-        }
-        if not good_entries:
-            self._atlas_png = None
-            self._atlas_manifest = empty_manifest
-            return
-
-        columns = min(64, max(1, math.ceil(math.sqrt(len(good_entries)))))
-        rows = math.ceil(len(good_entries) / columns)
-        atlas_width = columns * tile_size
-        atlas_height = rows * tile_size
-        atlas = bytearray(atlas_width * atlas_height * 4)
-        file_rects: dict[str, dict[str, int]] = {}
-
-        for index, entry in enumerate(good_entries):
-            x = (index % columns) * tile_size
-            y = (index // columns) * tile_size
-            try:
-                icon_width, icon_height, icon_rows = self._read_png_rgba(self.icons_dir / entry.icon_file)
-            except Exception:
-                continue
-            icon_width, icon_height, icon_rows = self._trim_transparent_rgba(icon_width, icon_height, icon_rows)
-            padding = 2
-            target_size = max(1, tile_size - padding * 2)
-            if icon_width > target_size or icon_height > target_size:
-                icon_width, icon_height, icon_rows = self._resize_nearest_rgba(icon_width, icon_height, icon_rows, target_size)
-            offset_x = x + (tile_size - icon_width) // 2
-            offset_y = y + (tile_size - icon_height) // 2
-            self._blit_rgba(atlas, atlas_width, icon_rows, icon_width, icon_height, offset_x, offset_y)
-            file_rects[entry.icon_file] = {'x': x, 'y': y, 'w': tile_size, 'h': tile_size}
-
-        manifest_entries: dict[str, dict] = {}
-        for entry in self.entries_by_key.values():
-            rect = file_rects.get(entry.icon_file)
-            if rect is None:
-                continue
-            raw = self._build_raw(entry.item_key, entry.meta)
-            manifest_entries[raw] = {
-                **rect,
-                'display_name': entry.display_name,
-                'item_key': entry.item_key,
-                'meta': entry.meta,
-            }
-
-        self._atlas_png = self._encode_rgba_png(atlas_width, atlas_height, atlas)
-        self._atlas_manifest = {
-            'image_url': '/api/itempanel/atlas.png',
-            'tile_size': tile_size,
-            'columns': columns,
-            'rows': rows,
-            'entries': manifest_entries,
-        }
+        self._atlas_builder.ensure(self)
 
     def read_png_rgba_bytes(self, data: bytes) -> tuple[int, int, list[bytes]]:
         width, height, rows, channels, palette, alpha_palette = self._decode_png_bytes(data)

@@ -52,3 +52,33 @@ test('getItemPanelAtlas falls back to the static base atlas when backend atlas i
   expect(Object.keys(atlas.entries)).toEqual(['<minecraft:stone>']);
   expect(global.fetch).toHaveBeenCalledWith('/itempanel-atlas.json');
 });
+
+test('getItemPanelAtlas does not rebuild or request generated mod atlases in the browser', async () => {
+  global.fetch = vi.fn((input: RequestInfo | URL) => {
+    const url = String(input);
+    if (url === '/api/itempanel/atlas') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          image_url: '/api/itempanel/atlas.png',
+          tile_size: 32,
+          columns: 1,
+          rows: 1,
+          entries: {
+            '<minecraft:stone>': { x: 0, y: 0, w: 32, h: 32, display_name: 'Stone', item_key: 'minecraft:stone', meta: 0 },
+          },
+        }),
+      }) as Promise<Response>;
+    }
+    return Promise.reject(new Error(`unexpected fetch ${url}`));
+  });
+
+  const atlas = await getItemPanelAtlas('server-with-published-atlas');
+  const apiCalls = (global.fetch as unknown as ReturnType<typeof vi.fn>).mock.calls
+    .map(([input]) => String(input))
+    .filter((url) => url !== '/api/debug/log');
+
+  expect(Object.keys(atlas.entries)).toEqual(['<minecraft:stone>']);
+  expect(apiCalls).toEqual(['/api/itempanel/atlas']);
+});

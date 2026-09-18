@@ -244,7 +244,9 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Recipe save operations now rescan only the changed `.zs` file instead of all recipe sources.
   - `itempanel_icons`/NEI dump catalog is now the primary startup icon source; old asset scan is skipped during startup when the catalog is available and remains available via explicit index/debug rescans.
   - `create_app(config_path=...)` after itempanel catalog integration and startup asset-scan skip: about 2.001s.
-  - Remaining Stage 2 work: consider persisted itempanel catalog cache if startup needs to go below about 1s.
+  - Added a per-server persistent itempanel atlas cache; the backend reuses the generated PNG/manifest when the source fingerprint is unchanged instead of rebuilding it for each client, while keeping first generation lazy so cold startup is not blocked.
+  - Removed the frontend Canvas merge of generated mod atlases from the itempanel startup path; generated mod atlas pages remain server-owned and are no longer recombined per page load.
+  - Remaining Stage 2 work: validate cold-start and warm-restart timings on Railway after deployment.
 
 ### Stage 3: Asset Index and Resolver
 - Status: next.
@@ -276,8 +278,9 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Bound localStorage caches.
 - Reduce redundant debug/API calls.
 - Progress on 2026-09-18:
-  - Added a persistent browser Cache Storage snapshot for the merged itempanel atlas, keyed by server and authenticated user, with immediate stale rendering and background refresh.
+  - Added a persistent browser Cache Storage snapshot for the published itempanel atlas, keyed by server and authenticated user, with immediate stale rendering and background refresh.
   - Kept the existing server-scoped localStorage catalog cache for fast subject/search metadata and keyed in-memory atlas requests by server to prevent cross-server reuse.
+  - Removed client-side Canvas recomposition of mod icons; the frontend now consumes the server-generated itempanel atlas directly and requests generated mod metadata only through the existing technical/mod-icon workflow.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.
@@ -308,6 +311,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.
 - Added a wipe-update workflow, backend combined item catalog from itempanel CSV/NBT/icon data, and shared per-size mod icon atlas packing.
 - Added persistent browser itempanel atlas caching with server/user isolation and stale-while-revalidate startup loading.
+- Added persistent per-server itempanel atlas caching and removed per-page browser-side atlas recomposition.
 
 ### Known Issues
 - Resolver heuristics not fully implemented.

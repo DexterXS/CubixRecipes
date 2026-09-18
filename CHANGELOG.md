@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Added
-- Added persistent browser caching for the merged itempanel atlas: cached atlas data is shown immediately on reload, refreshed in the background, and isolated by server and user while the existing item catalog cache remains the fast metadata path.
+- Added persistent server/browser caching for the published itempanel atlas: the backend builds it once per server source snapshot, clients show the cached atlas immediately on reload, and the browser no longer rebuilds it by merging mod atlases on every page load.
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.
 - Added `/data`-backed backend persistence for the Auctions planner under `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when a backend data volume is configured, with frontend load/autosave through `/api/admin/auction-planner` so local folders/lots survive reloads and deploys.
