@@ -3088,11 +3088,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     let cancelled = false;
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
+      let cachedEntriesLoaded = false;
+      let remoteCatalogApplied = false;
       try {
         const cached = window.localStorage.getItem(itemPanelCacheKey);
         if (cached) {
           const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
+            cachedEntriesLoaded = true;
             setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
             setItemCatalogSummary(parsed.summary ?? null);
           }
@@ -3100,20 +3103,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       } catch {
         // ignore corrupted cache
       }
-      try {
-        const payload = await getItemCatalog();
-        if (!cancelled && payload.entries.length) {
-          applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
-          return;
-        }
-      } catch {
-        // Fall back to static itempanel.csv below.
-      }
-      try {
+
+      async function loadBundledItemPanelEntries(): Promise<ItemPanelEntry[]> {
         const response = await fetch('/itempanel.csv');
-        if (!response.ok) {
-          return;
-        }
+        if (!response.ok) return [];
         const bytes = await response.arrayBuffer();
         let text = '';
         try {
@@ -3139,21 +3132,36 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           if (Number.isNaN(meta)) return;
           const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
           const hasNbt = hasNbtRaw === 'true' || hasNbtRaw === '1' || hasNbtRaw === 'yes';
-          const entry: ItemPanelEntry = {
+          entries.push({
             key,
             legacyId: Number.isNaN(legacyId ?? Number.NaN) ? null : legacyId,
             meta,
             hasNbt,
             displayRu: displayRu || primaryDisplay,
             displayEn
-          };
-          entries.push(entry);
+          });
         });
-        if (!cancelled) {
-          applyItemPanelEntries(entries);
+        return entries;
+      }
+
+      if (!cachedEntriesLoaded) {
+        void loadBundledItemPanelEntries().then((entries) => {
+          if (!cancelled && !remoteCatalogApplied && entries.length) {
+            applyItemPanelEntries(entries);
+          }
+        }).catch(() => {
+          // The bundled catalog is optional when the backend catalog is available.
+        });
+      }
+
+      try {
+        const payload = await getItemCatalog();
+        if (!cancelled && payload.entries.length) {
+          remoteCatalogApplied = true;
+          applyItemPanelEntries(payload.entries.map(itemCatalogEntryToPanelEntry), payload.summary);
         }
       } catch {
-        // optional source
+        // The bundled catalog continues loading independently.
       }
     }
     void loadItemPanelTranslations();

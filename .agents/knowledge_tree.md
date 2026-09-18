@@ -322,6 +322,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
   - Owns editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted app-shell navigation and icon-surface settings.
+  - Loads cached/bundled itempanel entries immediately; the backend catalog is a background refresh rather than a prerequisite for rendering NEI cells.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
