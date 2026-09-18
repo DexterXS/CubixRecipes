@@ -35,6 +35,7 @@ import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, t
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -1541,6 +1542,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [sharedCraftDraftEnabled, setSharedCraftDraftEnabled] = useState(() => loadSharedCraftDraftEnabled());
   const localDraftStorageKeyCurrent = serverLocalDraftStorageKey(authUser.email, activeServerId, sharedCraftDraftEnabled);
   const itemPanelCacheKey = serverScopedStorageKey(ITEMPANEL_CACHE_KEY, activeServerId);
+  const itemAssetCacheScope = buildItemAssetCacheScope(activeServerId, authUser.email);
   const itemSearchIconCacheKey = serverScopedStorageKey(ITEM_SEARCH_ICON_CACHE_KEY, activeServerId);
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
@@ -3160,9 +3162,30 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     let cancelled = false;
+    let freshAtlasApplied = false;
+    let cachedAtlas: ItemPanelAtlas | null = null;
+    const cachedAtlasPromise = readCachedItemPanelAtlas(itemAssetCacheScope);
+    const freshAtlasPromise = getItemPanelAtlas(activeServerId);
+
+    void (async () => {
+      const cached = await cachedAtlasPromise;
+      if (cancelled || freshAtlasApplied || !cached?.entries) {
+        releaseCachedItemPanelAtlas(cached);
+        return;
+      }
+      cachedAtlas = cached;
+      if (Object.keys(cached.entries).length > 0) {
+        await preloadImage(normalizeAtlasImageUrl(cached.image_url));
+      }
+      if (!cancelled && !freshAtlasApplied) {
+        setItemPanelAtlas(cached);
+      }
+    })();
+
     void (async () => {
       try {
-        const atlas = await getItemPanelAtlas();
+        const atlas = await freshAtlasPromise;
+        freshAtlasApplied = true;
         if (!cancelled && atlas.entries) {
           if (Object.keys(atlas.entries).length > 0) {
             await preloadImage(normalizeAtlasImageUrl(atlas.image_url));
@@ -3170,17 +3193,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           if (!cancelled) {
             setItemPanelAtlas(atlas);
           }
+          if (!cancelled && cachedAtlas) {
+            releaseCachedItemPanelAtlas(cachedAtlas);
+            cachedAtlas = null;
+          }
+          void writeCachedItemPanelAtlas(itemAssetCacheScope, atlas, activeServerId);
         }
       } catch {
-        if (!cancelled) {
+        if (!cancelled && !cachedAtlas) {
           setItemPanelAtlas(null);
         }
       }
     })();
     return () => {
       cancelled = true;
+      releaseCachedItemPanelAtlas(cachedAtlas);
     };
-  }, [activeServerId]);
+  }, [activeServerId, itemAssetCacheScope]);
 
   useEffect(() => {
     let cancelled = false;

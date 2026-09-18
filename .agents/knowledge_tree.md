@@ -664,7 +664,7 @@ Last full rebuild: 2026-06-29
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `services/itemAssetCache.ts`, `services/itemAssetCache.test.ts`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
@@ -743,6 +743,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
+- `pages/App.tsx` -> `services/itemAssetCache.ts` for persistent server/user-scoped itempanel atlas snapshots.
 - `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.

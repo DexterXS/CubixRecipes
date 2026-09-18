@@ -271,10 +271,13 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added persisted dark/light theme mode with a compact sun/moon toggle.
 
 ### Stage 6: Frontend Performance
-- Status: pending.
+- Status: in progress.
 - Optimize itempanel loading/search.
 - Bound localStorage caches.
 - Reduce redundant debug/API calls.
+- Progress on 2026-09-18:
+  - Added a persistent browser Cache Storage snapshot for the merged itempanel atlas, keyed by server and authenticated user, with immediate stale rendering and background refresh.
+  - Kept the existing server-scoped localStorage catalog cache for fast subject/search metadata and keyed in-memory atlas requests by server to prevent cross-server reuse.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.
@@ -292,6 +295,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 ### Error Log
 - Browser screenshot tool unavailable in this environment.
 - Backend pytest unavailable in current `venv`: `No module named pytest`.
+- The full frontend suite on rollback base `2210dc9` currently has four unrelated failures in workspace navigation and task-card expectations; the new item-asset-cache tests and production build pass.
 
 ### Change Notes
 - Added parser, storage, resolver, indexer, API routes, frontend editor, tests, wiki, and reusable skills.
@@ -303,6 +307,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Frontend workspace now uses task tabs and a theme toggle; texture-cache actions live in the items tab instead of the global header.
 - Added Minecraft 1.7.10 remove-template recipe rendering, local uploaded `.zs` save choices, CSV itempanel refresh, whitelist mode, and configurable 9x9 grouping gaps.
 - Added a wipe-update workflow, backend combined item catalog from itempanel CSV/NBT/icon data, and shared per-size mod icon atlas packing.
+- Added persistent browser itempanel atlas caching with server/user isolation and stale-while-revalidate startup loading.
 
 ### Known Issues
 - Resolver heuristics not fully implemented.

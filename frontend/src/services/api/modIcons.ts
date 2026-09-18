@@ -5,8 +5,10 @@ export async function getModIconAdminStatus(): Promise<ModIconAdminStatus> {
   return request<ModIconAdminStatus>(apiPath('/admin/mod-icons'));
 }
 
-export async function getModIconAtlasManifest(): Promise<ModIconAtlasManifest | null> {
-  const payload = await request<{ manifest: ModIconAtlasManifest | null }>(apiPath('/mod-icons/atlas'));
+export async function getModIconAtlasManifest(serverId?: string): Promise<ModIconAtlasManifest | null> {
+  const payload = await request<{ manifest: ModIconAtlasManifest | null }>(apiPath('/mod-icons/atlas'), {
+    headers: serverId ? { 'X-Server-Id': serverId } : undefined
+  });
   return payload.manifest;
 }
 

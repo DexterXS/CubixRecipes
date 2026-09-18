@@ -2,8 +2,8 @@ import { ItemCatalogResponse, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAtlasE
 import { apiPath, buildRequestHeaders, readErrorMessage, request } from './client';
 import { getModIconAtlasManifest } from './modIcons';
 
-let mergedAtlasPromise: Promise<ItemPanelAtlas> | null = null;
-let mergedAtlasObjectUrl: string | null = null;
+const mergedAtlasPromises = new Map<string, Promise<ItemPanelAtlas>>();
+const mergedAtlasObjectUrls = new Map<string, string>();
 
 function normalizeIconName(value: string): string {
   return (value || '')
@@ -60,11 +60,12 @@ function backendAssetUrl(url: string): string {
   return url;
 }
 
-async function fetchImage(url: string): Promise<{ image: HTMLImageElement; objectUrl: string }> {
+async function fetchImage(url: string, serverId?: string): Promise<{ image: HTMLImageElement; objectUrl: string }> {
   const resolvedUrl = backendAssetUrl(url);
   const response = await fetch(resolvedUrl, {
+    cache: 'no-store',
     credentials: 'include',
-    headers: buildRequestHeaders()
+    headers: buildRequestHeaders(serverId ? { 'X-Server-Id': serverId } : undefined)
   });
   if (!response.ok) throw new Error(`HTTP ${response.status} for ${resolvedUrl}`);
   const objectUrl = URL.createObjectURL(await response.blob());
@@ -74,15 +75,15 @@ async function fetchImage(url: string): Promise<{ image: HTMLImageElement; objec
   return { image, objectUrl };
 }
 
-async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas): Promise<ItemPanelAtlas> {
+async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas, serverId?: string): Promise<ItemPanelAtlas> {
   if (typeof document === 'undefined' || typeof Image === 'undefined' || !baseAtlas.image_url) return baseAtlas;
 
   let manifest;
   let catalog: ItemCatalogResponse | null = null;
   try {
     [manifest, catalog] = await Promise.all([
-      getModIconAtlasManifest(),
-      getItemCatalog().catch(() => null)
+      getModIconAtlasManifest(serverId),
+      getItemCatalog(serverId).catch(() => null)
     ]);
   } catch {
     return baseAtlas;
@@ -155,7 +156,7 @@ async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas): Promise<ItemPa
 
   const disposableUrls: string[] = [];
   try {
-    const baseImage = await fetchImage(baseAtlas.image_url);
+    const baseImage = await fetchImage(baseAtlas.image_url, serverId);
     disposableUrls.push(baseImage.objectUrl);
     context.drawImage(baseImage.image, 0, 0, width, baseHeight);
 
@@ -164,7 +165,7 @@ async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas): Promise<ItemPa
       const cacheKey = generated.image_url;
       let source = atlasImages.get(cacheKey);
       if (!source) {
-        const loaded = await fetchImage(generated.image_url);
+        const loaded = await fetchImage(generated.image_url, serverId);
         disposableUrls.push(loaded.objectUrl);
         source = loaded.image;
         atlasImages.set(cacheKey, source);
@@ -187,9 +188,12 @@ async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas): Promise<ItemPa
 
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
     if (!blob) return baseAtlas;
-    if (mergedAtlasObjectUrl) URL.revokeObjectURL(mergedAtlasObjectUrl);
-    mergedAtlasObjectUrl = URL.createObjectURL(blob);
-    return { ...baseAtlas, image_url: mergedAtlasObjectUrl, rows, entries: nextEntries };
+    const cacheKey = serverId || 'default';
+    const previousObjectUrl = mergedAtlasObjectUrls.get(cacheKey);
+    if (previousObjectUrl) URL.revokeObjectURL(previousObjectUrl);
+    const mergedObjectUrl = URL.createObjectURL(blob);
+    mergedAtlasObjectUrls.set(cacheKey, mergedObjectUrl);
+    return { ...baseAtlas, image_url: mergedObjectUrl, rows, entries: nextEntries };
   } catch {
     return baseAtlas;
   } finally {
@@ -197,9 +201,12 @@ async function mergeGeneratedModIcons(baseAtlas: ItemPanelAtlas): Promise<ItemPa
   }
 }
 
-async function loadBaseItemPanelAtlas(): Promise<ItemPanelAtlas> {
+async function loadBaseItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas> {
   try {
-    const backendAtlas = await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'));
+    const backendAtlas = await request<ItemPanelAtlas>(apiPath('/itempanel/atlas'), {
+      cache: 'no-store',
+      headers: serverId ? { 'X-Server-Id': serverId } : undefined
+    });
     if (Object.keys(backendAtlas.entries ?? {}).length > 0) {
       return backendAtlas;
     }
@@ -219,15 +226,19 @@ async function loadBaseItemPanelAtlas(): Promise<ItemPanelAtlas> {
   };
 }
 
-export async function getItemPanelAtlas(): Promise<ItemPanelAtlas> {
-  if (!mergedAtlasPromise) {
-    mergedAtlasPromise = loadBaseItemPanelAtlas().then(mergeGeneratedModIcons);
-  }
-  return mergedAtlasPromise;
+export async function getItemPanelAtlas(serverId?: string): Promise<ItemPanelAtlas> {
+  const cacheKey = serverId || 'default';
+  const existing = mergedAtlasPromises.get(cacheKey);
+  if (existing) return existing;
+  const promise = loadBaseItemPanelAtlas(serverId).then((atlas) => mergeGeneratedModIcons(atlas, serverId));
+  mergedAtlasPromises.set(cacheKey, promise);
+  return promise;
 }
 
-export async function getItemCatalog(): Promise<ItemCatalogResponse> {
-  return request<ItemCatalogResponse>(apiPath('/itempanel/catalog'));
+export async function getItemCatalog(serverId?: string): Promise<ItemCatalogResponse> {
+  return request<ItemCatalogResponse>(apiPath('/itempanel/catalog'), {
+    headers: serverId ? { 'X-Server-Id': serverId } : undefined
+  });
 }
 
 async function uploadRawItemPanelFile(file: File, endpoint: string, contentType: string): Promise<Response> {
