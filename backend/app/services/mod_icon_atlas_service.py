@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import re
 from dataclasses import dataclass
@@ -187,7 +188,9 @@ class ModIconAtlasService:
             entries[f'x{size}'] = size_entries
             rejected.extend(size_rejected)
 
+        revision = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
         manifest = {
+            'revision': revision,
             'updatedAt': datetime.now(timezone.utc).isoformat(),
             'maxAtlasSize': MAX_ATLAS_SIZE,
             'fallbackAtlasUrl': '/api/itempanel/atlas.png',
@@ -199,6 +202,7 @@ class ModIconAtlasService:
             'totalMods': len({source.modid for source in sources}),
             'totalIcons': len({source.key for source in sources}),
         }
+        self._version_manifest_assets(manifest, revision)
         (self.atlases_dir / 'mod-icons-atlas.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         return manifest
 
@@ -216,9 +220,37 @@ class ModIconAtlasService:
         if not path.is_file():
             return None
         try:
-            return json.loads(path.read_text(encoding='utf-8'))
+            manifest = json.loads(path.read_text(encoding='utf-8'))
+            if not isinstance(manifest, dict):
+                return None
+            revision = str(manifest.get('revision') or '').strip()
+            if not revision:
+                revision = hashlib.sha256(path.read_bytes()).hexdigest()[:20]
+                manifest['revision'] = revision
+            self._version_manifest_assets(manifest, revision)
+            return manifest
         except json.JSONDecodeError:
             return None
+
+    @staticmethod
+    def _version_manifest_assets(manifest: dict[str, Any], revision: str) -> None:
+        def version_url(url: Any) -> Any:
+            if not isinstance(url, str) or not url or 'v=' in url:
+                return url
+            separator = '&' if '?' in url else '?'
+            return f'{url}{separator}v={quote(revision, safe="")}'
+
+        for atlas in manifest.get('atlases', []):
+            if isinstance(atlas, dict):
+                atlas['image_url'] = version_url(atlas.get('image_url'))
+                for entry in (atlas.get('entries') or {}).values():
+                    if isinstance(entry, dict):
+                        entry['image_url'] = version_url(entry.get('image_url'))
+        for entries in (manifest.get('entries') or {}).values():
+            if isinstance(entries, dict):
+                for entry in entries.values():
+                    if isinstance(entry, dict):
+                        entry['image_url'] = version_url(entry.get('image_url'))
 
     def read_atlas_png(self, filename: str) -> bytes | None:
         safe_name = Path(filename).name

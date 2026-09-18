@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added revisioned server-side mod atlas publications and browser Cache Storage for the manifest plus every generated x32/x256 atlas page, so additional pages reuse local cached object URLs after reloads.
 - Added persistent server/browser caching for the published itempanel atlas: the backend builds it once per server source snapshot, clients show the cached atlas immediately on reload, and the browser no longer rebuilds it by merging mod atlases on every page load.
 - Reworked the Auctions frontend toward a local day-folder command planner: added day-folder state/types/helpers, a ribbon menu, day folder grid, selected-day details panel, normal/expert mode, lazy price graph rendering, and focused day-folder tests while preserving existing `/aca` command generation.
 - Changed the Auctions workspace into an explicit three-level structure: folder list, opened folder with auction lots, and opened auction lot with preview/content/control/NEI zones.

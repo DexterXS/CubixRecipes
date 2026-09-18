@@ -26,7 +26,8 @@ class ItemPanelAtlasBuilder:
         source_key = self.cache.source_key(catalog.csv_path, catalog.icons_dir, catalog._icon_files)
         cached = self.cache.load(source_key)
         if cached is not None:
-            catalog._atlas_manifest, catalog._atlas_png = cached
+            cached_manifest, catalog._atlas_png = cached
+            catalog._atlas_manifest = {**cached_manifest, 'revision': source_key}
             return
 
         good_entries: list[Any] = []
@@ -41,6 +42,7 @@ class ItemPanelAtlasBuilder:
 
         tile_size = 32
         empty_manifest = {
+            'revision': source_key,
             'image_url': '/api/itempanel/atlas.png',
             'tile_size': tile_size,
             'columns': 0,
@@ -91,6 +93,7 @@ class ItemPanelAtlasBuilder:
 
         catalog._atlas_png = catalog._encode_rgba_png(atlas_width, atlas_height, atlas)
         catalog._atlas_manifest = {
+            'revision': source_key,
             'image_url': '/api/itempanel/atlas.png',
             'tile_size': tile_size,
             'columns': columns,

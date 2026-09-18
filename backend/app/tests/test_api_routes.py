@@ -193,14 +193,17 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     generated = generate_route()
     first_atlas = generated['manifest']['atlases'][0]
     atlas_response = atlas_route(first_atlas['file'])
-    public_manifest = public_manifest_route()
+    public_manifest_response = public_manifest_route()
+    public_manifest = json.loads(public_manifest_response.body)
     public_atlas_response = public_atlas_route(first_atlas['file'])
 
     assert uploaded['archive']['name'] == 'examplemod_x32.zip'
     assert generated['manifest']['totalMods'] == 1
     assert generated['manifest']['totalIcons'] == 2
+    assert generated['manifest']['revision']
     assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-x32-1.png'
     assert generated['manifest']['atlases'][0]['image_url'].startswith('/api/mod-icons/atlases/')
+    assert '?v=' in generated['manifest']['atlases'][0]['image_url']
     assert generated['manifest']['entries']['x32']['examplemod/First icon']['w'] == 32
     assert generated['manifest']['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
     assert public_manifest['manifest']['entries']['x32']['examplemod/First icon']['modid'] == 'examplemod'
@@ -208,6 +211,8 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     assert atlas_response.body.startswith(b'\x89PNG')
     assert public_atlas_response.media_type == 'image/png'
     assert public_atlas_response.body.startswith(b'\x89PNG')
+    assert public_manifest_response.headers['cache-control'] == 'no-cache'
+    assert public_atlas_response.headers['cache-control'].startswith('public, max-age=31536000')
 
 
 def test_admin_mod_icon_atlas_packs_multiple_mods_into_one_page(tmp_path: Path):

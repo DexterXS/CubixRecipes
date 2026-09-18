@@ -36,6 +36,7 @@ import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled }
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
+import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
@@ -2191,6 +2192,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     try {
       const manifest = await generateModIconAtlases();
       setModIconManifest(manifest);
+      void writeCachedModIconAtlas(itemAssetCacheScope, manifest, activeServerId);
       setModIconStatus((current) => ({
         archives: manifest.archives,
         manifest,
@@ -3213,22 +3215,63 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     let cancelled = false;
+    let cachedAtlas: Awaited<ReturnType<typeof readCachedModIconAtlas>> = null;
+    let freshAtlas: ModIconAtlasManifest | null = null;
+    let freshApplied = false;
+    const cachedPromise = readCachedModIconAtlas(itemAssetCacheScope);
+    const freshPromise = getModIconAtlasManifest(activeServerId);
+
+    void (async () => {
+      const cached = await cachedPromise;
+      if (!cached) return;
+      if (cancelled || freshApplied) {
+        releaseCachedModIconAtlas(cached.manifest);
+        return;
+      }
+      cachedAtlas = cached;
+      setModIconManifest(cached.manifest);
+    })();
+
     void (async () => {
       try {
-        const manifest = await getModIconAtlasManifest();
-        if (!cancelled) {
-          setModIconManifest(manifest);
+        const manifest = await freshPromise;
+        if (!manifest) {
+          freshApplied = true;
+          if (cachedAtlas) {
+            releaseCachedModIconAtlas(cachedAtlas.manifest);
+            cachedAtlas = null;
+          }
+          await clearCachedModIconAtlas(itemAssetCacheScope);
+          if (!cancelled) setModIconManifest(null);
+          return;
+        }
+        const revision = getModIconAtlasRevision(manifest);
+        if (cachedAtlas && revision && revision === cachedAtlas.revision) {
+          freshApplied = true;
+          return;
+        }
+        const hydrated = await writeCachedModIconAtlas(itemAssetCacheScope, manifest, activeServerId);
+        freshApplied = true;
+        if (cancelled) {
+          if (hydrated) releaseCachedModIconAtlas(hydrated.manifest);
+          return;
+        }
+        freshAtlas = hydrated?.manifest ?? null;
+        setModIconManifest(freshAtlas ?? manifest);
+        if (cachedAtlas) {
+          releaseCachedModIconAtlas(cachedAtlas.manifest);
+          cachedAtlas = null;
         }
       } catch {
-        if (!cancelled) {
-          setModIconManifest(null);
-        }
+        if (!cachedAtlas && !cancelled) setModIconManifest(null);
       }
     })();
     return () => {
       cancelled = true;
+      if (cachedAtlas) releaseCachedModIconAtlas(cachedAtlas.manifest);
+      if (freshAtlas) releaseCachedModIconAtlas(freshAtlas);
     };
-  }, [activeServerId]);
+  }, [activeServerId, itemAssetCacheScope]);
 
   function persistUiPreferences(next: UiPreferences) {
     hasLocalUiChangesRef.current = true;

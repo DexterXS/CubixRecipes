@@ -146,6 +146,7 @@ Last full rebuild: 2026-06-29
   - Depends on `AssetIndex`, `ItemPanelIconCatalog`, and domain models.
 - `backend/app/services/mod_icon_atlas_service.py`
   - Uploads/validates/cleans mod icon ZIP archives and packs generated per-size shared atlas pages.
+  - Publishes a revisioned manifest and versioned URLs for every generated page so x32/x256 multi-page atlases can be cached safely.
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
 
 ### Server and Admin State
@@ -545,6 +546,10 @@ Last full rebuild: 2026-06-29
   - API base resolution, Vite/backend target messages, URL helpers, itempanel fallback env helper.
 - `frontend/src/types/index.ts`
   - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, desktop/mobile icon surface settings, tasks, favorites, users, cloud files, aliases, OreDict.
+- `frontend/src/services/modIconAssetCache.ts`
+  - Stores the mod atlas manifest and every generated atlas page in server/user-scoped browser Cache Storage, hydrating cached pages as object URLs on reload.
+- `frontend/src/services/modIconAssetCache.test.ts`
+  - Verifies that multiple x32/x256 pages are restored from browser cache.
 - `frontend/src/i18n.ts`
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
@@ -747,6 +752,7 @@ Last full rebuild: 2026-06-29
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
 - `pages/App.tsx` -> `services/itemAssetCache.ts` for persistent server/user-scoped itempanel atlas snapshots.
+- `pages/App.tsx` -> `services/modIconAssetCache.ts` for persistent server/user-scoped mod atlas pages and stale-while-revalidate startup loading.
 - `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.

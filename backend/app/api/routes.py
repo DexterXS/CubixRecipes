@@ -782,14 +782,26 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.get('/mod-icons/atlas')
     def mod_icon_atlas_manifest():
-        return {'manifest': mod_icon_atlas_service.read_manifest()}
+        manifest = mod_icon_atlas_service.read_manifest()
+        revision = str((manifest or {}).get('revision') or '')
+        headers = {'Cache-Control': 'no-cache'}
+        if revision:
+            headers['ETag'] = f'"{revision}"'
+        return JSONResponse(content={'manifest': manifest}, headers=headers)
 
     @router.get('/mod-icons/atlases/{filename}')
     def mod_icon_atlas_png(filename: str):
         content = mod_icon_atlas_service.read_atlas_png(filename)
         if content is None:
             raise HTTPException(status_code=404, detail='Mod icon atlas is not available')
-        return Response(content=content, media_type='image/png')
+        manifest = mod_icon_atlas_service.read_manifest()
+        revision = str((manifest or {}).get('revision') or '')
+        headers = {
+            'Cache-Control': 'public, max-age=31536000, immutable' if revision else 'no-cache',
+        }
+        if revision:
+            headers['ETag'] = f'"{revision}:{filename}"'
+        return Response(content=content, media_type='image/png', headers=headers)
 
     @router.get('/admin/zs-cloud/files')
     def admin_list_zs_cloud_files():

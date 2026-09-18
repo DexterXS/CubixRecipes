@@ -106,6 +106,7 @@ export interface ItemPanelAtlasEntry {
 }
 
 export interface ItemPanelAtlas {
+  revision?: string;
   image_url: string;
   tile_size: number;
   columns: number;
@@ -263,6 +264,7 @@ export interface ModIconAtlasEntry {
 }
 
 export interface ModIconAtlasManifest {
+  revision?: string;
   updatedAt?: string;
   maxAtlasSize: number;
   fallbackAtlasUrl: string;

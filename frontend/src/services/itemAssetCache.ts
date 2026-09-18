@@ -79,9 +79,13 @@ export async function writeCachedItemPanelAtlas(scope: string, atlas: ItemPanelA
     const previous = previousManifestResponse
       ? await previousManifestResponse.json() as Partial<CachedAtlasManifest>
       : null;
-    const revision = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    const revision = atlas.revision?.trim() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    if (previous?.revision === revision) {
+      const existingImage = await cache.match(itemAssetCacheKey(scope, 'atlas-image', revision));
+      if (existingImage) return;
+    }
     const imageResponse = await fetch(resolveAssetUrl(atlas.image_url), {
-      cache: 'no-store',
+      cache: 'force-cache',
       credentials: 'include',
       headers: buildRequestHeaders(serverId ? { 'X-Server-Id': serverId } : undefined)
     });
