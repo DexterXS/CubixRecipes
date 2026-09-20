@@ -288,7 +288,8 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added revisioned backend mod-atlas URLs, manifest caching, and a lazy Cache Storage service worker for generated x32/x256 pages, including future additional pages; page bytes are cached only after the browser requests that page.
   - Changed itempanel startup to render the bundled catalog immediately while the backend catalog refreshes in the background, preventing an empty NEI during slow API responses.
   - Added the first Atlas v2 vertical slice: a shared frontend candidate registry/selector now combines primary itempanel, ZIP x32/x256, and direct fallback candidates by quality/source/size; App, CubixCraft, and the item database use the shared lookup, and backend atlas manifests expose normalized quality/source metadata.
-  - Remaining Atlas v2 work: background immutable revision builds, explicit activation/current pointer, page/index APIs, and resolver batch fallback.
+  - Added the unified backend Atlas v2 registry: ZIP x32/x256 entries are matched to item-catalog raws once during the immutable revision build, with mapping statistics published in the index; the frontend uses that registry globally and keeps the old matcher only as an incomplete-registry fallback.
+  - Remaining Stage 2/Atlas v2 work: validate the deployed Railway revision and cold/warm behavior after the registry build.
 
 ### Stage 7: Documentation and Regression Guardrails
 - Status: pending.

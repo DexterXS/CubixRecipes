@@ -2,6 +2,7 @@ import { type CSSProperties, type ChangeEvent, useEffect, useMemo, useState } fr
 import { NbtTreeEditor, type NbtCompoundNode, type NbtNode } from '../../components/NbtTreeEditor';
 import {
   downloadZsCloudFile,
+  getAtlasV2Index,
   getItemCatalog,
   getItemPanelAtlas,
   getModIconAtlasManifest,
@@ -10,7 +11,8 @@ import {
   uploadZsCloudFile
 } from '../../services/api';
 import type { ItemCatalogEntry, ItemPanelAtlas, ModIconAtlasManifest, ZsCloudFile } from '../../types';
-import { createAtlasLookup } from '../../services/atlas/atlasLookup';
+import { createAtlasLookup, hasBackendZipRegistry } from '../../services/atlas/atlasLookup';
+import type { AtlasV2Index } from '../../services/atlas/types';
 import { buildModIconCandidates } from '../../services/atlas/modIconMatching';
 import {
   defaultIconSurfaceSettings,
@@ -285,6 +287,7 @@ export function CubixCraftWorkspace() {
   const [catalog, setCatalog] = useState<ItemCatalogEntry[]>([]);
   const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
   const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
+  const [atlasV2Index, setAtlasV2Index] = useState<AtlasV2Index | null>(null);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudSelection, setCloudSelection] = useState('');
   const [desktopIconSettings, setDesktopIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
@@ -316,11 +319,12 @@ export function CubixCraftWorkspace() {
   const [expandedOutputs, setExpandedOutputs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    Promise.all([getItemCatalog(), getItemPanelAtlas(), getModIconAtlasManifest().catch(() => null), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
-      .then(([catalogResponse, atlasResponse, modIconResponse, projectSettings, cloudResponse]) => {
+    Promise.all([getItemCatalog(), getItemPanelAtlas(), getModIconAtlasManifest().catch(() => null), getAtlasV2Index().catch(() => null), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
+      .then(([catalogResponse, atlasResponse, modIconResponse, atlasV2Response, projectSettings, cloudResponse]) => {
         setCatalog(catalogResponse.entries ?? []);
         setAtlas(atlasResponse);
         setModIconManifest(modIconResponse);
+        setAtlasV2Index(atlasV2Response);
         setDesktopIconSettings(projectSettings.ui_preferences?.icon_surfaces ?? null);
         setMobileIconSettings(projectSettings.ui_preferences?.mobile_icon_surfaces ?? null);
         setCloudFiles(cloudResponse.files ?? []);
@@ -378,12 +382,14 @@ export function CubixCraftWorkspace() {
     displayEn: item.display_en,
     raw: item.raw
   }))), [catalog, modIconManifest]);
+  const backendZipRegistryReady = hasBackendZipRegistry(atlasV2Index);
   const atlasLookup = useMemo(() => createAtlasLookup({
     primaryAtlas: atlas,
-    modIconManifest,
-    modIconCandidatesByRaw,
+    atlasV2Index,
+    modIconManifest: backendZipRegistryReady ? null : modIconManifest,
+    modIconCandidatesByRaw: backendZipRegistryReady ? undefined : modIconCandidatesByRaw,
     fallbackIconsByRaw: new Map(catalog.map((item) => [item.raw, item.icon_url]))
-  }), [atlas, catalog, modIconCandidatesByRaw, modIconManifest]);
+  }), [atlas, atlasV2Index, backendZipRegistryReady, catalog, modIconCandidatesByRaw, modIconManifest]);
 
   function itemVisual(raw: string, surface: IconSurfaceSettings) {
     const item = catalogByRaw.get(raw);

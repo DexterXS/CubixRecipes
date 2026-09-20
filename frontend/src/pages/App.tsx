@@ -39,7 +39,7 @@ import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTe
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
-import { createAtlasLookup } from '../services/atlas/atlasLookup';
+import { createAtlasLookup, hasBackendZipRegistry } from '../services/atlas/atlasLookup';
 import { resolveAtlasPageUrl } from '../services/atlas/atlasPageUrlResolver';
 import { buildModIconCandidates } from '../services/atlas/modIconMatching';
 import { can } from '../auth/permissions';
@@ -3555,13 +3555,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return [...unique.values()];
   }, [neiCatalogEntries]);
   const modIconByRaw = useMemo(() => buildModIconCandidates(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
+  const backendZipRegistryReady = hasBackendZipRegistry(atlasV2Index);
   const atlasLookup = useMemo(() => createAtlasLookup({
     primaryAtlas: itemPanelAtlas,
     atlasV2Index,
-    modIconManifest,
-    modIconCandidatesByRaw: modIconByRaw,
+    modIconManifest: backendZipRegistryReady ? null : modIconManifest,
+    modIconCandidatesByRaw: backendZipRegistryReady ? undefined : modIconByRaw,
     fallbackIconsByRaw: new Map(Object.entries(itemSearchIcons))
-  }), [itemPanelAtlas, itemSearchIcons, modIconByRaw, modIconManifest]);
+  }), [atlasV2Index, backendZipRegistryReady, itemPanelAtlas, itemSearchIcons, modIconByRaw, modIconManifest]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();

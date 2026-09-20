@@ -56,11 +56,20 @@ export interface AtlasV2Page {
   url: string;
 }
 
+export interface AtlasV2RegistryStats {
+  catalogEntries: number;
+  zipIcons: number;
+  mappedZipIcons: number;
+  unmappedZipIcons: number;
+  mappedCandidates: number;
+}
+
 export interface AtlasV2Index {
   schemaVersion: number;
   revision: string | null;
   candidates: AtlasV2CandidateRecord[];
   pages: AtlasV2Page[];
+  registry?: AtlasV2RegistryStats;
 }
 
 export interface AtlasLookupOptions {

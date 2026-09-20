@@ -119,6 +119,17 @@ export interface AtlasLookup {
   candidatesFor(raw: string): AtlasCandidate[];
 }
 
+export function hasBackendZipRegistry(index: AtlasV2Index | null | undefined): boolean {
+  const registry = index?.registry;
+  return Boolean(
+    index?.revision &&
+    registry &&
+    registry.zipIcons > 0 &&
+    registry.unmappedZipIcons === 0 &&
+    index.candidates.some((entry) => entry.source === 'zip' && Boolean(entry.raw))
+  );
+}
+
 export function createAtlasLookup(input: AtlasLookupInput): AtlasLookup {
   const byRaw = new Map<string, AtlasCandidate[]>();
   const byKeyMeta = new Map<string, AtlasCandidate[]>();

@@ -9,6 +9,7 @@ import {
   getItemIntelligenceSchema,
   getItemIntelligenceSummary,
   getItemPanelAtlas,
+  getAtlasV2Index,
   getModIconAtlasManifest,
   getItemPriceHistory,
   runBasicEnrichmentBatch,
@@ -24,8 +25,9 @@ import {
   type PassportGroup
 } from '../../services/api';
 import type { ModIconAtlasManifest } from '../../types';
-import { createAtlasLookup } from '../../services/atlas/atlasLookup';
+import { createAtlasLookup, hasBackendZipRegistry } from '../../services/atlas/atlasLookup';
 import { buildModIconCandidates } from '../../services/atlas/modIconMatching';
+import type { AtlasV2Index } from '../../services/atlas/types';
 import { PriceImportDialog } from './PriceImportDialog';
 import './ItemDatabasePage.css';
 
@@ -75,6 +77,7 @@ export function ItemDatabasePage() {
   const [mods, setMods] = useState<ItemIntelligenceMod[]>([]);
   const [atlas, setAtlas] = useState<Awaited<ReturnType<typeof getItemPanelAtlas>>>(null);
   const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
+  const [atlasV2Index, setAtlasV2Index] = useState<AtlasV2Index | null>(null);
   const [summary, setSummary] = useState<ItemIntelligenceSummary>(EMPTY_SUMMARY);
   const [schema, setSchema] = useState<PassportGroup[]>([]);
   const [selected, setSelected] = useState<ItemIntelligenceRecord | null>(null);
@@ -109,11 +112,12 @@ export function ItemDatabasePage() {
     const run = async () => {
       try {
         setLoading(true);
-        const [sum, schemaResponse, atlasResponse, modIconResponse, stageA] = await Promise.all([
+        const [sum, schemaResponse, atlasResponse, modIconResponse, atlasV2Response, stageA] = await Promise.all([
           getItemIntelligenceSummary(),
           getItemIntelligenceSchema(),
           getItemPanelAtlas().catch(() => null),
           getModIconAtlasManifest().catch(() => null),
+          getAtlasV2Index().catch(() => null),
           getBasicEnrichmentStatus().catch(() => null)
         ]);
         if (cancelled) return;
@@ -132,6 +136,7 @@ export function ItemDatabasePage() {
         setSchema(schemaResponse.groups || []);
         setAtlas(atlasResponse);
         setModIconManifest(modIconResponse);
+        setAtlasV2Index(atlasV2Response);
         setItems(indexResponse.items || []);
         setTotal(indexResponse.total || 0);
         setHasMore(Boolean(indexResponse.has_more));
@@ -168,7 +173,13 @@ export function ItemDatabasePage() {
     displayEn: entry.display_en,
     raw: entry.raw ?? `<${entry.registry_key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`
   }))), [items, modIconManifest]);
-  const atlasLookup = useMemo(() => createAtlasLookup({ primaryAtlas: atlas, modIconManifest, modIconCandidatesByRaw }), [atlas, modIconCandidatesByRaw, modIconManifest]);
+  const backendZipRegistryReady = hasBackendZipRegistry(atlasV2Index);
+  const atlasLookup = useMemo(() => createAtlasLookup({
+    primaryAtlas: atlas,
+    atlasV2Index,
+    modIconManifest: backendZipRegistryReady ? null : modIconManifest,
+    modIconCandidatesByRaw: backendZipRegistryReady ? undefined : modIconCandidatesByRaw
+  }), [atlas, atlasV2Index, backendZipRegistryReady, modIconCandidatesByRaw, modIconManifest]);
 
   const atlasStyle = (entry: ItemIntelligenceRecord, size: number): CSSProperties | undefined => {
     const raw = entry.raw ?? `<${entry.registry_key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;

@@ -93,6 +93,7 @@ class ServerContext:
             server_id,
             self.itempanel_icon_catalog,
             self.mod_icon_atlas_service,
+            self.item_catalog_service,
         )
         self.item_case_alias_service = ItemCaseAliasService(
             Path(active_scripts_dir),

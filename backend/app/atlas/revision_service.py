@@ -8,15 +8,17 @@ from typing import Any, Optional
 from urllib.parse import quote
 
 from app.atlas.artifact_store import AtlasArtifactStore
+from app.atlas.registry import AtlasRegistry
 
 
 class AtlasRevisionService:
     """Builds Atlas v2 snapshots in the background and publishes them atomically."""
 
-    def __init__(self, root: Path, server_id: str, itempanel_catalog: Any, mod_icon_service: Any) -> None:
+    def __init__(self, root: Path, server_id: str, itempanel_catalog: Any, mod_icon_service: Any, item_catalog_service: Any | None = None) -> None:
         self.server_id = server_id
         self.itempanel_catalog = itempanel_catalog
         self.mod_icon_service = mod_icon_service
+        self.registry = AtlasRegistry(item_catalog_service)
         self.store = AtlasArtifactStore(root)
         self._lock = threading.RLock()
         self._worker: Optional[threading.Thread] = None
@@ -169,6 +171,7 @@ class AtlasRevisionService:
                 })
 
         mod_manifest = self.mod_icon_service.read_manifest() or {}
+        zip_pages_by_file: dict[str, dict[str, Any]] = {}
         for page in mod_manifest.get('atlases') or []:
             if not isinstance(page, dict):
                 continue
@@ -189,39 +192,17 @@ class AtlasRevisionService:
                 'rows': page.get('rows'),
                 'tileSize': page.get('tileSize'),
             })
+            zip_pages_by_file[filename] = page_descriptors[-1]
 
-        for size_key, entries in (mod_manifest.get('entries') or {}).items():
-            if not isinstance(entries, dict):
-                continue
-            for entry in entries.values():
-                if not isinstance(entry, dict):
-                    continue
-                filename = Path(str(entry.get('atlasFile') or '')).name
-                if not filename:
-                    continue
-                page_name = f'zip-{filename}'
-                candidates.append({
-                    'raw': None,
-                    'key': entry.get('key') or f"{entry.get('modid', '')}/{entry.get('iconName', '')}",
-                    'meta': None,
-                    'quality': self._normalize_quality(entry.get('quality')),
-                    'source': 'zip',
-                    'size': 256 if int(entry.get('size') or (256 if size_key == 'x256' else 32)) >= 128 else 32,
-                    'revision': revision,
-                    'page': page_name,
-                    'x': entry.get('x'),
-                    'y': entry.get('y'),
-                    'w': entry.get('w'),
-                    'h': entry.get('h'),
-                    'imageUrl': self._page_url(revision, page_name),
-                    'displayName': entry.get('iconName') or entry.get('entryName'),
-                })
+        zip_candidates, registry_stats = self.registry.map_zip_icons(mod_manifest, revision, zip_pages_by_file)
+        candidates.extend(zip_candidates)
 
         index = {
             'schemaVersion': 2,
             'revision': revision,
             'candidates': candidates,
             'pages': page_descriptors,
+            'registry': registry_stats,
         }
         meta = {
             'schemaVersion': 2,
@@ -235,6 +216,7 @@ class AtlasRevisionService:
                 'primary': bool(primary_png),
                 'zip': bool(mod_manifest.get('atlases')),
             },
+            'registry': registry_stats,
         }
         return meta, index, candidates, pages
 

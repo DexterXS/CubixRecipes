@@ -150,8 +150,10 @@ Last full rebuild: 2026-06-29
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
 - `backend/app/services/mod_icon_atlas_build_job.py`
   - Runs ZIP/mod-icon atlas packing outside the HTTP request and exposes queued/building/ready/error status; ready completion starts the Atlas v2 rebuild.
+- `backend/app/atlas/registry.py`
+  - Builds the single backend ZIP-to-item registry used by Atlas v2 revisions; matches catalog raws to all available x32/x256 ZIP entries and reports mapped/unmapped counts.
 - `backend/app/atlas/artifact_store.py` and `backend/app/atlas/revision_service.py`
-  - Store per-server immutable Atlas v2 revisions, atomically publish the active revision pointer, and build combined primary/ZIP page snapshots in a daemon background worker.
+  - Store per-server immutable Atlas v2 revisions, atomically publish the active revision pointer, and build combined primary/ZIP page snapshots in a daemon background worker; revision indexes include the unified registry candidates and mapping statistics.
   - `AtlasArtifactStore` owns safe revision/artifact paths, atomic JSON/PNG writes, and guarded pruning; `AtlasRevisionService` owns build status, active revision reads, candidate/page snapshots, explicit activation, and prune orchestration.
   - Revision data lives under `.cubixrecipes_admin/servers/{server_id}/atlas/` and does not replace legacy itempanel/mod-atlas storage.
 
@@ -199,6 +201,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/tests/test_item_catalog.py`: CSV/SNBT/catalog ordering/NBT authority coverage.
 - `backend/app/tests/test_itempanel_icon_catalog.py`: icon catalog and atlas behavior.
 - `backend/app/tests/test_mod_icon_atlas_service.py`: mod icon ZIP and atlas packing.
+- `backend/app/tests/test_atlas_registry.py`: ZIP x32/x256 to catalog-raw mapping and registry completeness statistics.
 - `backend/app/tests/test_auth_permissions.py`: auth role/permission rules.
 - `backend/app/tests/test_server_manager.py`: server context fallback behavior.
 - `backend/app/tests/test_project_config.py`: data-dir/config defaults.
@@ -346,10 +349,10 @@ Last full rebuild: 2026-06-29
 
 - `frontend/src/services/atlas/`
   - Shared frontend Atlas v2 foundation used by the main app, CubixCraft, and the item database.
-  - `types.ts`: candidate quality/source/surface contracts and lookup inputs.
+  - `types.ts`: candidate quality/source/surface contracts, registry completeness statistics, and lookup inputs.
   - `candidateSelector.ts`: deterministic quality, match, source, size, and revision ordering; invalid candidates never render.
-  - `atlasLookup.ts`: normalizes active Atlas v2 primary candidates, legacy itempanel, ZIP, and direct fallback candidates into O(1) raw/key indexes and produces atlas CSS styles.
-  - `modIconMatching.ts`: maps all available x32/x256 ZIP entries to catalog raws without discarding a second size.
+  - `atlasLookup.ts`: normalizes active Atlas v2 primary/registry candidates, legacy itempanel, ZIP, and direct fallback candidates into O(1) raw/key indexes and produces atlas CSS styles; activates legacy ZIP matching only when the backend registry is incomplete.
+  - `modIconMatching.ts`: compatibility fallback that maps available x32/x256 ZIP entries to catalog raws when an older/incomplete backend registry is served.
   - `atlasPageUrlResolver.ts`: shared server-aware immutable atlas URL normalization.
   - `candidateSelector.test.ts`: focused quality/source/size, multi-source, and Atlas v2 page URL coverage.
 

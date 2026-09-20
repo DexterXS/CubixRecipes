@@ -836,6 +836,13 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'revision': None,
             'candidates': [],
             'pages': [],
+            'registry': {
+                'catalogEntries': 0,
+                'zipIcons': 0,
+                'mappedZipIcons': 0,
+                'unmappedZipIcons': 0,
+                'mappedCandidates': 0,
+            },
         }
 
     @router.get('/atlas/v2/candidates/{raw:path}')

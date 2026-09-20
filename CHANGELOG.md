@@ -4,6 +4,7 @@
 ### Added
 - Added the first Atlas v2 slice: one shared multi-source candidate selector now combines primary itempanel, ZIP x32/x256, and direct fallback icons, prefers good candidates over question/empty icons, respects the requested size, and keeps URL/server normalization in one service. CubixCraft, the main editor, and the item database use it; atlas manifests now include quality/source metadata.
 - Added the first Atlas v2 backend revision layer: per-server background snapshot builds write immutable ready artifacts and publish them through an atomic `current.json` pointer, with metadata/index/candidate/page APIs and explicit root-admin activation; legacy atlas endpoints remain unchanged.
+- Added a unified backend Atlas v2 registry that maps ZIP icon entries from every generated x32/x256 page to item-catalog raws during revision builds, publishes completeness statistics, and lets the main editor, CubixCraft, and the item database share the same mapping.
 - Connected the frontend Atlas lookup to the active Atlas v2 index: primary candidates now use immutable revisioned page URLs when available, with legacy itempanel/mod/fallback sources preserved as compatibility fallbacks.
 - Added a guarded root-admin Atlas v2 revision-prune endpoint that removes only old ready artifacts while preserving the active and recent revisions.
 - Moved ZIP/mod-icon atlas generation out of the HTTP request into a background job with status polling; the completed job now triggers a fresh Atlas v2 snapshot and no longer returns a stale manifest while rebuilding.
