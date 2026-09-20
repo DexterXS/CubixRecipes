@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 from pathlib import Path
 from zipfile import ZipFile
 import struct
@@ -179,6 +180,7 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
     upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate')
+    generation_status_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate/status')
     atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/atlases/{filename}')
     public_manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/mod-icons/atlas')
     public_atlas_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/mod-icons/atlases/{filename}')
@@ -191,21 +193,28 @@ def test_admin_mod_icon_archive_generates_atlas(tmp_path: Path):
 
     uploaded = asyncio.run(upload_route(BodyRequest(), filename='examplemod_x32.zip', replace=False))
     generated = generate_route()
-    first_atlas = generated['manifest']['atlases'][0]
-    atlas_response = atlas_route(first_atlas['file'])
+    for _ in range(100):
+        generation_status = generation_status_route()
+        if generation_status['status'] == 'ready':
+            break
+        time.sleep(0.01)
     public_manifest_response = public_manifest_route()
     public_manifest = json.loads(public_manifest_response.body)
+    manifest = public_manifest['manifest']
+    first_atlas = manifest['atlases'][0]
+    atlas_response = atlas_route(first_atlas['file'])
     public_atlas_response = public_atlas_route(first_atlas['file'])
 
     assert uploaded['archive']['name'] == 'examplemod_x32.zip'
-    assert generated['manifest']['totalMods'] == 1
-    assert generated['manifest']['totalIcons'] == 2
-    assert generated['manifest']['revision']
-    assert generated['manifest']['atlases'][0]['file'] == 'mod-icons-x32-1.png'
-    assert generated['manifest']['atlases'][0]['image_url'].startswith('/api/mod-icons/atlases/')
-    assert '?v=' in generated['manifest']['atlases'][0]['image_url']
-    assert generated['manifest']['entries']['x32']['examplemod/First icon']['w'] == 32
-    assert generated['manifest']['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
+    assert generated['job']['status'] in {'queued', 'building', 'ready'}
+    assert manifest['totalMods'] == 1
+    assert manifest['totalIcons'] == 2
+    assert manifest['revision']
+    assert manifest['atlases'][0]['file'] == 'mod-icons-x32-1.png'
+    assert manifest['atlases'][0]['image_url'].startswith('/api/mod-icons/atlases/')
+    assert '?v=' in manifest['atlases'][0]['image_url']
+    assert manifest['entries']['x32']['examplemod/First icon']['w'] == 32
+    assert manifest['entries']['x32']['examplemod/Second icon']['iconName'] == 'Second icon'
     assert public_manifest['manifest']['entries']['x32']['examplemod/First icon']['modid'] == 'examplemod'
     assert atlas_response.media_type == 'image/png'
     assert atlas_response.body.startswith(b'\x89PNG')
@@ -228,6 +237,7 @@ def test_admin_mod_icon_atlas_packs_multiple_mods_into_one_page(tmp_path: Path):
     app = create_app(config_path=str(tmp_path / 'cubixrecipes.config.json'))
     upload_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/archive')
     generate_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate')
+    generation_status_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/admin/mod-icons/generate/status')
 
     class BodyRequest:
         headers = {}
@@ -240,7 +250,14 @@ def test_admin_mod_icon_atlas_packs_multiple_mods_into_one_page(tmp_path: Path):
 
     asyncio.run(upload_route(BodyRequest(first_archive), filename='firstmod_x32.zip', replace=False))
     asyncio.run(upload_route(BodyRequest(second_archive), filename='secondmod_x32.zip', replace=False))
-    generated = generate_route()['manifest']
+    generate_route()
+    for _ in range(100):
+        generated = generation_status_route()
+        if generated['status'] == 'ready':
+            break
+        time.sleep(0.01)
+    manifest_route = next(route.endpoint for route in app.routes if getattr(route, 'path', '') == '/api/mod-icons/atlas')
+    generated = json.loads(manifest_route().body)['manifest']
 
     assert generated['totalMods'] == 2
     assert len(generated['atlases']) == 1

@@ -318,6 +318,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_icon_catalog = ContextProxy(_current_context, 'itempanel_icon_catalog')
     item_catalog_service = ContextProxy(_current_context, 'item_catalog_service')
     mod_icon_atlas_service = ContextProxy(_current_context, 'mod_icon_atlas_service')
+    mod_icon_atlas_build_job = ContextProxy(_current_context, 'mod_icon_atlas_build_job')
     atlas_revision_service = ContextProxy(_current_context, 'atlas_revision_service')
     item_case_alias_service = ContextProxy(_current_context, 'item_case_alias_service')
     zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
@@ -721,10 +722,17 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
 
     @router.post('/admin/mod-icons/generate')
     def admin_generate_mod_icon_atlases():
-        manifest = mod_icon_atlas_service.generate_atlases()
-        atlas_v2_build = atlas_revision_service.start_build()
-        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon atlases generated', {'atlases': len(manifest.get('atlases', [])), 'totalMods': manifest.get('totalMods')})
-        return {'ok': True, 'manifest': manifest, 'atlas_v2': atlas_v2_build}
+        job = mod_icon_atlas_build_job.start(on_ready=atlas_revision_service.start_build)
+        # Do not return a previous manifest while a new build is queued. The
+        # frontend must wait for this job, otherwise it could keep displaying
+        # stale ZIP atlas coordinates after an archive upload.
+        manifest = mod_icon_atlas_service.read_manifest() if job.get('status') == 'ready' else None
+        log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon atlas generation queued', {'job_id': job.get('jobId')})
+        return {'ok': True, 'job': job, 'manifest': manifest}
+
+    @router.get('/admin/mod-icons/generate/status')
+    def admin_mod_icon_atlas_generation_status():
+        return mod_icon_atlas_build_job.status()
 
     @router.get('/admin/item-case-aliases')
     def admin_item_case_alias_report():

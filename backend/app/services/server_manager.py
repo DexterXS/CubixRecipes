@@ -21,6 +21,7 @@ from app.items.custom_items import CustomItemService
 from app.services.item_case_alias_service import ItemCaseAliasService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.services.mod_icon_atlas_service import ModIconAtlasService
+from app.services.mod_icon_atlas_build_job import ModIconAtlasBuildJob
 from app.atlas.revision_service import AtlasRevisionService
 
 
@@ -86,6 +87,7 @@ class ServerContext:
             self.admin_data_dir / 'mod_icon_archives',
             self.admin_data_dir / 'mod_icon_atlases'
         )
+        self.mod_icon_atlas_build_job = ModIconAtlasBuildJob(self.mod_icon_atlas_service.generate_atlases)
         self.atlas_revision_service = AtlasRevisionService(
             self.admin_data_dir / 'atlas',
             server_id,

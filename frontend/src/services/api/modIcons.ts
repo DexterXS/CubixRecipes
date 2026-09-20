@@ -52,7 +52,39 @@ export async function cleanModIconArchive(filename: string): Promise<{ status: M
   return { status: payload.status, cleanup: payload.cleanup };
 }
 
+export interface ModIconAtlasGenerationStatus {
+  jobId?: string | null;
+  status: 'idle' | 'queued' | 'building' | 'ready' | 'error';
+  startedAt?: string | null;
+  finishedAt?: string | null;
+  error?: string | null;
+  summary?: { revision?: string; totalMods?: number; totalIcons?: number; atlasCount?: number };
+}
+
+export async function getModIconAtlasGenerationStatus(): Promise<ModIconAtlasGenerationStatus> {
+  return request<ModIconAtlasGenerationStatus>(apiPath('/admin/mod-icons/generate/status'));
+}
+
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
+
 export async function generateModIconAtlases(): Promise<ModIconAtlasManifest> {
-  const payload = await request<{ ok: boolean; manifest: ModIconAtlasManifest }>(apiPath('/admin/mod-icons/generate'), { method: 'POST' });
-  return payload.manifest;
+  const payload = await request<{ ok: boolean; manifest?: ModIconAtlasManifest | null; job?: ModIconAtlasGenerationStatus }>(apiPath('/admin/mod-icons/generate'), { method: 'POST' });
+  // Keep compatibility with older backends that still return a completed manifest.
+  if (payload.manifest) return payload.manifest;
+  let status = payload.job ?? await getModIconAtlasGenerationStatus();
+  for (let attempt = 0; attempt < 240; attempt += 1) {
+    if (status.status === 'ready') {
+      const manifest = await getModIconAtlasManifest();
+      if (manifest) return manifest;
+      throw new Error('Генерация завершена, но manifest атласа не найден.');
+    }
+    if (status.status === 'error') {
+      throw new Error(status.error || 'Не удалось сгенерировать ZIP-атласы.');
+    }
+    await wait(250);
+    status = await getModIconAtlasGenerationStatus();
+  }
+  throw new Error('Генерация ZIP-атласов выполняется слишком долго. Проверьте статус позже.');
 }

@@ -6,6 +6,7 @@
 - Added the first Atlas v2 backend revision layer: per-server background snapshot builds write immutable ready artifacts and publish them through an atomic `current.json` pointer, with metadata/index/candidate/page APIs and explicit root-admin activation; legacy atlas endpoints remain unchanged.
 - Connected the frontend Atlas lookup to the active Atlas v2 index: primary candidates now use immutable revisioned page URLs when available, with legacy itempanel/mod/fallback sources preserved as compatibility fallbacks.
 - Added a guarded root-admin Atlas v2 revision-prune endpoint that removes only old ready artifacts while preserving the active and recent revisions.
+- Moved ZIP/mod-icon atlas generation out of the HTTP request into a background job with status polling; the completed job now triggers a fresh Atlas v2 snapshot and no longer returns a stale manifest while rebuilding.
 - Restored the focused drafts workspace behavior from the archived version: exact NBT variant matching, per-card raw output details, primary-recipe ★ selection, Ctrl/⌘ multi-selection, and batch draft export without changing saved recipe data.
 - Added immediate bundled itempanel catalog rendering while the backend catalog refreshes in the background, so NEI cells are present before API metadata or icon assets finish loading.
 - Added revisioned server-side mod atlas publications and browser Cache Storage for the manifest plus every generated x32/x256 atlas page, so additional pages reuse local cached object URLs after reloads.

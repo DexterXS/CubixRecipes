@@ -148,6 +148,8 @@ Last full rebuild: 2026-06-29
   - Uploads/validates/cleans mod icon ZIP archives and packs generated per-size shared atlas pages.
   - Publishes a revisioned manifest and versioned URLs for every generated page so x32/x256 multi-page atlases can be cached safely.
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
+- `backend/app/services/mod_icon_atlas_build_job.py`
+  - Runs ZIP/mod-icon atlas packing outside the HTTP request and exposes queued/building/ready/error status; ready completion starts the Atlas v2 rebuild.
 - `backend/app/atlas/artifact_store.py` and `backend/app/atlas/revision_service.py`
   - Store per-server immutable Atlas v2 revisions, atomically publish the active revision pointer, and build combined primary/ZIP page snapshots in a daemon background worker.
   - `AtlasArtifactStore` owns safe revision/artifact paths, atomic JSON/PNG writes, and guarded pruning; `AtlasRevisionService` owns build status, active revision reads, candidate/page snapshots, explicit activation, and prune orchestration.
@@ -244,6 +246,7 @@ Last full rebuild: 2026-06-29
 - `DELETE /api/admin/mod-icons/archive`
 - `POST /api/admin/mod-icons/archive/clean`
 - `POST /api/admin/mod-icons/generate`
+- `GET /api/admin/mod-icons/generate/status`
 - `GET /api/admin/mod-icons/atlases/{filename}`
 - `GET /api/mod-icons/atlas`
 - `GET /api/mod-icons/atlases/{filename}`
@@ -559,7 +562,7 @@ Last full rebuild: 2026-06-29
   - `auth.ts`: current user, login/logout, users, roles, access-control endpoints.
   - `tasks.ts`: admin recipe task board endpoints and `RecipeTaskPayload`.
   - `favorites.ts`: NEI favorites endpoints.
-  - `modIcons.ts`: mod icon archive/admin/atlas endpoints.
+  - `modIcons.ts`: mod icon archive/admin/atlas endpoints, including background generation status polling.
   - `aliases.ts`: item-case alias report/manual/FML-log endpoints.
   - `zsCloud.ts`: cloud `.zs` files and backup endpoints.
   - `oredict.ts`: OreDict upload/list endpoints.
@@ -666,7 +669,7 @@ Last full rebuild: 2026-06-29
 - `getModIconArchiveDownloadUrl` -> `GET /api/admin/mod-icons/archive`
 - `deleteModIconArchive` -> `DELETE /api/admin/mod-icons/archive`
 - `cleanModIconArchive` -> `POST /api/admin/mod-icons/archive/clean`
-- `generateModIconAtlases` -> `POST /api/admin/mod-icons/generate`
+- `generateModIconAtlases` -> `POST /api/admin/mod-icons/generate`, then polls `GET /api/admin/mod-icons/generate/status` until the ZIP atlas is ready.
 - `getItemCaseAliasReport` -> `GET /api/item-case-aliases`
 - `generateItemCaseAliasReport` -> `POST /api/admin/item-case-aliases/generate`
 - `saveManualItemCaseAlias` -> `POST /api/admin/item-case-aliases/manual`
