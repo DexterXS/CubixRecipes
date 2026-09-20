@@ -5,7 +5,8 @@ import {
 } from './itemAssetCache';
 import {
   modIconAssetCacheKey,
-  readCachedModIconAtlas
+  readCachedModIconAtlas,
+  writeCachedModIconAtlas
 } from './modIconAssetCache';
 
 afterEach(() => {
@@ -14,7 +15,7 @@ afterEach(() => {
 });
 
 describe('mod icon asset cache', () => {
-  test('restores every cached atlas page, including future pages and x256', async () => {
+  test('restores the manifest without reading x32/x256 pages eagerly', async () => {
     const scope = buildItemAssetCacheScope('hitech', 'user@example.com');
     const manifest: ModIconAtlasManifest = {
       revision: 'revision-1',
@@ -87,12 +88,6 @@ describe('mod icon asset cache', () => {
       delete: vi.fn()
     } as unknown as Cache;
     vi.stubGlobal('caches', { open: vi.fn(async () => cache) });
-    let objectUrlIndex = 0;
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL: vi.fn(() => `blob:mod-atlas-${objectUrlIndex++}`),
-      revokeObjectURL: vi.fn()
-    });
 
     responses.set(modIconAssetCacheKey(scope, 'manifest'), new Response(JSON.stringify({ revision: 'revision-1', manifest })));
     for (const atlas of manifest.atlases) {
@@ -103,7 +98,49 @@ describe('mod icon asset cache', () => {
 
     expect(cached?.revision).toBe('revision-1');
     expect(cached?.manifest.atlases).toHaveLength(2);
-    expect(cached?.manifest.atlases[0].image_url).toBe('blob:mod-atlas-0');
-    expect(cached?.manifest.atlases[1].image_url).toBe('blob:mod-atlas-1');
+    expect(cached?.manifest.atlases[0].image_url).toContain('mod-icons-x32-1.png');
+    expect(cached?.manifest.atlases[1].image_url).toContain('mod-icons-x256-2.png');
+    expect(cache.match).toHaveBeenCalledTimes(1);
+  });
+
+  test('stores only the manifest and does not download atlas pages during refresh', async () => {
+    const scope = buildItemAssetCacheScope('hitech', 'user@example.com');
+    const manifest = {
+      revision: 'revision-2',
+      maxAtlasSize: 4096,
+      fallbackAtlasUrl: '/api/itempanel/atlas.png',
+      archives: [],
+      atlases: [
+        {
+          size: 32,
+          page: 1,
+          image_url: '/api/mod-icons/atlases/mod-icons-x32-1.png?v=revision-2',
+          file: 'mod-icons-x32-1.png',
+          columns: 1,
+          rows: 1,
+          tileSize: 32,
+          entries: {}
+        }
+      ],
+      entries: { x32: {}, x256: {} },
+      duplicates: [],
+      rejected: [],
+      totalMods: 0,
+      totalIcons: 0
+    } satisfies ModIconAtlasManifest;
+    const cache = {
+      match: vi.fn(async () => undefined),
+      put: vi.fn(async () => undefined),
+      delete: vi.fn(async () => undefined)
+    } as unknown as Cache;
+    vi.stubGlobal('caches', { open: vi.fn(async () => cache) });
+    vi.stubGlobal('fetch', vi.fn());
+
+    const result = await writeCachedModIconAtlas(scope, manifest, 'hitech');
+
+    expect(result?.manifest).toBe(manifest);
+    expect(cache.put).toHaveBeenCalledTimes(1);
+    expect(String((cache.put as ReturnType<typeof vi.fn>).mock.calls[0][0])).toContain('kind=manifest');
+    expect(fetch).not.toHaveBeenCalled();
   });
 });

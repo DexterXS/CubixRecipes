@@ -285,7 +285,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added a persistent browser Cache Storage snapshot for the published itempanel atlas, keyed by server and authenticated user, with immediate stale rendering and background refresh.
   - Kept the existing server-scoped localStorage catalog cache for fast subject/search metadata and keyed in-memory atlas requests by server to prevent cross-server reuse.
   - Removed client-side Canvas recomposition of mod icons; the frontend now consumes the server-generated itempanel atlas directly while the already-generated mod atlas remains a separate server-owned overlay layer.
-  - Added revisioned backend mod-atlas URLs and server/user-scoped browser Cache Storage for the manifest plus every generated x32/x256 atlas page, including future additional pages.
+  - Added revisioned backend mod-atlas URLs, manifest caching, and a lazy Cache Storage service worker for generated x32/x256 pages, including future additional pages; page bytes are cached only after the browser requests that page.
   - Changed itempanel startup to render the bundled catalog immediately while the backend catalog refreshes in the background, preventing an empty NEI during slow API responses.
   - Added the first Atlas v2 vertical slice: a shared frontend candidate registry/selector now combines primary itempanel, ZIP x32/x256, and direct fallback candidates by quality/source/size; App, CubixCraft, and the item database use the shared lookup, and backend atlas manifests expose normalized quality/source metadata.
   - Remaining Atlas v2 work: background immutable revision builds, explicit activation/current pointer, page/index APIs, and resolver batch fallback.

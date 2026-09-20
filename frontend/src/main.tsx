@@ -32,6 +32,17 @@ installCompactCubixAmounts();
 installCubixVariantInteractionFix();
 installCubixCraftVariantDelete();
 
+function installAtlasPageCacheWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  const supportedProtocol = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (!supportedProtocol) return;
+  void navigator.serviceWorker.register('/atlas-cache-sw.js', { scope: '/' }).catch(() => {
+    // Cache Storage is an optimization and must never block the application.
+  });
+}
+
+installAtlasPageCacheWorker();
+
 interface ServerGateProps {
   authUser: AuthUser;
   onLogout: () => Promise<void>;

@@ -146,7 +146,7 @@ Last full rebuild: 2026-06-29
   - Depends on `AssetIndex`, `ItemPanelIconCatalog`, and domain models.
 - `backend/app/services/mod_icon_atlas_service.py`
   - Uploads/validates/cleans mod icon ZIP archives and packs generated per-size shared atlas pages.
-  - Publishes a revisioned manifest and versioned URLs for every generated page so x32/x256 multi-page atlases can be cached safely.
+  - Publishes a revisioned manifest and versioned URLs for every generated page so x32/x256 multi-page atlases can be cached safely; frontend page bytes are loaded lazily.
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
 - `backend/app/services/mod_icon_atlas_build_job.py`
   - Runs ZIP/mod-icon atlas packing outside the HTTP request and exposes queued/building/ready/error status; ready completion starts the Atlas v2 rebuild.
@@ -563,6 +563,8 @@ Last full rebuild: 2026-06-29
   - `tasks.ts`: admin recipe task board endpoints and `RecipeTaskPayload`.
   - `favorites.ts`: NEI favorites endpoints.
   - `modIcons.ts`: mod icon archive/admin/atlas endpoints, including background generation status polling.
+  - `modIconAssetCache.ts`: server/user-scoped manifest Cache Storage; atlas page bytes are not prefetched.
+  - `public/atlas-cache-sw.js`: cache-first lazy interception for every legacy mod-atlas and Atlas v2 page URL.
   - `aliases.ts`: item-case alias report/manual/FML-log endpoints.
   - `zsCloud.ts`: cloud `.zs` files and backup endpoints.
   - `oredict.ts`: OreDict upload/list endpoints.
@@ -575,9 +577,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/types/index.ts`
   - Shared frontend response/domain types: auth, recipes, resolution, item catalog, atlas, settings, layout, desktop/mobile icon surface settings, tasks, favorites, users, cloud files, aliases, OreDict.
 - `frontend/src/services/modIconAssetCache.ts`
-  - Stores the mod atlas manifest and every generated atlas page in server/user-scoped browser Cache Storage, hydrating cached pages as object URLs on reload.
+  - Stores the mod atlas manifest in server/user-scoped browser Cache Storage; page bytes are intentionally left to the lazy atlas-page service worker.
 - `frontend/src/services/modIconAssetCache.test.ts`
-  - Verifies that multiple x32/x256 pages are restored from browser cache.
+  - Verifies that x32/x256 pages are not read or downloaded while restoring/refreshing the manifest.
 - `frontend/src/i18n.ts`
   - UI translation tree and helper getters.
 - `frontend/src/styles.css`
@@ -781,7 +783,7 @@ Last full rebuild: 2026-06-29
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
 - `pages/App.tsx` -> `services/itemAssetCache.ts` for persistent server/user-scoped itempanel atlas snapshots.
-- `pages/App.tsx` -> `services/modIconAssetCache.ts` for persistent server/user-scoped mod atlas pages and stale-while-revalidate startup loading.
+- `pages/App.tsx` -> `services/modIconAssetCache.ts` for persistent server/user-scoped mod-atlas manifest loading; `main.tsx` registers `public/atlas-cache-sw.js` for lazy page caching.
 - `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.
 - `services/api/index.ts` -> API domain modules.
