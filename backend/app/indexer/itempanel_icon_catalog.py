@@ -88,6 +88,10 @@ class ItemPanelIconCatalog:
             'enabled': self.csv_path.is_file() and self.icons_dir.is_dir(),
         }
 
+    def source_fingerprint(self) -> str:
+        """Return the existing atlas source fingerprint for catalog consumers."""
+        return self._atlas_builder.cache.source_key(self.csv_path, self.icons_dir, self._icon_files)
+
     def resolve(self, item_ref: ItemRef) -> Optional[ResolutionResult]:
         entry = self._find_entry(item_ref)
         if entry is None:

@@ -80,6 +80,7 @@ class ServerContext:
             self.itempanel_icon_catalog,
             merged_csv_path=self.itempanel_merged_csv_path,
             oredict_path=oredict_storage_path,
+            cache_path=self.admin_data_dir / 'itempanel' / 'item_catalog_cache.json',
         )
         self.item_catalog_service.scan()
 

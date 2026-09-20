@@ -250,11 +250,12 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - The frontend now reads the active Atlas v2 index when available and uses its immutable page URLs through the shared lookup, while retaining legacy sources as fallback.
   - Added an explicit root-admin Atlas v2 revision garbage collector that keeps the active/recent ready artifacts and never touches building/error revisions.
   - ZIP/mod-icon atlas generation now runs in a daemon background job with a status endpoint; completion triggers an Atlas v2 rebuild without blocking the HTTP request.
+  - Progress on 2026-09-20: added an atomic per-server item catalog cache keyed by CSV/SNBT/OreDict/icon fingerprints; on the current 12,762-entry dataset, catalog startup fell from 17.458s cold to 0.329s warm (icon scan included: 18.489s to 0.913s).
   - Remaining Stage 2 work: move any remaining source generation behind queued background jobs and validate cold-start and warm-restart timings on Railway.
 
 ### Stage 3: Asset Index and Resolver
 - Status: next.
-- Add safe persistent index cache or fingerprinting.
+- Add safe persistent AssetIndex cache or fingerprinting.
 - Avoid reading irrelevant archive entries.
 - Add resolver result caching and later batch resolve if needed.
 - Prefer the `itempanel_icons` catalog over jar/assets heuristics; keep old resolver strategies as fallback/debug paths.
@@ -321,6 +322,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
 - Added a wipe-update workflow, backend combined item catalog from itempanel CSV/NBT/icon data, and shared per-size mod icon atlas packing.
 - Added persistent browser itempanel atlas caching with server/user isolation and stale-while-revalidate startup loading.
 - Added persistent per-server itempanel atlas caching and removed per-page browser-side atlas recomposition.
+- Added persistent per-server item catalog caching with source fingerprint invalidation and atomic writes; unchanged startup sources now skip the full catalog rebuild.
 
 ### Known Issues
 - Resolver heuristics not fully implemented.

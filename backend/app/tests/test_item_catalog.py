@@ -149,3 +149,69 @@ def test_item_catalog_does_not_treat_csv_has_nbt_flag_as_real_nbt(tmp_path: Path
     assert entry['raw'] == '<mod:meta_only:1>'
     assert entry['nbt_raw'] is None
     assert entry['has_nbt'] is False
+
+
+def test_item_catalog_reuses_persistent_cache_without_reading_csv(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'mod:cached,475,0,false,Cached Item\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    _write_rgba_png(icons_dir / 'Cached Item.png', [(255, 0, 0, 255)])
+    snbt_path = tmp_path / 'itempanel.json'
+    snbt_path.write_text('', encoding='utf-8')
+    cache_path = tmp_path / 'cache' / 'item_catalog_cache.json'
+
+    first_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    first_catalog.scan()
+    first_service = ItemCatalogService(csv_path, snbt_path, first_catalog, cache_path=cache_path)
+    first_service.scan()
+    first_payload = first_service.to_api()
+    assert cache_path.is_file()
+
+    second_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    second_catalog.scan()
+    second_service = ItemCatalogService(csv_path, snbt_path, second_catalog, cache_path=cache_path)
+
+    def fail_if_source_is_read(_path: Path):
+        raise AssertionError('catalog cache miss')
+
+    second_service._read_csv_rows = fail_if_source_is_read
+    second_service.scan()
+    second_payload = second_service.to_api()
+
+    assert second_payload == first_payload
+
+
+def test_item_catalog_rebuilds_cache_when_csv_changes(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'mod:before,475,0,false,Before\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    cache_path = tmp_path / 'cache' / 'item_catalog_cache.json'
+    snbt_path = tmp_path / 'itempanel.json'
+    snbt_path.write_text('', encoding='utf-8')
+
+    first_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    first_catalog.scan()
+    ItemCatalogService(csv_path, snbt_path, first_catalog, cache_path=cache_path).scan()
+
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'mod:after,475,0,false,After\n',
+        encoding='utf-8',
+    )
+    second_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    second_catalog.scan()
+    second_service = ItemCatalogService(csv_path, snbt_path, second_catalog, cache_path=cache_path)
+
+    second_service.scan()
+
+    assert [entry['raw'] for entry in second_service.to_api()['entries']] == ['<mod:after>']

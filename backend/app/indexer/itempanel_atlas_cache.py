@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -9,7 +10,7 @@ from typing import Optional
 class ItemPanelAtlasCache:
     """Persistent cache for one server's generated itempanel atlas."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self, cache_dir: Optional[Path]) -> None:
         self.cache_dir = cache_dir
@@ -26,11 +27,33 @@ class ItemPanelAtlasCache:
                 'mtime_ns': stat.st_mtime_ns,
             }
 
+        icon_file_set = set(icon_files)
+        icon_markers: dict[str, dict[str, object]] = {}
+        try:
+            with os.scandir(icons_dir) as directory:
+                for entry in directory:
+                    if entry.name not in icon_file_set:
+                        continue
+                    try:
+                        stat = entry.stat(follow_symlinks=False)
+                    except OSError:
+                        icon_markers[entry.name] = {'name': entry.name, 'missing': True}
+                        continue
+                    icon_markers[entry.name] = {
+                        'name': entry.name,
+                        'size': stat.st_size,
+                        'mtime_ns': stat.st_mtime_ns,
+                    }
+        except OSError:
+            icon_markers = {}
+        for icon_file in icon_files:
+            icon_markers.setdefault(icon_file, {'name': icon_file, 'missing': True})
+
         payload = {
             'version': self.VERSION,
             'csv': stat_marker(csv_path),
             'icons_dir': stat_marker(icons_dir),
-            'icon_files': [stat_marker(icons_dir / icon_file) for icon_file in icon_files],
+            'icon_files': [icon_markers[icon_file] for icon_file in sorted(icon_markers)],
         }
         encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
         return hashlib.sha256(encoded).hexdigest()

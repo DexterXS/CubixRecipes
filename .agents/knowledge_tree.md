@@ -27,6 +27,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel/itempanel.csv`: uploaded per-server itempanel CSV.
   - `.cubixrecipes_admin/servers/{server_id}/itempanel/itempanel.json`: uploaded per-server line-based SNBT dump.
   - `.cubixrecipes_admin/servers/{server_id}/itempanel/itempanel_merged.csv`: explicit merged CSV/SNBT output.
+  - `.cubixrecipes_admin/servers/{server_id}/itempanel/item_catalog_cache.json`: fingerprinted serialized item catalog cache; rebuilt atomically when catalog inputs change.
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_atlas_cache/`: generated itempanel atlas PNG/manifest cache for the server source snapshot.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
@@ -115,7 +116,7 @@ Last full rebuild: 2026-06-29
 
 ### Item and Catalog Data
 - `backend/app/items/item_catalog.py`
-  - Builds backend item catalog from itempanel CSV, SNBT, icon availability, OreDict.
+  - Builds backend item catalog from itempanel CSV, SNBT, icon availability, OreDict; persists a fingerprinted per-server cache so unchanged startup sources reuse serialized entries.
   - Classes/functions: `ItemCatalogEntry`, `ItemCatalogService`, `build_item_raw`.
   - Depends on `ItemPanelIconCatalog`, `itempanel_merge`, `oredict_parser`, and domain item refs.
 - `backend/app/items/itempanel_merge.py`

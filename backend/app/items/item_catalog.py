@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -51,12 +53,23 @@ class ItemCatalogEntry:
 
 
 class ItemCatalogService:
-    def __init__(self, csv_path: Path, snbt_path: Path, icon_catalog: ItemPanelIconCatalog, merged_csv_path: Optional[Path] = None, oredict_path: Optional[Path] = None) -> None:
+    CACHE_VERSION = 1
+
+    def __init__(
+        self,
+        csv_path: Path,
+        snbt_path: Path,
+        icon_catalog: ItemPanelIconCatalog,
+        merged_csv_path: Optional[Path] = None,
+        oredict_path: Optional[Path] = None,
+        cache_path: Optional[Path] = None,
+    ) -> None:
         self.csv_path = csv_path
         self.snbt_path = snbt_path
         self.merged_csv_path = merged_csv_path or csv_path.with_name('itempanel_merged.csv')
         self.icon_catalog = icon_catalog
         self.oredict_path = oredict_path
+        self.cache_path = cache_path
         self.entries: list[ItemCatalogEntry] = []
         self.last_scan_report: dict[str, object] = {
             'csv_path': str(csv_path),
@@ -77,6 +90,11 @@ class ItemCatalogService:
 
     def scan(self) -> dict[str, object]:
         source_csv_path = self._catalog_csv_path()
+        fingerprint = self._cache_fingerprint(source_csv_path)
+        cached = self._load_cache(fingerprint)
+        if cached is not None:
+            return cached
+
         csv_rows_data = self._read_csv_rows(source_csv_path)
         csv_entries = self._csv_entries_from_rows(csv_rows_data)
         csv_rows = len(csv_rows_data)
@@ -106,6 +124,7 @@ class ItemCatalogService:
             'nbt_entries': csv_nbt_entries,
             'enabled': self.csv_path.is_file() or self.merged_csv_path.is_file(),
         }
+        self._save_cache(fingerprint)
         return self.last_scan_report
 
     def upload_snbt_json(self, content: bytes) -> dict[str, object]:
@@ -179,6 +198,128 @@ class ItemCatalogService:
 
     def _catalog_csv_path(self) -> Path:
         return self.merged_csv_path if self.merged_csv_path.is_file() else self.csv_path
+
+    def _cache_fingerprint(self, source_csv_path: Path) -> str:
+        payload = {
+            'version': self.CACHE_VERSION,
+            'catalog_csv': self._path_marker(source_csv_path),
+            'csv': self._path_marker(self.csv_path),
+            'merged_csv': self._path_marker(self.merged_csv_path),
+            'snbt': self._path_marker(self.snbt_path),
+            'oredict': self._path_marker(self.oredict_path),
+            'icons': self.icon_catalog.source_fingerprint(),
+        }
+        encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+        return hashlib.sha256(encoded).hexdigest()
+
+    def _path_marker(self, path: Optional[Path]) -> dict[str, object] | None:
+        if path is None:
+            return None
+        resolved = path.resolve(strict=False)
+        try:
+            stat = resolved.stat()
+        except OSError:
+            return {'path': str(resolved), 'missing': True}
+        return {
+            'path': str(resolved),
+            'size': stat.st_size,
+            'mtime_ns': stat.st_mtime_ns,
+        }
+
+    def _load_cache(self, fingerprint: str) -> Optional[dict[str, object]]:
+        if self.cache_path is None or not self.cache_path.is_file():
+            return None
+        try:
+            payload = json.loads(self.cache_path.read_text(encoding='utf-8'))
+            if not isinstance(payload, dict):
+                return None
+            if payload.get('version') != self.CACHE_VERSION or payload.get('fingerprint') != fingerprint:
+                return None
+            raw_entries = payload.get('entries')
+            summary = payload.get('summary')
+            if not isinstance(raw_entries, list) or not isinstance(summary, dict):
+                return None
+            entries = [self._entry_from_cache(item) for item in raw_entries]
+            if any(entry is None for entry in entries):
+                return None
+            self.entries = [entry for entry in entries if entry is not None]
+            self.last_scan_report = dict(summary)
+            return self.last_scan_report
+        except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError):
+            return None
+
+    def _save_cache(self, fingerprint: str) -> None:
+        if self.cache_path is None:
+            return
+        payload = {
+            'version': self.CACHE_VERSION,
+            'fingerprint': fingerprint,
+            'entries': [self._entry_to_cache(entry) for entry in self.entries],
+            'summary': self.last_scan_report,
+        }
+        temporary_path = self.cache_path.with_name(f'{self.cache_path.name}.{os.getpid()}.tmp')
+        try:
+            self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+            temporary_path.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
+            temporary_path.replace(self.cache_path)
+        except (OSError, TypeError, ValueError):
+            try:
+                temporary_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+    def _entry_to_cache(self, entry: ItemCatalogEntry) -> dict[str, object]:
+        return {
+            'key': entry.key,
+            'legacy_id': entry.legacy_id,
+            'meta': entry.meta,
+            'has_nbt': entry.has_nbt,
+            'display_ru': entry.display_ru,
+            'display_en': entry.display_en,
+            'raw': entry.raw,
+            'nbt_raw': entry.nbt_raw,
+            'has_icon': entry.has_icon,
+            'icon_url': entry.icon_url,
+            'sources': sorted(entry.sources),
+            'ore_groups': entry.ore_groups,
+        }
+
+    def _entry_from_cache(self, value: object) -> Optional[ItemCatalogEntry]:
+        if not isinstance(value, dict):
+            return None
+        required_strings = ('key', 'display_ru', 'display_en')
+        if any(not isinstance(value.get(name), str) for name in required_strings):
+            return None
+        if not isinstance(value.get('meta'), int) or isinstance(value.get('meta'), bool):
+            return None
+        if not isinstance(value.get('has_nbt'), bool) or not isinstance(value.get('has_icon'), bool):
+            return None
+        legacy_id = value.get('legacy_id')
+        if legacy_id is not None and (not isinstance(legacy_id, int) or isinstance(legacy_id, bool)):
+            return None
+        optional_strings = ('raw', 'nbt_raw', 'icon_url')
+        if any(value.get(name) is not None and not isinstance(value.get(name), str) for name in optional_strings):
+            return None
+        sources = value.get('sources')
+        ore_groups = value.get('ore_groups')
+        if not isinstance(sources, list) or not all(isinstance(item, str) for item in sources):
+            return None
+        if not isinstance(ore_groups, list) or not all(isinstance(item, str) for item in ore_groups):
+            return None
+        return ItemCatalogEntry(
+            key=value['key'],
+            legacy_id=legacy_id,
+            meta=value['meta'],
+            has_nbt=value['has_nbt'],
+            display_ru=value['display_ru'],
+            display_en=value['display_en'],
+            raw=value.get('raw'),
+            nbt_raw=value.get('nbt_raw'),
+            has_icon=value['has_icon'],
+            icon_url=value.get('icon_url'),
+            sources=set(sources),
+            ore_groups=list(ore_groups),
+        )
 
     def _read_csv_rows(self, path: Path) -> list[dict[str, str]]:
         if not path.is_file():
