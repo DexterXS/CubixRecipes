@@ -318,6 +318,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     itempanel_icon_catalog = ContextProxy(_current_context, 'itempanel_icon_catalog')
     item_catalog_service = ContextProxy(_current_context, 'item_catalog_service')
     mod_icon_atlas_service = ContextProxy(_current_context, 'mod_icon_atlas_service')
+    atlas_revision_service = ContextProxy(_current_context, 'atlas_revision_service')
     item_case_alias_service = ContextProxy(_current_context, 'item_case_alias_service')
     zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
     recipe_draft_store = ContextProxy(_current_context, 'recipe_draft_store')
@@ -559,6 +560,11 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     def admin_mod_icons_status():
         return mod_icon_atlas_service.status()
 
+    @router.post('/admin/atlas/v2/revisions/build')
+    def admin_build_atlas_v2_revision(request: Request):
+        _require_root_admin(request)
+        return {'ok': True, **atlas_revision_service.start_build()}
+
     @router.post('/admin/itempanel/csv')
     async def admin_upload_itempanel_csv(request: Request, filename: str = ''):
         upload_name = filename or request.headers.get('x-itempanel-filename', '')
@@ -580,12 +586,14 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             'scan': itempanel_icon_catalog.last_scan_report,
             'catalog': item_catalog_service.last_scan_report,
         })
+        atlas_v2_build = atlas_revision_service.start_build()
         return {
             'ok': True,
             'path': str(target),
             'scan': itempanel_icon_catalog.last_scan_report,
             'catalog_summary': item_catalog_service.last_scan_report,
             'atlas': itempanel_icon_catalog.get_atlas_manifest(),
+            'atlas_v2': atlas_v2_build,
         }
 
     @router.post('/admin/itempanel/json')
@@ -714,8 +722,9 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.post('/admin/mod-icons/generate')
     def admin_generate_mod_icon_atlases():
         manifest = mod_icon_atlas_service.generate_atlases()
+        atlas_v2_build = atlas_revision_service.start_build()
         log_service.log('BACKEND', 'INFO', 'ASSETS', 'Mod icon atlases generated', {'atlases': len(manifest.get('atlases', [])), 'totalMods': manifest.get('totalMods')})
-        return {'ok': True, 'manifest': manifest}
+        return {'ok': True, 'manifest': manifest, 'atlas_v2': atlas_v2_build}
 
     @router.get('/admin/item-case-aliases')
     def admin_item_case_alias_report():
@@ -802,6 +811,54 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         if revision:
             headers['ETag'] = f'"{revision}:{filename}"'
         return Response(content=content, media_type='image/png', headers=headers)
+
+    @router.get('/atlas/v2/meta')
+    def atlas_v2_meta():
+        return atlas_revision_service.read_active_meta() or {
+            'schemaVersion': 2,
+            'status': 'empty',
+            'activeRevision': None,
+            'serverId': _current_context().server_id,
+        }
+
+    @router.get('/atlas/v2/index')
+    def atlas_v2_index():
+        return atlas_revision_service.read_active_index() or {
+            'schemaVersion': 2,
+            'revision': None,
+            'candidates': [],
+            'pages': [],
+        }
+
+    @router.get('/atlas/v2/candidates/{raw:path}')
+    def atlas_v2_candidates(raw: str):
+        meta = atlas_revision_service.read_active_meta() or {}
+        return {
+            'revision': meta.get('activeRevision') or meta.get('revision'),
+            'raw': raw,
+            'candidates': atlas_revision_service.read_candidates(raw),
+        }
+
+    @router.get('/atlas/v2/pages/{page}')
+    def atlas_v2_page(page: str, revision: str = ''):
+        content = atlas_revision_service.read_page(page, revision or None)
+        if content is None:
+            raise HTTPException(status_code=404, detail='Atlas v2 page is not available')
+        headers = {'Cache-Control': 'public, max-age=31536000, immutable' if revision else 'no-cache'}
+        return Response(content=content, media_type='image/png', headers=headers)
+
+    @router.get('/atlas/v2/revisions')
+    def atlas_v2_revisions():
+        return atlas_revision_service.list_revisions()
+
+    @router.post('/atlas/v2/revisions/{revision}/activate')
+    def atlas_v2_activate_revision(revision: str, request: Request):
+        _require_root_admin(request)
+        try:
+            meta = atlas_revision_service.activate(revision)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {'ok': True, 'revision': revision, 'meta': meta}
 
     @router.get('/admin/zs-cloud/files')
     def admin_list_zs_cloud_files():

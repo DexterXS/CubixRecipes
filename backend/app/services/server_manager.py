@@ -21,6 +21,7 @@ from app.items.custom_items import CustomItemService
 from app.services.item_case_alias_service import ItemCaseAliasService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.services.mod_icon_atlas_service import ModIconAtlasService
+from app.atlas.revision_service import AtlasRevisionService
 
 
 class ServerContext:
@@ -85,6 +86,12 @@ class ServerContext:
             self.admin_data_dir / 'mod_icon_archives',
             self.admin_data_dir / 'mod_icon_atlases'
         )
+        self.atlas_revision_service = AtlasRevisionService(
+            self.admin_data_dir / 'atlas',
+            server_id,
+            self.itempanel_icon_catalog,
+            self.mod_icon_atlas_service,
+        )
         self.item_case_alias_service = ItemCaseAliasService(
             Path(active_scripts_dir),
             self.itempanel_icon_catalog.csv_path,
@@ -107,6 +114,10 @@ class ServerContext:
         has_catalog_icons = bool(self.itempanel_icon_catalog.last_scan_report.get('matched', 0))
         if index_paths and not has_catalog_icons:
             self.asset_index.scan_paths(index_paths)
+
+        # Build Atlas v2 without delaying server-context creation. The active
+        # legacy endpoints remain untouched until a ready revision is activated.
+        self.atlas_revision_service.start_build()
 
     def active_itempanel_csv_path(self) -> Path:
         if self.itempanel_csv_storage_path.is_file() or self.itempanel_merged_csv_path.is_file():

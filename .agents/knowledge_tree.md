@@ -148,6 +148,10 @@ Last full rebuild: 2026-06-29
   - Uploads/validates/cleans mod icon ZIP archives and packs generated per-size shared atlas pages.
   - Publishes a revisioned manifest and versioned URLs for every generated page so x32/x256 multi-page atlases can be cached safely.
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
+- `backend/app/atlas/artifact_store.py` and `backend/app/atlas/revision_service.py`
+  - Store per-server immutable Atlas v2 revisions, atomically publish the active revision pointer, and build combined primary/ZIP page snapshots in a daemon background worker.
+  - `AtlasArtifactStore` owns safe revision/artifact paths and atomic JSON/PNG writes; `AtlasRevisionService` owns build status, active revision reads, candidate/page snapshots, and explicit activation.
+  - Revision data lives under `.cubixrecipes_admin/servers/{server_id}/atlas/` and does not replace legacy itempanel/mod-atlas storage.
 
 ### Server and Admin State
 - `backend/app/services/server_manager.py`
@@ -243,6 +247,13 @@ Last full rebuild: 2026-06-29
 - `GET /api/admin/mod-icons/atlases/{filename}`
 - `GET /api/mod-icons/atlas`
 - `GET /api/mod-icons/atlases/{filename}`
+- `POST /api/admin/atlas/v2/revisions/build`
+- `GET /api/atlas/v2/meta`
+- `GET /api/atlas/v2/index`
+- `GET /api/atlas/v2/candidates/{raw:path}`
+- `GET /api/atlas/v2/pages/{page}`
+- `GET /api/atlas/v2/revisions`
+- `POST /api/atlas/v2/revisions/{revision}/activate`
 - `GET /api/admin/item-case-aliases`
 - `GET /api/item-case-aliases`
 - `POST /api/admin/item-case-aliases/generate`
