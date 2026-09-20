@@ -141,6 +141,23 @@ function scaledIcon(base: IconSurfaceSettings, nextCell: number, minIcon: number
   return clamp(next, minIcon, base.icon);
 }
 
+function iconPlacementVars(prefix: string, value: IconSurfaceSettings): Record<string, string> {
+  const centered = value.mode === 'absolute' || value.mode === 'scale';
+  const scaled = value.mode === 'scale';
+  return {
+    [`${prefix}-render-position`]: centered ? 'absolute' : 'relative',
+    [`${prefix}-render-left`]: centered ? '50%' : 'auto',
+    [`${prefix}-render-top`]: centered ? '50%' : 'auto',
+    [`${prefix}-render-width`]: scaled ? '32px' : `${value.icon}px`,
+    [`${prefix}-render-height`]: scaled ? '32px' : `${value.icon}px`,
+    [`${prefix}-render-transform`]: scaled
+      ? `translate(-50%, -50%) scale(${value.icon / 32})`
+      : centered
+        ? 'translate(-50%, -50%)'
+        : 'none'
+  };
+}
+
 export function buildIconSurfaceCssVars(
   settings: Partial<Record<string, Partial<IconSurfaceSettings>>> | null | undefined,
   viewport: IconViewport | null,
@@ -164,6 +181,7 @@ export function buildIconSurfaceCssVars(
     vars[`${prefix}-icon`] = `${value.icon}px`;
     vars[`${prefix}-gap`] = `${value.gap}px`;
     vars[`${prefix}-scale`] = String(value.icon / 32);
+    Object.assign(vars, iconPlacementVars(prefix, value));
   });
   return vars as CSSProperties;
 }

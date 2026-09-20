@@ -729,7 +729,7 @@ export function CubixCraftWorkspace() {
               <div style={{ display: 'grid', justifyItems: 'center', gap: 5 }}>
                 <span style={{ fontSize: 12, opacity: 0.72 }}>Результат</span>
                 <div
-                  className={`grid-cell ${outputRaw ? 'is-filled' : 'is-empty'}`}
+                  className={`grid-cell cubixcraft-output-cell ${outputRaw ? 'is-filled' : 'is-empty'}`}
                   style={{ width: outputSurface.cell, height: outputSurface.cell, minWidth: outputSurface.cell, minHeight: outputSurface.cell, position: 'relative', cursor: heldRaw ? 'copy' : 'default' }}
                   onClick={(event) => {
                     event.stopPropagation();

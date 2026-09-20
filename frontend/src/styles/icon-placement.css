@@ -1,0 +1,339 @@
+/* Keep icon content centered by the same rule on every editor/item surface. */
+.nei-icon,
+.favorite-icon,
+.draft-item-button .nei-icon,
+.task-icon-slot,
+.task-item-picker-icon,
+.suggestion-icon-slot,
+.draft-selected-icon,
+.recipe-builder-grid .cell-icon-slot,
+.recipe-builder-grid .craft-output-slot,
+.draft-preview-grid .cell-icon-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.nei-icon {
+  width: var(--icon-nei-cell, 34px);
+  height: var(--icon-nei-cell, 34px);
+}
+
+.nei-icon > img,
+.nei-icon > .animated-icon,
+.nei-icon > .nei-atlas-icon,
+.favorite-icon > img,
+.favorite-icon > .animated-icon,
+.favorite-icon > .output-atlas-icon,
+.draft-item-button .nei-icon > img,
+.draft-item-button .nei-icon > .animated-icon,
+.draft-item-button .nei-icon > .nei-atlas-icon {
+  position: var(--icon-nei-render-position, relative);
+  left: var(--icon-nei-render-left, auto);
+  top: var(--icon-nei-render-top, auto);
+  width: var(--icon-nei-render-width, var(--icon-nei-icon, 28px));
+  height: var(--icon-nei-render-height, var(--icon-nei-icon, 28px));
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  transform: var(--icon-nei-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.favorite-items .favorite-icon {
+  position: relative;
+  width: var(--icon-favorites-cell, 34px);
+  height: var(--icon-favorites-cell, 34px);
+}
+
+.favorite-items .favorite-icon > img,
+.favorite-items .favorite-icon > .animated-icon,
+.favorite-items .favorite-icon > .output-atlas-icon {
+  position: var(--icon-favorites-render-position, relative);
+  left: var(--icon-favorites-render-left, auto);
+  top: var(--icon-favorites-render-top, auto);
+  width: var(--icon-favorites-render-width, var(--icon-favorites-icon, 28px));
+  height: var(--icon-favorites-render-height, var(--icon-favorites-icon, 28px));
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  transform: var(--icon-favorites-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.draft-item-button .nei-icon {
+  width: var(--icon-draft-items-cell, 34px);
+  height: var(--icon-draft-items-cell, 34px);
+}
+
+.draft-item-button .nei-icon > img,
+.draft-item-button .nei-icon > .animated-icon,
+.draft-item-button .nei-icon > .nei-atlas-icon,
+.draft-item-button .nei-icon > .output-atlas-icon {
+  position: var(--icon-draft-items-render-position, relative);
+  left: var(--icon-draft-items-render-left, auto);
+  top: var(--icon-draft-items-render-top, auto);
+  width: var(--icon-draft-items-render-width, var(--icon-draft-items-icon, 28px));
+  height: var(--icon-draft-items-render-height, var(--icon-draft-items-icon, 28px));
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  transform: var(--icon-draft-items-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.recipe-builder-grid .cell-icon-slot > img,
+.recipe-builder-grid .cell-icon-slot > .animated-icon,
+.recipe-builder-grid .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-craft-grid-render-position, relative);
+  left: var(--icon-craft-grid-render-left, auto);
+  top: var(--icon-craft-grid-render-top, auto);
+  width: var(--icon-craft-grid-render-width, 32px);
+  height: var(--icon-craft-grid-render-height, 32px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-craft-grid-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.recipe-builder-grid .grid-cell.size-9 .cell-icon-slot > img,
+.recipe-builder-grid .grid-cell.size-9 .cell-icon-slot > .animated-icon,
+.recipe-builder-grid .grid-cell.size-9 .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-craft-grid9-render-position, relative);
+  left: var(--icon-craft-grid9-render-left, auto);
+  top: var(--icon-craft-grid9-render-top, auto);
+  width: var(--icon-craft-grid9-render-width, 32px);
+  height: var(--icon-craft-grid9-render-height, 32px);
+  transform: var(--icon-craft-grid9-render-transform, none);
+}
+
+.recipe-builder-grid .craft-output-slot > img,
+.recipe-builder-grid .craft-output-slot > .animated-icon,
+.recipe-builder-grid .craft-output-slot > .output-atlas-icon {
+  position: var(--icon-craft-output-render-position, relative);
+  left: var(--icon-craft-output-render-left, auto);
+  top: var(--icon-craft-output-render-top, auto);
+  width: var(--icon-craft-output-render-width, 32px);
+  height: var(--icon-craft-output-render-height, 32px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-craft-output-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.draft-preview-grid .cell-icon-slot > img,
+.draft-preview-grid .cell-icon-slot > .animated-icon,
+.draft-preview-grid .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-draft-preview-render-position, relative);
+  left: var(--icon-draft-preview-render-left, auto);
+  top: var(--icon-draft-preview-render-top, auto);
+  width: var(--icon-draft-preview-render-width, 28px);
+  height: var(--icon-draft-preview-render-height, 28px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-draft-preview-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.draft-preview-grid .grid-wrap[data-grid-size='9'] .cell-icon-slot > img,
+.draft-preview-grid .grid-wrap[data-grid-size='9'] .cell-icon-slot > .animated-icon,
+.draft-preview-grid .grid-wrap[data-grid-size='9'] .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-draft-preview9-render-position, relative);
+  left: var(--icon-draft-preview9-render-left, auto);
+  top: var(--icon-draft-preview9-render-top, auto);
+  width: var(--icon-draft-preview9-render-width, 32px);
+  height: var(--icon-draft-preview9-render-height, 32px);
+  transform: var(--icon-draft-preview9-render-transform, none);
+}
+
+.draft-selected-icon > img,
+.draft-selected-icon > .animated-icon,
+.draft-selected-icon > .output-atlas-icon {
+  position: var(--icon-draft-selected-render-position, relative);
+  left: var(--icon-draft-selected-render-left, auto);
+  top: var(--icon-draft-selected-render-top, auto);
+  width: var(--icon-draft-selected-render-width, 42px);
+  height: var(--icon-draft-selected-render-height, 42px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-draft-selected-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.task-icon-slot > img,
+.task-icon-slot > .animated-icon,
+.task-icon-slot > .output-atlas-icon,
+.task-icon-slot > .output-mod-atlas-icon,
+.task-item-picker-icon > img,
+.task-item-picker-icon > .animated-icon,
+.task-item-picker-icon > .output-atlas-icon,
+.task-item-picker-icon > .output-mod-atlas-icon,
+.suggestion-icon-slot > img,
+.suggestion-icon-slot > .animated-icon,
+.suggestion-icon-slot > .output-atlas-icon,
+.suggestion-icon-slot > .nei-atlas-icon {
+  position: var(--icon-tasks-render-position, relative);
+  left: var(--icon-tasks-render-left, auto);
+  top: var(--icon-tasks-render-top, auto);
+  width: var(--icon-tasks-render-width, 32px);
+  height: var(--icon-tasks-render-height, 32px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-tasks-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.held-item-cursor,
+.touch-held-item-icon,
+.cubixcraft-grid .cell-icon-slot,
+.cubixcraft-output-cell .cell-icon-slot,
+.auction-day-auction-preview,
+.auction-lot-main-icon,
+.auction-lot-quick-icon,
+.auction-day-auction-item,
+.auction-lot-preview-slot,
+.auction-lot-item-icon,
+.auction-inventory-slot,
+.auction-item-icon,
+.auction-lot-library-icon,
+.auction-folder-preview-slot,
+.auction-lot-nei-grid button {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.held-item-cursor > img,
+.held-item-cursor > .held-atlas-icon,
+.touch-held-item-icon > img,
+.touch-held-item-icon > .held-atlas-icon {
+  position: var(--icon-touch-held-render-position, relative);
+  left: var(--icon-touch-held-render-left, auto);
+  top: var(--icon-touch-held-render-top, auto);
+  width: var(--icon-touch-held-render-width, 32px);
+  height: var(--icon-touch-held-render-height, 32px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-touch-held-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.cubixcraft-grid .cell-icon-slot > img,
+.cubixcraft-grid .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-cubix-craft-grid-render-position, relative) !important;
+  left: var(--icon-cubix-craft-grid-render-left, auto) !important;
+  top: var(--icon-cubix-craft-grid-render-top, auto) !important;
+  width: var(--icon-cubix-craft-grid-render-width, 20px) !important;
+  height: var(--icon-cubix-craft-grid-render-height, 20px) !important;
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-cubix-craft-grid-render-transform, none) !important;
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.cubixcraft-output-cell .cell-icon-slot > img,
+.cubixcraft-output-cell .cell-icon-slot > .cell-atlas-icon {
+  position: var(--icon-craft-output-render-position, relative) !important;
+  left: var(--icon-craft-output-render-left, auto) !important;
+  top: var(--icon-craft-output-render-top, auto) !important;
+  width: var(--icon-craft-output-render-width, 32px) !important;
+  height: var(--icon-craft-output-render-height, 32px) !important;
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-craft-output-render-transform, none) !important;
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.auction-day-auction-preview > img,
+.auction-day-auction-preview > .animated-icon,
+.auction-day-auction-preview > .output-atlas-icon,
+.auction-lot-main-icon > img,
+.auction-lot-main-icon > .animated-icon,
+.auction-lot-main-icon > .output-atlas-icon,
+.auction-lot-quick-icon > img,
+.auction-lot-quick-icon > .animated-icon,
+.auction-lot-quick-icon > .output-atlas-icon {
+  position: var(--icon-auction-preview-render-position, relative);
+  left: var(--icon-auction-preview-render-left, auto);
+  top: var(--icon-auction-preview-render-top, auto);
+  width: var(--icon-auction-preview-render-width, 40px);
+  height: var(--icon-auction-preview-render-height, 40px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-auction-preview-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.auction-day-auction-item > img,
+.auction-day-auction-item > .animated-icon,
+.auction-day-auction-item > .output-atlas-icon,
+.auction-lot-preview-slot > img,
+.auction-lot-preview-slot > .animated-icon,
+.auction-lot-preview-slot > .output-atlas-icon,
+.auction-lot-item-icon > img,
+.auction-lot-item-icon > .animated-icon,
+.auction-lot-item-icon > .output-atlas-icon,
+.auction-inventory-slot > img,
+.auction-inventory-slot > .animated-icon,
+.auction-inventory-slot > .output-atlas-icon,
+.auction-item-icon > img,
+.auction-item-icon > .animated-icon,
+.auction-item-icon > .output-atlas-icon,
+.auction-lot-library-icon > img,
+.auction-lot-library-icon > .animated-icon,
+.auction-lot-library-icon > .output-atlas-icon,
+.auction-folder-preview-slot > img,
+.auction-folder-preview-slot > .animated-icon,
+.auction-folder-preview-slot > .output-atlas-icon {
+  position: var(--icon-auction-lot-items-render-position, relative);
+  left: var(--icon-auction-lot-items-render-left, auto);
+  top: var(--icon-auction-lot-items-render-top, auto);
+  width: var(--icon-auction-lot-items-render-width, 28px);
+  height: var(--icon-auction-lot-items-render-height, 28px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-auction-lot-items-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.auction-lot-nei-grid button > img,
+.auction-lot-nei-grid button > .animated-icon,
+.auction-lot-nei-grid button > .output-atlas-icon {
+  position: var(--icon-auction-nei-render-position, relative);
+  left: var(--icon-auction-nei-render-left, auto);
+  top: var(--icon-auction-nei-render-top, auto);
+  width: var(--icon-auction-nei-render-width, 26px);
+  height: var(--icon-auction-nei-render-height, 26px);
+  max-width: none;
+  max-height: none;
+  transform: var(--icon-auction-nei-render-transform, none);
+  transform-origin: center;
+  object-fit: contain;
+  image-rendering: pixelated;
+}

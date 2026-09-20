@@ -8,6 +8,7 @@ import './styles/mobile-craft-icons.css';
 import './styles/mobile-shell.css';
 import './styles/cubixcraft.css';
 import './styles/item-database.css';
+import './styles/icon-placement.css';
 import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';

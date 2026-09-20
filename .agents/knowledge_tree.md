@@ -450,7 +450,9 @@ Last full rebuild: 2026-06-29
 ### Icon Settings Feature
 - `frontend/src/features/icon-settings/iconSurfaces.ts`
   - Registry and normalization owner for all configurable icon surfaces: NEI, favorites, draft items, craft grids, outputs, draft previews, tasks, Auctions preview/lot/NEI surfaces, held item, and mobile inspection.
-  - Builds shared CSS custom properties, desktop/mobile default profiles, and dynamic craft-grid fitting from viewport size.
+  - Builds shared CSS custom properties, desktop/mobile default profiles, dynamic craft-grid fitting from viewport size, and real per-surface placement variables for grid/absolute/wrapper/scale modes.
+- `frontend/src/features/icon-settings/iconSurfaces.test.ts`
+  - Covers centered scale placement, normal grid/wrapper flow, and placement-variable publication for the configured surface registry.
 - `frontend/src/features/icon-settings/useIconViewport.ts`
   - React hook owner for viewport tracking, mobile profile selection, and icon-surface CSS variable generation.
 - `frontend/src/features/icon-settings/IconSettingsPanel.tsx`
@@ -593,6 +595,8 @@ Last full rebuild: 2026-06-29
 - `frontend/src/styles.css`
   - Global app styling, including CSS-variable-driven craft-grid, output, favorites, draft, task, and held-item icon sizing.
   - Craft output atlas sprites keep their 32px tile and use output scale variables so phone output icons match the icon-settings preview instead of being cropped.
+- `frontend/src/styles/icon-placement.css`
+  - Final shared placement layer loaded after the legacy surface styles. It applies the configured center mode consistently to NEI, favorites, drafts, recipe/CubixCraft grids, outputs, tasks, held items, and Auctions icon slots.
 - `frontend/src/styles/nei.css`
   - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, compact mobile item action menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
