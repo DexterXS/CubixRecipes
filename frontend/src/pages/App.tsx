@@ -35,7 +35,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
@@ -44,6 +44,7 @@ import { resolveAtlasPageUrl } from '../services/atlas/atlasPageUrlResolver';
 import { buildModIconCandidates } from '../services/atlas/modIconMatching';
 import { can } from '../auth/permissions';
 import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import type { AtlasV2Index } from '../services/atlas/types';
 import { formatFileSize } from '../utils/formatFileSize';
 
 const defaultMatrix: CellValue[][] = [
@@ -1490,6 +1491,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [neiPage, setNeiPage] = useState(restoredDraft?.neiPage ?? 0);
   const [neiColumnCount, setNeiColumnCount] = useState(NEI_FALLBACK_COLUMNS);
   const [itemPanelAtlas, setItemPanelAtlas] = useState<ItemPanelAtlas | null | undefined>(undefined);
+  const [atlasV2Index, setAtlasV2Index] = useState<AtlasV2Index | null>(null);
   const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
   const [heldItemRaw, setHeldItemRaw] = useState<string | null>(null);
   const [hoveredItemRaw, setHoveredItemRaw] = useState<string | null>(null);
@@ -2970,6 +2972,25 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   useEffect(() => {
     let cancelled = false;
+    const loadAtlasV2Index = async () => {
+      try {
+        const index = await getAtlasV2Index(activeServerId);
+        if (!cancelled) setAtlasV2Index(index?.revision ? index : null);
+      } catch {
+        if (!cancelled) setAtlasV2Index(null);
+      }
+    };
+    setAtlasV2Index(null);
+    void loadAtlasV2Index();
+    const retryTimer = window.setTimeout(loadAtlasV2Index, 1000);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(retryTimer);
+    };
+  }, [activeServerId]);
+
+  useEffect(() => {
+    let cancelled = false;
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
       let cachedEntriesLoaded = false;
@@ -3536,6 +3557,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const modIconByRaw = useMemo(() => buildModIconCandidates(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
   const atlasLookup = useMemo(() => createAtlasLookup({
     primaryAtlas: itemPanelAtlas,
+    atlasV2Index,
     modIconManifest,
     modIconCandidatesByRaw: modIconByRaw,
     fallbackIconsByRaw: new Map(Object.entries(itemSearchIcons))

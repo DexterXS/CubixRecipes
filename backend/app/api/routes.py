@@ -1328,6 +1328,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         _current_context().refresh_itempanel_sources(updated.scripts_dir)
         itempanel_icon_catalog.scan()
         item_catalog_service.scan()
+        atlas_revision_service.start_build()
         asset_index.reset()
         index_paths = config_service.build_index_paths(updated)
         if index_paths and not _has_itempanel_icon_catalog(itempanel_icon_catalog):

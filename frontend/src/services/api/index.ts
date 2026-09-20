@@ -1,4 +1,5 @@
 export * from './aliases';
+export * from './atlas';
 export * from './auth';
 export * from './auctions';
 export * from './client';

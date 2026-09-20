@@ -247,6 +247,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added a per-server persistent itempanel atlas cache; the backend reuses the generated PNG/manifest when the source fingerprint is unchanged instead of rebuilding it for each client, while keeping first generation lazy so cold startup is not blocked.
   - Removed the frontend Canvas merge of generated mod atlases from the itempanel startup path; generated mod atlas pages remain server-owned and are no longer recombined per page load.
   - Added the first Atlas v2 backend slice: immutable per-server revisions, atomic `current.json` publication, background snapshot builds, ready-artifact reads, revision/page APIs, and explicit root-admin activation while legacy atlas endpoints remain unchanged.
+  - The frontend now reads the active Atlas v2 index when available and uses its immutable page URLs through the shared lookup, while retaining legacy sources as fallback.
   - Remaining Stage 2 work: move source generation itself behind queued background jobs, validate cold-start and warm-restart timings on Railway, and add revision garbage collection.
 
 ### Stage 3: Asset Index and Resolver

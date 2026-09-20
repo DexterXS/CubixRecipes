@@ -42,31 +42,27 @@ class FakeModIconService:
         return None
 
 
-def wait_for_status(service: AtlasRevisionService, revision: str, expected: str) -> dict:
+def wait_for_status(service: AtlasRevisionService, revision: str, expected: str, active: bool = False) -> dict:
     for _ in range(100):
         status = service.build_status(revision)
-        if status.get('status') == expected:
+        if status.get('status') == expected and (not active or status.get('active')):
             return status
         time.sleep(0.01)
     return service.build_status(revision)
 
 
-def test_build_stays_inactive_until_explicit_activation(tmp_path: Path):
+def test_first_ready_build_becomes_active_and_keeps_revisioned_page(tmp_path: Path):
     service = AtlasRevisionService(tmp_path / 'atlas', 'test-server', FakeItemPanelCatalog(), FakeModIconService())
 
     started = service.start_build()
     revision = started['revision']
-    ready = wait_for_status(service, revision, 'ready')
+    ready = wait_for_status(service, revision, 'ready', active=True)
 
     assert ready['status'] == 'ready'
-    assert service.read_active_meta() is None
-    assert service.read_candidates('<example:item>') == []
-
-    service.activate(revision)
-
     assert service.read_active_meta()['activeRevision'] == revision
     assert service.read_candidates('<example:item>')[0]['source'] == 'primary'
     assert service.read_page('itempanel-atlas.png', revision) == PNG
+    assert service.read_active_index()['candidates'][0]['columns'] == 1
 
 
 def test_pages_are_not_served_before_ready_marker(tmp_path: Path):

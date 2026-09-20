@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import type { ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAtlasEntry, ModIconAtlasManifest } from '../../types';
 import { parseAtlasRaw, selectRankedAtlasCandidate } from './candidateSelector';
 import { resolveAtlasPageUrl } from './atlasPageUrlResolver';
-import type { AtlasCandidate, AtlasLookupInput, AtlasLookupOptions, AtlasResolvedIcon } from './types';
+import type { AtlasCandidate, AtlasLookupInput, AtlasLookupOptions, AtlasResolvedIcon, AtlasV2CandidateRecord, AtlasV2Page } from './types';
 
 function revisionOf(value: string | undefined): string {
   return value ?? '';
@@ -61,6 +61,29 @@ function modIconCandidate(raw: string, entry: ModIconAtlasEntry, manifest: ModIc
   };
 }
 
+function atlasV2Candidate(entry: AtlasV2CandidateRecord, page?: AtlasV2Page): AtlasCandidate | null {
+  if (!entry.raw) return null;
+  return {
+    raw: entry.raw,
+    key: entry.key,
+    meta: entry.meta,
+    quality: qualityOf(entry.quality),
+    source: entry.source === 'zip' ? 'zip' : 'primary',
+    size: entry.size >= 128 ? 256 : 32,
+    revision: entry.revision,
+    page: entry.page,
+    x: entry.x,
+    y: entry.y,
+    w: entry.w,
+    h: entry.h,
+    imageUrl: entry.imageUrl ?? page?.url,
+    displayName: entry.displayName,
+    columns: entry.columns ?? page?.columns,
+    rows: entry.rows ?? page?.rows,
+    tileSize: entry.tileSize ?? page?.tileSize
+  };
+}
+
 function fallbackCandidate(raw: string, imageUrl: string): AtlasCandidate {
   const parsed = parseAtlasRaw(raw);
   return {
@@ -111,6 +134,13 @@ export function createAtlasLookup(input: AtlasLookupInput): AtlasLookup {
 
   if (input.primaryAtlas) {
     Object.entries(input.primaryAtlas.entries).forEach(([raw, entry]) => register(itemPanelCandidate(raw, entry, input.primaryAtlas!)));
+  }
+  if (input.atlasV2Index) {
+    const pagesByName = new Map(input.atlasV2Index.pages.map((page) => [page.name, page]));
+    input.atlasV2Index.candidates.forEach((entry) => {
+      const candidate = atlasV2Candidate(entry, entry.page ? pagesByName.get(entry.page) : undefined);
+      if (candidate) register(candidate);
+    });
   }
   if (input.modIconManifest && input.modIconCandidatesByRaw) {
     input.modIconCandidatesByRaw.forEach((entries, raw) => entries.forEach((entry) => register(modIconCandidate(raw, entry, input.modIconManifest!))));

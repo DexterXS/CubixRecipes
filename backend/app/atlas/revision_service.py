@@ -95,6 +95,10 @@ class AtlasRevisionService:
         try:
             meta, index, candidates, pages = self._build_snapshot(revision)
             self.store.write_revision(revision, meta, index, candidates, pages)
+            # The first complete snapshot becomes the initial active version.
+            # Later builds stay inactive until an administrator activates them.
+            if self.store.read_current_revision() is None:
+                self.store.activate(revision)
         except Exception as exc:
             self.store.write_state(revision, {
                 'revision': revision,
@@ -127,6 +131,9 @@ class AtlasRevisionService:
                 'source': 'primary',
                 'size': int(primary_manifest.get('tile_size') or 32),
                 'url': self._page_url(revision, page_name),
+                'columns': primary_manifest.get('columns'),
+                'rows': primary_manifest.get('rows'),
+                'tileSize': primary_manifest.get('tile_size'),
             })
             for raw, entry in (primary_manifest.get('entries') or {}).items():
                 if not isinstance(entry, dict):
@@ -146,6 +153,9 @@ class AtlasRevisionService:
                     'h': entry.get('h'),
                     'imageUrl': self._page_url(revision, page_name),
                     'displayName': entry.get('display_name'),
+                    'columns': primary_manifest.get('columns'),
+                    'rows': primary_manifest.get('rows'),
+                    'tileSize': primary_manifest.get('tile_size'),
                 })
 
         mod_manifest = self.mod_icon_service.read_manifest() or {}

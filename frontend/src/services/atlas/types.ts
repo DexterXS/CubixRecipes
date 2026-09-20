@@ -26,6 +26,43 @@ export interface AtlasCandidate {
   atlasFile?: string;
 }
 
+export interface AtlasV2CandidateRecord {
+  raw: string | null;
+  key: string;
+  meta: number | null;
+  quality: AtlasCandidateQuality | string;
+  source: AtlasCandidateSource | string;
+  size: number;
+  revision: string;
+  page?: string;
+  x?: number;
+  y?: number;
+  w?: number;
+  h?: number;
+  imageUrl?: string;
+  displayName?: string;
+  columns?: number;
+  rows?: number;
+  tileSize?: number;
+}
+
+export interface AtlasV2Page {
+  name: string;
+  source: string;
+  size?: number;
+  columns?: number;
+  rows?: number;
+  tileSize?: number;
+  url: string;
+}
+
+export interface AtlasV2Index {
+  schemaVersion: number;
+  revision: string | null;
+  candidates: AtlasV2CandidateRecord[];
+  pages: AtlasV2Page[];
+}
+
 export interface AtlasLookupOptions {
   surface?: AtlasSurface;
   preferredSize?: 32 | 256;
@@ -39,6 +76,7 @@ export interface AtlasResolvedIcon {
 
 export interface AtlasLookupInput {
   primaryAtlas?: ItemPanelAtlas | null;
+  atlasV2Index?: AtlasV2Index | null;
   modIconManifest?: ModIconAtlasManifest | null;
   modIconCandidatesByRaw?: Map<string, ModIconAtlasEntry[]>;
   fallbackIconsByRaw?: Map<string, string | null | undefined>;

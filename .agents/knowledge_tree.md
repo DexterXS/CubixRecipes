@@ -344,10 +344,10 @@ Last full rebuild: 2026-06-29
   - Shared frontend Atlas v2 foundation used by the main app, CubixCraft, and the item database.
   - `types.ts`: candidate quality/source/surface contracts and lookup inputs.
   - `candidateSelector.ts`: deterministic quality, match, source, size, and revision ordering; invalid candidates never render.
-  - `atlasLookup.ts`: normalizes primary itempanel, ZIP, and direct fallback candidates into O(1) raw/key indexes and produces atlas CSS styles.
+  - `atlasLookup.ts`: normalizes active Atlas v2 primary candidates, legacy itempanel, ZIP, and direct fallback candidates into O(1) raw/key indexes and produces atlas CSS styles.
   - `modIconMatching.ts`: maps all available x32/x256 ZIP entries to catalog raws without discarding a second size.
   - `atlasPageUrlResolver.ts`: shared server-aware immutable atlas URL normalization.
-  - `candidateSelector.test.ts`: focused quality/source/size and multi-source selection coverage.
+  - `candidateSelector.test.ts`: focused quality/source/size, multi-source, and Atlas v2 page URL coverage.
 
 ### Auth and Server Selection
 - `frontend/src/auth/AuthGate.tsx`
@@ -554,6 +554,7 @@ Last full rebuild: 2026-06-29
   - `settings.ts`: project settings and UI preferences endpoints.
   - `items.ts`: item resolve, custom item, and draft-template endpoints.
   - `itempanel.ts`: item catalog/atlas and itempanel upload/merge endpoints, including static `/itempanel-atlas.json` fallback.
+  - `atlas.ts`: active Atlas v2 index endpoint with server-scoped no-store refresh.
   - `auth.ts`: current user, login/logout, users, roles, access-control endpoints.
   - `tasks.ts`: admin recipe task board endpoints and `RecipeTaskPayload`.
   - `favorites.ts`: NEI favorites endpoints.

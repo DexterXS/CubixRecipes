@@ -98,4 +98,41 @@ describe('Atlas v2 candidate selection', () => {
     expect(resolved?.candidate.source).toBe('zip');
     expect(resolved?.candidate.quality).toBe('good');
   });
+
+  it('uses the active Atlas v2 page URL for primary candidates', () => {
+    const lookup = createAtlasLookup({
+      atlasV2Index: {
+        schemaVersion: 2,
+        revision: 'rev-20260920',
+        pages: [{
+          name: 'itempanel-atlas.png',
+          source: 'primary',
+          size: 32,
+          columns: 2,
+          rows: 1,
+          tileSize: 32,
+          url: '/api/atlas/v2/pages/itempanel-atlas.png?revision=rev-20260920'
+        }],
+        candidates: [{
+          raw: '<example:item>',
+          key: 'example:item',
+          meta: 0,
+          quality: 'good',
+          source: 'primary',
+          size: 32,
+          revision: 'rev-20260920',
+          page: 'itempanel-atlas.png',
+          x: 32,
+          y: 0,
+          w: 32,
+          h: 32,
+          imageUrl: '/api/atlas/v2/pages/itempanel-atlas.png?revision=rev-20260920'
+        }]
+      }
+    });
+
+    const resolved = lookup.resolve('<example:item>');
+    expect(resolved?.candidate.imageUrl).toContain('/api/atlas/v2/pages/itempanel-atlas.png');
+    expect(resolved?.style?.backgroundPosition).toContain('-32px');
+  });
 });
