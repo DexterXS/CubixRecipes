@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Restored the focused drafts workspace behavior from the archived version: exact NBT variant matching, per-card raw output details, primary-recipe ★ selection, Ctrl/⌘ multi-selection, and batch draft export without changing saved recipe data.
 - Added immediate bundled itempanel catalog rendering while the backend catalog refreshes in the background, so NEI cells are present before API metadata or icon assets finish loading.
 - Added revisioned server-side mod atlas publications and browser Cache Storage for the manifest plus every generated x32/x256 atlas page, so additional pages reuse local cached object URLs after reloads.
 - Added persistent server/browser caching for the published itempanel atlas: the backend builds it once per server source snapshot, clients show the cached atlas immediately on reload, and the browser no longer rebuilds it by merging mod atlases on every page load.
