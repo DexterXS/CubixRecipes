@@ -87,6 +87,7 @@
 - Added a premium, modern server select grid screen with sleek futuristic gradients, glowing hover states, and smooth card transition animations.
 
 ### Fixed
+- Fixed item hover tooltips being clipped by NEI, favorites, recipe-grid, draft, search, and task scroll containers; desktop tooltips now render in a viewport-bound overlay that flips sides near the window edge, while mobile long-press inspection remains unchanged.
 - Fixed the admin icon settings grid and Auctions NEI picker sizing: center-mode buttons now wrap instead of overlapping, and the opened-lot NEI catalog uses exact square cells with zero button padding from the `auctionNei` icon-surface settings instead of stretching columns.
 - Fixed saved Auctions command-generator modes after deploy/reload: disabled command checkboxes now stay disabled through frontend/backend normalization, and saved profiles are not dropped when remote day folders are empty.
 - Made Auctions folder cards show currency beside start price and bid step, show each lot description directly in the opened-folder list, and mark missing descriptions as high-risk warnings.

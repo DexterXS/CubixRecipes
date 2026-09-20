@@ -565,6 +565,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
                     key={option.raw}
                     type="button"
                     className="suggestion-item suggestion-item-with-icon"
+                    data-item-raw={option.raw}
                     onMouseDown={(event) => {
                       event.preventDefault();
                       onChange(itemPatchFromSelection(form, option.raw, option.title));
@@ -679,7 +680,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
           void dropTask(task.status, task.id);
         }}
       >
-        <button type="button" className="task-card-summary" aria-expanded={expandedCard} aria-label={`task-card-${task.id}`} onClick={() => setExpanded((current) => ({ ...current, [task.id]: !current[task.id] }))}>
+        <button type="button" className="task-card-summary" data-item-raw={task.itemRaw || undefined} aria-expanded={expandedCard} aria-label={`task-card-${task.id}`} onClick={() => setExpanded((current) => ({ ...current, [task.id]: !current[task.id] }))}>
           <span className="task-icon-slot">{task.itemRaw ? renderItemIcon(task.itemRaw) : null}</span>
           <span className="task-card-main">
             <strong>{title}</strong>

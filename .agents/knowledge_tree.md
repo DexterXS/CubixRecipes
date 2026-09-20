@@ -712,7 +712,7 @@ Last full rebuild: 2026-06-29
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `indexer/itempanel_atlas_builder.py`, `indexer/itempanel_atlas_cache.py`, `services/server_manager.py`, `api/routes.py`.
-- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `services/itemAssetCache.ts`, `services/itemAssetCache.test.ts`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
+- Frontend files: `pages/App.tsx`, `features/item-catalog/ItemTextureToolsPanel.tsx`, `features/nei/NeiIconItem.tsx`, `features/nei-favorites/NeiFavoritesPanel.tsx`, `services/api/*`, `services/itemAssetCache.ts`, `services/itemAssetCache.test.ts`, `components/ItemTooltipLayer.tsx`, `components/ItemTooltipLayer.test.tsx`, `components/RecipeGrid.tsx`, `types/index.ts`, `styles/nei.css`, `frontend/public/itempanel.csv`, `frontend/public/itempanel-atlas.json`.
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `itempanel_atlas_cache/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.

@@ -267,6 +267,7 @@
   }
 
   .held-item-cursor,
+  .item-tooltip-layer,
   .nei-tooltip,
   .item-tooltip {
     display: none !important;

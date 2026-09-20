@@ -207,6 +207,7 @@ export function RecipeGrid({
                 data-row={rowIndex}
                 data-col={colIndex}
                 data-item-raw={value || undefined}
+                data-item-tooltip-disabled={tooltipsDisabled ? 'true' : undefined}
                 title={nativeTitle}
                 onMouseDown={(event) => startCellPaint(event, rowIndex, colIndex)}
                 onMouseEnter={() => {

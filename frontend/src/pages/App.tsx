@@ -6,6 +6,7 @@ import { Panel } from '../components/Panel';
 import { RecipeGrid } from '../components/RecipeGrid';
 import { StatusBar } from '../components/StatusBar';
 import { AnimatedIcon } from '../components/AnimatedIcon';
+import { ItemTooltipLayer } from '../components/ItemTooltipLayer';
 import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type NbtScalarNode, type NbtScalarType } from '../components/NbtTreeEditor';
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
@@ -5969,7 +5970,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const hasRecipe = getRecipeAvailability(raw) === 'available';
     const hasNbtTag = entry ? itemPanelEntryHasNbtTag(entry) || rawHasNbtTag(raw) : rawHasNbtTag(raw);
     return (
-      <span className="item-tooltip nei-tooltip" aria-hidden="true">
+      <span className="item-tooltip item-tooltip-inline nei-tooltip" aria-hidden="true">
         <span className="nei-tooltip-title">
           <span>{title}</span>
           <span className="nei-tooltip-id">{itemIdLabel}</span>
@@ -8105,6 +8106,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           {renderHeldItemIcon(heldItemRaw)}
         </div>
       ) : null}
+      <ItemTooltipLayer renderTooltip={renderItemTooltip} />
       {renderHotkeyDebugPanel()}
       {renderTouchItemInspection()}
       {renderNeiContextMenu()}
@@ -8163,7 +8165,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 {itemSearchSuggestions.length ? (
                   <div className="suggestions-list" role="listbox" aria-label="item-search-suggestions">
                     {itemSearchSuggestions.map((entry) => (
-                      <button key={itemPanelEntryIdentity(entry)} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
+                      <button key={itemPanelEntryIdentity(entry)} type="button" className="suggestion-item suggestion-item-with-icon" data-item-raw={itemPanelRaw(entry)} onClick={() => applyItemSearchSuggestion(entry)}>
                         {(() => {
                           const raw = itemPanelRaw(entry);
                           const resolvedIcon = atlasLookup.resolve(raw, { surface: 'diagnostics', preferredSize: 32, wildcardTick: wildcardCycleTick });
