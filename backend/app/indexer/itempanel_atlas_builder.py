@@ -89,6 +89,8 @@ class ItemPanelAtlasBuilder:
                 'display_name': entry.display_name,
                 'item_key': entry.item_key,
                 'meta': entry.meta,
+                'quality': 'good',
+                'source': 'primary',
             }
 
         catalog._atlas_png = catalog._encode_rgba_png(atlas_width, atlas_height, atlas)

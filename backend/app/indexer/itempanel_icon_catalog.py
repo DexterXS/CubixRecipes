@@ -296,7 +296,13 @@ class ItemPanelIconCatalog:
         if not path.is_file():
             return NO_ICON_FILE
         try:
-            width, height, rows, channels, palette, alpha_palette = self._decode_png(path)
+            return self.inspect_png_bytes(path.read_bytes())
+        except Exception:
+            return UNSUPPORTED_ICON
+
+    def inspect_png_bytes(self, data: bytes) -> str:
+        try:
+            width, height, rows, channels, palette, alpha_palette = self._decode_png_bytes(data)
         except Exception:
             return UNSUPPORTED_ICON
         if width <= 0 or height <= 0 or rows is None:

@@ -4,11 +4,14 @@ import {
   downloadZsCloudFile,
   getItemCatalog,
   getItemPanelAtlas,
+  getModIconAtlasManifest,
   getProjectSettings,
   listZsCloudFiles,
   uploadZsCloudFile
 } from '../../services/api';
-import type { ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ZsCloudFile } from '../../types';
+import type { ItemCatalogEntry, ItemPanelAtlas, ModIconAtlasManifest, ZsCloudFile } from '../../types';
+import { createAtlasLookup } from '../../services/atlas/atlasLookup';
+import { buildModIconCandidates } from '../../services/atlas/modIconMatching';
 import {
   defaultIconSurfaceSettings,
   defaultMobileIconSurfaceSettings,
@@ -189,12 +192,6 @@ function parseCubixRecipes(text: string): ParsedCubixRecipe[] {
   return recipes;
 }
 
-function parseAtlasRaw(raw: string): { key: string; meta: number } | null {
-  const match = raw.trim().match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>/);
-  if (!match) return null;
-  return { key: match[1].toLowerCase(), meta: match[2] === '*' ? 0 : (Number.parseInt(match[2] ?? '0', 10) || 0) };
-}
-
 function scalarToSnbt(node: Extract<NbtNode, { kind: 'scalar' }>): string {
   const value = node.value || '0';
   if (node.scalarType === 'string') return JSON.stringify(node.value ?? '');
@@ -287,6 +284,7 @@ export function CubixCraftWorkspace() {
   const mobile = isMobileIconViewport(viewport);
   const [catalog, setCatalog] = useState<ItemCatalogEntry[]>([]);
   const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
+  const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
   const [cloudFiles, setCloudFiles] = useState<ZsCloudFile[]>([]);
   const [cloudSelection, setCloudSelection] = useState('');
   const [desktopIconSettings, setDesktopIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
@@ -318,10 +316,11 @@ export function CubixCraftWorkspace() {
   const [expandedOutputs, setExpandedOutputs] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    Promise.all([getItemCatalog(), getItemPanelAtlas(), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
-      .then(([catalogResponse, atlasResponse, projectSettings, cloudResponse]) => {
+    Promise.all([getItemCatalog(), getItemPanelAtlas(), getModIconAtlasManifest().catch(() => null), getProjectSettings(), listZsCloudFiles().catch(() => ({ files: [] }))])
+      .then(([catalogResponse, atlasResponse, modIconResponse, projectSettings, cloudResponse]) => {
         setCatalog(catalogResponse.entries ?? []);
         setAtlas(atlasResponse);
+        setModIconManifest(modIconResponse);
         setDesktopIconSettings(projectSettings.ui_preferences?.icon_surfaces ?? null);
         setMobileIconSettings(projectSettings.ui_preferences?.mobile_icon_surfaces ?? null);
         setCloudFiles(cloudResponse.files ?? []);
@@ -372,29 +371,27 @@ export function CubixCraftWorkspace() {
       });
   }, [catalogByRaw, fileRecipes, recipeSearch]);
 
-  const atlasIndex = useMemo(() => {
-    const byKeyMeta = new Map<string, ItemPanelAtlasEntry>();
-    Object.values(atlas?.entries ?? {}).forEach((entry) => byKeyMeta.set(`${entry.item_key}:${entry.meta ?? 0}`, entry));
-    return byKeyMeta;
-  }, [atlas]);
-
-  function atlasStyle(raw: string): CSSProperties | undefined {
-    if (!atlas) return undefined;
-    const parsed = parseAtlasRaw(raw);
-    const entry = atlas.entries[raw] ?? (parsed ? atlasIndex.get(`${parsed.key}:${parsed.meta}`) ?? atlasIndex.get(`${parsed.key}:0`) : undefined);
-    if (!entry || !atlas.image_url) return undefined;
-    return {
-      backgroundImage: `url(${atlas.image_url})`,
-      backgroundPosition: `-${entry.x}px -${entry.y}px`,
-      backgroundSize: `${atlas.columns * atlas.tile_size}px ${atlas.rows * atlas.tile_size}px`
-    };
-  }
+  const modIconCandidatesByRaw = useMemo(() => buildModIconCandidates(modIconManifest, catalog.map((item) => ({
+    key: item.key,
+    meta: item.meta,
+    displayRu: item.display_ru,
+    displayEn: item.display_en,
+    raw: item.raw
+  }))), [catalog, modIconManifest]);
+  const atlasLookup = useMemo(() => createAtlasLookup({
+    primaryAtlas: atlas,
+    modIconManifest,
+    modIconCandidatesByRaw,
+    fallbackIconsByRaw: new Map(catalog.map((item) => [item.raw, item.icon_url]))
+  }), [atlas, catalog, modIconCandidatesByRaw, modIconManifest]);
 
   function itemVisual(raw: string, surface: IconSurfaceSettings) {
     const item = catalogByRaw.get(raw);
-    const atlasIcon = positionedIconStyle(atlasStyle(raw), surface);
+    const resolved = atlasLookup.resolve(raw, { surface: 'cubixCraftGrid', preferredSize: 32 });
+    const atlasIcon = positionedIconStyle(resolved?.style, surface);
     if (atlasIcon) return <span className="cell-atlas-icon" style={atlasIcon} aria-hidden="true" />;
-    if (item?.icon_url) return <img src={item.icon_url} alt="" style={{ width: surface.icon, height: surface.icon, objectFit: 'contain' }} />;
+    const iconUrl = resolved?.candidate.source === 'fallback' ? resolved.candidate.imageUrl : item?.icon_url;
+    if (iconUrl) return <img src={iconUrl} alt="" style={{ width: surface.icon, height: surface.icon, objectFit: 'contain' }} />;
     return raw ? <span style={{ opacity: 0.6 }}>?</span> : null;
   }
 
@@ -785,7 +782,9 @@ export function CubixCraftWorkspace() {
           <input aria-label="cubixcraft-nei-search" placeholder="Поиск NEI" value={search} onChange={(event) => setSearch(event.target.value)} style={{ width: '100%', marginBottom: 8 }} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, minmax(34px, 1fr))', gap: 4, maxHeight: 'calc(100vh - 190px)', overflow: 'auto', paddingRight: 2 }}>
             {visibleItems.map((item) => {
-              const style = atlasStyle(item.raw);
+              const resolvedIcon = atlasLookup.resolve(item.raw, { surface: 'nei', preferredSize: 32 });
+              const style = resolvedIcon?.style;
+              const iconUrl = resolvedIcon?.candidate.source === 'fallback' ? resolvedIcon.candidate.imageUrl : item.icon_url;
               return (
                 <button
                   key={`${item.raw}-${item.meta}`}
@@ -802,8 +801,8 @@ export function CubixCraftWorkspace() {
                   style={{ minWidth: 34, minHeight: 34, padding: 2, position: 'relative' }}
                 >
                   {style ? <span className="nei-atlas-icon" style={style} aria-hidden="true" /> : null}
-                  {!style && item.icon_url ? <img src={item.icon_url} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /> : null}
-                  {!style && !item.icon_url ? '?' : null}
+                  {!style && iconUrl ? <img src={iconUrl} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /> : null}
+                  {!style && !iconUrl ? '?' : null}
                 </button>
               );
             })}

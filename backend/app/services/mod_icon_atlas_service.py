@@ -387,6 +387,8 @@ class ModIconAtlasService:
                     'y': y,
                     'w': tile_size,
                     'h': tile_size,
+                    'quality': self._png_tools.inspect_png_bytes(source.content),
+                    'source': 'zip',
                 }
                 atlas_entries[source.key] = entry
                 manifest_entries[source.key] = entry

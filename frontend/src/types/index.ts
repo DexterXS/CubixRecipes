@@ -103,6 +103,8 @@ export interface ItemPanelAtlasEntry {
   display_name: string;
   item_key: string;
   meta: number | null;
+  quality?: 'good' | 'question' | 'empty' | 'invalid' | string;
+  source?: 'primary' | 'zip' | 'additional' | 'fallback' | string;
 }
 
 export interface ItemPanelAtlas {
@@ -261,6 +263,8 @@ export interface ModIconAtlasEntry {
   y: number;
   w: number;
   h: number;
+  quality?: 'good' | 'question' | 'empty' | 'invalid' | string;
+  source?: 'primary' | 'zip' | 'additional' | 'fallback' | string;
 }
 
 export interface ModIconAtlasManifest {

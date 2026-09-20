@@ -327,6 +327,16 @@ Last full rebuild: 2026-06-29
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
   - Direct static fetch: `/itempanel.csv`.
+  - Uses the shared Atlas v2 lookup for NEI, recipe, draft, suggestion, and held-item rendering; legacy endpoint/cache shapes remain adapters at the page boundary.
+
+- `frontend/src/services/atlas/`
+  - Shared frontend Atlas v2 foundation used by the main app, CubixCraft, and the item database.
+  - `types.ts`: candidate quality/source/surface contracts and lookup inputs.
+  - `candidateSelector.ts`: deterministic quality, match, source, size, and revision ordering; invalid candidates never render.
+  - `atlasLookup.ts`: normalizes primary itempanel, ZIP, and direct fallback candidates into O(1) raw/key indexes and produces atlas CSS styles.
+  - `modIconMatching.ts`: maps all available x32/x256 ZIP entries to catalog raws without discarding a second size.
+  - `atlasPageUrlResolver.ts`: shared server-aware immutable atlas URL normalization.
+  - `candidateSelector.test.ts`: focused quality/source/size and multi-source selection coverage.
 
 ### Auth and Server Selection
 - `frontend/src/auth/AuthGate.tsx`

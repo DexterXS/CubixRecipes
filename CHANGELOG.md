@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added the first Atlas v2 slice: one shared multi-source candidate selector now combines primary itempanel, ZIP x32/x256, and direct fallback icons, prefers good candidates over question/empty icons, respects the requested size, and keeps URL/server normalization in one service. CubixCraft, the main editor, and the item database use it; atlas manifests now include quality/source metadata.
 - Restored the focused drafts workspace behavior from the archived version: exact NBT variant matching, per-card raw output details, primary-recipe ★ selection, Ctrl/⌘ multi-selection, and batch draft export without changing saved recipe data.
 - Added immediate bundled itempanel catalog rendering while the backend catalog refreshes in the background, so NEI cells are present before API metadata or icon assets finish loading.
 - Added revisioned server-side mod atlas publications and browser Cache Storage for the manifest plus every generated x32/x256 atlas page, so additional pages reuse local cached object URLs after reloads.

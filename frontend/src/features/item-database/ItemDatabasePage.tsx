@@ -9,6 +9,7 @@ import {
   getItemIntelligenceSchema,
   getItemIntelligenceSummary,
   getItemPanelAtlas,
+  getModIconAtlasManifest,
   getItemPriceHistory,
   runBasicEnrichmentBatch,
   searchItemIntelligence,
@@ -22,7 +23,9 @@ import {
   type PassportField,
   type PassportGroup
 } from '../../services/api';
-import type { ItemPanelAtlas, ItemPanelAtlasEntry } from '../../types';
+import type { ModIconAtlasManifest } from '../../types';
+import { createAtlasLookup } from '../../services/atlas/atlasLookup';
+import { buildModIconCandidates } from '../../services/atlas/modIconMatching';
 import { PriceImportDialog } from './PriceImportDialog';
 import './ItemDatabasePage.css';
 
@@ -70,7 +73,8 @@ export function ItemDatabasePage() {
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [mods, setMods] = useState<ItemIntelligenceMod[]>([]);
-  const [atlas, setAtlas] = useState<ItemPanelAtlas | null>(null);
+  const [atlas, setAtlas] = useState<Awaited<ReturnType<typeof getItemPanelAtlas>>>(null);
+  const [modIconManifest, setModIconManifest] = useState<ModIconAtlasManifest | null>(null);
   const [summary, setSummary] = useState<ItemIntelligenceSummary>(EMPTY_SUMMARY);
   const [schema, setSchema] = useState<PassportGroup[]>([]);
   const [selected, setSelected] = useState<ItemIntelligenceRecord | null>(null);
@@ -105,10 +109,11 @@ export function ItemDatabasePage() {
     const run = async () => {
       try {
         setLoading(true);
-        const [sum, schemaResponse, atlasResponse, stageA] = await Promise.all([
+        const [sum, schemaResponse, atlasResponse, modIconResponse, stageA] = await Promise.all([
           getItemIntelligenceSummary(),
           getItemIntelligenceSchema(),
           getItemPanelAtlas().catch(() => null),
+          getModIconAtlasManifest().catch(() => null),
           getBasicEnrichmentStatus().catch(() => null)
         ]);
         if (cancelled) return;
@@ -126,6 +131,7 @@ export function ItemDatabasePage() {
         setBasicRun(stageA);
         setSchema(schemaResponse.groups || []);
         setAtlas(atlasResponse);
+        setModIconManifest(modIconResponse);
         setItems(indexResponse.items || []);
         setTotal(indexResponse.total || 0);
         setHasMore(Boolean(indexResponse.has_more));
@@ -155,22 +161,26 @@ export function ItemDatabasePage() {
     return () => window.clearTimeout(timer);
   }, [query, modFilter]);
 
-  const atlasIndex = useMemo(() => {
-    const map = new Map<string, ItemPanelAtlasEntry>();
-    Object.values(atlas?.entries ?? {}).forEach((entry) => map.set(`${String(entry.item_key || '').toLowerCase()}:${entry.meta ?? 0}`, entry));
-    return map;
-  }, [atlas]);
+  const modIconCandidatesByRaw = useMemo(() => buildModIconCandidates(modIconManifest, items.map((entry) => ({
+    key: entry.registry_key,
+    meta: entry.meta,
+    displayRu: entry.display_ru,
+    displayEn: entry.display_en,
+    raw: entry.raw ?? `<${entry.registry_key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`
+  }))), [items, modIconManifest]);
+  const atlasLookup = useMemo(() => createAtlasLookup({ primaryAtlas: atlas, modIconManifest, modIconCandidatesByRaw }), [atlas, modIconCandidatesByRaw, modIconManifest]);
 
   const atlasStyle = (entry: ItemIntelligenceRecord, size: number): CSSProperties | undefined => {
-    if (!atlas?.image_url) return undefined;
-    const atlasEntry = atlasIndex.get(`${entry.registry_key.toLowerCase()}:${entry.meta ?? 0}`) ?? atlasIndex.get(`${entry.registry_key.toLowerCase()}:0`);
-    if (!atlasEntry) return undefined;
-    const scale = size / atlas.tile_size;
+    const raw = entry.raw ?? `<${entry.registry_key}${entry.meta > 0 ? `:${entry.meta}` : ''}>`;
+    const resolved = atlasLookup.resolve(raw, { surface: 'diagnostics', preferredSize: size >= 128 ? 256 : 32 });
+    if (!resolved?.style) return undefined;
+    const scale = size / 32;
     return {
-      width: size, height: size,
-      backgroundImage: `url(${atlas.image_url})`, backgroundRepeat: 'no-repeat',
-      backgroundPosition: `-${atlasEntry.x * scale}px -${atlasEntry.y * scale}px`,
-      backgroundSize: `${atlas.columns * atlas.tile_size * scale}px ${atlas.rows * atlas.tile_size * scale}px`,
+      ...resolved.style,
+      width: 32,
+      height: 32,
+      transform: scale === 1 ? undefined : `scale(${scale})`,
+      transformOrigin: 'center',
       imageRendering: 'pixelated'
     };
   };

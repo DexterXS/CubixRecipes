@@ -39,8 +39,11 @@ import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTe
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
+import { createAtlasLookup } from '../services/atlas/atlasLookup';
+import { resolveAtlasPageUrl } from '../services/atlas/atlasPageUrlResolver';
+import { buildModIconCandidates } from '../services/atlas/modIconMatching';
 import { can } from '../auth/permissions';
-import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ItemPanelAtlasEntry, ModIconAdminStatus, ModIconAtlasEntry, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
+import { AccessControlSettings, AppTab, AuthUser, CellValue, CustomItem, DensityMode, DisplayMode, EditorMode, ItemCaseAliasReport, ItemCatalogEntry, ItemPanelAtlas, ModIconAdminStatus, ModIconAtlasManifest, NeiFavoritesProfile, OreDictGroupsResponse, PanelId, PanelLayoutItem, ProjectSettings, RecipeDraftTemplate, RecipeView, ThemeMode, UiLanguage, UiPreferences, UiScale, UserRole, WorkspaceLayout, ZsCloudBackup, ZsCloudFile } from '../types';
 import { formatFileSize } from '../utils/formatFileSize';
 
 const defaultMatrix: CellValue[][] = [
@@ -1065,129 +1068,7 @@ function customItemToEntry(item: CustomItem): ItemPanelEntry {
 }
 
 function normalizeAtlasImageUrl(imageUrl: string): string {
-  let url = imageUrl;
-  if (imageUrl.startsWith('/api/')) {
-    url = apiPath(imageUrl.slice(4));
-  }
-  const activeServerId = window.localStorage.getItem('active_server_id');
-  if (activeServerId && (url.startsWith('http') || url.startsWith('/'))) {
-    const separator = url.includes('?') ? '&' : '?';
-    url = `${url}${separator}server=${encodeURIComponent(activeServerId)}`;
-  }
-  return url;
-}
-
-function resolveAtlasEntryFromRaw(atlas: ItemPanelAtlas | null | undefined, raw: string, wildcardTick = 0): ItemPanelAtlasEntry | undefined {
-  const exact = atlas?.entries[raw];
-  if (exact) return exact;
-  const parsed = parseItemRaw(raw);
-  if (!atlas || !parsed) return undefined;
-  const entries = Object.values(atlas.entries);
-  const byKeyMeta = entries.find((entry) => entry.item_key === parsed.key && (entry.meta ?? 0) === (parsed.meta ?? 0));
-  const byKeyZero = entries.find((entry) => entry.item_key === parsed.key && (entry.meta ?? 0) === 0);
-  const firstByKey = entries.find((entry) => entry.item_key === parsed.key);
-  if (parsed.wildcardMeta) {
-    const variants = entries
-      .filter((entry) => entry.item_key === parsed.key)
-      .sort((left, right) => (left.meta ?? 0) - (right.meta ?? 0));
-    return variants[wildcardTick % Math.max(variants.length, 1)] ?? firstByKey ?? byKeyZero;
-  }
-  return atlas.entries[`<${parsed.key}${(parsed.meta ?? 0) > 0 ? `:${parsed.meta}` : ''}>`]
-    ?? byKeyMeta
-    ?? byKeyZero
-    ?? firstByKey;
-}
-
-function buildAtlasIconStyle(atlas: ItemPanelAtlas, entry: ItemPanelAtlasEntry): CSSProperties {
-  return {
-    backgroundImage: `url(${normalizeAtlasImageUrl(atlas.image_url)})`,
-    backgroundPosition: `-${entry.x}px -${entry.y}px`,
-    backgroundSize: `${atlas.columns * atlas.tile_size}px ${atlas.rows * atlas.tile_size}px`
-  };
-}
-
-function normalizeModIconImageUrl(imageUrl: string): string {
-  const publicUrl = imageUrl.replace('/api/admin/mod-icons/atlases/', '/api/mod-icons/atlases/');
-  return normalizeAtlasImageUrl(publicUrl);
-}
-
-function normalizeModIconLabel(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[_-]+/g, ' ')
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function modIconBaseLabel(iconName: string): string {
-  const leaf = iconName.split('/').pop() ?? iconName;
-  return normalizeModIconLabel(leaf.replace(/_\d+$/, ''));
-}
-
-function modIconDuplicateOrder(iconName: string): number {
-  const match = (iconName.split('/').pop() ?? iconName).match(/_(\d+)$/);
-  return match ? Number.parseInt(match[1], 10) : 1;
-}
-
-function buildModIconStyle(manifest: ModIconAtlasManifest | null, entry: ModIconAtlasEntry | undefined): CSSProperties | undefined {
-  if (!manifest || !entry) return undefined;
-  const atlas = manifest.atlases.find((item) => item.file === entry.atlasFile);
-  const scale = 32 / Math.max(entry.w, 1);
-  return {
-    backgroundImage: `url(${normalizeModIconImageUrl(entry.image_url)})`,
-    backgroundPosition: `-${entry.x * scale}px -${entry.y * scale}px`,
-    backgroundSize: `${(atlas?.columns ?? 1) * entry.w * scale}px ${(atlas?.rows ?? 1) * entry.h * scale}px`
-  };
-}
-
-function buildModIconMatches(manifest: ModIconAtlasManifest | null, entries: ItemPanelEntry[]): Map<string, ModIconAtlasEntry> {
-  const result = new Map<string, ModIconAtlasEntry>();
-  if (!manifest) return result;
-  const iconGroups = new Map<string, ModIconAtlasEntry[]>();
-  const x32Icons = Object.values(manifest.entries.x32 ?? {});
-  const x32Keys = new Set(x32Icons.map((icon) => icon.key ?? `${icon.modid}/${icon.iconName ?? ''}`));
-  const x256FallbackIcons = Object.values(manifest.entries.x256 ?? {}).filter((icon) => !x32Keys.has(icon.key ?? `${icon.modid}/${icon.iconName ?? ''}`));
-  const orderedIcons = [...x32Icons, ...x256FallbackIcons]
-    .sort((left, right) => left.size - right.size || modIconDuplicateOrder(left.iconName ?? '') - modIconDuplicateOrder(right.iconName ?? '') || (left.iconName ?? '').localeCompare(right.iconName ?? '', 'ru', { numeric: true }));
-  orderedIcons.forEach((icon) => {
-    const label = modIconBaseLabel(icon.iconName ?? icon.key ?? icon.modid);
-    if (!label) return;
-    const groupKey = `${icon.modid.toLowerCase()}|${label}`;
-    const group = iconGroups.get(groupKey) ?? [];
-    group.push(icon);
-    iconGroups.set(groupKey, group);
-  });
-
-  const occurrenceByLabel = new Map<string, number>();
-  entries.forEach((entry) => {
-    const [modid, itemPath = ''] = entry.key.split(':');
-    if (!modid) return;
-    const labels = [
-      entry.displayRu,
-      entry.displayEn,
-      itemPath.split('/').pop() ?? itemPath,
-      itemPath,
-    ].map(normalizeModIconLabel).filter(Boolean);
-    let icon: ModIconAtlasEntry | undefined;
-    for (const label of labels) {
-      const groupKey = `${modid.toLowerCase()}|${label}`;
-      const group = iconGroups.get(groupKey);
-      if (!group?.length) continue;
-      const occurrence = occurrenceByLabel.get(groupKey) ?? 0;
-      icon = group[Math.min(occurrence, group.length - 1)];
-      occurrenceByLabel.set(groupKey, occurrence + 1);
-      break;
-    }
-    if (!icon) return;
-    const raw = itemPanelRaw(entry);
-    result.set(raw, icon);
-    if (entry.meta === 0) {
-      result.set(`<${entry.key}:0>`, icon);
-    }
-  });
-  return result;
+  return resolveAtlasPageUrl(imageUrl);
 }
 
 function describeElement(element: Element | null): string {
@@ -3652,7 +3533,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     });
     return [...unique.values()];
   }, [neiCatalogEntries]);
-  const modIconByRaw = useMemo(() => buildModIconMatches(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
+  const modIconByRaw = useMemo(() => buildModIconCandidates(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
+  const atlasLookup = useMemo(() => createAtlasLookup({
+    primaryAtlas: itemPanelAtlas,
+    modIconManifest,
+    modIconCandidatesByRaw: modIconByRaw,
+    fallbackIconsByRaw: new Map(Object.entries(itemSearchIcons))
+  }), [itemPanelAtlas, itemSearchIcons, modIconByRaw, modIconManifest]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();
@@ -5655,51 +5542,31 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderCraftItemIcon(raw: string, iconUrl?: string | null, animated?: boolean, frameTime?: number, title?: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
-    if (modIconStyle) {
-      return <span className="cell-atlas-icon output-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    const resolved = atlasLookup.resolve(raw, { surface: 'preview', preferredSize: 32, wildcardTick: wildcardCycleTick });
+    if (resolved?.style && resolved.candidate.source !== 'fallback') {
+      return <span className="cell-atlas-icon output-atlas-icon" style={resolved.style} aria-hidden="true" />;
     }
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
-    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
-    if (atlasStyle) {
-      return <span className="cell-atlas-icon output-atlas-icon" style={atlasStyle} aria-hidden="true" />;
-    }
-    if (iconUrl) {
-      return <AnimatedIcon iconUrl={iconUrl} alt={title ?? raw} animated={Boolean(animated)} frameTime={frameTime ?? 1} animationsEnabled={areAnimationsEnabled} />;
+    const resolvedIconUrl = resolved?.candidate.source === 'fallback' ? resolved.candidate.imageUrl : iconUrl;
+    if (resolvedIconUrl) {
+      return <AnimatedIcon iconUrl={resolvedIconUrl} alt={title ?? raw} animated={Boolean(animated)} frameTime={frameTime ?? 1} animationsEnabled={areAnimationsEnabled} />;
     }
     return <span>?</span>;
   }
 
   function renderHeldItemIcon(raw: string) {
-    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
-    if (modIconStyle) {
-      return <span className="held-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    const resolved = atlasLookup.resolve(raw, { surface: 'recipeGrid', preferredSize: 32, wildcardTick: wildcardCycleTick });
+    if (resolved?.style && resolved.candidate.source !== 'fallback') {
+      return <span className="held-atlas-icon" style={resolved.style} aria-hidden="true" />;
     }
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
-    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
-    const iconUrl = itemSearchIcons[raw];
-    if (atlasStyle) {
-      return <span className="held-atlas-icon" style={atlasStyle} aria-hidden="true" />;
-    }
+    const iconUrl = resolved?.candidate.source === 'fallback' ? resolved.candidate.imageUrl : itemSearchIcons[raw];
     if (iconUrl) {
       return <img src={iconUrl} alt="" />;
     }
     return <span>?</span>;
   }
 
-  function getModIconEntryForRaw(raw: string): ModIconAtlasEntry | undefined {
-    const direct = modIconByRaw.get(raw);
-    if (direct) return direct;
-    const parsed = parseItemRaw(raw);
-    if (!parsed) return undefined;
-    const exactRaw = `<${parsed.key}${parsed.meta !== null && parsed.meta > 0 ? `:${parsed.meta}` : ''}>`;
-    return modIconByRaw.get(exactRaw)
-      ?? modIconByRaw.get(`<${parsed.key}>`)
-      ?? modIconByRaw.get(`<${parsed.key}:0>`);
-  }
-
   function resolveRecipeGridIconStyle(raw: string): CSSProperties | undefined {
-    return buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
+    return atlasLookup.getIconStyle(raw, { surface: 'recipeGrid', preferredSize: 32, wildcardTick: wildcardCycleTick });
   }
 
   function renderRecipeBuilderPanel() {
@@ -6195,7 +6062,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renderNeiPanel() {
-    const atlasImageUrl = itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '';
     return (
       <div className="workspace-panel-shell panel-nei">
         <Panel title="NEI предметы" subtitle="Поиск и перетаскивание в рецепт" className="nei-panel">
@@ -6217,20 +6083,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               if (overrideGroup) {
                 insertRaw = `<${overrideGroup}>`;
               }
-              const iconUrl = itemSearchIcons[raw];
-              const modIconStyle = buildModIconStyle(modIconManifest, modIconByRaw.get(raw));
-              const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, raw, wildcardCycleTick);
+              const resolvedIcon = atlasLookup.resolve(raw, { surface: 'nei', preferredSize: 32, wildcardTick: wildcardCycleTick });
+              const atlasStyle = resolvedIcon?.style && resolvedIcon.candidate.source !== 'fallback' ? resolvedIcon.style : undefined;
+              const iconUrl = resolvedIcon?.candidate.source === 'fallback' ? resolvedIcon.candidate.imageUrl : itemSearchIcons[raw];
               const availability = getRecipeAvailability(raw);
               const nbtClass = itemPanelEntryHasNbtTag(entry) ? 'has-nbt' : 'no-nbt';
               const customForRaw = customItems.find((item) => item.item_raw === raw);
               const isFavorite = activeFavoriteRawSet.has(insertRaw) || activeFavoriteRawSet.has(raw);
-              const atlasStyle = itemPanelAtlas && atlasEntry
-                ? {
-                  backgroundImage: `url(${atlasImageUrl})`,
-                  backgroundPosition: `-${atlasEntry.x}px -${atlasEntry.y}px`,
-                  backgroundSize: `${itemPanelAtlas.columns * itemPanelAtlas.tile_size}px ${itemPanelAtlas.rows * itemPanelAtlas.tile_size}px`
-                }
-                : undefined;
               return (
                 <NeiIconItem
                   key={itemPanelEntryIdentity(entry)}
@@ -6239,10 +6098,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                   ariaLabelPrefix="nei-item"
                   className={`nei-item recipe-${availability} ${nbtClass} ${entry.customItemId ? 'is-custom' : ''} ${isFavorite ? 'is-favorite' : ''} ${heldItemRaw === insertRaw ? 'is-held' : ''}`.trim()}
                   icon={(
-                    <span className={`nei-icon ${modIconStyle || atlasEntry || iconUrl ? 'has-icon' : 'is-loading'}`}>
-                      {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : null}
-                      {!modIconStyle && atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
-                      {!modIconStyle && !atlasStyle && iconUrl ? (
+                    <span className={`nei-icon ${atlasStyle || iconUrl ? 'has-icon' : 'is-loading'}`}>
+                      {atlasStyle ? <span className="nei-atlas-icon" style={atlasStyle} /> : null}
+                      {!atlasStyle && iconUrl ? (
                         <img
                           src={iconUrl}
                           alt=""
@@ -6885,7 +6743,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         uploading={modIconUploading}
         generating={modIconGenerating}
         archiveAction={modIconArchiveAction}
-        normalizeImageUrl={normalizeModIconImageUrl}
+        normalizeImageUrl={resolveAtlasPageUrl}
         onArchiveFiles={(files) => void handleModIconArchiveFiles(files)}
         onRefreshStatus={() => void refreshModIconStatus()}
         onGenerateAtlases={() => void handleGenerateModIconAtlases()}
@@ -7362,16 +7220,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       }
     }
 
-    const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(resolvedRaw));
-    if (modIconStyle) {
-      return <span className="nei-atlas-icon" style={modIconStyle} aria-hidden="true" />;
+    const resolvedIcon = atlasLookup.resolve(resolvedRaw, { surface: 'diagnostics', preferredSize: 32, wildcardTick: wildcardCycleTick });
+    if (resolvedIcon?.style && resolvedIcon.candidate.source !== 'fallback') {
+      return <span className="nei-atlas-icon" style={resolvedIcon.style} aria-hidden="true" />;
     }
-    const atlasEntry = resolveAtlasEntryFromRaw(itemPanelAtlas, resolvedRaw, wildcardCycleTick);
-    const atlasStyle = itemPanelAtlas && atlasEntry ? buildAtlasIconStyle(itemPanelAtlas, atlasEntry) : undefined;
-    const iconUrl = itemSearchIcons[resolvedRaw];
-    if (atlasStyle) {
-      return <span className="nei-atlas-icon" style={atlasStyle} aria-hidden="true" />;
-    }
+    const iconUrl = resolvedIcon?.candidate.source === 'fallback' ? resolvedIcon.candidate.imageUrl : itemSearchIcons[resolvedRaw];
     if (iconUrl) {
       return <img src={iconUrl} alt="" onError={() => setItemSearchIcons((current) => ({ ...current, [resolvedRaw]: null }))} />;
     }
@@ -8217,8 +8070,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                       <button key={itemPanelEntryIdentity(entry)} type="button" className="suggestion-item suggestion-item-with-icon" onClick={() => applyItemSearchSuggestion(entry)}>
                         {(() => {
                           const raw = itemPanelRaw(entry);
-                          const iconUrl = itemSearchIcons[raw];
-                          const modIconStyle = buildModIconStyle(modIconManifest, getModIconEntryForRaw(raw));
+                          const resolvedIcon = atlasLookup.resolve(raw, { surface: 'diagnostics', preferredSize: 32, wildcardTick: wildcardCycleTick });
+                          const modIconStyle = resolvedIcon?.style && resolvedIcon.candidate.source !== 'fallback' ? resolvedIcon.style : undefined;
+                          const iconUrl = resolvedIcon?.candidate.source === 'fallback' ? resolvedIcon.candidate.imageUrl : itemSearchIcons[raw];
                           return (
                             <span className="suggestion-icon-slot" aria-hidden="true">
                               {modIconStyle ? <span className="nei-atlas-icon" style={modIconStyle} /> : iconUrl ? <img src={iconUrl} alt="" loading="lazy" /> : '□'}
