@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import App from './pages/App';
+import { buildBootstrapCacheScope, writeCachedNeiFavorites } from './services/bootstrapCache';
 import { AuthUser } from './types';
 
 const adminUser: AuthUser = {
@@ -1111,6 +1112,29 @@ test('moderator can toggle NEI favorites with the configured hotkey', async () =
   fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
 
   await waitFor(() => expect(mockNeiFavorites.tabs[0].items).toHaveLength(0));
+});
+
+test('restores cached NEI favorites before the backend refresh completes', () => {
+  writeCachedNeiFavorites(buildBootstrapCacheScope(undefined, moderatorUser.email), {
+    activeTabId: 'default',
+    favoriteHotkey: 'A',
+    hiddenPatterns: [],
+    tabs: [{ id: 'default', name: 'Основное', items: [{ raw: '<minecraft:stick>', addedAt: 1 }] }]
+  });
+  const originalFetch = global.fetch;
+  global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+    if (String(input) === '/api/nei/favorites') {
+      return new Promise<Response>(() => undefined);
+    }
+    return originalFetch(input, init);
+  });
+
+  try {
+    render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+    expect(screen.getByLabelText('favorite-item-<minecraft:stick>')).toBeTruthy();
+  } finally {
+    global.fetch = originalFetch;
+  }
 });
 
 test('NEI favorites use browser tabs and hide settings behind menu', async () => {

@@ -37,6 +37,7 @@ import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled }
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemCatalogVersion, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
+import { buildBootstrapCacheScope, hydrateCachedNeiFavorites, readCachedNeiFavorites, writeCachedNeiFavorites } from '../services/bootstrapCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
 import { createAtlasLookup, hasBackendZipRegistry } from '../services/atlas/atlasLookup';
@@ -1427,12 +1428,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const localDraftStorageKeyCurrent = serverLocalDraftStorageKey(authUser.email, activeServerId, sharedCraftDraftEnabled);
   const itemPanelCacheKey = serverScopedStorageKey(ITEMPANEL_CACHE_KEY, activeServerId);
   const itemAssetCacheScope = buildItemAssetCacheScope(activeServerId, authUser.email);
+  const bootstrapCacheScope = buildBootstrapCacheScope(activeServerId, authUser.email);
   const itemSearchIconCacheKey = serverScopedStorageKey(ITEM_SEARCH_ICON_CACHE_KEY, activeServerId);
   const localDraftRef = useRef<LocalDraftPayload | null | undefined>(undefined);
   if (localDraftRef.current === undefined) {
     localDraftRef.current = loadLocalDraftPayload(authUser.email, localDraftStorageKeyCurrent);
   }
   const restoredDraft = localDraftRef.current?.state ?? null;
+  const initialNeiFavoritesRef = useRef<NeiFavoritesProfile | null | undefined>(undefined);
+  if (initialNeiFavoritesRef.current === undefined) {
+    initialNeiFavoritesRef.current = readCachedNeiFavorites(bootstrapCacheScope);
+  }
+  const initialNeiFavorites = initialNeiFavoritesRef.current ?? defaultNeiFavoritesProfile;
 
   const [input, setInput] = useState(restoredDraft?.input ?? '');
   const [matrix, setMatrix] = useState<CellValue[][]>(() => restoredDraft ? cloneMatrix(restoredDraft.matrix) : cloneMatrix(defaultMatrix));
@@ -1554,8 +1561,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return {};
     }
   });
-  const [neiFavorites, setNeiFavorites] = useState<NeiFavoritesProfile>(defaultNeiFavoritesProfile);
-  const [neiFavoritesStatus, setNeiFavoritesStatus] = useState('');
+  const [neiFavorites, setNeiFavorites] = useState<NeiFavoritesProfile>(initialNeiFavorites);
+  const [neiFavoritesStatus, setNeiFavoritesStatus] = useState(initialNeiFavoritesRef.current ? 'Обновляю избранное...' : '');
   const [newFavoriteTabName, setNewFavoriteTabName] = useState('');
   const [neiHiddenPatternsDraft, setNeiHiddenPatternsDraft] = useState('');
   const [taskRawLookup, setTaskRawLookup] = useState<Set<string>>(() => new Set());
@@ -1617,7 +1624,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const autoParseTimerRef = useRef<number | null>(null);
   const settingsRetryTimerRef = useRef<number | null>(null);
   const neiFavoritesSaveTimerRef = useRef<number | null>(null);
-  const neiFavoritesRef = useRef<NeiFavoritesProfile>(defaultNeiFavoritesProfile);
+  const neiFavoritesRef = useRef<NeiFavoritesProfile>(initialNeiFavorites);
   const latestUiPreferencesRef = useRef<UiPreferences>(defaultUiPreferences);
   const hasLocalUiChangesRef = useRef(false);
   const lastRequestedParseRef = useRef('');
@@ -2814,17 +2821,29 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
 
     async function loadFavorites() {
-      setNeiFavoritesStatus('Загружаю избранное...');
+      let remoteApplied = false;
+      const hasLocalCachedProfile = Boolean(initialNeiFavoritesRef.current);
+      setNeiFavoritesStatus(hasLocalCachedProfile ? 'Обновляю избранное...' : 'Загружаю избранное...');
+      void hydrateCachedNeiFavorites(bootstrapCacheScope).then((cachedProfile) => {
+        if (cancelled || remoteApplied || !cachedProfile) return;
+        const normalizedCached = normalizeNeiFavoritesProfile(cachedProfile);
+        neiFavoritesRef.current = normalizedCached;
+        setNeiFavorites(normalizedCached);
+        setNeiHiddenPatternsDraft(normalizedCached.hiddenPatterns.join('\n'));
+        setNeiFavoritesStatus('Обновляю избранное...');
+      });
       try {
         const profile = normalizeNeiFavoritesProfile(await getNeiFavorites());
+        remoteApplied = true;
         if (cancelled) return;
         neiFavoritesRef.current = profile;
         setNeiFavorites(profile);
         setNeiHiddenPatternsDraft(profile.hiddenPatterns.join('\n'));
+        writeCachedNeiFavorites(bootstrapCacheScope, profile);
         setNeiFavoritesStatus('Избранное загружено');
       } catch (error) {
         if (cancelled) return;
-        setNeiFavoritesStatus(error instanceof Error ? error.message : String(error));
+        setNeiFavoritesStatus(hasLocalCachedProfile ? 'Не удалось обновить: используется кеш' : error instanceof Error ? error.message : String(error));
       }
     }
 
@@ -2832,7 +2851,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return () => {
       cancelled = true;
     };
-  }, [authUser.email, canUseNeiFavorites]);
+  }, [authUser.email, bootstrapCacheScope, canUseNeiFavorites]);
 
   useEffect(() => () => {
     if (persistTimerRef.current !== null) {
@@ -3266,6 +3285,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (!canUseNeiFavorites) {
       return;
     }
+    writeCachedNeiFavorites(bootstrapCacheScope, normalized);
     if (neiFavoritesSaveTimerRef.current !== null) {
       window.clearTimeout(neiFavoritesSaveTimerRef.current);
     }
@@ -3277,6 +3297,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           neiFavoritesRef.current = normalizedSaved;
           setNeiFavorites(normalizedSaved);
           setNeiHiddenPatternsDraft(normalizedSaved.hiddenPatterns.join('\n'));
+          writeCachedNeiFavorites(bootstrapCacheScope, normalizedSaved);
           setNeiFavoritesStatus('Избранное сохранено');
         })
         .catch((error) => {

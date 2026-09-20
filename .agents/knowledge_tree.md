@@ -362,6 +362,9 @@ Last full rebuild: 2026-06-29
 - `frontend/src/auth/AuthGate.tsx`
   - Loads current user, hydrates the last confirmed session from session storage during F5 reloads, renders auth/offline states, and calls logout.
   - Uses `getCurrentUser`, `getGoogleLoginUrl`, `logoutCurrentUser`.
+- `frontend/src/services/bootstrapCache.ts`
+  - Stores server-and-user scoped bootstrap snapshots for small critical startup data; currently restores NEI favorites synchronously from localStorage and mirrors them to IndexedDB for asynchronous hydration.
+  - Owns cache schema validation and never stores authentication secrets.
 - `frontend/src/auth/permissions.ts`
   - Frontend role permission helper: `can`.
 - `frontend/src/auth/ServerSelect.tsx`
@@ -650,6 +653,7 @@ Last full rebuild: 2026-06-29
 - `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`
 - `getItemCatalog` -> `GET /api/itempanel/catalog`
 - `getItemCatalogVersion` -> `GET /api/itempanel/catalog/version`
+- `bootstrapCache` -> browser-local user/server bootstrap snapshot; backend remains authoritative and refreshes it in the background.
 - `uploadItemPanelCsv` -> `POST /api/admin/itempanel/csv`
 - `uploadItemPanelJson` -> `POST /api/admin/itempanel/json`
 - `mergeItemPanelFiles` -> `POST /api/admin/itempanel/merge`
