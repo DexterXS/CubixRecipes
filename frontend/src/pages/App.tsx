@@ -37,7 +37,7 @@ import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled }
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
 import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemCatalogVersion, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
-import { buildBootstrapCacheScope, hydrateCachedNeiFavorites, readCachedNeiFavorites, writeCachedNeiFavorites } from '../services/bootstrapCache';
+import { buildBootstrapCacheScope, hydrateCachedItemPanelCatalog, hydrateCachedNeiFavorites, readCachedNeiFavorites, writeCachedItemPanelCatalog, writeCachedNeiFavorites } from '../services/bootstrapCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
 import { createAtlasLookup, hasBackendZipRegistry } from '../services/atlas/atlasLookup';
@@ -208,6 +208,17 @@ type NeiContextMenuState = {
   y: number;
   customPickerOpen?: boolean;
 };
+
+function isCachedItemPanelEntry(value: unknown): value is ItemPanelEntry {
+  if (!value || typeof value !== 'object') return false;
+  const entry = value as Partial<ItemPanelEntry>;
+  return typeof entry.key === 'string'
+    && (entry.legacyId === null || typeof entry.legacyId === 'number')
+    && typeof entry.meta === 'number'
+    && typeof entry.hasNbt === 'boolean'
+    && typeof entry.displayRu === 'string'
+    && typeof entry.displayEn === 'string';
+}
 
 type TouchItemInspectionState = {
   raw: string;
@@ -1894,6 +1905,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     } catch {
       // Cache persistence is best-effort.
     }
+    if (summary?.catalog_fingerprint || uniqueEntries.length >= 100) {
+      writeCachedItemPanelCatalog(bootstrapCacheScope, uniqueEntries, summary ?? null);
+    }
   }
 
   async function refreshItemCatalogTranslations(): Promise<Record<string, unknown>> {
@@ -3013,6 +3027,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     async function loadItemPanelTranslations() {
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
       let cachedEntriesLoaded = false;
+      let cachedEntryCount = 0;
       let remoteCatalogApplied = false;
       let cachedCatalogFingerprint: string | null = null;
       try {
@@ -3024,12 +3039,33 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             : null;
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
             cachedEntriesLoaded = true;
+            cachedEntryCount = parsed.entries.length;
             setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
             setItemCatalogSummary(parsed.summary ?? null);
           }
         }
       } catch {
         // ignore corrupted cache
+      }
+
+      try {
+        const cachedCatalog = await hydrateCachedItemPanelCatalog(bootstrapCacheScope);
+        const cachedEntries = cachedCatalog?.entries.filter(isCachedItemPanelEntry) ?? [];
+        const cachedCatalogFingerprintFromIndexedDb = typeof cachedCatalog?.summary?.catalog_fingerprint === 'string'
+          ? cachedCatalog.summary.catalog_fingerprint
+          : null;
+        const shouldUseIndexedDbCatalog = !cachedEntriesLoaded
+          || cachedEntries.length > cachedEntryCount
+          || (!cachedCatalogFingerprint && Boolean(cachedCatalogFingerprintFromIndexedDb));
+        if (!cancelled && cachedEntries.length && shouldUseIndexedDbCatalog) {
+          cachedEntriesLoaded = true;
+          cachedEntryCount = cachedEntries.length;
+          cachedCatalogFingerprint = cachedCatalogFingerprintFromIndexedDb;
+          setItemPanelTranslations(buildItemPanelTranslationsFromEntries(cachedEntries, fallbackToFirstMeta));
+          setItemCatalogSummary(cachedCatalog?.summary ?? null);
+        }
+      } catch {
+        // IndexedDB is an optional acceleration layer; continue with the API and bundled fallback.
       }
 
       if (cachedEntriesLoaded && cachedCatalogFingerprint) {

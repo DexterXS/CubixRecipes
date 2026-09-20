@@ -363,7 +363,7 @@ Last full rebuild: 2026-06-29
   - Loads current user, hydrates the last confirmed session from session storage during F5 reloads, renders auth/offline states, and calls logout.
   - Uses `getCurrentUser`, `getGoogleLoginUrl`, `logoutCurrentUser`.
 - `frontend/src/services/bootstrapCache.ts`
-  - Stores server-and-user scoped bootstrap snapshots for small critical startup data; currently restores NEI favorites synchronously from localStorage and mirrors them to IndexedDB for asynchronous hydration.
+  - Stores server-and-user scoped bootstrap snapshots for critical startup data; restores NEI favorites synchronously and keeps the full NEI item catalog in localStorage when possible plus IndexedDB for large-catalog hydration.
   - Owns cache schema validation and never stores authentication secrets.
 - `frontend/src/auth/permissions.ts`
   - Frontend role permission helper: `can`.
@@ -653,7 +653,7 @@ Last full rebuild: 2026-06-29
 - `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`
 - `getItemCatalog` -> `GET /api/itempanel/catalog`
 - `getItemCatalogVersion` -> `GET /api/itempanel/catalog/version`
-- `bootstrapCache` -> browser-local user/server bootstrap snapshot; backend remains authoritative and refreshes it in the background.
+- `bootstrapCache` -> browser-local user/server bootstrap snapshots for NEI favorites and the full item catalog; backend remains authoritative and refreshes them in the background.
 - `uploadItemPanelCsv` -> `POST /api/admin/itempanel/csv`
 - `uploadItemPanelJson` -> `POST /api/admin/itempanel/json`
 - `mergeItemPanelFiles` -> `POST /api/admin/itempanel/merge`
@@ -792,7 +792,7 @@ Last full rebuild: 2026-06-29
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.
 - `pages/App.tsx` -> shared components, tasks feature, runtime config, i18n, API client, debug log, auth permissions, types.
 - `pages/App.tsx` -> `features/recipe-editor/recipeMatrix` for recipe matrix source-shaping helpers.
-- `pages/App.tsx` -> `services/itemAssetCache.ts` for persistent server/user-scoped itempanel atlas snapshots.
+- `pages/App.tsx` -> `services/itemAssetCache.ts` for persistent server/user-scoped itempanel atlas snapshots and `services/bootstrapCache.ts` for early NEI favorites/catalog restoration.
 - `pages/App.tsx` -> `services/modIconAssetCache.ts` for persistent server/user-scoped mod-atlas manifest loading; `main.tsx` registers `public/atlas-cache-sw.js` for lazy page caching.
 - `main.tsx` -> `styles.css`, `styles/nei.css`, `styles/mobile.css`, `styles/mobile-craft-icons.css`, `styles/mobile-shell.css`.
 - `features/tasks/RecipeTasksBoard.tsx` -> `Panel`, API client, types, task defaults.

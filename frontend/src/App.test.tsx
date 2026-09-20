@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import App from './pages/App';
-import { buildBootstrapCacheScope, writeCachedNeiFavorites } from './services/bootstrapCache';
+import { buildBootstrapCacheScope, writeCachedItemPanelCatalog, writeCachedNeiFavorites } from './services/bootstrapCache';
 import { AuthUser } from './types';
 
 const adminUser: AuthUser = {
@@ -1132,6 +1132,26 @@ test('restores cached NEI favorites before the backend refresh completes', () =>
   try {
     render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
     expect(screen.getByLabelText('favorite-item-<minecraft:stick>')).toBeTruthy();
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('restores the full NEI catalog before the backend refresh completes', async () => {
+  writeCachedItemPanelCatalog(buildBootstrapCacheScope(undefined, moderatorUser.email), [
+    { key: 'examplemod:cached', legacyId: null, meta: 0, hasNbt: false, displayRu: 'Кешированный предмет', displayEn: 'Cached item' }
+  ], null);
+  const originalFetch = global.fetch;
+  global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+    if (String(input) === '/api/itempanel/catalog') {
+      return new Promise<Response>(() => undefined);
+    }
+    return originalFetch(input, init);
+  });
+
+  try {
+    render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+    expect(await screen.findByLabelText('nei-item-<examplemod:cached>')).toBeTruthy();
   } finally {
     global.fetch = originalFetch;
   }

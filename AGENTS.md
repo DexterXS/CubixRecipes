@@ -292,6 +292,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Added the unified backend Atlas v2 registry: ZIP x32/x256 entries are matched to item-catalog raws once during the immutable revision build, with mapping statistics published in the index; the frontend uses that registry globally and keeps the old matcher only as an incomplete-registry fallback.
   - Progress on 2026-09-20: added session-scoped auth hydration for F5 reloads and a lightweight item-catalog fingerprint check; unchanged reloads keep the workspace visible and skip the full catalog response.
   - Progress on 2026-09-20: added the first unified bootstrap-cache slice for NEI favorites, scoped by user and server, with immediate local restoration and background backend refresh.
+  - Progress on 2026-09-20: added a server-and-user scoped IndexedDB snapshot for the full NEI item catalog; large catalogs restore before the backend refresh and continue updating in the background.
   - Remaining Stage 2/Atlas v2 work: validate the deployed Railway revision and cold/warm behavior after the registry build.
 
 ### Stage 7: Documentation and Regression Guardrails

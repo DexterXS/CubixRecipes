@@ -6,14 +6,23 @@ const DATABASE_VERSION = 1;
 const SNAPSHOT_STORE = 'snapshots';
 const LOCAL_STORAGE_PREFIX = 'cubixrecipes:bootstrap-snapshot:v1:';
 const FAVORITES_KIND = 'nei-favorites';
+const ITEM_CATALOG_KIND = 'item-catalog';
 
-interface CachedFavoritesRecord {
+export interface CachedItemPanelCatalog {
+  entries: unknown[];
+  summary: Record<string, unknown> | null;
+}
+
+interface CachedRecord<TValue, TKind extends string> {
   schemaVersion: number;
   scope: string;
-  kind: typeof FAVORITES_KIND;
+  kind: TKind;
   savedAt: number;
-  value: NeiFavoritesProfile;
+  value: TValue;
 }
+
+type CachedFavoritesRecord = CachedRecord<NeiFavoritesProfile, typeof FAVORITES_KIND>;
+type CachedItemCatalogRecord = CachedRecord<CachedItemPanelCatalog, typeof ITEM_CATALOG_KIND>;
 
 export function buildBootstrapCacheScope(serverId: string | null | undefined, userEmail: string | null | undefined): string {
   const server = serverId?.trim() || 'default';
@@ -21,8 +30,8 @@ export function buildBootstrapCacheScope(serverId: string | null | undefined, us
   return `${server}::${user}`;
 }
 
-function localStorageKey(scope: string): string {
-  return `${LOCAL_STORAGE_PREFIX}${encodeURIComponent(scope)}:${FAVORITES_KIND}`;
+function localStorageKey(scope: string, kind: string): string {
+  return `${LOCAL_STORAGE_PREFIX}${encodeURIComponent(scope)}:${kind}`;
 }
 
 function isFavoritesProfile(value: unknown): value is NeiFavoritesProfile {
@@ -42,32 +51,50 @@ function isFavoritesProfile(value: unknown): value is NeiFavoritesProfile {
     ));
 }
 
-function parseRecord(value: unknown, scope: string): CachedFavoritesRecord | null {
-  if (!value || typeof value !== 'object') return null;
-  const record = value as Partial<CachedFavoritesRecord>;
-  if (record.schemaVersion !== CACHE_SCHEMA_VERSION || record.scope !== scope || record.kind !== FAVORITES_KIND) {
-    return null;
-  }
-  if (typeof record.savedAt !== 'number' || !Number.isFinite(record.savedAt) || !isFavoritesProfile(record.value)) {
-    return null;
-  }
-  return record as CachedFavoritesRecord;
+function isItemPanelCatalog(value: unknown): value is CachedItemPanelCatalog {
+  if (!value || typeof value !== 'object') return false;
+  const catalog = value as Partial<CachedItemPanelCatalog>;
+  const summary = catalog.summary;
+  return Array.isArray(catalog.entries)
+    && catalog.entries.every((entry) => Boolean(entry) && typeof entry === 'object')
+    && (summary === null || (Boolean(summary) && typeof summary === 'object'));
 }
 
-function readLocalRecord(scope: string): CachedFavoritesRecord | null {
+function parseRecord<TValue, TKind extends string>(
+  value: unknown,
+  scope: string,
+  kind: TKind,
+  isValue: (candidate: unknown) => candidate is TValue
+): CachedRecord<TValue, TKind> | null {
+  if (!value || typeof value !== 'object') return null;
+  const record = value as Partial<CachedRecord<TValue, TKind>>;
+  if (record.schemaVersion !== CACHE_SCHEMA_VERSION || record.scope !== scope || record.kind !== kind) {
+    return null;
+  }
+  if (typeof record.savedAt !== 'number' || !Number.isFinite(record.savedAt) || !isValue(record.value)) {
+    return null;
+  }
+  return record as CachedRecord<TValue, TKind>;
+}
+
+function readLocalRecord<TValue, TKind extends string>(
+  scope: string,
+  kind: TKind,
+  isValue: (candidate: unknown) => candidate is TValue
+): CachedRecord<TValue, TKind> | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.localStorage.getItem(localStorageKey(scope));
-    return raw ? parseRecord(JSON.parse(raw), scope) : null;
+    const raw = window.localStorage.getItem(localStorageKey(scope, kind));
+    return raw ? parseRecord(JSON.parse(raw), scope, kind, isValue) : null;
   } catch {
     return null;
   }
 }
 
-function writeLocalRecord(record: CachedFavoritesRecord): void {
+function writeLocalRecord<TValue, TKind extends string>(record: CachedRecord<TValue, TKind>): void {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(localStorageKey(record.scope), JSON.stringify(record));
+    window.localStorage.setItem(localStorageKey(record.scope, record.kind), JSON.stringify(record));
   } catch {
     // Local persistence is best-effort; the live API remains authoritative.
   }
@@ -92,18 +119,22 @@ function openDatabase(): Promise<IDBDatabase | null> {
   });
 }
 
-function indexedDbKey(scope: string): string {
-  return `${scope}:${FAVORITES_KIND}`;
+function indexedDbKey(scope: string, kind: string): string {
+  return `${scope}:${kind}`;
 }
 
-async function readIndexedRecord(scope: string): Promise<CachedFavoritesRecord | null> {
+async function readIndexedRecord<TValue, TKind extends string>(
+  scope: string,
+  kind: TKind,
+  isValue: (candidate: unknown) => candidate is TValue
+): Promise<CachedRecord<TValue, TKind> | null> {
   const database = await openDatabase();
   if (!database) return null;
   return new Promise((resolve) => {
     try {
       const transaction = database.transaction(SNAPSHOT_STORE, 'readonly');
-      const request = transaction.objectStore(SNAPSHOT_STORE).get(indexedDbKey(scope));
-      request.onsuccess = () => resolve(parseRecord(request.result?.value, scope));
+      const request = transaction.objectStore(SNAPSHOT_STORE).get(indexedDbKey(scope, kind));
+      request.onsuccess = () => resolve(parseRecord(request.result?.value, scope, kind, isValue));
       request.onerror = () => resolve(null);
       transaction.onabort = () => resolve(null);
     } catch {
@@ -112,13 +143,13 @@ async function readIndexedRecord(scope: string): Promise<CachedFavoritesRecord |
   });
 }
 
-async function writeIndexedRecord(record: CachedFavoritesRecord): Promise<void> {
+async function writeIndexedRecord<TValue, TKind extends string>(record: CachedRecord<TValue, TKind>): Promise<void> {
   const database = await openDatabase();
   if (!database) return;
   await new Promise<void>((resolve) => {
     try {
       const transaction = database.transaction(SNAPSHOT_STORE, 'readwrite');
-      transaction.objectStore(SNAPSHOT_STORE).put({ key: indexedDbKey(record.scope), value: record });
+      transaction.objectStore(SNAPSHOT_STORE).put({ key: indexedDbKey(record.scope, record.kind), value: record });
       transaction.oncomplete = () => resolve();
       transaction.onerror = () => resolve();
       transaction.onabort = () => resolve();
@@ -129,12 +160,12 @@ async function writeIndexedRecord(record: CachedFavoritesRecord): Promise<void> 
 }
 
 export function readCachedNeiFavorites(scope: string): NeiFavoritesProfile | null {
-  return readLocalRecord(scope)?.value ?? null;
+  return readLocalRecord(scope, FAVORITES_KIND, isFavoritesProfile)?.value ?? null;
 }
 
 export async function hydrateCachedNeiFavorites(scope: string): Promise<NeiFavoritesProfile | null> {
-  const localRecord = readLocalRecord(scope);
-  const indexedRecord = await readIndexedRecord(scope);
+  const localRecord = readLocalRecord(scope, FAVORITES_KIND, isFavoritesProfile);
+  const indexedRecord = await readIndexedRecord(scope, FAVORITES_KIND, isFavoritesProfile);
   const newest = indexedRecord && (!localRecord || indexedRecord.savedAt > localRecord.savedAt)
     ? indexedRecord
     : localRecord;
@@ -151,6 +182,38 @@ export function writeCachedNeiFavorites(scope: string, value: NeiFavoritesProfil
     kind: FAVORITES_KIND,
     savedAt: Date.now(),
     value
+  };
+  writeLocalRecord(record);
+  void writeIndexedRecord(record);
+}
+
+export function readCachedItemPanelCatalog(scope: string): CachedItemPanelCatalog | null {
+  return readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog)?.value ?? null;
+}
+
+export async function hydrateCachedItemPanelCatalog(scope: string): Promise<CachedItemPanelCatalog | null> {
+  const localRecord = readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog);
+  const indexedRecord = await readIndexedRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog);
+  const newest = indexedRecord && (!localRecord || indexedRecord.savedAt > localRecord.savedAt)
+    ? indexedRecord
+    : localRecord;
+  if (newest && (!localRecord || newest.savedAt !== localRecord.savedAt)) {
+    writeLocalRecord(newest);
+  }
+  return newest?.value ?? null;
+}
+
+export function writeCachedItemPanelCatalog(
+  scope: string,
+  entries: unknown[],
+  summary: Record<string, unknown> | null
+): void {
+  const record: CachedItemCatalogRecord = {
+    schemaVersion: CACHE_SCHEMA_VERSION,
+    scope,
+    kind: ITEM_CATALOG_KIND,
+    savedAt: Date.now(),
+    value: { entries, summary }
   };
   writeLocalRecord(record);
   void writeIndexedRecord(record);

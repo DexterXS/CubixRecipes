@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import {
   buildBootstrapCacheScope,
+  hydrateCachedItemPanelCatalog,
   hydrateCachedNeiFavorites,
+  readCachedItemPanelCatalog,
   readCachedNeiFavorites,
+  writeCachedItemPanelCatalog,
   writeCachedNeiFavorites
 } from './bootstrapCache';
 
@@ -11,6 +14,11 @@ const favorites = {
   favoriteHotkey: 'A',
   hiddenPatterns: [],
   tabs: [{ id: 'default', name: 'Основное', items: [{ raw: '<minecraft:stone>', addedAt: 1 }] }]
+};
+
+const itemCatalog = {
+  entries: [{ key: 'examplemod:cached', legacyId: null, meta: 0, hasNbt: false, displayRu: 'Кешированный предмет', displayEn: 'Cached item' }],
+  summary: { catalog_fingerprint: 'test-fingerprint' }
 };
 
 describe('bootstrap cache', () => {
@@ -44,5 +52,19 @@ describe('bootstrap cache', () => {
     writeCachedNeiFavorites(scope, favorites);
 
     await expect(hydrateCachedNeiFavorites(scope)).resolves.toEqual(favorites);
+  });
+
+  test('restores the item catalog snapshot synchronously', () => {
+    const scope = buildBootstrapCacheScope('hitech', 'user@example.com');
+    writeCachedItemPanelCatalog(scope, itemCatalog.entries, itemCatalog.summary);
+
+    expect(readCachedItemPanelCatalog(scope)).toEqual(itemCatalog);
+  });
+
+  test('hydrates the item catalog snapshot without requiring IndexedDB', async () => {
+    const scope = buildBootstrapCacheScope('hitech', 'user@example.com');
+    writeCachedItemPanelCatalog(scope, itemCatalog.entries, itemCatalog.summary);
+
+    await expect(hydrateCachedItemPanelCatalog(scope)).resolves.toEqual(itemCatalog);
   });
 });
