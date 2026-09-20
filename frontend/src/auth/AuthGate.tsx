@@ -2,20 +2,48 @@ import { useEffect, useState } from 'react';
 import { getCurrentUser, getGoogleLoginUrl, logoutCurrentUser } from '../services/api';
 import { AuthMeResponse, AuthUser } from '../types';
 
+const AUTH_SESSION_CACHE_KEY = 'cubixrecipes:auth-session-v1';
+
 interface AuthGateProps {
   children: (user: AuthUser, onLogout: () => Promise<void>) => JSX.Element;
 }
 
+function readCachedAuth(): AuthMeResponse | null {
+  try {
+    const parsed = JSON.parse(window.sessionStorage.getItem(AUTH_SESSION_CACHE_KEY) ?? 'null') as AuthMeResponse | null;
+    if (!parsed?.authenticated || !parsed.user?.email || !parsed.user.role) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function persistAuth(auth: AuthMeResponse): void {
+  try {
+    if (auth.authenticated && auth.user) {
+      window.sessionStorage.setItem(AUTH_SESSION_CACHE_KEY, JSON.stringify(auth));
+    } else {
+      window.sessionStorage.removeItem(AUTH_SESSION_CACHE_KEY);
+    }
+  } catch {
+    // Session cache is best-effort and never replaces server validation.
+  }
+}
+
 export function AuthGate({ children }: AuthGateProps) {
-  const [auth, setAuth] = useState<AuthMeResponse | null>(null);
+  const [auth, setAuth] = useState<AuthMeResponse | null>(() => readCachedAuth());
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => readCachedAuth() === null);
 
   async function refreshAuth() {
-    setLoading(true);
+    setLoading((current) => current && auth === null);
     setError(null);
     try {
-      setAuth(await getCurrentUser());
+      const nextAuth = await getCurrentUser();
+      setAuth(nextAuth);
+      persistAuth(nextAuth);
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : String(nextError));
     } finally {
@@ -25,6 +53,11 @@ export function AuthGate({ children }: AuthGateProps) {
 
   async function handleLogout() {
     await logoutCurrentUser();
+    try {
+      window.sessionStorage.removeItem(AUTH_SESSION_CACHE_KEY);
+    } catch {
+      // Ignore unavailable browser storage.
+    }
     setAuth((current) => current ? { ...current, authenticated: false, user: null } : current);
   }
 

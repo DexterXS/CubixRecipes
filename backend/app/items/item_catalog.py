@@ -53,7 +53,7 @@ class ItemCatalogEntry:
 
 
 class ItemCatalogService:
-    CACHE_VERSION = 1
+    CACHE_VERSION = 2
 
     def __init__(
         self,
@@ -70,6 +70,7 @@ class ItemCatalogService:
         self.icon_catalog = icon_catalog
         self.oredict_path = oredict_path
         self.cache_path = cache_path
+        self.last_cache_fingerprint: Optional[str] = None
         self.entries: list[ItemCatalogEntry] = []
         self.last_scan_report: dict[str, object] = {
             'csv_path': str(csv_path),
@@ -91,6 +92,7 @@ class ItemCatalogService:
     def scan(self) -> dict[str, object]:
         source_csv_path = self._catalog_csv_path()
         fingerprint = self._cache_fingerprint(source_csv_path)
+        self.last_cache_fingerprint = fingerprint
         cached = self._load_cache(fingerprint)
         if cached is not None:
             return cached
@@ -122,6 +124,7 @@ class ItemCatalogService:
             'csv_entries': len(csv_entries),
             'csv_nbt_entries': csv_nbt_entries,
             'nbt_entries': csv_nbt_entries,
+            'catalog_fingerprint': fingerprint,
             'enabled': self.csv_path.is_file() or self.merged_csv_path.is_file(),
         }
         self._save_cache(fingerprint)
@@ -160,6 +163,12 @@ class ItemCatalogService:
             'entries': [entry.to_api() for entry in self.entries],
             'summary': self.last_scan_report,
         }
+
+    def current_fingerprint(self) -> str:
+        """Return the current source fingerprint without rebuilding the catalog."""
+        fingerprint = self._cache_fingerprint(self._catalog_csv_path())
+        self.last_cache_fingerprint = fingerprint
+        return fingerprint
 
     def _read_csv_entries(self) -> tuple[list[ItemCatalogEntry], int]:
         rows = self._read_csv_rows(self._catalog_csv_path())

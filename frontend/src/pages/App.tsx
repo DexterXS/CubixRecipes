@@ -35,7 +35,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemCatalogVersion, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
 import { logFrontendEvent } from '../services/debugLog';
@@ -2995,10 +2995,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       const fallbackToFirstMeta = getItemPanelFallbackToFirstMetaEnabled();
       let cachedEntriesLoaded = false;
       let remoteCatalogApplied = false;
+      let cachedCatalogFingerprint: string | null = null;
       try {
         const cached = window.localStorage.getItem(itemPanelCacheKey);
         if (cached) {
           const parsed = JSON.parse(cached) as { entries?: ItemPanelEntry[]; summary?: Record<string, unknown> | null };
+          cachedCatalogFingerprint = typeof parsed.summary?.catalog_fingerprint === 'string'
+            ? parsed.summary.catalog_fingerprint
+            : null;
           if (!cancelled && Array.isArray(parsed.entries) && parsed.entries.length) {
             cachedEntriesLoaded = true;
             setItemPanelTranslations(buildItemPanelTranslationsFromEntries(parsed.entries, fallbackToFirstMeta));
@@ -3007,6 +3011,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         }
       } catch {
         // ignore corrupted cache
+      }
+
+      if (cachedEntriesLoaded && cachedCatalogFingerprint) {
+        try {
+          const version = await getItemCatalogVersion(activeServerId);
+          if (!cancelled && version.fingerprint === cachedCatalogFingerprint) {
+            return;
+          }
+        } catch {
+          // Keep the stale local catalog if the lightweight version check is unavailable.
+          return;
+        }
       }
 
       async function loadBundledItemPanelEntries(): Promise<ItemPanelEntry[]> {

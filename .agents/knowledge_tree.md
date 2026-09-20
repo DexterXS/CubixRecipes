@@ -116,7 +116,7 @@ Last full rebuild: 2026-06-29
 
 ### Item and Catalog Data
 - `backend/app/items/item_catalog.py`
-  - Builds backend item catalog from itempanel CSV, SNBT, icon availability, OreDict; persists a fingerprinted per-server cache so unchanged startup sources reuse serialized entries.
+  - Builds backend item catalog from itempanel CSV, SNBT, icon availability, OreDict; persists a fingerprinted per-server cache so unchanged startup sources reuse serialized entries and exposes the current source fingerprint for lightweight reload checks.
   - Classes/functions: `ItemCatalogEntry`, `ItemCatalogService`, `build_item_raw`.
   - Depends on `ItemPanelIconCatalog`, `itempanel_merge`, `oredict_parser`, and domain item refs.
 - `backend/app/items/itempanel_merge.py`
@@ -239,6 +239,7 @@ Last full rebuild: 2026-06-29
 - `POST /api/admin/itempanel/merge`
 - `GET /api/admin/itempanel/merged`
 - `GET /api/itempanel/catalog`
+- `GET /api/itempanel/catalog/version`
 - `GET /api/itempanel/atlas`
 - `GET /api/itempanel/atlas.png`
 - `POST /api/admin/oredict/upload`
@@ -359,7 +360,7 @@ Last full rebuild: 2026-06-29
 
 ### Auth and Server Selection
 - `frontend/src/auth/AuthGate.tsx`
-  - Loads current user, renders auth/offline states, calls logout.
+  - Loads current user, hydrates the last confirmed session from session storage during F5 reloads, renders auth/offline states, and calls logout.
   - Uses `getCurrentUser`, `getGoogleLoginUrl`, `logoutCurrentUser`.
 - `frontend/src/auth/permissions.ts`
   - Frontend role permission helper: `can`.
@@ -648,6 +649,7 @@ Last full rebuild: 2026-06-29
 - `deleteRecipeDraftTemplate` -> `DELETE /api/recipe-drafts/templates/{draft_id}`
 - `getItemPanelAtlas` -> `GET /api/itempanel/atlas`, fallback `/itempanel-atlas.json`
 - `getItemCatalog` -> `GET /api/itempanel/catalog`
+- `getItemCatalogVersion` -> `GET /api/itempanel/catalog/version`
 - `uploadItemPanelCsv` -> `POST /api/admin/itempanel/csv`
 - `uploadItemPanelJson` -> `POST /api/admin/itempanel/json`
 - `mergeItemPanelFiles` -> `POST /api/admin/itempanel/merge`

@@ -290,6 +290,7 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Changed itempanel startup to render the bundled catalog immediately while the backend catalog refreshes in the background, preventing an empty NEI during slow API responses.
   - Added the first Atlas v2 vertical slice: a shared frontend candidate registry/selector now combines primary itempanel, ZIP x32/x256, and direct fallback candidates by quality/source/size; App, CubixCraft, and the item database use the shared lookup, and backend atlas manifests expose normalized quality/source metadata.
   - Added the unified backend Atlas v2 registry: ZIP x32/x256 entries are matched to item-catalog raws once during the immutable revision build, with mapping statistics published in the index; the frontend uses that registry globally and keeps the old matcher only as an incomplete-registry fallback.
+  - Progress on 2026-09-20: added session-scoped auth hydration for F5 reloads and a lightweight item-catalog fingerprint check; unchanged reloads keep the workspace visible and skip the full catalog response.
   - Remaining Stage 2/Atlas v2 work: validate the deployed Railway revision and cold/warm behavior after the registry build.
 
 ### Stage 7: Documentation and Regression Guardrails

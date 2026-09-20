@@ -43,6 +43,12 @@ export async function getItemCatalog(serverId?: string): Promise<ItemCatalogResp
   });
 }
 
+export async function getItemCatalogVersion(serverId?: string): Promise<{ fingerprint: string }> {
+  return request<{ fingerprint: string }>(apiPath('/itempanel/catalog/version'), {
+    headers: serverId ? { 'X-Server-Id': serverId } : undefined
+  });
+}
+
 async function uploadRawItemPanelFile(file: File, endpoint: string, contentType: string): Promise<Response> {
   const path = apiPath(`${endpoint}?filename=${encodeURIComponent(file.name)}`);
   const headers = buildRequestHeaders({ 'Content-Type': contentType });

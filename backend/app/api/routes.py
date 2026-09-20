@@ -1325,6 +1325,10 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     def itempanel_catalog():
         return item_catalog_service.to_api()
 
+    @router.get('/itempanel/catalog/version')
+    def itempanel_catalog_version():
+        return {'fingerprint': item_catalog_service.current_fingerprint()}
+
     @router.get('/itempanel/atlas')
     def itempanel_atlas_manifest():
         return itempanel_icon_catalog.get_atlas_manifest()

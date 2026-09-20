@@ -168,9 +168,10 @@ def test_item_catalog_reuses_persistent_cache_without_reading_csv(tmp_path: Path
     first_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     first_catalog.scan()
     first_service = ItemCatalogService(csv_path, snbt_path, first_catalog, cache_path=cache_path)
-    first_service.scan()
+    first_summary = first_service.scan()
     first_payload = first_service.to_api()
     assert cache_path.is_file()
+    assert first_service.current_fingerprint() == first_summary['catalog_fingerprint']
 
     second_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
     second_catalog.scan()
@@ -180,10 +181,11 @@ def test_item_catalog_reuses_persistent_cache_without_reading_csv(tmp_path: Path
         raise AssertionError('catalog cache miss')
 
     second_service._read_csv_rows = fail_if_source_is_read
-    second_service.scan()
+    second_summary = second_service.scan()
     second_payload = second_service.to_api()
 
     assert second_payload == first_payload
+    assert second_summary['catalog_fingerprint'] == first_summary['catalog_fingerprint']
 
 
 def test_item_catalog_rebuilds_cache_when_csv_changes(tmp_path: Path):
