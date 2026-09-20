@@ -248,7 +248,8 @@ Build a maintainable modular monolith and remove major performance bottlenecks w
   - Removed the frontend Canvas merge of generated mod atlases from the itempanel startup path; generated mod atlas pages remain server-owned and are no longer recombined per page load.
   - Added the first Atlas v2 backend slice: immutable per-server revisions, atomic `current.json` publication, background snapshot builds, ready-artifact reads, revision/page APIs, and explicit root-admin activation while legacy atlas endpoints remain unchanged.
   - The frontend now reads the active Atlas v2 index when available and uses its immutable page URLs through the shared lookup, while retaining legacy sources as fallback.
-  - Remaining Stage 2 work: move source generation itself behind queued background jobs, validate cold-start and warm-restart timings on Railway, and add revision garbage collection.
+  - Added an explicit root-admin Atlas v2 revision garbage collector that keeps the active/recent ready artifacts and never touches building/error revisions.
+  - Remaining Stage 2 work: move source generation itself behind queued background jobs and validate cold-start and warm-restart timings on Railway.
 
 ### Stage 3: Asset Index and Resolver
 - Status: next.

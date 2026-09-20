@@ -150,7 +150,7 @@ Last full rebuild: 2026-06-29
   - Classes: `ArchiveAlreadyExistsError`, `ArchiveNotFoundError`, `InvalidModIconArchiveError`, `ModIconSource`, `ModIconAtlasService`.
 - `backend/app/atlas/artifact_store.py` and `backend/app/atlas/revision_service.py`
   - Store per-server immutable Atlas v2 revisions, atomically publish the active revision pointer, and build combined primary/ZIP page snapshots in a daemon background worker.
-  - `AtlasArtifactStore` owns safe revision/artifact paths and atomic JSON/PNG writes; `AtlasRevisionService` owns build status, active revision reads, candidate/page snapshots, and explicit activation.
+  - `AtlasArtifactStore` owns safe revision/artifact paths, atomic JSON/PNG writes, and guarded pruning; `AtlasRevisionService` owns build status, active revision reads, candidate/page snapshots, explicit activation, and prune orchestration.
   - Revision data lives under `.cubixrecipes_admin/servers/{server_id}/atlas/` and does not replace legacy itempanel/mod-atlas storage.
 
 ### Server and Admin State
@@ -254,6 +254,7 @@ Last full rebuild: 2026-06-29
 - `GET /api/atlas/v2/pages/{page}`
 - `GET /api/atlas/v2/revisions`
 - `POST /api/atlas/v2/revisions/{revision}/activate`
+- `POST /api/admin/atlas/v2/revisions/prune`
 - `GET /api/admin/item-case-aliases`
 - `GET /api/item-case-aliases`
 - `POST /api/admin/item-case-aliases/generate`

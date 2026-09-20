@@ -74,3 +74,22 @@ def test_pages_are_not_served_before_ready_marker(tmp_path: Path):
     (page_path / 'itempanel-atlas.png').write_bytes(PNG)
 
     assert service.read_page('itempanel-atlas.png', revision) is None
+
+
+def test_prune_keeps_active_and_recent_revisions(tmp_path: Path):
+    service = AtlasRevisionService(tmp_path / 'atlas', 'test-server', FakeItemPanelCatalog(), FakeModIconService())
+    for revision in ('rev-active', 'rev-old'):
+        service.store.write_revision(
+            revision,
+            {'revision': revision, 'status': 'ready', 'builtAt': '2020-01-01T00:00:00+00:00'},
+            {'schemaVersion': 2, 'revision': revision, 'candidates': [], 'pages': []},
+            [],
+            {},
+        )
+    service.activate('rev-active')
+
+    result = service.prune_revisions(keep=1, min_age_hours=0)
+
+    assert result['removed'] == ['rev-old']
+    assert service.store.read_current_revision() == 'rev-active'
+    assert service.store.revision_path('rev-old').exists() is False

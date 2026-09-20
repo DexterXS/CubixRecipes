@@ -860,6 +860,15 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         return {'ok': True, 'revision': revision, 'meta': meta}
 
+    @router.post('/admin/atlas/v2/revisions/prune')
+    def admin_prune_atlas_v2_revisions(request: Request, keep: int = 3, min_age_hours: float = 24):
+        _require_root_admin(request)
+        if keep < 1 or keep > 100:
+            raise HTTPException(status_code=400, detail='keep must be between 1 and 100')
+        if min_age_hours < 0 or min_age_hours > 24 * 365:
+            raise HTTPException(status_code=400, detail='min_age_hours is outside the supported range')
+        return {'ok': True, **atlas_revision_service.prune_revisions(keep=keep, min_age_hours=min_age_hours)}
+
     @router.get('/admin/zs-cloud/files')
     def admin_list_zs_cloud_files():
         return {'files': storage.list_managed_zs_files()}

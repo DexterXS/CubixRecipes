@@ -91,6 +91,16 @@ class AtlasRevisionService:
     def activate(self, revision: str) -> dict[str, Any]:
         return self.store.activate(revision)
 
+    def prune_revisions(self, keep: int = 3, min_age_hours: float = 24) -> dict[str, Any]:
+        active_revision = self.store.read_current_revision()
+        removed = self.store.prune_revisions(active_revision, keep=keep, min_age_hours=min_age_hours)
+        return {
+            'activeRevision': active_revision,
+            'removed': removed,
+            'removedCount': len(removed),
+            'remaining': self.list_revisions()['revisions'],
+        }
+
     def _build(self, revision: str) -> None:
         try:
             meta, index, candidates, pages = self._build_snapshot(revision)

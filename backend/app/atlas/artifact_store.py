@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Optional
 
@@ -107,10 +108,55 @@ class AtlasArtifactStore:
         })
         return meta
 
+    def prune_revisions(self, active_revision: Optional[str], keep: int = 3, min_age_hours: float = 24) -> list[str]:
+        protected_count = max(1, int(keep))
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=max(0, float(min_age_hours)))
+        candidates: list[tuple[datetime, Path, dict[str, Any]]] = []
+        for revision_dir in self.revisions_dir.iterdir() if self.revisions_dir.is_dir() else []:
+            if not revision_dir.is_dir() or not REVISION_PATTERN.fullmatch(revision_dir.name):
+                continue
+            state = self.read_json(revision_dir.name, 'state.json')
+            if not isinstance(state, dict) or state.get('status') != 'ready':
+                continue
+            meta = self.read_json(revision_dir.name, 'meta.json')
+            built_at = self._parse_timestamp(meta.get('builtAt') if isinstance(meta, dict) else None)
+            if built_at is None:
+                built_at = datetime.fromtimestamp(revision_dir.stat().st_mtime, tz=timezone.utc)
+            candidates.append((built_at, revision_dir, state))
+
+        candidates.sort(key=lambda item: item[0], reverse=True)
+        protected = {path.name for _, path, _ in candidates[:protected_count]}
+        if active_revision:
+            protected.add(active_revision)
+
+        removed: list[str] = []
+        revisions_root = self.revisions_dir.resolve(strict=False)
+        for built_at, revision_dir, _state in candidates:
+            if revision_dir.name in protected or built_at > cutoff:
+                continue
+            resolved = revision_dir.resolve(strict=False)
+            try:
+                resolved.relative_to(revisions_root)
+            except ValueError:
+                continue
+            shutil.rmtree(resolved)
+            removed.append(revision_dir.name)
+        return removed
+
     def _safe_filename(self, filename: str) -> str:
         if not isinstance(filename, str) or not FILE_PATTERN.fullmatch(filename):
             raise ValueError('Invalid atlas artifact filename')
         return filename
+
+    @staticmethod
+    def _parse_timestamp(value: Any) -> Optional[datetime]:
+        if not isinstance(value, str) or not value:
+            return None
+        try:
+            parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        except ValueError:
+            return None
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
 
     def _write_json_atomic(self, path: Path, payload: Any) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
