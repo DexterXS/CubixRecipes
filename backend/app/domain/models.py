@@ -23,10 +23,18 @@ class ItemRef:
     name: str
     meta_mode: MetaMode = MetaMode.NONE
     meta_value: Optional[int] = None
+    canonical_modid: Optional[str] = None
+    canonical_name: Optional[str] = None
 
     @property
     def base_key(self) -> str:
         return f"{self.modid}:{self.name}".lower()
+
+    @property
+    def canonical_key(self) -> str:
+        modid = self.canonical_modid or self.modid
+        name = self.canonical_name or self.name
+        return f'{modid}:{name}'
 
 
 @dataclass

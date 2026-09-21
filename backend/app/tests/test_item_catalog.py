@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import struct
 import zlib
 from pathlib import Path
@@ -95,11 +96,11 @@ def test_item_catalog_reads_combined_semicolon_csv_nbt_tags(tmp_path: Path):
     summary = service.scan()
     payload = service.to_api()
     entries = {entry['raw']: entry for entry in payload['entries']}
-    nbt_raw = '<advancedsolarpanel:advanced_solar_helmet:1>.withTag({charge: 1000000.0})'
+    nbt_raw = '<AdvancedSolarPanel:advanced_solar_helmet:1>.withTag({charge: 1000000.0})'
 
     assert nbt_raw in entries
-    assert '<advancedsolarpanel:advanced_solar_helmet:27>' in entries
-    assert '<advancedsolarpanel:advanced_solar_helmet:1>' not in entries
+    assert '<AdvancedSolarPanel:advanced_solar_helmet:27>' in entries
+    assert '<AdvancedSolarPanel:advanced_solar_helmet:1>' not in entries
     assert entries[nbt_raw]['nbt_raw'] == '{charge: 1000000.0}'
     assert entries[nbt_raw]['has_nbt'] is True
     assert entries[nbt_raw]['sources'] == ['csv', 'nbt']
@@ -126,6 +127,48 @@ def test_item_catalog_preserves_itempanel_csv_order(tmp_path: Path):
     raws = [entry['raw'] for entry in service.to_api()['entries']]
 
     assert raws == ['<zzz:last_in_sort>', '<aaa:first_in_sort>']
+
+
+def test_item_catalog_preserves_canonical_itempanel_case_in_raw(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'appliedenergistics2:item.ItemMultiMaterial,434,56,false,Multi Material\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.json', icon_catalog)
+
+    service.scan()
+    entry = service.to_api()['entries'][0]
+
+    assert entry['key'] == 'appliedenergistics2:item.itemmultimaterial'
+    assert entry['canonical_key'] == 'appliedenergistics2:item.ItemMultiMaterial'
+    assert entry['raw'] == '<appliedenergistics2:item.ItemMultiMaterial:56>'
+
+
+def test_item_catalog_deduplicates_case_only_itempanel_variants(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'Avaritia:Resource,1,1,false,Resource A\n'
+        'avaritia:resource,1,1,false,Resource B\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, tmp_path / 'missing_itempanel.json', icon_catalog)
+
+    service.scan()
+    entries = service.to_api()['entries']
+
+    assert len(entries) == 1
+    assert entries[0]['raw'] == '<Avaritia:Resource:1>'
 
 
 def test_item_catalog_does_not_treat_csv_has_nbt_flag_as_real_nbt(tmp_path: Path):
@@ -217,3 +260,30 @@ def test_item_catalog_rebuilds_cache_when_csv_changes(tmp_path: Path):
     second_service.scan()
 
     assert [entry['raw'] for entry in second_service.to_api()['entries']] == ['<mod:after>']
+
+
+def test_item_catalog_invalidates_legacy_cache_version_before_loading_entries(tmp_path: Path):
+    csv_path = tmp_path / 'itempanel.csv'
+    csv_path.write_text(
+        'Item Name,Item ID,Item meta,Has NBT,Display Name\n'
+        'Avaritia:Resource,1,1,false,Resource\n',
+        encoding='utf-8',
+    )
+    icons_dir = tmp_path / 'itempanel_icons'
+    icons_dir.mkdir()
+    cache_path = tmp_path / 'cache' / 'item_catalog_cache.json'
+    snbt_path = tmp_path / 'itempanel.json'
+    snbt_path.write_text('', encoding='utf-8')
+    icon_catalog = ItemPanelIconCatalog(csv_path, icons_dir)
+    icon_catalog.scan()
+    service = ItemCatalogService(csv_path, snbt_path, icon_catalog, cache_path=cache_path)
+    fingerprint = service.current_fingerprint()
+    cache_path.parent.mkdir(parents=True)
+    cache_path.write_text(
+        json.dumps({'version': 2, 'fingerprint': fingerprint, 'entries': [], 'summary': {}}),
+        encoding='utf-8',
+    )
+
+    service.scan()
+
+    assert service.to_api()['entries'][0]['raw'] == '<Avaritia:Resource:1>'

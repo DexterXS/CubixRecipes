@@ -478,8 +478,8 @@ function buildItemPanelTranslationsFromEntries(entries: ItemPanelEntry[], fallba
 }
 
 function buildStructuredItemRaw(modidDraft: string, itemDraft: string, metaDraft: string, nbtRoot: NbtCompoundNode): string {
-  const modid = modidDraft.trim().toLowerCase();
-  const item = itemDraft.trim().toLowerCase();
+  const modid = modidDraft.trim();
+  const item = itemDraft.trim();
   if (!modid || !item) return '';
   const parsedMeta = Number.parseInt(metaDraft.trim() || '0', 10);
   const safeMeta = Number.isNaN(parsedMeta) ? 0 : Math.max(0, parsedMeta);
@@ -3097,14 +3097,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           if (!line.trim()) return;
           const parts = line.split(',');
           if (parts.length < 5) return;
-          const key = parts[0]?.trim().toLowerCase();
+          const canonicalKey = parts[0]?.trim();
+          const key = canonicalKey?.toLowerCase();
           const legacyIdRaw = parts[1]?.trim();
           const metaRaw = parts[2]?.trim();
           const hasNbtRaw = parts[3]?.trim().toLowerCase();
           const displayRu = (parts[4] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
           const displayEn = (parts[5] ?? '').replace(/\r/g, '').replace(/\\n/g, '').trim();
           const primaryDisplay = displayRu || displayEn;
-          if (!key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
+          if (!canonicalKey || !key || !primaryDisplay || primaryDisplay === '-' || primaryDisplay === '- ') return;
           const meta = Number.parseInt(metaRaw || '0', 10);
           if (Number.isNaN(meta)) return;
           const legacyId = legacyIdRaw ? Number.parseInt(legacyIdRaw, 10) : null;
@@ -3115,7 +3116,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             meta,
             hasNbt,
             displayRu: displayRu || primaryDisplay,
-            displayEn
+            displayEn,
+            raw: buildItemRawValue(canonicalKey, meta)
           });
         });
         return entries;

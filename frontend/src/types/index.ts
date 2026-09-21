@@ -118,6 +118,7 @@ export interface ItemPanelAtlas {
 
 export interface ItemCatalogEntry {
   key: string;
+  canonical_key?: string;
   legacy_id: number | null;
   meta: number;
   has_nbt: boolean;

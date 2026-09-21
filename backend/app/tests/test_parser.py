@@ -115,6 +115,25 @@ def test_parse_item_ref_normalizes_key_to_lowercase_for_lookup():
     assert item.base_key == 'avaritia:resource_block'
 
 
+def test_parse_item_ref_preserves_canonical_case_for_serialization():
+    parser = RecipeParser()
+    item = parser.parse_item_ref('<appliedenergistics2:item.ItemMultiMaterial:56>')
+
+    assert item.base_key == 'appliedenergistics2:item.itemmultimaterial'
+    assert item.canonical_key == 'appliedenergistics2:item.ItemMultiMaterial'
+    assert item.raw == '<appliedenergistics2:item.ItemMultiMaterial:56>'
+
+
+def test_parse_item_ref_preserves_mixed_case_block_and_avaritia_ids():
+    parser = RecipeParser()
+
+    block = parser.parse_item_ref('<appliedenergistics2:tile.BlockAdvancedCraftingUnit>')
+    avaritia = parser.parse_item_ref('<Avaritia:Resource:1>')
+
+    assert block.canonical_key == 'appliedenergistics2:tile.BlockAdvancedCraftingUnit'
+    assert avaritia.canonical_key == 'Avaritia:Resource'
+
+
 def test_parse_meta_wildcard():
     parser = RecipeParser()
     item = parser.parse_item_ref('<minecraft:planks:*>')

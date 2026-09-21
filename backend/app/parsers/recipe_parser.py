@@ -38,14 +38,35 @@ class RecipeParser:
         match = ITEM_RE.match(raw.strip())
         if not match:
             raise ValueError(f'Invalid item reference: {raw}')
-        modid, name, meta, _nbt = match.groups()
-        modid = modid.lower()
-        name = name.lower()
+        canonical_modid, canonical_name, meta, _nbt = match.groups()
+        modid = canonical_modid.lower()
+        name = canonical_name.lower()
         if meta is None:
-            return ItemRef(raw=raw.strip(), modid=modid, name=name)
+            return ItemRef(
+                raw=raw.strip(),
+                modid=modid,
+                name=name,
+                canonical_modid=canonical_modid,
+                canonical_name=canonical_name,
+            )
         if meta == '*':
-            return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.WILDCARD)
-        return ItemRef(raw=raw.strip(), modid=modid, name=name, meta_mode=MetaMode.EXACT, meta_value=int(meta))
+            return ItemRef(
+                raw=raw.strip(),
+                modid=modid,
+                name=name,
+                meta_mode=MetaMode.WILDCARD,
+                canonical_modid=canonical_modid,
+                canonical_name=canonical_name,
+            )
+        return ItemRef(
+            raw=raw.strip(),
+            modid=modid,
+            name=name,
+            meta_mode=MetaMode.EXACT,
+            meta_value=int(meta),
+            canonical_modid=canonical_modid,
+            canonical_name=canonical_name,
+        )
 
     def _looks_like_item_query(self, text: str) -> bool:
         return bool(ITEM_RE.match(text.strip()))

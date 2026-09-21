@@ -75,6 +75,7 @@ Last full rebuild: 2026-06-29
 - `backend/app/domain/models.py`
   - Shared backend domain objects.
   - Classes/enums: `MetaMode`, `BindingMode`, `ItemRef`, `RecipeCell`, `RecipeSource`, `Recipe`, `ResolutionResult`, `AssetCandidate`.
+  - `ItemRef.modid/name/base_key` remain lowercase normalized lookup data; `canonical_modid/canonical_name/canonical_key` preserve source registry spelling for serialization.
   - Used by parser, storage, resolver, item catalog, debug, and recipe service.
 
 ### Config
@@ -117,6 +118,7 @@ Last full rebuild: 2026-06-29
 ### Item and Catalog Data
 - `backend/app/items/item_catalog.py`
   - Builds backend item catalog from itempanel CSV, SNBT, icon availability, OreDict; persists a fingerprinted per-server cache so unchanged startup sources reuse serialized entries and exposes the current source fingerprint for lightweight reload checks.
+  - `ItemCatalogEntry.key` is the lowercase lookup key while `canonical_key` and `raw` retain itempanel registry spelling; cache version 3 invalidates older entries with the previous lowercase serialization semantics.
   - Classes/functions: `ItemCatalogEntry`, `ItemCatalogService`, `build_item_raw`.
   - Depends on `ItemPanelIconCatalog`, `itempanel_merge`, `oredict_parser`, and domain item refs.
 - `backend/app/items/itempanel_merge.py`

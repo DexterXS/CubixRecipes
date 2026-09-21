@@ -124,4 +124,4 @@ class RecipeService:
         return rendered
 
     def _item_with_meta(self, item: ItemRef, meta: str) -> str:
-        return f'<{item.modid}:{item.name}:{meta}>'
+        return f'<{item.canonical_key}:{meta}>'

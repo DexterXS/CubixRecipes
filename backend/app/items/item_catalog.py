@@ -23,6 +23,7 @@ from app.items.oredict_parser import build_oredict_indexes
 @dataclass
 class ItemCatalogEntry:
     key: str
+    canonical_key: str
     legacy_id: Optional[int]
     meta: int
     has_nbt: bool
@@ -38,12 +39,13 @@ class ItemCatalogEntry:
     def to_api(self) -> dict:
         return {
             'key': self.key,
+            'canonical_key': self.canonical_key,
             'legacy_id': self.legacy_id,
             'meta': self.meta,
             'has_nbt': self.has_nbt,
             'display_ru': self.display_ru,
             'display_en': self.display_en,
-            'raw': self.raw or build_item_raw(self.key, self.meta, self.nbt_raw),
+            'raw': self.raw or build_item_raw(self.canonical_key, self.meta, self.nbt_raw),
             'nbt_raw': self.nbt_raw,
             'has_icon': self.has_icon,
             'icon_url': self.icon_url,
@@ -53,7 +55,7 @@ class ItemCatalogEntry:
 
 
 class ItemCatalogService:
-    CACHE_VERSION = 2
+    CACHE_VERSION = 3
 
     def __init__(
         self,
@@ -101,13 +103,13 @@ class ItemCatalogService:
         csv_entries = self._csv_entries_from_rows(csv_rows_data)
         csv_rows = len(csv_rows_data)
         csv_nbt_entries = sum(1 for entry in csv_entries if entry.nbt_raw)
-        by_raw: dict[str, ItemCatalogEntry] = {}
+        by_normalized_raw: dict[str, ItemCatalogEntry] = {}
 
         for entry in csv_entries:
-            self._merge_entry(by_raw, entry)
+            self._merge_entry(by_normalized_raw, entry)
 
         snbt_rows = self._count_snbt_rows()
-        self.entries = list(by_raw.values())
+        self.entries = list(by_normalized_raw.values())
         self._enrich_ore_groups()
         self.last_scan_report = {
             'csv_path': str(self.csv_path),
@@ -177,7 +179,8 @@ class ItemCatalogService:
     def _csv_entries_from_rows(self, rows: list[dict[str, str]]) -> list[ItemCatalogEntry]:
         entries: list[ItemCatalogEntry] = []
         for row in rows:
-            key = self._field(row, 'Item Name', 'key', 'item_name').lower()
+            canonical_key = self._field(row, 'Item Name', 'key', 'item_name')
+            key = canonical_key.lower()
             display_ru = self._field(row, 'Display Name', 'display_ru', 'display_name', 'display_name_csv')
             display_en = self._field(row, 'Display EN', 'display_en')
             primary_display = display_ru or display_en
@@ -188,16 +191,17 @@ class ItemCatalogService:
             nbt_raw = self._csv_nbt_raw(row)
             has_nbt = bool(nbt_raw)
             has_icon = self._has_icon(key, meta)
-            icon_url = self._icon_url(key, meta)
+            icon_url = self._icon_url(canonical_key, meta)
             sources = {'csv'} | ({'icon'} if has_icon else set()) | ({'nbt'} if nbt_raw else set())
             entries.append(ItemCatalogEntry(
                 key=key,
+                canonical_key=canonical_key,
                 legacy_id=legacy_id,
                 meta=meta,
                 has_nbt=has_nbt,
                 display_ru=display_ru or primary_display,
                 display_en=display_en,
-                raw=build_item_raw(key, meta, nbt_raw) if nbt_raw else None,
+                raw=build_item_raw(canonical_key, meta, nbt_raw),
                 nbt_raw=nbt_raw,
                 has_icon=has_icon,
                 icon_url=icon_url,
@@ -280,6 +284,7 @@ class ItemCatalogService:
     def _entry_to_cache(self, entry: ItemCatalogEntry) -> dict[str, object]:
         return {
             'key': entry.key,
+            'canonical_key': entry.canonical_key,
             'legacy_id': entry.legacy_id,
             'meta': entry.meta,
             'has_nbt': entry.has_nbt,
@@ -296,7 +301,7 @@ class ItemCatalogService:
     def _entry_from_cache(self, value: object) -> Optional[ItemCatalogEntry]:
         if not isinstance(value, dict):
             return None
-        required_strings = ('key', 'display_ru', 'display_en')
+        required_strings = ('key', 'canonical_key', 'display_ru', 'display_en')
         if any(not isinstance(value.get(name), str) for name in required_strings):
             return None
         if not isinstance(value.get('meta'), int) or isinstance(value.get('meta'), bool):
@@ -317,6 +322,7 @@ class ItemCatalogService:
             return None
         return ItemCatalogEntry(
             key=value['key'],
+            canonical_key=value['canonical_key'],
             legacy_id=legacy_id,
             meta=value['meta'],
             has_nbt=value['has_nbt'],
@@ -356,13 +362,17 @@ class ItemCatalogService:
         except csv.Error:
             return ','
 
-    def _merge_entry(self, by_raw: dict[str, ItemCatalogEntry], entry: ItemCatalogEntry) -> None:
-        raw = entry.raw or build_item_raw(entry.key, entry.meta, entry.nbt_raw)
-        current = by_raw.get(raw)
+    def _merge_entry(self, by_normalized_raw: dict[str, ItemCatalogEntry], entry: ItemCatalogEntry) -> None:
+        raw = entry.raw or build_item_raw(entry.canonical_key, entry.meta, entry.nbt_raw)
+        normalized_raw = self._normalized_entry_identity(entry)
+        current = by_normalized_raw.get(normalized_raw)
         if current is None:
             entry.raw = raw
-            by_raw[raw] = entry
+            by_normalized_raw[normalized_raw] = entry
             return
+        if current.canonical_key == current.key and entry.canonical_key != entry.key:
+            current.canonical_key = entry.canonical_key
+            current.raw = raw
         current.sources.update(entry.sources)
         current.has_icon = current.has_icon or entry.has_icon
         current.has_nbt = current.has_nbt or entry.has_nbt
@@ -391,19 +401,27 @@ class ItemCatalogService:
             or (key, None) in self.icon_catalog.entries_by_key
         )
 
-    def _icon_url(self, key: str, meta: int) -> Optional[str]:
-        parts = key.split(':', 1)
+    def _icon_url(self, canonical_key: str, meta: int) -> Optional[str]:
+        parts = canonical_key.split(':', 1)
         if len(parts) != 2:
             return None
+        modid, name = parts[0], parts[1]
         item_ref = ItemRef(
-            raw=build_item_raw(key, meta),
-            modid=parts[0],
-            name=parts[1],
+            raw=build_item_raw(canonical_key, meta),
+            modid=modid.lower(),
+            name=name.lower(),
             meta_mode=MetaMode.EXACT,
             meta_value=meta,
+            canonical_modid=modid,
+            canonical_name=name,
         )
         result = self.icon_catalog.resolve(item_ref)
         return result.icon_url if result else None
+
+    def _normalized_entry_identity(self, entry: ItemCatalogEntry) -> str:
+        base = f'<{entry.key}{f":{entry.meta}" if entry.meta > 0 else ""}>'
+        normalized_nbt = (entry.nbt_raw or '').strip()
+        return f'{base}.withTag({normalized_nbt})' if normalized_nbt else base
 
     def _field(self, row: dict[str, str], *names: str) -> str:
         lower = {key.lower(): value for key, value in row.items() if key is not None}
