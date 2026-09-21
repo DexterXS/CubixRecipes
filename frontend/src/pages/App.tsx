@@ -264,7 +264,7 @@ type ItemPanelTranslations = {
   entries: ItemPanelEntry[];
   fallbackToFirstMeta: boolean;
 };
-const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v1';
+const ITEMPANEL_CACHE_KEY = 'cubixrecipes:itempanel-cache-v2';
 const ITEM_SEARCH_ICON_CACHE_KEY = 'cubixrecipes:item-search-icon-cache-v1';
 const SHARED_CRAFT_DRAFT_STORAGE_KEY = 'cubixrecipes:shared-craft-draft:v1';
 const NEI_VISIBLE_ROWS = 16;

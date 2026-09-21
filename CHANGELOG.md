@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Added
-- Preserved canonical/case-sensitive CraftTweaker item IDs across parsing, itempanel catalog generation, recipe editing, wildcard rendering, and bundled catalog fallback while keeping lowercase lookup keys and invalidating the previous item catalog cache format.
+- Preserved canonical/case-sensitive CraftTweaker item IDs across parsing, itempanel catalog generation, recipe editing, wildcard rendering, and bundled catalog fallback while keeping lowercase lookup keys and invalidating previous backend and browser item catalog cache formats.
 - Added shared icon placement variables and a final placement stylesheet so icon-surface `grid`, `absolute`, `wrapper`, and `scale` settings now control the real NEI, draft, recipe-grid, CubixCraft, held-item, task, and Auctions slots instead of only the settings preview.
 - Added a fingerprinted per-server item catalog cache that atomically stores catalog entries and invalidates when CSV, SNBT, OreDict, or icon sources change; unchanged startup loads now skip repeated icon URL resolution.
 - Added session-scoped auth hydration for page reloads and a lightweight item-catalog fingerprint endpoint; a warm F5 now keeps the workspace visible while auth refreshes in the background and skips the full catalog download when its sources are unchanged.

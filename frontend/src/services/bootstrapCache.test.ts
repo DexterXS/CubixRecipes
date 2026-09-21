@@ -47,6 +47,22 @@ describe('bootstrap cache', () => {
     expect(readCachedNeiFavorites(scope)).toBeNull();
   });
 
+  test('ignores item catalog snapshots from the previous schema', () => {
+    const scope = buildBootstrapCacheScope('hitech', 'user@example.com');
+    window.localStorage.setItem(
+      `cubixrecipes:bootstrap-snapshot:v1:${encodeURIComponent(scope)}:item-catalog`,
+      JSON.stringify({
+        schemaVersion: 1,
+        scope,
+        kind: 'item-catalog',
+        savedAt: Date.now(),
+        value: itemCatalog
+      })
+    );
+
+    expect(readCachedItemPanelCatalog(scope)).toBeNull();
+  });
+
   test('hydrates the browser cache without requiring IndexedDB', async () => {
     const scope = buildBootstrapCacheScope('hitech', 'user@example.com');
     writeCachedNeiFavorites(scope, favorites);

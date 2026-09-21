@@ -1,6 +1,7 @@
 import type { NeiFavoritesProfile } from '../types';
 
 const CACHE_SCHEMA_VERSION = 1;
+const ITEM_CATALOG_CACHE_SCHEMA_VERSION = 2;
 const DATABASE_NAME = 'cubixrecipes-bootstrap-v1';
 const DATABASE_VERSION = 1;
 const SNAPSHOT_STORE = 'snapshots';
@@ -64,11 +65,12 @@ function parseRecord<TValue, TKind extends string>(
   value: unknown,
   scope: string,
   kind: TKind,
-  isValue: (candidate: unknown) => candidate is TValue
+  isValue: (candidate: unknown) => candidate is TValue,
+  expectedSchemaVersion = CACHE_SCHEMA_VERSION
 ): CachedRecord<TValue, TKind> | null {
   if (!value || typeof value !== 'object') return null;
   const record = value as Partial<CachedRecord<TValue, TKind>>;
-  if (record.schemaVersion !== CACHE_SCHEMA_VERSION || record.scope !== scope || record.kind !== kind) {
+  if (record.schemaVersion !== expectedSchemaVersion || record.scope !== scope || record.kind !== kind) {
     return null;
   }
   if (typeof record.savedAt !== 'number' || !Number.isFinite(record.savedAt) || !isValue(record.value)) {
@@ -80,12 +82,13 @@ function parseRecord<TValue, TKind extends string>(
 function readLocalRecord<TValue, TKind extends string>(
   scope: string,
   kind: TKind,
-  isValue: (candidate: unknown) => candidate is TValue
+  isValue: (candidate: unknown) => candidate is TValue,
+  expectedSchemaVersion = CACHE_SCHEMA_VERSION
 ): CachedRecord<TValue, TKind> | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = window.localStorage.getItem(localStorageKey(scope, kind));
-    return raw ? parseRecord(JSON.parse(raw), scope, kind, isValue) : null;
+    return raw ? parseRecord(JSON.parse(raw), scope, kind, isValue, expectedSchemaVersion) : null;
   } catch {
     return null;
   }
@@ -126,7 +129,8 @@ function indexedDbKey(scope: string, kind: string): string {
 async function readIndexedRecord<TValue, TKind extends string>(
   scope: string,
   kind: TKind,
-  isValue: (candidate: unknown) => candidate is TValue
+  isValue: (candidate: unknown) => candidate is TValue,
+  expectedSchemaVersion = CACHE_SCHEMA_VERSION
 ): Promise<CachedRecord<TValue, TKind> | null> {
   const database = await openDatabase();
   if (!database) return null;
@@ -134,7 +138,7 @@ async function readIndexedRecord<TValue, TKind extends string>(
     try {
       const transaction = database.transaction(SNAPSHOT_STORE, 'readonly');
       const request = transaction.objectStore(SNAPSHOT_STORE).get(indexedDbKey(scope, kind));
-      request.onsuccess = () => resolve(parseRecord(request.result?.value, scope, kind, isValue));
+      request.onsuccess = () => resolve(parseRecord(request.result?.value, scope, kind, isValue, expectedSchemaVersion));
       request.onerror = () => resolve(null);
       transaction.onabort = () => resolve(null);
     } catch {
@@ -188,12 +192,12 @@ export function writeCachedNeiFavorites(scope: string, value: NeiFavoritesProfil
 }
 
 export function readCachedItemPanelCatalog(scope: string): CachedItemPanelCatalog | null {
-  return readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog)?.value ?? null;
+  return readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog, ITEM_CATALOG_CACHE_SCHEMA_VERSION)?.value ?? null;
 }
 
 export async function hydrateCachedItemPanelCatalog(scope: string): Promise<CachedItemPanelCatalog | null> {
-  const localRecord = readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog);
-  const indexedRecord = await readIndexedRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog);
+  const localRecord = readLocalRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog, ITEM_CATALOG_CACHE_SCHEMA_VERSION);
+  const indexedRecord = await readIndexedRecord(scope, ITEM_CATALOG_KIND, isItemPanelCatalog, ITEM_CATALOG_CACHE_SCHEMA_VERSION);
   const newest = indexedRecord && (!localRecord || indexedRecord.savedAt > localRecord.savedAt)
     ? indexedRecord
     : localRecord;
@@ -209,7 +213,7 @@ export function writeCachedItemPanelCatalog(
   summary: Record<string, unknown> | null
 ): void {
   const record: CachedItemCatalogRecord = {
-    schemaVersion: CACHE_SCHEMA_VERSION,
+    schemaVersion: ITEM_CATALOG_CACHE_SCHEMA_VERSION,
     scope,
     kind: ITEM_CATALOG_KIND,
     savedAt: Date.now(),
