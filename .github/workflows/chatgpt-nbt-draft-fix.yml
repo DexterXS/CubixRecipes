@@ -65,103 +65,30 @@ jobs:
           }
 
           function itemPanelEntryHasNbtTag(entry: ItemPanelEntry): boolean {''',
-              'add case-insensitive exact NBT lookup identity',
+              'add normalized exact NBT lookup identity',
           )
 
           replace_once(
               app,
-              '''    if (rawHasNbtTag(raw)) {
-                const exactEntry = itemPanelEntryByRaw.get(raw);
-                const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
-                if (exactTitle) {
-                  return exactTitle;
-                }
-              }''',
-              '''    if (rawHasNbtTag(raw)) {
-                const exactEntry = itemPanelEntryByRaw.get(raw) ?? itemPanelEntryByRaw.get(itemRawLookupIdentity(raw));
-                const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
-                if (exactTitle) {
-                  return exactTitle;
-                }
-              }''',
+              '      const exactEntry = itemPanelEntryByRaw.get(raw);',
+              '      const exactEntry = itemPanelEntryByRaw.get(raw) ?? itemPanelEntryByRaw.get(itemRawLookupIdentity(raw));',
               'use normalized exact NBT identity for titles',
           )
 
           replace_once(
               app,
-              '''  const itemPanelEntryByRaw = useMemo(() => {
-                const byRaw = new Map<string, ItemPanelEntry>();
-                neiCatalogEntries.forEach((entry) => {
-                  byRaw.set(itemPanelRaw(entry), entry);
-                });
-                return byRaw;
-              }, [neiCatalogEntries]);''',
-              '''  const itemPanelEntryByRaw = useMemo(() => {
-                const byRaw = new Map<string, ItemPanelEntry>();
-                neiCatalogEntries.forEach((entry) => {
-                  const raw = itemPanelRaw(entry);
-                  byRaw.set(raw, entry);
-                  byRaw.set(itemRawLookupIdentity(raw), entry);
-                });
-                return byRaw;
-              }, [neiCatalogEntries]);''',
+              '      byRaw.set(itemPanelRaw(entry), entry);',
+              '''      const raw = itemPanelRaw(entry);
+                byRaw.set(raw, entry);
+                byRaw.set(itemRawLookupIdentity(raw), entry);''',
               'index normalized exact NBT identities',
-          )
-
-          replace_once(
-              app,
-              '''    recipeDraftTemplates.forEach((template) => {
-                recipeLookupKeysForRaw(template.outputRaw).forEach((key) => {
-                  const templates = byOutput.get(key) ?? [];
-                  if (!templates.some((current) => current.id === template.id)) {
-                    templates.push(template);
-                    byOutput.set(key, templates);
-                  }
-                });
-              });''',
-              '''    recipeDraftTemplates.forEach((template) => {
-                const lookupKeys = rawHasNbtTag(template.outputRaw)
-                  ? new Set([template.outputRaw, itemRawLookupIdentity(template.outputRaw)])
-                  : new Set(recipeLookupKeysForRaw(template.outputRaw));
-                lookupKeys.forEach((key) => {
-                  const templates = byOutput.get(key) ?? [];
-                  if (!templates.some((current) => current.id === template.id)) {
-                    templates.push(template);
-                    byOutput.set(key, templates);
-                  }
-                });
-              });''',
-              'index NBT draft templates by normalized exact identity',
-          )
-
-          replace_once(
-              app,
-              '''  function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
-                const templates = new Map<string, RecipeDraftTemplate>();
-                const lookupKeys = rawHasNbtTag(raw) ? [raw] : recipeLookupKeysForRaw(raw);
-                lookupKeys.forEach((key) => {
-                  (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
-                });
-                return [...templates.values()];
-              }''',
-              '''  function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
-                const templates = new Map<string, RecipeDraftTemplate>();
-                const lookupKeys = rawHasNbtTag(raw)
-                  ? new Set([raw, itemRawLookupIdentity(raw)])
-                  : new Set(recipeLookupKeysForRaw(raw));
-                lookupKeys.forEach((key) => {
-                  (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
-                });
-                return [...templates.values()];
-              }''',
-              'lookup NBT drafts by normalized exact identity',
           )
 
           drafts = Path('frontend/src/features/drafts/DraftsWorkspace.tsx')
           replace_once(
               drafts,
-              '''                        <strong>{activeDraftPreview.name}</strong>''',
-              '''                        <strong>{draftTemplateDisplayName(activeDraftPreview, resolveCellTitle)}</strong>''',
+              '<strong>{activeDraftPreview.name}</strong>',
+              '<strong>{draftTemplateDisplayName(activeDraftPreview, resolveCellTitle)}</strong>',
               'resolve exact title in draft preview header',
           )
 
@@ -174,47 +101,9 @@ jobs:
           )
 
           tests = Path('frontend/src/App.test.tsx')
-          old_test = r'''test('draft selection keeps NBT variants separate and uses the exact variant title', async () => {
-            const exactRaw = '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})';
-            const otherVariantRaw = '<examplemod:charged:1>.withTag({charge: 7, ea_module_admin: 1})';
-            const makeDraft = (id: string, outputRaw: string, name: string) => ({
-              id,
-              outputRaw,
-              recipe: {
-                recipe_uid: id,
-                recipe_type: 'ct_shaped',
-                binding_mode: 'soft',
-                name: null,
-                output: { raw: outputRaw },
-                output_resolution: null,
-                grid_w: 1,
-                grid_h: 1,
-                source: { kind: 'local_draft', path: `draft:${outputRaw}` },
-                matrix: [[{ raw: null }]]
-              },
-              sourceText: `recipes.addShaped(${outputRaw}, [[<minecraft:stick>]]);`,
-              createdByEmail: adminUser.email,
-              createdAt: 1770000000000,
-              updatedAt: 1770000000000,
-              name
-            });
-
-            mockRecipeDraftTemplates = [
-              makeDraft('charged-exact', exactRaw, 'Старое общее имя #1'),
-              makeDraft('charged-other', otherVariantRaw, 'Другая версия #2')
-            ];
-
-            render(<App authUser={adminUser} onLogout={vi.fn()} />);
-            fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
-            fireEvent.click(await screen.findByLabelText(`draft-item-${exactRaw}`));
-
-            const templateList = await screen.findByLabelText('draft-template-list');
-            expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
-            expect(within(templateList).getByText('Charged item #1')).toBeTruthy();
-            expect(within(templateList).queryByText('Другая версия #2')).toBeFalsy();
-          });'''
-
-          new_test = r'''test('draft selection keeps NBT variants separate and uses the exact variant title across item casing', async () => {
+          marker = "\ntest('admin can browse recipe draft templates created by moderators', async () => {"
+          detector_test = r'''
+          test('draft titles resolve the exact NBT variant when catalog item casing differs', async () => {
             const exactRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:3600,DetectorMaterial:"GOLD"})';
             const otherVariantRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:7200,DetectorMaterial:"DIAMOND"})';
             const originalFetch = global.fetch;
@@ -271,12 +160,13 @@ jobs:
             expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
             expect(within(templateList).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
             expect(within(templateList).queryByText('Алмазный Наземный Детектор #100')).toBeFalsy();
+
             const preview = screen.getByLabelText('draft-template-preview');
             expect(within(preview).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
             expect(within(preview).queryByText('Железный Наземный Детектор #99')).toBeFalsy();
-          });'''
-
-          replace_once(tests, old_test, new_test, 'upgrade exact NBT draft regression test')
+          });
+          '''
+          replace_once(tests, marker, '\n' + detector_test.strip() + '\n' + marker.lstrip('\n'), 'add detector NBT regression test')
           PY
 
       - name: Install frontend dependencies
