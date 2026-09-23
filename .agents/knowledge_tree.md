@@ -354,7 +354,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/features/icon-settings/`
   - Shared icon-surface registry, desktop/mobile defaults, CSS variable builder, local trigger/host wiring, and the modal settings controller used by NEI, favorites, drafts, crafting, tasks, Auctions, and CubixCraft.
   - `IconSurfaceSettingsContext.tsx` owns one active live draft, saved snapshot, explicit global save, cancel/close rollback, profile/surface reset, retryable save errors, and mobile profile selection.
-  - `IconSurfaceSettingsPopover.tsx` is the keyboard-accessible native modal/bottom sheet with advanced controls for cell/icon size, gaps, padding, border, sprite scale, offsets, overflow, smoothing, and grid grouping.
+  - `IconSurfaceSettingsPopover.tsx` is the keyboard-accessible native modal/bottom sheet with advanced controls for cell/icon size, gaps, padding, border, sprite scale, offsets, overflow, smoothing, and grid grouping; the shared window has a transparent backdrop, pointer-drag header, viewport bounds, and native resize support.
   - `iconSurfaces.ts` normalizes legacy four-field settings into the additive extended contract and publishes per-surface CSS variables consumed by `styles/icon-placement.css` and `IconSurfaceSettings.css`.
 
 - `frontend/src/services/atlas/`

@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Added
-- Added local icon-surface settings menus for NEI, favorites, drafts, crafting, tasks, Auctions, CubixCraft, and mobile surfaces. Changes apply live, while explicit global save, cancel, surface/profile reset, desktop/mobile profiles, native modal focus handling, and backward-compatible advanced layout settings keep persistence predictable.
+- Added local icon-surface settings menus for NEI, favorites, drafts, crafting, tasks, Auctions, CubixCraft, and mobile surfaces. Changes apply live, while explicit global save, cancel, surface/profile reset, desktop/mobile profiles, native modal focus handling, transparent backdrop, draggable/resizable window controls, and backward-compatible advanced layout settings keep persistence predictable.
 - Preserved canonical/case-sensitive CraftTweaker item IDs across parsing, itempanel catalog generation, recipe editing, wildcard rendering, and bundled catalog fallback while keeping lowercase lookup keys and invalidating previous backend and browser item catalog cache formats.
 - Added shared icon placement variables and a final placement stylesheet so icon-surface `grid`, `absolute`, `wrapper`, and `scale` settings now control the real NEI, draft, recipe-grid, CubixCraft, held-item, task, and Auctions slots instead of only the settings preview.
 - Added a fingerprinted per-server item catalog cache that atomically stores catalog entries and invalidates when CSV, SNBT, OreDict, or icon sources change; unchanged startup loads now skip repeated icon URL resolution.

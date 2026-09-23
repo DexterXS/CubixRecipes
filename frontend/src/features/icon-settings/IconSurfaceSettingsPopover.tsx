@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import type { IconSettingsProfile } from './IconSurfaceSettingsContext';
 import type { IconSurfaceDefinition, IconSurfaceSettings } from './iconSurfaces';
 
@@ -56,6 +56,8 @@ export function IconSurfaceSettingsPopover({
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const firstControlRef = useRef<HTMLInputElement | null>(null);
+  const dragRef = useRef<{ pointerId?: number; startX: number; startY: number; originLeft: number; originTop: number } | null>(null);
+  const [dialogPosition, setDialogPosition] = useState<{ left: number; top: number } | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -75,6 +77,39 @@ export function IconSurfaceSettingsPopover({
     };
   }, []);
 
+  const startDrag = (event: ReactPointerEvent<HTMLElement>) => {
+    if ((event.button !== undefined && event.button !== 0) || (event.target as HTMLElement).closest('button, input, select, textarea')) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originLeft: rect.left,
+      originTop: rect.top
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+  };
+
+  const moveDrag = (event: ReactPointerEvent<HTMLElement>) => {
+    const drag = dragRef.current;
+    const dialog = dialogRef.current;
+    if (!drag || !dialog || (drag.pointerId !== undefined && event.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
+    const rect = dialog.getBoundingClientRect();
+    const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
+    const maxTop = Math.max(8, window.innerHeight - rect.height - 8);
+    setDialogPosition({
+      left: Math.min(maxLeft, Math.max(8, drag.originLeft + event.clientX - drag.startX)),
+      top: Math.min(maxTop, Math.max(8, drag.originTop + event.clientY - drag.startY))
+    });
+  };
+
+  const endDrag = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!dragRef.current || dragRef.current.pointerId === undefined || event.pointerId === undefined || dragRef.current.pointerId === event.pointerId) dragRef.current = null;
+  };
+
   useEffect(() => {
     const handleOutsidePointer = (event: PointerEvent) => {
       const dialog = dialogRef.current;
@@ -92,10 +127,16 @@ export function IconSurfaceSettingsPopover({
   } as CSSProperties;
 
   const profileLabel = profile === 'mobile' ? 'Телефон' : 'ПК';
+  const dialogStyle = dialogPosition ? {
+    left: `${dialogPosition.left}px`,
+    top: `${dialogPosition.top}px`,
+    margin: 0
+  } as CSSProperties : undefined;
   const dialog = (
     <dialog
       ref={dialogRef}
-      className={`icon-settings-dialog ${profile === 'mobile' ? 'is-mobile' : ''}`}
+      className={`icon-settings-dialog ${profile === 'mobile' ? 'is-mobile' : ''} ${dialogPosition ? 'is-positioned' : ''}`.trim()}
+      style={dialogStyle}
       aria-modal="true"
       aria-labelledby="icon-settings-dialog-title"
       onCancel={(event) => {
@@ -107,11 +148,19 @@ export function IconSurfaceSettingsPopover({
       }}
     >
       <div className="icon-settings-dialog-card">
-        <header className="icon-settings-dialog-header">
+        <header
+          className="icon-settings-dialog-header"
+          onPointerDown={startDrag}
+          onPointerMove={moveDrag}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          title="Перетащите окно за этот заголовок"
+        >
           <div>
             <span className="icon-settings-eyebrow">Настройки иконок · {profileLabel}</span>
             <h2 id="icon-settings-dialog-title">{surface.label}</h2>
             <p>{surface.description}</p>
+            <span className="icon-settings-window-hint">Перетащите заголовок · измените размер за угол</span>
           </div>
           <button type="button" className="icon-settings-close" aria-label="Закрыть настройки иконок" onClick={onCancel}>×</button>
         </header>

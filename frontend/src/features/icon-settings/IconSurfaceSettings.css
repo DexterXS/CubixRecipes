@@ -102,10 +102,17 @@
 }
 
 .icon-settings-dialog {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
   width: min(760px, calc(100vw - 32px));
   max-width: min(760px, calc(100vw - 32px));
   max-height: min(820px, calc(100vh - 32px));
+  min-width: min(420px, calc(100vw - 32px));
+  min-height: 360px;
   padding: 0;
+  overflow: hidden;
+  resize: both;
   border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
   border-radius: 16px;
   background: var(--panel-bg);
@@ -114,17 +121,25 @@
 }
 
 .icon-settings-dialog::backdrop {
-  background: rgba(4, 9, 18, .7);
-  backdrop-filter: blur(3px);
+  background: transparent;
+  backdrop-filter: none;
 }
 
+.icon-settings-dialog.is-positioned { inset: auto; }
+
 .icon-settings-dialog.is-mobile {
+  inset: auto 0 0;
   width: 100%;
   max-width: none;
   max-height: min(92vh, 820px);
+  min-width: 100%;
+  min-height: 320px;
   margin: auto 0 0;
+  resize: vertical;
   border-radius: 18px 18px 0 0;
 }
+
+.icon-settings-dialog.is-mobile.is-positioned { inset: auto; }
 
 .icon-settings-dialog-card { display: grid; min-height: 0; }
 .icon-settings-dialog-header,
@@ -147,6 +162,11 @@
 .icon-settings-dialog-header h2 { margin: 2px 0 4px; font-size: 20px; }
 .icon-settings-dialog-header p { margin: 0; color: var(--muted); font-size: 13px; }
 .icon-settings-eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; }
+.icon-settings-dialog-header { cursor: move; user-select: none; }
+.icon-settings-dialog-header button,
+.icon-settings-dialog-header input,
+.icon-settings-dialog-header select { cursor: pointer; }
+.icon-settings-window-hint { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; opacity: .8; }
 .icon-settings-close { min-width: 40px; min-height: 40px; padding: 0; font-size: 24px; line-height: 1; }
 .icon-settings-dialog-body { overflow: auto; padding: 18px 20px; }
 .icon-settings-live-preview { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 12px; margin-bottom: 16px; }
@@ -171,7 +191,7 @@
 
 @media (max-width: 720px) {
   .icon-settings-trigger { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; }
-  .icon-settings-dialog { width: 100%; max-width: none; max-height: 94vh; margin: auto 0 0; border-radius: 18px 18px 0 0; }
+  .icon-settings-dialog { width: 100%; max-width: none; max-height: 94vh; min-width: 100%; margin: auto 0 0; border-radius: 18px 18px 0 0; }
   .icon-settings-control-groups { grid-template-columns: 1fr; }
   .icon-settings-dialog-header, .icon-settings-dialog-footer { padding: 16px; }
   .icon-settings-dialog-body { padding: 16px; }
