@@ -608,6 +608,8 @@ Last full rebuild: 2026-06-29
   - Final shared placement layer loaded after the legacy surface styles. It applies the configured center mode consistently to NEI, favorites, drafts, recipe/CubixCraft grids, outputs, tasks, held items, and Auctions icon slots; the viewport-fixed `.held-item-cursor` remains outside the flow-positioned surface group.
 - `frontend/src/styles/icon-placement.test.ts`
   - Regression check that the shared flow-positioned icon selector cannot override the held-item cursor's fixed positioning.
+- `frontend/src/pages/App.tsx`
+  - Builds the shared Atlas lookup with the backend ZIP-registry readiness calculation scoped inside the memo callback so repeated NEI clicks cannot hit a production minifier TDZ binding.
 - `frontend/src/styles/nei.css`
   - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, compact mobile item action menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
@@ -620,6 +622,7 @@ Last full rebuild: 2026-06-29
 
 ### Frontend Tests
 - `frontend/src/App.test.tsx`: large application workflow coverage.
+- `frontend/src/App.test.tsx`: includes a regression check for repeated NEI clicks and double-click output selection keeping the editor mounted.
 - `frontend/src/features/nei/NeiIconItem.tsx`: covered through App NEI/favorites interaction tests.
 - `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`: covered through App favorite-tab and hidden-settings tests.
 - `frontend/src/features/mobile-shell/MobileAppMenu.test.tsx`: mobile app drawer behavior.

@@ -3675,14 +3675,16 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return [...unique.values()];
   }, [neiCatalogEntries]);
   const modIconByRaw = useMemo(() => buildModIconCandidates(modIconManifest, itemPanelTranslations.entries), [modIconManifest, itemPanelTranslations.entries]);
-  const backendZipRegistryReady = hasBackendZipRegistry(atlasV2Index);
-  const atlasLookup = useMemo(() => createAtlasLookup({
-    primaryAtlas: itemPanelAtlas,
-    atlasV2Index,
-    modIconManifest: backendZipRegistryReady ? null : modIconManifest,
-    modIconCandidatesByRaw: backendZipRegistryReady ? undefined : modIconByRaw,
-    fallbackIconsByRaw: new Map(Object.entries(itemSearchIcons))
-  }), [atlasV2Index, backendZipRegistryReady, itemPanelAtlas, itemSearchIcons, modIconByRaw, modIconManifest]);
+  const atlasLookup = useMemo(() => {
+    const backendZipRegistryReady = hasBackendZipRegistry(atlasV2Index);
+    return createAtlasLookup({
+      primaryAtlas: itemPanelAtlas,
+      atlasV2Index,
+      modIconManifest: backendZipRegistryReady ? null : modIconManifest,
+      modIconCandidatesByRaw: backendZipRegistryReady ? undefined : modIconByRaw,
+      fallbackIconsByRaw: new Map(Object.entries(itemSearchIcons))
+    });
+  }, [atlasV2Index, itemPanelAtlas, itemSearchIcons, modIconByRaw, modIconManifest]);
 
   const itemSearchSuggestions = useMemo(() => {
     const query = itemSearchQuery.trim().toLowerCase();

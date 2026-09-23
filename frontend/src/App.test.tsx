@@ -858,6 +858,18 @@ test('right click clears a held item before opening context menus again', async 
   expect(document.querySelector('.nei-context-menu')).toBeTruthy();
 });
 
+test('repeated NEI clicks keep the editor mounted', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const item = await screen.findByLabelText('nei-item-<minecraft:planks>');
+
+  fireEvent.click(item);
+  fireEvent.click(item);
+  fireEvent.doubleClick(item);
+
+  expect(screen.getByText('NEI предметы')).toBeTruthy();
+  expect(screen.queryByText('CubixRecipes: ошибка интерфейса')).toBeFalsy();
+});
+
 test('touch held item bar tracks and clears a selected NEI item', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
   const item = await screen.findByLabelText('nei-item-<minecraft:planks>');

@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - Fixed the NEI held-item cursor drifting to the bottom of the workspace after icon-placement CSS changes by keeping its viewport-fixed positioning intact.
+- Fixed the production NEI repeat-click crash (`Cannot access 'Vd' before initialization`) by keeping the Atlas registry readiness calculation inside its memoized lookup builder.
 
 ### Added
 - Added local icon-surface settings menus for NEI, favorites, drafts, crafting, tasks, Auctions, CubixCraft, and mobile surfaces, including per-recipe icons in the draft list. Changes apply live, while explicit global save, cancel, surface/profile reset, desktop/mobile profiles, native modal focus handling, transparent backdrop, draggable/resizable window controls, and backward-compatible advanced layout settings keep persistence predictable.
