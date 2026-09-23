@@ -15,6 +15,7 @@ export type IconSurfaceId =
   | 'draftPreview'
   | 'draftPreview9'
   | 'draftSelected'
+  | 'draftTemplateIcon'
   | 'tasks'
   | 'auctionPreview'
   | 'auctionLotItems'
@@ -86,6 +87,7 @@ export const iconSurfaceDefinitions: IconSurfaceDefinition[] = [
   { id: 'draftPreview', label: 'Превью 2x2/3x3', description: 'Предпросмотр обычных черновиков', defaults: surfaceDefaults({ cell: 48, icon: 28, gap: 2, mode: 'scale' }), minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 44 },
   { id: 'draftPreview9', label: 'Превью 9x9', description: 'Предпросмотр черновиков 9x9', defaults: surfaceDefaults({ cell: 36, icon: 14, gap: 2, mode: 'scale' }), minCell: 20, maxCell: 44, minIcon: 8, maxIcon: 28 },
   { id: 'draftSelected', label: 'Выбранный черновик', description: 'Большая иконка выбранного предмета', defaults: surfaceDefaults({ cell: 72, icon: 42, gap: 0, mode: 'scale' }), minCell: 44, maxCell: 96, minIcon: 20, maxIcon: 72 },
+  { id: 'draftTemplateIcon', label: 'Иконка рецепта', description: 'Иконка конкретного рецепта в списке черновиков', defaults: surfaceDefaults({ cell: 38, icon: 30, gap: 0, mode: 'scale' }), minCell: 28, maxCell: 56, minIcon: 12, maxIcon: 48 },
   { id: 'tasks', label: 'Задачи', description: 'Иконки в карточках задач', defaults: surfaceDefaults({ cell: 42, icon: 32, gap: 6, mode: 'scale' }), minCell: 28, maxCell: 72, minIcon: 14, maxIcon: 56 },
   { id: 'auctionPreview', label: 'Аукционы: превью', description: 'Главная иконка лота и карточки аукциона', defaults: surfaceDefaults({ cell: 84, icon: 40, gap: 8, mode: 'scale' }), minCell: 48, maxCell: 120, minIcon: 18, maxIcon: 72 },
   { id: 'auctionLotItems', label: 'Аукционы: предметы', description: 'Предметы внутри открытого лота', defaults: surfaceDefaults({ cell: 42, icon: 28, gap: 6, mode: 'scale' }), minCell: 28, maxCell: 64, minIcon: 12, maxIcon: 48 },
@@ -109,6 +111,7 @@ export const defaultMobileIconSurfaceSettings: IconSurfaceSettingsMap = {
   cubixCraftGrid: surfaceDefaults({ cell: 32, icon: 20, gap: 1, mode: 'absolute' }),
   craftOutput: surfaceDefaults({ cell: 36, icon: 24, gap: 0, mode: 'scale' }),
   draftPreview9: surfaceDefaults({ cell: 30, icon: 12, gap: 1, mode: 'scale' }),
+  draftTemplateIcon: surfaceDefaults({ cell: 38, icon: 30, gap: 0, mode: 'scale' }),
   auctionPreview: surfaceDefaults({ cell: 72, icon: 34, gap: 8, mode: 'scale' }),
   auctionLotItems: surfaceDefaults({ cell: 40, icon: 26, gap: 6, mode: 'scale' }),
   auctionNei: surfaceDefaults({ cell: 42, icon: 30, gap: 7, mode: 'scale' }),

@@ -21,6 +21,12 @@
   transition: opacity .16s ease, transform .16s ease, border-color .16s ease;
 }
 
+.icon-settings-placement-top-left .icon-settings-trigger { top: 6px; right: auto; bottom: auto; left: 6px; }
+.icon-settings-placement-top-right .icon-settings-trigger { top: 6px; right: 6px; bottom: auto; left: auto; }
+.icon-settings-placement-bottom-left .icon-settings-trigger { top: auto; right: auto; bottom: 6px; left: 6px; }
+.icon-settings-placement-bottom-right .icon-settings-trigger { top: auto; right: 6px; bottom: 6px; left: auto; }
+.icon-settings-compact .icon-settings-trigger { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; font-size: 13px; }
+
 .icon-settings-trigger:hover,
 .icon-settings-trigger:focus-visible,
 .icon-settings-trigger[aria-expanded='true'] {
@@ -41,6 +47,7 @@
 .icon-settings-surface[data-icon-surface='favorites'] .favorite-icon,
 .icon-settings-surface[data-icon-surface='draftItems'] .nei-icon,
 .icon-settings-surface[data-icon-surface='draftSelected'] .draft-selected-icon,
+.icon-settings-surface[data-icon-surface='draftTemplateIcon'] .draft-template-icon,
 .icon-settings-surface[data-icon-surface='tasks'] .task-icon-slot,
 .icon-settings-surface[data-icon-surface='tasks'] .task-item-picker-icon,
 .icon-settings-surface[data-icon-surface='tasks'] .suggestion-icon-slot,
@@ -91,6 +98,7 @@
 .icon-settings-surface[data-icon-surface='nei'] img,
 .icon-settings-surface[data-icon-surface='favorites'] img,
 .icon-settings-surface[data-icon-surface='draftItems'] img,
+.icon-settings-surface[data-icon-surface='draftTemplateIcon'] img,
 .icon-settings-surface[data-icon-surface='craftGrid'] img,
 .icon-settings-surface[data-icon-surface='craftGrid9'] img,
 .icon-settings-surface[data-icon-surface='cubixCraftGrid'] img,

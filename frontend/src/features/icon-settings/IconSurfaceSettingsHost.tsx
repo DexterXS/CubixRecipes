@@ -7,13 +7,15 @@ type Props = {
   children: ReactNode;
   className?: string;
   title?: string;
+  placement?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  size?: 'default' | 'compact';
 };
 
 function cssSurfaceKey(surfaceId: IconSurfaceId): string {
   return surfaceId.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 
-export function IconSurfaceSettingsHost({ surfaceId, children, className, title }: Props) {
+export function IconSurfaceSettingsHost({ surfaceId, children, className, title, placement = 'top-right', size = 'default' }: Props) {
   const settings = useIconSurfaceSettings();
   const prefix = `--icon-${cssSurfaceKey(surfaceId)}`;
   const style = {
@@ -28,7 +30,7 @@ export function IconSurfaceSettingsHost({ surfaceId, children, className, title 
   } as CSSProperties;
 
   return (
-    <div className={`icon-settings-surface ${className ?? ''}`.trim()} data-icon-surface={surfaceId} style={style}>
+    <div className={`icon-settings-surface icon-settings-placement-${placement} ${size === 'compact' ? 'icon-settings-compact' : ''} ${className ?? ''}`.trim()} data-icon-surface={surfaceId} style={style}>
       {settings.canEdit ? (
         <button
           type="button"

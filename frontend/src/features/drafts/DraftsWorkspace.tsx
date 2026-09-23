@@ -338,7 +338,7 @@ export function DraftsWorkspace({
                         <button type="button" className="secondary-button draft-template-edit" aria-label="edit-selected-draft-template" onClick={() => onOpenDraft(activeDraftPreview)}>Редактировать рецепт</button>
                       </div>
                     </div>
-                    <IconSurfaceSettingsHost surfaceId={activeGridMode === '9' ? 'draftPreview9' : 'draftPreview'} title="Настроить превью черновика">
+                    <IconSurfaceSettingsHost surfaceId={activeGridMode === '9' ? 'draftPreview9' : 'draftPreview'} title="Настроить превью черновика" placement="bottom-right">
                       <div className="draft-preview-grid">
                         <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={displayMode} animationsEnabled={animationsEnabled} editorMode="view" tooltipsDisabled extremeGroupGap={3} heldItemRaw={null} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
                       </div>
@@ -382,7 +382,9 @@ export function DraftsWorkspace({
                           >
                             <div className="draft-template-card-row">
                               <input type="checkbox" aria-label={`draft-template-select-${draft.id}`} checked={Boolean(selectedTemplateIds[draft.id])} onChange={(event) => setTemplateSelected(draft.id, event.target.checked)} onClick={(event) => event.stopPropagation()} />
-                              <span className="draft-template-icon">{renderCraftItemIcon(draft.outputRaw, draft.recipe.output_resolution?.icon_url, draft.recipe.output_resolution?.animated, draft.recipe.output_resolution?.animation_meta?.frametime, resolveCellTitle(draft.outputRaw))}</span>
+                              <IconSurfaceSettingsHost surfaceId="draftTemplateIcon" title="Настроить иконку этого рецепта" placement="bottom-right" size="compact">
+                                <span className="draft-template-icon">{renderCraftItemIcon(draft.outputRaw, draft.recipe.output_resolution?.icon_url, draft.recipe.output_resolution?.animated, draft.recipe.output_resolution?.animation_meta?.frametime, resolveCellTitle(draft.outputRaw))}</span>
+                              </IconSurfaceSettingsHost>
                               <div className="draft-template-main">
                                 <strong>{displayName}</strong>
                                 <span>{draft.outputRaw}</span>

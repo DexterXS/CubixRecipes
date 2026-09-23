@@ -822,10 +822,10 @@ test('technical workspace uses side navigation sections', async () => {
   expect(screen.getByText('Фильтры вывода')).toBeTruthy();
   fireEvent.click(screen.getByLabelText('debug-section-iconSettings'));
   expect(screen.getByLabelText('icon-settings-panel')).toBeTruthy();
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(17);
   fireEvent.click(screen.getByLabelText('icon-settings-profile-mobile'));
   expect(screen.getByLabelText('icon-settings-profile-mobile').className).toContain('active');
-  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(15);
+  expect(screen.getAllByLabelText(/^icon-surface-/)).toHaveLength(17);
   fireEvent.click(screen.getByLabelText('debug-section-iconLab'));
   expect(screen.getByLabelText('icon-scale-lab')).toBeTruthy();
   expect(screen.getAllByLabelText(/^icon-lab-variant-/)).toHaveLength(64);
@@ -1693,6 +1693,7 @@ test('saved recipe draft templates can be browsed, previewed, opened, and remove
   const templateList = screen.getByLabelText('draft-template-list');
   const template = within(templateList).getByLabelText(/^draft-template-<minecraft:planks>-/);
   expect(within(template).getByText(adminUser.email)).toBeTruthy();
+  expect(within(template).getByRole('button', { name: 'Настроить иконку этого рецепта' })).toBeTruthy();
   expect(screen.queryByText('Только с черновиками')).toBeFalsy();
   expect(screen.getByLabelText('draft-template-preview')).toBeTruthy();
 

@@ -40,6 +40,7 @@ describe('buildIconSurfaceCssVars', () => {
     expect(vars['--icon-draft-items-render-transform']).toBeTruthy();
     expect(vars['--icon-craft-output-render-transform']).toBeTruthy();
     expect(vars['--icon-draft-preview9-render-transform']).toBeTruthy();
+    expect(vars['--icon-draft-template-icon-render-transform']).toBeTruthy();
     expect(vars['--icon-auction-nei-render-transform']).toBeTruthy();
   });
 
