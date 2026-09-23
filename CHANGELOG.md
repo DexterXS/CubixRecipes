@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Fixed the NEI held-item cursor drifting to the bottom of the workspace after icon-placement CSS changes by keeping its viewport-fixed positioning intact.
+
 ### Added
 - Added local icon-surface settings menus for NEI, favorites, drafts, crafting, tasks, Auctions, CubixCraft, and mobile surfaces, including per-recipe icons in the draft list. Changes apply live, while explicit global save, cancel, surface/profile reset, desktop/mobile profiles, native modal focus handling, transparent backdrop, draggable/resizable window controls, and backward-compatible advanced layout settings keep persistence predictable.
 - Preserved canonical/case-sensitive CraftTweaker item IDs across parsing, itempanel catalog generation, recipe editing, wildcard rendering, and bundled catalog fallback while keeping lowercase lookup keys and invalidating previous backend and browser item catalog cache formats.

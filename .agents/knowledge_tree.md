@@ -605,7 +605,9 @@ Last full rebuild: 2026-06-29
   - Global app styling, including CSS-variable-driven craft-grid, output, favorites, draft, task, and held-item icon sizing.
   - Craft output atlas sprites keep their 32px tile and use output scale variables so phone output icons match the icon-settings preview instead of being cropped.
 - `frontend/src/styles/icon-placement.css`
-  - Final shared placement layer loaded after the legacy surface styles. It applies the configured center mode consistently to NEI, favorites, drafts, recipe/CubixCraft grids, outputs, tasks, held items, and Auctions icon slots.
+  - Final shared placement layer loaded after the legacy surface styles. It applies the configured center mode consistently to NEI, favorites, drafts, recipe/CubixCraft grids, outputs, tasks, held items, and Auctions icon slots; the viewport-fixed `.held-item-cursor` remains outside the flow-positioned surface group.
+- `frontend/src/styles/icon-placement.test.ts`
+  - Regression check that the shared flow-positioned icon selector cannot override the held-item cursor's fixed positioning.
 - `frontend/src/styles/nei.css`
   - CSS-variable-driven NEI/favorites icon-cell sizing, favorite browser tabs, hidden favorite settings menu, compact mobile item action menu, and mobile item-inspection presentation.
 - `frontend/src/styles/mobile.css`
