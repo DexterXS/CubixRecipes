@@ -1,0 +1,3 @@
+.cubixcraft-embedded > .app-shell > div:first-child {
+  display: flex !important;
+}
